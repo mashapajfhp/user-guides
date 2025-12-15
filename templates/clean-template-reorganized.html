@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="version" content="2.0 - Reorganized Clean Template">
+    <meta name="last-updated" content="November 12, 2025">
+    <title>[FEATURE-NAME] - User Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* CSS Custom Properties - Design System */
+        :root {
+            /* Typography Scale */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            --text-3xl: 2rem;
+            --text-4xl: 3rem;
+
+            /* Spacing Scale (8px base) */
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 40px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+
+            /* Bayzat Brand Colors */
+            --primary: #9647FF;
+            --primary-dark: #5A2B99;
+            --primary-light: #EADAFF;
+            --success: #22C993;
+            --critical: #FF6B6B;
+            --warning: #FFB020;
+            
+            /* Background Colors */
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8FAFC;
+            --bg-tertiary: #F1F5F9;
+            --bg-border: #E2E8F0;
+            
+            /* Text Colors */
+            --text-primary: #1E293B;
+            --text-secondary: #475569;
+            --text-tertiary: #64748B;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-2xl);
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: var(--space-3xl);
+            padding: var(--space-2xl);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: var(--radius-lg);
+            color: white;
+        }
+
+        .header h1 {
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+        }
+
+        .section {
+            margin-bottom: var(--space-3xl);
+            padding: var(--space-2xl);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            margin-bottom: var(--space-lg);
+            font-size: var(--text-2xl);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: var(--space-sm);
+        }
+
+        .step-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin: var(--space-md) 0;
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .warning-box {
+            background: var(--critical-light, #FFE5E5);
+            border: 2px solid var(--critical);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin: var(--space-md) 0;
+        }
+
+        .feature-highlight {
+            background: var(--primary-light);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin: var(--space-md) 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--space-lg) 0;
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        th, td {
+            padding: var(--space-md);
+            text-align: left;
+            border-bottom: 1px solid var(--bg-border);
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .image-container {
+            margin: var(--space-lg) 0;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+        }
+
+        .image-caption {
+            margin-top: var(--space-sm);
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .context-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-xl) 0;
+        }
+
+        .context-item {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease;
+        }
+
+        .context-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .context-item h3 {
+            margin-bottom: var(--space-md);
+            color: var(--text-secondary);
+            font-size: var(--text-lg);
+        }
+
+        .context-item h3::before {
+            content: attr(data-icon);
+            margin-right: var(--space-sm);
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1>[FEATURE EMOJI] [FEATURE NAME]</h1>
+            <div class="subtitle">[FEATURE TYPE - e.g., User Guide, Configuration Guide]</div>
+            <div class="purpose">[FEATURE PURPOSE BASED ON SCREENSHOTS AND ANALYSIS]</div>
+        </header>
+
+        <!-- What is [Feature Name] - Basic Overview with Hero Image -->
+        <section class="section">
+            <h2>What is [FEATURE NAME]?</h2>
+            
+            <!-- Hero Image Section -->
+            <div class="image-container" style="margin-bottom: var(--space-xl);">
+                <img src="[BEST-HERO-SCREENSHOT].png" alt="[FEATURE] Main Interface - Hero Image" style="width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
+                <div class="image-caption" style="font-size: var(--text-lg); color: var(--text-secondary); margin-top: var(--space-md);">[COMPREHENSIVE DESCRIPTION OF HERO IMAGE - Main interface showing primary feature functionality, key UI elements, and user workflow entry point]</div>
+            </div>
+            
+            <p>[FEATURE DESCRIPTION BASED ON INTERFACE SCREENSHOTS AND ANALYSIS DATA - Comprehensive explanation of feature purpose, functionality, and business value from interface evidence and analysis.]</p>
+            
+            <!-- Strategic Business Context -->
+            <div class="feature-highlight" style="background: linear-gradient(135deg, #4F46E5 0%, #3B82F6 100%); color: white; padding: var(--space-2xl); border-radius: var(--radius-lg); margin: var(--space-xl) 0;">
+                <h3 style="color: white; margin-bottom: var(--space-lg);">💡 Strategic Business Context</h3>
+                <p style="font-size: var(--text-lg); line-height: 1.7;">[STRATEGIC BUSINESS CONTEXT FROM ANALYSIS - This feature positions Bayzat as [business positioning], creates [integration/workflow benefits] for customer [retention/satisfaction], and drives [business value] through [automation/efficiency] value.]</p>
+            </div>
+            
+            <p><strong>PLATFORM COVERAGE:</strong> [PLATFORM COVERAGE DESCRIPTION FROM SYSTEM VERIFICATION - This feature works through [platform modules/APIs], supporting [number] [entities/processes/configurations]. [Platform/System] enforces [technical limits/business rules] calculated as [formula/constraints] with [concurrent operations/limitations] per [entity/timeframe].]</p>
+            
+        </section>
+
+        <!-- Product Foundation Overview -->
+        <section class="section">
+            <h2>Product Foundation Overview</h2>
+            
+            <div class="context-grid">
+                <div class="context-item">
+                    <h3 data-icon="🎯">Business Problem Solved</h3>
+                    <p>[BUSINESS PROBLEM DESCRIPTION FROM JIRA/KNOWLEDGE HUB ANALYSIS]</p>
+                    <ul>
+                        <li>[PROBLEM SOLUTION 1]</li>
+                        <li>[PROBLEM SOLUTION 2]</li>
+                        <li>[PROBLEM SOLUTION 3]</li>
+                        <li>[PROBLEM SOLUTION 4]</li>
+                    </ul>
+                </div>
+
+                <div class="context-item">
+                    <h3 data-icon="💰">Revenue Impact</h3>
+                    <p>[BUSINESS VALUE DESCRIPTION FROM ANALYSIS]</p>
+                    <ul>
+                        <li>[BUSINESS VALUE 1]</li>
+                        <li>[BUSINESS VALUE 2]</li>
+                        <li>[BUSINESS VALUE 3]</li>
+                        <li>[BUSINESS VALUE 4]</li>
+                    </ul>
+                </div>
+
+                <div class="context-item">
+                    <h3 data-icon="🏗️">Technical Architecture</h3>
+                    <p>[TECHNICAL ARCHITECTURE FROM ANALYSIS]</p>
+                    <ul>
+                        <li>[TECHNICAL ASPECT 1]</li>
+                        <li>[TECHNICAL ASPECT 2]</li>
+                        <li>[TECHNICAL ASPECT 3]</li>
+                        <li>[TECHNICAL ASPECT 4]</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Complete User Journey Guide -->
+        <section class="user-journey" style="background: rgba(255,255,255,0.95); border-radius: 20px; padding: 40px; margin: 40px 0; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
+            <h2 style="color: #6366f1; margin-bottom: 25px; font-size: 1.8rem;">Complete User Journey Guide</h2>
+            
+            <div class="journey-flow" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 30px 0;">
+                
+                <div class="journey-step" style="background: #f8fafc; border-left: 4px solid #e2e8f0; border-radius: 12px; padding: 25px;">
+                    <h3 style="color: #374151; margin-bottom: 15px; font-size: 1.25rem;">📋 1. Pre-Implementation</h3>
+                    <p style="color: #4b5563; margin-bottom: 15px;"><strong>Essential preparation checklist:</strong></p>
+                    <ul style="color: #000000; list-style: none; padding-left: 0;">
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [PREREQUISITE 1 FROM KNOWLEDGE HUB]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [PREREQUISITE 2 FROM KNOWLEDGE HUB]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [PREREQUISITE 3 FROM ANALYSIS]
+                        </li>
+                    </ul>
+                    <a href="#pre-implementation" style="color: #6366f1; text-decoration: none; font-weight: 600;">Complete checklist →</a>
+                </div>
+
+                <div class="journey-step" style="background: #f8fafc; border-left: 4px solid #e2e8f0; border-radius: 12px; padding: 25px;">
+                    <h3 style="color: #374151; margin-bottom: 15px; font-size: 1.25rem;">🔍 2. Feature Discovery</h3>
+                    <p style="color: #4b5563; margin-bottom: 15px;"><strong>How users find the feature:</strong></p>
+                    <ul style="color: #000000; list-style: none; padding-left: 0;">
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [ACCESS PATH 1 FROM SCREENSHOTS]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [ACCESS PATH 2 FROM SCREENSHOTS]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [ACCESS PATH 3 FROM SCREENSHOTS]
+                        </li>
+                    </ul>
+                    <a href="#discovery-paths" style="color: #6366f1; text-decoration: none; font-weight: 600;">View detailed access paths →</a>
+                </div>
+
+                <div class="journey-step" style="background: #f8fafc; border-left: 4px solid #e2e8f0; border-radius: 12px; padding: 25px;">
+                    <h3 style="color: #374151; margin-bottom: 15px; font-size: 1.25rem;">⚙️ 3. Setup Process</h3>
+                    <p style="color: #4b5563; margin-bottom: 15px;"><strong>Configuration workflow:</strong></p>
+                    <ul style="color: #000000; list-style: none; padding-left: 0;">
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [SETUP STEP 1 FROM SCREENSHOTS]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [SETUP STEP 2 FROM SCREENSHOTS]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [SETUP STEP 3 FROM SCREENSHOTS]
+                        </li>
+                    </ul>
+                    <a href="#setup-flow" style="color: #6366f1; text-decoration: none; font-weight: 600;">Step-by-step guide →</a>
+                </div>
+
+                <div class="journey-step" style="background: #f8fafc; border-left: 4px solid #e2e8f0; border-radius: 12px; padding: 25px;">
+                    <h3 style="color: #374151; margin-bottom: 15px; font-size: 1.25rem;">🎯 4. Feature Usage</h3>
+                    <p style="color: #4b5563; margin-bottom: 15px;"><strong>Daily operational tasks:</strong></p>
+                    <ul style="color: #000000; list-style: none; padding-left: 0;">
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [PRIMARY TASK 1 FROM VERIFICATION]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [PRIMARY TASK 2 FROM VERIFICATION]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [PRIMARY TASK 3 FROM VERIFICATION]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            Advanced Features & Customization: [ENTERPRISE CAPABILITIES FROM JIRA]
+                        </li>
+                    </ul>
+                    <a href="#feature-usage" style="color: #6366f1; text-decoration: none; font-weight: 600;">Usage guide →</a>
+                </div>
+
+                <div class="journey-step" style="background: #f8fafc; border-left: 4px solid #e2e8f0; border-radius: 12px; padding: 25px;">
+                    <h3 style="color: #374151; margin-bottom: 15px; font-size: 1.25rem;">🔧 5. Feature Maintenance</h3>
+                    <p style="color: #4b5563; margin-bottom: 15px;"><strong>Ongoing administrative tasks:</strong></p>
+                    <ul style="color: #000000; list-style: none; padding-left: 0;">
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [MAINTENANCE TASK 1 FROM VERIFICATION]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [MAINTENANCE TASK 2 FROM VERIFICATION]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [MAINTENANCE TASK 3 FROM VERIFICATION]
+                        </li>
+                    </ul>
+                    <a href="#feature-maintenance" style="color: #6366f1; text-decoration: none; font-weight: 600;">Maintenance guide →</a>
+                </div>
+
+
+                <div class="journey-step" style="background: #f8fafc; border-left: 4px solid #e2e8f0; border-radius: 12px; padding: 25px;">
+                    <h3 style="color: #374151; margin-bottom: 15px; font-size: 1.25rem;">💡 6. Feature Gaps and Customer Requests</h3>
+                    <p style="color: #4b5563; margin-bottom: 15px;"><strong>Gaps / Limitations from Jira:</strong></p>
+                    <ul style="color: #000000; list-style: none; padding-left: 0;">
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [GAP/LIMITATION 1 FROM JIRA ANALYSIS]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [GAP/LIMITATION 2 FROM JIRA ANALYSIS]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [CUSTOMER REQUEST 1 FROM JIRA ANALYSIS]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [CUSTOMER REQUEST 2 FROM JIRA ANALYSIS]
+                        </li>
+                    </ul>
+                    <a href="#feature-gaps" style="color: #6366f1; text-decoration: none; font-weight: 600;">Gaps & requests guide →</a>
+                </div>
+
+                <div class="journey-step" style="background: #f8fafc; border-left: 4px solid #e2e8f0; border-radius: 12px; padding: 25px;">
+                    <h3 style="color: #374151; margin-bottom: 15px; font-size: 1.25rem;">🛠️ 7. Support Resources</h3>
+                    <p style="color: #4b5563; margin-bottom: 15px;"><strong>Help & documentation:</strong></p>
+                    <ul style="color: #000000; list-style: none; padding-left: 0;">
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [SUPPORT RESOURCE 1 FROM KNOWLEDGE HUB]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            [SUPPORT RESOURCE 2 FROM KNOWLEDGE HUB]
+                        </li>
+                        <li style="padding: 5px 0; display: flex; align-items: flex-start;">
+                            <span style="color: #374151; margin-right: 10px;">●</span>
+                            Glossary of Terms: [KEY TERMS FROM FEATURE CONTEXT]
+                        </li>
+                    </ul>
+                    <a href="#support-resources" style="color: #6366f1; text-decoration: none; font-weight: 600;">Support guide →</a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 1. Pre-Implementation - Requirements for Setting Up -->
+        <section class="section">
+            <h2>1. Pre-Implementation</h2>
+            <p>[REQUIREMENTS FOR SETTING UP THE FEATURE FROM KNOWLEDGE HUB]</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th width="30%">Prerequisite</th>
+                        <th width="70%">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>[PREREQUISITE 1 NAME]</strong></td>
+                        <td>[PREREQUISITE 1 DESCRIPTION FROM KNOWLEDGE HUB]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>[PREREQUISITE 2 NAME]</strong></td>
+                        <td>[PREREQUISITE 2 DESCRIPTION FROM KNOWLEDGE HUB]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>[PREREQUISITE 3 NAME]</strong></td>
+                        <td>[PREREQUISITE 3 DESCRIPTION FROM ANALYSIS]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 2. Feature Discovery - Access Paths -->
+        <section class="section">
+            <h2>2. Feature Discovery</h2>
+            <p>[NAVIGATION PATHS FOR SETUP, USAGE, AND MAINTENANCE FROM SYSTEM VERIFICATION]</p>
+            
+            <h3>Setup Access Path</h3>
+            <div class="step-card">
+                <h4>[SETUP NAVIGATION PATH FROM SCREENSHOTS]</h4>
+                <p>[DESCRIPTION FROM INTERFACE EVIDENCE]</p>
+            </div>
+            
+            <h3>Usage Access Path</h3>
+            <div class="step-card">
+                <h4>[USAGE NAVIGATION PATH FROM SCREENSHOTS]</h4>
+                <p>[DESCRIPTION FROM INTERFACE EVIDENCE]</p>
+            </div>
+            
+            <h3>Maintenance Access Path</h3>
+            <div class="step-card">
+                <h4>[MAINTENANCE NAVIGATION PATH FROM SCREENSHOTS]</h4>
+                <p>[DESCRIPTION FROM INTERFACE EVIDENCE]</p>
+            </div>
+        </section>
+
+        <!-- 3. Setup Process - Configuration Workflow -->
+        <section class="section">
+            <h2>3. Setup Process</h2>
+            <p>[SETUP WORKFLOW FROM SYSTEM VERIFICATION]</p>
+            
+            <h3>Configuration Step 1: [FIRST ACTION FROM SCREENSHOTS]</h3>
+            <p>[DESCRIPTION BASED ON INTERFACE EVIDENCE]</p>
+            
+            <div class="image-container">
+                <img src="[CONFIGURATION-STEP1-SCREENSHOT].png" alt="[FEATURE] Configuration Interface Step 1">
+                <div class="image-caption">[ACCURATE DESCRIPTION OF CONFIGURATION SHOWN]</div>
+            </div>
+            
+            <h3>Configuration Step 2: [SECOND ACTION FROM SCREENSHOTS]</h3>
+            <p>[DESCRIPTION BASED ON INTERFACE EVIDENCE]</p>
+            
+            <div class="image-container">
+                <img src="[CONFIGURATION-STEP2-SCREENSHOT].png" alt="[FEATURE] Configuration Interface Step 2">
+                <div class="image-caption">[ACCURATE DESCRIPTION OF CONFIGURATION SHOWN]</div>
+            </div>
+            
+            <h3>Configuration Step 3: [THIRD ACTION FROM SCREENSHOTS]</h3>
+            <p>[DESCRIPTION BASED ON INTERFACE EVIDENCE]</p>
+            
+            <div class="image-container">
+                <img src="[CONFIGURATION-STEP3-SCREENSHOT].png" alt="[FEATURE] Configuration Interface Step 3">
+                <div class="image-caption">[ACCURATE DESCRIPTION OF CONFIGURATION SHOWN]</div>
+            </div>
+        </section>
+
+        <!-- 4. Feature Usage - Daily Operations -->
+        <section class="section">
+            <h2>4. Feature Usage</h2>
+            <p>[USER JOURNEY BASED ON TASKS THAT USERS PERFORM FROM SYSTEM VERIFICATION]</p>
+            
+            <h3>Primary Task Flow</h3>
+            <div class="step-card">
+                <h4>[TASK 1 NAME FROM VERIFICATION EVIDENCE]</h4>
+                <p><strong>Task Description:</strong> [DETAILED TASK DESCRIPTION FROM INTERFACE EVIDENCE]</p>
+                <p><strong>UI Elements Involved:</strong> [BUTTONS, FIELDS, DROPDOWNS, TABLES FROM SYSTEM VERIFICATION]</p>
+                <p><strong>System Behavior:</strong> [HOW SYSTEM RESPONDS, VALIDATION RULES, ERROR HANDLING FROM VERIFICATION]</p>
+                <p><strong>User Actions:</strong> [STEP-BY-STEP ACTIONS USER PERFORMS FROM VERIFICATION EVIDENCE]</p>
+                <p><strong>Expected Outcome:</strong> [WHAT HAPPENS WHEN TASK COMPLETES FROM VERIFICATION]</p>
+                
+                <div class="image-container">
+                    <img src="[TASK1-SCREENSHOT].png" alt="[TASK 1] Interface">
+                    <div class="image-caption">[DETAILED EXPLANATION OF UI ELEMENTS VISIBLE IN SCREENSHOT]</div>
+                </div>
+                
+                <!-- Sub-tasks -->
+                <h5>Sub-task 1.1: [SUBTASK 1 NAME FROM VERIFICATION]</h5>
+                <div class="step-card" style="margin-left: 20px; border-left-color: #64748B;">
+                    <p><strong>Task Description:</strong> [DETAILED SUBTASK DESCRIPTION FROM INTERFACE EVIDENCE]</p>
+                    <p><strong>UI Elements Involved:</strong> [SPECIFIC UI COMPONENTS FOR SUBTASK]</p>
+                    <p><strong>User Actions:</strong> [STEP-BY-STEP SUBTASK ACTIONS]</p>
+                    <p><strong>Expected Outcome:</strong> [SUBTASK COMPLETION CRITERIA]</p>
+                    
+                    <div class="image-container">
+                        <img src="[TASK1-SUBTASK1-SCREENSHOT].png" alt="[TASK 1] Sub-task 1.1 Interface">
+                        <div class="image-caption">[DETAILED EXPLANATION OF SUBTASK UI ELEMENTS AND WORKFLOW]</div>
+                    </div>
+                </div>
+                
+                <h5>Sub-task 1.2: [SUBTASK 2 NAME FROM VERIFICATION]</h5>
+                <div class="step-card" style="margin-left: 20px; border-left-color: #64748B;">
+                    <p><strong>Task Description:</strong> [DETAILED SUBTASK DESCRIPTION FROM INTERFACE EVIDENCE]</p>
+                    <p><strong>UI Elements Involved:</strong> [SPECIFIC UI COMPONENTS FOR SUBTASK]</p>
+                    <p><strong>User Actions:</strong> [STEP-BY-STEP SUBTASK ACTIONS]</p>
+                    <p><strong>Expected Outcome:</strong> [SUBTASK COMPLETION CRITERIA]</p>
+                    
+                    <div class="image-container">
+                        <img src="[TASK1-SUBTASK2-SCREENSHOT].png" alt="[TASK 1] Sub-task 1.2 Interface">
+                        <div class="image-caption">[DETAILED EXPLANATION OF SUBTASK UI ELEMENTS AND WORKFLOW]</div>
+                    </div>
+                </div>
+                
+                <h4>✅ Task 1 Success Indicators</h4>
+                <div class="step-card">
+                    <p><strong>[SUCCESS INDICATOR 1 TITLE]:</strong> [DETAILED EXPLANATION OF UI STATE CHANGES - What specific buttons change color/state, what text appears, what elements become enabled/disabled, what visual feedback user receives from system verification testing]</p>
+                </div>
+                <div class="step-card">
+                    <p><strong>[SUCCESS INDICATOR 2 TITLE]:</strong> [COMPREHENSIVE EXPLANATION OF SYSTEM MESSAGES - Exact text of success notifications, where they appear on screen, how long they display, what actions become available after success from system verification evidence]</p>
+                </div>
+                
+                <h4>⚠️ Task 1 Error Scenarios</h4>
+                <div class="warning-box">
+                    <p><strong>[ERROR SCENARIO 1 TITLE]:</strong> [DETAILED EXPLANATION OF ERROR CAUSE AND UI RESPONSE - What triggers this error, exact error message text, where error displays, what UI elements become disabled, how user recovers, workarounds available from system verification testing]</p>
+                </div>
+                <div class="warning-box">
+                    <p><strong>[ERROR SCENARIO 2 TITLE]:</strong> [COMPREHENSIVE EXPLANATION OF VALIDATION FAILURES - What validation rules are triggered, field-level error messages, form submission blocking behavior, required user corrections from system verification evidence]</p>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <h4>[TASK 2 NAME FROM VERIFICATION EVIDENCE]</h4>
+                <p><strong>Task Description:</strong> [DETAILED TASK DESCRIPTION FROM INTERFACE EVIDENCE]</p>
+                <p><strong>UI Elements Involved:</strong> [SPECIFIC UI COMPONENTS FROM SYSTEM VERIFICATION]</p>
+                <p><strong>System Behavior:</strong> [SYSTEM RESPONSES, CALCULATIONS, VALIDATIONS FROM VERIFICATION]</p>
+                <p><strong>User Actions:</strong> [DETAILED STEP-BY-STEP USER WORKFLOW FROM VERIFICATION]</p>
+                <p><strong>Business Logic:</strong> [UNDERLYING BUSINESS RULES FROM SYSTEM VERIFICATION]</p>
+                <p><strong>Expected Outcome:</strong> [SUCCESSFUL COMPLETION CRITERIA FROM VERIFICATION]</p>
+                
+                <div class="image-container">
+                    <img src="[TASK2-SCREENSHOT].png" alt="[TASK 2] Interface">
+                    <div class="image-caption">[COMPREHENSIVE EXPLANATION OF ALL UI ELEMENTS AND THEIR STATES]</div>
+                </div>
+                
+                <!-- Sub-tasks -->
+                <h5>Sub-task 2.1: [SUBTASK 1 NAME FROM VERIFICATION]</h5>
+                <div class="step-card" style="margin-left: 20px; border-left-color: #64748B;">
+                    <p><strong>Task Description:</strong> [DETAILED SUBTASK DESCRIPTION FROM INTERFACE EVIDENCE]</p>
+                    <p><strong>UI Elements Involved:</strong> [SPECIFIC UI COMPONENTS FOR SUBTASK]</p>
+                    <p><strong>User Actions:</strong> [STEP-BY-STEP SUBTASK ACTIONS]</p>
+                    <p><strong>Expected Outcome:</strong> [SUBTASK COMPLETION CRITERIA]</p>
+                    
+                    <div class="image-container">
+                        <img src="[TASK2-SUBTASK1-SCREENSHOT].png" alt="[TASK 2] Sub-task 2.1 Interface">
+                        <div class="image-caption">[DETAILED EXPLANATION OF SUBTASK UI ELEMENTS AND WORKFLOW]</div>
+                    </div>
+                </div>
+                
+                <h5>Sub-task 2.2: [SUBTASK 2 NAME FROM VERIFICATION]</h5>
+                <div class="step-card" style="margin-left: 20px; border-left-color: #64748B;">
+                    <p><strong>Task Description:</strong> [DETAILED SUBTASK DESCRIPTION FROM INTERFACE EVIDENCE]</p>
+                    <p><strong>UI Elements Involved:</strong> [SPECIFIC UI COMPONENTS FOR SUBTASK]</p>
+                    <p><strong>User Actions:</strong> [STEP-BY-STEP SUBTASK ACTIONS]</p>
+                    <p><strong>Expected Outcome:</strong> [SUBTASK COMPLETION CRITERIA]</p>
+                    
+                    <div class="image-container">
+                        <img src="[TASK2-SUBTASK2-SCREENSHOT].png" alt="[TASK 2] Sub-task 2.2 Interface">
+                        <div class="image-caption">[DETAILED EXPLANATION OF SUBTASK UI ELEMENTS AND WORKFLOW]</div>
+                    </div>
+                </div>
+                
+                <h4>✅ Task 2 Success Indicators</h4>
+                <div class="step-card">
+                    <p><strong>[TASK 2 SUCCESS INDICATOR 1 TITLE]:</strong> [DETAILED EXPLANATION OF UI STATE CHANGES - Specific interface elements that change, visual feedback, button color/state transformations, progress indicators, status badges from system verification testing]</p>
+                </div>
+                <div class="step-card">
+                    <p><strong>[TASK 2 SUCCESS INDICATOR 2 TITLE]:</strong> [COMPREHENSIVE EXPLANATION OF SYSTEM MESSAGES - Exact success notification text, toast message appearance, status update locations, confirmation dialog content from system verification evidence]</p>
+                </div>
+                <div class="step-card">
+                    <p><strong>[TASK 2 SUCCESS INDICATOR 3 TITLE]:</strong> [DETAILED EXPLANATION OF DATA UPDATES - Interface data refresh, table row updates, calculated field population, cross-module synchronization from system verification]</p>
+                </div>
+                
+                <h4>⚠️ Task 2 Error Scenarios</h4>
+                <div class="warning-box">
+                    <p><strong>[TASK 2 ERROR SCENARIO 1 TITLE]:</strong> [DETAILED EXPLANATION OF ERROR CAUSE AND UI RESPONSE - Error triggering conditions, exact error message text, UI element blocking behavior, user recovery workflow, system state preservation from system verification testing]</p>
+                </div>
+                <div class="warning-box">
+                    <p><strong>[TASK 2 ERROR SCENARIO 2 TITLE]:</strong> [COMPREHENSIVE EXPLANATION OF VALIDATION FAILURES - Failed validation rules, field-level error highlighting, form submission prevention, user correction guidance from system verification]</p>
+                </div>
+                <div class="warning-box">
+                    <p><strong>[TASK 2 ERROR SCENARIO 3 TITLE]:</strong> [DETAILED EXPLANATION OF SYSTEM CONSTRAINTS - Business rule boundary violations, calculation limits exceeded, access permission restrictions from system verification evidence]</p>
+                </div>
+            </div>
+            
+            <h3>Secondary Task Flow</h3>
+            <div class="step-card">
+                <h4>[SECONDARY TASK NAME FROM VERIFICATION]</h4>
+                <p><strong>Task Description:</strong> [DETAILED DESCRIPTION OF SECONDARY TASK FROM VERIFICATION]</p>
+                <p><strong>UI Elements:</strong> [ALL INTERFACE COMPONENTS DOCUMENTED IN SYSTEM VERIFICATION]</p>
+                <p><strong>System Behavior:</strong> [HOW SYSTEM HANDLES SECONDARY TASKS, ERROR STATES, EDGE CASES]</p>
+                <p><strong>User Actions:</strong> [COMPLETE WORKFLOW FOR SECONDARY TASKS]</p>
+                <p><strong>Integration Points:</strong> [HOW TASK CONNECTS TO OTHER FEATURES FROM VERIFICATION]</p>
+                <p><strong>Validation Rules:</strong> [CONSTRAINTS AND BUSINESS RULES FROM VERIFICATION]</p>
+                
+                <div class="image-container">
+                    <img src="[SECONDARY-TASK-SCREENSHOT].png" alt="[Secondary Task] Interface">
+                    <div class="image-caption">[DETAILED UI ELEMENT EXPLANATION WITH SYSTEM BEHAVIOR CONTEXT]</div>
+                </div>
+                
+                <h4>✅ Secondary Task Success Indicators</h4>
+                <div class="step-card">
+                    <p><strong>[SECONDARY SUCCESS INDICATOR 1 TITLE]:</strong> [DETAILED EXPLANATION OF UI STATE CHANGES - Interface element transformations, visual confirmation signals, status updates, enabled/disabled state changes from system verification testing]</p>
+                </div>
+                <div class="step-card">
+                    <p><strong>[SECONDARY SUCCESS INDICATOR 2 TITLE]:</strong> [COMPREHENSIVE EXPLANATION OF SYSTEM MESSAGES - Notification text, message positioning, display duration, follow-up actions from system verification evidence]</p>
+                </div>
+                <div class="step-card">
+                    <p><strong>[SECONDARY SUCCESS INDICATOR 3 TITLE]:</strong> [DETAILED EXPLANATION OF DATA UPDATES - Database changes reflected in UI, table refreshes, calculated values, cross-feature data synchronization from system verification]</p>
+                </div>
+                
+                <h4>⚠️ Secondary Task Error Scenarios</h4>
+                <div class="warning-box">
+                    <p><strong>[SECONDARY ERROR SCENARIO 1 TITLE]:</strong> [DETAILED EXPLANATION OF ERROR CAUSE AND UI RESPONSE - Triggering conditions, exact error message text, UI element behavior during error, user recovery workflow, system state after error from system verification testing]</p>
+                </div>
+                <div class="warning-box">
+                    <p><strong>[SECONDARY ERROR SCENARIO 2 TITLE]:</strong> [COMPREHENSIVE EXPLANATION OF VALIDATION FAILURES - Failed validation rules, field-specific error messages, form interaction blocking, required user corrections, system guidance provided from system verification]</p>
+                </div>
+                <div class="warning-box">
+                    <p><strong>[SECONDARY ERROR SCENARIO 3 TITLE]:</strong> [DETAILED EXPLANATION OF SYSTEM CONSTRAINTS - Business rule limitations, access permission blocks, data dependency failures, system boundary conditions from system verification evidence]</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Feature Maintenance -->
+        <section class="section">
+            <h2>5. Feature Maintenance</h2>
+            <p>[ONGOING MANAGEMENT TASKS FROM KNOWLEDGE HUB AND VERIFICATION]</p>
+            
+            <h3>Regular Maintenance</h3>
+            
+            <div class="step-card">
+                <h4>Maintenance Task 1: [MAINTENANCE TASK 1 FROM ANALYSIS]</h4>
+                <p>[DETAILED DESCRIPTION OF MAINTENANCE TASK FROM VERIFICATION]</p>
+                <p><strong>Triggers:</strong> [WHAT NECESSITATES NEED FOR THIS MAINTENANCE - System changes, data updates, performance issues, scheduled intervals, user feedback, integration changes]</p>
+                <p><strong>Frequency:</strong> [HOW OFTEN TASK SHOULD BE PERFORMED]</p>
+                <p><strong>UI Access:</strong> [WHERE TO FIND MAINTENANCE CONTROLS]</p>
+                <p><strong>Steps:</strong> [STEP-BY-STEP MAINTENANCE PROCEDURE]</p>
+                
+                <div class="image-container">
+                    <img src="[MAINTENANCE-TASK1-SCREENSHOT].png" alt="Feature Maintenance Task 1 Interface">
+                    <div class="image-caption">[DETAILED EXPLANATION OF MAINTENANCE UI ELEMENTS AND CONTROLS]</div>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <h4>Maintenance Task 2: [MAINTENANCE TASK 2 FROM ANALYSIS]</h4>
+                <p>[DETAILED DESCRIPTION OF MAINTENANCE TASK FROM VERIFICATION]</p>
+                <p><strong>Triggers:</strong> [WHAT NECESSITATES NEED FOR THIS MAINTENANCE - System changes, data updates, performance issues, scheduled intervals, user feedback, integration changes]</p>
+                <p><strong>Frequency:</strong> [HOW OFTEN TASK SHOULD BE PERFORMED]</p>
+                <p><strong>UI Access:</strong> [WHERE TO FIND MAINTENANCE CONTROLS]</p>
+                <p><strong>Steps:</strong> [STEP-BY-STEP MAINTENANCE PROCEDURE]</p>
+                
+                <div class="image-container">
+                    <img src="[MAINTENANCE-TASK2-SCREENSHOT].png" alt="Feature Maintenance Task 2 Interface">
+                    <div class="image-caption">[DETAILED EXPLANATION OF MAINTENANCE UI ELEMENTS AND CONTROLS]</div>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <h4>Maintenance Task 3: [MAINTENANCE TASK 3 FROM ANALYSIS]</h4>
+                <p>[DETAILED DESCRIPTION OF MAINTENANCE TASK FROM VERIFICATION]</p>
+                <p><strong>Triggers:</strong> [WHAT NECESSITATES NEED FOR THIS MAINTENANCE - System changes, data updates, performance issues, scheduled intervals, user feedback, integration changes]</p>
+                <p><strong>Frequency:</strong> [HOW OFTEN TASK SHOULD BE PERFORMED]</p>
+                <p><strong>UI Access:</strong> [WHERE TO FIND MAINTENANCE CONTROLS]</p>
+                <p><strong>Steps:</strong> [STEP-BY-STEP MAINTENANCE PROCEDURE]</p>
+                
+                <div class="image-container">
+                    <img src="[MAINTENANCE-TASK3-SCREENSHOT].png" alt="Feature Maintenance Task 3 Interface">
+                    <div class="image-caption">[DETAILED EXPLANATION OF MAINTENANCE UI ELEMENTS AND CONTROLS]</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Feature Gaps and Customer Requests -->
+        <section class="section">
+            <h2>6. Feature Gaps and Customer Requests</h2>
+            <p>[COMPREHENSIVE LIMITATION OVERVIEW FROM JIRA ANALYSIS AND SYSTEM VERIFICATION]</p>
+            
+            <div class="warning-box">
+                <h4>🚨 Critical Limitations</h4>
+                <ul>
+                    <li>[LIMITATION 1 FROM JIRA ANALYSIS]</li>
+                    <li>[LIMITATION 2 FROM JIRA ANALYSIS]</li>
+                    <li>[LIMITATION 3 FROM JIRA ANALYSIS]</li>
+                </ul>
+            </div>
+            
+            <h3>Product Gaps</h3>
+            <ul>
+                <li>[PRODUCT GAP 1 FROM JIRA ANALYSIS]</li>
+                <li>[PRODUCT GAP 2 FROM JIRA ANALYSIS]</li>
+            </ul>
+            
+            <h3>Common Platform Issues</h3>
+            <div class="step-card">
+                <h4>[COMMON ISSUE 1 FROM JIRA]</h4>
+                <p>[ISSUE DESCRIPTION AND FREQUENCY]</p>
+            </div>
+        </section>
+
+        <!-- 7. Support Resources -->
+        <section class="section">
+            <h2>7. Support Resources</h2>
+            <p>[SUPPORT INFORMATION AND RESOURCES FROM KNOWLEDGE HUB AND VERIFICATION]</p>
+            
+            <h3>Getting Help</h3>
+            <ul>
+                <li>[SUPPORT CHANNEL 1 FROM KNOWLEDGE HUB]</li>
+                <li>[SUPPORT CHANNEL 2 FROM KNOWLEDGE HUB]</li>
+                <li>[SUPPORT CHANNEL 3 FROM KNOWLEDGE HUB]</li>
+            </ul>
+            
+            <h3>Related Documentation & Help Articles</h3>
+            <ul>
+                <li><a href="#how-feature-works" style="color: #6366f1; text-decoration: none; font-weight: 600;">How this feature works</a> - [DETAILED EXPLANATION OF FEATURE MECHANICS FROM KNOWLEDGE HUB]</li>
+                <li><a href="[HELP-ARTICLE-1-LINK]" style="color: #6366f1; text-decoration: none; font-weight: 600;">[RELATED DOC 1 TITLE FROM KNOWLEDGE HUB]</a> - [BRIEF DESCRIPTION OF HELP ARTICLE CONTENT]</li>
+                <li><a href="[HELP-ARTICLE-2-LINK]" style="color: #6366f1; text-decoration: none; font-weight: 600;">[RELATED DOC 2 TITLE FROM KNOWLEDGE HUB]</a> - [BRIEF DESCRIPTION OF HELP ARTICLE CONTENT]</li>
+                <li><a href="[HELP-ARTICLE-3-LINK]" style="color: #6366f1; text-decoration: none; font-weight: 600;">[RELATED DOC 3 TITLE FROM KNOWLEDGE HUB]</a> - [BRIEF DESCRIPTION OF HELP ARTICLE CONTENT]</li>
+            </ul>
+            
+            <h3>Troubleshooting</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th width="40%">Common Issue</th>
+                        <th width="60%">Solution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>[ISSUE 1 FROM JIRA]</strong></td>
+                        <td>[SOLUTION FROM JIRA/VERIFICATION]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>[ISSUE 2 FROM JIRA]</strong></td>
+                        <td>[SOLUTION FROM JIRA/VERIFICATION]</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Glossary and Key Terms</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th width="30%">Term</th>
+                        <th width="70%">Definition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>[TERM 1]</strong></td>
+                        <td>[DEFINITION FROM FEATURE CONTEXT]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>[TERM 2]</strong></td>
+                        <td>[DEFINITION FROM FEATURE CONTEXT]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>[TERM 3]</strong></td>
+                        <td>[DEFINITION FROM SYSTEM VERIFICATION]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- BUILD ADDITIONAL SECTIONS BASED ON FEATURE COMPLEXITY AND ANALYSIS DATA -->
+        <!-- ALWAYS VALIDATE CONTENT AGAINST SCREENSHOT EVIDENCE -->
+        <!-- NEVER INCLUDE TEMPLATE PLACEHOLDER CONTENT -->
+    </div>
+</body>
+</html>
