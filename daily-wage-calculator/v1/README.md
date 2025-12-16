@@ -1,6 +1,6 @@
-# User Guide: daily wage calculator
+ # User Guide: daily wage calculator
 
-  Generated: 2025-12-16T12:45:16.420Z
+  Generated: 2025-12-16T19:43:53.249Z
   Version: v1
   Status: In Progress
 
