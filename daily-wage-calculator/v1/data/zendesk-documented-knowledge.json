@@ -2,266 +2,516 @@
   "source": "zendesk",
   "feature_name": "Daily Wage Calculator",
   "analysis_date": "2025-12-16",
-  "documented_knowledge": {
-    "job_to_be_done": [
-      {
-        "statement": "Adjust and calculate an employee's salary proportionally based on the actual days worked, affecting first salary and end-of-service settlement",
-        "source_article_ids": [
-          "Salary Proration"
-        ]
-      }
-    ],
-    "navigation_paths": [
-      {
-        "path": "Go to Settings > Payroll > Daily wage calculation",
-        "context": "From Zendesk documentation",
-        "source_article_ids": [
-          "Salary Proration"
-        ]
-      },
-      {
-        "path": "Select calculation bases (custom days, calendar days, or working days)",
-        "context": "From Zendesk documentation",
-        "source_article_ids": [
-          "Salary Proration"
-        ]
-      },
-      {
-        "path": "Save changes",
-        "context": "From Zendesk documentation",
-        "source_article_ids": [
-          "Salary Proration"
-        ]
-      },
-      {
-        "path": "Reject and resave prorated salary transactions if needed",
-        "context": "From Zendesk documentation",
-        "source_article_ids": [
-          "Salary Proration"
-        ]
-      }
-    ]
-  },
+  "documented_knowledge": {},
   "claims_to_validate": [
     {
-      "claim_id": "DWC_001",
-      "claim_statement": "Daily pay is calculated by dividing total salary (basic + allowance) by number of actual working days",
-      "validation_type": "computational",
-      "expected_inputs": [
-        "total_monthly_salary",
-        "total_working_days_in_month"
-      ]
+      "claim_id": "daily_pay_calculation",
+      "claim_type": "calculation_rule",
+      "claim_text": "Daily pay is calculated by dividing total salary by actual working days",
+      "validation_hint": "Verify calculation method with payroll team",
+      "source_article_ids": [
+        14154746403601
+      ],
+      "risk_of_being_outdated": "low"
     },
     {
-      "claim_id": "DWC_002",
-      "claim_statement": "Working days can be calculated using either calendar days (30 days) or actual working days (e.g., 22 days)",
-      "validation_type": "configuration",
-      "expected_variations": [
-        "calendar_days_policy",
-        "working_days_policy"
-      ]
+      "claim_id": "daily_wage_calculation_method",
+      "claim_type": "system_behavior",
+      "claim_text": "Daily wage can be calculated using calendar days, working days, or custom days",
+      "validation_hint": "Verify configuration options in the Daily Wage Calculator",
+      "source_article_ids": [
+        14243704039185
+      ],
+      "risk_of_being_outdated": "low"
     },
     {
-      "claim_id": "DWC_003",
-      "claim_statement": "Public holidays must be subtracted from total working days when calculating daily pay rate",
-      "validation_type": "logical",
-      "expected_conditions": [
-        "holiday_list_available",
-        "working_days_adjusted_for_holidays"
-      ]
-    },
-    {
-      "claim_id": "DWC_004",
-      "claim_statement": "Daily pay calculation process requires approval of unpaid leave request before salary deduction",
-      "validation_type": "workflow",
-      "expected_sequence": [
-        "leave_request_submission",
-        "leave_request_approval",
-        "daily_pay_calculation",
-        "payroll_deduction"
-      ]
-    },
-    {
-      "claim_id": "DWC_005",
-      "claim_statement": "Daily pay deduction interacts with payroll, leave management, and employee record systems",
-      "validation_type": "integration",
-      "expected_system_interactions": [
-        "payroll_system",
-        "leave_management_system",
-        "employee_records_system"
-      ]
-    },
-    {
-      "claim_id": "DWC_001",
-      "claim_statement": "Daily wage calculator can be accessed from Settings → Payroll → Daily Wage Calculation",
-      "validation_type": "navigation_path"
-    },
-    {
-      "claim_id": "DWC_002",
-      "claim_statement": "Calculation base can be selected from calendar days, working days, or custom days",
-      "validation_type": "dropdown_selection"
-    },
-    {
-      "claim_id": "DWC_003",
-      "claim_statement": "Salary components can include basic salary, basic salary plus allowances, or allowances only",
-      "validation_type": "multi_select"
-    },
-    {
-      "claim_id": "DWC_004",
-      "claim_statement": "Calendar days calculation uses total month days (e.g., 31 in January, 28 in February)",
-      "validation_type": "calculation_logic"
-    },
-    {
-      "claim_id": "DWC_005",
-      "claim_statement": "Working days exclude weekends and public holidays",
-      "validation_type": "calculation_exclusion"
-    },
-    {
-      "claim_id": "DWC_006",
-      "claim_statement": "Most UAE and KSA companies use 30 custom days for wage calculation",
-      "validation_type": "regional_compliance"
-    },
-    {
-      "claim_id": "DWC_007",
-      "claim_statement": "Daily wage calculator supports salary proration, leave encashment, and unpaid leave deduction",
-      "validation_type": "feature_coverage"
-    },
-    "Super admin can select calculation basis for salary proration",
-    "Calculation bases include custom days, calendar days, and working days",
-    "Changes to proration affect all active (unpaid) payroll amounts",
-    "Open payroll months require manual transaction rejection before saving new settings",
-    "Salary proration impacts first salary and end-of-service settlement"
+      "claim_id": "proration_method_selection",
+      "claim_type": "calculation_rule",
+      "claim_text": "Super admins can select between custom days, calendar days, and working days for salary proration",
+      "validation_hint": "Verify available calculation bases in Daily Wage Calculator",
+      "source_article_ids": [
+        14243760419089
+      ],
+      "risk_of_being_outdated": "low"
+    }
   ],
   "raw_articles": [
     {
+      "analysis_date": "2025-12-16",
       "feature_name": "Daily Wage Calculator",
-      "claims_to_validate": [
-        {
-          "claim_id": "DWC_001",
-          "claim_statement": "Daily pay is calculated by dividing total salary (basic + allowance) by number of actual working days",
-          "validation_type": "computational",
-          "expected_inputs": [
-            "total_monthly_salary",
-            "total_working_days_in_month"
-          ]
-        },
-        {
-          "claim_id": "DWC_002",
-          "claim_statement": "Working days can be calculated using either calendar days (30 days) or actual working days (e.g., 22 days)",
-          "validation_type": "configuration",
-          "expected_variations": [
-            "calendar_days_policy",
-            "working_days_policy"
-          ]
-        },
-        {
-          "claim_id": "DWC_003",
-          "claim_statement": "Public holidays must be subtracted from total working days when calculating daily pay rate",
-          "validation_type": "logical",
-          "expected_conditions": [
-            "holiday_list_available",
-            "working_days_adjusted_for_holidays"
-          ]
-        },
-        {
-          "claim_id": "DWC_004",
-          "claim_statement": "Daily pay calculation process requires approval of unpaid leave request before salary deduction",
-          "validation_type": "workflow",
-          "expected_sequence": [
-            "leave_request_submission",
-            "leave_request_approval",
-            "daily_pay_calculation",
-            "payroll_deduction"
-          ]
-        },
-        {
-          "claim_id": "DWC_005",
-          "claim_statement": "Daily pay deduction interacts with payroll, leave management, and employee record systems",
-          "validation_type": "integration",
-          "expected_system_interactions": [
-            "payroll_system",
-            "leave_management_system",
-            "employee_records_system"
-          ]
-        }
-      ]
-    },
-    {
-      "feature_name": "Daily Wage Calculator",
-      "claims_to_validate": [
-        {
-          "claim_id": "DWC_001",
-          "claim_statement": "Daily wage calculator can be accessed from Settings → Payroll → Daily Wage Calculation",
-          "validation_type": "navigation_path"
-        },
-        {
-          "claim_id": "DWC_002",
-          "claim_statement": "Calculation base can be selected from calendar days, working days, or custom days",
-          "validation_type": "dropdown_selection"
-        },
-        {
-          "claim_id": "DWC_003",
-          "claim_statement": "Salary components can include basic salary, basic salary plus allowances, or allowances only",
-          "validation_type": "multi_select"
-        },
-        {
-          "claim_id": "DWC_004",
-          "claim_statement": "Calendar days calculation uses total month days (e.g., 31 in January, 28 in February)",
-          "validation_type": "calculation_logic"
-        },
-        {
-          "claim_id": "DWC_005",
-          "claim_statement": "Working days exclude weekends and public holidays",
-          "validation_type": "calculation_exclusion"
-        },
-        {
-          "claim_id": "DWC_006",
-          "claim_statement": "Most UAE and KSA companies use 30 custom days for wage calculation",
-          "validation_type": "regional_compliance"
-        },
-        {
-          "claim_id": "DWC_007",
-          "claim_statement": "Daily wage calculator supports salary proration, leave encashment, and unpaid leave deduction",
-          "validation_type": "feature_coverage"
-        }
-      ]
-    },
-    {
-      "feature_name": "Salary Proration",
-      "documentation_knowledge_pack": {
-        "job_to_be_done": "Adjust and calculate an employee's salary proportionally based on the actual days worked, affecting first salary and end-of-service settlement",
-        "primary_user_persona": "Super admin",
-        "key_actions_steps": [
-          "Go to Settings > Payroll > Daily wage calculation",
-          "Select calculation bases (custom days, calendar days, or working days)",
-          "Save changes",
-          "Reject and resave prorated salary transactions if needed"
+      "metadata": {
+        "source": "zendesk_articles",
+        "total_articles": 1,
+        "article_ids": [
+          14154746403601
         ],
-        "rules_and_constraints": [
-          "Changes will affect all active (unpaid) amounts in payroll table",
-          "When payroll month is open, super admin must reject existing prorated salary transactions before saving new proration settings"
+        "doc_categories": {
+          "feature_documentation": 1
+        },
+        "recency_assessment": "fresh"
+      },
+      "documented_knowledge": {
+        "job_to_be_done": [
+          {
+            "statement": "Calculate and deduct daily pay for employees taking unpaid leave by determining appropriate salary reduction",
+            "source_article_ids": [
+              14154746403601
+            ]
+          }
         ],
-        "data_inputs": [
-          "Calculation basis selection: custom days, calendar days, or working days"
+        "primary_personas": [
+          {
+            "persona": "HR personnel and payroll administrators",
+            "source_article_ids": [
+              14154746403601
+            ]
+          }
         ],
-        "outputs": [
-          "Updated salary calculations proportionally adjusted based on selected calculation method"
+        "navigation_paths": [
+          {
+            "path": "Unpaid Leave Request → Approval → Pay Deduction Calculation",
+            "context": "Leave management and payroll processing",
+            "source_article_ids": [
+              14154746403601
+            ]
+          }
         ],
-        "edge_cases": [
-          "When payroll month is open and prorated salary transactions exist, super admin must manually reject and resave transactions"
+        "prerequisites": [
+          {
+            "requirement": "Approved unpaid leave request",
+            "source_article_ids": [
+              14154746403601
+            ]
+          }
         ],
-        "feature_interactions": [
-          "Interacts with Payroll system",
-          "Interacts with Daily Wage Calculator (DWC)",
-          "Affects active payroll table transactions"
+        "data_inputs_required": [
+          {
+            "input": "Employee total salary",
+            "details": "Basic salary plus allowances",
+            "source_article_ids": [
+              14154746403601
+            ]
+          },
+          {
+            "input": "Working days policy",
+            "details": "Calendar days (30) or working days (22)",
+            "source_article_ids": [
+              14154746403601
+            ]
+          }
+        ],
+        "outputs_results": [
+          {
+            "output": "Daily pay rate",
+            "details": "Salary divided by actual working days",
+            "source_article_ids": [
+              14154746403601
+            ]
+          },
+          {
+            "output": "Payroll deduction",
+            "details": "Automatically generated in payroll system",
+            "source_article_ids": [
+              14154746403601
+            ]
+          }
+        ],
+        "procedures": [
+          {
+            "procedure_name": "Daily Pay Calculation",
+            "when_to_use": "For unpaid leave salary deductions",
+            "steps": [
+              "Determine leave policy type (calendar or working days)",
+              "Calculate total working days",
+              "Subtract public holidays",
+              "Divide total salary by actual working days",
+              "Generate payroll deduction"
+            ],
+            "source_article_ids": [
+              14154746403601
+            ]
+          }
+        ],
+        "rules_limitations_constraints": [
+          {
+            "rule": "Public holidays are subtracted from working days",
+            "source_article_ids": [
+              14154746403601
+            ]
+          },
+          {
+            "rule": "Daily pay = Total Salary / Actual Working Days",
+            "source_article_ids": [
+              14154746403601
+            ]
+          }
+        ],
+        "edge_cases_warnings": [
+          {
+            "edge_case_or_warning": "Public holidays impact working days calculation",
+            "source_article_ids": [
+              14154746403601
+            ]
+          }
+        ],
+        "glossary_terms": [
+          {
+            "term": "Daily Pay",
+            "definition_from_docs": "Salary Amount (Basic + Allowance) divided by number of actual working days in the month",
+            "source_article_ids": [
+              14154746403601
+            ]
+          }
         ]
       },
       "claims_to_validate": [
-        "Super admin can select calculation basis for salary proration",
-        "Calculation bases include custom days, calendar days, and working days",
-        "Changes to proration affect all active (unpaid) payroll amounts",
-        "Open payroll months require manual transaction rejection before saving new settings",
-        "Salary proration impacts first salary and end-of-service settlement"
+        {
+          "claim_id": "daily_pay_calculation",
+          "claim_type": "calculation_rule",
+          "claim_text": "Daily pay is calculated by dividing total salary by actual working days",
+          "validation_hint": "Verify calculation method with payroll team",
+          "source_article_ids": [
+            14154746403601
+          ],
+          "risk_of_being_outdated": "low"
+        }
+      ],
+      "source_articles_index": [
+        {
+          "article_id": 14154746403601,
+          "title": "How is daily pay calculated",
+          "article_url": "https://bayzathelp.zendesk.com/hc/en-gb/articles/14154746403601-How-is-daily-pay-calculated",
+          "doc_category": "feature_documentation",
+          "keywords": [
+            "unpaid leave",
+            "daily pay calculation",
+            "salary deduction",
+            "working days",
+            "calendar days",
+            "public holidays",
+            "payroll"
+          ],
+          "article_summary": "Explains how daily pay is calculated for unpaid leave, including working days policy, salary division, and public holiday considerations"
+        }
+      ]
+    },
+    {
+      "analysis_date": "2025-12-16",
+      "feature_name": "Daily Wage Calculator",
+      "metadata": {
+        "source": "zendesk_articles",
+        "total_articles": 1,
+        "article_ids": [
+          14243704039185
+        ],
+        "doc_categories": {
+          "feature_introduction": 1
+        },
+        "recency_assessment": "fresh"
+      },
+      "documented_knowledge": {
+        "job_to_be_done": [
+          {
+            "statement": "Provide a flexible and customizable method for calculating daily wages, including salary proration, leave encashment, and unpaid leave deductions",
+            "source_article_ids": [
+              14243704039185
+            ]
+          }
+        ],
+        "primary_personas": [
+          {
+            "persona": "Superadmin",
+            "source_article_ids": [
+              14243704039185
+            ]
+          },
+          {
+            "persona": "Payroll table managers",
+            "source_article_ids": [
+              14243704039185
+            ]
+          },
+          {
+            "persona": "Transaction processors",
+            "source_article_ids": [
+              14243704039185
+            ]
+          }
+        ],
+        "navigation_paths": [
+          {
+            "path": "Settings → Payroll → Daily Wage Calculation",
+            "context": "Accessing the Daily Wage Calculator",
+            "source_article_ids": [
+              14243704039185
+            ]
+          }
+        ],
+        "prerequisites": [
+          {
+            "requirement": "Company's public holiday calendar must be configured",
+            "source_article_ids": [
+              14243704039185
+            ]
+          }
+        ],
+        "data_inputs_required": [
+          {
+            "input": "Calculation base",
+            "details": "Options include calendar days, working days, or custom days",
+            "source_article_ids": [
+              14243704039185
+            ]
+          },
+          {
+            "input": "Salary components",
+            "details": "Can include basic salary, basic salary plus allowances, or allowances only",
+            "source_article_ids": [
+              14243704039185
+            ]
+          }
+        ],
+        "outputs_results": [
+          {
+            "output": "Daily wage rates",
+            "details": "Used for salary proration, leave encashment, and unpaid leave deduction",
+            "source_article_ids": [
+              14243704039185
+            ]
+          }
+        ],
+        "procedures": [
+          {
+            "procedure_name": "Daily Wage Calculation",
+            "when_to_use": "For prorating salaries, calculating leave encashment, and deducting unpaid leave",
+            "steps": [
+              "Access Daily Wage Calculator from Settings → Payroll → Daily Wage Calculation",
+              "Select calculation base (calendar days, working days, or custom days)",
+              "Choose salary components to include in calculation",
+              "Apply calculation"
+            ],
+            "source_article_ids": [
+              14243704039185
+            ]
+          }
+        ],
+        "rules_limitations_constraints": [
+          {
+            "rule": "Calculation can exclude weekends and public holidays",
+            "source_article_ids": [
+              14243704039185
+            ]
+          },
+          {
+            "rule": "Most UAE and KSA companies use 30 custom days to align with labor law",
+            "source_article_ids": [
+              14243704039185
+            ]
+          }
+        ],
+        "edge_cases_warnings": [
+          {
+            "edge_case_or_warning": "Calculation varies depending on month length (e.g., 31 days in January, 28 days in February)",
+            "source_article_ids": [
+              14243704039185
+            ]
+          }
+        ],
+        "glossary_terms": [
+          {
+            "term": "Calendar days",
+            "definition_from_docs": "The number of days in a given month",
+            "source_article_ids": [
+              14243704039185
+            ]
+          },
+          {
+            "term": "Working days",
+            "definition_from_docs": "Only business days are counted, excluding weekends and public holidays",
+            "source_article_ids": [
+              14243704039185
+            ]
+          },
+          {
+            "term": "Custom days",
+            "definition_from_docs": "Allows payroll table managers to set calculation base according to company policies",
+            "source_article_ids": [
+              14243704039185
+            ]
+          }
+        ]
+      },
+      "claims_to_validate": [
+        {
+          "claim_id": "daily_wage_calculation_method",
+          "claim_type": "system_behavior",
+          "claim_text": "Daily wage can be calculated using calendar days, working days, or custom days",
+          "validation_hint": "Verify configuration options in the Daily Wage Calculator",
+          "source_article_ids": [
+            14243704039185
+          ],
+          "risk_of_being_outdated": "low"
+        }
+      ],
+      "source_articles_index": [
+        {
+          "article_id": 14243704039185,
+          "title": "Introduction to daily wage calculator",
+          "article_url": "https://bayzathelp.zendesk.com/hc/en-gb/articles/14243704039185-Introduction-to-daily-wage-calculator",
+          "doc_category": "feature_introduction",
+          "keywords": [
+            "daily wage",
+            "salary proration",
+            "leave encashment",
+            "unpaid leave",
+            "calculation base",
+            "calendar days",
+            "working days",
+            "custom days",
+            "payroll",
+            "labor law"
+          ],
+          "article_summary": "Introduces a new Daily Wage calculator with flexible calculation options for salary proration, leave encashment, and unpaid leave deductions."
+        }
+      ]
+    },
+    {
+      "analysis_date": "2025-12-16",
+      "feature_name": "Salary Proration",
+      "metadata": {
+        "source": "zendesk_articles",
+        "total_articles": 1,
+        "article_ids": [
+          14243760419089
+        ],
+        "doc_categories": {
+          "feature_documentation": 1
+        },
+        "recency_assessment": "fresh"
+      },
+      "documented_knowledge": {
+        "job_to_be_done": [
+          {
+            "statement": "Adjust and calculate an employee's salary proportionally based on the actual days worked",
+            "source_article_ids": [
+              14243760419089
+            ]
+          }
+        ],
+        "primary_personas": [
+          {
+            "persona": "Super admin",
+            "source_article_ids": [
+              14243760419089
+            ]
+          }
+        ],
+        "navigation_paths": [
+          {
+            "path": "Settings > Payroll > Daily wage calculation",
+            "context": "Updating salary proration settings",
+            "source_article_ids": [
+              14243760419089
+            ]
+          }
+        ],
+        "data_inputs_required": [
+          {
+            "input": "Calculation basis",
+            "details": "Choose from: custom days, calendar days, or working days",
+            "source_article_ids": [
+              14243760419089
+            ]
+          }
+        ],
+        "outputs_results": [
+          {
+            "output": "Updated salary calculations",
+            "details": "Proportionally adjusts employee compensation based on selected calculation method",
+            "source_article_ids": [
+              14243760419089
+            ]
+          }
+        ],
+        "procedures": [
+          {
+            "procedure_name": "Update Salary Proration",
+            "when_to_use": "Adjusting employee salary calculations",
+            "steps": [
+              "Go to Settings > Payroll > Daily wage calculation",
+              "Select calculation basis (custom days, calendar days, or working days)",
+              "Save changes",
+              "If payroll month is open, reject existing prorated salary transactions",
+              "Confirm new proration settings"
+            ],
+            "source_article_ids": [
+              14243760419089
+            ]
+          }
+        ],
+        "rules_limitations_constraints": [
+          {
+            "rule": "Changes affect all active (unpaid) amounts in payroll table",
+            "source_article_ids": [
+              14243760419089
+            ]
+          },
+          {
+            "rule": "Super admin must reject existing prorated salary transactions before saving new proration settings when payroll month is open",
+            "source_article_ids": [
+              14243760419089
+            ]
+          }
+        ],
+        "edge_cases_warnings": [
+          {
+            "edge_case_or_warning": "When payroll month is open and prorated salary transactions exist, super admin must manually reject and resave transactions",
+            "source_article_ids": [
+              14243760419089
+            ]
+          }
+        ],
+        "glossary_terms": [
+          {
+            "term": "Daily Wage Calculator (DWC)",
+            "definition_from_docs": "Tool for calculating prorated salaries with different calculation bases",
+            "source_article_ids": [
+              14243760419089
+            ]
+          }
+        ]
+      },
+      "claims_to_validate": [
+        {
+          "claim_id": "proration_method_selection",
+          "claim_type": "calculation_rule",
+          "claim_text": "Super admins can select between custom days, calendar days, and working days for salary proration",
+          "validation_hint": "Verify available calculation bases in Daily Wage Calculator",
+          "source_article_ids": [
+            14243760419089
+          ],
+          "risk_of_being_outdated": "low"
+        }
+      ],
+      "source_articles_index": [
+        {
+          "article_id": 14243760419089,
+          "title": "Salary Proration",
+          "article_url": "https://bayzathelp.zendesk.com/hc/en-gb/articles/14243760419089-Salary-Proration",
+          "doc_category": "feature_documentation",
+          "keywords": [
+            "daily wage calculator",
+            "payroll",
+            "salary calculation",
+            "prorated salary",
+            "super admin",
+            "calculation bases",
+            "working days",
+            "calendar days",
+            "custom days"
+          ],
+          "article_summary": "Explains how super admins can update salary proration by selecting calculation bases in the Daily Wage Calculator, affecting employee first salary and end-of-service settlement"
+        }
       ]
     }
   ],
