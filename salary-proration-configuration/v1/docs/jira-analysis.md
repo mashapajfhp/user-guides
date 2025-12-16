@@ -4,9 +4,9 @@
 
   ## Operational Reality Overview
   Based on comprehensive Jira ticket analysis, the Salary Proration Configuration represents a critical payroll feature with 
-  significant operational complexity and customer impact. Customer requests and issues reveal that organizations primarily need this feature to configure different salary proration methods for multiple employee categories, and calculate accurate pro-rated leave encashment for mid-month employee departures, and configure daily rate for leave encashment directly within daily rate calculator, and visualize employee attendance patterns through calendar interface, and add contextual comments to attendance records, and notify employees/managers about attendance events, and accurately track employee check-in times across different timezones, and generate comprehensive attendance records for time tracking and legal documentation, and verify consistent attendance records across different reporting modules, and log daily work attendance, and automate absence deduction request generation for employees with no attendance record, and configure leave balance accrual to match organizational policy, and successfully log into bayzat admin platform, and accurately track employee attendance across different shift configurations, and correct historical biometric attendance data, and configure leave encashment calculation using only basic salary, and track and approve employee leave requests, and calculate unpaid leave deductions accurately, and generate comprehensive attendance reports with complete location details, and understand precise leave balance calculation method, and track document expiration dates, and receive timely document expiry notifications, and configure different salary proration methods for distinct employee groups, and migrate leave accrual between work anniversary and calendar year cycles, and configure daily leave proration for accurate end-of-service calculations, and view daily motivational quotes across different platforms, and automate salary calculation based on precise working days, and selectively disable specific system-generated newsfeed posts, and achieve consistent daily wage formula across leave and payroll modules, and synchronize attendance records across different systems, and accurately calculate unpaid leave deductions, and track detailed employee work hours across multiple shift segments, and accurately calculate prorated employer social security contributions for employees offboarded mid-month, and calculate accurate end of service gratuity considering exact service days, and calculate accurate pro-rated salary for employees leaving mid-month, and understand precise eos gratuity calculation methodology, and accurately calculate end-of-service daily wage, and accurately calculate prorated salary for mid-month employee departures, and process end-of-service settlements with precise salary deductions, and calculate accurate leave balance during employee exit, and calculate accurate end of service gratuity for employees, and understand gratuity calculation logic and rules, and process employee final settlement accurately, and submit end of service transaction for departing employee, and calculate accurate prorated salary for mid-month employee joining, and filter attendance reports to investigate out-of-office check-ins, and accurate unpaid leave daily rate calculations reflecting historical salary rates, and accurately calculate end-of-service gratuity for employees, and accurately calculate end-of-service gratuity payment, and understand precise gratuity calculation methodology, and calculate precise end-of-service gratuity payments, and accurately calculate gratuity for limited contract employees, and understand precise leave balance calculation methodology, and change payroll cycle from calendar month to custom date range, and understand unpaid leave deduction calculations, and calculate precise employee end-of-service gratuity benefits, and generate accurate payroll documentation with precise gosi deduction calculations, and generate accurate leave encashment for mid-month employee departures, and obtain accurate prorated leave salary based on actual leave duration, and generate accurate leave salary accrual reports with correct daily wage calculations, and understand salary deduction calculations for different leave types, and accurately calculate unpaid leave deductions based on current salary configuration, and correct duplicate variable pay entries after payroll cycle closure, and accurately calculate prorated leave salary, and process accurate end of service compensation for employees with complex employment histories, and generate accurate leave salary accrual report using custom salary formulas, and precise mid-month salary calculation for employee departures, and process unpaid leave deductions accurately during payroll cycles, and manage leave requests during employee offboarding, and calculate leave accruals using full salary before deductions, and compute daily leave rates based on working days, not calendar days, and understand projected leave salary calculations, and understand precise leave balance calculations, and verify accurate leave allowance across work cycles, and understand detailed leave balance calculation across multiple cycles, and obtain accurate daily leave accrual across all leave policy types, and accurately calculate prorated salary during leave periods, and configure flexible leave salary accrual calculation methods, and understand monthly leave salary accrual calculations, and verify cumulative leave salary totals across months, and calculate accurate leave salary using custom daily wage formulas, and receive accurate financial compensation for approved leave periods, and accurately calculate leave salary across multiple payroll months, and configure precise leave salary calculations with component-level control, and configure complex leave salary policies with variable daily rate calculations, and map different leave policies to specific employee groups, and configure leave policies that pay only specific salary components during leave, and configure different salary proration formulas for distinct employee groups, and implement daily pro-ration of air ticket allowances, and understand salary proration calculation logic, and understand precise timing of gosi percentage data retrieval, and understand precise gratuity calculation formula, and manually reduce employee's leave balance due to incorrect initial approval, and understand leave salary calculation methodology, and accurately calculate prorated salary for offboarded employees, and calculate accurate partial month salary for employees joining mid-month, and calculate accurate prorated salary during employee resignation/offboarding, and calculate accurate prorated salary for mid-month employee terminations, and filter processed time and pay adjustments by destination (time off vs payroll), and automatically calculate total daily work hours across multiple activities, and log daily work tasks with accurate date tracking, and modify automatically generated leave deductions in eos calculations, and change daily rate calculation basis from basic to gross salary, and accurately track and deduct unpaid leave days from leave allowance, and recalculate unpaid leave deductions without generating duplicate entries, and accurately represent unpaid leave days and deductions on payslips, and accurately calculate unpaid leave salary deductions, and understand unpaid leave deduction calculations, and accurately calculate daily wage deductions for unpaid and half-paid leaves, and accurately calculate unpaid leave compensation across different policy types, and calculate precise leave salary accruals using calendar-based daily wage computations, and automate employee absence notifications, and automate employee absence notification process, and accurately calculate unpaid leave salary deductions, and obtain accurate unpaid leave salary deductions based on specific leave policy configurations, and accurately calculate unpaid leave deductions across different payroll months. Real-world usage patterns show that 103 distinct workflow scenarios have been documented through customer 
-  interactions. Support analysis identifies 97 known technical issues requiring customer workarounds or manual interventions. 
-  The platform currently implements 106 specific system constraints that impact customer workflows and 
+  significant operational complexity and customer impact. Customer requests and issues reveal that organizations primarily need this feature to configure different salary proration methods for distinct employee categories, and calculate accurate pro-rated leave encashment for employees departing mid-month, and configure daily rate for leave encashment directly in calculator, and obtain a visual representation of employee attendance, and add contextual comments to employee attendance records, and receive mobile push notifications for attendance comments, and accurately track employee attendance across different time zones, and generate comprehensive attendance documentation for legal and administrative purposes, and verify consistent attendance record details across different reporting views, and log daily work attendance, and automate absence deduction generation for employees with no attendance record, and configure leave balance accrual to match organizational policy, and successfully log into bayzat administrative platform, and accurately track employee leave status across complex shift schedules, and correct biometric attendance data for specific date ranges, and configure leave encashment calculation compliant with labor law, and track and approve employee leave requests, and understand leave request status changes, and generate comprehensive attendance reports with complete location details, and understand precise leave balance calculation method, and track company and employee document lifecycles, and receive timely notifications about document expirations, and configure different salary proration methods for distinct employee groups, and migrate leave accrual between different cycle types while maintaining accurate balance calculations, and configure daily leave accrual for precise balance tracking, and view daily motivational quotes across mobile and desktop platforms, and automate salary calculation based on precise working days, and selectively disable specific system posts in newsfeed, and achieve consistent daily wage formula across leave and payroll modules, and synchronize attendance records across different systems, and accurately calculate unpaid leave salary deductions, and understand daily attendance records for employees with split shifts, and accurately calculate prorated employer social security contributions during employee offboarding, and calculate accurate end of service gratuity for employees, and calculate accurate pro-rated salary for employees leaving mid-month, and understand precise gratuity calculation methodology, and verify accuracy of automated eos payment computation, and calculate accurate end-of-service daily wage, and calculate accurate prorated salary for mid-month employee departures, and process end-of-service settlements with precise financial calculations, and accurately calculate leave balance during employee exit, and calculate accurate end of service (eos) gratuity for employees, and submit accurate employee end of service transaction, and calculate accurate prorated salary for mid-month employee joinings, and filter attendance reports by out-of-office check-ins, and calculate accurate unpaid leave daily rates using historical salary configurations, and calculate accurate end-of-service gratuity for employees, and understand precise gratuity calculation method, and validate gratuity calculation accuracy against manual computations, and calculate accurate end-of-service gratuity for employees, and calculate accurate gratuity for limited contract employees, and understand precise leave balance calculation method, and modify payroll cycle from standard calendar month to custom date range, and accurately calculate salary deductions for unpaid leave, and calculate precise end-of-service gratuity for employees, and generate accurate payroll reports with precise gosi deduction calculations, and obtain accurate, system-generated leave encashment calculation for mid-month employee departures, and obtain accurate prorated leave salary based on actual working days, and generate accurate leave salary accrual reports with correct daily wage calculations, and understand salary deduction calculations for different leave types, and accurately calculate unpaid leave deductions across different salary configurations, and correct duplicate variable pay entries after payroll cycle closure, and accurately calculate prorated leave salary across different month lengths, and process accurate end of service settlement for employees with complex employment histories, and generate accurate leave salary accrual reports using configurable formulas, and calculate precise proportional salary for employee termination, and process unpaid leave deductions accurately during payroll, and manage leave requests during employee offboarding, and automate precise leave balance calculations using full salary and working days, and understand projected leave salary calculations, and understand precise leave balance calculations across different work cycles, and understand detailed leave balance calculation across multiple cycles, and obtain accurate leave balance calculations across different employment scenarios, and accurate prorated salary calculation during leave periods, and configure flexible leave salary accrual calculations, and understand monthly leave salary accrual calculations, and verify cumulative leave salary amounts across months, and accurately calculate prorated salary during employee leave periods, and configure flexible daily wage calculations for different payroll scenarios, and receive accurate leave salary compensation, and understand precise leave salary calculation across multiple months, and accurately prorate salary components during employee leave, and automate leave salary calculations across different employee leave policies, and configure leave policies that pay only specific salary components during leave, and configure flexible salary proration methods for different employee groups, and track daily air ticket allowance eligibility, and prorate air ticket allowances similar to leave balances, and understand salary proration calculation logic, and understand gosi percentage data retrieval timing, and understand precise gratuity calculation formula, and manually reduce employee leave balance after incorrect approval, and understand leave salary calculation logic, and configure precise allowance proration during leave, and accurately calculate prorated salaries for offboarded employees, and calculate accurate partial month salary for employees joining mid-month, and calculate accurate prorated salary during employee resignation/offboarding, and calculate accurate prorated salary for mid-month terminations, and understand salary calculation methodology for partial employment periods, and filter processed time and pay adjustments by destination (time off vs payroll), and automatically calculate total daily work hours across multiple activities, and log daily work tasks with accurate date tracking, and modify automatically generated leave deductions in eos calculations, and change daily rate calculation basis from basic to gross salary, and accurately track and deduct unpaid leave days from employee leave allowance, and recalculate unpaid leave deductions without generating duplicate entries, and generate accurate payslips with correct unpaid leave day count and deduction amounts, and calculate accurate unpaid leave salary deductions, and understand precise salary deduction calculations for unpaid leave, and configure accurate daily wage calculations for different leave types, and accurately calculate unpaid leave salary deductions, and calculate precise daily wage for leave salary accrual, and automate employee absence notifications, and automatically notify about employee absences, and calculate precise unpaid leave deductions based on actual calendar days, and accurate unpaid leave salary deduction calculation based on specific organizational policies, and calculate accurate unpaid leave salary deductions. Real-world usage patterns show that 104 distinct workflow scenarios have been documented through customer 
+  interactions. Support analysis identifies 98 known technical issues requiring customer workarounds or manual interventions. 
+  The platform currently implements 107 specific system constraints that impact customer workflows and 
   calculation accuracy. These operational realities, documented through customer support interactions and development tickets, reveal both the 
   feature's importance and areas requiring enhancement. The analysis provides validation-ready claims for interface testing and user guide accuracy 
   verification.
@@ -16,786 +16,793 @@
   Projects: tssd, os, TSSD
 
   ## Observed User Goals
-  - Configure different salary proration methods for multiple employee categories [TSSD-4876]
-- Calculate accurate pro-rated leave encashment for mid-month employee departures [TSSD-2499]
-- Configure Daily Rate for Leave Encashment directly within Daily Rate Calculator [OS-446]
-- Visualize employee attendance patterns through calendar interface [TSSD-3774]
-- Add contextual comments to attendance records [TSSD-1517]
-- Notify employees/managers about attendance events [TSSD-1517]
-- Accurately track employee check-in times across different timezones [TSSD-713]
-- Generate comprehensive attendance records for time tracking and legal documentation [TSSD-1433]
-- Verify consistent attendance records across different reporting modules [TSSD-1908]
+  - Configure different salary proration methods for distinct employee categories [TSSD-4876]
+- Calculate accurate pro-rated leave encashment for employees departing mid-month [TSSD-2499]
+- Configure Daily Rate for Leave Encashment directly in calculator [OS-446]
+- Obtain a visual representation of employee attendance [TSSD-3774]
+- Add contextual comments to employee attendance records [TSSD-1517]
+- Receive mobile push notifications for attendance comments [TSSD-1517]
+- Accurately track employee attendance across different time zones [TSSD-713]
+- Generate comprehensive attendance documentation for legal and administrative purposes [TSSD-1433]
+- Verify consistent attendance record details across different reporting views [TSSD-1908]
 - Log daily work attendance [TSSD-430]
-- Automate absence deduction request generation for employees with no attendance record [TSSD-2206]
+- Automate absence deduction generation for employees with no attendance record [TSSD-2206]
 - Configure leave balance accrual to match organizational policy [TSSD-1453]
-- Successfully log into Bayzat admin platform [TSSD-2266]
-- Accurately track employee attendance across different shift configurations [OS-639]
-- Correct historical biometric attendance data [TSSD-1134]
-- Configure leave encashment calculation using only basic salary [TSSD-3939]
+- Successfully log into Bayzat administrative platform [TSSD-2266]
+- Accurately track employee leave status across complex shift schedules [OS-639]
+- Correct biometric attendance data for specific date ranges [TSSD-1134]
+- Configure leave encashment calculation compliant with labor law [TSSD-3939]
 - Track and approve employee leave requests [TSSD-2056]
-- Calculate unpaid leave deductions accurately [TSSD-2056]
+- Understand leave request status changes [TSSD-2056]
 - Generate comprehensive attendance reports with complete location details [TSSD-4151]
 - Understand precise leave balance calculation method [TSSD-4203]
-- Track document expiration dates [TSSD-1357]
-- Receive timely document expiry notifications [TSSD-1357]
+- Track company and employee document lifecycles [TSSD-1357]
+- Receive timely notifications about document expirations [TSSD-1357]
 - Configure different salary proration methods for distinct employee groups [TSSD-4882]
-- Migrate leave accrual between work anniversary and calendar year cycles [TSSD-4212]
-- Configure daily leave proration for accurate end-of-service calculations [TSSD-4212]
-- View daily motivational quotes across different platforms [TSSD-872]
+- Migrate leave accrual between different cycle types while maintaining accurate balance calculations [TSSD-4212]
+- Configure daily leave accrual for precise balance tracking [TSSD-4212]
+- View daily motivational quotes across mobile and desktop platforms [TSSD-872]
 - Automate salary calculation based on precise working days [TSSD-4905]
-- Selectively disable specific system-generated newsfeed posts [TSSD-120]
+- Selectively disable specific system posts in newsfeed [TSSD-120]
 - Achieve consistent daily wage formula across leave and payroll modules [TSSD-2648]
 - Synchronize attendance records across different systems [TSSD-3419]
-- Accurately calculate unpaid leave deductions [TSSD-1581]
-- Track detailed employee work hours across multiple shift segments [TSSD-4230]
-- Accurately calculate prorated employer social security contributions for employees offboarded mid-month [TSSD-2561]
-- Calculate accurate end of service gratuity considering exact service days [TSSD-4179]
+- Accurately calculate unpaid leave salary deductions [TSSD-1581]
+- Understand daily attendance records for employees with split shifts [TSSD-4230]
+- Accurately calculate prorated employer social security contributions during employee offboarding [TSSD-2561]
+- Calculate accurate end of service gratuity for employees [TSSD-4179]
 - Calculate accurate pro-rated salary for employees leaving mid-month [TSSD-2605]
-- Understand precise EOS gratuity calculation methodology [TSSD-1232]
-- Accurately calculate end-of-service daily wage [TSSD-3832]
-- Accurately calculate prorated salary for mid-month employee departures [TSSD-4033]
-- Process end-of-service settlements with precise salary deductions [TSSD-4033]
-- Calculate accurate leave balance during employee exit [TSSD-4042]
-- Calculate accurate end of service gratuity for employees [TSSD-4742]
-- Understand gratuity calculation logic and rules [TSSD-4742]
-- Process employee final settlement accurately [TSSD-3908]
-- Submit End of Service transaction for departing employee [TSSD-3908]
-- Calculate accurate prorated salary for mid-month employee joining [TSSD-4129]
-- Filter attendance reports to investigate out-of-office check-ins [TSSD-319]
-- Accurate unpaid leave daily rate calculations reflecting historical salary rates [OS-867]
-- Accurately calculate end-of-service gratuity for employees [TSSD-1625]
-- Accurately calculate end-of-service gratuity payment [TSSD-4779]
-- Understand precise gratuity calculation methodology [TSSD-3123]
-- Calculate precise end-of-service gratuity payments [TSSD-2252]
-- Accurately calculate gratuity for limited contract employees [TSSD-4796]
-- Understand precise leave balance calculation methodology [TSSD-3139]
-- Change payroll cycle from calendar month to custom date range [TSSD-3879]
-- Understand unpaid leave deduction calculations [TSSD-2212]
-- Calculate precise employee end-of-service gratuity benefits [TSSD-2043]
-- Generate accurate payroll documentation with precise GOSI deduction calculations [TSSD-3249]
-- Generate accurate leave encashment for mid-month employee departures [TSSD-4813]
-- Obtain accurate prorated leave salary based on actual leave duration [TSSD-2106]
+- Understand precise gratuity calculation methodology [TSSD-1232]
+- Verify accuracy of automated EOS payment computation [TSSD-1232]
+- Calculate accurate end-of-service daily wage [TSSD-3832]
+- Calculate accurate prorated salary for mid-month employee departures [TSSD-4033]
+- Process end-of-service settlements with precise financial calculations [TSSD-4033]
+- Accurately calculate leave balance during employee exit [TSSD-4042]
+- Calculate accurate End of Service (EOS) gratuity for employees [TSSD-4742]
+- Submit accurate employee end of service transaction [TSSD-3908]
+- Calculate accurate prorated salary for mid-month employee joinings [TSSD-4129]
+- Filter attendance reports by out-of-office check-ins [TSSD-319]
+- Calculate accurate unpaid leave daily rates using historical salary configurations [OS-867]
+- Calculate accurate end-of-service gratuity for employees [TSSD-1625]
+- Understand precise gratuity calculation method [TSSD-4779]
+- Validate gratuity calculation accuracy against manual computations [TSSD-3123]
+- Calculate accurate end-of-service gratuity for employees [TSSD-2252]
+- Calculate accurate gratuity for limited contract employees [TSSD-4796]
+- Understand precise leave balance calculation method [TSSD-3139]
+- Modify payroll cycle from standard calendar month to custom date range [TSSD-3879]
+- Accurately calculate salary deductions for unpaid leave [TSSD-2212]
+- Calculate precise end-of-service gratuity for employees [TSSD-2043]
+- Generate accurate payroll reports with precise GOSI deduction calculations [TSSD-3249]
+- Obtain accurate, system-generated leave encashment calculation for mid-month employee departures [TSSD-4813]
+- Obtain accurate prorated leave salary based on actual working days [TSSD-2106]
 - Generate accurate leave salary accrual reports with correct daily wage calculations [TSSD-3487]
 - Understand salary deduction calculations for different leave types [TSSD-3213]
-- Accurately calculate unpaid leave deductions based on current salary configuration [TSSD-1798]
+- Accurately calculate unpaid leave deductions across different salary configurations [TSSD-1798]
 - Correct duplicate variable pay entries after payroll cycle closure [TSSD-3880]
-- Accurately calculate prorated leave salary [TSSD-4731]
-- Process accurate End of Service compensation for employees with complex employment histories [TSSD-2597]
-- Generate accurate leave salary accrual report using custom salary formulas [TSSD-3402]
-- Precise mid-month salary calculation for employee departures [TSSD-3995]
-- Process unpaid leave deductions accurately during payroll cycles [TSSD-4720]
+- Accurately calculate prorated leave salary across different month lengths [TSSD-4731]
+- Process accurate End of Service settlement for employees with complex employment histories [TSSD-2597]
+- Generate accurate leave salary accrual reports using configurable formulas [TSSD-3402]
+- Calculate precise proportional salary for employee termination [TSSD-3995]
+- Process unpaid leave deductions accurately during payroll [TSSD-4720]
 - Manage leave requests during employee offboarding [TSSD-4720]
-- Calculate leave accruals using full salary before deductions [TSSD-291]
-- Compute daily leave rates based on working days, not calendar days [TSSD-291]
+- Automate precise leave balance calculations using full salary and working days [TSSD-291]
 - Understand projected leave salary calculations [TSSD-4543]
-- Understand precise leave balance calculations [TSSD-3822]
-- Verify accurate leave allowance across work cycles [TSSD-3822]
+- Understand precise leave balance calculations across different work cycles [TSSD-3822]
 - Understand detailed leave balance calculation across multiple cycles [TSSD-4243]
-- Obtain accurate daily leave accrual across all leave policy types [TSSD-3082]
-- Accurately calculate prorated salary during leave periods [TSSD-2937]
-- Configure flexible leave salary accrual calculation methods [TSSD-3779]
+- Obtain accurate leave balance calculations across different employment scenarios [TSSD-3082]
+- Accurate prorated salary calculation during leave periods [TSSD-2937]
+- Configure flexible leave salary accrual calculations [TSSD-3779]
 - Understand monthly leave salary accrual calculations [TSSD-3648]
-- Verify cumulative leave salary totals across months [TSSD-3648]
-- Calculate accurate leave salary using custom daily wage formulas [TSSD-2321]
-- Receive accurate financial compensation for approved leave periods [TSSD-3226]
-- Accurately calculate leave salary across multiple payroll months [TSSD-3275]
-- Configure precise leave salary calculations with component-level control [TSSD-4387]
-- Configure complex leave salary policies with variable daily rate calculations [TSSD-2934]
-- Map different leave policies to specific employee groups [TSSD-2934]
+- Verify cumulative leave salary amounts across months [TSSD-3648]
+- Accurately calculate prorated salary during employee leave periods [TSSD-2321]
+- Configure flexible daily wage calculations for different payroll scenarios [TSSD-2321]
+- Receive accurate leave salary compensation [TSSD-3226]
+- Understand precise leave salary calculation across multiple months [TSSD-3275]
+- Accurately prorate salary components during employee leave [TSSD-4387]
+- Automate leave salary calculations across different employee leave policies [TSSD-2934]
 - Configure leave policies that pay only specific salary components during leave [TSSD-3654]
-- Configure different salary proration formulas for distinct employee groups [TSSD-4375]
-- Implement daily pro-ration of air ticket allowances [TSSD-3146]
+- Configure flexible salary proration methods for different employee groups [TSSD-4375]
+- Track daily air ticket allowance eligibility [TSSD-3146]
+- Prorate air ticket allowances similar to leave balances [TSSD-3146]
 - Understand salary proration calculation logic [TSSD-4292]
-- Understand precise timing of GOSI percentage data retrieval [OS-3034]
+- Understand GOSI percentage data retrieval timing [OS-3034]
 - Understand precise gratuity calculation formula [TSSD-375]
-- Manually reduce employee's leave balance due to incorrect initial approval [TSSD-3789]
-- Understand leave salary calculation methodology [TSSD-4349]
-- Accurately calculate prorated salary for offboarded employees [TSSD-3058]
+- Manually reduce employee leave balance after incorrect approval [TSSD-3789]
+- Understand leave salary calculation logic [TSSD-4349]
+- Configure precise allowance proration during leave [TSSD-4349]
+- Accurately calculate prorated salaries for offboarded employees [TSSD-3058]
 - Calculate accurate partial month salary for employees joining mid-month [TSSD-3512]
 - Calculate accurate prorated salary during employee resignation/offboarding [TSSD-2518]
-- Calculate accurate prorated salary for mid-month employee terminations [TSSD-4303]
+- Calculate accurate prorated salary for mid-month terminations [TSSD-4303]
+- Understand salary calculation methodology for partial employment periods [TSSD-4303]
 - Filter processed time and pay adjustments by destination (Time Off vs Payroll) [TSSD-463]
 - Automatically calculate total daily work hours across multiple activities [TSSD-696]
 - Log daily work tasks with accurate date tracking [TSSD-4409]
 - Modify automatically generated leave deductions in EOS calculations [TSSD-3946]
 - Change daily rate calculation basis from Basic to Gross salary [TSSD-3946]
-- Accurately track and deduct unpaid leave days from leave allowance [TSSD-2384]
+- Accurately track and deduct unpaid leave days from employee leave allowance [TSSD-2384]
 - Recalculate unpaid leave deductions without generating duplicate entries [TSSD-2532]
-- Accurately represent unpaid leave days and deductions on payslips [TSSD-3044]
-- Accurately calculate unpaid leave salary deductions [TSSD-4464]
-- Understand unpaid leave deduction calculations [TSSD-4368]
-- Accurately calculate daily wage deductions for unpaid and half-paid leaves [TSSD-4947]
-- Accurately calculate unpaid leave compensation across different policy types [TSSD-1746]
-- Calculate precise leave salary accruals using calendar-based daily wage computations [TSSD-1227]
+- Generate accurate payslips with correct unpaid leave day count and deduction amounts [TSSD-3044]
+- Calculate accurate unpaid leave salary deductions [TSSD-4464]
+- Understand precise salary deduction calculations for unpaid leave [TSSD-4368]
+- Configure accurate daily wage calculations for different leave types [TSSD-4947]
+- Accurately calculate unpaid leave salary deductions [TSSD-1746]
+- Calculate precise daily wage for leave salary accrual [TSSD-1227]
 - Automate employee absence notifications [TSSD-3438]
-- Automate employee absence notification process [TSSD-3507]
-- Accurately calculate unpaid leave salary deductions [TSSD-1301]
-- Obtain accurate unpaid leave salary deductions based on specific leave policy configurations [TSSD-1753]
-- Accurately calculate unpaid leave deductions across different payroll months [TSSD-1807]
+- Automatically notify about employee absences [TSSD-3507]
+- Calculate precise unpaid leave deductions based on actual calendar days [TSSD-1301]
+- Accurate unpaid leave salary deduction calculation based on specific organizational policies [TSSD-1753]
+- Calculate accurate unpaid leave salary deductions [TSSD-1807]
 
 
   ## Observed Workflows
-  ### Attempt to set up organization-wide salary proration with multiple employee type calculations [TSSD-4876]
-  **When it occurs**: During payroll configuration and setup
+  ### Attempt to set up organization-wide salary proration method [TSSD-4876]
+  **When it occurs**: During payroll system configuration
   **Failure points**:
-    - Cannot define separate proration rules for different employee categories
-  - System enforces single proration method across organization
+    - Cannot differentiate proration rules by employee type
+  - Single proration method applies to entire organization
 
-### Employee departure triggers leave encashment calculation [TSSD-2499]
-  **When it occurs**: Upon employee resignation or termination
+### Employee offboarding leave encashment calculation [TSSD-2499]
+  **When it occurs**: During employee termination or resignation
   **Failure points**:
-    - System only calculates full month leave accruals
-  - Partial month leave days not automatically computed
+    - Only calculates full month leave accruals
+  - Ignores partial month worked days
+  - Requires manual intervention for accurate calculations
 
-### Payroll managers attempt to configure leave encashment daily rates [OS-446]
-  **When it occurs**: During payroll setup and leave compensation processing
+### Payroll managers attempt to set daily rates for leave compensation [OS-446]
+  **When it occurs**: During leave encashment process
   **Failure points**:
     - No direct rate configuration in Daily Rate Calculator
-  - Requires external or manual rate setting
+  - Manual workarounds required
 
-### Current attendance tracking relies on list view with limited visual context [TSSD-3774]
-  **When it occurs**: During workforce management and reporting
+### Current attendance tracking requires navigating a standard list view [TSSD-3774]
+  **When it occurs**: When reviewing employee attendance records
   **Failure points**:
-    - Lack of visual attendance representation
+    - Lack of visual context
   - Difficulty in quickly understanding attendance patterns
 
-### Comment submission from daily attendance record [TSSD-1517]
-  **When it occurs**: During workforce event tracking
+### Add comment from daily attendance record [TSSD-1517]
+  **When it occurs**: Tracking employee attendance
   **Failure points**:
-    - Notification delivery inconsistent
-  - Mobile push notifications unreliable
+    - Inconsistent comment submission
+  - Mobile notification delivery failure
 
-### Employee checks in, system compares check-in time against configured work timing and timezone settings [TSSD-713]
-  **When it occurs**: During daily employee check-in process
+### Add comment from custom attendance report [TSSD-1517]
+  **When it occurs**: Analyzing absent days or attendance exceptions
   **Failure points**:
-    - Inconsistent timezone configuration
-  - Misconfigured work timing settings
-  - Mismatched late arrival settings
+    - Error messages during comment submission
+  - No push notifications received
 
-### Employee checks in/out, system calculates total and extra hours automatically [TSSD-1433]
-  **When it occurs**: During shift completion and checkout process
+### Employee checks in, system validates check-in time against configured work timing [TSSD-713]
+  **When it occurs**: During employee work hours
+  **Failure points**:
+    - Timezone misconfiguration
+  - Inconsistent late arrival settings
+  - Deleted work timing configurations
+
+### Employee checks in, works shift, may or may not check out properly, system calculates hours automatically [TSSD-1433]
+  **When it occurs**: Daily attendance tracking
   **Failure points**:
     - No validation of checkout legitimacy
-  - Automatic extra hours calculation without manual review
-  - Inability to flag suspicious checkout patterns
+  - Automatic hour calculation without manual review
+  - Potential for checkout time manipulation
 
 ### Cross-referencing Time & Productivity adjustments with daily attendance reports [TSSD-1908]
   **When it occurs**: During attendance record review and verification
   **Failure points**:
     - Inconsistent location status display
-  - Mismatched edit status across reports
-  - Lack of data synchronization
+  - Mismatched edit tracking across reports
 
-### Employee checks in once per day, system tracks and manages check-in button visibility [TSSD-430]
-  **When it occurs**: During work day
+### Daily single check-in and check-out cycle [TSSD-430]
+  **When it occurs**: During employee's work day
   **Failure points**:
-    - Check-in button disappears after daily cycle
+    - Check-in button disappears after daily use
   - No clear indication of cycle completion
 
-### Manual marking of employee absence when no check-in data exists [TSSD-2206]
-  **When it occurs**: Daily attendance tracking
+### Manual 'Mark as Absent' process for employees with no check-in data [TSSD-2206]
+  **When it occurs**: When no attendance record exists for an entire day
   **Failure points**:
-    - Requires individual manager intervention
-  - No bulk action capabilities
-  - Time-consuming for large organizations
+    - Requires manual manager intervention
+  - Not scalable for large organizations
+  - Increases administrative burden
 
-### Select leave policy type (conditional/non-conditional) which determines accrual frequency [TSSD-1453]
-  **When it occurs**: During leave policy configuration
+### Configure leave policy with accrual method selection [TSSD-1453]
+  **When it occurs**: During HR system setup and leave policy definition
   **Failure points**:
-    - Cannot customize accrual frequency for conditional leave
-  - Monthly accrual not supported for conditional policies
+    - Cannot switch between daily and monthly accrual for conditional leaves
+  - Limited flexibility in accrual frequency configuration
 
-### Admin attempts login, encounters page loading issues, tries multiple browser strategies [TSSD-2266]
+### User attempts login, encounters browser-specific loading issues, tries alternative access methods [TSSD-2266]
   **When it occurs**: During authentication process
   **Failure points**:
     - Browser cache interference
-  - Inconsistent page rendering
-  - Multiple login attempt required
+  - Inconsistent page loading
+  - Error message display
 
-### Leave request submission and status update for split shifts [OS-639]
-  **When it occurs**: When employee has multiple shift segments
+### Leave request submission and approval for split shift employees [OS-639]
+  **When it occurs**: When employee has multi-segment work shifts
   **Failure points**:
-    - Status not consistently updated across shift rows
-  - Incomplete leave status propagation
+    - Inconsistent status propagation across shift rows
+  - Incomplete leave status representation
 
-### Attempt to delete or modify historical attendance API logs [TSSD-1134]
-  **When it occurs**: When data entry errors are discovered
+### Attempt to delete and re-push biometric attendance data [TSSD-1134]
+  **When it occurs**: When attendance records contain errors
   **Failure points**:
-    - API does not support log deletion
-  - Cannot overwrite existing attendance records
+    - API does not support data deletion
+  - Cannot overwrite existing attendance logs
   - Requires manual manager intervention
 
-### Configure End of Service (EOS) leave encashment daily wage calculation [TSSD-3939]
+### Configure daily wage calculation method for end of service settlement [TSSD-3939]
   **When it occurs**: During employee exit/termination process
   **Failure points**:
-    - Unclear configuration change reflection
-  - Potential misalignment between selected setting and displayed calculation method
+    - Lack of clear configuration change confirmation
+  - Unclear relationship between configuration settings and eligibility display
 
-### Leave request submission, superadmin approval, and payroll deduction calculation [TSSD-2056]
-  **When it occurs**: When employee submits leave request
+### Leave request creation, approval, and payroll deduction tracking [TSSD-2056]
+  **When it occurs**: Employee submits leave request
   **Failure points**:
-    - Multiple approval entries for single request
-  - Approved requests reverting to pending
+    - Multiple records generated for single request
+  - Inconsistent status tracking
   - Unexpected email notifications
 
-### API-based attendance check-in/check-out process [TSSD-4151]
-  **When it occurs**: When external systems integrate attendance tracking
+### Export custom attendance breakdown report across different time ranges [TSSD-4151]
+  **When it occurs**: When detailed attendance tracking is required
   **Failure points**:
-    - Office location not captured
-  - Incomplete reporting data
-  - Inconsistent information across report types
+    - Office location missing for API-based check-ins
+  - Inconsistent data representation between integration methods
 
-### User checks leave balance and notices discrepancy with expected calculation [TSSD-4203]
-  **When it occurs**: During leave balance review
+### User checks leave balance and notices discrepancy from expected calculation [TSSD-4203]
+  **When it occurs**: When leave policy is set to Conditional
   **Failure points**:
     - Lack of transparent calculation explanation
-  - Complex pro-rata accrual logic
+  - Complex daily accrual logic not visible in UI
 
-### Monthly automated email notifications for document expiry [TSSD-1357]
-  **When it occurs**: First day of each month
+### Monthly automated email notifications sent on first of each month about document expirations [TSSD-1357]
+  **When it occurs**: Monthly on first day
   **Failure points**:
-    - No daily notification option
-  - Cannot customize notification frequency
+    - No daily notification options
+  - Cannot configure start dates
+  - Fixed monthly notification schedule
 
-### Manual salary adjustment for employee groups not supported by default proration method [TSSD-4882]
-  **When it occurs**: During employee onboarding or monthly payroll processing
+### Salary proration calculation for new employees or partial month employment [TSSD-4882]
+  **When it occurs**: During employee onboarding or mid-month hiring
   **Failure points**:
-    - Single proration method applied across all employees
-  - No group-specific calculation support
+    - Single proration method applied across all employee types
+  - Manual adjustments required for non-standard employee groups
 
-### Configure leave policy to enable daily accrual through conditional policy settings [TSSD-4212]
-  **When it occurs**: During initial leave policy setup or cycle migration
+### Configuring leave policy to enable daily accrual across different cycle types [TSSD-4212]
+  **When it occurs**: During HR system setup or policy migration
   **Failure points**:
-    - Incorrect configuration leads to inaccurate leave balance calculations
-  - Misunderstanding of daily vs. monthly accrual mechanisms
+    - Lack of understanding about conditional policy requirements
+  - Incorrect configuration leading to inaccurate leave balance calculations
 
-### User accesses newsfeed on mobile or desktop, expecting to view complete daily quote [TSSD-872]
-  **When it occurs**: Daily content publication
+### User accesses newsfeed to view daily quotes [TSSD-872]
+  **When it occurs**: During daily employee engagement interactions
   **Failure points**:
-    - Content rendering across different screen sizes
-  - UI layout consistency
+    - Inconsistent content rendering
+  - UI formatting issues
+  - Cross-platform display problems
 
-### Calculate monthly salary using 26 working days as standard, with dynamic adjustments for extra or fewer days worked [TSSD-4905]
-  **When it occurs**: Monthly payroll processing
+### Calculate monthly salary using 26 working days standard, with dynamic adjustments for extra or fewer worked days [TSSD-4905]
+  **When it occurs**: During monthly payroll processing
   **Failure points**:
     - Manual tracking of overtime
-  - Manual tracking of unpaid leaves
-  - No automatic pro-rata adjustments
+  - Separate tracking of unpaid leaves
+  - No automatic pro-rata salary adjustment
 
-### Navigate to Admin Panel >> Company >> Newsfeed system posts to configure post visibility [TSSD-120]
-  **When it occurs**: When administrator wants to modify system post settings
+### Navigate to Admin Panel > Company > Newsfeed system posts to manage system post visibility [TSSD-120]
+  **When it occurs**: When administrator wants to customize newsfeed content
   **Failure points**:
-    - Requires administrative permissions
-  - Potential confusion about navigation path
+    - Requires administrative access
+  - Might require understanding of configuration interface
 
-### Configure daily wage calculation by selecting salary components and defining divisor method [TSSD-2648]
+### Configure daily wage calculation in payroll settings, which automatically overrides leave policy formulas [TSSD-2648]
   **When it occurs**: During payroll and leave policy setup
   **Failure points**:
-    - Inconsistent formula configuration between modules
-  - Unclear override mechanisms
-  - Lack of synchronization between leave and payroll settings
+    - Lack of clear override communication
+  - Inconsistent formula display
+  - No automatic synchronization between modules
 
-### API-based attendance data transmission from third-party provider to Bayzat [TSSD-3419]
-  **When it occurs**: Continuous data synchronization
+### API data transmission from third-party time tracking system to Bayzat [TSSD-3419]
+  **When it occurs**: Continuously during work week
   **Failure points**:
     - Weekend data transmission
   - Check-in time recording
   - Time zone conversion
 
-### Calculate daily wage by dividing total salary by 30.41 and multiplying by days of unpaid leave [TSSD-1581]
+### Calculate daily wage by dividing total salary by 30.41, then multiply by number of unpaid leave days [TSSD-1581]
   **When it occurs**: During monthly payroll processing
   **Failure points**:
     - Salary configuration changes after leave request
-  - System uses outdated salary information
+  - Incorrect base salary used for calculation
 
-### Employee with split shifts generates multiple attendance records on the same day [TSSD-4230]
-  **When it occurs**: When an employee is scheduled for non-consecutive work periods
+### View attendance page with multiple shift entries for same employee [TSSD-4230]
+  **When it occurs**: When employee has split shifts configured
   **Failure points**:
-    - Visual confusion from multiple attendance entries
-  - Potential misunderstanding of record generation
+    - Potential misinterpretation of multiple records
+  - Lack of visual consolidation for split shifts
 
-### Calculate full monthly social security contribution regardless of employee's actual working days [TSSD-2561]
-  **When it occurs**: During employee offboarding or partial month employment
+### Employee offboarding transaction processing with social security contribution calculation [TSSD-2561]
+  **When it occurs**: During employee termination in final month of employment
   **Failure points**:
-    - No prorated calculation logic
-  - Full month contribution calculated automatically
+    - Full month contribution calculated instead of prorated amount
   - Reporting shows incorrect contribution amount
 
-### Employee exit gratuity calculation using daily wage, service period, and benefit rate [TSSD-4179]
-  **When it occurs**: During employee termination or resignation
+### Compute total service days across multiple years, converting salary to daily rate, and applying gratuity formula [TSSD-4179]
+  **When it occurs**: When employee is leaving organization
   **Failure points**:
-    - Leap year day count
-  - Pro-rata service period calculation
-  - Daily wage computation
+    - Leap year day counting
+  - Prorating service period
+  - Daily wage calculation
 
-### Select employee departure date, compute pro-rated salary using basic + allowances / 30 formula [TSSD-2605]
-  **When it occurs**: During employee end of service process
+### Employee departure triggers pro-rated salary calculation using (basic + allowances) / 30 [TSSD-2605]
+  **When it occurs**: During End of Service (EOS) processing
   **Failure points**:
-    - Decimal precision in calculation
-  - Rounding of final amount
+    - Decimal precision errors
+  - Consistent slight undercalculation
 
-### Calculate employee gratuity using WPS-compliant formula [TSSD-1232]
-  **When it occurs**: At employee contract termination
+### User requests explanation of EOS calculation for specific employee [TSSD-1232]
+  **When it occurs**: During payroll processing or employee contract termination
   **Failure points**:
-    - Decimal precision differences
-  - Manual calculation misalignment
-  - Rounding interpretation
+    - Discrepancy between manual and system calculations
+  - Lack of transparency in calculation methodology
 
-### Calculate daily wage by dividing total compensation by working days in departure month [TSSD-3832]
-  **When it occurs**: During employee separation or end-of-service benefit calculation
+### Calculate daily wage by dividing total compensation by working days in month [TSSD-3832]
+  **When it occurs**: During employee separation or vacation leave calculation
   **Failure points**:
-    - Handling of public holidays
-  - Variation between policy standard and actual working days
+    - Public holiday handling
+  - Actual vs policy working days mismatch
 
 ### Employee offboarding with salary proration and EOS calculation [TSSD-4033]
-  **When it occurs**: When employee leaves mid-month with potential unpaid leave
+  **When it occurs**: When an employee leaves mid-month
   **Failure points**:
-    - System cannot handle unpaid leave in EOS calculations
-  - Rigid full-month salary calculation
-  - No dynamic adjustment for actual days worked
+    - System cannot handle unpaid leave periods
+  - Rigid salary calculation ignoring actual days worked
+  - Full monthly salary deduction regardless of actual payment
 
-### Employee exit processing with leave balance calculation [TSSD-4042]
-  **When it occurs**: During employee termination or resignation
+### Employee exit process with leave balance calculation [TSSD-4042]
+  **When it occurs**: When employee terminates employment
   **Failure points**:
-    - Mid-month departures not automatically pro-rated
+    - Mid-month departures not automatically prorated
   - Manual adjustment required for partial month leave
 
-### Compute gratuity based on service duration, daily wage, and tiered rates [TSSD-4742]
+### Calculate gratuity by determining service duration, applying tiered daily rates, and handling partial years [TSSD-4742]
   **When it occurs**: Employee contract termination
   **Failure points**:
     - Mid-month departures
-  - Partial year service duration
-  - Leave balance calculation
+  - Incomplete year service periods
+  - Leave balance for partial months
 
-### Validate employee leave requests before EOS submission [TSSD-3908]
-  **When it occurs**: During employee offboarding process
+### Employee offboarding financial settlement calculation [TSSD-3908]
+  **When it occurs**: When employee terminates employment
   **Failure points**:
-    - Incorrect leave request detection
-  - False positive validation checks
-  - Blocking legitimate EOS transactions
+    - Incorrect leave request validation
+  - Blocking EOS submission due to false positive leave detection
 
-### Verify working days by excluding weekends and public holidays [TSSD-4129]
-  **When it occurs**: During monthly salary calculation for new employees
+### Determine working days by excluding weekends and public holidays from total month days [TSSD-4129]
+  **When it occurs**: During salary calculation for partial employment periods
   **Failure points**:
-    - Incorrect working day counting
-  - Misunderstanding of proration formula
+    - Incorrect working day count
+  - Misunderstanding proration formula
+  - Lack of calculation transparency
 
-### Employee checks in from various locations, system automatically detects and labels location [TSSD-319]
+### Employee checks in from various locations, system automatically detects and labels office or out-of-office status [TSSD-319]
   **When it occurs**: During employee check-in process
   **Failure points**:
-    - No filtering capability for out-of-office locations
+    - No filtering capability for out-of-office check-ins
   - Limited reporting options for location-based attendance
 
-### Compute daily compensation rates for employee time off [OS-867]
-  **When it occurs**: During payroll processing and leave accounting
+### Retrospective salary rate determination for unpaid leave periods [OS-867]
+  **When it occurs**: During payroll processing and leave compensation calculation
   **Failure points**:
-    - Using current salary configuration instead of historical rates
-  - Inability to perform retrospective salary calculations
+    - Using current salary settings instead of historical rates
+  - Inability to track temporal salary configurations
 
-### Input employee details → Calculate daily wage → Compute service duration → Apply gratuity formula [TSSD-1625]
-  **When it occurs**: Employee termination or contract completion
+### Input employee details to compute final settlement [TSSD-1625]
+  **When it occurs**: During employee termination or contract end
   **Failure points**:
     - Leap year day inclusion
   - Departure date counting
-  - Service duration conversion
+  - Service duration calculation
 
-### Calculate gratuity by multiplying daily rate by total service duration, handling complete and partial years [TSSD-4779]
-  **When it occurs**: Employee departure/contract termination
+### Calculate gratuity based on service duration, daily rate, and departure reason [TSSD-4779]
+  **When it occurs**: Employee end of service
   **Failure points**:
-    - Inconsistent calculation based on contract type
-  - Incorrect handling of partial years
+    - Inconsistent calculation between contract types
+  - Incorrect prorated year calculation
   - Departure reason affecting calculation
 
-### Employee departure triggers automated gratuity calculation based on contract details [TSSD-3123]
-  **When it occurs**: Upon employee resignation or contract termination
+### Employee departure triggers gratuity calculation based on contract type, service duration, and termination reason [TSSD-3123]
+  **When it occurs**: During employee contract termination
   **Failure points**:
-    - Calculation methodology not transparent
-  - Potential minor computational differences from manual calculations
+    - Calculation methodology not immediately transparent
+  - Potential discrepancies between system and manual calculations
 
-### Input employee service duration, calculate gratuity based on service period segments [TSSD-2252]
-  **When it occurs**: Employee termination or resignation
+### Calculate gratuity by segmenting service duration, applying different daily rates for first 5 years and subsequent years [TSSD-2252]
+  **When it occurs**: During employee final settlement or resignation
   **Failure points**:
-    - Handling partial years
+    - Handling partial years of service
   - Leap year calculations
-  - Different rate periods (first 5 years vs subsequent years)
+  - Prorating incomplete service periods
 
-### Calculate end-of-service gratuity based on contract type, daily wage, and service period [TSSD-4796]
-  **When it occurs**: Employee contract termination
+### Employee termination gratuity calculation process [TSSD-4796]
+  **When it occurs**: At employee contract conclusion or termination
   **Failure points**:
     - Incorrect calculation for limited contracts
   - Departure reason impacts calculation accuracy
-  - Manual intervention required to correct amounts
+  - Manual intervention required for correct results
 
-### Manual calculation of leave balance by support team, breaking down monthly and daily accrual components [TSSD-3139]
-  **When it occurs**: When users request detailed leave balance explanation
+### Calculate leave balance by segmenting into completed months and partial months [TSSD-3139]
+  **When it occurs**: During leave balance inquiry or reporting
   **Failure points**:
     - Lack of transparent calculation display
-  - Requires manual support intervention
+  - Complex manual calculation required
 
-### Request payroll cycle modification [TSSD-3879]
-  **When it occurs**: During payroll setup or periodic review
+### Attempt to change payroll cycle configuration [TSSD-3879]
+  **When it occurs**: During initial payroll setup or periodic financial restructuring
   **Failure points**:
     - Irreversible cycle change
   - Cannot reopen previous months
-  - Potential duplicate monthly entries
-  - Altered proration calculations
+  - Potential duplicate month entries
+  - Proration calculation disruption
 
-### Calculate daily rate for unpaid leave based on basic salary, allowances, and working days [TSSD-2212]
+### Employee requests unpaid leave, system calculates daily rate based on current working days and salary configuration [TSSD-2212]
   **When it occurs**: During leave approval and payroll processing
   **Failure points**:
     - Dynamic recalculation of daily rates
-  - Inconsistent handling of holiday calendar changes
+  - Inconsistent display of calculation basis
 
-### Input employee basic salary, joining date, departure date, and contract details to compute gratuity [TSSD-2043]
-  **When it occurs**: Employee contract termination or resignation
+### Compute gratuity by calculating total working days, converting to years, and applying service-based rate [TSSD-2043]
+  **When it occurs**: Employee departure/contract termination
   **Failure points**:
     - Inflexible daily wage calculation method
-  - Potential rounding discrepancies in days worked
+  - Potential extra day in days worked calculation
 
-### Export payroll template for employees, with focus on accurate social insurance deduction calculations [TSSD-3249]
+### Export payroll template for employees, especially mid-month joiners [TSSD-3249]
   **When it occurs**: During monthly payroll processing
   **Failure points**:
-    - Incorrect proration for mid-month joiners
-  - Full monthly deduction displayed instead of prorated amount
+    - Incorrect prorated deduction calculation
+  - Full monthly deduction displayed for partial month
 
-### Calculate remaining leave balance for end-of-service settlement [TSSD-4813]
+### Employee leaves mid-month, system calculates leave balance for encashment [TSSD-4813]
   **When it occurs**: During employee offboarding process
   **Failure points**:
-    - Monthly proration instead of daily accrual
-  - Incorrect handling of partial month leave calculations
+    - Monthly proration instead of daily proration
+  - Incomplete accrual calculation for partial months
 
-### Employee submits leave request, system calculates salary based on configured leave policy settings [TSSD-2106]
-  **When it occurs**: During payroll processing for time off periods
+### Employee submits leave request, system calculates leave duration and corresponding salary [TSSD-2106]
+  **When it occurs**: During leave request processing
   **Failure points**:
     - Mismatched day type configurations
-  - Public holiday exclusion inconsistencies
-  - Unclear calculation logic
+  - Public holiday exclusion handling
+  - Salary calculation basis selection
 
-### Download leave salary accrual report for monthly payroll reconciliation [TSSD-3487]
-  **When it occurs**: Monthly payroll processing
+### User downloads monthly leave salary accrual report and validates calculation methodology [TSSD-3487]
+  **When it occurs**: Monthly reporting cycle
   **Failure points**:
-    - Incorrect daily wage base calculation
+    - Incorrect salary base selection
   - Unexpected social security component display
+  - Inflexible calculation logic
 
-### Employee requests leave, system calculates daily rate based on specific leave policy formula [TSSD-3213]
-  **When it occurs**: During leave request and payroll processing
+### Employee challenges leave deduction calculation [TSSD-3213]
+  **When it occurs**: After receiving payroll statement
   **Failure points**:
     - Lack of formula transparency
-  - User confusion between leave policy types
+  - Complex policy-specific calculations
+  - Insufficient user documentation
 
-### Calculate daily rate for unpaid leave using salary components [TSSD-1798]
-  **When it occurs**: During payroll processing and end of service calculations
+### Unpaid leave deduction calculation based on current payroll configuration [TSSD-1798]
+  **When it occurs**: During payroll processing and employee end of service settlement
   **Failure points**:
-    - Recalculating historical rates with current configuration
-  - Not preserving original calculation method
+    - Configuration changes mid-period
+  - Dynamic recalculation of display values
+  - Lack of historical configuration preservation
 
-### Monthly payroll cycle finalization process with irreversible data lock [TSSD-3880]
+### Monthly payroll cycle processing with strict closure rules [TSSD-3880]
   **When it occurs**: End of each payroll month
   **Failure points**:
-    - No mechanism to correct variable pay errors after closure
-  - Complete cycle reopening required for any modifications
+    - Inability to modify closed payroll cycles
+  - No backend correction mechanism for payment errors
 
-### Employee submits leave request, system calculates prorated salary based on predefined policy configuration [TSSD-4731]
-  **When it occurs**: During leave request and salary processing
+### Employee submits leave request, system calculates prorated salary based on policy configuration [TSSD-4731]
+  **When it occurs**: During leave request processing
   **Failure points**:
-    - Misalignment between user expectation and system calculation logic
+    - Misalignment between policy divisor and user expectations
   - Lack of transparency in calculation method
 
-### Process EOS for an employee in the current open payroll month, considering previous month's employment status [TSSD-2597]
-  **When it occurs**: During employee offboarding and final compensation calculation
+### Process EOS for employee with departure in previous month, involving prorated salary and arrears calculation [TSSD-2597]
+  **When it occurs**: During monthly payroll cycle after employee departure
   **Failure points**:
-    - Incorrect prorated salary calculation
+    - Incorrect arrears calculation
   - Automatic deduction generation
-  - Salary arrears miscalculation
+  - Handling of offboarding and rehiring scenarios
 
-### User configures leave salary accrual report with custom formula (Basic Salary + Allowance / Working Days) [TSSD-3402]
-  **When it occurs**: During financial reporting period
+### User configures leave salary accrual formula, expects system to calculate using specified parameters [TSSD-3402]
+  **When it occurs**: During financial reporting and payroll processing
   **Failure points**:
-    - System defaults to calendar days instead of working days
-  - Formula configuration not respected by calculation engine
+    - Incorrect day calculation method
+  - System ignoring user-defined formula configuration
 
-### Input last working day to calculate prorated salary [TSSD-3995]
-  **When it occurs**: Employee termination or resignation
+### User inputs employee's last working day for EOS calculation [TSSD-3995]
+  **When it occurs**: During employee termination process
   **Failure points**:
-    - Public holiday handling in working days calculation
-  - Lack of manual day-level salary adjustment
+    - Misunderstanding of public holiday exclusion
+  - Expectation of manual day-level adjustments
 
 ### Leave request creation, payroll deduction generation, and automatic deletion during offboarding [TSSD-4720]
-  **When it occurs**: During employee departure process
+  **When it occurs**: During employee lifecycle events and payroll processing
   **Failure points**:
     - Automatic deletion of future leave requests
   - Loss of leave request details for offboarded employees
 
-### Leave balance calculation process involving salary analysis and time tracking [TSSD-291]
-  **When it occurs**: During periodic leave entitlement updates
+### Leave accrual balance calculation process [TSSD-291]
+  **When it occurs**: During periodic payroll and leave management cycles
   **Failure points**:
-    - Using post-GOSI deduction salary
-  - Calculating on calendar days instead of working days
+    - Calculation based on post-GOSI salary
+  - Use of calendar days instead of working days
+  - Manual reconciliation required
 
-### User downloads leave accrual report and compares virtual projection with expected leave salary [TSSD-4543]
-  **When it occurs**: During monthly or periodic leave reporting
+### Download leave accrual report and compare projected salary calculations [TSSD-4543]
+  **When it occurs**: Monthly or quarterly leave balance review
   **Failure points**:
-    - Lack of clear calculation methodology explanation
-  - Misalignment between report projection and actual leave salary
+    - Misunderstanding of calculation methodology
+  - Expectation of actual leave salary matching report
 
-### System calculates leave balance based on hire date, policy type, and work cycle [TSSD-3822]
-  **When it occurs**: At end of each leave cycle
+### Employee requests verification of leave balance calculation [TSSD-3822]
+  **When it occurs**: When leave balance appears inconsistent with expected allowance
   **Failure points**:
     - Leap year hire dates
   - Conditional allowance daily calculations
   - Cycle start date determination
 
-### Employee checks leave balance, discovers complex multi-cycle calculation, seeks support clarification [TSSD-4243]
-  **When it occurs**: During leave planning or balance review
+### User checks leave balance and encounters complex projection calculations [TSSD-4243]
+  **When it occurs**: During leave request or balance review
   **Failure points**:
-    - Negative day representations
-  - Cross-cycle leave deduction display
-  - Fractional day calculations
+    - Negative days display confusing
+  - Cross-cycle calculation complexity
+  - Unclear balance projection labeling
 
-### Configure leave policy type and job tenure toggle to determine accrual calculation method [TSSD-3082]
-  **When it occurs**: During leave policy setup and employee tenure tracking
+### Configure leave policy type and accrual toggle to determine calculation method [TSSD-3082]
+  **When it occurs**: During HR system setup and policy configuration
   **Failure points**:
-    - Inconsistent accrual methods between policy types
+    - Incorrect toggle configuration
+  - Misunderstanding policy type impact on accrual
   - Inaccurate mid-month leave calculations
-  - Potential EOS leave encashment errors
 
-### Submit leave request spanning multiple days, including potential public holidays [TSSD-2937]
-  **When it occurs**: Employee takes leave across calendar days
+### Submit leave request spanning multiple days including potential public holidays [TSSD-2937]
+  **When it occurs**: During employee leave planning
   **Failure points**:
     - Incorrect working days calculation
-  - Public holiday handling in salary proration
+  - Public holiday handling in salary computation
 
-### Configure daily wage calculation method, generate leave salary accrual report, verify calculation accuracy [TSSD-3779]
-  **When it occurs**: During payroll configuration and reporting
+### User configures leave encashment calculation method, generates leave salary accrual report [TSSD-3779]
+  **When it occurs**: During payroll processing and leave compensation reporting
   **Failure points**:
-    - Inconsistent application of configured calculation method
-  - Report generation not respecting configuration settings
+    - Calculation method not consistently applied
+  - Report generation uses incorrect computational method
 
-### Download leave salary accrual report for specific month [TSSD-3648]
-  **When it occurs**: Monthly financial reporting
+### Download leave salary accrual report and review monthly calculations [TSSD-3648]
+  **When it occurs**: Monthly financial reporting period
   **Failure points**:
-    - Unexpected calculation variations
-  - Misunderstanding of daily wage calculation method
+    - Unexpected variations in daily wage calculations
+  - Differences in working days per month
 
-### Compute prorated salary by dividing monthly compensation across working and leave days [TSSD-2321]
-  **When it occurs**: During partial work months or employee leave periods
+### Calculate daily wage by dividing total monthly compensation by specific number of days [TSSD-2321]
+  **When it occurs**: During salary processing and leave compensation
   **Failure points**:
-    - Mismatched daily wage divisors
-  - Inconsistent calculation configurations
+    - Mismatched divisor configurations
+  - Inconsistent daily wage formula between leave and proration
 
-### Employee submits leave request, system calculates daily rate and leave salary based on approved days [TSSD-3226]
-  **When it occurs**: During payroll processing for time off
+### Submit leave request, system calculates daily rate, compute leave salary based on approved days [TSSD-3226]
+  **When it occurs**: During employee time off periods
   **Failure points**:
     - Incorrect day count conversion
-  - Miscalculation of daily rate
-  - Mismatch between approved days and calculated days
+  - Misalignment between approved days and calculation logic
 
-### Employee requests leave spanning multiple months, system calculates prorated salary deduction [TSSD-3275]
-  **When it occurs**: During multi-month leave periods
+### Employee requests leave spanning multiple payroll months [TSSD-3275]
+  **When it occurs**: When an employee takes time off crossing month boundaries
   **Failure points**:
-    - Lack of calculation transparency
-  - User misunderstanding of prorating logic
+    - Calculation transparency
+  - User understanding of proration methodology
 
-### Calculate leave salary by prorating formula components and handling non-formula allowances [TSSD-4387]
+### Calculate leave salary by dividing base components by 30 days and multiplying by leave days [TSSD-4387]
   **When it occurs**: During employee leave periods
   **Failure points**:
-    - Non-formula allowances paid in full
-  - Lack of granular component configuration
+    - Excluded allowances paid in full
+  - No configurable proration options
+  - Lack of component-level leave behavior control
 
-### Create and map multiple leave salary policies to employee groups [TSSD-2934]
-  **When it occurs**: During payroll and leave management configuration
+### Configure multiple leave salary policies mapped to different employee categories [TSSD-2934]
+  **When it occurs**: During payroll and leave management setup
   **Failure points**:
-    - Policy precedence not clearly defined
-  - Changes to one policy affect others unpredictably
-  - Minimum days threshold validation inconsistent
+    - Policy change propagation
+  - Minimum days threshold validation
+  - Policy precedence resolution
 
-### Configure leave policy with partial payment percentage [TSSD-3654]
-  **When it occurs**: During employee leave policy setup
+### Configure leave policy percentage, apply to employee group, process leave requests [TSSD-3654]
+  **When it occurs**: During payroll and HR configuration
   **Failure points**:
     - Cannot exclude specific salary components
-  - Deductions calculated on total salary
-  - No granular salary component control
+  - Calculations based on total salary percentage
+  - Limited granular salary configuration
 
-### Global proration formula application across all employee types [TSSD-4375]
-  **When it occurs**: During payroll configuration and salary calculation
+### Global proration formula selection during payroll setup [TSSD-4375]
+  **When it occurs**: Initial payroll platform configuration
   **Failure points**:
-    - Cannot differentiate proration methods by employee category
+    - Cannot differentiate proration rules by employee category
   - Single formula applies to entire organization
 
-### Annual bulk air ticket allowance allocation at renewal cycle end [TSSD-3146]
-  **When it occurs**: End of employee renewal cycle
+### Annual bulk air ticket allowance allocation [TSSD-3146]
+  **When it occurs**: At renewal cycle end
   **Failure points**:
-    - No mid-cycle allowance access
-  - Cannot calculate partial allowances
-  - Inflexible benefit allocation
+    - No daily accrual tracking
+  - Lack of granular eligibility calculation
 
 ### Verify daily wage calculation based on work week configuration [TSSD-4292]
-  **When it occurs**: During payroll processing or salary review
+  **When it occurs**: During payroll processing
   **Failure points**:
     - Misunderstanding of work week configuration
-  - Incorrect expectation of weekend detection
+  - Incorrect interpretation of working days
 
-### Daily backend data retrieval for social insurance percentages [OS-3034]
-  **When it occurs**: 5 AM DBX time zone
+### Daily backend data retrieval of GOSI percentages at 5 AM DBX time [OS-3034]
+  **When it occurs**: Daily reporting cycle
   **Failure points**:
     - Timestamp inconsistency
   - Time zone synchronization
+  - Process timing ambiguity
 
-### Verify end of service gratuity calculation for employee termination [TSSD-375]
-  **When it occurs**: During employee departure process
+### Verify EOS gratuity calculation for departing employee [TSSD-375]
+  **When it occurs**: During employee termination process
   **Failure points**:
     - Lack of transparent calculation methodology
-  - Potential misapplication of contract-specific rules
-  - Unclear decimal precision and rounding rules
+  - Unclear contract type differentiation
+  - Undocumented decimal precision rules
 
 ### Backend manual database update to adjust leave balance [TSSD-3789]
-  **When it occurs**: When standard UI adjustment is not possible
+  **When it occurs**: When UI does not support leave balance correction
   **Failure points**:
     - Risk of overwriting attendance records
-  - Requires technical intervention
   - No standardized correction mechanism
+  - Requires direct database intervention
 
-### Navigate to Settings > Payroll > Leave Salary Policy to configure proration rules [TSSD-4349]
-  **When it occurs**: Before processing employee leave compensation
+### Configure leave salary policy by selecting calculation method and allowance inclusion rules [TSSD-4349]
+  **When it occurs**: During payroll system setup or policy adjustment
   **Failure points**:
-    - Misunderstanding configuration options
-  - Incorrect selection of calendar vs custom days
-  - Incomplete allowance configuration
+    - Misunderstanding calendar vs custom day calculations
+  - Incorrectly configuring allowance proration
+  - Not understanding interaction with active salary cycle
 
-### Process payroll for employee with mid-month departure [TSSD-3058]
+### Process payroll for employee with departure date different from processing date [TSSD-3058]
   **When it occurs**: During employee offboarding
   **Failure points**:
-    - Handling departure dates in future vs past
-  - Calculating daily rate correctly
-  - Applying proration logic consistently
+    - Inconsistent proration for future departure dates
+  - Full salary displayed instead of prorated amount
 
-### Configure salary proration with custom divisor, calculate daily rate, multiply by actual days worked [TSSD-3512]
-  **When it occurs**: When employee starts work partway through a month
+### Salary proration calculation using custom divisor and actual days worked [TSSD-3512]
+  **When it occurs**: When employee starts work mid-month or works partial pay period
   **Failure points**:
-    - Misunderstanding of divisor purpose
-  - Confusion about day counting methodology
-  - Unclear calculation transparency
+    - Unclear day counting methodology
+  - Lack of transparent calculation logic
+  - Confusion about divisor purpose
 
-### Employee offboarding with salary proration calculation [TSSD-2518]
+### Configure daily rate, offboard employee, process final salary calculation [TSSD-2518]
+  **When it occurs**: Employee resignation or termination
+  **Failure points**:
+    - Changing daily rate configuration after offboarding
+  - Not recalculating proration when configuration changes
+
+### Salary proration for employee departure mid-month [TSSD-4303]
   **When it occurs**: During employee termination or resignation
   **Failure points**:
-    - Daily rate configuration change after offboarding
-  - System not auto-recalculating proration
-  - Locked calculation based on offboarding moment's configuration
+    - Client misunderstanding of working day calculation
+  - Confusion about weekend exclusion
 
-### Determine daily wage by dividing total monthly salary by working days, then multiply by days worked [TSSD-4303]
-  **When it occurs**: During mid-month employment termination
+### Manually download processed time and pay adjustment data, then filter externally [TSSD-463]
+  **When it occurs**: When detailed reporting on processed entries is required
   **Failure points**:
-    - User misunderstanding of calculation method
+    - No native filtering in processed section
+  - Manual data manipulation required
+  - Risk of data misinterpretation
 
-### Administrators download processed time adjustment data and manually filter entries [TSSD-463]
-  **When it occurs**: When needing to categorize processed extra hour requests
+### Log multiple work activities with individual time entries [TSSD-696]
+  **When it occurs**: Daily time tracking
   **Failure points**:
-    - No native filtering for processed entries
-  - Manual export required
-  - Potential for human error in categorization
+    - Manual total hours calculation required
+  - No automatic daily hours summary
 
-### Employee logs multiple work activities with individual time entries [TSSD-696]
-  **When it occurs**: Daily time tracking process
-  **Failure points**:
-    - No automatic total hours calculation
-  - Manual summation required
-
-### Employee logs task, potentially modifies task date after initial entry [TSSD-4409]
+### Employee logs task, can modify task date retroactively [TSSD-4409]
   **When it occurs**: During daily time tracking
   **Failure points**:
-    - Date modification causes entry visibility issues
-  - Entries appear to disappear when date changed
-  - No clear indication of date modification impact
+    - Date modifications can cause entry visibility confusion
+  - No clear warning about date change impacts
 
-### Administrator attempts to edit system-generated leave deduction amount [TSSD-3946]
-  **When it occurs**: During payroll configuration and end-of-service settlement
+### Admin attempts to edit or delete system-generated leave deductions [TSSD-3946]
+  **When it occurs**: During payroll configuration and EOS settlement preparation
   **Failure points**:
-    - Cannot set deduction to zero
-  - System prevents editing auto-generated deductions
+    - Cannot set deduction amount to zero
+  - Unable to delete auto-created deductions
+  - Limited flexibility in calculation base selection
 
-### Employee submits multi-month unpaid leave request [TSSD-2384]
-  **When it occurs**: During payroll processing across multiple months
+### Process multi-month unpaid leave requests across different payroll cycles [TSSD-2384]
+  **When it occurs**: When employee submits unpaid leave spanning multiple months
   **Failure points**:
     - Cannot manually adjust used days
   - Deductions accumulate incorrectly
-  - Potential negative salary calculation
+  - Potential negative salary generation
 
 ### Modify daily wage calculation and delete leave transaction [TSSD-2532]
-  **When it occurs**: During payroll cycle recalculation
+  **When it occurs**: During payroll processing and leave management
   **Failure points**:
     - Duplicate deduction generation
   - Persistent orphaned deductions
   - Inability to remove deductions after leave request deletion
 
-### Process unpaid leave across multiple months during single payroll cycle [TSSD-3044]
-  **When it occurs**: When employee has retrospective leave approvals
+### Process multi-month unpaid leave across payroll cycles [TSSD-3044]
+  **When it occurs**: When employee has leave spanning multiple months
   **Failure points**:
     - Cross-month leave day aggregation
-  - Matching deduction amount with displayed leave days
+  - Displaying accurate leave day count
+  - Matching deduction amount with leave days
 
-### Calculate daily wage by dividing monthly salary by working days, excluding weekends and public holidays [TSSD-4464]
+### Compute daily wage by dividing monthly salary by working days, excluding weekends and public holidays [TSSD-4464]
   **When it occurs**: During payroll processing for employees with unpaid leave
   **Failure points**:
     - Public holidays added after leave request
-  - Inconsistent working days calculation
+  - Inconsistent working day calculations
   - No retroactive recalculation support
 
-### Calculate daily wage for unpaid leave deductions using custom divisor [TSSD-4368]
-  **When it occurs**: During payroll processing for employees with partial month absences
+### Calculate daily wage by dividing monthly salary by custom divisor (30.42 days) [TSSD-4368]
+  **When it occurs**: During payroll processing for periods with partial work or leave
   **Failure points**:
-    - Deduction amount differs from expected monthly salary
-  - Requires manual reconciliation
-  - Potential user confusion about calculation method
+    - User confusion about calculation method
+  - Potential deduction amounts exceeding expected monthly salary
 
-### Configure daily wage calculation method in Payroll Configuration, then set up corresponding leave policy [TSSD-4947]
+### Configure daily wage calculation method in Payroll Configuration, then set up specific leave policies [TSSD-4947]
   **When it occurs**: During payroll and leave policy setup
   **Failure points**:
-    - Inconsistent UI display of actual calculation method
-  - Overwrite option obscures actual calculation logic
+    - UI does not clearly show which calculation method is active
+  - Overwrite option can hide policy-level configurations
 
-### Configure multiple leave policies with distinct daily rate calculation formulas [TSSD-1746]
-  **When it occurs**: During payroll system setup and maintenance
+### Configure multiple leave policies with different daily rate calculation methods [TSSD-1746]
+  **When it occurs**: During payroll system setup and employee leave management
   **Failure points**:
-    - Lack of clear policy differentiation
-  - Complex calculation methods
-  - No explicit policy selection guidance
+    - Unclear policy distinctions
+  - Complex calculation formulas
+  - Lack of policy selection guidance
 
-### Generate monthly leave salary accrual report using total compensation divided by calendar days [TSSD-1227]
-  **When it occurs**: End of accounting period
+### Generate leave salary accrual report using calendar days for daily wage calculation [TSSD-1227]
+  **When it occurs**: Monthly financial reporting cycle
   **Failure points**:
     - Cannot use custom day divisors
-  - Rigid calculation methodology
-  - No support for non-standard accounting formulas
+  - Rigid calendar day calculation
 
-### HR managers configure absence detection workflow [TSSD-3438]
-  **When it occurs**: Daily attendance reporting
+### HR managers configure workflow to receive absence notifications [TSSD-3438]
+  **When it occurs**: When employee absence is detected
   **Failure points**:
-    - Manual 'mark as absent' button required
-  - No automatic system-default absence detection
+    - Manual 'Mark as Absent' action required
+  - System-default absences not automatically detected
 
-### Daily early morning check of previous day's attendance records to trigger absence notifications [TSSD-3507]
-  **When it occurs**: Configured daily time (e.g., 7 AM)
+### Daily early morning check of previous day's attendance records to identify absent employees [TSSD-3507]
+  **When it occurs**: Configured daily at specific time (e.g., 7 AM)
   **Failure points**:
-    - Inconsistent event triggering
-  - Misconfiguration of date-based events
-  - Incomplete attendance record maintenance
+    - Inconsistent trigger mechanism
+  - Dependency on accurate attendance record status
+  - Time-based event configuration complexity
 
-### Calculate daily wage rate by dividing monthly salary by actual calendar days in the month [TSSD-1301]
-  **When it occurs**: During monthly payroll processing
+### Monthly salary calculation with dynamic daily rate adjustment [TSSD-1301]
+  **When it occurs**: During payroll processing for months with variable days
   **Failure points**:
-    - Incorrect day count in remarks display
-  - Potential user misunderstanding of displayed rates
+    - Displaying incorrect number of days in remarks
+  - Potential user misunderstanding of calculation method
 
-### Calculate daily wage rate for unpaid leave by dividing salary component by working days [TSSD-1753]
-  **When it occurs**: During employee absence and payroll processing
+### Calculate daily wage rate for unpaid leave by dividing salary by working days [TSSD-1753]
+  **When it occurs**: During employee leave without pay
   **Failure points**:
-    - Global configuration overrides policy-specific calculations
-  - Potential use of incorrect salary component (gross vs basic)
-  - Inconsistent working day calculations
+    - Global configuration overrides policy-specific settings
+  - Inconsistent salary component selection (basic vs gross)
+  - Misalignment between expected and actual calculation method
 
-### Calculate daily rate by dividing (Basic Salary + Allowances) by working days, excluding public holidays [TSSD-1807]
-  **When it occurs**: During payroll processing and leave deduction calculation
+### Calculate daily rate by dividing (basic salary + allowances) by working days, excluding public holidays [TSSD-1807]
+  **When it occurs**: During payroll processing for months with employee leave
   **Failure points**:
     - Displaying daily rate from incorrect month
   - Recalculating instead of storing original daily rate
@@ -805,921 +812,931 @@
   ## System Rules & Constraints
   - **Rule**: Only one proration method can be configured organization-wide
     - **How users discover**: During payroll setup process
-    - **Impact**: Prevents configuring category-specific salary calculations
+    - **Impact**: Prevents accurate salary calculations for diverse workforce
     - **Evidence**: [TSSD-4876]
 
   - **Rule**: Leave days are only accrued after full month completion
     - **How users discover**: During employee offboarding process
-    - **Impact**: Employees may lose partial month leave days
+    - **Impact**: Employees lose potential leave compensation for partial months
     - **Evidence**: [TSSD-2499]
 
-  - **Rule**: Cannot configure Daily Rate directly in Daily Rate Calculator
-    - **How users discover**: Through attempted configuration and system limitations
-    - **Impact**: Increased administrative overhead and potential calculation errors
+  - **Rule**: Cannot configure Daily Rate directly in calculator
+    - **How users discover**: Through attempted configuration
+    - **Impact**: Increased administrative overhead
     - **Evidence**: [OS-446]
 
-  - **Rule**: Attendance data currently displayed only in list format
-    - **How users discover**: When attempting to analyze attendance records
-    - **Impact**: Reduced usability and slower data comprehension
+  - **Rule**: Attendance can only be viewed in a list format
+    - **How users discover**: When attempting to view attendance data
+    - **Impact**: Limited data comprehension and user experience
     - **Evidence**: [TSSD-3774]
 
-  - **Rule**: Must mention employee or manager to trigger notification
-    - **How users discover**: Through support interactions and failed notifications
-    - **Impact**: Additional manual step required for notification delivery
+  - **Rule**: Must mention employee or manager for notification
+    - **How users discover**: Through failed notification attempts
+    - **Impact**: Comments may not trigger notifications without explicit mention
     - **Evidence**: [TSSD-1517]
 
-  - **Rule**: Attendance status depends on work timing configuration and timezone offset
-    - **How users discover**: Through inconsistent attendance marking
-    - **Impact**: Potential unfair or incorrect attendance tracking
+  - **Rule**: Attendance status depends on work timing configuration and late arrival settings
+    - **How users discover**: Through attendance reports and color-coded status indicators
+    - **Impact**: Determines employee's attendance record and potential disciplinary actions
     - **Evidence**: [TSSD-713]
 
   - **Rule**: Hours calculated until official checkout or shift end
-    - **How users discover**: Through attendance report generation
-    - **Impact**: Can display up to 24 hours if no checkout occurs
+    - **How users discover**: By examining attendance report details
+    - **Impact**: Can generate up to 24-hour work period if no checkout occurs
     - **Evidence**: [TSSD-1433]
 
-  - **Rule**: Attendance records must maintain consistent metadata across all reporting views
-    - **How users discover**: By comparing different attendance reports for the same employee
-    - **Impact**: Potential misunderstandings about actual work location and attendance status
+  - **Rule**: Attendance records must maintain consistent attributes across reporting modules
+    - **How users discover**: By comparing different attendance reports
+    - **Impact**: Potential misunderstanding of employee attendance details
     - **Evidence**: [TSSD-1908]
 
   - **Rule**: One check-in/check-out per day
-    - **How users discover**: Through UI behavior and system limitations
-    - **Impact**: Prevents multiple attendance entries
+    - **How users discover**: Through system UI behavior
+    - **Impact**: Prevents multiple attendance entries in same day
     - **Evidence**: [TSSD-430]
 
-  - **Rule**: Managers must manually click 'Mark as Absent' for employees with no check-in data
-    - **How users discover**: Through daily attendance report interface
-    - **Impact**: Increased administrative overhead and potential delays in Time & Pay adjustments
+  - **Rule**: Managers must manually click 'Mark as Absent' for no check-in scenarios
+    - **How users discover**: Through daily attendance reporting process
+    - **Impact**: Operational inefficiency for large employee bases
     - **Evidence**: [TSSD-2206]
 
   - **Rule**: Conditional leave policies enforce daily accrual
-    - **How users discover**: During policy configuration and implementation
-    - **Impact**: Limited flexibility in leave balance tracking
+    - **How users discover**: During leave policy configuration process
+    - **Impact**: Prevents direct monthly accrual for conditional leave types
     - **Evidence**: [TSSD-1453]
 
-  - **Rule**: Login process is browser-cache dependent
+  - **Rule**: Login process is browser and cache state dependent
     - **How users discover**: Through intermittent access failures
-    - **Impact**: Requires manual cache management and browser switching
+    - **Impact**: Requires manual cache clearing and browser switching
     - **Evidence**: [TSSD-2266]
 
-  - **Rule**: Leave status cannot be uniformly applied to multi-segment shifts
-    - **How users discover**: Through inconsistent reporting in daily attendance reports
+  - **Rule**: Leave status must be consistently displayed across all shift segments
+    - **How users discover**: Through daily attendance reporting
     - **Impact**: Potential misrepresentation of employee attendance
     - **Evidence**: [OS-639]
 
-  - **Rule**: Attendance API logs are immutable once created
-    - **How users discover**: During data correction attempts
-    - **Impact**: Prevents direct data modification
+  - **Rule**: Attendance API logs are immutable after initial submission
+    - **How users discover**: During attempted data correction
+    - **Impact**: Prevents direct modification of historical attendance records
     - **Evidence**: [TSSD-1134]
 
-  - **Rule**: Leave encashment can be calculated using basic salary or basic salary with allowances
-    - **How users discover**: During EOS configuration process
-    - **Impact**: Determines final compensation calculation method
+  - **Rule**: Wage calculation can be based on basic salary or basic salary + allowances
+    - **How users discover**: Through configuration interface during EOS setup
+    - **Impact**: Directly affects final leave encashment and separation benefit calculations
     - **Evidence**: [TSSD-3939]
 
-  - **Rule**: Leave requests can be full-day or half-day
-    - **How users discover**: Through leave submission interface
-    - **Impact**: Enables flexible time-off tracking
+  - **Rule**: Leave requests can be created for full or half days
+    - **How users discover**: Through system interface and payroll calculations
+    - **Impact**: Affects unpaid leave deduction percentages
     - **Evidence**: [TSSD-2056]
 
-  - **Rule**: API integration does not support office location parameter
-    - **How users discover**: When generating custom attendance reports
-    - **Impact**: Incomplete attendance tracking and reporting
+  - **Rule**: API integrations do not pass office location details
+    - **How users discover**: By noticing empty columns in custom reports
+    - **Impact**: Incomplete attendance reporting
     - **Evidence**: [TSSD-4151]
 
-  - **Rule**: Conditional leave policies trigger daily accrual calculation
-    - **How users discover**: Through support inquiry or balance discrepancy
-    - **Impact**: Precise but potentially confusing leave balance tracking
+  - **Rule**: Conditional leave policies trigger daily pro-rata accrual calculation
+    - **How users discover**: Through support ticket investigation or unexpected balance
+    - **Impact**: More precise but potentially confusing leave balance computation
     - **Evidence**: [TSSD-4203]
 
-  - **Rule**: Notifications only sent monthly on first day
-    - **How users discover**: Through support interactions
-    - **Impact**: Limited flexibility in document tracking
+  - **Rule**: Only monthly notifications available
+    - **How users discover**: Through support interactions and system limitations
+    - **Impact**: Limited flexibility in document tracking and notification
     - **Evidence**: [TSSD-1357]
 
-  - **Rule**: Only one proration calculation method can be used company-wide
+  - **Rule**: Uniform salary proration calculation method
     - **How users discover**: During payroll setup and configuration
-    - **Impact**: Requires manual corrections for employee groups with different pay calculation needs
+    - **Impact**: Requires manual salary corrections for mixed employee categories
     - **Evidence**: [TSSD-4882]
 
-  - **Rule**: Daily leave accrual only available with conditional leave policies
-    - **How users discover**: Through support interactions or system configuration exploration
-    - **Impact**: Limits flexible leave accrual configuration without specific policy setup
+  - **Rule**: Daily leave accrual only available through conditional leave policies
+    - **How users discover**: Through support interactions or system documentation
+    - **Impact**: Requires explicit configuration to enable granular leave tracking
     - **Evidence**: [TSSD-4212]
 
-  - **Rule**: Quotes must be displayed consistently on mobile and desktop
+  - **Rule**: Content must be consistently displayed across mobile and desktop interfaces
     - **How users discover**: Through visual rendering inconsistencies
     - **Impact**: Reduced content readability and engagement
     - **Evidence**: [TSSD-872]
 
-  - **Rule**: Salary based on 26 working days per month
-    - **How users discover**: Through payroll calculations and manual adjustments
-    - **Impact**: Requires manual intervention for attendance variations
+  - **Rule**: Salary calculation based on 26 working days per month
+    - **How users discover**: Through payroll system configuration
+    - **Impact**: Requires manual intervention for variations in employee attendance
     - **Evidence**: [TSSD-4905]
 
   - **Rule**: Can disable individual system post types without affecting entire newsfeed
-    - **How users discover**: Through support guidance or administrative interface exploration
-    - **Impact**: Provides granular content management control
+    - **How users discover**: Through administrative interface exploration
+    - **Impact**: Provides granular content management
     - **Evidence**: [TSSD-120]
 
-  - **Rule**: Payroll settings always override leave policy daily wage formulas
-    - **How users discover**: Through greyed-out formulas and configuration screens
-    - **Impact**: Prevents unintended wage calculations and ensures centralized financial control
+  - **Rule**: Payroll settings take precedence over leave policy formulas for daily wage calculation
+    - **How users discover**: By observing greyed-out formulas in leave policy
+    - **Impact**: Users cannot directly modify overridden formulas
     - **Evidence**: [TSSD-2648]
 
-  - **Rule**: Dependent on third-party API provider's data transmission accuracy
+  - **Rule**: Dependent on third-party API provider data accuracy
     - **How users discover**: Through attendance record discrepancies
-    - **Impact**: Manual investigation required for data reconciliation
+    - **Impact**: Requires manual log reconciliation
     - **Evidence**: [TSSD-3419]
 
-  - **Rule**: Deduction calculation depends on most recent salary configuration
+  - **Rule**: Deduction calculated based on salary configuration at leave request creation time
     - **How users discover**: Through payroll discrepancies
-    - **Impact**: Potential incorrect financial calculations
+    - **Impact**: Potential incorrect salary deductions
     - **Evidence**: [TSSD-1581]
 
-  - **Rule**: One attendance record is generated per shift segment
-    - **How users discover**: By observing multiple entries for the same employee on a single day
-    - **Impact**: Detailed time tracking at the cost of simplified visual representation
+  - **Rule**: Each shift segment generates a separate attendance record
+    - **How users discover**: By observing attendance page display
+    - **Impact**: Multiple entries for same employee on same day
     - **Evidence**: [TSSD-4230]
 
-  - **Rule**: Social security contribution calculated as fixed percentage of gross salary
-    - **How users discover**: During payroll transaction submission
-    - **Impact**: Inflexible calculation method that does not adjust for partial employment
+  - **Rule**: Social security contributions calculated as full monthly amount
+    - **How users discover**: During payroll transaction submission and report generation
+    - **Impact**: Inaccurate employer contribution reporting
     - **Evidence**: [TSSD-2561]
 
-  - **Rule**: Gratuity calculated using 21 days per year for service between 1-5 years
-    - **How users discover**: Through payroll system calculation
-    - **Impact**: Determines final benefit amount
+  - **Rule**: Gratuity calculated as 21 days salary per year for 1-5 years of service
+    - **How users discover**: Through payroll calculations and exit processes
+    - **Impact**: Determines final compensation for departing employees
     - **Evidence**: [TSSD-4179]
 
-  - **Rule**: Daily wage calculated as (basic salary + allowances) / 30
-    - **How users discover**: During final settlement computation
-    - **Impact**: Affects accuracy of pro-rated salary calculations
+  - **Rule**: Daily wage calculated by dividing monthly compensation by 30 days
+    - **How users discover**: During payroll processing and EOS calculations
+    - **Impact**: Potential minor financial discrepancies
     - **Evidence**: [TSSD-2605]
 
-  - **Rule**: Fixed WPS-compliant gratuity calculation formula
-    - **How users discover**: Through calculation discrepancies
-    - **Impact**: Cannot customize calculation method
+  - **Rule**: WPS-compliant gratuity formula must be used
+    - **How users discover**: Through support interactions or manual verification
+    - **Impact**: Cannot customize calculation logic
     - **Evidence**: [TSSD-1232]
 
-  - **Rule**: System uses actual working days in month for daily wage calculation
-    - **How users discover**: Through discrepancies between manual and system calculations
-    - **Impact**: Potential minor variations in calculated end-of-service amounts
+  - **Rule**: Full decimal precision used in calculations
+    - **How users discover**: By comparing manual vs system calculations
+    - **Impact**: Minor amount variations possible
+    - **Evidence**: [TSSD-1232]
+
+  - **Rule**: Daily wage calculated using actual working days, not fixed policy days
+    - **How users discover**: Through calculation discrepancies
+    - **Impact**: Potential variation in calculated compensation
     - **Evidence**: [TSSD-3832]
 
-  - **Rule**: EOS calculation uses full monthly salary regardless of actual work performed
-    - **How users discover**: During payroll processing and settlement
-    - **Impact**: Potential financial discrepancies and manual adjustment requirements
+  - **Rule**: EOS calculation uses 30-day month formula
+    - **How users discover**: Through unexpected calculation results
+    - **Impact**: Inaccurate financial settlements for employees
     - **Evidence**: [TSSD-4033]
 
   - **Rule**: Leave accrues only at month-end
     - **How users discover**: During end-of-service processing
-    - **Impact**: Requires manual balance adjustment for mid-month exits
+    - **Impact**: Requires manual leave balance adjustment for mid-month departures
     - **Evidence**: [TSSD-4042]
 
-  - **Rule**: Monthly leave accrual only grants leave days at month-end
-    - **How users discover**: During EOS calculation
-    - **Impact**: Partial months not automatically included in leave balance
+  - **Rule**: Monthly accrual policies only grant leave days at month-end
+    - **How users discover**: During EOS gratuity calculation
+    - **Impact**: Leave days for incomplete months are not included
     - **Evidence**: [TSSD-4742]
 
-  - **Rule**: Daily wage calculated by dividing monthly salary by 30
-    - **How users discover**: During gratuity computation
-    - **Impact**: Standardized wage rate calculation
-    - **Evidence**: [TSSD-4742]
-
-  - **Rule**: EOS transaction requires no pending leave requests
+  - **Rule**: EOS transaction requires validation of existing leave requests
     - **How users discover**: Through system error messages during submission
-    - **Impact**: Prevents EOS processing even with no actual leave conflicts
+    - **Impact**: Prevents legitimate EOS transactions from processing
     - **Evidence**: [TSSD-3908]
 
-  - **Rule**: Salary proration requires total working days in month calculation
-    - **How users discover**: Through manual verification of calculation
-    - **Impact**: Determines precise salary for partial month employment
+  - **Rule**: Salary proration requires precise configuration of workweek, public holidays, and leave management
+    - **How users discover**: Through manual calculation verification
+    - **Impact**: Requires detailed understanding of payroll configuration
     - **Evidence**: [TSSD-4129]
 
-  - **Rule**: Location detection based on predefined office geofence configurations
-    - **How users discover**: Through check-in location labeling
-    - **Impact**: Limits ability to track check-ins across multiple undefined locations
+  - **Rule**: Location detection based on predefined office geofences
+    - **How users discover**: During check-in process
+    - **Impact**: Automatic location labeling (office or out-of-office)
     - **Evidence**: [TSSD-319]
 
   - **Rule**: Daily rates must be calculated using salary configuration at the time of leave
-    - **How users discover**: Through payroll discrepancies and compensation tracking
-    - **Impact**: Potential financial inaccuracies and employee compensation errors
+    - **How users discover**: During payroll reconciliation and compensation review
+    - **Impact**: Potential financial discrepancies and compensation inaccuracies
     - **Evidence**: [OS-867]
 
-  - **Rule**: Gratuity calculated using 21 days per year for 1-5 years of service
-    - **How users discover**: Manual calculation verification
-    - **Impact**: Determines final settlement amount
+  - **Rule**: Gratuity calculated by dividing total service days by 365
+    - **How users discover**: Manual calculation comparison
+    - **Impact**: Precise service year determination
     - **Evidence**: [TSSD-1625]
 
-  - **Rule**: Must calculate gratuity uniformly across contract types post-2021 UAE Labor Law
-    - **How users discover**: Through payroll calculation discrepancies
-    - **Impact**: Requires backend system updates to remove legacy calculation logic
+  - **Rule**: Gratuity calculation must follow UAE Labor Law Decree No. 33 of 2021
+    - **How users discover**: Through payroll calculations and support inquiries
+    - **Impact**: Uniform calculation across contract types
     - **Evidence**: [TSSD-4779]
 
-  - **Rule**: Gratuity calculation follows UAE labor law with system-specific computational nuances
-    - **How users discover**: Through support interactions or manual comparison
-    - **Impact**: Slight variations possible between system and manual calculations
+  - **Rule**: Gratuity calculation uses proprietary formula beyond simple UAE labor law interpretation
+    - **How users discover**: By comparing manual calculations with system results
+    - **Impact**: Requires additional explanation and validation of computational approach
     - **Evidence**: [TSSD-3123]
 
   - **Rule**: First 5 years calculated at 21 days per year, subsequent years at 30 days per year
-    - **How users discover**: Manual comparison or support inquiry
-    - **Impact**: Affects total gratuity calculation
+    - **How users discover**: Through manual calculation comparison or support interactions
+    - **Impact**: Determines precise gratuity amount based on service duration
     - **Evidence**: [TSSD-2252]
 
-  - **Rule**: Use 366-day divisor for years containing leap year periods
-    - **How users discover**: Calculation discrepancies
-    - **Impact**: Precise day count in partial years
+  - **Rule**: Use 366-day divisor for calculations involving leap years
+    - **How users discover**: Through detailed calculation review
+    - **Impact**: Ensures accurate prorating of partial years
     - **Evidence**: [TSSD-2252]
 
   - **Rule**: Gratuity calculation depends on contract type and departure reason
-    - **How users discover**: Through calculation discrepancies
-    - **Impact**: Requires manual workarounds to generate correct amounts
+    - **How users discover**: Through discrepancies in calculated amounts
+    - **Impact**: Requires manual verification and potential adjustment
     - **Evidence**: [TSSD-4796]
 
   - **Rule**: Leave balance calculated using monthly and daily accrual rates
     - **How users discover**: Through support team explanation
-    - **Impact**: Complex calculation requires manual interpretation
+    - **Impact**: Requires manual intervention to understand calculation
     - **Evidence**: [TSSD-3139]
 
   - **Rule**: Payroll cycle changes are permanent and cannot be undone
-    - **How users discover**: Through support consultation or attempted configuration
-    - **Impact**: High risk of data integrity issues
+    - **How users discover**: Through support consultation or direct system attempt
+    - **Impact**: Requires complete payroll table reset if change is necessary
     - **Evidence**: [TSSD-3879]
 
-  - **Rule**: Daily rate calculation must use working days at time of leave approval
-    - **How users discover**: Through payroll deduction discrepancies
-    - **Impact**: Ensures consistent and fair leave deduction calculations
+  - **Rule**: Daily rate calculation uses (Basic Salary + Allowances) / Working Days
+    - **How users discover**: Through payroll statements and leave deduction breakdowns
+    - **Impact**: Precise but potentially complex compensation adjustment
     - **Evidence**: [TSSD-2212]
 
-  - **Rule**: Daily wage calculated as Basic Salary / 30, not configurable
+  - **Rule**: Daily wage calculated as (Basic Salary / 30)
     - **How users discover**: During gratuity calculation process
-    - **Impact**: Prevents custom daily wage calculation methodologies
+    - **Impact**: Prevents custom daily wage formula configurations
     - **Evidence**: [TSSD-2043]
 
-  - **Rule**: GOSI deductions must be calculated based on actual working days for partial months
-    - **How users discover**: By comparing exported report with actual payroll calculations
+  - **Rule**: GOSI deductions must be calculated proportionally for partial months
+    - **How users discover**: By comparing exported report with actual payroll table
     - **Impact**: Potential financial reporting inaccuracies
     - **Evidence**: [TSSD-3249]
 
-  - **Rule**: Leave accrual defaults to monthly calculation
-    - **How users discover**: During final settlement process
-    - **Impact**: Potential minor discrepancies in leave balance
+  - **Rule**: Default leave accrual calculation uses monthly proration
+    - **How users discover**: During end-of-service leave balance settlement
+    - **Impact**: Potential minor calculation discrepancies for mid-month departures
     - **Evidence**: [TSSD-4813]
 
-  - **Rule**: Leave salary calculated using daily rate based on selected day type configuration
-    - **How users discover**: Through payroll statements or manual calculation comparisons
-    - **Impact**: Can result in full salary payment instead of prorated amount
+  - **Rule**: Leave salary can be calculated using 'Custom Days' or 'Calendar Days' method
+    - **How users discover**: Through payroll configuration and unexpected calculation results
+    - **Impact**: Determines whether public holidays are excluded from salary calculation
     - **Evidence**: [TSSD-2106]
 
-  - **Rule**: Daily wage calculated using basic salary by default
-    - **How users discover**: By comparing report calculations with expected results
+  - **Rule**: Daily wage must be calculated using either basic or gross pay
+    - **How users discover**: Through report generation and manual verification
     - **Impact**: Potential financial reporting inaccuracies
     - **Evidence**: [TSSD-3487]
 
-  - **Rule**: Different leave types have unique deduction calculation formulas
-    - **How users discover**: Through payroll statements or support interaction
-    - **Impact**: Potential misunderstanding of deduction amounts
+  - **Rule**: Different leave types use distinct salary deduction formulas
+    - **How users discover**: Through payroll statements or support interactions
+    - **Impact**: Potential user confusion and increased support burden
     - **Evidence**: [TSSD-3213]
 
-  - **Rule**: Daily rate can be calculated as basic/working days or basic+allowances/calendar days
-    - **How users discover**: Through payroll configuration and unexpected deduction amounts
-    - **Impact**: Directly affects unpaid leave financial calculations
+  - **Rule**: Daily rate can be calculated using basic/working days or basic+allowances/calendar days
+    - **How users discover**: Through payroll configuration settings and unexpected deduction amounts
+    - **Impact**: Potential inconsistent unpaid leave deduction calculations
     - **Evidence**: [TSSD-1798]
 
-  - **Rule**: Closed payroll cycles cannot be modified from backend
-    - **How users discover**: When attempting post-closure corrections
-    - **Impact**: Prevents retroactive payment adjustments
+  - **Rule**: Payroll cycles become immutable upon closure
+    - **How users discover**: During support requests for corrections
+    - **Impact**: Prevents retroactive payment modifications
     - **Evidence**: [TSSD-3880]
 
-  - **Rule**: Daily wage calculated using fixed divisor defined in leave policy
-    - **How users discover**: During salary computation or through support interactions
-    - **Impact**: Standardized but potentially inflexible salary calculations
+  - **Rule**: Leave salary calculated using fixed divisor defined in leave policy
+    - **How users discover**: Through salary calculation discrepancies
+    - **Impact**: Rigid calculation prevents manual override of daily wage divisor
     - **Evidence**: [TSSD-4731]
 
-  - **Rule**: System automatically generates full EOS deduction, then recalculates proportionally based on working days
-    - **How users discover**: During payroll processing and EOS calculation
-    - **Impact**: Users cannot directly delete platform-generated deductions
+  - **Rule**: System automatically deducts full monthly salary and recalculates proportionally based on working days
+    - **How users discover**: During EOS processing when unexpected deductions appear
+    - **Impact**: Requires manual verification and potential adjustment of calculated amounts
     - **Evidence**: [TSSD-2597]
 
-  - **Rule**: Calculation engine defaults to calendar days for leave salary accrual
+  - **Rule**: Default calculation uses calendar days instead of working days
     - **How users discover**: By comparing expected vs actual report calculations
-    - **Impact**: Inaccurate financial reporting and leave compensation tracking
+    - **Impact**: Inaccurate leave salary accrual reporting
     - **Evidence**: [TSSD-3402]
 
-  - **Rule**: Public holidays are automatically excluded from working days salary calculations
-    - **How users discover**: During final salary settlement process
-    - **Impact**: Consistent but potentially inflexible salary proration
+  - **Rule**: Public holidays are automatically excluded from working days calculation
+    - **How users discover**: During salary proration for termination
+    - **Impact**: Consistent but potentially inflexible salary calculations
     - **Evidence**: [TSSD-3995]
 
   - **Rule**: Leave requests with dates after offboarding date are automatically deleted
-    - **How users discover**: During offboarding process or after transaction rejection
-    - **Impact**: Potential loss of leave records and associated payroll information
+    - **How users discover**: During offboarding process or when reviewing leave history
+    - **Impact**: Potential loss of leave records and associated financial information
     - **Evidence**: [TSSD-4720]
 
-  - **Rule**: Current system calculates leave accruals using post-GOSI salary
-    - **How users discover**: Through manual reconciliation and discrepancy detection
-    - **Impact**: Requires additional manual calculation and verification
+  - **Rule**: Leave accrual calculated using post-GOSI salary
+    - **How users discover**: Through manual verification of leave balance computations
+    - **Impact**: Reduced accuracy in leave balance tracking
     - **Evidence**: [TSSD-291]
 
-  - **Rule**: Leave salary report shows virtual projection (Leave Availed * Daily Wage)
-    - **How users discover**: Through manual comparison with actual leave salary requests
-    - **Impact**: Potential user confusion about leave earnings
+  - **Rule**: Leave accrual report shows virtual projection, not actual leave salary
+    - **How users discover**: Through support interactions and manual investigation
+    - **Impact**: Potential user confusion about leave salary calculations
     - **Evidence**: [TSSD-4543]
 
-  - **Rule**: Leave cycles start based on employee's hire date
-    - **How users discover**: Through balance discrepancies
-    - **Impact**: Potential variations in leave balance calculations
+  - **Rule**: Leave cycle starts from day before hire date for February 29th hires
+    - **How users discover**: Through support ticket investigation
+    - **Impact**: Potential 1-day discrepancy in first leave cycle
     - **Evidence**: [TSSD-3822]
 
-  - **Rule**: Conditional allowance calculated on daily basis
-    - **How users discover**: Comparing expected vs actual balance
-    - **Impact**: Precise but complex calculation method
-    - **Evidence**: [TSSD-3822]
-
-  - **Rule**: Maximum 25 days can be carried forward between leave cycles
-    - **How users discover**: Through support explanation or system display
-    - **Impact**: Limits total accumulated leave
+  - **Rule**: Maximum 25 days can be carried forward to next leave cycle
+    - **How users discover**: Through balance calculation results
+    - **Impact**: Limits total accumulated leave days
     - **Evidence**: [TSSD-4243]
 
-  - **Rule**: Accrual frequency depends on policy type and job tenure toggle state
-    - **How users discover**: Through system configuration and leave balance calculations
-    - **Impact**: Determines precision of leave balance and EOS calculations
+  - **Rule**: Accrual frequency depends on policy type and toggle state
+    - **How users discover**: Through manual configuration and unexpected calculation results
+    - **Impact**: Potential inaccuracies in leave balance and EOS calculations
     - **Evidence**: [TSSD-3082]
 
-  - **Rule**: Public holidays must be correctly counted as paid working days in prorated salary
-    - **How users discover**: Comparing manual calculations with system-generated results
-    - **Impact**: Potential salary calculation discrepancies
+  - **Rule**: Public holidays must be correctly processed in leave and salary calculations
+    - **How users discover**: Through payroll discrepancies
+    - **Impact**: Potential salary calculation errors
     - **Evidence**: [TSSD-2937]
 
-  - **Rule**: Leave encashment calculation can use working days or custom 30-day formula
-    - **How users discover**: Through payroll configuration interface
-    - **Impact**: Determines how daily wage is calculated for leave salary accrual
+  - **Rule**: Leave salary can be calculated using basic salary, basic plus allowances, divided by working days or 30 days
+    - **How users discover**: Through payroll configuration interfaces
+    - **Impact**: Determines accuracy of leave salary accrual reporting
     - **Evidence**: [TSSD-3779]
 
-  - **Rule**: Daily wage calculation depends on monthly working days
-    - **How users discover**: By comparing reports across different months
-    - **Impact**: Cumulative totals can vary based on working days configuration
+  - **Rule**: Leave salary accrual calculated based on working days in each month
+    - **How users discover**: By comparing monthly reports and noticing calculation differences
+    - **Impact**: Cumulative leave salary amounts can vary month-to-month
     - **Evidence**: [TSSD-3648]
 
   - **Rule**: Leave salary and salary proration use independent daily wage configurations
-    - **How users discover**: Through calculation discrepancies
-    - **Impact**: Requires manual configuration alignment
+    - **How users discover**: Through payroll calculation discrepancies
+    - **Impact**: Manual configuration required to align calculations
     - **Evidence**: [TSSD-2321]
 
   - **Rule**: Daily rate calculated as monthly salary divided by 30
-    - **How users discover**: Through payroll documentation or calculation discrepancies
-    - **Impact**: Determines base unit for leave salary computation
+    - **How users discover**: Through salary calculation results
+    - **Impact**: Determines base calculation for leave salary
     - **Evidence**: [TSSD-3226]
 
-  - **Rule**: Leave salary calculated using (Monthly Salary / 30.41) * Days of Leave
+  - **Rule**: Leave salary calculated using 30.41 standard days per month
     - **How users discover**: Through manual calculation or support explanation
-    - **Impact**: Precise but complex salary adjustment mechanism
+    - **Impact**: Precise but complex compensation tracking
     - **Evidence**: [TSSD-3275]
 
-  - **Rule**: Leave salary calculated using (Basic + Housing) / 30 * leave days
-    - **How users discover**: Through payroll calculations and discrepancies
-    - **Impact**: Limited flexibility in salary component handling
+  - **Rule**: Salary components not in leave formula are still paid in full
+    - **How users discover**: During payroll processing and review
+    - **Impact**: Potential over-compensation and misalignment with client expectations
     - **Evidence**: [TSSD-4387]
 
-  - **Rule**: Only one leave salary policy should be active per employee group
-    - **How users discover**: Through unexpected calculation errors or policy conflicts
-    - **Impact**: Incorrect leave salary calculations and request generation
+  - **Rule**: Only one leave salary policy should be active per employee category
+    - **How users discover**: Through unexpected calculation behaviors
+    - **Impact**: Prevents conflicts in daily rate calculations
     - **Evidence**: [TSSD-2934]
 
   - **Rule**: Leave policies calculate deductions based on total salary percentage
-    - **How users discover**: During leave payment calculation
-    - **Impact**: Cannot implement component-specific leave payments
+    - **How users discover**: During leave request and payroll processing
+    - **Impact**: Cannot implement selective salary component payments
     - **Evidence**: [TSSD-3654]
 
-  - **Rule**: Only one proration formula can be configured globally
-    - **How users discover**: During initial payroll setup or when attempting to configure multiple formulas
-    - **Impact**: Limits compensation strategy flexibility
+  - **Rule**: Only one proration formula can be applied across all employees
+    - **How users discover**: During payroll configuration or when attempting to set different rules
+    - **Impact**: Prevents granular salary calculation strategies
     - **Evidence**: [TSSD-4375]
 
-  - **Rule**: Air ticket allowances are added in full at renewal cycle end
-    - **How users discover**: Through system configuration and benefit policy
-    - **Impact**: Limited flexibility in allowance management
+  - **Rule**: Air ticket allowances added in bulk at renewal cycle end
+    - **How users discover**: Through system configuration and support interactions
+    - **Impact**: Prevents time-based, proportional benefit allocation
     - **Evidence**: [TSSD-3146]
 
-  - **Rule**: Salary proration depends entirely on configured work week
+  - **Rule**: Salary proration strictly follows configured work week
     - **How users discover**: Through payroll calculations and support interactions
     - **Impact**: Requires precise work week configuration for accurate calculations
     - **Evidence**: [TSSD-4292]
 
-  - **Rule**: Backend process runs daily at 5 AM DBX time
-    - **How users discover**: Through reporting interface timestamps
-    - **Impact**: Potential user confusion about exact retrieval timing
+  - **Rule**: Backend process runs at 5 AM DBX time
+    - **How users discover**: Review page timestamp
+    - **Impact**: Potential minor time discrepancies in data retrieval
     - **Evidence**: [OS-3034]
 
-  - **Rule**: Different gratuity calculation rules for limited vs unlimited contracts
-    - **How users discover**: Through manual calculation verification
-    - **Impact**: Potential miscalculation of termination benefits
+  - **Rule**: Different calculation rules for limited vs unlimited contracts
+    - **How users discover**: Manual calculation comparison
+    - **Impact**: Potential miscalculation of gratuity benefits
     - **Evidence**: [TSSD-375]
 
-  - **Rule**: Cannot backdate leave balance adjustments with existing daily attendance records
+  - **Rule**: Cannot backdate leave balance changes if daily attendance records exist
     - **How users discover**: Through support ticket escalation
-    - **Impact**: Prevents direct balance modifications
+    - **Impact**: Prevents simple leave balance corrections
     - **Evidence**: [TSSD-3789]
 
   - **Rule**: Leave salary calculated first, then deducted from active salary cycle
-    - **How users discover**: Through support interactions or manual calculation verification
-    - **Impact**: Affects total compensation calculation
+    - **How users discover**: Through support consultation or detailed configuration review
+    - **Impact**: Affects total compensation calculation and requires precise configuration
     - **Evidence**: [TSSD-4349]
 
   - **Rule**: Salary proration based on 30-day month calculation
     - **How users discover**: During payroll processing
-    - **Impact**: Determines precise daily wage for partial month work
+    - **Impact**: Determines daily rate and prorated salary calculation
     - **Evidence**: [TSSD-3058]
 
-  - **Rule**: Daily rate calculated using custom divisor (e.g., 30 days)
+  - **Rule**: Daily rate calculated by dividing total compensation by configured divisor
     - **How users discover**: Through payroll configuration or support explanation
-    - **Impact**: Precise compensation calculation
+    - **Impact**: Determines base calculation for prorated salary
     - **Evidence**: [TSSD-3512]
 
-  - **Rule**: Proration calculation locks at offboarding moment's daily rate configuration
+  - **Rule**: Actual calendar days used for final proration calculation
+    - **How users discover**: Through manual verification or support interaction
+    - **Impact**: Affects final prorated salary amount
+    - **Evidence**: [TSSD-3512]
+
+  - **Rule**: Proration calculation locks at offboarding moment based on current daily rate configuration
     - **How users discover**: During payroll processing or salary verification
     - **Impact**: Potential salary calculation inaccuracies
     - **Evidence**: [TSSD-2518]
 
-  - **Rule**: Salary proration based on working days, not calendar days
-    - **How users discover**: Through system calculations during payroll processing
-    - **Impact**: Ensures precise compensation matching actual work performed
+  - **Rule**: Salary calculated based on working days, excluding weekends
+    - **How users discover**: Through payroll processing and support interactions
+    - **Impact**: Ensures consistent and fair salary calculations
+    - **Evidence**: [TSSD-4303]
+
+  - **Rule**: Default workweek is Monday-Friday
+    - **How users discover**: System configuration and payroll calculations
+    - **Impact**: Standardizes working day determination
     - **Evidence**: [TSSD-4303]
 
   - **Rule**: Filtering is only available for Approved section, not Processed section
     - **How users discover**: Through attempted use of filtering functionality
-    - **Impact**: Requires manual data management and increases administrative overhead
+    - **Impact**: Increased administrative overhead and reporting complexity
     - **Evidence**: [TSSD-463]
 
-  - **Rule**: Individual activity hours are tracked but not automatically totaled
+  - **Rule**: Individual activity hours are tracked, but daily total is not automatically calculated
     - **How users discover**: Through manual calculation attempts
-    - **Impact**: Increased cognitive load for employees
+    - **Impact**: Additional user effort required to determine total work time
     - **Evidence**: [TSSD-696]
 
-  - **Rule**: Changing task date moves entry to new date in timesheet view
-    - **How users discover**: Through unexpected timesheet display changes
-    - **Impact**: Entries can appear to vanish from original dates
+  - **Rule**: Tasks can be reassigned to different dates without system restrictions
+    - **How users discover**: Through manual date editing
+    - **Impact**: Potential misunderstanding of timesheet historical accuracy
     - **Evidence**: [TSSD-4409]
 
-  - **Rule**: Leave deductions are automatically generated and cannot be easily modified
-    - **How users discover**: During payroll configuration attempts
-    - **Impact**: Reduced payroll configuration flexibility
+  - **Rule**: System automatically generates leave deductions
+    - **How users discover**: During payroll configuration process
+    - **Impact**: Restricts manual adjustment of compensation calculations
     - **Evidence**: [TSSD-3946]
 
   - **Rule**: Unpaid leave requests cannot have manual used days adjustment
-    - **How users discover**: During payroll processing and leave balance review
-    - **Impact**: Prevents accurate leave balance tracking
+    - **How users discover**: Through payroll cycle processing and unexpected deductions
+    - **Impact**: Prevents accurate leave balance tracking for complex leave scenarios
     - **Evidence**: [TSSD-2384]
 
-  - **Rule**: Leave request deletion does not automatically remove associated payroll deductions
-    - **How users discover**: Through manual verification during payroll processing
-    - **Impact**: Manual deduction removal required, potential payroll calculation errors
+  - **Rule**: Leave request deletion does not automatically remove corresponding payroll deductions
+    - **How users discover**: During payroll reconciliation and transaction review
+    - **Impact**: Manual deduction removal required, potential financial discrepancies
     - **Evidence**: [TSSD-2532]
 
-  - **Rule**: Unpaid leave deductions must match approved leave days
-    - **How users discover**: By reviewing payslip details
-    - **Impact**: Potential compliance and reporting issues
+  - **Rule**: Unpaid leave deduction calculated as daily wage rate × number of leave days
+    - **How users discover**: By comparing payslip deduction amounts
+    - **Impact**: Requires precise daily wage calculation and accurate day counting
     - **Evidence**: [TSSD-3044]
 
-  - **Rule**: Daily wage calculation locked at time of initial processing
+  - **Rule**: Daily wage calculation locked at time of initial computation
     - **How users discover**: Through unexpected salary deduction amounts
-    - **Impact**: Cannot modify deduction after initial calculation
+    - **Impact**: Cannot automatically adjust for mid-cycle configuration changes
     - **Evidence**: [TSSD-4464]
 
-  - **Rule**: Use 30.42 days divisor for daily wage calculation instead of calendar days
-    - **How users discover**: Through payroll deduction results
-    - **Impact**: Precise but potentially confusing wage deduction calculations
+  - **Rule**: Use 30.42 days divisor instead of calendar days for wage calculation
+    - **How users discover**: Through payroll statements or support inquiries
+    - **Impact**: More precise but potentially less intuitive wage calculations
     - **Evidence**: [TSSD-4368]
 
   - **Rule**: Payroll Configuration 'Overwrite' option takes precedence over Leave Policy settings
     - **How users discover**: Through configuration attempts and support interactions
-    - **Impact**: Users cannot modify leave policy calculation when overwrite is enabled
+    - **Impact**: Users cannot edit leave policy when overwrite is enabled
     - **Evidence**: [TSSD-4947]
 
-  - **Rule**: Daily rate can be calculated using Basic/Calendar days or Basic+Allowances/Calendar days
-    - **How users discover**: Through payroll calculations and policy configuration
-    - **Impact**: Potential miscalculation and user confusion
+  - **Rule**: Daily rate can be calculated using different formulas per policy
+    - **How users discover**: Through payroll calculations and manual investigation
+    - **Impact**: Potential misunderstanding of salary deductions
     - **Evidence**: [TSSD-1746]
 
-  - **Rule**: Daily wage calculated using actual calendar days in month
-    - **How users discover**: During report generation
+  - **Rule**: Daily wage calculated by dividing salary by actual calendar days in month
+    - **How users discover**: During report generation and review
     - **Impact**: Prevents custom divisor configurations
     - **Evidence**: [TSSD-1227]
 
-  - **Rule**: Workflow only triggers on manual 'mark as absent' action
-    - **How users discover**: Through workflow configuration and failed notifications
-    - **Impact**: Reduced automation, increased manual administrative overhead
+  - **Rule**: Workflow only triggers on manual 'Mark as Absent' action
+    - **How users discover**: Through failed notification attempts
+    - **Impact**: Reduces workflow automation effectiveness
     - **Evidence**: [TSSD-3438]
 
-  - **Rule**: Workflow must be configured with specific trigger time and date-based event parameters
-    - **How users discover**: Through configuration interface and support interactions
-    - **Impact**: Requires precise configuration for reliable operation
+  - **Rule**: Workflow triggers only after previous day's attendance is complete
+    - **How users discover**: Through configuration and system behavior
+    - **Impact**: Requires precise timing and record completeness
     - **Evidence**: [TSSD-3507]
 
-  - **Rule**: Use actual calendar days for daily rate calculation
+  - **Rule**: Daily rate calculated by dividing monthly salary by actual calendar days
     - **How users discover**: Through payroll remarks and deduction calculations
-    - **Impact**: Ensures precise, proportional salary deductions
+    - **Impact**: Ensures accurate pro-rata salary deductions
     - **Evidence**: [TSSD-1301]
 
   - **Rule**: Global daily rate configuration takes precedence over policy-level settings
     - **How users discover**: Through unexpected salary deduction calculations
-    - **Impact**: Users cannot customize leave deduction calculations when global settings exist
+    - **Impact**: Reduced flexibility in leave policy configuration
     - **Evidence**: [TSSD-1753]
 
-  - **Rule**: Daily rate calculation must exclude public holidays
-    - **How users discover**: During unpaid leave deduction verification
-    - **Impact**: Ensures precise pro-rata salary deductions
+  - **Rule**: Daily rate calculation must use working days, excluding public holidays
+    - **How users discover**: Through payroll deduction calculations
+    - **Impact**: Ensures precise pro-rata salary computation
     - **Evidence**: [TSSD-1807]
 
   
 
   ## Known Bugs & Failures
-  ### Cannot configure multiple proration methods within same organization [TSSD-4876]
+  ### Cannot configure multiple proration methods simultaneously [TSSD-4876]
   **Severity**: high
-  **Root cause hypothesis**: Inflexible proration calculation engine
+  **Root cause hypothesis**: Limited payroll configuration flexibility
   **Current status**: Feature request pending implementation
 
-  ### No automatic pro-rated leave encashment calculation [TSSD-2499]
-  **Severity**: high
-  **Root cause hypothesis**: Rigid monthly accrual logic
+  ### No automated pro-rata leave calculation for mid-month departures [TSSD-2499]
+  **Severity**: medium
+  **Root cause hypothesis**: Inflexible monthly accrual logic
   **Current status**: Requires manual workaround
 
-  ### Region-specific notification delivery failures [TSSD-1517]
+  ### Limited Daily Rate configuration options [OS-446]
+  **Severity**: medium
+  **Root cause hypothesis**: Incomplete feature design
+  **Current status**: Feature gap acknowledged
+
+  ### Comment submission fails in custom attendance reports [TSSD-1517]
   **Severity**: high
-  **Root cause hypothesis**: Potential regional deployment configuration issue
-  **Current status**: Intermittent notification failures in KSA accounts
+  **Root cause hypothesis**: Potential regional or interface-specific integration issue
+  **Current status**: Intermittent failure across KSA accounts
 
   ### Inconsistent attendance marking across different time periods [TSSD-713]
   **Severity**: medium
   **Root cause hypothesis**: Misconfigured work timing and late arrival settings
-  **Current status**: Configuration-dependent attendance tracking
+  **Current status**: Requires manual investigation and correction
 
-  ### Attendance report allows unvalidated overtime display [TSSD-1433]
+  ### Overtime column remains visible even after policy disablement [TSSD-1433]
   **Severity**: high
-  **Root cause hypothesis**: Lack of checkout validation mechanisms
-  **Current status**: System automatically calculates hours without manual review
+  **Root cause hypothesis**: Lack of conditional report column visibility
+  **Current status**: Column always displays, regardless of policy settings
 
-  ### Data inconsistency between Time & Productivity and daily attendance reports [TSSD-1908]
-  **Severity**: high
-  **Root cause hypothesis**: Lack of unified data synchronization mechanism across reporting modules
-  **Current status**: Unresolved systemic reporting issue
-
-  ### Lack of clear UI guidance about daily attendance cycle [TSSD-430]
+  ### Cross-report data synchronization failure in attendance records [TSSD-1908]
   **Severity**: medium
-  **Root cause hypothesis**: Insufficient user experience design
-  **Current status**: Users confused about check-in button availability
+  **Root cause hypothesis**: Disconnected data sources for different reporting modules
+  **Current status**: Unresolved data consistency issue
 
-  ### Lack of automated absence deduction generation for full-day employee absences [TSSD-2206]
-  **Severity**: high
-  **Root cause hypothesis**: System design prioritizes manual manager decision-making
-  **Current status**: Manual workflow with no automation option
-
-  ### Cannot configure monthly accrual for conditional leave policies [TSSD-1453]
+  ### Lack of clear UI feedback about daily attendance cycle [TSSD-430]
   **Severity**: medium
-  **Root cause hypothesis**: System design constraint prioritizing scalability
+  **Root cause hypothesis**: Insufficient user guidance about button visibility
+  **Current status**: Users confused about check-in availability
+
+  ### Lack of automated absence deduction generation [TSSD-2206]
+  **Severity**: high
+  **Root cause hypothesis**: System design prioritizes manual confirmation over automation
+  **Current status**: Requires manual 'Mark as Absent' action
+
+  ### No monthly accrual option for conditional leave policies [TSSD-1453]
+  **Severity**: medium
+  **Root cause hypothesis**: System design prioritizes scalability over configuration flexibility
   **Current status**: Unresolved system limitation
 
-  ### Browser cache interferes with login process [TSSD-2266]
+  ### Intermittent login failures across different browsers [TSSD-2266]
   **Severity**: medium
-  **Root cause hypothesis**: Inconsistent browser cache and cookie management
-  **Current status**: Requires manual intervention
+  **Root cause hypothesis**: Browser cache and cookie management complications
+  **Current status**: Requires manual user intervention
 
-  ### Leave status not consistently displayed for split shifts [OS-639]
+  ### Leave status not correctly propagated for split shifts [OS-639]
   **Severity**: medium
-  **Root cause hypothesis**: Incomplete shift configuration handling
-  **Current status**: Unresolved limitation
+  **Root cause hypothesis**: Incomplete shift configuration handling in reporting logic
+  **Current status**: Unresolved system limitation
 
   ### Cannot delete or overwrite biometric attendance API logs [TSSD-1134]
   **Severity**: medium
-  **Root cause hypothesis**: Design prioritizes data immutability and audit trail preservation
-  **Current status**: Requires manual workaround through manager override
+  **Root cause hypothesis**: Intentional data integrity design preventing retroactive modifications
+  **Current status**: Requires manual workaround via manager override
 
-  ### UI does not provide clear feedback after changing EOS leave encashment calculation method [TSSD-3939]
+  ### UI does not provide clear feedback on wage calculation configuration changes [TSSD-3939]
   **Severity**: medium
-  **Root cause hypothesis**: Potential synchronization issue between configuration backend and frontend display
-  **Current status**: Configuration changes not immediately reflected in UI
+  **Root cause hypothesis**: Potential synchronization issue between configuration and display
+  **Current status**: Configuration changes may not be immediately reflected in UI
 
-  ### Leave request status inconsistency [TSSD-2056]
+  ### Leave request state persistence failure [TSSD-2056]
   **Severity**: high
-  **Root cause hypothesis**: Fragmented state tracking across multiple database tables
-  **Current status**: Approved leaves can unexpectedly revert to pending
+  **Root cause hypothesis**: Multiple table record generation and inconsistent state tracking
+  **Current status**: Unresolved systemic issue
 
-  ### Office location missing in API-integrated attendance reports [TSSD-4151]
+  ### Office location not captured in API-based attendance custom reports [TSSD-4151]
   **Severity**: medium
-  **Root cause hypothesis**: API integration lacks office location data transmission capability
-  **Current status**: Unresolved long-standing limitation
+  **Root cause hypothesis**: API integration lacks office parameter transmission
+  **Current status**: Long-standing unresolved limitation
 
-  ### Lack of transparent leave balance calculation explanation [TSSD-4203]
+  ### Leave balance calculation not transparently explained [TSSD-4203]
   **Severity**: medium
-  **Root cause hypothesis**: Complex policy configuration options
+  **Root cause hypothesis**: Complex calculation logic not clearly communicated
   **Current status**: Requires manual support explanation
 
-  ### No start date field for documents [TSSD-1357]
-  **Severity**: medium
-  **Root cause hypothesis**: Limited document metadata configuration
-  **Current status**: Feature not planned
-
-  ### Cannot configure different proration methods per employee group [TSSD-4882]
+  ### Cannot configure group-specific salary proration methods [TSSD-4882]
   **Severity**: high
-  **Root cause hypothesis**: Lack of flexible salary configuration options
-  **Current status**: Requires manual workarounds
+  **Root cause hypothesis**: Lack of flexible payroll configuration options
+  **Current status**: Feature request pending implementation
 
-  ### Limited flexibility in leave accrual configuration across different cycle types [TSSD-4212]
+  ### Default leave accrual does not support automatic daily proration across all cycle types [TSSD-4212]
   **Severity**: medium
-  **Root cause hypothesis**: Rigid system design that requires complex policy configurations
-  **Current status**: Requires manual intervention and support assistance
+  **Root cause hypothesis**: Inflexible default configuration settings
+  **Current status**: Requires manual intervention through conditional policy configuration
 
-  ### Cross-platform UI rendering inconsistencies for daily quotes [TSSD-872]
+  ### Daily quotes incorrectly formatted across platforms [TSSD-872]
   **Severity**: medium
-  **Root cause hypothesis**: Lack of responsive design mechanisms
+  **Root cause hypothesis**: Lack of responsive design implementation
   **Current status**: Monitored but not immediately addressed
 
-  ### No automated salary proration for working days variation [TSSD-4905]
+  ### No automated mechanism for proportional salary calculation [TSSD-4905]
   **Severity**: high
-  **Root cause hypothesis**: Lack of dynamic payroll calculation system
-  **Current status**: Manual tracking and adjustment required
+  **Root cause hypothesis**: Lack of integrated attendance tracking with payroll system
+  **Current status**: Requires manual workarounds
 
-  ### Unclear visual communication of formula override mechanisms [TSSD-2648]
+  ### Unclear formula override mechanism in daily wage calculation [TSSD-2648]
   **Severity**: medium
-  **Root cause hypothesis**: Lack of explicit override indicators and synchronization between modules
-  **Current status**: Greyed-out formulas with implicit override behavior
+  **Root cause hypothesis**: Lack of synchronized configuration between leave and payroll modules
+  **Current status**: Manual alignment required
 
-  ### Selective data transmission discrepancies on weekends [TSSD-3419]
+  ### Inconsistent API data transmission on weekends [TSSD-3419]
   **Severity**: medium
-  **Root cause hypothesis**: API integration protocol limitations
-  **Current status**: Requires manual client-side investigation
+  **Root cause hypothesis**: Potential time zone or API configuration problem
+  **Current status**: Requires manual investigation
 
-  ### Unpaid leave deduction not automatically updated on salary configuration change [TSSD-1581]
+  ### System fails to recalculate pending unpaid leave deductions after salary configuration change [TSSD-1581]
   **Severity**: high
-  **Root cause hypothesis**: Synchronization issue between leave requests and salary configs
-  **Current status**: Requires manual intervention or workaround
+  **Root cause hypothesis**: Timing mismatch between leave request and salary configuration update
+  **Current status**: Requires manual workaround of deleting and recreating leave request
 
-  ### Split shift attendance records can be misinterpreted as duplicates [TSSD-4230]
+  ### Attendance page displays multiple records for split shifts [TSSD-4230]
   **Severity**: low
-  **Root cause hypothesis**: Lack of visual differentiation between shift segments
-  **Current status**: System working as designed, but with potential user confusion
+  **Root cause hypothesis**: Intentional system design for granular shift tracking
+  **Current status**: Expected system behavior, not a bug
 
-  ### No prorated calculation for employer social security contributions [TSSD-2561]
+  ### No proration logic for employer social security contributions [TSSD-2561]
   **Severity**: medium
-  **Root cause hypothesis**: Rigid calculation logic not designed for partial month scenarios
+  **Root cause hypothesis**: Lack of dynamic calculation mechanism for partial month employment
   **Current status**: Known limitation, planned for future improvement
 
-  ### Leap year not correctly processed in service day calculation [TSSD-4179]
+  ### Leap year not correctly handled in service day calculations [TSSD-4179]
   **Severity**: high
-  **Root cause hypothesis**: Hardcoded 365-day year assumption
+  **Root cause hypothesis**: Hardcoded 365-day year calculation logic
   **Current status**: Requires manual correction
 
-  ### Systematic undercalculation of pro-rated amounts by 0.1-0.2 decimals [TSSD-2605]
+  ### Decimal precision errors in pro-rated salary calculation [TSSD-2605]
   **Severity**: medium
-  **Root cause hypothesis**: Decimal precision handling limitation
-  **Current status**: Escalated to development, resolved
+  **Root cause hypothesis**: Rounding mechanism limitation
+  **Current status**: Escalated to development, potentially resolved
 
   ### Perceived calculation discrepancy due to decimal precision [TSSD-1232]
   **Severity**: low
-  **Root cause hypothesis**: Precise mathematical handling vs simplified manual calculation
-  **Current status**: Explained as expected system behavior
+  **Root cause hypothesis**: Different rounding approaches between manual and system calculations
+  **Current status**: Requires detailed explanation of calculation methodology
 
-  ### Inflexible working days calculation excluding manual override [TSSD-3832]
+  ### System calculates working days without public holiday exclusion [TSSD-3832]
   **Severity**: medium
-  **Root cause hypothesis**: Rigid system logic for working days determination
+  **Root cause hypothesis**: Rigid working days calculation logic
   **Current status**: Unresolved system limitation
 
-  ### EOS calculation ignores unpaid leave and actual salary received [TSSD-4033]
+  ### EOS calculation does not consider unpaid leave or actual salary received [TSSD-4033]
   **Severity**: high
   **Root cause hypothesis**: Inflexible backend calculation logic
-  **Current status**: Requires manual intervention and adjustment
+  **Current status**: Requires manual workarounds
 
-  ### No daily leave accrual for partial months [TSSD-4042]
+  ### No daily/pro-rata leave accrual for partial months [TSSD-4042]
   **Severity**: medium
-  **Root cause hypothesis**: Monthly accrual system design
+  **Root cause hypothesis**: System designed for monthly, not daily, leave crediting
   **Current status**: Requires manual intervention
 
   ### Potential discrepancy between system and manual gratuity calculations [TSSD-4742]
   **Severity**: medium
-  **Root cause hypothesis**: Complex calculation rules with multiple variables
+  **Root cause hypothesis**: Complex calculation rules with multiple service period rates
   **Current status**: Manual verification and adjustment possible
 
-  ### Incorrect leave request validation blocking EOS submission [TSSD-3908]
+  ### EOS submission blocked by incorrect leave request validation [TSSD-3908]
   **Severity**: high
   **Root cause hypothesis**: Flawed backend validation logic detecting non-existent leave requests
   **Current status**: Requires manual override or support intervention
 
-  ### Lack of calculation transparency in user interface [TSSD-4129]
+  ### Lack of transparent calculation fields in user interface [TSSD-4129]
   **Severity**: medium
-  **Root cause hypothesis**: Missing detailed calculation breakdown fields
+  **Root cause hypothesis**: UI does not show detailed proration steps
   **Current status**: Users must manually verify calculations
 
-  ### No filtering mechanism for out-of-office attendance records [TSSD-319]
+  ### No filter for out-of-office attendance records [TSSD-319]
   **Severity**: medium
   **Root cause hypothesis**: Reporting system lacks granular location-based filtering
-  **Current status**: Unresolved feature gap
+  **Current status**: Feature request pending evaluation
 
   ### Incorrect daily rate calculation for unpaid leave [OS-867]
   **Severity**: high
-  **Root cause hypothesis**: Lack of temporal salary rate tracking mechanism
-  **Current status**: Unresolved systemic limitation
+  **Root cause hypothesis**: Lack of temporal salary tracking mechanism
+  **Current status**: Unresolved system limitation
 
-  ### Leap year day not consistently included in service duration calculation [TSSD-1625]
-  **Severity**: medium
-  **Root cause hypothesis**: Inconsistent day counting methodology
-  **Current status**: Manual verification required
+  ### Leap year day calculation inconsistency [TSSD-1625]
+  **Severity**: low
+  **Root cause hypothesis**: Incomplete handling of February 29th in service duration
+  **Current status**: Requires manual verification
 
-  ### Legacy contract type logic causing inconsistent gratuity calculations [TSSD-4779]
+  ### Legacy contract type logic causing calculation discrepancies [TSSD-4779]
   **Severity**: high
-  **Root cause hypothesis**: Outdated system logic not aligned with 2021 UAE Labor Law
+  **Root cause hypothesis**: Outdated system logic not aligned with 2021 labor law
   **Current status**: Requires backend fix to implement uniform calculation
 
-  ### Gratuity calculation shows slight computational variance from manual calculation [TSSD-3123]
+  ### Minor calculation discrepancies between system and manual computations [TSSD-3123]
   **Severity**: low
-  **Root cause hypothesis**: System uses proprietary calculation methodology
-  **Current status**: Requires support explanation
+  **Root cause hypothesis**: Proprietary calculation methodology with nuanced rounding and computation rules
+  **Current status**: Requires support explanation, not considered a true error
 
   ### Calculation methodology not transparently communicated [TSSD-2252]
   **Severity**: medium
-  **Root cause hypothesis**: Complex calculation logic with multiple segmentation rules
-  **Current status**: Requires manual explanation
+  **Root cause hypothesis**: Complex calculation logic lacks clear user documentation
+  **Current status**: Requires manual explanation by support team
 
-  ### Gratuity calculation logic fails for limited contract employees [TSSD-4796]
+  ### Gratuity calculation produces incorrect amounts for limited contracts [TSSD-4796]
   **Severity**: high
-  **Root cause hypothesis**: Algorithmic complexity in handling contract type variations
-  **Current status**: Requires manual intervention
+  **Root cause hypothesis**: Calculation logic does not consistently handle different contract types
+  **Current status**: Requires manual workaround or system intervention
 
-  ### Custom payroll cycle modifications cause systemic data inconsistencies [TSSD-3879]
+  ### Lack of transparent leave balance calculation display [TSSD-3139]
+  **Severity**: medium
+  **Root cause hypothesis**: Complex backend calculation logic not exposed to users
+  **Current status**: Requires manual support explanation
+
+  ### Custom payroll cycle implementation causes multiple system complications [TSSD-3879]
   **Severity**: high
-  **Root cause hypothesis**: Rigid system architecture not designed for flexible cycle changes
+  **Root cause hypothesis**: Inflexible system architecture preventing dynamic cycle modifications
   **Current status**: Not recommended by support team
 
-  ### UI dynamically recalculates daily rates on page load [TSSD-2212]
+  ### UI dynamically recalculates daily rate on page load [TSSD-2212]
   **Severity**: medium
-  **Root cause hypothesis**: Lack of mechanism to store initially calculated daily rate
-  **Current status**: Resolved with fix to store initial daily rate
+  **Root cause hypothesis**: Lack of mechanism to store initially calculated rate
+  **Current status**: Fix deployed to store initial daily rate
 
   ### Potential extra day added in days worked calculation [TSSD-2043]
   **Severity**: low
   **Root cause hypothesis**: Rounding or date calculation logic
   **Current status**: Confirmed as designed behavior
 
-  ### Incorrect GOSI deduction calculation for mid-month joiners [TSSD-3249]
+  ### Incorrect GOSI deduction calculation in payroll template export [TSSD-3249]
   **Severity**: medium
-  **Root cause hypothesis**: Lack of sophisticated proration logic in export calculation
-  **Current status**: Workaround available through payroll table download
+  **Root cause hypothesis**: Lack of sophisticated proration logic for mid-month joiners
+  **Current status**: Workaround available via payroll table download
 
   ### Incorrect leave balance calculation for mid-month departures [TSSD-4813]
   **Severity**: high
   **Root cause hypothesis**: Monthly proration logic does not handle partial month accurately
   **Current status**: Requires manual intervention or policy configuration workaround
 
-  ### Leave salary calculation inconsistent with displayed leave duration [TSSD-2106]
+  ### Leave salary calculation shows different day counts based on day type configuration [TSSD-2106]
   **Severity**: medium
-  **Root cause hypothesis**: Misalignment between 'Custom Days' and 'Calendar Days' configurations
-  **Current status**: Configuration-dependent unexpected behavior
+  **Root cause hypothesis**: Inconsistent handling of public holiday exclusions
+  **Current status**: Configuration-dependent behavior
 
-  ### Daily wage calculation uses incorrect salary base [TSSD-3487]
+  ### Daily wage calculated on basic salary instead of gross pay [TSSD-3487]
   **Severity**: high
-  **Root cause hypothesis**: Lack of configurable calculation method
-  **Current status**: Unresolved systemic issue
+  **Root cause hypothesis**: Inflexible calculation base selection
+  **Current status**: Requires manual correction
 
-  ### Lack of clear documentation for leave policy calculation methods [TSSD-3213]
+  ### User misunderstands leave policy calculation method [TSSD-3213]
   **Severity**: medium
-  **Root cause hypothesis**: Complex, policy-driven calculation logic
-  **Current status**: Requires manual support intervention
+  **Root cause hypothesis**: Lack of clear policy formula documentation
+  **Current status**: Resolved through support explanation
 
-  ### System recalculates historical unpaid leave daily rates with current configuration [TSSD-1798]
+  ### System dynamically recalculates daily rate display without preserving original calculation [TSSD-1798]
   **Severity**: high
   **Root cause hypothesis**: Lack of configuration snapshot mechanism
-  **Current status**: Fix deployed to store initially calculated daily rate
+  **Current status**: Requires manual verification and potential manual correction
 
-  ### Unable to correct variable pay entries in closed payroll cycle [TSSD-3880]
+  ### Cannot correct duplicate variable pay in closed payroll cycle [TSSD-3880]
   **Severity**: medium
-  **Root cause hypothesis**: Intentional system design preventing post-closure modifications
-  **Current status**: Manual workaround or acceptance of duplicate payment required
+  **Root cause hypothesis**: Strict data immutability design
+  **Current status**: Requires manual workaround or cycle reopening
 
-  ### Perceived calculation discrepancy in leave salary computation [TSSD-4731]
+  ### Misalignment between user expectation and system calculation logic [TSSD-4731]
   **Severity**: medium
-  **Root cause hypothesis**: Rigid policy configuration not adapting to specific month characteristics
-  **Current status**: Requires support explanation of system logic
+  **Root cause hypothesis**: Inflexible policy configuration preventing dynamic calculation
+  **Current status**: Requires explicit policy configuration to resolve
 
-  ### Incorrect arrear amount calculation for employees with complex employment status changes [TSSD-2597]
+  ### Incorrect arrears calculation for employees with complex employment status changes [TSSD-2597]
   **Severity**: high
-  **Root cause hypothesis**: Inflexible calculation logic not accounting for nuanced employment transitions
-  **Current status**: Requires manual intervention and backend support
+  **Root cause hypothesis**: Lack of sophisticated handling for offboarding and rehiring scenarios
+  **Current status**: Manual correction required
 
-  ### Leave salary accrual report calculates using calendar days instead of working days [TSSD-3402]
+  ### Leave salary accrual calculation uses calendar days instead of working days [TSSD-3402]
   **Severity**: high
   **Root cause hypothesis**: Calculation engine lacks flexible formula interpretation
-  **Current status**: Bug identified, fix in development
+  **Current status**: Requires code fix and production deployment
 
-  ### Lack of manual override for public holiday exclusion in working days proration [TSSD-3995]
+  ### Lack of granular day-level salary adjustment around public holidays [TSSD-3995]
   **Severity**: medium
-  **Root cause hypothesis**: Rigid system design prioritizing standardization over flexibility
-  **Current status**: Calculation follows predefined working days logic
+  **Root cause hypothesis**: Rigid working days proration setting
+  **Current status**: System follows predefined calculation logic without manual override
 
-  ### Deduction details not displayed for offboarded employees [TSSD-4720]
+  ### Deduction details not fully displayed for offboarded employees [TSSD-4720]
   **Severity**: medium
-  **Root cause hypothesis**: System limitation in displaying leave information post-offboarding
-  **Current status**: Daily rates and number of days not shown
+  **Root cause hypothesis**: System limitation in preserving complete leave request information post-offboarding
+  **Current status**: Partial information displayed, daily rates and days might be hidden
 
-  ### Leave accrual calculation does not support full salary basis [TSSD-291]
+  ### Inaccurate leave accrual balance calculations [TSSD-291]
   **Severity**: medium
-  **Root cause hypothesis**: Inflexible calculation methodology
-  **Current status**: Planned enhancement for Q1 2024
+  **Root cause hypothesis**: Rigid calculation methodology not adaptable to varied organizational policies
+  **Current status**: Acknowledged as feature improvement for Q1 2024 release
 
-  ### Leave accrual report calculation does not match actual leave salary [TSSD-4543]
+  ### Leave salary column calculation differs from system's leave salary request [TSSD-4543]
   **Severity**: medium
-  **Root cause hypothesis**: Intentional virtual projection design lacking clear user communication
-  **Current status**: Unresolved UX design limitation
+  **Root cause hypothesis**: Intentional design to provide virtual projection
+  **Current status**: Requires user education about report's purpose
 
-  ### Incorrect leave balance for specific hire dates [TSSD-3822]
+  ### Conditional leave allowance calculation errors for specific hire dates [TSSD-3822]
   **Severity**: medium
-  **Root cause hypothesis**: Complexity in daily conditional allowance calculation
-  **Current status**: Requires manual investigation and system adjustment
+  **Root cause hypothesis**: Complex daily calculation logic with calendar edge cases
+  **Current status**: Requires manual support investigation
 
-  ### Leave balance display not intuitive for complex calculations [TSSD-4243]
+  ### Unintuitive leave balance display with negative days [TSSD-4243]
   **Severity**: medium
   **Root cause hypothesis**: Complex multi-cycle projection logic
-  **Current status**: Requires manual support explanation
+  **Current status**: Requires support team explanation
 
   ### Inconsistent leave accrual calculation across policy types [TSSD-3082]
   **Severity**: medium
-  **Root cause hypothesis**: Configuration toggle limits accrual method flexibility
-  **Current status**: System allows different accrual methods based on policy configuration
+  **Root cause hypothesis**: Toggle-based configuration creates calculation complexity
+  **Current status**: Requires manual verification and configuration
 
-  ### Public holiday incorrectly excluded from working days calculation during leave salary computation [TSSD-2937]
+  ### Public holiday incorrectly excluded from working days calculation [TSSD-2937]
   **Severity**: high
-  **Root cause hypothesis**: Inflexible calculation logic not handling holiday interactions
-  **Current status**: Requires manual correction
+  **Root cause hypothesis**: Calculation logic does not consistently handle public holidays in prorated salary
+  **Current status**: Engineering fix in progress
 
   ### Leave salary accrual report does not respect configured calculation method [TSSD-3779]
-  **Severity**: high
+  **Severity**: medium
   **Root cause hypothesis**: Potential frontend or cache synchronization issue
-  **Current status**: Requires manual verification and potential backend intervention
+  **Current status**: Intermittent miscalculation in report generation
 
-  ### Misalignment between expected and calculated leave salary accrual [TSSD-3648]
+  ### Inconsistent leave salary accrual calculations across months [TSSD-3648]
   **Severity**: medium
-  **Root cause hypothesis**: Configuration of daily wage calculator affects calculation method
-  **Current status**: Requires user configuration and understanding
+  **Root cause hypothesis**: Configuration of daily wage calculator using 'working days' method
+  **Current status**: System working as configured, but causing user confusion
 
-  ### Calculation mismatch between expected and system-generated leave salary [TSSD-2321]
+  ### Inconsistent daily wage calculation between leave salary and salary proration [TSSD-2321]
   **Severity**: medium
-  **Root cause hypothesis**: Independent daily wage configurations
-  **Current status**: Requires manual configuration verification
+  **Root cause hypothesis**: Independent configuration of daily wage formulas
+  **Current status**: Requires manual configuration alignment
 
   ### System calculates leave salary using incorrect number of days [TSSD-3226]
   **Severity**: high
-  **Root cause hypothesis**: Algorithmic error in date range to day count conversion
-  **Current status**: Requires manual deletion and resubmission of leave salary request
+  **Root cause hypothesis**: Calculation logic fails to match approved leave days
+  **Current status**: Requires manual resubmission to correct
 
-  ### Leave salary calculation not intuitively understood by users [TSSD-3275]
+  ### Leave salary calculation lacks user-friendly transparency [TSSD-3275]
   **Severity**: medium
-  **Root cause hypothesis**: Complex mathematical logic not visually explained
+  **Root cause hypothesis**: Complex mathematical formula not visually explained
   **Current status**: Requires manual support explanation
 
-  ### Non-formula allowances not prorated during leave periods [TSSD-4387]
+  ### Lack of granular allowance proration during leave periods [TSSD-4387]
   **Severity**: high
-  **Root cause hypothesis**: Rigid salary calculation logic without component-level configuration
-  **Current status**: Requires manual adjustments
+  **Root cause hypothesis**: Inflexible salary calculation logic
+  **Current status**: Requires manual workarounds
 
-  ### Policy changes do not take effect until other policies are deactivated [TSSD-2934]
+  ### Policy changes do not take effect until other policies are set to inactive [TSSD-2934]
   **Severity**: high
-  **Root cause hypothesis**: Ineffective policy precedence and caching mechanism
-  **Current status**: Manual policy deactivation required to apply changes
+  **Root cause hypothesis**: Incorrect policy precedence logic
+  **Current status**: Manual policy deactivation required
 
   ### Cannot configure leave policies to pay only basic salary [TSSD-3654]
   **Severity**: high
-  **Root cause hypothesis**: Lack of granular salary component configuration
+  **Root cause hypothesis**: Inflexible salary component handling
   **Current status**: Requires manual workarounds
 
-  ### Cannot apply different proration formulas for employee groups [TSSD-4375]
+  ### Cannot configure different proration formulas for office vs non-office employees [TSSD-4375]
   **Severity**: high
-  **Root cause hypothesis**: Inflexible salary calculation engine design
-  **Current status**: Unresolved product limitation
+  **Root cause hypothesis**: Inflexible global configuration design
+  **Current status**: Unresolved platform limitation
 
-  ### No daily pro-ration mechanism for air ticket allowances [TSSD-3146]
+  ### Cannot prorate air ticket allowances daily [TSSD-3146]
   **Severity**: medium
-  **Root cause hypothesis**: System designed for bulk allocation instead of granular tracking
-  **Current status**: Feature not planned for development
+  **Root cause hypothesis**: System design limits granular benefit tracking
+  **Current status**: Not planned for development
 
-  ### Timestamp discrepancy in scheduled data retrieval [OS-3034]
+  ### Timestamp shows data fetched 6 minutes before expected time [OS-3034]
+  **Severity**: low
+  **Root cause hypothesis**: Time zone or backend process timing variation
+  **Current status**: Accepted as potential system behavior
+
+  ### Lack of transparent gratuity calculation documentation [TSSD-375]
   **Severity**: medium
-  **Root cause hypothesis**: Time zone or backend process configuration complexity
-  **Current status**: Unresolved system behavior
+  **Root cause hypothesis**: Insufficient system documentation
+  **Current status**: Requires manual verification and support intervention
 
-  ### Potential incorrect application of contract-type calculation rules [TSSD-375]
+  ### No mechanism to manually adjust leave balances without risking attendance record integrity [TSSD-3789]
   **Severity**: medium
-  **Root cause hypothesis**: Lack of clear documentation on calculation logic
-  **Current status**: Requires manual verification
+  **Root cause hypothesis**: Overly rigid leave tracking system design
+  **Current status**: Backend workarounds required
 
-  ### No UI for manual leave balance adjustment [TSSD-3789]
-  **Severity**: high
-  **Root cause hypothesis**: System design prioritizes attendance record integrity
-  **Current status**: Requires case-by-case backend intervention
-
-  ### Configuration complexity leads to calculation misunderstandings [TSSD-4349]
+  ### Calculation logic not transparent to users [TSSD-4349]
   **Severity**: medium
-  **Root cause hypothesis**: Non-intuitive policy settings
-  **Current status**: Requires manual configuration and verification
+  **Root cause hypothesis**: Complex, configurable system with multiple interdependent settings
+  **Current status**: Requires support intervention to explain calculations
 
   ### Inconsistent salary proration for future departure dates [TSSD-3058]
   **Severity**: high
@@ -1731,142 +1748,142 @@
   **Root cause hypothesis**: Complex two-step calculation not clearly communicated
   **Current status**: Requires manual support intervention
 
-  ### Salary proration miscalculated when daily rate configuration changes [TSSD-2518]
+  ### System does not auto-recalculate proration when daily rate configuration changes [TSSD-2518]
   **Severity**: high
-  **Root cause hypothesis**: System design prevents dynamic proration recalculation
-  **Current status**: Requires manual workaround of rehiring and re-offboarding
+  **Root cause hypothesis**: Lack of dynamic recalculation mechanism post-offboarding
+  **Current status**: Manual workaround required
 
-  ### User misunderstanding of proration calculation method [TSSD-4303]
+  ### Client misunderstanding of proration calculation method [TSSD-4303]
   **Severity**: low
   **Root cause hypothesis**: Lack of clear documentation about working day calculation
   **Current status**: Resolved through support explanation
 
-  ### Cannot filter processed time and pay adjustments by destination [TSSD-463]
+  ### No filtering capability for processed time and pay adjustments [TSSD-463]
   **Severity**: medium
-  **Root cause hypothesis**: Missing feature in reporting infrastructure
-  **Current status**: Logged in product backlog as improvement
+  **Root cause hypothesis**: Incomplete reporting feature implementation
+  **Current status**: Logged in product backlog for future improvement
 
-  ### No daily hours summary feature [TSSD-696]
-  **Severity**: low
-  **Root cause hypothesis**: System design limitation in time aggregation
-  **Current status**: Acknowledged as backlog item
-
-  ### Timesheet entries disappear or show incorrectly after date modification [TSSD-4409]
+  ### No automatic daily hours total calculation [TSSD-696]
   **Severity**: medium
-  **Root cause hypothesis**: Lack of clear date change tracking mechanism
-  **Current status**: User confusion about entry persistence
+  **Root cause hypothesis**: Missing feature in timesheet aggregation logic
+  **Current status**: Acknowledged as future enhancement
 
-  ### Unable to edit or delete automatically created annual leave deduction [TSSD-3946]
+  ### Timesheet entries can disappear or show incorrectly after date modifications [TSSD-4409]
   **Severity**: medium
-  **Root cause hypothesis**: Rigid system configuration preventing manual intervention
-  **Current status**: Requires development team intervention
+  **Root cause hypothesis**: Lack of clear date modification tracking
+  **Current status**: User experiences inconsistent timesheet display
 
-  ### Multi-month unpaid leave causes incorrect deduction and salary calculation [TSSD-2384]
+  ### Cannot edit or delete auto-generated leave deductions [TSSD-3946]
+  **Severity**: medium
+  **Root cause hypothesis**: Rigid system design preventing flexible payroll configuration
+  **Current status**: Development team investigating configuration limitations
+
+  ### Multi-month unpaid leave requests cause deduction accumulation and negative salary [TSSD-2384]
   **Severity**: high
   **Root cause hypothesis**: Lack of flexible leave balance adjustment mechanism
   **Current status**: Requires manual workaround of deleting and recreating leave requests
 
   ### Duplicate deduction generation during leave transaction modification [TSSD-2532]
   **Severity**: high
-  **Root cause hypothesis**: Lack of robust leave-to-payroll synchronization logic
-  **Current status**: Unresolved systemic issue requiring manual cleanup
+  **Root cause hypothesis**: Lack of robust synchronization between leave management and payroll systems
+  **Current status**: Requires manual cleanup of orphaned deductions
 
-  ### Payslip displays incorrect unpaid leave day count [TSSD-3044]
+  ### Mismatch between unpaid leave deduction amount and displayed leave days [TSSD-3044]
   **Severity**: high
   **Root cause hypothesis**: Incomplete cross-month leave aggregation logic
   **Current status**: Unresolved system limitation
 
   ### Time Off and Payroll modules lack real-time synchronization [TSSD-4464]
   **Severity**: high
-  **Root cause hypothesis**: Modules do not share complete leave request details during calculation
+  **Root cause hypothesis**: No comprehensive data exchange mechanism between modules
   **Current status**: Manual deduction or cycle reopening required
 
   ### Leave Policy UI does not reflect actual calculation method when Overwrite is enabled [TSSD-4947]
   **Severity**: medium
-  **Root cause hypothesis**: Configuration hierarchy complexity
-  **Current status**: Requires manual verification of actual calculation method
+  **Root cause hypothesis**: Configuration hierarchy design limits UI synchronization
+  **Current status**: Known limitation in the system
 
-  ### Lack of transparency in leave policy configuration and calculation [TSSD-1746]
+  ### Lack of clear policy configuration visibility [TSSD-1746]
   **Severity**: medium
-  **Root cause hypothesis**: Complex, non-intuitive policy configuration system
-  **Current status**: Requires manual verification and deep understanding
+  **Root cause hypothesis**: Complex leave policy system without intuitive user guidance
+  **Current status**: Requires manual investigation and support intervention
 
-  ### Cannot accommodate custom daily wage calculation methods [TSSD-1227]
+  ### Cannot configure custom day divisor for daily wage calculation [TSSD-1227]
   **Severity**: medium
   **Root cause hypothesis**: Intentional design for accounting compliance
   **Current status**: Enhancement request added to backlog
 
-  ### Workflow does not trigger for system-default absent employees [TSSD-3438]
-  **Severity**: medium
-  **Root cause hypothesis**: Event design requires explicit manual action
-  **Current status**: Planned enhancement in development
-
-  ### Attendance absence workflow inconsistently triggered [TSSD-3507]
-  **Severity**: medium
-  **Root cause hypothesis**: Configuration complexity and event trigger mechanism limitations
-  **Current status**: Requires ongoing engineering intervention
-
-  ### Remarks display shows incorrect number of days [TSSD-1301]
-  **Severity**: low
-  **Root cause hypothesis**: Frontend display logic not synchronized with backend calculation
-  **Current status**: Calculation remains accurate despite display inconsistency
-
-  ### Unpaid leave deduction calculated using gross salary instead of basic salary [TSSD-1753]
+  ### Workflow does not trigger for system-default absences [TSSD-3438]
   **Severity**: high
-  **Root cause hypothesis**: Global configuration override of policy-specific calculation rules
+  **Root cause hypothesis**: Event configuration requires manual intervention
+  **Current status**: Planned enhancement in 2 weeks
+
+  ### Unreliable workflow trigger for absent employee notifications [TSSD-3507]
+  **Severity**: medium
+  **Root cause hypothesis**: Configuration complexity and timing dependencies
+  **Current status**: Requires ongoing engineering support and configuration refinement
+
+  ### Remarks display incorrect number of days while calculation remains accurate [TSSD-1301]
+  **Severity**: low
+  **Root cause hypothesis**: UI display logic not fully synchronized with backend calculation
+  **Current status**: Calculation correct, display potentially misleading
+
+  ### Global configuration overrides individual policy leave deduction calculations [TSSD-1753]
+  **Severity**: high
+  **Root cause hypothesis**: Centralized configuration inheritance model prioritizing system-wide settings
   **Current status**: Confirmed as expected system behavior
 
   ### Daily rate display shows incorrect month's calculation [TSSD-1807]
   **Severity**: medium
-  **Root cause hypothesis**: System recalculates daily rate during payroll processing instead of preserving original rate
-  **Current status**: Fixed by storing initially calculated daily rate
+  **Root cause hypothesis**: System recalculates instead of storing original daily rate
+  **Current status**: Partially resolved with rate storage fix
 
   
 
   ## Edge Cases & Exceptions
-  - **Scenario**: Organizations with white-collar and blue-collar employees requiring different proration calculations
+  - **Scenario**: Organizations with mixed employee categories requiring different proration rules
     - **System behavior**: Forces uniform proration across all employee types
-    - **User impact**: Inaccurate salary calculations for different employee categories
+    - **User impact**: Inaccurate salary calculations
     - **Evidence**: [TSSD-4876]
 
-  - **Scenario**: Employee leaves mid-month
-    - **System behavior**: Incomplete leave day calculation
-    - **User impact**: Potential loss of accrued leave compensation
+  - **Scenario**: Employee leaves mid-month before month-end
+    - **System behavior**: Calculates reduced leave encashment
+    - **User impact**: Potential loss of earned leave compensation
     - **Evidence**: [TSSD-2499]
 
-  - **Scenario**: Payroll manager needs to set unique daily rate for leave encashment
-    - **System behavior**: No direct configuration path available
-    - **User impact**: Requires manual workaround or external calculation
+  - **Scenario**: Payroll manager needs to set custom daily rate
+    - **System behavior**: Configuration blocked
+    - **User impact**: Requires external manual calculation
     - **Evidence**: [OS-446]
 
-  - **Scenario**: Comparing attendance across different time periods
-    - **System behavior**: Limited by current list view representation
-    - **User impact**: Difficulty in identifying attendance trends
+  - **Scenario**: Comparing attendance across multiple employees or time periods
+    - **System behavior**: Requires manual cross-referencing of list view data
+    - **User impact**: Increased cognitive load and potential misinterpretation
     - **Evidence**: [TSSD-3774]
 
-  - **Scenario**: Comment submission from custom reports
-    - **System behavior**: Potential error in comment transmission
-    - **User impact**: Comments may fail to send or notify
+  - **Scenario**: KSA region account comment submission
+    - **System behavior**: Inconsistent comment and notification delivery
+    - **User impact**: Unreliable communication channel for attendance tracking
     - **Evidence**: [TSSD-1517]
 
-  - **Scenario**: Employee checks in early but is marked late due to configuration
-    - **System behavior**: Applies late status based on configured work timing rules
-    - **User impact**: Potential misrepresentation of actual attendance
+  - **Scenario**: Employee checks in early but gets marked late
+    - **System behavior**: Applies late arrival rules based on configured work timing
+    - **User impact**: Potential incorrect attendance tracking
     - **Evidence**: [TSSD-713]
 
   - **Scenario**: Employee checks out on subsequent day
-    - **System behavior**: Calculates and displays extended hours as overtime
-    - **User impact**: Potential for manipulating overtime claims
+    - **System behavior**: Calculates extended hours across multiple days
+    - **User impact**: Potential for generating unauthorized overtime claims
     - **Evidence**: [TSSD-1433]
 
-  - **Scenario**: Overtime adjustments showing different location statuses in multiple reports
-    - **System behavior**: Inconsistent display of check-in/out location across reporting modules
-    - **User impact**: Reduced trust in attendance tracking system
+  - **Scenario**: Overtime adjustment report shows different location status than daily attendance report
+    - **System behavior**: Displays conflicting location and edit status information
+    - **User impact**: Reduced trust in attendance tracking accuracy
     - **Evidence**: [TSSD-1908]
 
   - **Scenario**: Attempting multiple check-ins in same day
     - **System behavior**: Check-in button becomes unavailable
-    - **User impact**: Confusion about button visibility
+    - **User impact**: Confusion about attendance tracking
     - **Evidence**: [TSSD-430]
 
   - **Scenario**: No attendance record for entire day
@@ -1874,94 +1891,94 @@
     - **User impact**: Manual intervention needed for absence tracking
     - **Evidence**: [TSSD-2206]
 
-  - **Scenario**: Client needs monthly accrual for conditional leave policies
+  - **Scenario**: Client requires monthly accrual for End of Service calculations
     - **System behavior**: System defaults to daily accrual
-    - **User impact**: Cannot match specific organizational leave calculation methods
+    - **User impact**: Must adapt leave calculation methods to system constraints
     - **Evidence**: [TSSD-1453]
 
-  - **Scenario**: Browser-specific login inconsistencies
-    - **System behavior**: Intermittent page loading and authentication failures
-    - **User impact**: Requires technical troubleshooting
+  - **Scenario**: Login fails on primary browser but succeeds in incognito mode
+    - **System behavior**: Authentication mechanism bypasses browser-specific cache limitations
+    - **User impact**: Requires alternative browser or mode to access platform
     - **Evidence**: [TSSD-2266]
 
-  - **Scenario**: Split shift with leave request
-    - **System behavior**: Partial or inconsistent status update
-    - **User impact**: Incorrect attendance tracking
+  - **Scenario**: Split shift leave request
+    - **System behavior**: Partial or inconsistent leave status display
+    - **User impact**: Inaccurate attendance tracking
     - **Evidence**: [OS-639]
 
-  - **Scenario**: Selective employee attendance data correction
-    - **System behavior**: Requires manager override for individual record editing
-    - **User impact**: Manual intervention needed for data adjustments
+  - **Scenario**: Needing to correct attendance data for multiple employees
+    - **System behavior**: Requires individual record management through manager override
+    - **User impact**: Complex, manual correction process
     - **Evidence**: [TSSD-1134]
 
-  - **Scenario**: Changing daily wage calculation setting does not immediately update UI
-    - **System behavior**: Configuration change made, but display remains unchanged
-    - **User impact**: Confusion about whether configuration was successfully applied
+  - **Scenario**: Configuration change does not immediately update display
+    - **System behavior**: Eligibility section may show previous calculation method
+    - **User impact**: Uncertainty about whether configuration was successfully applied
     - **Evidence**: [TSSD-3939]
 
-  - **Scenario**: Multiple leave requests for same employee and date
-    - **System behavior**: Creates duplicate records across multiple tables
-    - **User impact**: Confusing approval status and notification history
+  - **Scenario**: Approved leave request reverts to pending status
+    - **System behavior**: Multiple approval entries created with unclear triggers
+    - **User impact**: Confusion about actual leave approval state
     - **Evidence**: [TSSD-2056]
 
-  - **Scenario**: API-based attendance tracking
-    - **System behavior**: Office location column remains empty in custom reports
-    - **User impact**: Reduced reporting accuracy and compliance tracking
+  - **Scenario**: API-based attendance tracking without office details
+    - **System behavior**: Reports show empty office location column
+    - **User impact**: Reduced reporting accuracy and visibility
     - **Evidence**: [TSSD-4151]
 
   - **Scenario**: Leave policy set to Conditional with changing tenure conditions
-    - **System behavior**: Calculate accrual on a daily basis using pro-rata method
-    - **User impact**: Balance may differ from manual expectations
+    - **System behavior**: Calculates accrual on daily basis: (monthly allowance / 30) * days worked
+    - **User impact**: Balance may differ from user's manual calculation expectation
     - **Evidence**: [TSSD-4203]
 
-  - **Scenario**: Need for daily expiry notifications
-    - **System behavior**: System cannot provide daily alerts
-    - **User impact**: Potential missed document renewal opportunities
+  - **Scenario**: Need for daily expiration notifications
+    - **System behavior**: Not supported, only monthly notifications
+    - **User impact**: Reduced document management granularity
     - **Evidence**: [TSSD-1357]
 
-  - **Scenario**: Mixed workforce with head office and operations employees
-    - **System behavior**: Applies uniform proration calculation
+  - **Scenario**: Mixed workforce with different proration requirements
+    - **System behavior**: Applies single calculation method
     - **User impact**: Necessitates manual salary adjustments
     - **Evidence**: [TSSD-4882]
 
   - **Scenario**: Migrating from work anniversary to calendar year cycle
-    - **System behavior**: Requires manual configuration of conditional leave policy for daily accrual
-    - **User impact**: Potential miscalculation of leave balances during transition
+    - **System behavior**: Requires reconfiguration of leave policy to maintain desired accrual method
+    - **User impact**: Potential complexity in maintaining consistent leave balance calculations
     - **Evidence**: [TSSD-4212]
 
-  - **Scenario**: Quote display on varying screen sizes and orientations
-    - **System behavior**: Content gets truncated or cut off
-    - **User impact**: Incomplete quote visibility
+  - **Scenario**: Daily quotes cut off on screen edges
+    - **System behavior**: Partial content display
+    - **User impact**: Incomplete message visibility
     - **Evidence**: [TSSD-872]
 
-  - **Scenario**: Employee works more than 26 days
-    - **System behavior**: Currently requires manual salary increment
-    - **User impact**: Additional administrative work
+  - **Scenario**: Employee works more or fewer than 26 days
+    - **System behavior**: Currently requires manual salary adjustment
+    - **User impact**: Additional administrative overhead and potential calculation errors
     - **Evidence**: [TSSD-4905]
 
-  - **Scenario**: Disabling 'Daily word of wisdom' while keeping newsfeed active
-    - **System behavior**: Allows selective post type deactivation
-    - **User impact**: Customizable information stream
+  - **Scenario**: User wants to disable specific system posts like 'Daily word of wisdom'
+    - **System behavior**: Allows selective disabling of system post types
+    - **User impact**: Customizable newsfeed experience
     - **Evidence**: [TSSD-120]
 
-  - **Scenario**: Unpaid leave daily wage calculation
-    - **System behavior**: Uses payroll-configured daily wage formula instead of leave policy formula
-    - **User impact**: Potential confusion about actual calculation method
+  - **Scenario**: Unpaid leave daily wage calculation differs from leave encashment
+    - **System behavior**: Different formulas applied based on context
+    - **User impact**: Requires manual verification of calculation method
     - **Evidence**: [TSSD-2648]
 
-  - **Scenario**: Weekend attendance data transmission
-    - **System behavior**: Potential selective recording issues
-    - **User impact**: Incomplete or inaccurate attendance records
+  - **Scenario**: Weekend attendance recording
+    - **System behavior**: Selective data transmission issues
+    - **User impact**: Incomplete or inaccurate attendance logs
     - **Evidence**: [TSSD-3419]
 
-  - **Scenario**: Salary configuration changes after leave request creation
-    - **System behavior**: May use outdated salary information for deduction
-    - **User impact**: Incorrect payroll deduction amounts
+  - **Scenario**: Salary configuration changed after leave request creation
+    - **System behavior**: Uses original salary configuration for deduction
+    - **User impact**: Incorrect payroll deduction amount
     - **Evidence**: [TSSD-1581]
 
-  - **Scenario**: Employee working split shifts
-    - **System behavior**: Generate separate attendance records for each shift segment
-    - **User impact**: Multiple entries appear for the same employee on the same day
+  - **Scenario**: Employee with split shifts
+    - **System behavior**: Generate multiple attendance records
+    - **User impact**: Potential confusion about record duplication
     - **Evidence**: [TSSD-4230]
 
   - **Scenario**: Employee offboarded mid-month
@@ -1969,119 +1986,119 @@
     - **User impact**: Incorrect reporting of employer contributions
     - **Evidence**: [TSSD-2561]
 
-  - **Scenario**: Calculating service days across a leap year
-    - **System behavior**: Incorrectly uses 365 days instead of 366
-    - **User impact**: Reduced gratuity calculation
+  - **Scenario**: Employee service spans a leap year
+    - **System behavior**: Incorrectly calculates using 365 days instead of 366 days
+    - **User impact**: Potential underpayment of gratuity benefits
     - **Evidence**: [TSSD-4179]
 
-  - **Scenario**: Employee departure on non-month-end date
-    - **System behavior**: Calculates proportional salary based on days worked
-    - **User impact**: Potential minor calculation discrepancies
+  - **Scenario**: Employee leaves before month-end
+    - **System behavior**: Pro-rate calculation triggered
+    - **User impact**: Potential minor calculation inaccuracies
     - **Evidence**: [TSSD-2605]
 
-  - **Scenario**: Partial year service duration
-    - **System behavior**: Convert days to precise decimal year fraction
-    - **User impact**: Minor calculation differences from manual methods
+  - **Scenario**: Limited contract employee with partial service year
+    - **System behavior**: Convert service days to precise decimal fraction
+    - **User impact**: Exact gratuity calculation including fractional periods
     - **Evidence**: [TSSD-1232]
 
-  - **Scenario**: Public holiday present in calculation month
-    - **System behavior**: Includes public holiday in working days count
-    - **User impact**: Slight reduction in calculated daily wage
+  - **Scenario**: Calculation in months with public holidays
+    - **System behavior**: Uses total working days without excluding public holidays
+    - **User impact**: Slightly different compensation calculation
     - **Evidence**: [TSSD-3832]
 
   - **Scenario**: Employee leaves mid-month with unpaid leave
-    - **System behavior**: Calculates EOS using full monthly salary
-    - **User impact**: Incorrect compensation and potential financial disputes
+    - **System behavior**: Cannot process EOS settlement automatically
+    - **User impact**: Requires manual intervention and calculation adjustments
     - **Evidence**: [TSSD-4033]
 
-  - **Scenario**: Employee leaving mid-month
+  - **Scenario**: Employee leaving before month-end
     - **System behavior**: No automatic pro-rata leave calculation
-    - **User impact**: Potential leave balance discrepancy
+    - **User impact**: Must manually adjust leave balance
     - **Evidence**: [TSSD-4042]
 
   - **Scenario**: Mid-month employee departure
-    - **System behavior**: Leave days not automatically prorated or included
+    - **System behavior**: Leave days not prorated or included
     - **User impact**: Requires manual balance adjustment
     - **Evidence**: [TSSD-4742]
 
-  - **Scenario**: Employee with no pending leaves cannot submit EOS
-    - **System behavior**: Blocks transaction with misleading error message
-    - **User impact**: Manual intervention required to resolve false validation
+  - **Scenario**: No pending leave requests exist, but system blocks EOS submission
+    - **System behavior**: Incorrectly detects leave requests after departure date
+    - **User impact**: Manual intervention required to complete EOS processing
     - **Evidence**: [TSSD-3908]
 
-  - **Scenario**: Employee joins mid-month with public holidays
-    - **System behavior**: Excludes non-working days from salary calculation
-    - **User impact**: Proportional salary based on actual working days
+  - **Scenario**: Employee joining mid-month with public holidays and weekends
+    - **System behavior**: Exclude non-working days from salary calculation
+    - **User impact**: Requires understanding complex proration formula
     - **Evidence**: [TSSD-4129]
 
   - **Scenario**: Check-in from location outside configured office boundaries
-    - **System behavior**: Generically labels as 'out of office'
-    - **User impact**: Cannot distinguish between different external locations
+    - **System behavior**: Labels as 'out of office'
+    - **User impact**: Cannot easily filter or investigate these records in reports
     - **Evidence**: [TSSD-319]
 
-  - **Scenario**: Unpaid leave spanning multiple salary rate periods
-    - **System behavior**: Defaults to current salary configuration
-    - **User impact**: Incorrect daily rate calculations
+  - **Scenario**: Unpaid leave across salary rate change periods
+    - **System behavior**: Incorrectly applies current salary configuration
+    - **User impact**: Inaccurate daily rate calculations
     - **Evidence**: [OS-867]
 
   - **Scenario**: Leap year with February 29th
-    - **System behavior**: Potential inconsistent day counting
-    - **User impact**: Minor gratuity amount discrepancies
+    - **System behavior**: May not automatically include extra day in calculations
+    - **User impact**: Potential minor gratuity amount discrepancies
     - **Evidence**: [TSSD-1625]
 
-  - **Scenario**: Partial year service duration calculation
-    - **System behavior**: Calculate using calendar days divided by 365, accounting for leap years
+  - **Scenario**: Partial service year with leap year
+    - **System behavior**: Calculate days using calendar days divided by 365
     - **User impact**: Precise prorated gratuity calculation
     - **Evidence**: [TSSD-4779]
 
-  - **Scenario**: Calculating gratuity for limited contract with resignation
-    - **System behavior**: Pro-rata calculation using specific formula
-    - **User impact**: Potential minor computational differences from expected amount
+  - **Scenario**: Limited contract with resignation and pro-rata service period
+    - **System behavior**: Applies complex calculation considering contract specifics
+    - **User impact**: Potential confusion about precise calculation methodology
     - **Evidence**: [TSSD-3123]
 
-  - **Scenario**: Partial year calculation with leap year inclusion
-    - **System behavior**: Dynamic divisor selection between 365 and 366
-    - **User impact**: Potential calculation differences from manual methods
+  - **Scenario**: Partial service year containing leap year
+    - **System behavior**: Dynamically adjust divisor from 365 to 366
+    - **User impact**: More precise calculation of incomplete service periods
     - **Evidence**: [TSSD-2252]
 
   - **Scenario**: Limited contract employee termination
     - **System behavior**: Inconsistent gratuity calculation
-    - **User impact**: Requires manual amount adjustment or departure reason modification
+    - **User impact**: Potential financial discrepancy requiring manual correction
     - **Evidence**: [TSSD-4796]
 
   - **Scenario**: Partial month leave accrual calculation
-    - **System behavior**: Calculate daily accrual rate and multiply by working days
+    - **System behavior**: Compute daily accrual rate by dividing monthly rate by working days
     - **User impact**: Requires detailed understanding of calculation method
     - **Evidence**: [TSSD-3139]
 
   - **Scenario**: Changing payroll cycle mid-year
-    - **System behavior**: Generates potential calculation and historical reporting complications
-    - **User impact**: Loss of historical data access and potential salary calculation errors
+    - **System behavior**: Generates potential calculation and historical data access issues
+    - **User impact**: Loss of previous month's financial record accessibility
     - **Evidence**: [TSSD-3879]
 
   - **Scenario**: Holiday calendar modifications after leave approval
-    - **System behavior**: Original calculation parameters should remain unchanged
-    - **User impact**: Prevents retroactive changes to approved leave deductions
+    - **System behavior**: Potentially recalculates daily rate dynamically
+    - **User impact**: Inconsistent display of deduction calculations
     - **Evidence**: [TSSD-2212]
 
-  - **Scenario**: Client wants alternative daily wage calculation (Basic × 12 / 365)
-    - **System behavior**: Rejects non-standard calculation, uses fixed 30-day divisor
-    - **User impact**: Potential minor differences in gratuity amount
+  - **Scenario**: Client requires alternative daily wage calculation method
+    - **System behavior**: Defaults to standard (Basic/30) calculation
+    - **User impact**: Potential minor discrepancies in gratuity amount
     - **Evidence**: [TSSD-2043]
 
   - **Scenario**: Employee joins mid-month
     - **System behavior**: Displays full monthly GOSI deduction instead of prorated amount
-    - **User impact**: Requires manual correction or alternative report verification
+    - **User impact**: Incorrect financial representation of deductions
     - **Evidence**: [TSSD-3249]
 
-  - **Scenario**: Employee leaves mid-month
-    - **System behavior**: Calculates leave based on previous month's end
-    - **User impact**: Potential loss of partial month leave days
+  - **Scenario**: Employee leaves mid-month before month's end
+    - **System behavior**: Accrues leaves only until previous month's end
+    - **User impact**: Slight reduction in calculated leave balance
     - **Evidence**: [TSSD-4813]
 
-  - **Scenario**: Leave policy uses 'Custom Days' with public holidays
-    - **System behavior**: Calculates using full interval without excluding holidays
-    - **User impact**: Potential overpayment or salary calculation confusion
+  - **Scenario**: Public holidays within leave interval
+    - **System behavior**: Different calculation methods exclude or include holidays differently
+    - **User impact**: Potential salary calculation discrepancies
     - **Evidence**: [TSSD-2106]
 
   - **Scenario**: UAE client with no social security contributions
@@ -2089,1242 +2106,1229 @@
     - **User impact**: Misleading financial reporting
     - **Evidence**: [TSSD-3487]
 
-  - **Scenario**: Confusion between unpaid leave and sick leave unpaid policy formulas
+  - **Scenario**: Mixing unpaid leave and sick leave unpaid policy formulas
     - **System behavior**: Applies policy-specific calculation method
-    - **User impact**: Unexpected or misunderstood salary deduction
+    - **User impact**: Unexpected deduction amounts
     - **Evidence**: [TSSD-3213]
 
-  - **Scenario**: Configuration changes mid-period
-    - **System behavior**: Dynamically recalculates display values using current settings
-    - **User impact**: Potential discrepancies in historical leave deduction amounts
+  - **Scenario**: Configuration change occurs after leave is taken
+    - **System behavior**: Recalculates display value using current configuration
+    - **User impact**: Misleading or incorrect unpaid leave deduction display
     - **Evidence**: [TSSD-1798]
 
-  - **Scenario**: Duplicate variable pay discovered after payroll cycle closure
-    - **System behavior**: No correction possible without reopening entire cycle
-    - **User impact**: Potential financial discrepancies and manual reconciliation required
+  - **Scenario**: Duplicate variable pay discovered after cycle closure
+    - **System behavior**: No correction possible without reopening entire payroll cycle
+    - **User impact**: Potential financial reconciliation challenges
     - **Evidence**: [TSSD-3880]
 
-  - **Scenario**: Leave spans partial month with varying calendar days
-    - **System behavior**: Applies consistent divisor regardless of month length
-    - **User impact**: Potential minor discrepancies in salary calculation
+  - **Scenario**: Leave request spans partial month with non-standard day count
+    - **System behavior**: Applies configured divisor regardless of actual month length
+    - **User impact**: Potential minor salary calculation variations
     - **Evidence**: [TSSD-4731]
 
   - **Scenario**: Employee offboarded and rehired in consecutive months
-    - **System behavior**: Generates prorated salary and EOS deductions based on departure date
-    - **User impact**: Requires manual verification and potential adjustment of arrears
+    - **System behavior**: Generates potentially incorrect arrears and deduction calculations
+    - **User impact**: Requires manual intervention to correct salary and benefit calculations
     - **Evidence**: [TSSD-2597]
 
-  - **Scenario**: User specifies working days in formula
-    - **System behavior**: Calculates using calendar days
-    - **User impact**: Incorrect leave salary computation
+  - **Scenario**: User configures 'Basic Salary + Allowance / Working Days' formula
+    - **System behavior**: Calculates using calendar days regardless of configuration
+    - **User impact**: Incorrect financial reporting and potential compliance issues
     - **Evidence**: [TSSD-3402]
 
   - **Scenario**: Employee departs mid-month near a public holiday
-    - **System behavior**: Maintains consistent salary calculation regardless of holiday proximity
-    - **User impact**: Potential misalignment with expected granular salary reduction
+    - **System behavior**: Calculates salary based on working days, excluding public holidays
+    - **User impact**: Potential misalignment with user's salary reduction expectations
     - **Evidence**: [TSSD-3995]
 
   - **Scenario**: Leave request created before offboarding with dates after departure
     - **System behavior**: Automatic deletion of leave request
-    - **User impact**: Unable to preserve leave records beyond departure date
+    - **User impact**: Loss of leave record and potential payroll deduction complications
     - **Evidence**: [TSSD-4720]
 
   - **Scenario**: Organizations with complex leave policy requirements
-    - **System behavior**: Unable to configure granular leave calculation rules
-    - **User impact**: Manual workarounds and potential leave balance inaccuracies
+    - **System behavior**: Current system cannot flexibly configure leave accrual calculations
+    - **User impact**: Requires manual workarounds and additional administrative effort
     - **Evidence**: [TSSD-291]
 
-  - **Scenario**: One month leave salary request always equals monthly salary
-    - **System behavior**: Actual calculation differs from report projection
-    - **User impact**: Misunderstanding of leave salary computation
+  - **Scenario**: Leave salary column shows different calculation from actual leave request
+    - **System behavior**: Displays theoretical projection based on accrual logic
+    - **User impact**: Misunderstanding of potential leave earnings
     - **Evidence**: [TSSD-4543]
 
   - **Scenario**: Employee hired on February 29th (leap year)
-    - **System behavior**: Cycle starts from February 28th, causing 1-day discrepancy
-    - **User impact**: Potential negative or reduced leave balance in first cycle
+    - **System behavior**: Cycle starts from February 28th, causing potential 1-day allowance gap
+    - **User impact**: Temporary negative or reduced leave balance
     - **Evidence**: [TSSD-3822]
 
-  - **Scenario**: Leave request spanning multiple cycles with partial month accruals
-    - **System behavior**: Prorates accrual and deducts from future and current balances
-    - **User impact**: Requires complex explanation of balance calculation
+  - **Scenario**: Leave request spanning multiple leave cycles
+    - **System behavior**: Prorates accrual and deducts from projected balances
+    - **User impact**: Requires complex understanding of balance calculation
     - **Evidence**: [TSSD-4243]
 
-  - **Scenario**: Employee leaves company mid-month with non-conditional leave policy
-    - **System behavior**: Monthly accrual may result in less accurate leave encashment
-    - **User impact**: Potential financial discrepancy in leave settlement
+  - **Scenario**: Employee leaving mid-month with non-conditional leave policy
+    - **System behavior**: Monthly accrual might not accurately reflect actual leave earned
+    - **User impact**: Potential underpayment or inaccurate leave encashment
     - **Evidence**: [TSSD-3082]
 
   - **Scenario**: Leave request spanning a public holiday
-    - **System behavior**: Excludes public holiday from working days calculation
-    - **User impact**: Incorrect prorated salary computation
+    - **System behavior**: May incorrectly exclude public holiday from working days total
+    - **User impact**: Potential underpayment or miscalculated salary
     - **Evidence**: [TSSD-2937]
 
-  - **Scenario**: Configured calculation method not reflected in generated reports
+  - **Scenario**: Configured calculation method not reflected in generated report
     - **System behavior**: Report uses default or previous calculation method
-    - **User impact**: Incorrect leave salary accrual reporting
+    - **User impact**: Inaccurate leave salary documentation
     - **Evidence**: [TSSD-3779]
 
   - **Scenario**: February has fewer working days
-    - **System behavior**: Recalculates daily wage rate based on available working days
-    - **User impact**: Potentially inconsistent cumulative leave salary totals
+    - **System behavior**: Daily wage rate adjusts dynamically
+    - **User impact**: Cumulative leave salary total differs from manual expectations
     - **Evidence**: [TSSD-3648]
 
-  - **Scenario**: Different divisors used for leave salary (30 days) and salary proration (30.42 days)
+  - **Scenario**: Different divisor used for leave salary (30 days) versus salary proration (30.42 days)
     - **System behavior**: Calculates compensation using separate formulas
-    - **User impact**: Potential misalignment in salary calculations
+    - **User impact**: Potential salary calculation variations
     - **Evidence**: [TSSD-2321]
 
-  - **Scenario**: Leave request spans multiple months or partial pay periods
-    - **System behavior**: Potential miscalculation of total leave days
-    - **User impact**: Incorrect leave salary amount
+  - **Scenario**: Leave request spans multiple date ranges
+    - **System behavior**: Potentially miscalculates total days
+    - **User impact**: Incorrect leave salary compensation
     - **Evidence**: [TSSD-3226]
 
-  - **Scenario**: Leave spanning two different payroll months
-    - **System behavior**: Compute total leave salary, then deduct current month's portion
-    - **User impact**: Potential confusion about calculation method
+  - **Scenario**: Leave spanning two payroll months
+    - **System behavior**: Calculate total leave salary, then deduct current month portion
+    - **User impact**: Potential confusion about expected salary amounts
     - **Evidence**: [TSSD-3275]
 
-  - **Scenario**: Allowances excluded from leave salary formula are still paid in full
-    - **System behavior**: Pays excluded allowances regardless of leave days
-    - **User impact**: Potential over-compensation and client dissatisfaction
+  - **Scenario**: Allowances excluded from leave salary formula
+    - **System behavior**: Pays excluded allowances in full during leave
+    - **User impact**: Unexpected salary calculations requiring manual adjustments
     - **Evidence**: [TSSD-4387]
 
   - **Scenario**: Multiple active leave salary policies for same employee type
-    - **System behavior**: Unpredictable daily rate calculations and policy application
+    - **System behavior**: Unpredictable daily rate calculations and policy change application
     - **User impact**: Incorrect leave salary requests and compensation
     - **Evidence**: [TSSD-2934]
 
-  - **Scenario**: Custom payroll cycle from 26th to 25th of month
-    - **System behavior**: Standard monthly salary calculations may not align
-    - **User impact**: Requires manual adjustment of leave calculations
+  - **Scenario**: Custom payroll cycles with non-standard monthly calculations
+    - **System behavior**: Uses standard 31-day month for daily rate calculations
+    - **User impact**: Potential misalignment with custom organizational cycles
     - **Evidence**: [TSSD-3654]
 
-  - **Scenario**: Different proration needed for office vs non-office employees
-    - **System behavior**: Rejects configuration of multiple formulas
-    - **User impact**: Manual calculations or workarounds required
+  - **Scenario**: Multi-category workforce with distinct compensation policies
+    - **System behavior**: Enforces uniform proration method
+    - **User impact**: Inability to implement precise salary calculations
     - **Evidence**: [TSSD-4375]
 
-  - **Scenario**: Employee wants to use partial air ticket allowance mid-cycle
-    - **System behavior**: Request rejected due to insufficient accrued balance
-    - **User impact**: Cannot utilize travel benefits proportionally
+  - **Scenario**: Partial year employment
+    - **System behavior**: Full annual allowance allocation
+    - **User impact**: Potential over or under-allocation of benefits
     - **Evidence**: [TSSD-3146]
 
   - **Scenario**: Work week with all 7 days configured as working days
     - **System behavior**: Calculates full month as working days
-    - **User impact**: Different proration result compared to standard calendar assumptions
+    - **User impact**: Different proration result compared to traditional calendar-based calculations
     - **Evidence**: [TSSD-4292]
 
-  - **Scenario**: Data retrieval occurs slightly before scheduled time
-    - **System behavior**: Timestamp shows retrieval 6 minutes early
-    - **User impact**: Uncertainty about precise data synchronization
+  - **Scenario**: Data retrieved slightly before or after scheduled time
+    - **System behavior**: Timestamp shows retrieval within minutes of scheduled time
+    - **User impact**: Confusion about exact data fetch timing
     - **Evidence**: [OS-3034]
 
   - **Scenario**: Calculating gratuity for employees with 5+ years of service
-    - **System behavior**: Apply 30 days per year of service
-    - **User impact**: Requires precise understanding of calculation methodology
+    - **System behavior**: Switch from 21 days to 30 days per year calculation
+    - **User impact**: Potential confusion about exact calculation method
     - **Evidence**: [TSSD-375]
 
-  - **Scenario**: Incorrect leave balance approval requiring reduction
-    - **System behavior**: Requires backend manual database update
-    - **User impact**: No self-service correction mechanism available
+  - **Scenario**: Incorrect leave balance approval requiring manual reduction
+    - **System behavior**: No native UI support for balance adjustment
+    - **User impact**: Requires backend intervention and manual database update
     - **Evidence**: [TSSD-3789]
 
   - **Scenario**: Selective allowance proration
-    - **System behavior**: Only specific allowances (e.g., housing) can be prorated
-    - **User impact**: Potential misalignment with expected compensation
+    - **System behavior**: Only specific allowances (e.g., housing) can be prorated while others remain full
+    - **User impact**: Requires manual configuration and deep understanding of payroll rules
     - **Evidence**: [TSSD-4349]
 
-  - **Scenario**: Payroll processed before employee departure date
+  - **Scenario**: Payroll processed before employee's departure date
     - **System behavior**: Fails to prorate salary correctly
-    - **User impact**: Potential over or underpayment of final salary
+    - **User impact**: Potential financial inaccuracy
     - **Evidence**: [TSSD-3058]
 
-  - **Scenario**: Employee joins mid-month in February
-    - **System behavior**: Calculates days worked based on actual calendar days
-    - **User impact**: Potential misunderstanding of proration logic
+  - **Scenario**: Employee joining mid-month in February
+    - **System behavior**: Calculates proration based on actual calendar days worked
+    - **User impact**: Potential misunderstanding of day counting method
     - **Evidence**: [TSSD-3512]
 
   - **Scenario**: Changing daily rate configuration after employee offboarding
-    - **System behavior**: No automatic recalculation of prorated amounts
-    - **User impact**: Incorrect salary calculations requiring manual intervention
+    - **System behavior**: Retains original proration calculation without automatic update
+    - **User impact**: Potentially incorrect salary calculation
     - **Evidence**: [TSSD-2518]
 
-  - **Scenario**: Employee terminated mid-month
-    - **System behavior**: Prorates salary based on actual working days in month
-    - **User impact**: Transparent and consistent salary calculation
+  - **Scenario**: Mid-month employee termination
+    - **System behavior**: Prorates salary based on actual working days
+    - **User impact**: Precise salary calculation reflecting actual work performed
     - **Evidence**: [TSSD-4303]
 
-  - **Scenario**: Multiple daily extra hour requests across different allocation types
-    - **System behavior**: No automatic categorization or filtering
-    - **User impact**: Increased manual tracking and potential misallocation risk
+  - **Scenario**: Multiple daily extra hour requests with different allocations
+    - **System behavior**: Cannot automatically distinguish destination of processed adjustments
+    - **User impact**: Requires manual tracking and potential data errors
     - **Evidence**: [TSSD-463]
 
-  - **Scenario**: Employee works multiple disconnected activities in a single day
-    - **System behavior**: Tracks individual activity times separately
-    - **User impact**: Must manually sum total hours worked
+  - **Scenario**: Multiple work activities in a single day
+    - **System behavior**: Hours recorded per activity without total aggregation
+    - **User impact**: Requires manual summation of activity hours
     - **Evidence**: [TSSD-696]
 
-  - **Scenario**: Manually changing task date across different days
-    - **System behavior**: Entry relocates to new date without warning
-    - **User impact**: Perceived loss or inconsistent tracking of time entries
+  - **Scenario**: Task logged on weekend appears in system
+    - **System behavior**: Entry persists despite being logged on non-working day
+    - **User impact**: Potential confusion about appropriate logging times
     - **Evidence**: [TSSD-4409]
 
   - **Scenario**: Employee uses more leave days than allowed
-    - **System behavior**: Automatically generates deduction based on predefined rules
-    - **User impact**: Limited ability to adjust or override automatic deductions
+    - **System behavior**: Automatically creates compensatory deductions
+    - **User impact**: Requires manual intervention to modify deduction calculations
     - **Evidence**: [TSSD-3946]
 
-  - **Scenario**: Unpaid leave spanning multiple payroll months
-    - **System behavior**: Accumulates deductions, creates negative salary
-    - **User impact**: Incorrect leave balance and salary calculations
+  - **Scenario**: Unpaid leave request spanning multiple payroll months
+    - **System behavior**: Accumulates deductions across closed months, potentially creating negative salary
+    - **User impact**: Inaccurate leave balance and unexpected salary calculations
     - **Evidence**: [TSSD-2384]
 
   - **Scenario**: Changing daily wage calculation after leave request submission
     - **System behavior**: Creates multiple deduction entries with different calculation methods
-    - **User impact**: Requires manual intervention to resolve deduction discrepancies
+    - **User impact**: Requires manual intervention to resolve deduction inconsistencies
     - **Evidence**: [TSSD-2532]
 
-  - **Scenario**: Leave approved across multiple months during single payroll cycle
-    - **System behavior**: Partial day count display with full deduction amount
-    - **User impact**: Confusion in leave representation
+  - **Scenario**: Leave approved retrospectively across multiple months
+    - **System behavior**: Partial aggregation of leave days on payslip
+    - **User impact**: Confusion in leave day count and total deduction
     - **Evidence**: [TSSD-3044]
 
   - **Scenario**: Public holiday added after leave request creation
-    - **System behavior**: Recalculation not supported, causing potential salary deduction discrepancies
-    - **User impact**: Potential incorrect salary deductions requiring manual intervention
+    - **System behavior**: Calculates daily wage with outdated working day configuration
+    - **User impact**: Incorrect salary deduction amount
     - **Evidence**: [TSSD-4464]
 
   - **Scenario**: Full month unpaid leave
-    - **System behavior**: Calculate deduction using 30.42 day divisor, potentially exceeding monthly salary
-    - **User impact**: Requires manual adjustment to balance payroll
+    - **System behavior**: Calculate deduction using daily rate multiplied by leave days
+    - **User impact**: Potential deduction amount higher than expected monthly salary
     - **Evidence**: [TSSD-4368]
 
-  - **Scenario**: Maternity half-pay leave with complex wage calculation
-    - **System behavior**: Calculation method can differ between Basic/calendar and Basic+Allowance/calendar
-    - **User impact**: Requires careful configuration to ensure correct wage deduction
+  - **Scenario**: Configuring half-paid or unpaid leave types
+    - **System behavior**: Calculation method may differ between Payroll Configuration and Leave Policy UI
+    - **User impact**: Confusion about actual salary deduction calculation
     - **Evidence**: [TSSD-4947]
 
-  - **Scenario**: Multiple leave policies with similar names but different calculation methods
-    - **System behavior**: Applies policy-specific calculation without user warning
-    - **User impact**: Potential misunderstanding of salary deductions
+  - **Scenario**: Multiple unpaid leave policies with similar names but different calculation methods
+    - **System behavior**: Applies policy-specific daily rate formula without user-friendly explanation
+    - **User impact**: Confusion about salary deduction accuracy
     - **Evidence**: [TSSD-1746]
 
   - **Scenario**: Client requires 30.5 day divisor instead of calendar days
-    - **System behavior**: Report uses strict calendar day calculation
-    - **User impact**: Manual workaround required
+    - **System behavior**: Rejects custom configuration, uses calendar days
+    - **User impact**: Requires manual report manipulation
     - **Evidence**: [TSSD-1227]
 
-  - **Scenario**: System-default absent records
-    - **System behavior**: No automatic workflow trigger
-    - **User impact**: Missing absence notifications
+  - **Scenario**: System-default employee absence
+    - **System behavior**: No workflow notification generated
+    - **User impact**: Missing absence alerts
     - **Evidence**: [TSSD-3438]
 
-  - **Scenario**: Workflow not triggering despite presence of absent employees
-    - **System behavior**: Failed to generate notifications
-    - **User impact**: Manual tracking and communication required
+  - **Scenario**: Workflow not triggering despite absent employees
+    - **System behavior**: No email notifications generated
+    - **User impact**: Manual intervention required to identify and notify absent employees
     - **Evidence**: [TSSD-3507]
 
   - **Scenario**: February in leap year with 29 days
     - **System behavior**: Calculates daily rate using 29 days instead of default 31
-    - **User impact**: More accurate unpaid leave deductions
+    - **User impact**: More precise unpaid leave deduction calculation
     - **Evidence**: [TSSD-1301]
 
-  - **Scenario**: Employees with non-standard work weeks and public holidays
-    - **System behavior**: Applies global daily rate calculation across all scenarios
-    - **User impact**: Potential miscalculation of salary deductions
+  - **Scenario**: Employees with non-standard work weeks and multiple public holidays
+    - **System behavior**: Apply global daily rate calculation regardless of specific policy settings
+    - **User impact**: Potential incorrect salary deduction amounts
     - **Evidence**: [TSSD-1753]
 
-  - **Scenario**: Leave request created in one month, processed in another
-    - **System behavior**: Potentially recalculates daily rate based on processing month
-    - **User impact**: Confusing daily rate display that doesn't match leave occurrence month
+  - **Scenario**: Leave request spans different payroll months
+    - **System behavior**: Recalculates daily rate based on current payroll month
+    - **User impact**: Potential confusion about displayed daily rate
     - **Evidence**: [TSSD-1807]
 
   
 
   ## Dependencies & Integrations
-  - **Employee classification system**: Requires ability to link proration rules to specific employee categories [TSSD-4876]
-- **HR offboarding process**: Requires manual intervention for accurate leave calculations [TSSD-2499]
-- **Mobile notification system**: Unreliable push notification delivery across devices [TSSD-1517]
-- **Accurate timezone and work timing configuration**: Directly impacts attendance status calculation [TSSD-713]
-- **Overtime policy configuration**: Toggle determines extra hours request requirement [TSSD-1433]
-- **Cross-module data mapping and synchronization**: Determines accuracy and consistency of attendance reporting [TSSD-1908]
-- **Time and Pay adjustment system**: Requires manual trigger for absence deduction requests [TSSD-2206]
-- **Leave policy type determines accrual method**: Constrains accrual frequency configuration [TSSD-1453]
-- **Browser cache and cookie management**: Directly impacts login reliability and user experience [TSSD-2266]
-- **Shift scheduling system**: Determines complexity of attendance reporting [OS-639]
-- **Manager administrative access**: Required for making attendance record modifications [TSSD-1134]
-- **Labor law compliance requirements**: Determines acceptable wage calculation methods [TSSD-3939]
-- **Payroll deduction calculation**: Triggers system updates and notifications [TSSD-2056]
-- **Employee profile and shift configurations**: Potentially used as fallback for office location information [TSSD-4151]
-- **Employee tenure tracking system**: Enables day-wise leave accrual calculation [TSSD-4203]
-- **Leave policy configuration**: Determines whether calculations are based on working days or calendar days [TSSD-4882]
-- **Conditional leave policy configuration**: Enables or restricts daily leave accrual functionality [TSSD-4212]
-- **Responsive UI design framework**: Determines content display consistency across platforms [TSSD-872]
-- **Accurate employee attendance tracking**: Required for precise salary calculation [TSSD-4905]
-- **Admin Panel access and permissions**: Configuration requires administrative credentials [TSSD-120]
-- **Payroll configuration module**: Determines ultimate daily wage calculation logic [TSSD-2648]
-- **Third-party API provider (Jay Softworks)**: Determines data transmission accuracy and completeness [TSSD-3419]
-- **Salary configuration system**: Determines accuracy of daily wage and leave deduction calculations [TSSD-1581]
-- **Shift configuration system**: Determines how attendance records are generated and displayed [TSSD-4230]
-- **Gross salary configuration**: Determines base for social security contribution calculation [TSSD-2561]
-- **Accurate employee joining and exit date recording**: Directly impacts gratuity calculation precision [TSSD-4179]
-- **Accurate salary component configuration**: Determines base calculation accuracy [TSSD-2605]
-- **WPS gratuity calculation regulations**: Enforces strict calculation methodology [TSSD-1232]
-- **Accurate employee joining and departure dates**: Directly impacts daily wage calculation precision [TSSD-3832]
-- **Accurate employee departure date and leave records**: Determines proration and salary calculation precision [TSSD-4033]
-- **Monthly leave policy configuration**: Determines leave crediting mechanism [TSSD-4042]
-- **Accurate employee hire and departure date records**: Directly impacts gratuity calculation precision [TSSD-4742]
-- **Leave management system**: Validates leave requests during EOS processing [TSSD-3908]
-- **Accurate workweek configuration**: Determines working day identification [TSSD-4129]
-- **Accurate office geofence configuration**: Determines accuracy of location detection and labeling [TSSD-319]
+  - **HR and Payroll systems**: Requires manual calculations for accurate leave encashment [TSSD-2499]
+- **Leave Encashment module**: Constrains rate configuration capabilities [OS-446]
+- **Mobile push notification system**: Unreliable notification delivery across different report types and regions [TSSD-1517]
+- **Accurate timezone configuration**: Determines check-in time validation and attendance status [TSSD-713]
+- **Overtime policy configuration**: Determines whether extra hours request is mandatory [TSSD-1433]
+- **Multiple reporting modules for attendance tracking**: Requires consistent data mapping and synchronization [TSSD-1908]
+- **Time and Pay adjustment workflow**: Determines absence deduction request generation [TSSD-2206]
+- **Leave policy type determines accrual method**: Conditional vs non-conditional policies have different accrual calculations [TSSD-1453]
+- **Browser cache and cookie management**: Directly impacts authentication success and user access [TSSD-2266]
+- **Shift scheduling system**: Determines complexity of leave status reporting [OS-639]
+- **Manager override functionality**: Provides alternative method for correcting attendance records [TSSD-1134]
+- **Labor law requirements for leave encashment**: Determines acceptable wage calculation methods [TSSD-3939]
+- **Payroll deduction calculation**: Triggers potential leave request state changes and notifications [TSSD-2056]
+- **API integration structure**: Determines completeness of attendance reporting [TSSD-4151]
+- **Leave policy configuration determines accrual method**: Conditional policy triggers daily calculation, standard policy uses monthly [TSSD-4203]
+- **Leave policy configuration**: Determines basis for salary proration calculation [TSSD-4882]
+- **Conditional leave policy configuration**: Enables or restricts granular leave accrual tracking [TSSD-4212]
+- **Cross-platform UI rendering engine**: Determines content display consistency [TSSD-872]
+- **Attendance tracking system**: Required to enable automated working days calculation [TSSD-4905]
+- **Administrative access to Admin Panel**: Requires proper permissions to modify newsfeed system posts [TSSD-120]
+- **Payroll settings configuration**: Determines daily wage calculation logic across system [TSSD-2648]
+- **Third-party API providers (e.g., Jay Softworks)**: Determines data transmission accuracy and completeness [TSSD-3419]
+- **Accurate and timely salary configuration updates**: Directly impacts unpaid leave deduction calculation accuracy [TSSD-1581]
+- **Shift configuration system**: Determines generation of multiple attendance records [TSSD-4230]
+- **Excel transaction reporting system**: Displays full monthly contribution regardless of actual working days [TSSD-2561]
+- **Accurate date tracking and calendar logic**: Determines precision of service period and gratuity calculation [TSSD-4179]
+- **Accurate salary component configuration**: Precision of pro-rated calculations depends on correctly configured basic salary and allowances [TSSD-2605]
+- **Accurate employee contract and salary data**: Precise input required for accurate EOS calculation [TSSD-1232]
+- **Accurate employee compensation and joining date records**: Directly impacts daily wage calculation accuracy [TSSD-3832]
+- **Payroll cycle closure**: Must close payroll before processing EOS settlement [TSSD-4033]
+- **Leave policy configuration**: Determines monthly vs daily accrual rules [TSSD-4042]
+- **Leave accrual policy configuration**: Determines leave balance inclusion in EOS calculations [TSSD-4742]
+- **Leave management system**: Validates leave requests before allowing EOS transaction [TSSD-3908]
+- **Accurate workweek configuration**: Determines working day calculation logic [TSSD-4129]
+- **Accurate office geofence configuration**: Determines precision of location detection and labeling [TSSD-319]
 - **Salary configuration system**: Determines accuracy of leave compensation calculations [OS-867]
 - **Accurate employee contract and salary data**: Directly impacts gratuity calculation precision [TSSD-1625]
-- **UAE Labor Law compliance**: Mandates uniform gratuity calculation across contract types [TSSD-4779]
-- **UAE labor law regulations**: Defines core calculation rules and parameters [TSSD-3123]
+- **UAE Labor Law regulations**: Determines calculation rules and uniformity [TSSD-4779]
+- **UAE labor law regulations**: Defines fundamental calculation parameters and compliance requirements [TSSD-3123]
 - **Accurate employee profile data (joining date, contract type, salary)**: Precise input required for correct gratuity calculation [TSSD-2252]
-- **Accurate employee contract and departure reason data**: Determines gratuity calculation method and result [TSSD-4796]
-- **Leave cycle dates**: Determines accrual calculation methodology [TSSD-3139]
-- **Salary proration logic tied to payroll cycle configuration**: Changes to cycle directly impact new employee salary calculations [TSSD-3879]
-- **Accurate holiday calendar configuration**: Determines working day count for daily rate calculation [TSSD-2212]
-- **Accurate employee contract and salary data**: Requires precise input for correct gratuity calculation [TSSD-2043]
-- **Accurate employee joining date and salary data**: Determines precision of GOSI deduction calculations [TSSD-3249]
-- **Leave policy configuration**: Determines accrual calculation method [TSSD-4813]
-- **Leave policy settings**: Determines day type, holiday exclusion, and salary calculation method [TSSD-2106]
-- **Payroll configuration settings**: Determines salary component inclusion and calculation methods [TSSD-3487]
-- **Accurate policy configuration for each leave type**: Determines specific deduction calculation method [TSSD-3213]
-- **Salary configuration and leave policy settings**: Determines calculation method for unpaid leave deductions [TSSD-1798]
-- **Requires manual pre-closure validation of all compensation entries**: Forces thorough review before payroll cycle finalization [TSSD-3880]
-- **Leave policy configuration**: Determines divisor and calculation method for daily wage [TSSD-4731]
-- **Accurate offboarding date and employment status tracking**: Determines prorated salary and EOS deduction calculations [TSSD-2597]
-- **Accurate day counting mechanism**: Determines precision of leave salary calculations [TSSD-3402]
-- **Public holiday calendar configuration**: Determines automatic exclusion in working days calculations [TSSD-3995]
-- **Payroll transaction system**: Determines leave deduction calculation and processing [TSSD-4720]
-- **Payroll system salary components**: Determines base for leave accrual calculation [TSSD-291]
-- **Accurate daily wage and leave balance configuration**: Determines accuracy of leave accrual projection [TSSD-4543]
-- **Accurate employee hire date recording**: Directly impacts leave balance calculation precision [TSSD-3822]
-- **Leave policy configuration**: Determines accrual rates, carry-over limits, and calculation rules [TSSD-4243]
-- **Job tenure tracking and policy type configuration**: Determines daily or monthly leave accrual calculation method [TSSD-3082]
-- **Calendar leave settings**: Determines how public holidays are treated in leave and salary calculations [TSSD-2937]
-- **Payroll configuration system**: Determines calculation method for daily wage computation [TSSD-3779]
-- **Daily Wage Calculator configuration**: Determines method of calculating leave salary accrual [TSSD-3648]
-- **Accurate monthly salary and leave policy configurations**: Determines precision of daily wage calculations [TSSD-2321]
-- **Accurate monthly salary configuration**: Determines daily rate calculation accuracy [TSSD-3226]
-- **Accurate monthly salary configuration**: Determines base calculation for leave salary [TSSD-3275]
-- **Salary structure configuration**: Determines leave salary calculation approach [TSSD-4387]
-- **Accurate employee policy mapping**: Determines which leave salary policy is applied [TSSD-2934]
-- **Payroll system salary component definitions**: Determines leave payment calculation logic [TSSD-3654]
-- **Payroll configuration system**: Enforces uniform proration calculation across all employees [TSSD-4375]
-- **Payroll management system**: Determines annual allowance allocation strategy [TSSD-3146]
-- **Accurate work week configuration**: Determines working days calculation logic [TSSD-4292]
-- **DBX time zone configuration**: Influences scheduled job execution timing [OS-3034]
-- **Accurate employee contract type configuration**: Determines gratuity calculation methodology [TSSD-375]
+- **Accurate employee contract and departure reason data**: Determines calculation method and final gratuity amount [TSSD-4796]
+- **Employee leave policy configuration**: Determines monthly and daily accrual rates [TSSD-3139]
+- **Salary proration calculation logic**: Changes to cycle directly impact how new joiners' salaries are calculated [TSSD-3879]
+- **Holiday calendar configuration**: Directly impacts working day calculations for unpaid leave deductions [TSSD-2212]
+- **Accurate employee joining/departure dates**: Critical for precise tenure and gratuity calculation [TSSD-2043]
+- **Accurate employee joining date and working days data**: Critical for correct prorated deduction calculation [TSSD-3249]
+- **Leave policy configuration**: Determines accrual calculation method and proration logic [TSSD-4813]
+- **Leave policy configuration**: Determines daily rate calculation method and holiday exclusion rules [TSSD-2106]
+- **Country-specific payroll configuration**: Determines social security component display and calculation rules [TSSD-3487]
+- **Accurate salary component configuration**: Determines precision of leave deduction calculations [TSSD-3213]
+- **Payroll configuration settings**: Determines calculation method for unpaid leave deductions [TSSD-1798]
+- **Accurate pre-closure validation of variable pay entries**: Critical for preventing post-closure correction issues [TSSD-3880]
+- **Leave policy configuration**: Determines daily rate divisor and calculation method [TSSD-4731]
+- **Accurate employee departure date and offboarding logs**: Determines prorated salary and EOS calculation accuracy [TSSD-2597]
+- **Payroll and financial reporting systems**: Requires precise day calculation for accurate compensation tracking [TSSD-3402]
+- **Public holiday calendar**: Automatically determines working days for salary calculation [TSSD-3995]
+- **Payroll processing system**: Determines deduction creation and transaction management for leave requests [TSSD-4720]
+- **Payroll and salary components**: Determines base for leave accrual calculations [TSSD-291]
+- **Daily wage configuration**: Determines leave accrual projection calculation [TSSD-4543]
+- **Accurate employee hire date recording**: Determines leave cycle start and conditional allowance calculation [TSSD-3822]
+- **Accurate daily accrual rate configuration**: Determines precision of leave balance calculations [TSSD-4243]
+- **HR policy configuration**: Determines accrual method and calculation precision [TSSD-3082]
+- **Accurate calendar and holiday configuration**: Determines leave and salary calculation precision [TSSD-2937]
+- **Leave encashment configuration system**: Determines calculation method for daily wage computation [TSSD-3779]
+- **Daily Wage Calculator configuration**: Determines monthly leave salary accrual calculation method [TSSD-3648]
+- **Accurate employee salary and allowance data**: Directly impacts daily wage calculation precision [TSSD-2321]
+- **Monthly salary configuration**: Determines daily rate for leave salary calculation [TSSD-3226]
+- **Payroll cycle configuration**: Determines leave salary deduction methodology [TSSD-3275]
+- **Payroll configuration and salary structure setup**: Determines how leave salary is calculated across different organizational policies [TSSD-4387]
+- **Employee policy assignment**: Determines which leave salary policy is applied [TSSD-2934]
+- **Payroll module salary component definitions**: Determines available options for leave policy configuration [TSSD-3654]
+- **Payroll configuration system**: Determines global proration calculation method [TSSD-4375]
+- **Payroll management system**: Determines bulk allocation of annual benefits [TSSD-3146]
+- **Work week configuration**: Determines working days calculation for salary proration [TSSD-4292]
+- **DBX time zone configuration**: Influences scheduled job execution and timestamp representation [OS-3034]
+- **Accurate contract type classification**: Determines gratuity calculation formula [TSSD-375]
 - **Daily attendance tracking system**: Prevents retroactive leave balance modifications [TSSD-3789]
-- **Accurate daily wage breakdown configuration**: Determines precision of leave salary calculations [TSSD-4349]
-- **Employee profile and offboarding date configuration**: Determines proration calculation accuracy [TSSD-3058]
-- **Accurate employee join date and salary configuration**: Determines precise proration calculation [TSSD-3512]
-- **Payroll cycle status and transaction submission**: Blocks automatic proration recalculation [TSSD-2518]
-- **Accurate salary component configuration**: Requires complete salary configuration to enable accurate proration [TSSD-4303]
-- **Manual data export functionality**: Enables workaround for lack of native filtering [TSSD-463]
-- **User understanding of date modification behavior**: Directly impacts perceived reliability of time tracking system [TSSD-4409]
-- **Salary components (Basic vs Gross pay)**: Determines basis for daily rate and deduction calculations [TSSD-3946]
-- **Payroll cycle and leave allowance tracking system**: Restricts manual intervention in leave balance calculations [TSSD-2384]
-- **Leave management system and payroll deduction module**: Synchronization failures lead to data inconsistency and manual intervention [TSSD-2532]
-- **MOHRE reporting requirements**: Requires accurate leave day and deduction tracking [TSSD-3044]
-- **Country-specific public holiday configurations**: Determines working days calculation and daily wage rate [TSSD-4464]
-- **Unpaid leave policy configuration**: Determines daily wage calculation method and divisor [TSSD-4368]
-- **Interaction between Payroll Configuration and Leave Policy settings**: Overwrite option can completely change calculation method [TSSD-4947]
-- **Accurate employee profile and salary configuration**: Determines daily rate calculation precision [TSSD-1746]
-- **Requires complete monthly salary and allowance data**: Calculation depends on accurate compensation information [TSSD-1227]
-- **Daily attendance report**: Manual interaction required to generate absence workflows [TSSD-3438]
-- **Accurate daily attendance record maintenance**: Workflow relies on correct 'absent' status recording [TSSD-3507]
-- **Accurate calendar day detection**: Enables precise monthly salary division [TSSD-1301]
-- **Global payroll configuration settings**: Determines precedence of salary calculation rules [TSSD-1753]
-- **Monthly working days configuration**: Determines divisor for daily rate calculation, must exclude public holidays [TSSD-1807]
+- **Accurate employee salary and allowance configuration**: Incorrect base data leads to miscalculated leave salary [TSSD-4349]
+- **Employee fixed income configuration**: Determines base salary for proration calculations [TSSD-3058]
+- **Accurate employee join date and salary configuration**: Determines proration calculation accuracy [TSSD-3512]
+- **Accurate timing of daily rate configuration before employee offboarding**: Determines precision of salary proration calculation [TSSD-2518]
+- **Accurate salary component configuration**: Requires correct setup of basic salary, allowances for accurate calculation [TSSD-4303]
+- **User understanding of date modification mechanics**: Directly impacts timesheet accuracy and user trust [TSSD-4409]
+- **Salary components (Basic vs Gross pay)**: Determines calculation basis for daily wage and leave deductions [TSSD-3946]
+- **Payroll cycle configuration**: Determines when and how leave deductions are processed [TSSD-2384]
+- **Leave management system and payroll deduction module**: Synchronization failures lead to inconsistent financial calculations [TSSD-2532]
+- **MOHRE reporting requirements**: Requires accurate leave documentation and calculation [TSSD-3044]
+- **Country-specific public holiday calendars**: Determines working day calculations for salary deduction [TSSD-4464]
+- **Unpaid leave policy configuration**: Determines daily wage divisor and calculation method [TSSD-4368]
+- **Payroll Configuration must be set before Leave Policy configuration**: System-level settings override policy-level settings when Overwrite is enabled [TSSD-4947]
+- **Accurate employee compensation and leave configuration data**: Determines daily rate calculation method [TSSD-1746]
+- **Relies on accurate employee salary and allowance data**: Calculation precision depends on input data quality [TSSD-1227]
+- **Daily attendance report**: Manual 'Mark as Absent' action required to trigger workflow [TSSD-3438]
+- **Accurate daily attendance record status**: Workflow effectiveness depends on precise attendance status recording [TSSD-3507]
+- **Accurate monthly salary configuration**: Enables precise daily rate calculation [TSSD-1301]
+- **Global payroll configuration system**: Determines daily rate calculation method across all policies [TSSD-1753]
+- **Payroll processing system**: Determines working days and holiday exclusions [TSSD-1807]
 
 
   ## Claims to Validate
-  - **(system_behavior)** System allows only single proration method across entire organization (Confidence: high)
-    - **Validation hint**: Attempt to configure different proration rules for multiple employee types
+  - **(system_behavior)** System allows only single proration method for entire organization (Confidence: high)
+    - **Validation hint**: Attempt to set different proration rules for multiple employee categories
     - **Evidence**: [TSSD-4876]
 
-  - **(workflow_step)** Proration configuration does not support category-specific calculation methods (Confidence: high)
-    - **Validation hint**: Verify inability to set different proration rules for white-collar vs blue-collar employees
+  - **(workflow_step)** Proration configuration cannot distinguish between white-collar and blue-collar employee categories (Confidence: high)
+    - **Validation hint**: Verify inability to set category-specific proration denominators
     - **Evidence**: [TSSD-4876]
 
   - **(calculation_rule)** System only calculates leave days after full month completion (Confidence: high)
-    - **Validation hint**: Test leave encashment for employee leaving mid-month
+    - **Validation hint**: Test leave calculation for employee departing mid-month
     - **Evidence**: [TSSD-2499]
 
   - **(system_behavior)** Manual intervention required for pro-rated leave encashment (Confidence: high)
-    - **Validation hint**: Verify manual addition process for partial month leave
+    - **Validation hint**: Verify manual addition process for partial month accruals
     - **Evidence**: [TSSD-2499]
 
-  - **(system_behavior)** Daily Rate Calculator does not support direct daily rate configuration for leave encashment (Confidence: high)
-    - **Validation hint**: Attempt to configure daily rate within the calculator interface
+  - **(system_behavior)** Daily Rate Calculator does not allow direct rate configuration for leave encashment (Confidence: high)
+    - **Validation hint**: Attempt to configure daily rate within calculator interface
     - **Evidence**: [OS-446]
 
-  - **(workflow_step)** Payroll managers must use external methods to set leave encashment daily rates (Confidence: medium)
-    - **Validation hint**: Verify alternative configuration pathways
+  - **(workflow_step)** Payroll managers must use external methods to set leave encashment rates (Confidence: medium)
+    - **Validation hint**: Verify manual calculation requirements
     - **Evidence**: [OS-446]
 
-  - **(system_behavior)** Current attendance module supports only list view representation (Confidence: high)
-    - **Validation hint**: Verify attendance data can only be viewed in linear list format
+  - **(system_behavior)** Attendance module currently supports only list view, not calendar view (Confidence: high)
+    - **Validation hint**: Verify current attendance reporting interface options
     - **Evidence**: [TSSD-3774]
 
-  - **(workflow_step)** Attendance calendar view would enable day-by-day presence/absence tracking (Confidence: medium)
-    - **Validation hint**: Simulate calendar interface showing employee attendance status
+  - **(workflow_step)** Users cannot visually track employee presence/absence using a calendar interface (Confidence: high)
+    - **Validation hint**: Attempt to switch to calendar view in attendance module
     - **Evidence**: [TSSD-3774]
 
-  - **(workflow_step)** Comments can be submitted from daily attendance records and custom reports (Confidence: medium)
-    - **Validation hint**: Test comment submission across different report types
+  - **(system_behavior)** Comments can be added to daily attendance records without errors (Confidence: high)
+    - **Validation hint**: Test comment submission from daily attendance record page
     - **Evidence**: [TSSD-1517]
 
-  - **(system_behavior)** Notification requires explicit mention of employee or manager (Confidence: high)
-    - **Validation hint**: Verify notification delivery with and without explicit mentions
+  - **(system_behavior)** Comments in custom attendance reports require explicit employee/manager mention (Confidence: medium)
+    - **Validation hint**: Verify notification delivery when employee/manager is mentioned
     - **Evidence**: [TSSD-1517]
 
-  - **(edge_case)** Mobile push notifications may fail inconsistently across regions (Confidence: high)
-    - **Validation hint**: Test notification delivery on multiple regional accounts
+  - **(edge_case)** KSA region accounts experience inconsistent comment submission and notification behavior (Confidence: high)
+    - **Validation hint**: Test comment submission and notification across multiple KSA accounts
     - **Evidence**: [TSSD-1517]
 
-  - **(system_behavior)** Attendance status is calculated based on work timing configuration and timezone settings (Confidence: high)
-    - **Validation hint**: Verify attendance marking under different timezone and work timing configurations
+  - **(system_behavior)** Attendance status is calculated based on work timing configuration and late arrival settings (Confidence: high)
+    - **Validation hint**: Verify attendance marking logic across different employee configurations
     - **Evidence**: [TSSD-713]
 
-  - **(workflow_step)** Late arrival settings can override default attendance marking behavior (Confidence: medium)
-    - **Validation hint**: Test attendance marking with late arrival enabled and disabled
+  - **(calculation_rule)** Check-in times are validated against configured work timing with timezone considerations (Confidence: high)
+    - **Validation hint**: Test attendance marking for employees in different timezone configurations
     - **Evidence**: [TSSD-713]
 
-  - **(system_behavior)** System calculates hours until official checkout or shift end (Confidence: high)
-    - **Validation hint**: Verify hours calculation logic in different checkout scenarios
+  - **(system_behavior)** System calculates hours until official checkout or shift end, potentially generating up to 24-hour work periods (Confidence: high)
+    - **Validation hint**: Verify hour calculation across multiple shift scenarios
     - **Evidence**: [TSSD-1433]
 
-  - **(edge_case)** Report displays extended hours for checkouts on subsequent days (Confidence: high)
-    - **Validation hint**: Test checkout scenarios spanning multiple days
+  - **(workflow_step)** Extra hours column remains visible even when overtime policy is disabled (Confidence: high)
+    - **Validation hint**: Test column visibility under different policy configurations
     - **Evidence**: [TSSD-1433]
 
-  - **(workflow_step)** Overtime policy toggle does not prevent extra hours column display (Confidence: high)
-    - **Validation hint**: Verify column visibility after overtime policy configuration
+  - **(edge_case)** Next-day checkout can trigger extended hours display without additional validation (Confidence: high)
+    - **Validation hint**: Simulate checkout scenarios across multiple days
     - **Evidence**: [TSSD-1433]
 
-  - **(system_behavior)** Attendance location status must be consistent across Time & Productivity and daily attendance reports (Confidence: high)
-    - **Validation hint**: Compare location status for the same employee record in multiple reports
+  - **(system_behavior)** Attendance location status must be identical across Time & Productivity and Daily Attendance reports for the same record (Confidence: high)
+    - **Validation hint**: Compare location status in multiple attendance reports for single employee record
     - **Evidence**: [TSSD-1908]
 
-  - **(workflow_step)** Edit status for attendance records should propagate uniformly across all reporting views (Confidence: high)
-    - **Validation hint**: Verify edit status matches in T&P and daily attendance reports
+  - **(calculation_rule)** Edit tracking status must propagate consistently across all attendance reporting views (Confidence: medium)
+    - **Validation hint**: Verify edit status synchronization between different attendance report types
     - **Evidence**: [TSSD-1908]
 
-  - **(system_behavior)** Check-in button becomes unavailable after daily attendance cycle completion (Confidence: high)
-    - **Validation hint**: Verify button disappears after successful check-in and check-out
+  - **(system_behavior)** Check-in button becomes unavailable after completing daily check-in/check-out cycle (Confidence: high)
+    - **Validation hint**: Verify button disappears after first check-in and check-out
     - **Evidence**: [TSSD-430]
 
-  - **(workflow_step)** Only one check-in/check-out cycle permitted per day (Confidence: high)
-    - **Validation hint**: Attempt multiple check-ins and confirm system prevents duplicate entries
+  - **(workflow_step)** Check-in button reappears automatically on next calendar day (Confidence: high)
+    - **Validation hint**: Test button visibility across day boundaries
     - **Evidence**: [TSSD-430]
 
-  - **(system_behavior)** System requires manual 'Mark as Absent' action for employees with no check-in data (Confidence: high)
-    - **Validation hint**: Verify manual marking process in attendance report interface
+  - **(system_behavior)** System requires manual 'Mark as Absent' for employees with no check-in data (Confidence: high)
+    - **Validation hint**: Verify manual intervention requirement in attendance reporting workflow
     - **Evidence**: [TSSD-2206]
 
-  - **(workflow_step)** No automated or bulk absence marking available for organizations with large employee bases (Confidence: high)
-    - **Validation hint**: Check for bulk action capabilities in attendance tracking module
+  - **(workflow_step)** Absence deduction requests can be approved or rejected by managers (Confidence: high)
+    - **Validation hint**: Test approval and rejection paths in Time & Pay adjustment screen
     - **Evidence**: [TSSD-2206]
 
-  - **(system_behavior)** Conditional leave policies always use daily accrual calculation (Confidence: high)
-    - **Validation hint**: Verify accrual method cannot be changed for conditional policies
+  - **(system_behavior)** Conditional leave policies always accrue leave on a daily basis (Confidence: high)
+    - **Validation hint**: Verify accrual calculation for conditional leave across different policy configurations
     - **Evidence**: [TSSD-1453]
 
-  - **(workflow_step)** Leave policy type selection determines accrual frequency automatically (Confidence: high)
-    - **Validation hint**: Check if accrual method changes when switching between conditional/non-conditional
+  - **(system_behavior)** Non-conditional leave policies support monthly accrual (Confidence: high)
+    - **Validation hint**: Check monthly accrual configuration for non-conditional leave types
     - **Evidence**: [TSSD-1453]
 
-  - **(system_behavior)** Login process requires multiple attempts in certain browser environments (Confidence: high)
-    - **Validation hint**: Verify login process across Chrome, Internet Explorer with cache cleared
+  - **(system_behavior)** Login process requires manual cache clearing for consistent access (Confidence: high)
+    - **Validation hint**: Verify login behavior after clearing browser cache
     - **Evidence**: [TSSD-2266]
 
-  - **(workflow_step)** Incognito/private browsing mode bypasses standard login complications (Confidence: high)
-    - **Validation hint**: Test login in regular vs incognito browser modes
+  - **(workflow_step)** Incognito mode bypasses standard browser cache authentication limitations (Confidence: high)
+    - **Validation hint**: Test login in standard and incognito browser modes
     - **Evidence**: [TSSD-2266]
 
-  - **(system_behavior)** Leave status is not consistently applied across split shift rows (Confidence: high)
-    - **Validation hint**: Test leave request for employee with multiple shift segments
+  - **(system_behavior)** Leave status must be consistently displayed for all shift segments in split shift scenarios (Confidence: high)
+    - **Validation hint**: Verify status changes across multiple shift rows
     - **Evidence**: [OS-639]
 
-  - **(workflow_step)** Daily attendance report fails to update status for all shift segments simultaneously (Confidence: medium)
-    - **Validation hint**: Verify status changes in multi-segment shift scenarios
+  - **(calculation_rule)** Attendance report should reduce total shift count when leave is approved (Confidence: high)
+    - **Validation hint**: Check shift count before and after leave request approval
     - **Evidence**: [OS-639]
 
-  - **(system_behavior)** Biometric attendance API logs cannot be deleted after initial creation (Confidence: high)
-    - **Validation hint**: Attempt to delete API attendance logs and verify system response
+  - **(system_behavior)** Attendance API logs cannot be deleted or overwritten after initial submission (Confidence: high)
+    - **Validation hint**: Attempt to delete attendance records via API and verify immutability
     - **Evidence**: [TSSD-1134]
 
-  - **(workflow_step)** Manager override is the only method to modify existing attendance records (Confidence: high)
-    - **Validation hint**: Verify edit capabilities require manager-level permissions
+  - **(workflow_step)** Correcting attendance records requires using manager override functionality (Confidence: high)
+    - **Validation hint**: Verify manager can edit attendance records after initial API submission
     - **Evidence**: [TSSD-1134]
 
-  - **(system_behavior)** Daily wage calculation method can be configured to use basic salary only or basic salary with allowances (Confidence: high)
-    - **Validation hint**: Verify configuration options in EOS settings
+  - **(system_behavior)** Daily wage calculation method can be configured to use basic salary only or basic salary plus allowances (Confidence: high)
+    - **Validation hint**: Verify all possible wage calculation configurations
     - **Evidence**: [TSSD-3939]
 
   - **(workflow_step)** Configuration changes in daily wage calculation do not immediately update the End of Service Eligibility section (Confidence: medium)
-    - **Validation hint**: Check UI synchronization after changing settings
+    - **Validation hint**: Check UI synchronization after configuration change
     - **Evidence**: [TSSD-3939]
 
-  - **(system_behavior)** Approved leave requests can revert to pending status without clear user action (Confidence: high)
-    - **Validation hint**: Submit multiple leave requests and track their status over time
+  - **(system_behavior)** Leave requests can generate multiple approval records for the same submission (Confidence: high)
+    - **Validation hint**: Create a leave request and check admin panel logs for duplicate entries
     - **Evidence**: [TSSD-2056]
 
-  - **(system_behavior)** System generates email notifications for leave requests without explicit user edits (Confidence: high)
-    - **Validation hint**: Monitor email notifications during leave request workflow
+  - **(edge_case)** System can send email notifications about leave request changes without actual user modifications (Confidence: medium)
+    - **Validation hint**: Submit leave request and verify email notification behavior
     - **Evidence**: [TSSD-2056]
 
-  - **(system_behavior)** API attendance integration does not capture office location during check-in/check-out (Confidence: high)
-    - **Validation hint**: Verify office column is empty in custom reports for API-based attendance
+  - **(system_behavior)** Custom attendance reports will have empty office location when using API integration (Confidence: high)
+    - **Validation hint**: Export custom breakdown report with API-integrated attendance data
     - **Evidence**: [TSSD-4151]
 
-  - **(system_behavior)** Office location appears in daily attendance report but not in custom reports for API integration (Confidence: high)
-    - **Validation hint**: Compare daily and custom attendance reports for API-integrated data
+  - **(integration)** Biometric integrations include office location, while API integrations do not (Confidence: high)
+    - **Validation hint**: Compare reports from biometric and API attendance data sources
     - **Evidence**: [TSSD-4151]
 
   - **(calculation_rule)** For Conditional leave policies, system calculates accrual daily using (monthly allowance / 30) * days worked (Confidence: high)
-    - **Validation hint**: Verify calculation matches ticket example of 2.5/30 * 5 days
+    - **Validation hint**: Verify calculation for partial month scenarios
     - **Evidence**: [TSSD-4203]
 
-  - **(system_behavior)** Leave balance changes based on policy type (Conditional vs Non-Conditional) (Confidence: high)
-    - **Validation hint**: Test accrual calculation with different policy configurations
+  - **(system_behavior)** Leave balance differs between Conditional and standard policy configurations (Confidence: high)
+    - **Validation hint**: Compare balance calculations for different policy types
     - **Evidence**: [TSSD-4203]
 
-  - **(system_behavior)** Monthly automated emails are triggered on the first day of each month for document expiry notifications (Confidence: high)
-    - **Validation hint**: Verify email trigger date and content
+  - **(system_behavior)** Monthly automated emails are triggered on the first of each month for document expirations (Confidence: high)
+    - **Validation hint**: Verify notification timing and content
     - **Evidence**: [TSSD-1357]
 
   - **(system_behavior)** No configurable start date field exists for documents (Confidence: high)
-    - **Validation hint**: Check document creation/upload form for start date input
+    - **Validation hint**: Check document creation form for start date input
     - **Evidence**: [TSSD-1357]
 
-  - **(system_behavior)** Daily notification option is not available for document expiry (Confidence: high)
+  - **(system_behavior)** Daily notification options are not available (Confidence: high)
     - **Validation hint**: Attempt to configure daily notifications in system settings
     - **Evidence**: [TSSD-1357]
 
-  - **(system_behavior)** System currently applies a single salary proration method across all employee groups (Confidence: high)
-    - **Validation hint**: Verify proration configuration screens allow group-specific rules
+  - **(system_behavior)** System applies single salary proration method across all employee groups (Confidence: high)
+    - **Validation hint**: Verify proration calculation for different employee types
     - **Evidence**: [TSSD-4882]
 
-  - **(workflow_step)** Manual salary adjustments are required when default proration method does not match employee group needs (Confidence: high)
-    - **Validation hint**: Test payroll processing with mixed employee type scenarios
+  - **(workflow_step)** Manual salary adjustments are required for employee groups with unique proration needs (Confidence: high)
+    - **Validation hint**: Test proration configuration for Head Office vs Operations employees
     - **Evidence**: [TSSD-4882]
 
-  - **(system_behavior)** Daily leave accrual is only possible with conditional leave policies (Confidence: high)
-    - **Validation hint**: Verify system behavior when attempting daily accrual with standard vs. conditional policies
+  - **(system_behavior)** Daily leave accrual is only possible when conditional leave policy is explicitly enabled (Confidence: high)
+    - **Validation hint**: Verify that daily accrual requires conditional policy activation
     - **Evidence**: [TSSD-4212]
 
-  - **(workflow_step)** Migrating between work anniversary and calendar year cycles requires explicit configuration (Confidence: high)
+  - **(workflow_step)** Migrating between leave cycle types requires careful reconfiguration of accrual settings (Confidence: medium)
     - **Validation hint**: Test leave balance calculation during cycle type transition
     - **Evidence**: [TSSD-4212]
 
-  - **(system_behavior)** Daily quotes should render completely without truncation on mobile and desktop interfaces (Confidence: medium)
-    - **Validation hint**: Test quote display across multiple device screen sizes and orientations
+  - **(system_behavior)** Daily quotes must render completely without truncation on all device interfaces (Confidence: medium)
+    - **Validation hint**: Test quote display on multiple screen sizes and orientations
     - **Evidence**: [TSSD-872]
 
-  - **(ui_rendering)** Newsfeed quotes maintain consistent formatting across different platforms (Confidence: low)
-    - **Validation hint**: Compare quote display on mobile, tablet, and desktop browsers
+  - **(ui_rendering)** Newsfeed content should maintain consistent formatting across mobile and desktop platforms (Confidence: medium)
+    - **Validation hint**: Compare visual rendering on different device types
     - **Evidence**: [TSSD-872]
 
-  - **(calculation_rule)** Salary is calculated based on 26 working days per month standard (Confidence: high)
-    - **Validation hint**: Verify calculation method matches 26-day standard
+  - **(system_behavior)** System can calculate salary based on 26 working days per month standard (Confidence: medium)
+    - **Validation hint**: Verify salary calculation matches 26-day baseline
     - **Evidence**: [TSSD-4905]
 
-  - **(system_behavior)** System cannot automatically adjust salary for extra or fewer working days (Confidence: high)
-    - **Validation hint**: Test salary calculation with varying attendance
+  - **(workflow_step)** Extra working days automatically increase monthly salary proportionally (Confidence: low)
+    - **Validation hint**: Test salary calculation with more than 26 days worked
     - **Evidence**: [TSSD-4905]
 
-  - **(navigation)** Administrators can navigate to Newsfeed system posts configuration via Admin Panel >> Company (Confidence: high)
-    - **Validation hint**: Verify exact navigation path in admin interface
+  - **(workflow_step)** Fewer working days automatically reduce monthly salary proportionally (Confidence: low)
+    - **Validation hint**: Test salary calculation with less than 26 days worked
+    - **Evidence**: [TSSD-4905]
+
+  - **(navigation)** Administrators can navigate to Admin Panel > Company > Newsfeed system posts to manage system post visibility (Confidence: high)
+    - **Validation hint**: Verify navigation path and accessibility of configuration interface
     - **Evidence**: [TSSD-120]
 
-  - **(system_behavior)** Individual system post types can be disabled without affecting overall newsfeed functionality (Confidence: high)
-    - **Validation hint**: Test disabling 'Daily word of wisdom' while confirming newsfeed remains active
+  - **(system_behavior)** System allows disabling individual system post types without affecting entire newsfeed functionality (Confidence: high)
+    - **Validation hint**: Test toggling different system post types independently
     - **Evidence**: [TSSD-120]
 
-  - **(system_behavior)** Payroll settings always override leave policy daily wage formulas (Confidence: high)
-    - **Validation hint**: Compare daily wage calculations in payroll vs leave policy configurations
+  - **(system_behavior)** Payroll settings always override leave policy formulas for daily wage calculation (Confidence: high)
+    - **Validation hint**: Verify formula precedence in multiple configuration scenarios
     - **Evidence**: [TSSD-2648]
 
-  - **(navigation)** Greyed-out formulas indicate active override from payroll settings (Confidence: medium)
-    - **Validation hint**: Check UI for greyed-out formulas and verify corresponding payroll configuration
+  - **(workflow_step)** Greyed-out formulas in leave policy indicate an active override from payroll settings (Confidence: high)
+    - **Validation hint**: Check visual indicators during configuration
     - **Evidence**: [TSSD-2648]
 
-  - **(integration)** Attendance data from third-party APIs must be accurately transmitted across all days of the week (Confidence: medium)
-    - **Validation hint**: Compare weekend vs. weekday attendance record transmission
+  - **(system_behavior)** Attendance API integration supports multiple third-party data sources with variable transmission reliability (Confidence: medium)
+    - **Validation hint**: Test API data ingestion from different providers under various scenarios
     - **Evidence**: [TSSD-3419]
 
-  - **(system_behavior)** System must handle time zone conversions without losing attendance record integrity (Confidence: medium)
-    - **Validation hint**: Test Dubai time and IST time zone conversions for punch logs
+  - **(edge_case)** Weekend attendance recordings may experience selective data transmission issues (Confidence: high)
+    - **Validation hint**: Verify check-in/check-out logs across different days of the week
     - **Evidence**: [TSSD-3419]
 
   - **(calculation_rule)** Daily wage is calculated by dividing total monthly salary by 30.41 (Confidence: high)
-    - **Validation hint**: Verify calculation matches ticket example of (5250/30.41 = 172.64)
+    - **Validation hint**: Verify calculation with sample salary and leave days
     - **Evidence**: [TSSD-1581]
 
-  - **(system_behavior)** Unpaid leave deduction updates automatically when new salary configuration is created (Confidence: low)
-    - **Validation hint**: Test leave request created before and after salary config change
+  - **(system_behavior)** Unpaid leave deduction uses salary configuration from leave request creation time (Confidence: high)
+    - **Validation hint**: Test deduction calculation after salary configuration change
     - **Evidence**: [TSSD-1581]
 
-  - **(system_behavior)** For employees with split shifts, the system generates one attendance record per shift segment (Confidence: high)
-    - **Validation hint**: Verify multiple attendance entries for an employee on the same day with different time ranges
+  - **(system_behavior)** For employees with split shifts, the system generates a separate attendance record for each shift segment (Confidence: high)
+    - **Validation hint**: Verify multiple entries for same employee on same date with different shift times
     - **Evidence**: [TSSD-4230]
 
-  - **(workflow_step)** The attendance page does not consolidate split shift records into a single daily entry (Confidence: medium)
-    - **Validation hint**: Check if split shift records can be merged or viewed in a consolidated format
+  - **(workflow_step)** The attendance page does not provide a consolidated view for split shift employees (Confidence: medium)
+    - **Validation hint**: Check if split shift records can be merged or summarized in a single view
     - **Evidence**: [TSSD-4230]
 
-  - **(calculation_rule)** Social security contribution is calculated for full month regardless of actual days worked (Confidence: high)
-    - **Validation hint**: Verify contribution amount for mid-month employee departure
+  - **(system_behavior)** Social security contributions are calculated for full month regardless of employee's actual working days (Confidence: high)
+    - **Validation hint**: Test offboarding transaction for mid-month employee termination
     - **Evidence**: [TSSD-2561]
 
-  - **(system_behavior)** Employer contribution calculation does not affect employee net payout (Confidence: high)
-    - **Validation hint**: Compare net payout with and without full month contribution
+  - **(calculation_rule)** Employer contribution calculation does not support prorated computation based on days worked (Confidence: high)
+    - **Validation hint**: Verify contribution amount for partial month employment
     - **Evidence**: [TSSD-2561]
 
-  - **(calculation_rule)** System must dynamically recognize and use 366 days for leap years in service period calculations (Confidence: high)
-    - **Validation hint**: Test gratuity calculation for employees with service spanning leap years
+  - **(calculation_rule)** System must correctly recognize and calculate 366 days for leap years in service period computations (Confidence: high)
+    - **Validation hint**: Test gratuity calculation for employees with service periods including 2024
     - **Evidence**: [TSSD-4179]
 
-  - **(calculation_rule)** Daily wage calculated by dividing monthly salary by 30 days (Confidence: high)
-    - **Validation hint**: Verify daily rate calculation across different salary amounts
+  - **(calculation_rule)** Daily wage must be calculated by dividing monthly salary by 30 (Confidence: high)
+    - **Validation hint**: Verify daily rate calculation matches ticket example
     - **Evidence**: [TSSD-4179]
 
-  - **(calculation_rule)** Pro-rated salary calculation uses (basic + allowances) / 30 formula (Confidence: high)
-    - **Validation hint**: Verify calculation across multiple salary structures
+  - **(calculation_rule)** Pro-rated salary calculation consistently uses (basic + allowances) / 30 formula (Confidence: high)
+    - **Validation hint**: Compare calculated amounts against manual calculations for multiple scenarios
     - **Evidence**: [TSSD-2605]
 
-  - **(system_behavior)** System consistently produces pro-rated amounts with minor decimal variations (Confidence: medium)
-    - **Validation hint**: Test calculations for multiple departure dates and salary levels
+  - **(system_behavior)** System shows slight undercalculation by 0.1 or 0.2 in pro-rated amounts (Confidence: medium)
+    - **Validation hint**: Test multiple employee profiles with varied salary structures
     - **Evidence**: [TSSD-2605]
 
-  - **(calculation_rule)** Daily salary is calculated as basic salary divided by 30 days (Confidence: high)
-    - **Validation hint**: Verify calculation for multiple salary amounts
+  - **(calculation_rule)** Daily salary is calculated by dividing monthly basic salary by 30 (Confidence: high)
+    - **Validation hint**: Verify calculation for sample employees with different salary levels
     - **Evidence**: [TSSD-1232]
 
-  - **(system_behavior)** Partial years are converted using 365-day basis with full decimal precision (Confidence: high)
-    - **Validation hint**: Test different service duration scenarios
+  - **(system_behavior)** Partial years are converted using exact day calculations (days/365) (Confidence: high)
+    - **Validation hint**: Test calculation for employees with non-complete service years
     - **Evidence**: [TSSD-1232]
 
-  - **(workflow_step)** Service duration uses 21 days per year multiplier for limited contracts (Confidence: high)
-    - **Validation hint**: Compare calculations across different contract lengths
+  - **(workflow_step)** Limited contract employees use 21 days per service year multiplier (Confidence: high)
+    - **Validation hint**: Confirm multiplier application across different contract types
     - **Evidence**: [TSSD-1232]
 
-  - **(calculation_rule)** Daily wage is calculated by dividing (basic salary + allowances) by actual working days in departure month (Confidence: high)
-    - **Validation hint**: Compare system calculation with manual calculation for various employee scenarios
+  - **(calculation_rule)** Daily wage is calculated by dividing total compensation by actual working days in the month (Confidence: high)
+    - **Validation hint**: Compare system calculation against manual calculation for various employee profiles
     - **Evidence**: [TSSD-3832]
 
-  - **(system_behavior)** System does not exclude public holidays when counting working days (Confidence: high)
+  - **(system_behavior)** Public holidays are not automatically excluded from working days calculation (Confidence: high)
     - **Validation hint**: Test calculation in months with public holidays
     - **Evidence**: [TSSD-3832]
 
-  - **(calculation_rule)** System calculates salary proration using full monthly salary divided by 30, including departure date (Confidence: high)
-    - **Validation hint**: Verify salary calculation for mid-month departures
+  - **(calculation_rule)** Daily wage calculator uses 30-day month for prorated salary calculations (Confidence: high)
+    - **Validation hint**: Test proration for mid-month employee departure
     - **Evidence**: [TSSD-4033]
 
-  - **(system_behavior)** EOS calculation does not consider unpaid leave or partial salary payments (Confidence: high)
-    - **Validation hint**: Test EOS settlement for employees with unpaid leave
-    - **Evidence**: [TSSD-4033]
-
-  - **(workflow_step)** Users must manually delete unpaid leave to enable EOS calculation (Confidence: medium)
-    - **Validation hint**: Confirm system behavior when unpaid leave exists
+  - **(system_behavior)** System cannot process EOS with active unpaid leave entries (Confidence: high)
+    - **Validation hint**: Attempt EOS calculation with unpaid leave in final month
     - **Evidence**: [TSSD-4033]
 
   - **(system_behavior)** Leave is only credited at month-end, not pro-rated for partial months (Confidence: high)
-    - **Validation hint**: Verify leave balance for mid-month employee exit
+    - **Validation hint**: Verify leave balance for employee exiting mid-month
     - **Evidence**: [TSSD-4042]
 
-  - **(workflow_step)** Manual adjustment is required for leave balance during mid-month exits (Confidence: high)
-    - **Validation hint**: Test leave balance calculation for employee leaving before month-end
+  - **(workflow_step)** Manual adjustment required for leave balance in mid-month departures (Confidence: high)
+    - **Validation hint**: Check if system allows manual leave balance modification during EOS
     - **Evidence**: [TSSD-4042]
 
-  - **(calculation_rule)** Gratuity calculation uses 21 days per year for first 5 years, 30 days per year thereafter (Confidence: high)
-    - **Validation hint**: Verify calculation for employees with varying service durations
+  - **(calculation_rule)** Daily wage is calculated by dividing monthly salary by 30 (Confidence: high)
+    - **Validation hint**: Verify calculation for various salary inputs
     - **Evidence**: [TSSD-4742]
 
-  - **(system_behavior)** Monthly leave accrual only grants leave days at month-end (Confidence: high)
-    - **Validation hint**: Test leave balance for mid-month departures
+  - **(system_behavior)** First 5 years use 21 days per year, subsequent years use 30 days per year for gratuity (Confidence: high)
+    - **Validation hint**: Test gratuity calculation for different service durations
     - **Evidence**: [TSSD-4742]
 
-  - **(edge_case)** Partial years are prorated using days divided by 365 (Confidence: high)
-    - **Validation hint**: Calculate gratuity for non-complete service years
+  - **(system_behavior)** Monthly accrual policies only grant leave days at month-end (Confidence: high)
+    - **Validation hint**: Verify leave balance for mid-month departures
     - **Evidence**: [TSSD-4742]
 
-  - **(system_behavior)** System blocks EOS submission when no actual pending leave requests exist (Confidence: high)
-    - **Validation hint**: Attempt EOS submission for employee with zero pending leaves
+  - **(system_behavior)** System blocks EOS submission if any leave requests are detected for the employee (Confidence: high)
+    - **Validation hint**: Verify EOS submission with various leave request scenarios
     - **Evidence**: [TSSD-3908]
 
-  - **(workflow_step)** Leave request validation occurs before EOS transaction processing (Confidence: high)
-    - **Validation hint**: Verify validation sequence in EOS submission workflow
+  - **(calculation_rule)** EOS calculates gratuity based on total service duration, excluding unpaid leave days (Confidence: medium)
+    - **Validation hint**: Cross-check gratuity calculation against sample employee records
     - **Evidence**: [TSSD-3908]
 
-  - **(calculation_rule)** Prorated salary calculation excludes weekends and public holidays (Confidence: high)
-    - **Validation hint**: Verify calculation for mid-month employee scenarios
+  - **(calculation_rule)** Prorated salary is calculated as (Basic + Allowances) / Total Working Days * Included Working Days (Confidence: high)
+    - **Validation hint**: Verify calculation matches ticket example of (11000/18) * 4 = 2444.44
     - **Evidence**: [TSSD-4129]
 
-  - **(system_behavior)** Salary is calculated as (Basic + Allowances) / Total Working Days * Included Working Days (Confidence: high)
-    - **Validation hint**: Test calculation with sample employee data
+  - **(system_behavior)** System excludes weekends and public holidays when calculating working days (Confidence: high)
+    - **Validation hint**: Check working day count matches expected monthly working days
     - **Evidence**: [TSSD-4129]
 
-  - **(workflow_step)** Workweek and public holiday configurations are mandatory for accurate calculation (Confidence: medium)
-    - **Validation hint**: Validate calculation fails without proper configuration
+  - **(edge_case)** Proration calculation adapts to partial month employment periods (Confidence: medium)
+    - **Validation hint**: Test salary calculation for mid-month employee start dates
     - **Evidence**: [TSSD-4129]
 
-  - **(system_behavior)** System automatically detects and labels check-ins as specific office location or 'out of office' (Confidence: high)
-    - **Validation hint**: Verify location labeling across multiple check-in scenarios
+  - **(system_behavior)** System automatically detects and labels check-ins as office or out-of-office based on configured geofences (Confidence: high)
+    - **Validation hint**: Test check-ins from multiple locations relative to office boundaries
     - **Evidence**: [TSSD-319]
 
-  - **(workflow_step)** Current attendance reports do not support filtering by 'out of office' location type (Confidence: high)
-    - **Validation hint**: Attempt to filter daily/custom reports by out-of-office entries
+  - **(workflow_step)** Attendance reports lack filtering capability for out-of-office check-ins (Confidence: high)
+    - **Validation hint**: Attempt to filter daily/custom reports by out-of-office location
     - **Evidence**: [TSSD-319]
 
-  - **(calculation_rule)** Daily rates for unpaid leave must be calculated using salary configuration effective during the specific leave period (Confidence: high)
-    - **Validation hint**: Compare daily rate calculations across different historical salary configurations
+  - **(calculation_rule)** Daily rates for unpaid leave must use salary configuration effective during the specific leave period (Confidence: high)
+    - **Validation hint**: Compare calculated daily rates across different salary configuration periods
     - **Evidence**: [OS-867]
 
-  - **(system_behavior)** System cannot perform retrospective salary rate calculations for leave periods (Confidence: high)
-    - **Validation hint**: Test leave compensation calculations with salary changes
+  - **(system_behavior)** System cannot currently track and apply historical salary rates for leave compensation (Confidence: high)
+    - **Validation hint**: Test retrospective salary rate application during leave periods
     - **Evidence**: [OS-867]
 
-  - **(calculation_rule)** System must correctly handle February 29th in leap year service duration calculations (Confidence: medium)
+  - **(calculation_rule)** System correctly handles February 29th in service duration calculations (Confidence: medium)
     - **Validation hint**: Compare manual and system calculations for leap year scenarios
     - **Evidence**: [TSSD-1625]
 
-  - **(system_behavior)** Last working day must be consistently included or excluded in service duration (Confidence: medium)
-    - **Validation hint**: Verify day counting logic across different termination scenarios
+  - **(system_behavior)** Departure date is consistently counted as a working day in service duration (Confidence: medium)
+    - **Validation hint**: Verify day count includes or excludes departure date
     - **Evidence**: [TSSD-1625]
 
-  - **(calculation_rule)** Gratuity calculation uses daily rate multiplied by total service duration, with precise calendar day handling for partial years (Confidence: high)
-    - **Validation hint**: Verify calculation matches ticket example of 216.67 × 2.90685 years
+  - **(calculation_rule)** Gratuity calculation uses daily rate multiplied by total service duration, with precise prorated calculation for partial years (Confidence: high)
+    - **Validation hint**: Verify calculation matches 216.67 * 2.90685 = 13,226.16
     - **Evidence**: [TSSD-4779]
 
-  - **(system_behavior)** Gratuity amount display varies based on departure reason before system update (Confidence: high)
-    - **Validation hint**: Check gratuity display for resignation vs termination scenarios
+  - **(system_behavior)** Gratuity amount display should be consistent across resignation, termination, and contract end scenarios (Confidence: medium)
+    - **Validation hint**: Check gratuity amount for different departure reasons
     - **Evidence**: [TSSD-4779]
 
-  - **(calculation_rule)** Gratuity calculation uses basic salary/30 * 21 days * service years with potential minor algorithmic adjustments (Confidence: high)
-    - **Validation hint**: Compare system calculation against manual computation for multiple scenarios
+  - **(calculation_rule)** Gratuity calculation uses basic salary divided by 30, multiplied by 21 days, adjusted for service years with potential proprietary rounding (Confidence: high)
+    - **Validation hint**: Compare multiple employee scenarios against manual calculations
     - **Evidence**: [TSSD-3123]
 
-  - **(system_behavior)** Calculation methodology varies slightly from manual interpretation of UAE labor law (Confidence: medium)
-    - **Validation hint**: Document and explain computational differences transparently
+  - **(system_behavior)** Calculation adapts to different contract types (limited, unlimited) and considers termination reason (Confidence: medium)
+    - **Validation hint**: Test with various contract and termination scenarios
     - **Evidence**: [TSSD-3123]
 
-  - **(calculation_rule)** First 5 years of service calculated at 21 days per year (Confidence: high)
-    - **Validation hint**: Verify calculation for employee with exactly 5 years service
+  - **(calculation_rule)** First 5 years of service calculated at 21 days per year, subsequent years at 30 days per year (Confidence: high)
+    - **Validation hint**: Verify calculation for employees with varied service durations
     - **Evidence**: [TSSD-2252]
 
-  - **(calculation_rule)** Years after 5 years calculated at 30 days per year (Confidence: high)
-    - **Validation hint**: Verify calculation for employee with more than 5 years service
+  - **(system_behavior)** Leap year calculations use 366-day divisor for partial years (Confidence: high)
+    - **Validation hint**: Test calculations for service periods including leap years
     - **Evidence**: [TSSD-2252]
 
-  - **(system_behavior)** Dynamically select 365 or 366 day divisor based on leap year inclusion (Confidence: medium)
-    - **Validation hint**: Test partial year calculations across leap year boundaries
-    - **Evidence**: [TSSD-2252]
-
-  - **(calculation_rule)** Gratuity calculation changes based on contract type and departure reason (Confidence: high)
-    - **Validation hint**: Test calculations for different contract types and exit scenarios
+  - **(calculation_rule)** Gratuity calculation varies based on contract type and departure reason (Confidence: high)
+    - **Validation hint**: Test calculations for different contract types with multiple departure scenarios
     - **Evidence**: [TSSD-4796]
 
-  - **(system_behavior)** Limited contract gratuity calculations require manual verification (Confidence: high)
-    - **Validation hint**: Verify if system generates different amounts compared to manual calculation
+  - **(system_behavior)** Manual intervention is required to correct gratuity calculations for limited contracts (Confidence: high)
+    - **Validation hint**: Verify ability to manually adjust calculation or change departure reason
     - **Evidence**: [TSSD-4796]
 
-  - **(calculation_rule)** Leave balance is calculated by multiplying completed months by monthly accrual rate, plus daily accrual for partial months (Confidence: high)
-    - **Validation hint**: Verify calculation matches support team's manual breakdown
+  - **(calculation_rule)** Leave balance is calculated by multiplying completed months by monthly accrual rate, plus partial month calculated using daily accrual rate (Confidence: high)
+    - **Validation hint**: Verify calculation matches manual breakdown in ticket
     - **Evidence**: [TSSD-3139]
 
-  - **(system_behavior)** Daily accrual rate is computed by dividing monthly accrual rate by total working days in a month (Confidence: high)
-    - **Validation hint**: Check daily rate calculation against monthly rate
+  - **(system_behavior)** Daily accrual rate is computed by dividing monthly accrual rate by total working days in the month (Confidence: high)
+    - **Validation hint**: Check daily rate calculation matches support explanation
     - **Evidence**: [TSSD-3139]
 
-  - **(system_behavior)** Changing payroll cycle is an irreversible action that prevents accessing previous months' data (Confidence: high)
-    - **Validation hint**: Attempt to modify payroll cycle and verify historical data accessibility
+  - **(system_behavior)** Changing payroll cycle is an irreversible action that permanently modifies proration and historical data access (Confidence: high)
+    - **Validation hint**: Attempt to change cycle and verify permanent system state
     - **Evidence**: [TSSD-3879]
 
-  - **(calculation_rule)** Salary proration automatically adjusts to match the configured payroll cycle length (Confidence: high)
-    - **Validation hint**: Create new employee record and verify prorated salary calculation
+  - **(workflow_step)** System prevents reopening of previous months after payroll cycle modification (Confidence: high)
+    - **Validation hint**: Verify historical month accessibility post-cycle change
     - **Evidence**: [TSSD-3879]
 
-  - **(calculation_rule)** Daily rate for unpaid leave is calculated using (Basic Salary + Allowances) / Working Days at time of leave approval (Confidence: high)
-    - **Validation hint**: Verify calculation remains constant after leave approval
+  - **(calculation_rule)** Daily rate is calculated as (Basic Salary + Allowances) / Working Days in the month (Confidence: high)
+    - **Validation hint**: Verify calculation matches manual computation
     - **Evidence**: [TSSD-2212]
 
-  - **(system_behavior)** Leave deduction amount is locked and cannot be retroactively modified after payroll processing (Confidence: high)
-    - **Validation hint**: Test scenario of holiday calendar changes post-leave approval
+  - **(system_behavior)** Deduction amount is locked at the time of leave approval and not retroactively modified (Confidence: high)
+    - **Validation hint**: Check if deductions remain unchanged after holiday calendar modifications
     - **Evidence**: [TSSD-2212]
 
-  - **(calculation_rule)** Daily wage is always calculated as Basic Salary / 30 (Confidence: high)
-    - **Validation hint**: Verify calculation across different salary amounts
+  - **(calculation_rule)** Daily wage is always calculated as (Basic Salary / 30) (Confidence: high)
+    - **Validation hint**: Verify daily wage calculation across different salary amounts
     - **Evidence**: [TSSD-2043]
 
-  - **(system_behavior)** Daily wage divisor cannot be modified via configuration (Confidence: high)
-    - **Validation hint**: Attempt to change daily wage calculation method in settings
+  - **(system_behavior)** System does not support alternative daily wage calculation formulas (Confidence: high)
+    - **Validation hint**: Attempt to configure custom daily wage calculation method
     - **Evidence**: [TSSD-2043]
 
-  - **(edge_case)** System rounds service duration to nearest whole day (Confidence: medium)
-    - **Validation hint**: Test edge cases with partial days in employment
-    - **Evidence**: [TSSD-2043]
-
-  - **(calculation_rule)** GOSI deductions for mid-month joiners should be calculated proportionally based on actual working days (Confidence: high)
-    - **Validation hint**: Compare exported template against manual calculation for partial month employees
+  - **(calculation_rule)** GOSI deductions for mid-month joiners should be proportionally calculated based on actual working days (Confidence: medium)
+    - **Validation hint**: Compare exported template values against manual calculation
     - **Evidence**: [TSSD-3249]
 
-  - **(system_behavior)** Payroll template export must display accurate, prorated deduction amounts for employees with non-standard joining dates (Confidence: medium)
-    - **Validation hint**: Test export for employees joining on different dates within a month
+  - **(system_behavior)** Payroll template export provides alternative data verification through payroll table download (Confidence: high)
+    - **Validation hint**: Verify data consistency across different export methods
     - **Evidence**: [TSSD-3249]
 
-  - **(calculation_rule)** System calculates leave balance using monthly proration by default (Confidence: high)
-    - **Validation hint**: Verify leave balance calculation for mid-month departure
+  - **(calculation_rule)** System must calculate leave balance for mid-month departures using daily proration (Confidence: high)
+    - **Validation hint**: Compare system calculation with manual daily proration calculation
     - **Evidence**: [TSSD-4813]
 
   - **(system_behavior)** Conditional leave policy can force daily proration for all employees (Confidence: medium)
-    - **Validation hint**: Test leave balance with conditional policy enabled
+    - **Validation hint**: Verify policy change affects leave accrual calculation across all scenarios
     - **Evidence**: [TSSD-4813]
 
-  - **(calculation_rule)** Leave salary calculation uses different methods for 'Custom Days' and 'Calendar Days' (Confidence: high)
-    - **Validation hint**: Compare salary calculations with different day type settings
+  - **(calculation_rule)** Leave salary calculation method changes based on 'Custom Days' vs 'Calendar Days' configuration (Confidence: high)
+    - **Validation hint**: Verify salary calculation for leave requests with and without public holidays
     - **Evidence**: [TSSD-2106]
 
-  - **(system_behavior)** Public holiday exclusion flag changes day count in leave duration (Confidence: high)
-    - **Validation hint**: Test leave duration with and without public holiday exclusion
+  - **(system_behavior)** Public holiday exclusion flag impacts leave duration and salary calculation differently based on day type (Confidence: high)
+    - **Validation hint**: Test leave salary with public_holiday_excluded set to true and false
     - **Evidence**: [TSSD-2106]
 
-  - **(calculation_rule)** Daily wage is calculated using basic salary by default (Confidence: high)
-    - **Validation hint**: Verify daily wage calculation method in leave accrual report
+  - **(calculation_rule)** Daily wage calculation allows selection between basic and gross pay (Confidence: medium)
+    - **Validation hint**: Verify configurable salary base in calculation settings
     - **Evidence**: [TSSD-3487]
 
-  - **(system_behavior)** Social security components appear without proper country-specific configuration (Confidence: high)
-    - **Validation hint**: Check report for unexpected social security line items
+  - **(system_behavior)** Social security components are filtered based on country configuration (Confidence: low)
+    - **Validation hint**: Check component display for clients without social security setup
     - **Evidence**: [TSSD-3487]
 
-  - **(calculation_rule)** Different leave types use distinct daily rate calculation formulas (Confidence: high)
-    - **Validation hint**: Verify calculation methods for unpaid leave vs sick leave unpaid
+  - **(calculation_rule)** Different leave types have unique daily rate calculation formulas (Confidence: high)
+    - **Validation hint**: Verify calculation methods for unpaid leave and sick leave
     - **Evidence**: [TSSD-3213]
 
-  - **(system_behavior)** Working days calculation excludes weekends (Saturdays and Sundays) (Confidence: high)
-    - **Validation hint**: Check monthly working days computation
+  - **(system_behavior)** Working days exclude weekends when calculating daily rates (Confidence: high)
+    - **Validation hint**: Check monthly working day calculation logic
     - **Evidence**: [TSSD-3213]
 
-  - **(calculation_rule)** Daily rate for unpaid leave is calculated using either basic/working days or basic+allowances/calendar days (Confidence: high)
-    - **Validation hint**: Verify calculation methods in payroll configuration
+  - **(calculation_rule)** Daily rate for unpaid leave can be calculated using basic/working days or basic+allowances/calendar days (Confidence: high)
+    - **Validation hint**: Verify both calculation methods in payroll configuration
     - **Evidence**: [TSSD-1798]
 
-  - **(system_behavior)** System should preserve original daily rate calculation method at time of leave (Confidence: medium)
-    - **Validation hint**: Check if historical calculations remain consistent after configuration changes
+  - **(system_behavior)** System recalculates daily rate display based on current configuration, not original calculation (Confidence: high)
+    - **Validation hint**: Compare historical and current unpaid leave deduction calculations
     - **Evidence**: [TSSD-1798]
 
-  - **(system_behavior)** Payroll cycle becomes completely locked and unmodifiable after closure (Confidence: high)
-    - **Validation hint**: Attempt to modify a closed payroll cycle through various interfaces
+  - **(edge_case)** Configuration changes mid-period can cause inconsistent unpaid leave deduction calculations (Confidence: high)
+    - **Validation hint**: Test deduction calculation before and after configuration update
+    - **Evidence**: [TSSD-1798]
+
+  - **(system_behavior)** Payroll cycles become completely locked after closure, preventing all backend modifications (Confidence: high)
+    - **Validation hint**: Attempt to modify a closed payroll cycle via backend interface
     - **Evidence**: [TSSD-3880]
 
-  - **(system_behavior)** No backend mechanism exists to correct variable pay entries in a closed cycle (Confidence: high)
-    - **Validation hint**: Verify inability to modify variable pay through admin/backend interfaces
+  - **(workflow_step)** Variable pay entries cannot be corrected after payroll cycle finalization (Confidence: high)
+    - **Validation hint**: Verify inability to adjust variable pay in a closed cycle
     - **Evidence**: [TSSD-3880]
 
-  - **(calculation_rule)** Daily wage is calculated using a fixed divisor defined in leave policy configuration (Confidence: high)
-    - **Validation hint**: Verify calculation across different month lengths and leave periods
+  - **(calculation_rule)** Daily wage is calculated by dividing monthly salary by a fixed divisor defined in leave policy (Confidence: high)
+    - **Validation hint**: Verify calculation matches policy configuration
     - **Evidence**: [TSSD-4731]
 
-  - **(system_behavior)** System does not dynamically adjust divisor based on actual calendar days in month (Confidence: high)
-    - **Validation hint**: Test salary calculation for months with 28, 30, and 31 days
+  - **(system_behavior)** System does not dynamically adjust daily wage divisor based on actual month length (Confidence: high)
+    - **Validation hint**: Test calculation across different month lengths
     - **Evidence**: [TSSD-4731]
 
-  - **(system_behavior)** System automatically generates full EOS deduction and recalculates proportionally based on working days (Confidence: high)
-    - **Validation hint**: Verify deduction calculation for employees with partial month employment
+  - **(calculation_rule)** System deducts full monthly salary and recalculates proportionally based on working days (Confidence: high)
+    - **Validation hint**: Verify calculation for employee with partial month employment
     - **Evidence**: [TSSD-2597]
 
-  - **(calculation_rule)** Salary arrears are automatically calculated based on offboarding and rehiring dates (Confidence: medium)
-    - **Validation hint**: Test arrears calculation for employees with consecutive month employment changes
+  - **(system_behavior)** Platform-generated EOS deductions cannot be deleted without risking data inconsistency (Confidence: high)
+    - **Validation hint**: Attempt to delete auto-generated EOS deduction and observe system response
     - **Evidence**: [TSSD-2597]
 
-  - **(calculation_rule)** System must respect user-configured day type (working vs calendar) in leave salary accrual formula (Confidence: high)
-    - **Validation hint**: Test report generation with different day type configurations
+  - **(calculation_rule)** System must support configurable day calculation (working days vs calendar days) in leave salary accrual reports (Confidence: high)
+    - **Validation hint**: Verify report calculations using different day count methods
     - **Evidence**: [TSSD-3402]
 
-  - **(system_behavior)** Leave salary accrual report calculation engine defaults to calendar days (Confidence: high)
-    - **Validation hint**: Verify calculation method when no explicit day type is specified
+  - **(system_behavior)** Formula 'Basic Salary + Allowance / Working Days' must calculate using actual working days, not calendar days (Confidence: high)
+    - **Validation hint**: Test formula with various salary and day configurations
     - **Evidence**: [TSSD-3402]
 
-  - **(calculation_rule)** System calculates salary based on working days, automatically excluding public holidays (Confidence: high)
-    - **Validation hint**: Test salary calculation for departures near public holidays
+  - **(calculation_rule)** System calculates salary based on working days, excluding public holidays (Confidence: high)
+    - **Validation hint**: Test salary calculation for employee departing near a public holiday
     - **Evidence**: [TSSD-3995]
 
-  - **(system_behavior)** Departure date proximity to public holidays does not change salary calculation (Confidence: high)
-    - **Validation hint**: Verify salary remains consistent with different departure dates
+  - **(system_behavior)** Departure dates before or including a holiday result in identical salary computations (Confidence: high)
+    - **Validation hint**: Compare salary calculations for different departure dates around a holiday
     - **Evidence**: [TSSD-3995]
 
-  - **(system_behavior)** Leave requests with dates after offboarding date are automatically deleted (Confidence: high)
-    - **Validation hint**: Create a leave request for an offboarded employee with future dates
+  - **(system_behavior)** Leave requests with dates after offboarding date are automatically deleted during employee exit process (Confidence: high)
+    - **Validation hint**: Create leave request for an employee with future dates during offboarding
     - **Evidence**: [TSSD-4720]
 
-  - **(calculation_rule)** Unpaid leave deductions are calculated based on daily rates and total leave days (Confidence: medium)
-    - **Validation hint**: Verify deduction amount matches leave request duration
+  - **(calculation_rule)** Unpaid leave requests trigger automatic payroll deduction calculations (Confidence: high)
+    - **Validation hint**: Create unpaid leave request and verify corresponding payroll deduction
     - **Evidence**: [TSSD-4720]
 
-  - **(calculation_rule)** Leave accrual balance uses full salary before GOSI deduction (Confidence: medium)
-    - **Validation hint**: Verify salary base in calculation matches gross salary
+  - **(system_behavior)** Leave request details are partially or completely hidden for offboarded employees (Confidence: medium)
+    - **Validation hint**: Check leave request details for recently offboarded employee
+    - **Evidence**: [TSSD-4720]
+
+  - **(calculation_rule)** Leave accrual balance uses post-GOSI salary for calculations (Confidence: high)
+    - **Validation hint**: Verify salary base in leave balance computation
     - **Evidence**: [TSSD-291]
 
-  - **(calculation_rule)** Daily leave rate calculates using working days, not calendar days (Confidence: medium)
-    - **Validation hint**: Confirm day calculation excludes non-working days
+  - **(system_behavior)** Current system uses calendar days for leave accrual (Confidence: high)
+    - **Validation hint**: Check day counting method in leave balance tracking
     - **Evidence**: [TSSD-291]
 
-  - **(system_behavior)** Leave accrual report shows a virtual projection calculated as Leave Availed * Daily Wage (Confidence: high)
-    - **Validation hint**: Verify calculation matches ticket description
+  - **(system_behavior)** Leave accrual report calculates salary using Leave Availed * Daily Wage formula (Confidence: high)
+    - **Validation hint**: Compare report calculation against configured daily wage
     - **Evidence**: [TSSD-4543]
 
-  - **(workflow_step)** One month leave salary request always equals full monthly salary (Confidence: high)
-    - **Validation hint**: Test leave salary request for single month scenario
+  - **(workflow_step)** Leave salary in report is a virtual projection, not actual leave salary (Confidence: high)
+    - **Validation hint**: Verify report calculation differs from leave salary request
     - **Evidence**: [TSSD-4543]
 
-  - **(ux_issue)** Report lacks clear explanation of its virtual projection methodology (Confidence: high)
-    - **Validation hint**: Review report UI for calculation method description
-    - **Evidence**: [TSSD-4543]
-
-  - **(calculation_rule)** Leave balance is calculated daily based on conditional allowance rules (Confidence: high)
-    - **Validation hint**: Verify balance calculations for employees with various hire dates
+  - **(calculation_rule)** Leave balance is calculated daily with consideration of hire date and work cycle (Confidence: high)
+    - **Validation hint**: Verify balance calculation for employees with various hire dates
     - **Evidence**: [TSSD-3822]
 
-  - **(edge_case)** Employees hired on February 29th may experience a 1-day leave balance discrepancy in the first cycle (Confidence: medium)
-    - **Validation hint**: Test balance calculation for leap year hire dates
+  - **(edge_case)** February 29th hire dates trigger a special calculation workflow starting from February 28th (Confidence: medium)
+    - **Validation hint**: Test leave balance for employees hired on February 29th in leap years
     - **Evidence**: [TSSD-3822]
 
-  - **(calculation_rule)** System calculates leave balance across multiple cycles with daily precision (Confidence: high)
-    - **Validation hint**: Verify fractional day calculations match support explanation
+  - **(calculation_rule)** System can carry forward maximum 25 days across leave cycles (Confidence: high)
+    - **Validation hint**: Verify balance calculation exceeding 25 days
     - **Evidence**: [TSSD-4243]
 
-  - **(system_behavior)** Maximum 25 days can be carried forward between leave cycles (Confidence: high)
-    - **Validation hint**: Test carry-over limit enforcement
+  - **(system_behavior)** Leave requests spanning multiple cycles are prorated and deducted from projected balances (Confidence: high)
+    - **Validation hint**: Test leave request across cycle boundaries
     - **Evidence**: [TSSD-4243]
 
-  - **(system_behavior)** Job tenure toggle controls whether leave accrual is calculated on daily or monthly basis (Confidence: high)
-    - **Validation hint**: Verify toggle state changes accrual calculation method
+  - **(system_behavior)** Toggle controls whether job tenure calculations include partial days or only full months (Confidence: high)
+    - **Validation hint**: Test accrual calculations with toggle enabled and disabled for various employment durations
     - **Evidence**: [TSSD-3082]
 
-  - **(calculation_rule)** Conditional leave policies default to daily accrual, non-conditional policies default to monthly accrual (Confidence: high)
-    - **Validation hint**: Test accrual calculation for different policy types
+  - **(calculation_rule)** Conditional and non-conditional leave policies have different default accrual frequencies (Confidence: high)
+    - **Validation hint**: Verify accrual calculations for both policy types under different scenarios
     - **Evidence**: [TSSD-3082]
 
-  - **(calculation_rule)** System must count public holidays as paid working days during leave salary calculation (Confidence: high)
-    - **Validation hint**: Verify prorated salary includes public holidays in working days total
+  - **(calculation_rule)** Public holidays during leave periods are correctly counted as paid working days in prorated salary calculations (Confidence: medium)
+    - **Validation hint**: Verify salary calculation for leave requests spanning public holidays
     - **Evidence**: [TSSD-2937]
 
-  - **(system_behavior)** Leave requests spanning public holidays should maintain accurate working days count (Confidence: high)
-    - **Validation hint**: Check that total working days match calendar days minus excluded days
+  - **(system_behavior)** Leave requests can span multiple days and automatically exclude public holidays from leave day count (Confidence: high)
+    - **Validation hint**: Test leave request submission across different holiday scenarios
     - **Evidence**: [TSSD-2937]
 
-  - **(system_behavior)** Daily wage calculation method can be configured to use either working days or custom 30-day formula (Confidence: high)
-    - **Validation hint**: Verify configuration options in payroll settings
+  - **(calculation_rule)** Daily wage calculation respects configured formula (Basic + allowances / 30 days) (Confidence: medium)
+    - **Validation hint**: Verify report generation matches configuration settings
     - **Evidence**: [TSSD-3779]
 
-  - **(calculation_rule)** Leave salary accrual report must use the configured daily wage calculation method (Confidence: medium)
-    - **Validation hint**: Generate report and compare against configuration settings
+  - **(system_behavior)** Leave salary accrual report uses most recently configured calculation method (Confidence: medium)
+    - **Validation hint**: Check report output after changing configuration
     - **Evidence**: [TSSD-3779]
 
-  - **(edge_case)** System might default to working days calculation if custom method configuration fails (Confidence: low)
-    - **Validation hint**: Test various configuration scenarios and verify report output
-    - **Evidence**: [TSSD-3779]
-
-  - **(calculation_rule)** Daily wage for leave salary accrual changes based on monthly working days (Confidence: high)
+  - **(calculation_rule)** Leave salary accrual calculations dynamically adjust based on monthly working days (Confidence: high)
     - **Validation hint**: Compare leave salary reports for months with different working day counts
     - **Evidence**: [TSSD-3648]
 
-  - **(system_behavior)** Users can switch between 'working days' and 'custom days' calculation methods (Confidence: high)
-    - **Validation hint**: Verify configuration options in Daily Wage Calculator
+  - **(system_behavior)** Daily wage calculator supports 'working days' and 'custom days' configuration modes (Confidence: high)
+    - **Validation hint**: Verify configuration options in leave encashment settings
     - **Evidence**: [TSSD-3648]
 
-  - **(calculation_rule)** Leave salary and salary proration use separate daily wage divisors (Confidence: high)
-    - **Validation hint**: Compare calculations using 30 and 30.42 day divisors
+  - **(calculation_rule)** Daily wage can be calculated using different divisors for leave salary and salary proration (Confidence: high)
+    - **Validation hint**: Verify independent configuration of daily wage formulas
     - **Evidence**: [TSSD-2321]
 
-  - **(system_behavior)** Daily wage calculator supports independent configuration for leave and proration calculations (Confidence: high)
-    - **Validation hint**: Verify ability to set different divisors for leave and proration
+  - **(system_behavior)** System allows configuration of daily wage using 30 or 30.42 day divisors (Confidence: high)
+    - **Validation hint**: Test multiple divisor configurations
     - **Evidence**: [TSSD-2321]
 
   - **(calculation_rule)** Daily rate is calculated by dividing monthly salary by 30 (Confidence: high)
-    - **Validation hint**: Verify daily rate computation matches 'monthly salary / 30'
+    - **Validation hint**: Verify calculation matches: monthly_salary / 30
     - **Evidence**: [TSSD-3226]
 
-  - **(system_behavior)** Leave salary calculation must use exact number of approved leave days (Confidence: high)
-    - **Validation hint**: Compare system-calculated days against approved leave request days
+  - **(system_behavior)** Leave salary calculation must use exact number of approved leave days (Confidence: medium)
+    - **Validation hint**: Compare approved leave days with calculation input
     - **Evidence**: [TSSD-3226]
 
-  - **(workflow_step)** Incorrect leave salary calculations require manual request deletion and resubmission (Confidence: medium)
-    - **Validation hint**: Verify workflow allows complete request deletion and fresh submission
+  - **(workflow_step)** Incorrect calculations require deleting and resubmitting leave salary request (Confidence: high)
+    - **Validation hint**: Test workflow for manual correction process
     - **Evidence**: [TSSD-3226]
 
-  - **(calculation_rule)** Leave salary is calculated by dividing monthly salary by 30.41 and multiplying by actual leave days (Confidence: high)
+  - **(calculation_rule)** Leave salary is calculated by dividing monthly salary by 30.41 days and multiplying by actual leave days (Confidence: high)
     - **Validation hint**: Verify calculation matches ticket example of 8200/30.41 * 32
     - **Evidence**: [TSSD-3275]
 
-  - **(system_behavior)** For multi-month leave, system computes total leave salary, then deducts current month's portion from active payroll (Confidence: high)
-    - **Validation hint**: Check calculation for leave spanning two months
+  - **(system_behavior)** System deducts only current month's leave salary from active payroll cycle (Confidence: high)
+    - **Validation hint**: Check that total leave amount is not fully deducted in one cycle
     - **Evidence**: [TSSD-3275]
 
-  - **(calculation_rule)** Allowances excluded from leave salary formula should be prorated based on leave days (Confidence: high)
-    - **Validation hint**: Verify calculation of allowances during partial month leave
+  - **(calculation_rule)** Excluded salary components are currently paid in full during leave periods (Confidence: high)
+    - **Validation hint**: Verify calculation of allowances not in leave salary formula
     - **Evidence**: [TSSD-4387]
 
-  - **(system_behavior)** System must provide configurable options for handling salary components during leave (Confidence: medium)
-    - **Validation hint**: Check configuration interfaces for component-level leave behavior control
+  - **(system_behavior)** No configurable option exists to prorate or exclude specific allowances during leave (Confidence: high)
+    - **Validation hint**: Check payroll configuration screens for component-level leave behavior controls
     - **Evidence**: [TSSD-4387]
 
-  - **(system_behavior)** Only one leave salary policy can be active for a specific employee group to prevent calculation conflicts (Confidence: high)
-    - **Validation hint**: Attempt to activate multiple policies and verify calculation behavior
+  - **(system_behavior)** Changes to daily rate in a leave salary policy require deactivation of other conflicting policies (Confidence: high)
+    - **Validation hint**: Verify policy change propagation with multiple active policies
     - **Evidence**: [TSSD-2934]
 
-  - **(calculation_rule)** Daily rate calculations must update immediately when policy changes are made (Confidence: medium)
-    - **Validation hint**: Modify policy settings and confirm immediate calculation updates
+  - **(calculation_rule)** Minimum days threshold is not consistently enforced across different leave salary policies (Confidence: high)
+    - **Validation hint**: Test leave request generation against policy minimum days configuration
     - **Evidence**: [TSSD-2934]
 
-  - **(system_behavior)** Leave policies cannot exclude specific salary components during payment calculation (Confidence: high)
-    - **Validation hint**: Attempt to configure a leave policy paying only basic salary
+  - **(calculation_rule)** Leave policy deductions are calculated using total salary percentage, not selective salary components (Confidence: high)
+    - **Validation hint**: Configure a leave policy and verify deduction calculation method
     - **Evidence**: [TSSD-3654]
 
-  - **(calculation_rule)** Partial leave payment uses total salary percentage instead of component-specific rules (Confidence: high)
-    - **Validation hint**: Compare leave deduction calculations across different salary structures
+  - **(system_behavior)** Cannot configure leave policies to exclude specific salary components like housing allowance (Confidence: high)
+    - **Validation hint**: Attempt to create a leave policy excluding non-basic salary components
     - **Evidence**: [TSSD-3654]
 
-  - **(system_behavior)** System allows only one global proration formula for all employees (Confidence: high)
-    - **Validation hint**: Attempt to set different formulas for employee groups
+  - **(system_behavior)** System applies single proration formula to all employees regardless of employee category (Confidence: high)
+    - **Validation hint**: Attempt to set different proration rules for distinct employee groups
     - **Evidence**: [TSSD-4375]
 
-  - **(calculation_rule)** Proration formula applies Basic + Allowance divided by fixed period (Confidence: high)
-    - **Validation hint**: Review salary calculation logic in configuration
+  - **(workflow_step)** Proration formula selection occurs during initial payroll platform setup (Confidence: high)
+    - **Validation hint**: Verify configuration options during payroll system initialization
     - **Evidence**: [TSSD-4375]
 
   - **(system_behavior)** Air ticket allowances are added in bulk at renewal cycle end (Confidence: high)
-    - **Validation hint**: Verify allocation timing and method in system configuration
+    - **Validation hint**: Check allowance allocation timing in system configuration
     - **Evidence**: [TSSD-3146]
 
-  - **(workflow_step)** No daily pro-ration of air ticket allowances is currently supported (Confidence: high)
-    - **Validation hint**: Check if system allows incremental air ticket allowance accrual
+  - **(workflow_step)** No daily pro-ration of air ticket allowances is possible (Confidence: high)
+    - **Validation hint**: Attempt to calculate partial ticket eligibility mid-cycle
     - **Evidence**: [TSSD-3146]
 
-  - **(system_behavior)** Salary proration calculates based on configured work week, not standard calendar days (Confidence: high)
-    - **Validation hint**: Verify proration calculation with various work week configurations
+  - **(system_behavior)** Salary proration calculates based on work week configuration, not standard calendar days (Confidence: high)
+    - **Validation hint**: Verify proration calculation changes with different work week configurations
     - **Evidence**: [TSSD-4292]
 
-  - **(calculation_rule)** All days marked as working in work week configuration are considered for salary proration (Confidence: high)
-    - **Validation hint**: Test proration with 7-day work week configuration
+  - **(workflow_step)** System allows configuring all 7 days as working days in work week setup (Confidence: high)
+    - **Validation hint**: Test work week configuration to include all days as working
     - **Evidence**: [TSSD-4292]
 
-  - **(system_behavior)** GOSI percentage retrieval occurs daily at 5 AM DBX time with potential ±6 minute variation (Confidence: medium)
-    - **Validation hint**: Check multiple days' timestamps for retrieval consistency
+  - **(system_behavior)** GOSI percentage data retrieval occurs daily at approximately 5 AM DBX time with potential +/- 10-minute variance (Confidence: medium)
+    - **Validation hint**: Verify timestamp on review page against scheduled time
     - **Evidence**: [OS-3034]
 
-  - **(workflow_step)** Reporting interface displays last retrieval timestamp for GOSI percentages (Confidence: high)
-    - **Validation hint**: Verify timestamp display accuracy and timezone representation
+  - **(workflow_step)** Backend process fetches GOSI percentages automatically without manual intervention (Confidence: high)
+    - **Validation hint**: Confirm data appears without user trigger
     - **Evidence**: [OS-3034]
 
   - **(calculation_rule)** System applies different gratuity calculation rules for limited and unlimited contracts (Confidence: high)
-    - **Validation hint**: Verify calculation logic for 0-5 years and 5+ years of service
+    - **Validation hint**: Verify calculation differences between contract types
     - **Evidence**: [TSSD-375]
 
-  - **(system_behavior)** Gratuity calculation requires precise configuration of contract type, basic salary, and service period (Confidence: high)
-    - **Validation hint**: Test calculation with varied employee profiles
+  - **(system_behavior)** Gratuity calculation switches from 21 to 30 days per year after 5 years of service (Confidence: medium)
+    - **Validation hint**: Test calculation for employees with varying service lengths
     - **Evidence**: [TSSD-375]
 
-  - **(system_behavior)** Leave balance cannot be manually adjusted when daily attendance records exist (Confidence: high)
-    - **Validation hint**: Attempt to reduce leave balance with active attendance records
+  - **(system_behavior)** Administrators cannot directly modify leave balances through the user interface (Confidence: high)
+    - **Validation hint**: Attempt to modify leave balance via admin dashboard
     - **Evidence**: [TSSD-3789]
 
   - **(workflow_step)** Leave balance corrections require backend database intervention (Confidence: high)
-    - **Validation hint**: Verify no direct UI method for balance adjustment exists
+    - **Validation hint**: Verify if leave balance can be modified without direct database update
     - **Evidence**: [TSSD-3789]
 
-  - **(system_behavior)** Leave salary is calculated first using daily rates before deducting from active salary cycle (Confidence: high)
-    - **Validation hint**: Verify calculation sequence in payroll settings
+  - **(system_behavior)** Leave salary is calculated first using selected daily method before deducting from active salary cycle (Confidence: high)
+    - **Validation hint**: Verify calculation sequence in multiple scenarios
     - **Evidence**: [TSSD-4349]
 
-  - **(configuration_rule)** Users can select between calendar days and custom days for leave salary calculation (Confidence: high)
-    - **Validation hint**: Check available options in leave salary policy settings
+  - **(configuration_rule)** Users can selectively configure which allowances are prorated during leave (Confidence: high)
+    - **Validation hint**: Test allowance proration settings across different policy configurations
     - **Evidence**: [TSSD-4349]
 
-  - **(calculation_rule)** Salary proration calculates daily rate by dividing monthly fixed income by 30 days (Confidence: high)
-    - **Validation hint**: Verify calculation matches ticket example: 21,000 / 30 = 700 daily rate
+  - **(calculation_rule)** Salary proration must work consistently for departure dates in past and future (Confidence: high)
+    - **Validation hint**: Test proration with various departure date scenarios
     - **Evidence**: [TSSD-3058]
 
-  - **(system_behavior)** Proration logic differs for departure dates in past versus future (Confidence: high)
-    - **Validation hint**: Test proration scenarios with departure dates before and after payroll processing date
+  - **(system_behavior)** Daily rate calculation uses 30-day month divisor (Confidence: high)
+    - **Validation hint**: Verify daily rate matches total monthly salary divided by 30
     - **Evidence**: [TSSD-3058]
 
-  - **(calculation_rule)** Daily rate is calculated by dividing total compensation by a custom divisor (e.g., 30 days) (Confidence: high)
+  - **(calculation_rule)** Daily rate is calculated by dividing total compensation by a configured divisor (e.g., 30 days) (Confidence: high)
     - **Validation hint**: Verify daily rate calculation matches configured divisor
     - **Evidence**: [TSSD-3512]
 
-  - **(calculation_rule)** Actual prorated salary is calculated by multiplying daily rate by actual calendar days worked (Confidence: high)
-    - **Validation hint**: Count and validate days between start and end dates
+  - **(calculation_rule)** Prorated salary multiplies daily rate by actual calendar days worked (Confidence: high)
+    - **Validation hint**: Confirm day count matches actual employee presence
     - **Evidence**: [TSSD-3512]
 
-  - **(system_behavior)** Proration calculation locks at the moment of employee offboarding (Confidence: high)
-    - **Validation hint**: Change daily rate configuration after offboarding and verify calculation remains unchanged
+  - **(system_behavior)** Current proration calculation lacks clear user-facing explanation (Confidence: high)
+    - **Validation hint**: Review UI for calculation logic clarity
+    - **Evidence**: [TSSD-3512]
+
+  - **(calculation_rule)** Proration calculation locks at exact moment of employee offboarding based on current daily rate configuration (Confidence: high)
+    - **Validation hint**: Change daily rate configuration before and after offboarding, verify calculation differences
     - **Evidence**: [TSSD-2518]
 
-  - **(workflow_step)** Rehiring and re-offboarding an employee triggers proration recalculation (Confidence: high)
-    - **Validation hint**: Perform rehire and re-offboarding to confirm proration updates
+  - **(system_behavior)** System requires manual rehire and re-offboarding to recalculate prorated salary after configuration change (Confidence: high)
+    - **Validation hint**: Attempt to recalculate proration through configuration change, confirm manual intervention needed
     - **Evidence**: [TSSD-2518]
 
   - **(calculation_rule)** Daily wage is calculated by dividing total monthly salary by total working days in the month (Confidence: high)
     - **Validation hint**: Verify calculation matches ticket example of (5300 + 700 + 500) / 23
     - **Evidence**: [TSSD-4303]
 
-  - **(system_behavior)** Weekend days are automatically excluded from working day calculations (Confidence: high)
-    - **Validation hint**: Confirm system detects and removes Saturday/Sunday from working day count
+  - **(system_behavior)** System automatically excludes weekends when calculating working days (Confidence: high)
+    - **Validation hint**: Confirm weekend days are removed from total month days
     - **Evidence**: [TSSD-4303]
 
-  - **(workflow_step)** Prorated salary equals daily wage multiplied by actual working days completed (Confidence: high)
-    - **Validation hint**: Check mid-month termination calculation matches ticket example of 282.6 * 14
+  - **(workflow_step)** Prorated salary equals daily wage multiplied by actual days worked (Confidence: high)
+    - **Validation hint**: Check calculation of 282.6 * 14 days matches system output
     - **Evidence**: [TSSD-4303]
 
-  - **(system_behavior)** Filtering in Time and Pay Adjustments is limited to Approved section only (Confidence: high)
-    - **Validation hint**: Verify filtering options in Processed section of Time and Pay Adjustments
+  - **(system_behavior)** Filtering is only available in Approved section, not Processed section (Confidence: high)
+    - **Validation hint**: Attempt to filter processed entries by Time Off and Payroll
     - **Evidence**: [TSSD-463]
 
-  - **(workflow_step)** Users must download data and manually filter to separate Time Off and Payroll processed entries (Confidence: high)
-    - **Validation hint**: Attempt to filter processed entries directly in UI and confirm manual export requirement
+  - **(workflow_step)** Users must download data and manually filter processed time and pay adjustments (Confidence: high)
+    - **Validation hint**: Verify current workflow requires external data manipulation
     - **Evidence**: [TSSD-463]
 
-  - **(system_behavior)** System tracks individual activity times but does not automatically calculate total daily hours (Confidence: high)
-    - **Validation hint**: Verify total hours are not automatically displayed in timesheet view
+  - **(system_behavior)** System tracks individual activity hours but does not automatically calculate daily total (Confidence: high)
+    - **Validation hint**: Verify total hours are not auto-calculated in timesheet view
     - **Evidence**: [TSSD-696]
 
-  - **(workflow_step)** Users must manually sum activity times to determine total daily hours worked (Confidence: high)
-    - **Validation hint**: Confirm no automatic calculation exists in current UI
+  - **(workflow_step)** Users must manually sum activity hours to determine daily work time (Confidence: high)
+    - **Validation hint**: Confirm no built-in total hours calculation exists
     - **Evidence**: [TSSD-696]
 
-  - **(system_behavior)** Changing a task's date will move the entire entry to the new date without preserving original date context (Confidence: high)
-    - **Validation hint**: Modify task date and verify entry's new location in timesheet
+  - **(system_behavior)** Users can modify task dates retroactively without system warnings (Confidence: high)
+    - **Validation hint**: Attempt to change task date and verify no explicit warning appears
     - **Evidence**: [TSSD-4409]
 
-  - **(workflow_step)** Task entries can become temporarily or permanently invisible when date is modified (Confidence: medium)
-    - **Validation hint**: Track a task through multiple date changes and confirm visibility
+  - **(workflow_step)** Date modifications can cause entries to appear to 'disappear' from original logging date (Confidence: high)
+    - **Validation hint**: Log task, modify date, check original and new date views
     - **Evidence**: [TSSD-4409]
 
-  - **(system_behavior)** System automatically generates leave deductions that cannot be directly edited (Confidence: high)
-    - **Validation hint**: Attempt to modify an auto-generated leave deduction
+  - **(system_behavior)** System automatically generates leave deductions that cannot be edited (Confidence: high)
+    - **Validation hint**: Attempt to modify an auto-created leave deduction
     - **Evidence**: [TSSD-3946]
 
-  - **(calculation_rule)** Daily rate can be calculated based on Basic or Gross salary (Confidence: medium)
-    - **Validation hint**: Verify configuration options for salary basis in calculation
+  - **(calculation_rule)** Daily rate can be calculated based on Gross or Basic salary (Confidence: medium)
+    - **Validation hint**: Verify calculation method configuration options
     - **Evidence**: [TSSD-3946]
 
   - **(system_behavior)** System cannot manually adjust used days for unpaid leave requests (Confidence: high)
-    - **Validation hint**: Attempt to modify used days in an unpaid leave request
+    - **Validation hint**: Attempt to modify used days for an existing unpaid leave request
     - **Evidence**: [TSSD-2384]
 
-  - **(workflow_step)** Multi-month unpaid leave requests cause cumulative salary deductions (Confidence: high)
-    - **Validation hint**: Submit unpaid leave request spanning multiple payroll months
+  - **(workflow_step)** Multi-month unpaid leave requests must be split into single-month intervals (Confidence: high)
+    - **Validation hint**: Create a multi-month unpaid leave request and verify system response
     - **Evidence**: [TSSD-2384]
 
   - **(system_behavior)** Deleting a leave request does not automatically remove corresponding payroll deductions (Confidence: high)
-    - **Validation hint**: Attempt to delete leave request and verify payroll deduction persistence
+    - **Validation hint**: Attempt to delete a leave request and verify payroll deduction status
     - **Evidence**: [TSSD-2532]
 
-  - **(calculation_rule)** Changing daily wage calculation creates duplicate deduction entries instead of replacing existing entries (Confidence: high)
-    - **Validation hint**: Modify daily wage mid-transaction and check for duplicate deductions
+  - **(calculation_rule)** Modifying daily wage calculation creates duplicate deduction entries (Confidence: high)
+    - **Validation hint**: Change daily wage rate for an existing leave request and check deduction entries
     - **Evidence**: [TSSD-2532]
 
-  - **(calculation_rule)** Unpaid leave day count must match total deduction amount across multiple months (Confidence: high)
-    - **Validation hint**: Verify payslip shows correct total days when leave spans multiple months
+  - **(calculation_rule)** Unpaid leave deduction amount must match the number of unpaid leave days displayed on the payslip (Confidence: high)
+    - **Validation hint**: Verify calculation for multi-month leave scenarios
     - **Evidence**: [TSSD-3044]
 
-  - **(system_behavior)** Payslip must aggregate leave days from previous months during current payroll cycle (Confidence: medium)
-    - **Validation hint**: Check if retrospective leaves are fully represented
+  - **(system_behavior)** System must aggregate leave days from multiple months when processing a single payroll cycle (Confidence: medium)
+    - **Validation hint**: Test cross-month leave processing
     - **Evidence**: [TSSD-3044]
 
   - **(calculation_rule)** Daily wage is calculated by dividing monthly salary by total working days, excluding weekends and public holidays (Confidence: high)
-    - **Validation hint**: Verify calculation for different employee scenarios
+    - **Validation hint**: Verify calculation with various leave scenarios
     - **Evidence**: [TSSD-4464]
 
-  - **(system_behavior)** System cannot recalculate salary deduction retroactively after initial processing (Confidence: high)
-    - **Validation hint**: Attempt to modify past payroll calculations
+  - **(system_behavior)** System cannot retroactively recalculate daily wage after initial computation (Confidence: high)
+    - **Validation hint**: Attempt to modify salary deduction after initial calculation
     - **Evidence**: [TSSD-4464]
 
   - **(calculation_rule)** Daily wage is calculated by dividing monthly salary by 30.42, not calendar days (Confidence: high)
-    - **Validation hint**: Verify calculation matches ticket example of 4300/30.42 = 141.35
+    - **Validation hint**: Compare calculated daily rate against expected monthly salary division
     - **Evidence**: [TSSD-4368]
 
-  - **(system_behavior)** Unpaid leave deductions can exceed monthly salary amount (Confidence: medium)
-    - **Validation hint**: Test deduction calculation for full month absence
+  - **(system_behavior)** Deduction for unpaid leave can exceed the monthly salary amount (Confidence: high)
+    - **Validation hint**: Verify deduction calculation for full month leave scenarios
     - **Evidence**: [TSSD-4368]
 
-  - **(system_behavior)** Payroll Configuration 'Overwrite' option always takes precedence over Leave Policy calculation settings (Confidence: high)
-    - **Validation hint**: Verify calculation method matches Payroll Configuration when Overwrite is enabled
+  - **(system_behavior)** When 'Overwrite' is enabled in Payroll Configuration, Leave Policy UI shows 'Basic/calendar' but calculates using 'Basic + Allowance/calendar' (Confidence: high)
+    - **Validation hint**: Compare displayed calculation method with actual computed value
     - **Evidence**: [TSSD-4947]
 
-  - **(workflow_step)** Users cannot modify Leave Policy calculation method when Overwrite option is enabled (Confidence: high)
-    - **Validation hint**: Attempt to change calculation in Leave Policy with Overwrite active
+  - **(workflow_step)** Users cannot edit Leave Policy calculation method when Payroll Configuration 'Overwrite' option is enabled (Confidence: high)
+    - **Validation hint**: Attempt to modify leave policy settings with Overwrite active
     - **Evidence**: [TSSD-4947]
 
-  - **(ux_issue)** Leave Policy UI does not synchronize or clearly indicate when Payroll Configuration overrides are active (Confidence: high)
-    - **Validation hint**: Check for visual indicators of configuration override in Leave Policy interface
-    - **Evidence**: [TSSD-4947]
-
-  - **(system_behavior)** Leave policies can have different daily rate calculation formulas (Confidence: high)
-    - **Validation hint**: Verify multiple policy configurations with distinct calculation methods
+  - **(system_behavior)** Multiple leave policies can have different daily rate calculation formulas (Confidence: high)
+    - **Validation hint**: Verify different formulas produce different deduction amounts
     - **Evidence**: [TSSD-1746]
 
-  - **(workflow_step)** System applies policy-specific calculation without explicit user confirmation (Confidence: high)
-    - **Validation hint**: Test leave request processing across different policy types
+  - **(configuration_rule)** Daily rate can be calculated as Basic/Calendar Days or Basic+Allowances/Calendar Days (Confidence: high)
+    - **Validation hint**: Test calculation results with different policy configurations
     - **Evidence**: [TSSD-1746]
 
-  - **(edge_case)** No warning is provided when selecting between similar leave policies (Confidence: high)
-    - **Validation hint**: Attempt to select between policies with similar names and different calculations
-    - **Evidence**: [TSSD-1746]
-
-  - **(calculation_rule)** Daily wage is calculated by dividing total compensation by actual calendar days in the month (Confidence: high)
+  - **(calculation_rule)** Daily wage is calculated by dividing total salary by actual calendar days in the month (Confidence: high)
     - **Validation hint**: Verify calculation across different months with varying day counts
     - **Evidence**: [TSSD-1227]
 
-  - **(system_behavior)** System does not support custom divisor configurations for daily wage calculation (Confidence: high)
-    - **Validation hint**: Attempt to modify divisor in report settings
+  - **(system_behavior)** System does not support custom day divisors for leave salary calculation (Confidence: high)
+    - **Validation hint**: Attempt to configure custom divisor and confirm system rejection
     - **Evidence**: [TSSD-1227]
 
-  - **(system_behavior)** Attendance workflow only triggers when 'mark as absent' button is manually clicked (Confidence: high)
-    - **Validation hint**: Verify workflow behavior with system-default and manually marked absences
+  - **(system_behavior)** Workflow notifications only trigger when 'Mark as Absent' is manually clicked (Confidence: high)
+    - **Validation hint**: Test workflow with system-default and manually marked absences
     - **Evidence**: [TSSD-3438]
 
-  - **(workflow_step)** HR managers do not receive automatic notifications for system-default absent records (Confidence: high)
-    - **Validation hint**: Test workflow with various absence scenarios
+  - **(workflow_step)** HR must manually mark an employee absent to receive notification (Confidence: high)
+    - **Validation hint**: Verify notification generation process requires manual action
     - **Evidence**: [TSSD-3438]
 
-  - **(system_behavior)** Workflow triggers at configured daily time to check previous day's attendance records (Confidence: medium)
-    - **Validation hint**: Verify event triggers at specified time with sample attendance data
+  - **(system_behavior)** Workflow checks previous day's attendance records at a configured time (Confidence: medium)
+    - **Validation hint**: Verify trigger occurs at specified time with correct date range
     - **Evidence**: [TSSD-3507]
 
-  - **(configuration)** Users can configure specific trigger time for absence notification workflow (Confidence: high)
-    - **Validation hint**: Test workflow configuration interface for time selection
+  - **(workflow_step)** Email notifications are generated only for employees with 'Absent' status (Confidence: high)
+    - **Validation hint**: Test workflow with mixed attendance statuses
     - **Evidence**: [TSSD-3507]
 
-  - **(calculation_rule)** Daily wage rate is calculated by dividing monthly salary by actual calendar days in the month (Confidence: high)
-    - **Validation hint**: Verify calculation for February in leap year shows 29 days, not 31
+  - **(calculation_rule)** Daily rate is calculated by dividing monthly salary by actual calendar days in the month (Confidence: high)
+    - **Validation hint**: Verify calculation for February (29 days) vs other months
     - **Evidence**: [TSSD-1301]
 
-  - **(system_behavior)** Unpaid leave deduction uses precise daily rate multiplied by number of unpaid days (Confidence: high)
-    - **Validation hint**: Check deduction amount matches calculated daily rate
+  - **(system_behavior)** Unpaid leave deduction multiplies correct daily rate by number of unpaid days (Confidence: high)
+    - **Validation hint**: Check deduction amount matches calculated daily rate * unpaid days
     - **Evidence**: [TSSD-1301]
 
-  - **(calculation_rule)** Daily wage is calculated by dividing salary component by total working days (Confidence: high)
-    - **Validation hint**: Verify calculation using different salary components and work schedules
+  - **(system_behavior)** Global daily rate configuration always overrides policy-specific leave deduction calculations (Confidence: high)
+    - **Validation hint**: Verify deduction calculation using different global and policy-level configurations
     - **Evidence**: [TSSD-1753]
 
-  - **(system_behavior)** Global configuration always overrides policy-specific leave calculation settings (Confidence: high)
-    - **Validation hint**: Test different policy configurations against global settings
+  - **(calculation_rule)** Daily wage rate is calculated by dividing salary (basic or gross) by total working days (Confidence: high)
+    - **Validation hint**: Test calculation with various salary components and working day configurations
     - **Evidence**: [TSSD-1753]
 
-  - **(calculation_rule)** Daily rate is calculated as (Basic Salary + Allowances) / Working Days, excluding public holidays (Confidence: high)
-    - **Validation hint**: Verify calculation matches ticket example of 4000/17 = 235.294
+  - **(calculation_rule)** Daily rate calculated as (Basic + Allowances) / Working Days, excluding public holidays (Confidence: high)
+    - **Validation hint**: Verify calculation across different months with varying working days
     - **Evidence**: [TSSD-1807]
 
-  - **(system_behavior)** Daily rate display should match the leave occurrence month, not the payroll processing month (Confidence: medium)
-    - **Validation hint**: Compare displayed daily rate with month of leave request
+  - **(system_behavior)** Daily rate is stored at initial calculation and not recalculated for display (Confidence: medium)
+    - **Validation hint**: Check that displayed rate matches original leave occurrence month
     - **Evidence**: [TSSD-1807]
 
   
@@ -3336,5 +3340,5 @@
   ## Analysis Metadata
   - **Source**: jira
   - **Analysis date**: 2025-12-16
-  - **Project distribution**: {"tssd":75,"os":4,"TSSD":24}
+  - **Project distribution**: {"tssd":77,"os":4,"TSSD":22}
   
