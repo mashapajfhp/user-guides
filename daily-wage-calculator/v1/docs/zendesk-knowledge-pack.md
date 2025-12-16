@@ -4,7 +4,7 @@
 
   ## Feature Overview
   The Daily Wage Calculator is a comprehensive payroll feature that enables organizations to calculate and manage employee 
-  daily wage rates for various compensation scenarios. This system calculate and deduct daily pay for employees taking unpaid leave, and provide a flexible and customizable method for calculating daily wages, including salary proration, leave encashment, and unpaid leave deductions, and adjust and calculate an employee's salary proportionally based on the actual days worked. The feature supports multiple calculation bases including calendar days (standard monthly days), working days (excluding 
+  daily wage rates for various compensation scenarios. This system calculate and deduct daily pay for employees taking unpaid leave, and provide a flexible and customizable method for calculating daily wages, including salary proration, leave encashment, and unpaid leave deductions, and adjust and calculate employee's salary proportionally based on actual days worked. The feature supports multiple calculation bases including calendar days (standard monthly days), working days (excluding 
   weekends and holidays), and custom days (configurable to align with regional labor laws). It integrates seamlessly with payroll processing, leave 
   management, and end-of-service calculations to ensure accurate compensation across all employee lifecycle stages. The calculator accommodates 
   different organizational structures and regional compliance requirements, particularly for UAE and KSA companies that typically use 30 custom days 
@@ -16,7 +16,7 @@
   ## Documented Jobs To Be Done
   - Calculate and deduct daily pay for employees taking unpaid leave [Articles: 14154746403601]
 - Provide a flexible and customizable method for calculating daily wages, including salary proration, leave encashment, and unpaid leave deductions [Articles: 14243704039185]
-- Adjust and calculate an employee's salary proportionally based on the actual days worked [Articles: 14243760419089]
+- Adjust and calculate employee's salary proportionally based on actual days worked [Articles: 14243760419089]
 
 
   ## Primary User Personas
@@ -36,27 +36,27 @@
   ## Prerequisites
   - Approved unpaid leave request [Articles: 14154746403601]
 - Access to payroll settings [Articles: 14243704039185]
-- Super admin access to payroll settings [Articles: 14243760419089]
+- Access to Super Admin role [Articles: 14243760419089]
 
 
   ## Data Inputs Required
-  - **Total salary (basic + allowance)**: Employee's monthly compensation [Articles: 14154746403601]
-- **Working days in month**: Total working days, accounting for public holidays [Articles: 14154746403601]
+  - **Employee total salary**: Basic salary plus allowances [Articles: 14154746403601]
+- **Working days in month**: Can be calendar days (30) or working days (22) [Articles: 14154746403601]
 - **Calculation base**: Calendar days, working days, or custom days [Articles: 14243704039185]
 - **Salary components**: Basic salary, basic salary plus allowances, or allowances only [Articles: 14243704039185]
-- **Calculation basis**: Choose from custom days, calendar days, or working days [Articles: 14243760419089]
+- **Calculation basis**: Choose from: custom days, calendar days, working days [Articles: 14243760419089]
 
 
   ## Outputs & Results
-  - **Daily pay rate**: Calculated salary deduction for unpaid leave [Articles: 14154746403601]
-- **Payroll table adjustment**: Automatic deduction reflection [Articles: 14154746403601]
+  - **Daily pay rate**: Salary divided by actual working days [Articles: 14154746403601]
+- **Payroll deduction**: Automatically generated and reflected in payroll table [Articles: 14154746403601]
 - **Daily wage rates**: For salary proration, leave encashment, and unpaid leave deduction [Articles: 14243704039185]
-- **Prorated salary calculation**: Proportional employee compensation based on selected calculation method [Articles: 14243760419089]
+- **Prorated salary calculations**: Proportionally adjusted employee compensation [Articles: 14243760419089]
 
 
   ## Procedures
   ### Daily Pay Calculation [Articles: 14154746403601]
-  **When to use**: Processing unpaid leave salary deductions
+  **When to use**: For unpaid leave salary adjustments
   **Steps**:
     1. Determine leave policy (calendar or working days)
   1. Calculate total working days
@@ -65,7 +65,7 @@
   1. Generate payroll deduction
 
 ### Daily Wage Calculation [Articles: 14243704039185]
-  **When to use**: Prorating salaries, calculating leave encashment, processing unpaid leave
+  **When to use**: Determining prorated salaries, leave encashment, and unpaid leave deductions
   **Steps**:
     1. Access Daily Wage Calculator
   1. Select calculation base
@@ -73,7 +73,7 @@
   1. Apply calculation
 
 ### Update Salary Proration [Articles: 14243760419089]
-  **When to use**: When adjusting employee salary calculation method
+  **When to use**: Adjusting employee compensation for partial work periods
   **Steps**:
     1. Navigate to Settings
   1. Select Payroll
@@ -85,37 +85,37 @@
 
 
   ## Rules & Limitations
-  - Daily pay = Salary Amount / Number of actual working days [Articles: 14154746403601]
-- Can use calendar days (30 days) or working days (e.g., 22 days) [Articles: 14154746403601]
-- Calculation can be based on calendar days, working days, or custom days [Articles: 14243704039185]
-- Can exclude weekends and public holidays [Articles: 14243704039185]
+  - Public holidays are subtracted from working days [Articles: 14154746403601]
+- Can use either calendar days (30) or working days (22) policy [Articles: 14154746403601]
+- Calculation can exclude weekends and public holidays [Articles: 14243704039185]
+- Most UAE and KSA companies use 30 custom days to align with labor law [Articles: 14243704039185]
 - Changes affect all active (unpaid) amounts in payroll table [Articles: 14243760419089]
-- During open payroll month, existing prorated transactions must be rejected before saving new settings [Articles: 14243760419089]
+- During open payroll month, must reject and resave prorated transactions [Articles: 14243760419089]
 
 
   ## Edge Cases & Warnings
-  - Public holidays must be subtracted from working days [Articles: 14154746403601]
-- Manual transaction rejection required during open payroll months [Articles: 14243760419089]
+  - Must account for public holidays in working days calculation [Articles: 14154746403601]
+- Manual transaction rejection required in open payroll months [Articles: 14243760419089]
 
 
   ## Feature Interactions & Dependencies
   - Integrates with payroll, leave management, and employee record systems [Articles: 14154746403601]
-- Integrates with Daily Wage Calculator (DWC) and Payroll system [Articles: 14243760419089]
+- Integrates with Daily Wage Calculator (DWC) [Articles: 14243760419089]
 
 
   ## Glossary Terms
-  - **Daily Pay**: Salary Amount (Basic + Allowance) divided by number of actual working days [Articles: 14154746403601]
+  - **Daily Pay**: Total salary divided by number of actual working days [Articles: 14154746403601]
 - **Calendar days**: Total number of days in a given month [Articles: 14243704039185]
 - **Working days**: Business days excluding weekends and public holidays [Articles: 14243704039185]
 - **Custom days**: Flexible calculation base set according to company policies [Articles: 14243704039185]
-- **Proration**: Proportional calculation of salary based on actual days worked [Articles: 14243760419089]
+- **Proration**: Proportional salary calculation based on actual days worked [Articles: 14243760419089]
 
 
   ## Claims To Validate
-  - (calculation_rule) Daily pay is calculated by dividing total monthly salary by actual working days [Articles: 14154746403601]
+  - (calculation_rule) Daily pay = (Basic Salary + Allowances) / Actual Working Days [Articles: 14154746403601]
 - (system_behavior) Public holidays are automatically subtracted from working days [Articles: 14154746403601]
-- (navigation) User can navigate to Daily Wage Calculator via Settings → Payroll → Daily Wage Calculation [Articles: 14243704039185]
-- (ui_step) User can select between calendar days, working days, and custom days [Articles: 14243704039185]
+- (navigation) User can access Daily Wage Calculator via Settings → Payroll → Daily Wage Calculation [Articles: 14243704039185]
+- (calculation_rule) Daily wage can be calculated using calendar days, working days, or custom days [Articles: 14243704039185]
 - (navigation) Super admin can navigate to Settings > Payroll > Daily wage calculation [Articles: 14243760419089]
 - (calculation_rule) Calculation basis can be selected from custom days, calendar days, or working days [Articles: 14243760419089]
 
@@ -125,11 +125,11 @@
     - URL: https://bayzathelp.zendesk.com/hc/en-gb/articles/14154746403601-How-is-daily-pay-calculated
     - Keywords: unpaid leave, daily pay calculation, salary deduction, working days, calendar days, public holidays, payroll
 
-  - **Introduction to daily wage calculator** (ID: 14243704039185): Comprehensive introduction to the Daily Wage Calculator, explaining its functionality, calculation bases, and application in payroll management.
+  - **Introduction to daily wage calculator** (ID: 14243704039185): Introduces a flexible Daily Wage Calculator that allows customizable calculation of daily wages using different bases and salary components.
     - URL: https://bayzathelp.zendesk.com/hc/en-gb/articles/14243704039185-Introduction-to-daily-wage-calculator
     - Keywords: daily wage, salary proration, leave encashment, unpaid leave, calculation base, calendar days, working days, custom days, payroll, labor law
 
-  - **Salary Proration** (ID: 14243760419089): Explains how super admins can update salary proration in the Daily Wage Calculator, affecting employee first salary and end-of-service settlement by selecting different calculation bases.
+  - **Salary Proration** (ID: 14243760419089): Explains how super admins can update salary proration by selecting different calculation bases in the Daily Wage Calculator, affecting employee first salary and end-of-service settlement.
     - URL: https://bayzathelp.zendesk.com/hc/en-gb/articles/14243760419089-Salary-Proration
     - Keywords: daily wage calculator, payroll, salary calculation, prorated salary, super admin, calculation bases, working days, calendar days, custom days
 
