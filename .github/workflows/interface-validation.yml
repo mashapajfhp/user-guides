@@ -98,8 +98,9 @@ jobs:
           set -euo pipefail
           echo "Running interface-validator agent (repo-pinned)"
           # NOTE: this runs Claude with your prompt. Your agent markdown is instructions; execution still depends on how your CLI is set up.
-          claude "Validate UI using input file .validation/input/request.json. Follow agents/interface-validator.md strictly."
-
+          claude -p --output-format text "Use the Task tool with subagent_type 'interface-validator' and the following input data from 
+  .validation/input/request.json: $(cat .validation/input/request.json)"
+  
       - name: Commit validation evidence (safe pull)
         shell: bash
         run: |
