@@ -119,7 +119,7 @@ jobs:
           set -euo pipefail
           echo "Running interface-validator agent (repo-pinned)"
           # Run the repo agent file directly:
-          claude agents/interface-validator.md "Validate UI using input file .validation/input/request.json"
+          claude -p --output-format text "Use the Task tool with subagent_type 'interface-validator' and the following input data from .validation/input/request.json: $(cat .validation/input/request.json)"
 
       - name: Commit validation evidence (safe pull)
         shell: bash
