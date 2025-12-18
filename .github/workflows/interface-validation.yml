@@ -1,4 +1,4 @@
-name: Interface Validation (Playwright + Claude)
+name: Interface Validation (Anthropic + Claude Code + Playwright)
 
 on:
   workflow_dispatch:
@@ -40,6 +40,31 @@ jobs:
           fi
           echo "✅ ANTHROPIC_API_KEY present (len=${#ANTHROPIC_API_KEY})"
           python3 -c 'import os; k=os.environ.get("ANTHROPIC_API_KEY",""); print("✅ starts_with_sk=", k.startswith("sk-"))'
+
+      - name: Test Anthropic API key (curl smoke test)
+        shell: bash
+        run: |
+          set -euo pipefail
+          HTTP_CODE=$(curl -sS -o /tmp/anthropic_test.json -w "%{http_code}" \
+            https://api.anthropic.com/v1/messages \
+            -H "x-api-key: ${ANTHROPIC_API_KEY}" \
+            -H "anthropic-version: 2023-06-01" \
+            -H "content-type: application/json" \
+            -d '{
+              "model": "claude-3-5-haiku-latest",
+              "max_tokens": 16,
+              "messages": [{"role":"user","content":"Reply with OK only."}]
+            }')
+
+          echo "Anthropic HTTP status: ${HTTP_CODE}"
+          cat /tmp/anthropic_test.json || true
+
+          if [ "${HTTP_CODE}" != "200" ]; then
+            echo "❌ Anthropic key test failed"
+            exit 1
+          fi
+
+          echo "✅ Anthropic key test passed"
 
       - name: Verify Claude Code CLI available
         shell: bash
