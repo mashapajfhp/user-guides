@@ -8,48 +8,109 @@ on:
         required: true
         type: string
       claims_json:
-        description: "Claims to validate (JSON string)"
+        description: "Claims to validate (JSON string, e.g. [\"claim1\",\"claim2\"])"
         required: true
         type: string
       navigation_paths_json:
-        description: "Navigation paths (JSON string)"
+        description: "Navigation paths (JSON string, e.g. [\"Path A\",\"Path B\"])"
         required: false
         type: string
+
+permissions:
+  contents: write
 
 jobs:
   validate-interface:
     runs-on: self-hosted
 
-    # 🔐 REQUIRED: Claude authentication for non-interactive CI
-    env:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Write validation input
+      - name: Prepare run folders (evidence/<feature>/<run-id>/)
+        shell: bash
         run: |
-          mkdir -p .validation/input
+          set -euo pipefail
+
+          FEATURE="${{ github.event.inputs.feature_name }}"
+          RUN_ID="${{ github.run_id }}"
+
+          EVID_DIR="evidence/${FEATURE}/${RUN_ID}"
+          SHOTS_DIR="${EVID_DIR}/screenshots"
+          REPTS_DIR="${EVID_DIR}/reports"
+
+          mkdir -p "$SHOTS_DIR" "$REPTS_DIR" ".validation/input"
+
+          echo "EVID_DIR=$EVID_DIR" >> "$GITHUB_ENV"
+          echo "SHOTS_DIR=$SHOTS_DIR" >> "$GITHUB_ENV"
+          echo "REPTS_DIR=$REPTS_DIR" >> "$GITHUB_ENV"
+
+      - name: Write validation input (includes output_configuration)
+        shell: bash
+        run: |
+          set -euo pipefail
+
           cat <<EOF > .validation/input/request.json
           {
             "feature_name": "${{ github.event.inputs.feature_name }}",
             "claims_to_validate": ${{ github.event.inputs.claims_json }},
-            "navigation_paths": ${{ github.event.inputs.navigation_paths_json || '[]' }}
+            "navigation_paths": ${{ github.event.inputs.navigation_paths_json || '[]' }},
+            "jira_analysis": {},
+            "zendesk_analysis": {},
+            "validation_config": {},
+            "output_configuration": {
+              "screenshots_dir": "${{ env.SHOTS_DIR }}",
+              "reports_dir": "${{ env.REPTS_DIR }}",
+              "evidence_file": "${{ env.REPTS_DIR }}/validation-evidence.json",
+              "summary_file": "${{ env.REPTS_DIR }}/validation-summary.md"
+            }
           }
           EOF
 
-      - name: Run Interface Validator Agent (repo-pinned)
-        run: |
-          echo "Running interface-validator agent"
-          claude agents/interface-validator.md \
-            "Validate UI using input file .validation/input/request.json"
+          echo "Wrote .validation/input/request.json"
+          cat .validation/input/request.json
 
-      - name: Commit validation evidence
+      - name: Install repo-pinned agent into Claude agents folder
+        shell: bash
         run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.claude/agents"
+          cp -f "agents/interface-validator.md" "$HOME/.claude/agents/interface-validator.md"
+          echo "Installed agent to $HOME/.claude/agents/interface-validator.md"
+
+      - name: Run Interface Validator Agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Running interface-validator agent"
+          claude interface-validator "Validate UI using input file .validation/input/request.json"
+
+      - name: Verify evidence files exist (hard fail if missing)
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -f "${{ env.REPTS_DIR }}/validation-evidence.json"
+          test -f "${{ env.REPTS_DIR }}/validation-summary.md"
+
+          echo "✅ Evidence JSON + Summary MD exist"
+          ls -la "${{ env.EVID_DIR }}" || true
+          ls -la "${{ env.REPTS_DIR }}" || true
+          ls -la "${{ env.SHOTS_DIR }}" || true
+
+      - name: Commit validation evidence only
+        shell: bash
+        run: |
+          set -euo pipefail
+
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          git add .
-          git commit -m "Interface validation: ${{ github.event.inputs.feature_name }}" || echo "No changes to commit"
+          git add "${{ env.EVID_DIR }}"
+          git commit -m "Interface validation evidence: ${{ github.event.inputs.feature_name }} (run ${{ github.run_id }})" || {
+            echo "Nothing to commit."
+            exit 0
+          }
           git push
