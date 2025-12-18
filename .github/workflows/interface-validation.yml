@@ -1,0 +1,50 @@
+name: Interface Validation (Playwright + Claude)
+
+on:
+  workflow_dispatch:
+    inputs:
+      feature_name:
+        description: "Feature name to validate"
+        required: true
+        type: string
+      claims_json:
+        description: "Claims to validate (JSON string)"
+        required: true
+        type: string
+      navigation_paths_json:
+        description: "Navigation paths (JSON string)"
+        required: false
+        type: string
+
+jobs:
+  validate-interface:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Write validation input
+        run: |
+          mkdir -p .validation/input
+          cat <<EOF > .validation/input/request.json
+          {
+            "feature_name": "${{ github.event.inputs.feature_name }}",
+            "claims_to_validate": ${{ github.event.inputs.claims_json }},
+            "navigation_paths": ${{ github.event.inputs.navigation_paths_json || '[]' }}
+          }
+          EOF
+
+      - name: Run Interface Validator Agent
+        run: |
+          echo "Running interface-validator agent"
+          claude interface-validator "Validate UI using input file .validation/input/request.json"
+
+      - name: Commit validation evidence
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add .
+          git commit -m "Interface validation: ${{ github.event.inputs.feature_name }}"
+          git push
