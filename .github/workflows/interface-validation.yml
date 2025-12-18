@@ -20,6 +20,10 @@ jobs:
   validate-interface:
     runs-on: self-hosted
 
+    # 🔐 REQUIRED: Claude authentication for non-interactive CI
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -35,9 +39,9 @@ jobs:
           }
           EOF
 
-      - name: Run Interface Validator Agent
+      - name: Run Interface Validator Agent (repo-pinned)
         run: |
-          echo "Running interface-validator agent (repo-pinned)"
+          echo "Running interface-validator agent"
           claude agents/interface-validator.md \
             "Validate UI using input file .validation/input/request.json"
 
@@ -47,5 +51,5 @@ jobs:
           git config user.email "github-actions@github.com"
 
           git add .
-          git commit -m "Interface validation: ${{ github.event.inputs.feature_name }}"
+          git commit -m "Interface validation: ${{ github.event.inputs.feature_name }}" || echo "No changes to commit"
           git push
