@@ -39,7 +39,41 @@ jobs:
             exit 1
           fi
           echo "✅ ANTHROPIC_API_KEY present (len=${#ANTHROPIC_API_KEY})"
-          python3 -c 'import os; k=os.environ.get("ANTHROPIC_API_KEY",""); print("✅ starts_with_sk=", k.startswith("sk-"))'
+          python3 -c 'import os; k=os.environ.get("ANTHROPIC_API_KEY",""); print("✅ starts_with_sk_ant=", k.startswith("sk-ant-"))'
+
+      - name: Normalize Anthropic key (fix CI newline issues)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Remove any hidden CR/LF that can cause "invalid x-api-key" in CI
+          ANTHROPIC_API_KEY="$(printf '%s' "$ANTHROPIC_API_KEY" | tr -d '\r\n')"
+          export ANTHROPIC_API_KEY
+          echo "✅ Normalized key length=${#ANTHROPIC_API_KEY}"
+
+      - name: Test Anthropic key using secret directly (debug)
+        shell: bash
+        run: |
+          set -euo pipefail
+          HTTP_CODE=$(curl -sS -o /tmp/anthropic_test_secret.json -w "%{http_code}" \
+            https://api.anthropic.com/v1/messages \
+            -H "x-api-key: ${{ secrets.ANTHROPIC_API_KEY }}" \
+            -H "anthropic-version: 2023-06-01" \
+            -H "content-type: application/json" \
+            -d '{
+              "model": "claude-3-5-haiku-latest",
+              "max_tokens": 16,
+              "messages": [{"role":"user","content":"Reply with OK only."}]
+            }')
+
+          echo "Anthropic HTTP status (secret-direct): ${HTTP_CODE}"
+          cat /tmp/anthropic_test_secret.json || true
+
+          if [ "${HTTP_CODE}" != "200" ]; then
+            echo "❌ Anthropic key failed even when using secret directly"
+            exit 1
+          fi
+
+          echo "✅ Anthropic key works when using secret directly"
 
       - name: Test Anthropic API key (curl smoke test)
         shell: bash
