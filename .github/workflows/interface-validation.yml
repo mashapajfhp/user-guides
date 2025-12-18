@@ -1,150 +1,133 @@
 name: Interface Validation (Playwright + Claude)
 
-  on:
-    workflow_dispatch:
-      inputs:
-        feature_name:
-          description: "Feature name to validate"
-          required: true
-          type: string
-        claims_json:
-          description: "Claims to validate (JSON string)"
-          required: true
-          type: string
-        navigation_paths_json:
-          description: "Navigation paths (JSON string)"
-          required: false
-          type: string
+on:
+  workflow_dispatch:
+    inputs:
+      feature_name:
+        description: "Feature name to validate"
+        required: true
+        type: string
+      claims_json:
+        description: "Claims to validate (JSON string)"
+        required: true
+        type: string
+      navigation_paths_json:
+        description: "Navigation paths (JSON string)"
+        required: false
+        type: string
 
-  permissions:
-    contents: write
+permissions:
+  contents: write
 
-  jobs:
-    validate-interface:
-      runs-on: self-hosted
+jobs:
+  validate-interface:
+    runs-on: self-hosted
 
-      # Claude Code reads this env var automatically (no login/setup-token needed)
-      env:
-        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
-      steps:
-        - name: Checkout repo
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-        # Fail fast if secret isn't injected (does NOT print the secret)
-        - name: Verify Anthropic key present (safe)
-          shell: bash
-          run: |
-            set -euo pipefail
-            if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
-              echo "❌ ANTHROPIC_API_KEY is EMPTY. Ensure repo secret 'ANTHROPIC_API_KEY' exists and is available to this workflow."
-              exit 1
-            fi
+      - name: Verify Anthropic key present (safe)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
+            echo "❌ ANTHROPIC_API_KEY is EMPTY. Ensure repo secret 'ANTHROPIC_API_KEY' exists and is available to this workflow."
+            exit 1
+          fi
+          echo "✅ ANTHROPIC_API_KEY present (len=${#ANTHROPIC_API_KEY})"
+          python3 -c 'import os; k=os.environ.get("ANTHROPIC_API_KEY",""); print("✅ starts_with_sk=", k.startswith("sk-"))'
 
-            echo "✅ ANTHROPIC_API_KEY present (len=${#ANTHROPIC_API_KEY})"
-            python3 -c 'import os; k=os.environ.get("ANTHROPIC_API_KEY",""); print("✅ starts_with_sk=", k.startswith("sk-"))'
+      - name: Verify Claude Code CLI available
+        shell: bash
+        run: |
+          set -euo pipefail
+          which claude
+          claude --version | tee /tmp/claude_version.txt
+          grep -q "Claude Code" /tmp/claude_version.txt || {
+            echo "❌ Claude Code CLI required. Install on the self-hosted runner with:"
+            echo "   npm uninstall -g claude || true"
+            echo "   npm install -g @anthropic-ai/claude-code"
+            exit 1
+          }
 
-        # Ensure we're using Claude Code (not the chat CLI)
-        - name: Verify Claude Code CLI available
-          shell: bash
-          run: |
-            set -euo pipefail
-            which claude
-            claude --version | tee /tmp/claude_version.txt
-            grep -q "Claude Code" /tmp/claude_version.txt || {
-              echo "❌ Claude Code CLI required. Install on the self-hosted runner with:"
-              echo "   npm uninstall -g claude || true"
-              echo "   npm install -g @anthropic-ai/claude-code"
-              exit 1
-            }
+      - name: Compute evidence paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          FEATURE_SLUG="$(echo "${{ github.event.inputs.feature_name }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]+/_/g' | sed 's/^_//; s/_$//')"
+          RUN_ID="$(date +%s)"
+          echo "FEATURE_SLUG=$FEATURE_SLUG" >> "$GITHUB_ENV"
+          echo "RUN_ID=$RUN_ID" >> "$GITHUB_ENV"
 
-        - name: Setup Claude Token
-          shell: bash
-          run: |
-            set -euo pipefail
-            echo "${{ secrets.ANTHROPIC_API_KEY }}" | claude setup-token --stdin
+      - name: Write validation input (safe JSON)
+        shell: bash
+        run: |
+          set -euo pipefail
 
-        - name: Compute evidence paths
-          shell: bash
-          run: |
-            set -euo pipefail
-            FEATURE_SLUG="$(echo "${{ github.event.inputs.feature_name }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]+/_/g' | sed 's/^_//; 
-  s/_$//')"
-            RUN_ID="$(date +%s)"
-            echo "FEATURE_SLUG=$FEATURE_SLUG" >> "$GITHUB_ENV"
-            echo "RUN_ID=$RUN_ID" >> "$GITHUB_ENV"
+          mkdir -p .validation/input
 
-        # Build request.json safely using jq (prevents invalid JSON)
-        - name: Write validation input (safe JSON)
-          shell: bash
-          run: |
-            set -euo pipefail
+          SCREENSHOTS_DIR="evidence/${FEATURE_SLUG}/${RUN_ID}/screenshots"
+          REPORTS_DIR="evidence/${FEATURE_SLUG}/${RUN_ID}/reports"
+          EVIDENCE_FILE="${REPORTS_DIR}/evidence.json"
+          SUMMARY_FILE="${REPORTS_DIR}/summary.md"
 
-            mkdir -p .validation/input
+          mkdir -p "${SCREENSHOTS_DIR}" "${REPORTS_DIR}"
 
-            SCREENSHOTS_DIR="evidence/${FEATURE_SLUG}/${RUN_ID}/screenshots"
-            REPORTS_DIR="evidence/${FEATURE_SLUG}/${RUN_ID}/reports"
-            EVIDENCE_FILE="${REPORTS_DIR}/evidence.json"
-            SUMMARY_FILE="${REPORTS_DIR}/summary.md"
+          CLAIMS_RAW='${{ github.event.inputs.claims_json }}'
+          NAV_RAW='${{ github.event.inputs.navigation_paths_json }}'
+          [ -z "${NAV_RAW}" ] && NAV_RAW='[]'
 
-            mkdir -p "${SCREENSHOTS_DIR}" "${REPORTS_DIR}"
+          echo "${CLAIMS_RAW}" | jq -e . >/dev/null
+          echo "${NAV_RAW}" | jq -e . >/dev/null
 
-            CLAIMS_RAW='${{ github.event.inputs.claims_json }}'
-            NAV_RAW='${{ github.event.inputs.navigation_paths_json }}'
-            [ -z "${NAV_RAW}" ] && NAV_RAW='[]'
+          jq -n \
+            --arg feature_name '${{ github.event.inputs.feature_name }}' \
+            --arg screenshots_dir "${SCREENSHOTS_DIR}" \
+            --arg reports_dir "${REPORTS_DIR}" \
+            --arg evidence_file "${EVIDENCE_FILE}" \
+            --arg summary_file "${SUMMARY_FILE}" \
+            --argjson claims_to_validate "${CLAIMS_RAW}" \
+            --argjson navigation_paths "${NAV_RAW}" \
+            '{
+              feature_name: $feature_name,
+              claims_to_validate: $claims_to_validate,
+              navigation_paths: $navigation_paths,
+              output_configuration: {
+                screenshots_dir: $screenshots_dir,
+                reports_dir: $reports_dir,
+                evidence_file: $evidence_file,
+                summary_file: $summary_file
+              }
+            }' > .validation/input/request.json
 
-            # Validate inputs are valid JSON
-            echo "${CLAIMS_RAW}" | jq -e . >/dev/null
-            echo "${NAV_RAW}" | jq -e . >/dev/null
+          echo "Wrote request.json:"
+          cat .validation/input/request.json
 
-            jq -n \
-              --arg feature_name '${{ github.event.inputs.feature_name }}' \
-              --arg screenshots_dir "${SCREENSHOTS_DIR}" \
-              --arg reports_dir "${REPORTS_DIR}" \
-              --arg evidence_file "${EVIDENCE_FILE}" \
-              --arg summary_file "${SUMMARY_FILE}" \
-              --argjson claims_to_validate "${CLAIMS_RAW}" \
-              --argjson navigation_paths "${NAV_RAW}" \
-              '{
-                feature_name: $feature_name,
-                claims_to_validate: $claims_to_validate,
-                navigation_paths: $navigation_paths,
-                output_configuration: {
-                  screenshots_dir: $screenshots_dir,
-                  reports_dir: $reports_dir,
-                  evidence_file: $evidence_file,
-                  summary_file: $summary_file
-                }
-              }' > .validation/input/request.json
+      - name: Run Interface Validator Agent (repo-pinned)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Running interface-validator agent (repo-pinned)"
+          claude agents/interface-validator.md "Validate UI using input file .validation/input/request.json"
 
-            echo "Wrote request.json:"
-            cat .validation/input/request.json
+      - name: Commit validation evidence (safe pull)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
 
-        - name: Run Interface Validator Agent (repo-pinned)
-          shell: bash
-          run: |
-            set -euo pipefail
-            echo "Running interface-validator agent (repo-pinned)"
-            # Run the repo agent file directly:
-            claude -p --output-format text "Use the Task tool with subagent_type 'interface-validator' and the following input data from .validation/input/request.json: $(cat .validation/input/request.json)"
+          git pull --rebase origin main || true
+          git add evidence .validation || true
 
-        - name: Commit validation evidence (safe pull)
-          shell: bash
-          run: |
-            set -euo pipefail
-            git config user.name "github-actions"
-            git config user.email "github-actions@github.com"
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
 
-            # Avoid non-fast-forward failures
-            git pull --rebase origin main || true
-
-            git add evidence .validation || true
-
-            # Avoid failing if no changes
-            if git diff --cached --quiet; then
-              echo "No changes to commit."
-              exit 0
-            fi
-
-            git commit -m "Interface validation: ${{ github.event.inputs.feature_name }} (${RUN_ID})"
-            git push
+          git commit -m "Interface validation: ${{ github.event.inputs.feature_name }} (${RUN_ID})"
+          git push
