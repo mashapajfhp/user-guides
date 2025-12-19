@@ -22,22 +22,25 @@ permissions:
 jobs:
   validate-interface:
     runs-on: self-hosted
-
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
 
-      # (Optional but recommended) avoid push/pull conflicts before we create files
+      # Avoid push/pull conflicts before we create files
       - name: Sync main (safe pull)
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git pull --rebase origin main || true
+          git config rebase.autoStash true
+          git pull --rebase --autostash origin main || true
 
       - name: Verify Anthropic key present (safe)
         shell: bash
@@ -49,13 +52,13 @@ jobs:
           fi
           echo "✅ Key present (len=${#ANTHROPIC_API_KEY})"
 
-      # Normalize to remove accidental \r or \n characters (common when copying)
+      # Normalize to remove accidental \r or \n characters (common copy/paste issue)
       - name: Normalize Anthropic key (strip CR/LF)
         shell: bash
         run: |
           set -euo pipefail
           ANTHROPIC_API_KEY="$(printf '%s' "$ANTHROPIC_API_KEY" | tr -d '\r\n')"
-          export ANTHROPIC_API_KEY
+          echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" >> "$GITHUB_ENV"
           echo "✅ Normalized key length=${#ANTHROPIC_API_KEY}"
 
       # Your requested diagnostic block (prints only length + a few chars, not full key)
@@ -75,7 +78,7 @@ jobs:
             -H "x-api-key: ${ANTHROPIC_API_KEY}" \
             -H "anthropic-version: 2023-06-01" \
             -d '{
-              "model": "claude-3-5-haiku-latest",
+              "model": "claude-3-5-haiku-20241022",
               "max_tokens": 5,
               "messages": [{"role":"user","content":"hi"}]
             }')
@@ -87,7 +90,6 @@ jobs:
             echo "❌ API call failed"
             exit 1
           fi
-
           echo "✅ API call succeeded"
 
       - name: Verify Claude Code CLI available
@@ -159,8 +161,9 @@ jobs:
 
           INPUT_JSON="$(cat .validation/input/request.json)"
 
-          # ✅ CRITICAL: heredoc content is indented by 10 spaces (same as other run lines),
-          # so YAML will NOT attempt to parse "SYSTEM (NON-NEGOTIABLE)" as YAML.
+          # IMPORTANT:
+          # - The heredoc BODY MUST be indented (it is) so YAML doesn't try to parse lines like "SYSTEM (NON-NEGOTIABLE)".
+          # - Keep the closing marker at column 1 in bash terms; YAML will still treat it as part of the run block.
           cat > .validation/output/agent_prompt.txt <<'__AGENT_PROMPT__'
           SYSTEM (NON-NEGOTIABLE)
 
@@ -202,18 +205,51 @@ jobs:
           }
           __AGENT_PROMPT__
 
-          # Run Claude with the prompt + INPUT_JSON appended
+          # Run Claude; capture raw output (Claude sometimes wraps JSON in ```json fences)
           claude -p --output-format text \
             "$(cat .validation/output/agent_prompt.txt)
 
           INPUT_JSON:
           ${INPUT_JSON}
-          " > .validation/output/result.json
+          " > .validation/output/result_raw.txt
 
-          echo "Saved: .validation/output/result.json"
+          echo "Saved: .validation/output/result_raw.txt"
+          cat .validation/output/result_raw.txt
+
+      # Clean any ```json fences / extra text and write valid JSON only
+      - name: Clean JSON Output (strip fences / extract object)
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python3 - <<'PY'
+          import json, re, pathlib, sys
+
+          raw_path = pathlib.Path(".validation/output/result_raw.txt")
+          out_path = pathlib.Path(".validation/output/result.json")
+
+          s = raw_path.read_text(encoding="utf-8", errors="replace").strip()
+
+          # Remove common fenced code blocks
+          s = re.sub(r"^```(?:json)?\s*", "", s.strip(), flags=re.IGNORECASE)
+          s = re.sub(r"\s*```$", "", s.strip())
+
+          # Extract the first JSON object (best-effort)
+          start = s.find("{")
+          end = s.rfind("}")
+          if start == -1 or end == -1 or end <= start:
+            raise SystemExit("Could not find JSON object in output")
+
+          candidate = s[start:end+1].strip()
+          obj = json.loads(candidate)  # validate JSON
+          out_path.write_text(json.dumps(obj, ensure_ascii=False, indent=2), encoding="utf-8")
+          print("✅ Clean JSON saved to", out_path)
+          PY
+
+          echo "Cleaned JSON:"
           cat .validation/output/result.json
 
-          # Validate JSON output shape quickly
+          # Validate schema quickly
           jq -e 'type=="object"' .validation/output/result.json >/dev/null
           jq -e '.status and .feature_name and (.validated_claims|type=="array") and .summary' .validation/output/result.json >/dev/null
           echo "✅ Output is valid JSON and matches required schema"
