@@ -24,6 +24,9 @@ jobs:
     runs-on: self-hosted
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+      APP_USERNAME: ${{ secrets.APP_USERNAME }}
+      APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
 
     steps:
       - name: Checkout repo
@@ -251,8 +254,19 @@ jobs:
 
           # Validate schema quickly
           jq -e 'type=="object"' .validation/output/result.json >/dev/null
-          jq -e '.status and .feature_name and (.validated_claims|type=="array") and .summary' .validation/output/result.json >/dev/null
-          echo "✅ Output is valid JSON and matches required schema"
+
+          STATUS="$(jq -r '.status // empty' .validation/output/result.json)"
+
+          if [ "$STATUS" = "ok" ]; then
+            jq -e '.feature_name and (.validated_claims|type=="array") and .summary' .validation/output/result.json >/dev/null
+            echo "✅ Output is valid JSON and matches required OK schema"
+          elif [ "$STATUS" = "error" ]; then
+            jq -e '.reason' .validation/output/result.json >/dev/null
+            echo "✅ Output is valid JSON and matches required ERROR schema"
+          else
+            echo "❌ Output JSON missing valid status (ok|error)"
+            exit 1
+          fi
 
       - name: Commit validation output
         shell: bash
