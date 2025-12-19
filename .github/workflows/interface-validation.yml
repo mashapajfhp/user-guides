@@ -130,6 +130,28 @@ jobs:
           fi
           jq --version
 
+      - name: Verify App login config present (safe)
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -z "${APP_BASE_URL:-}" ]; then
+            echo "❌ APP_BASE_URL is EMPTY. Ensure repo secret 'APP_BASE_URL' exists."
+            exit 1
+          fi
+          if [ -z "${APP_USERNAME:-}" ]; then
+            echo "❌ APP_USERNAME is EMPTY. Ensure repo secret 'APP_USERNAME' exists."
+            exit 1
+          fi
+          if [ -z "${APP_PASSWORD:-}" ]; then
+            echo "❌ APP_PASSWORD is EMPTY. Ensure repo secret 'APP_PASSWORD' exists."
+            exit 1
+          fi
+
+          echo "✅ APP_BASE_URL present (len=${#APP_BASE_URL})"
+          echo "✅ APP_USERNAME present (len=${#APP_USERNAME})"
+          echo "✅ APP_PASSWORD present (len=${#APP_PASSWORD})"
+
       - name: Write validation input JSON (safe)
         shell: bash
         run: |
@@ -147,14 +169,23 @@ jobs:
             --arg feature_name '${{ github.event.inputs.feature_name }}' \
             --argjson claims_to_validate "${CLAIMS_RAW}" \
             --argjson navigation_paths "${NAV_RAW}" \
+            --arg app_base_url "${APP_BASE_URL}" \
+            --arg app_username "${APP_USERNAME}" \
+            --arg app_password "${APP_PASSWORD}" \
             '{
               feature_name: $feature_name,
               claims_to_validate: $claims_to_validate,
-              navigation_paths: $navigation_paths
+              navigation_paths: $navigation_paths,
+              app: {
+                base_url: $app_base_url,
+                username: $app_username,
+                password: $app_password
+              }
             }' > .validation/input/request.json
 
           echo "Wrote request.json:"
-          cat .validation/input/request.json
+          # Do NOT print password; redact it for logs
+          jq '.app.password="***REDACTED***"' .validation/input/request.json
 
       - name: Run Interface Validator Agent (PURE, STRICT JSON)
         shell: bash
@@ -267,6 +298,17 @@ jobs:
             echo "❌ Output JSON missing valid status (ok|error)"
             exit 1
           fi
+
+      - name: Upload validation output artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: interface-validation-${{ github.run_id }}
+          path: |
+            .validation/output/result.json
+            .validation/output/result_raw.txt
+            .validation/input/request.json
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Commit validation output
         shell: bash
