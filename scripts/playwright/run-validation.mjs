@@ -396,9 +396,10 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
     const passwordLabel = navigation_paths?.authentication?.login?.ui_elements?.form?.password_field?.label || "Password";
     const loginButtonText = navigation_paths?.authentication?.login?.ui_elements?.actions?.primary?.text || "Log in";
 
-    // Fill inputs by label (robust if your app uses <label for=...>)
+    // Fill inputs - use specific selectors for reliability
     await page.getByLabel(emailLabel, { exact: false }).fill(app.username, { timeout: STEP_TIMEOUT });
-    await page.getByLabel(passwordLabel, { exact: false }).fill(app.password, { timeout: STEP_TIMEOUT });
+    // Use input[type="password"] selector to avoid matching toggle buttons or switches
+    await page.locator('input[type="password"]').fill(app.password, { timeout: STEP_TIMEOUT });
 
     // Click primary button by role+name
     await page.getByRole("button", { name: loginButtonText, exact: false }).click({ timeout: STEP_TIMEOUT });
