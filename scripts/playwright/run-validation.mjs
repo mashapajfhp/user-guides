@@ -401,8 +401,8 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
     // Use input[type="password"] selector to avoid matching toggle buttons or switches
     await page.locator('input[type="password"]').fill(app.password, { timeout: STEP_TIMEOUT });
 
-    // Click primary button by role+name
-    await page.getByRole("button", { name: loginButtonText, exact: false }).click({ timeout: STEP_TIMEOUT });
+    // Click primary login button - use type="submit" to avoid matching social login buttons
+    await page.locator('button[type="submit"]').click({ timeout: STEP_TIMEOUT });
 
     await page.waitForTimeout(1500);
 
