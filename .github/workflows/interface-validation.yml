@@ -187,6 +187,36 @@ jobs:
           # Do NOT print password; redact it for logs
           jq '.app.password="***REDACTED***"' .validation/input/request.json
 
+      - name: Setup Node (for Playwright)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Playwright deps
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npx playwright install --with-deps
+
+      - name: Run Playwright validation (UI execution)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .validation/output/screenshots
+          node scripts/playwright/run-validation.mjs \
+            --input .validation/input/request.json \
+            --out .validation/output/pw_result.json \
+            --screenshots .validation/output/screenshots
+
+      - name: Clean JSON Output (Playwright) - ensure valid JSON file exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f .validation/output/pw_result.json
+          jq -e . .validation/output/pw_result.json >/dev/null
+          echo "✅ pw_result.json is valid JSON"
+
       - name: Run Interface Validator Agent (PURE, STRICT JSON)
         shell: bash
         run: |
@@ -306,6 +336,8 @@ jobs:
           path: |
             .validation/output/result.json
             .validation/output/result_raw.txt
+            .validation/output/pw_result.json
+            .validation/output/screenshots/**
             .validation/input/request.json
           if-no-files-found: error
           retention-days: 7
