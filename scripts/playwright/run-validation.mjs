@@ -111,6 +111,32 @@ function isPlainObject(x) {
   return !!x && typeof x === "object" && !Array.isArray(x);
 }
 
+/**
+ * Detect if a string is a breadcrumb path (e.g., "Settings > Payroll > Daily Wage")
+ * vs an actual URL
+ */
+function isBreadcrumbPath(str) {
+  if (!str || typeof str !== "string") return false;
+  // If it looks like a URL, it's not a breadcrumb
+  if (/^https?:\/\//i.test(str.trim())) return false;
+  if (str.trim().startsWith("/")) return false;
+  // Check for breadcrumb separators
+  return /[>→›]/.test(str);
+}
+
+/**
+ * Parse a breadcrumb string into an array of navigation items
+ * "Settings > Payroll > Daily Wage" → ["Settings", "Payroll", "Daily Wage"]
+ */
+function parseBreadcrumb(breadcrumb) {
+  if (!breadcrumb || typeof breadcrumb !== "string") return [];
+  // Split by common breadcrumb separators: >, →, ›
+  return breadcrumb
+    .split(/\s*[>→›]\s*/)
+    .map(s => s.trim())
+    .filter(Boolean);
+}
+
 // ------------------ claims normalization ------------------
 function normalizeClaimChecks(claims_to_validate) {
   if (!Array.isArray(claims_to_validate)) return [];
@@ -190,18 +216,37 @@ function flattenNavigationTree(navObj) {
  * Supports:
  * - navigation_paths as an ARRAY (old format)
  * - navigation_paths as an OBJECT TREE (your sample)
+ * - Breadcrumb paths like "Settings > Payroll > Daily Wage" (converted to click sequences)
  *
  * Returns list of paths to check:
  * [{ name, steps: [{action:"navigate", url:"..."}, {action:"verify"...} ...] }]
  */
 function normalizeNavigationPaths(navigation_paths, appBaseUrl) {
-  // If array: keep prior behavior (minimal)
+  // If array: handle strings (URLs or breadcrumbs)
   if (Array.isArray(navigation_paths)) {
-    // URLs array
+    // String array - could be URLs or breadcrumbs
     if (typeof navigation_paths[0] === "string") {
+      const steps = [];
+
+      for (const item of navigation_paths) {
+        if (isBreadcrumbPath(item)) {
+          // Convert breadcrumb to click sequence
+          const menuItems = parseBreadcrumb(item);
+          steps.push({
+            action: "click_sequence",
+            name: item,
+            menu_items: menuItems,
+            original_breadcrumb: item
+          });
+        } else {
+          // Regular URL navigation
+          steps.push({ action: "navigate", url: item });
+        }
+      }
+
       return [{
         name: "navigation_urls",
-        steps: navigation_paths.map(u => ({ action: "navigate", url: u })),
+        steps: steps,
       }];
     }
 
@@ -340,6 +385,118 @@ async function runStep(page, step, screenshotsDir, context) {
       const screenshot = await saveScreenshot(page, screenshotsDir, shotLabel);
       res.status = "pass";
       res.evidence.screenshot = screenshot;
+      return res;
+    }
+
+    if (action === "click_sequence") {
+      // Click through a breadcrumb navigation sequence
+      // e.g., "Settings > Payroll > Daily Wage" → click Settings, click Payroll, click Daily Wage
+      const menuItems = step.menu_items || [];
+      const originalBreadcrumb = step.original_breadcrumb || step.name || "unknown";
+
+      if (!menuItems.length) {
+        throw new Error(`click_sequence requires menu_items array, got: ${originalBreadcrumb}`);
+      }
+
+      res.evidence.breadcrumb = originalBreadcrumb;
+      res.evidence.menu_items = menuItems;
+      res.evidence.clicked = [];
+
+      for (let i = 0; i < menuItems.length; i++) {
+        const menuText = menuItems[i];
+
+        // Try multiple strategies to find and click the menu item
+        let clicked = false;
+
+        // Strategy 1: Look for exact text match in clickable elements
+        const clickableSelectors = [
+          `a:has-text("${menuText}")`,
+          `button:has-text("${menuText}")`,
+          `[role="menuitem"]:has-text("${menuText}")`,
+          `[role="tab"]:has-text("${menuText}")`,
+          `[role="link"]:has-text("${menuText}")`,
+          `li:has-text("${menuText}")`,
+          `span:has-text("${menuText}")`,
+          `div[class*="menu"]:has-text("${menuText}")`,
+          `div[class*="nav"]:has-text("${menuText}")`,
+        ];
+
+        for (const selector of clickableSelectors) {
+          try {
+            const element = page.locator(selector).first();
+            if (await element.isVisible({ timeout: 2000 })) {
+              await element.click({ timeout: STEP_TIMEOUT });
+              clicked = true;
+              res.evidence.clicked.push({ item: menuText, selector, success: true });
+              // Wait for navigation/animation after click
+              await page.waitForTimeout(1000);
+              break;
+            }
+          } catch {
+            // Try next selector
+          }
+        }
+
+        // Strategy 2: Use getByRole with name
+        if (!clicked) {
+          try {
+            const roleElement = page.getByRole("link", { name: menuText }).or(
+              page.getByRole("button", { name: menuText })
+            ).or(
+              page.getByRole("menuitem", { name: menuText })
+            ).or(
+              page.getByRole("tab", { name: menuText })
+            ).first();
+
+            if (await roleElement.isVisible({ timeout: 2000 })) {
+              await roleElement.click({ timeout: STEP_TIMEOUT });
+              clicked = true;
+              res.evidence.clicked.push({ item: menuText, method: "getByRole", success: true });
+              await page.waitForTimeout(1000);
+            }
+          } catch {
+            // Continue to next strategy
+          }
+        }
+
+        // Strategy 3: Use getByText with exact match
+        if (!clicked) {
+          try {
+            const textElement = page.getByText(menuText, { exact: true }).first();
+            if (await textElement.isVisible({ timeout: 2000 })) {
+              await textElement.click({ timeout: STEP_TIMEOUT });
+              clicked = true;
+              res.evidence.clicked.push({ item: menuText, method: "getByText-exact", success: true });
+              await page.waitForTimeout(1000);
+            }
+          } catch {
+            // Continue to next strategy
+          }
+        }
+
+        // Strategy 4: Use getByText with partial match
+        if (!clicked) {
+          try {
+            const partialTextElement = page.getByText(menuText).first();
+            if (await partialTextElement.isVisible({ timeout: 2000 })) {
+              await partialTextElement.click({ timeout: STEP_TIMEOUT });
+              clicked = true;
+              res.evidence.clicked.push({ item: menuText, method: "getByText-partial", success: true });
+              await page.waitForTimeout(1000);
+            }
+          } catch {
+            // Continue to error
+          }
+        }
+
+        if (!clicked) {
+          res.evidence.clicked.push({ item: menuText, success: false, error: "Element not found" });
+          throw new Error(`Could not find clickable element for menu item: "${menuText}" in breadcrumb: ${originalBreadcrumb}`);
+        }
+      }
+
+      // All menu items clicked successfully
+      res.status = "pass";
       return res;
     }
 
