@@ -791,16 +791,88 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
     const loginFail = output.login?.status !== "pass";
     const anyClaimFail = output.claim_ui_checks.some((c) => c.status === "fail");
 
-    // Navigation results are recorded but don't affect overall status
-    const navSuccessCount = output.navigation_results.filter((p) => p.status === "pass").length;
-    const navTotalCount = output.navigation_results.length;
-
-    output.navigation_summary = {
-      total_paths: navTotalCount,
-      successful_paths: navSuccessCount,
-      failed_paths: navTotalCount - navSuccessCount,
-      note: "Navigation paths are guidance only (from Zendesk docs). Failures are informational, not blocking."
+    // Build detailed Navigation Validation Report (similar to claims report)
+    const navigationReport = {
+      report_type: "navigation_guidance_validation",
+      disclaimer: "Navigation paths are sourced from Zendesk documentation and serve as GUIDANCE ONLY. " +
+                  "The actual UI may differ as menus change over time. Failed paths indicate potential " +
+                  "documentation updates needed, NOT system errors.",
+      validation_date: nowISO(),
+      summary: {
+        total_paths_tested: 0,
+        paths_verified: 0,
+        paths_not_found: 0,
+        paths_partial: 0
+      },
+      paths: []
     };
+
+    // Process each navigation result into the report
+    for (const navResult of output.navigation_results) {
+      for (const step of navResult.steps || []) {
+        if (step.action === "click_sequence") {
+          const pathEntry = {
+            path_id: `nav_${navigationReport.paths.length + 1}`,
+            breadcrumb: step.evidence?.breadcrumb || step.name || "unknown",
+            menu_items: step.evidence?.menu_items || [],
+            status: step.status === "pass" ? "verified" : "not_found",
+            source: "zendesk_documentation",
+            is_blocking: false,
+            validation_details: {
+              attempted: true,
+              clicks_succeeded: (step.evidence?.clicked || []).filter(c => c.success).length,
+              clicks_failed: (step.evidence?.clicked || []).filter(c => !c.success).length,
+              click_log: step.evidence?.clicked || [],
+              error_message: step.error || null
+            },
+            evidence: {
+              screenshot: step.evidence?.screenshot || null,
+              caveat: step.evidence?.caveat || "Navigation paths are guidance only."
+            },
+            recommendation: step.status === "pass"
+              ? "Path verified - can be used in user guide"
+              : "Path not found - verify if UI has changed or documentation needs update"
+          };
+          navigationReport.paths.push(pathEntry);
+          navigationReport.summary.total_paths_tested++;
+          if (step.status === "pass") {
+            navigationReport.summary.paths_verified++;
+          } else {
+            navigationReport.summary.paths_not_found++;
+          }
+        } else if (step.action === "navigate" && step.evidence?.url) {
+          // URL-based navigation
+          const pathEntry = {
+            path_id: `nav_${navigationReport.paths.length + 1}`,
+            url: step.evidence.url,
+            status: step.status === "pass" ? "verified" : "not_found",
+            source: "zendesk_documentation",
+            is_blocking: false,
+            validation_details: {
+              attempted: true,
+              http_status: step.evidence?.http_status || null,
+              error_message: step.error || null
+            },
+            evidence: {
+              screenshot: step.evidence?.screenshot || null
+            },
+            recommendation: step.status === "pass"
+              ? "URL accessible - can be used in user guide"
+              : "URL not accessible - verify if path has changed"
+          };
+          navigationReport.paths.push(pathEntry);
+          navigationReport.summary.total_paths_tested++;
+          if (step.status === "pass") {
+            navigationReport.summary.paths_verified++;
+          } else {
+            navigationReport.summary.paths_not_found++;
+          }
+        }
+      }
+    }
+
+    // Add the navigation report to output
+    output.navigation_validation_report = navigationReport;
 
     // Status only fails on CRITICAL issues: login failure or claim validation failure
     // Navigation failures are recorded but do NOT cause overall failure
