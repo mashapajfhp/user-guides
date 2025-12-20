@@ -83,6 +83,15 @@ function sanitizeFileName(name) {
     .slice(0, 80) || "unnamed";
 }
 
+function buildShotLabel(parts) {
+  // parts: array of strings; remove empties; join with "__"
+  const clean = (parts || [])
+    .map(p => safeString(p).trim())
+    .filter(Boolean)
+    .join("__");
+  return clean || "shot";
+}
+
 async function saveScreenshot(page, screenshotsDir, label) {
   try {
     const file = `${sanitizeFileName(label)}.png`;
@@ -327,6 +336,18 @@ async function runStep(page, step, screenshotsDir, context) {
       res.evidence.url = url;
       if (status !== null) res.evidence.http_status = status;
       if (step.meta) res.evidence.meta = step.meta;
+
+      // Screenshot with structured label
+      const navShotLabel = buildShotLabel([
+        context?.featureName,
+        context?.pathName,
+        "navigate",
+        step?.meta?.title,
+        step?.meta?.path,
+        label
+      ]);
+      res.evidence.screenshot = await saveScreenshot(page, screenshotsDir, navShotLabel);
+
       return res;
     }
 
@@ -388,7 +409,12 @@ async function runStep(page, step, screenshotsDir, context) {
     }
 
     if (action === "screenshot") {
-      const shotLabel = step.name || step.label || `${context?.pathName || "path"}_${label}`;
+      const shotLabel = buildShotLabel([
+        context?.featureName,
+        context?.pathName,
+        "shot",
+        step?.name || step?.label || label
+      ]);
       const screenshot = await saveScreenshot(page, screenshotsDir, shotLabel);
       res.status = "pass";
       res.evidence.screenshot = screenshot;
@@ -514,10 +540,17 @@ async function runStep(page, step, screenshotsDir, context) {
     throw new Error(`Unsupported action: ${action}`);
   } catch (e) {
     res.error = safeString(e?.message || e);
+    const failShotLabel = buildShotLabel([
+      context?.featureName,
+      context?.pathName,
+      "fail",
+      action,
+      label
+    ]);
     res.evidence.screenshot = await saveScreenshot(
       page,
       screenshotsDir,
-      `${context?.pathName || "path"}_${label}_fail`
+      failShotLabel
     );
     return res;
   }
@@ -579,12 +612,12 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
       login_url: loginUrl,
       login_title: loginTitle,
       header_checks: headerChecks,
-      screenshot: await saveScreenshot(page, screenshotsDir, "post_login"),
+      screenshot: await saveScreenshot(page, screenshotsDir, "auth__login__post_login"),
     };
     return res;
   } catch (e) {
     res.error = safeString(e?.message || e);
-    res.evidence.screenshot = await saveScreenshot(page, screenshotsDir, "login_fail");
+    res.evidence.screenshot = await saveScreenshot(page, screenshotsDir, "auth__login__fail");
     return res;
   }
 }
@@ -638,7 +671,15 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
       };
 
       for (const step of steps) {
-        const stepRes = await runStep(page, step, SCREENSHOTS_DIR, { pathName });
+        const stepRes = await runStep(
+          page,
+          step,
+          SCREENSHOTS_DIR,
+          {
+            pathName,
+            featureName: output.feature_name
+          }
+        );
         pathResult.steps.push(stepRes);
         if (stepRes.status !== "pass") pathResult.status = "fail";
       }
