@@ -218,6 +218,13 @@ function flattenNavigationTree(navObj) {
  * - navigation_paths as an OBJECT TREE (your sample)
  * - Breadcrumb paths like "Settings > Payroll > Daily Wage" (converted to click sequences)
  *
+ * IMPORTANT: Navigation paths are provided for CONTEXT and GUIDANCE only.
+ * Actual system behavior may differ since Zendesk documentation can become
+ * outdated as navigation menus change frequently. These paths should NOT be
+ * considered as absolute truth but rather as context setters and guidance
+ * for exploration. The validator will attempt to follow these paths but
+ * gracefully handle cases where the UI has changed.
+ *
  * Returns list of paths to check:
  * [{ name, steps: [{action:"navigate", url:"..."}, {action:"verify"...} ...] }]
  */
@@ -391,6 +398,9 @@ async function runStep(page, step, screenshotsDir, context) {
     if (action === "click_sequence") {
       // Click through a breadcrumb navigation sequence
       // e.g., "Settings > Payroll > Daily Wage" → click Settings, click Payroll, click Daily Wage
+      //
+      // NOTE: These navigation paths are from Zendesk documentation and serve as
+      // GUIDANCE only. The actual UI may have changed. We attempt best-effort navigation.
       const menuItems = step.menu_items || [];
       const originalBreadcrumb = step.original_breadcrumb || step.name || "unknown";
 
@@ -401,6 +411,7 @@ async function runStep(page, step, screenshotsDir, context) {
       res.evidence.breadcrumb = originalBreadcrumb;
       res.evidence.menu_items = menuItems;
       res.evidence.clicked = [];
+      res.evidence.caveat = "Navigation paths are from Zendesk docs (guidance only). Actual UI may differ.";
 
       for (let i = 0; i < menuItems.length; i++) {
         const menuText = menuItems[i];
