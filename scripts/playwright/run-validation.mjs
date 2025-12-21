@@ -92,17 +92,12 @@ function buildShotLabel(parts) {
   return clean || "shot";
 }
 
-async function saveScreenshot(page, screenshotsDir, label, options = {}) {
+async function saveScreenshot(page, screenshotsDir, label) {
   try {
     const file = `${sanitizeFileName(label)}.png`;
     const fullPath = path.join(screenshotsDir, file);
-    // Default to viewport-only screenshots for contextual relevance
-    // Use fullPage: true only when explicitly requested
-    const screenshotOptions = {
-      path: fullPath,
-      fullPage: options.fullPage || false,
-    };
-    await page.screenshot(screenshotOptions);
+    // Always capture viewport-only for contextually relevant screenshots
+    await page.screenshot({ path: fullPath, fullPage: false });
     return path.relative(ROOT, fullPath);
   } catch {
     return null;
