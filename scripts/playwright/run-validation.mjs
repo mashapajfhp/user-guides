@@ -2,34 +2,51 @@
 /**
  * scripts/playwright/run-validation.mjs
  *
- * Aligned to Interface Validation workflow input:
+ * ============================================================================
+ * VALIDATION METHODOLOGY: COGNITIVE WALKTHROUGH + FEATURE INSPECTION
+ * ============================================================================
+ *
+ * This script uses TWO complementary approaches for UI validation:
+ *
+ * 1. COGNITIVE WALKTHROUGH:
+ *    - Explores the UI from a user's perspective
+ *    - Follows logical navigation patterns (not literal breadcrumbs)
+ *    - Asks: "Can a user accomplish this task?"
+ *    - Documents the actual path discovered vs expected
+ *
+ * 2. FEATURE INSPECTION:
+ *    - Searches for UI elements matching feature keywords
+ *    - Looks for labels, headings, buttons, inputs related to the feature
+ *    - Documents what elements exist vs what was expected
+ *    - Captures evidence screenshots of discovered elements
+ *
+ * IMPORTANT: Navigation paths and procedures are CONTEXT SETTERS, not literal
+ * instructions. They help understand:
+ *   - What the feature does (from procedures)
+ *   - Where it might be located (from navigation hints)
+ *   - What terminology to search for (keywords extraction)
+ *
+ * The validator does NOT blindly follow paths - it EXPLORES intelligently.
+ *
+ * Input:
  * {
  *   feature_name: string,
  *   claims_to_validate: array,
- *   navigation_paths: (array OR object tree),
- *   procedures: array (from Zendesk documentation),
- *   app: { base_url: string, username: string, password: string }
+ *   navigation_paths: (array OR object) - CONTEXT for expected location
+ *   procedures: array - CONTEXT for feature behavior and terminology
+ *   app: { base_url, username, password }
  * }
  *
- * Now supports navigation_paths_json object-tree like:
- * navigation_paths.authentication.login.path, main_navigation.*, etc.
- *
- * PROCEDURES provide context to distinguish:
- * - Menu navigation paths (e.g., "Settings > Payroll > Daily Wage") → clickable
- * - Conceptual process flows (e.g., "Leave Request > Approval > Deduction") → NOT clickable
- *
- * Output (deterministic JSON, always written):
+ * Output:
  * {
- *   status: "pass"|"fail",
- *   executed_at: string,
- *   started_at: string,
- *   feature_name: string|null,
- *   login: {...},
- *   navigation_results: [...],
- *   claim_ui_checks: [...],
- *   procedures_context: [...],
- *   summary: {...},
- *   fatal_error: string|null
+ *   status: "pass"|"partial"|"fail",
+ *   methodology: "cognitive_walkthrough_and_feature_inspection",
+ *   feature_context: {...},      // Extracted understanding of the feature
+ *   exploration_results: [...],  // What was discovered through exploration
+ *   feature_inspection: {...},   // Elements found matching feature keywords
+ *   claim_validations: [...],    // Claims checked against actual UI
+ *   screenshots: [...],          // Evidence captured
+ *   summary: {...}
  * }
  */
 
@@ -151,6 +168,439 @@ function parseBreadcrumb(breadcrumb) {
     .split(/\s*[>→›]\s*/)
     .map(s => s.trim())
     .filter(Boolean);
+}
+
+// ============================================================================
+// CONTEXT EXTRACTION - Understanding the feature from provided context
+// ============================================================================
+
+/**
+ * Extract keywords and understanding from feature name, procedures, and navigation paths.
+ * This builds the "mental model" of what we're looking for.
+ */
+function extractFeatureContext(featureName, procedures, navigationPaths) {
+  const context = {
+    feature_name: featureName || "unknown",
+    keywords: new Set(),
+    navigation_hints: [],
+    expected_ui_elements: [],
+    expected_actions: [],
+    domain_area: null  // e.g., "payroll", "settings", "employees"
+  };
+
+  // Extract keywords from feature name
+  const featureWords = (featureName || "")
+    .toLowerCase()
+    .replace(/[_-]/g, " ")
+    .split(/\s+/)
+    .filter(w => w.length > 2);
+  featureWords.forEach(w => context.keywords.add(w));
+
+  // Extract from procedures (these describe HOW the feature works)
+  if (Array.isArray(procedures)) {
+    for (const proc of procedures) {
+      const title = proc.title || proc.name || "";
+      const steps = Array.isArray(proc.steps) ? proc.steps : [];
+
+      // Keywords from procedure title
+      title.toLowerCase().split(/\s+/).filter(w => w.length > 3).forEach(w => context.keywords.add(w));
+
+      // Extract from procedure steps
+      for (const step of steps) {
+        const stepText = typeof step === "string" ? step : (step.text || step.description || "");
+
+        // Look for action verbs and nouns
+        const words = stepText.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+        words.forEach(w => context.keywords.add(w));
+
+        // Look for navigation hints like "Go to Settings" or "Navigate to Payroll"
+        const navMatch = stepText.match(/(?:go to|navigate to|click on|open|select)\s+([^.,]+)/i);
+        if (navMatch) {
+          context.navigation_hints.push(navMatch[1].trim());
+        }
+
+        // Look for UI element references
+        const uiMatch = stepText.match(/(?:click|toggle|check|select|enter|input|button|field|tab|menu)\s+([^.,]+)/i);
+        if (uiMatch) {
+          context.expected_ui_elements.push(uiMatch[1].trim());
+        }
+      }
+    }
+  }
+
+  // Extract navigation hints from navigation paths (CONTEXT, not literal paths)
+  if (navigationPaths) {
+    const extractFromNav = (obj, prefix = "") => {
+      if (!obj) return;
+      if (typeof obj === "string") {
+        // Could be a breadcrumb like "Settings > Payroll > Daily Wage"
+        const parts = parseBreadcrumb(obj);
+        parts.forEach(p => {
+          context.navigation_hints.push(p);
+          context.keywords.add(p.toLowerCase());
+        });
+        return;
+      }
+      if (Array.isArray(obj)) {
+        obj.forEach((item, i) => extractFromNav(item, `${prefix}[${i}]`));
+        return;
+      }
+      if (isPlainObject(obj)) {
+        // Extract titles and meaningful keys
+        if (obj.title) context.navigation_hints.push(obj.title);
+        if (obj.name) context.navigation_hints.push(obj.name);
+
+        for (const key of Object.keys(obj)) {
+          if (["path", "url", "href"].includes(key)) continue;
+          if (key === "ui_elements") continue;
+          extractFromNav(obj[key], `${prefix}.${key}`);
+        }
+      }
+    };
+    extractFromNav(navigationPaths);
+  }
+
+  // Identify domain area from keywords
+  const domainKeywords = {
+    payroll: ["payroll", "salary", "wage", "payment", "deduction", "earnings"],
+    settings: ["settings", "configuration", "config", "preferences", "setup"],
+    employees: ["employee", "staff", "worker", "team", "member"],
+    leave: ["leave", "vacation", "absence", "time off", "pto"],
+    benefits: ["benefits", "insurance", "health", "medical"],
+    reports: ["report", "analytics", "dashboard", "metrics"]
+  };
+
+  for (const [domain, keywords] of Object.entries(domainKeywords)) {
+    if (keywords.some(k => context.keywords.has(k))) {
+      context.domain_area = domain;
+      break;
+    }
+  }
+
+  // Convert Set to Array for JSON serialization
+  context.keywords = [...context.keywords];
+  context.navigation_hints = [...new Set(context.navigation_hints)];
+
+  return context;
+}
+
+// ============================================================================
+// COGNITIVE WALKTHROUGH - Explore UI like a user would
+// ============================================================================
+
+/**
+ * Perform cognitive walkthrough: explore the UI to find the feature.
+ * Uses navigation hints as GUIDANCE, not literal instructions.
+ */
+async function performCognitiveWalkthrough(page, featureContext, screenshotsDir) {
+  const results = {
+    methodology: "cognitive_walkthrough",
+    goal: `Find and validate ${featureContext.feature_name} feature`,
+    exploration_path: [],
+    discovered_elements: [],
+    screenshots: []
+  };
+
+  try {
+    // Take initial screenshot
+    const initialShot = await saveScreenshot(page, screenshotsDir, "walkthrough__initial_state");
+    if (initialShot) results.screenshots.push({ stage: "initial", path: initialShot });
+
+    // Strategy 1: Look for main navigation areas
+    const mainNavAreas = [
+      { name: "sidebar", selectors: ['nav', '[role="navigation"]', '.sidebar', '.nav-menu', '[class*="sidebar"]'] },
+      { name: "header", selectors: ['header', '[role="banner"]', '.header', '.top-nav'] },
+      { name: "menu", selectors: ['[role="menu"]', '[role="menubar"]', '.menu', '[class*="menu"]'] }
+    ];
+
+    for (const area of mainNavAreas) {
+      for (const selector of area.selectors) {
+        try {
+          const element = page.locator(selector).first();
+          if (await element.isVisible({ timeout: 2000 })) {
+            // Get text content to understand what's available
+            const text = await element.textContent().catch(() => "");
+            results.exploration_path.push({
+              action: "inspected_nav_area",
+              area: area.name,
+              selector: selector,
+              content_preview: text.slice(0, 200).replace(/\s+/g, " ").trim()
+            });
+            break;
+          }
+        } catch {
+          // Continue to next selector
+        }
+      }
+    }
+
+    // Strategy 2: Search for navigation hints from context
+    for (const hint of featureContext.navigation_hints.slice(0, 5)) {
+      // Skip process-flow terms
+      const skipTerms = ["request", "approval", "calculation", "process", "submit"];
+      if (skipTerms.some(term => hint.toLowerCase().includes(term))) {
+        results.exploration_path.push({
+          action: "skipped_process_term",
+          hint: hint,
+          reason: "Appears to be a process flow, not a navigation element"
+        });
+        continue;
+      }
+
+      // Try to find clickable element with this text
+      const found = await findAndExploreElement(page, hint, screenshotsDir, featureContext.feature_name);
+      if (found.success) {
+        results.exploration_path.push({
+          action: "found_and_clicked",
+          hint: hint,
+          method: found.method,
+          result: "navigated"
+        });
+        results.discovered_elements.push(found);
+
+        const navShot = await saveScreenshot(page, screenshotsDir, `walkthrough__after_${sanitizeFileName(hint)}`);
+        if (navShot) results.screenshots.push({ stage: `after_${hint}`, path: navShot });
+
+        // Wait for any navigation/animation
+        await page.waitForTimeout(1000);
+      } else {
+        results.exploration_path.push({
+          action: "not_found",
+          hint: hint,
+          attempted_selectors: found.attempted
+        });
+      }
+    }
+
+    // Strategy 3: Use domain area to find relevant section
+    if (featureContext.domain_area) {
+      const domainNavigation = {
+        payroll: ["Payroll", "Pay", "Salary", "Compensation"],
+        settings: ["Settings", "Configuration", "Setup", "Preferences"],
+        employees: ["Employees", "People", "Staff", "Team"],
+        leave: ["Leave", "Time Off", "Absence", "PTO"],
+        benefits: ["Benefits", "Insurance", "Health"],
+        reports: ["Reports", "Analytics", "Dashboard"]
+      };
+
+      const navTerms = domainNavigation[featureContext.domain_area] || [];
+      for (const term of navTerms) {
+        const found = await findAndExploreElement(page, term, screenshotsDir, featureContext.feature_name);
+        if (found.success) {
+          results.exploration_path.push({
+            action: "domain_navigation",
+            domain: featureContext.domain_area,
+            term: term,
+            result: "found_and_clicked"
+          });
+          const domainShot = await saveScreenshot(page, screenshotsDir, `walkthrough__domain_${sanitizeFileName(term)}`);
+          if (domainShot) results.screenshots.push({ stage: `domain_${term}`, path: domainShot });
+          break;
+        }
+      }
+    }
+
+    // Take final screenshot
+    const finalShot = await saveScreenshot(page, screenshotsDir, "walkthrough__final_state");
+    if (finalShot) results.screenshots.push({ stage: "final", path: finalShot });
+
+    results.status = results.discovered_elements.length > 0 ? "success" : "partial";
+  } catch (error) {
+    results.status = "error";
+    results.error = safeString(error.message);
+  }
+
+  return results;
+}
+
+/**
+ * Try to find and optionally click an element by text
+ */
+async function findAndExploreElement(page, text, screenshotsDir, featureName) {
+  const result = {
+    text: text,
+    success: false,
+    method: null,
+    attempted: []
+  };
+
+  // Strategy 1: Role-based search (most reliable)
+  const roles = ["link", "button", "menuitem", "tab", "option"];
+  for (const role of roles) {
+    try {
+      const element = page.getByRole(role, { name: text, exact: false }).first();
+      if (await element.isVisible({ timeout: 1500 })) {
+        await element.click({ timeout: 5000 });
+        result.success = true;
+        result.method = `getByRole(${role})`;
+        return result;
+      }
+    } catch {
+      result.attempted.push(`role:${role}`);
+    }
+  }
+
+  // Strategy 2: Text-based search
+  try {
+    const element = page.getByText(text, { exact: false }).first();
+    if (await element.isVisible({ timeout: 1500 })) {
+      // Check if it's clickable
+      const tagName = await element.evaluate(el => el.tagName.toLowerCase()).catch(() => "");
+      if (["a", "button", "span", "div"].includes(tagName)) {
+        await element.click({ timeout: 5000 });
+        result.success = true;
+        result.method = "getByText";
+        return result;
+      }
+    }
+  } catch {
+    result.attempted.push("getByText");
+  }
+
+  // Strategy 3: CSS selector with text content
+  const selectors = [
+    `a:has-text("${text}")`,
+    `button:has-text("${text}")`,
+    `[role="menuitem"]:has-text("${text}")`,
+    `li:has-text("${text}")`
+  ];
+
+  for (const selector of selectors) {
+    try {
+      const element = page.locator(selector).first();
+      if (await element.isVisible({ timeout: 1500 })) {
+        await element.click({ timeout: 5000 });
+        result.success = true;
+        result.method = selector;
+        return result;
+      }
+    } catch {
+      result.attempted.push(selector);
+    }
+  }
+
+  return result;
+}
+
+// ============================================================================
+// FEATURE INSPECTION - Search for feature-specific UI elements
+// ============================================================================
+
+/**
+ * Inspect the current page for feature-related elements.
+ * This answers: "Are the expected UI elements present?"
+ */
+async function performFeatureInspection(page, featureContext, screenshotsDir) {
+  const results = {
+    methodology: "feature_inspection",
+    feature_name: featureContext.feature_name,
+    keywords_searched: [],
+    elements_found: [],
+    elements_not_found: [],
+    page_analysis: {},
+    screenshots: []
+  };
+
+  try {
+    // Get current page info
+    results.page_analysis.url = page.url();
+    results.page_analysis.title = await page.title();
+
+    // Search for each keyword in the UI
+    const keywordsToSearch = featureContext.keywords.slice(0, 15); // Limit for performance
+
+    for (const keyword of keywordsToSearch) {
+      if (keyword.length < 3) continue;
+
+      const searchResult = {
+        keyword: keyword,
+        found: false,
+        occurrences: 0,
+        element_types: []
+      };
+
+      try {
+        // Count occurrences of keyword in page
+        const elements = page.getByText(keyword, { exact: false });
+        const count = await elements.count();
+
+        if (count > 0) {
+          searchResult.found = true;
+          searchResult.occurrences = count;
+
+          // Get element types for first few matches
+          for (let i = 0; i < Math.min(count, 3); i++) {
+            try {
+              const el = elements.nth(i);
+              if (await el.isVisible({ timeout: 500 })) {
+                const tagName = await el.evaluate(e => e.tagName.toLowerCase()).catch(() => "unknown");
+                const role = await el.getAttribute("role").catch(() => null);
+                searchResult.element_types.push({ tag: tagName, role: role });
+              }
+            } catch {
+              // Skip this element
+            }
+          }
+
+          results.elements_found.push(searchResult);
+        } else {
+          results.elements_not_found.push(keyword);
+        }
+      } catch {
+        results.elements_not_found.push(keyword);
+      }
+
+      results.keywords_searched.push(keyword);
+    }
+
+    // Look for specific UI patterns related to the feature
+    const uiPatterns = [
+      { name: "forms", selector: "form" },
+      { name: "tables", selector: "table" },
+      { name: "cards", selector: '[class*="card"]' },
+      { name: "modals", selector: '[role="dialog"]' },
+      { name: "tabs", selector: '[role="tablist"]' },
+      { name: "inputs", selector: "input, select, textarea" }
+    ];
+
+    results.page_analysis.ui_patterns = {};
+    for (const pattern of uiPatterns) {
+      try {
+        const count = await page.locator(pattern.selector).count();
+        if (count > 0) {
+          results.page_analysis.ui_patterns[pattern.name] = count;
+        }
+      } catch {
+        // Skip this pattern
+      }
+    }
+
+    // Get all headings to understand page structure
+    results.page_analysis.headings = [];
+    try {
+      const headings = page.locator("h1, h2, h3");
+      const headingCount = await headings.count();
+      for (let i = 0; i < Math.min(headingCount, 10); i++) {
+        const text = await headings.nth(i).textContent().catch(() => "");
+        if (text.trim()) {
+          results.page_analysis.headings.push(text.trim().slice(0, 100));
+        }
+      }
+    } catch {
+      // Skip headings
+    }
+
+    // Take inspection screenshot
+    const inspectionShot = await saveScreenshot(page, screenshotsDir, "inspection__feature_elements");
+    if (inspectionShot) results.screenshots.push({ stage: "inspection", path: inspectionShot });
+
+    results.status = results.elements_found.length > 0 ? "success" : "no_matches";
+  } catch (error) {
+    results.status = "error";
+    results.error = safeString(error.message);
+  }
+
+  return results;
 }
 
 // ------------------ claims normalization ------------------
@@ -785,11 +1235,15 @@ function extractNavigablePathsFromProcedures(procedures) {
 
   const output = {
     status: "fail",
+    methodology: "cognitive_walkthrough_and_feature_inspection",
     executed_at: nowISO(),
     started_at: startedAt,
     feature_name: null,
+    feature_context: null,           // Understanding of the feature from context
     login: { status: "fail" },
-    navigation_results: [],
+    cognitive_walkthrough: null,      // Results from intelligent exploration
+    feature_inspection: null,         // Results from feature element search
+    navigation_results: [],           // Legacy navigation results (for reference)
     claim_ui_checks: [],
     procedures_context: [],
     summary: { total_steps: 0, passed_steps: 0, failed_steps: 0, screenshots: 0 },
@@ -805,10 +1259,26 @@ function extractNavigablePathsFromProcedures(procedures) {
     output.feature_name = input?.feature_name || null;
 
     const appBaseUrl = input?.app?.base_url || "";
-    const navigation_paths = input?.navigation_paths; // could be array OR object tree
+    const navigation_paths = input?.navigation_paths; // CONTEXT SETTER - not literal instructions
     const procedures = Array.isArray(input?.procedures) ? input.procedures : [];
-    const normalizedNav = normalizeNavigationPaths(navigation_paths, appBaseUrl);
     const claims = normalizeClaimChecks(input?.claims_to_validate);
+
+    // ========================================================================
+    // STEP 1: EXTRACT FEATURE CONTEXT
+    // Build understanding of the feature from name, procedures, and nav hints
+    // ========================================================================
+    const featureContext = extractFeatureContext(
+      output.feature_name,
+      procedures,
+      navigation_paths
+    );
+    output.feature_context = featureContext;
+
+    console.log(`📋 Feature Context Extracted:`);
+    console.log(`   Name: ${featureContext.feature_name}`);
+    console.log(`   Domain: ${featureContext.domain_area || "unknown"}`);
+    console.log(`   Keywords: ${featureContext.keywords.slice(0, 10).join(", ")}`);
+    console.log(`   Navigation Hints: ${featureContext.navigation_hints.slice(0, 5).join(", ")}`);
 
     // Store procedures context in output for reference
     output.procedures_context = procedures.map(p => ({
@@ -827,53 +1297,107 @@ function extractNavigablePathsFromProcedures(procedures) {
     const context = await browser.newContext();
     const page = await context.newPage();
 
-    // 1) Login using your navigation spec (if present)
+    // ========================================================================
+    // STEP 2: LOGIN
+    // ========================================================================
     output.login = await attemptLoginFromNavigationSpec(page, input?.app, navigation_paths, SCREENSHOTS_DIR);
 
-    // 2) Navigation checks (deterministic, bounded)
-    for (const navPath of normalizedNav) {
-      const pathName = navPath.name || "navigation";
-      const steps = Array.isArray(navPath.steps) ? navPath.steps : [];
+    // ========================================================================
+    // STEP 3: COGNITIVE WALKTHROUGH (if login succeeded)
+    // Explore the UI intelligently using context as guidance
+    // ========================================================================
+    if (output.login?.status === "pass") {
+      console.log(`\n🧠 Starting Cognitive Walkthrough...`);
+      console.log(`   Goal: Find ${featureContext.feature_name} feature through exploration`);
 
-      const pathResult = {
-        name: pathName,
-        status: "pass",
-        steps: [],
-      };
+      output.cognitive_walkthrough = await performCognitiveWalkthrough(
+        page,
+        featureContext,
+        SCREENSHOTS_DIR
+      );
 
-      for (const step of steps) {
-        const stepRes = await runStep(
-          page,
-          step,
-          SCREENSHOTS_DIR,
-          {
-            pathName,
-            featureName: output.feature_name
-          },
-          procedures // Pass procedures for conceptual flow detection
-        );
-        pathResult.steps.push(stepRes);
-        // Conceptual flows are OK - they're informational, not failures
-        if (stepRes.status !== "pass" && stepRes.status !== "skipped_conceptual") {
-          pathResult.status = "fail";
-        }
-      }
+      console.log(`   Result: ${output.cognitive_walkthrough.status}`);
+      console.log(`   Elements discovered: ${output.cognitive_walkthrough.discovered_elements?.length || 0}`);
+      console.log(`   Screenshots: ${output.cognitive_walkthrough.screenshots?.length || 0}`);
 
-      const endShot = await saveScreenshot(page, SCREENSHOTS_DIR, `${pathName}_end`);
-      if (endShot) {
-        pathResult.steps.push({
-          action: "screenshot",
-          name: `${pathName}_end`,
-          status: "pass",
-          evidence: { screenshot: endShot },
-          error: null,
-        });
-      }
+      // ========================================================================
+      // STEP 4: FEATURE INSPECTION
+      // Search for feature-specific UI elements on the current page
+      // ========================================================================
+      console.log(`\n🔍 Starting Feature Inspection...`);
+      console.log(`   Searching for: ${featureContext.keywords.slice(0, 5).join(", ")}`);
 
-      output.navigation_results.push(pathResult);
+      output.feature_inspection = await performFeatureInspection(
+        page,
+        featureContext,
+        SCREENSHOTS_DIR
+      );
+
+      console.log(`   Result: ${output.feature_inspection.status}`);
+      console.log(`   Elements found: ${output.feature_inspection.elements_found?.length || 0}`);
+      console.log(`   Elements not found: ${output.feature_inspection.elements_not_found?.length || 0}`);
+    } else {
+      console.log(`\n⚠️ Skipping exploration - login failed`);
+      output.cognitive_walkthrough = { status: "skipped", reason: "login_failed" };
+      output.feature_inspection = { status: "skipped", reason: "login_failed" };
     }
 
-    // 3) Claim UI checks (best-effort; unchanged)
+    // ========================================================================
+    // STEP 5: LEGACY NAVIGATION CHECKS (Optional - for reference only)
+    // These are kept for backward compatibility but are NOT required
+    // ========================================================================
+    const normalizedNav = normalizeNavigationPaths(navigation_paths, appBaseUrl);
+
+    // Only attempt legacy navigation if we have explicit paths and login succeeded
+    if (output.login?.status === "pass" && normalizedNav.length > 0) {
+      console.log(`\n📍 Legacy Navigation Checks (for reference)...`);
+
+      for (const navPath of normalizedNav) {
+        const pathName = navPath.name || "navigation";
+        const steps = Array.isArray(navPath.steps) ? navPath.steps : [];
+
+        const pathResult = {
+          name: pathName,
+          status: "pass",
+          steps: [],
+        };
+
+        for (const step of steps) {
+          const stepRes = await runStep(
+            page,
+            step,
+            SCREENSHOTS_DIR,
+            {
+              pathName,
+              featureName: output.feature_name
+            },
+            procedures // Pass procedures for conceptual flow detection
+          );
+          pathResult.steps.push(stepRes);
+          // Conceptual flows are OK - they're informational, not failures
+          if (stepRes.status !== "pass" && stepRes.status !== "skipped_conceptual") {
+            pathResult.status = "fail";
+          }
+        }
+
+        const endShot = await saveScreenshot(page, SCREENSHOTS_DIR, `${pathName}_end`);
+        if (endShot) {
+          pathResult.steps.push({
+            action: "screenshot",
+            name: `${pathName}_end`,
+            status: "pass",
+            evidence: { screenshot: endShot },
+            error: null,
+          });
+        }
+
+        output.navigation_results.push(pathResult);
+      }
+    }
+
+    // ========================================================================
+    // STEP 6: CLAIM UI CHECKS (best-effort)
+    // ========================================================================
     for (const c of claims) {
       const claimRes = {
         id: c.id,
@@ -929,7 +1453,9 @@ function extractNavigablePathsFromProcedures(procedures) {
       output.claim_ui_checks.push(claimRes);
     }
 
-    // 4) Summary + final status
+    // ========================================================================
+    // STEP 7: SUMMARY + FINAL STATUS
+    // ========================================================================
     let total = 0,
       passed = 0,
       failed = 0,
@@ -957,12 +1483,25 @@ function extractNavigablePathsFromProcedures(procedures) {
       }
     })();
 
+    // Build comprehensive summary including new methodology
     output.summary = {
+      methodology: "cognitive_walkthrough_and_feature_inspection",
       total_steps: total,
       passed_steps: passed,
       failed_steps: failed,
       skipped_conceptual: skippedConceptual,
       screenshots: screenshotCount,
+      cognitive_walkthrough: {
+        status: output.cognitive_walkthrough?.status || "not_run",
+        elements_discovered: output.cognitive_walkthrough?.discovered_elements?.length || 0,
+        exploration_steps: output.cognitive_walkthrough?.exploration_path?.length || 0
+      },
+      feature_inspection: {
+        status: output.feature_inspection?.status || "not_run",
+        keywords_searched: output.feature_inspection?.keywords_searched?.length || 0,
+        elements_found: output.feature_inspection?.elements_found?.length || 0,
+        elements_not_found: output.feature_inspection?.elements_not_found?.length || 0
+      }
     };
 
     // IMPORTANT: Navigation paths are GUIDANCE ONLY from Zendesk docs.
