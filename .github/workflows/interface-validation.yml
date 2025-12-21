@@ -15,6 +15,10 @@ on:
         description: "Navigation paths (JSON string)"
         required: false
         type: string
+      procedures_json:
+        description: "Procedures from Zendesk documentation (JSON string)"
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -157,6 +161,7 @@ jobs:
         env:
           CLAIMS_JSON: ${{ github.event.inputs.claims_json }}
           NAV_JSON: ${{ github.event.inputs.navigation_paths_json }}
+          PROCEDURES_JSON: ${{ github.event.inputs.procedures_json }}
           FEATURE_NAME: ${{ github.event.inputs.feature_name }}
         run: |
           set -euo pipefail
@@ -165,16 +170,20 @@ jobs:
           # Use environment variables to avoid shell escaping issues
           CLAIMS_RAW="${CLAIMS_JSON}"
           NAV_RAW="${NAV_JSON}"
+          PROCEDURES_RAW="${PROCEDURES_JSON}"
           [ -z "${NAV_RAW}" ] && NAV_RAW='[]'
+          [ -z "${PROCEDURES_RAW}" ] && PROCEDURES_RAW='[]'
 
           # Validate JSON
           echo "${CLAIMS_RAW}" | jq -e . >/dev/null || { echo "❌ Invalid claims JSON"; exit 1; }
           echo "${NAV_RAW}" | jq -e . >/dev/null || { echo "❌ Invalid navigation JSON"; exit 1; }
+          echo "${PROCEDURES_RAW}" | jq -e . >/dev/null || { echo "❌ Invalid procedures JSON"; exit 1; }
 
           jq -n \
             --arg feature_name "${FEATURE_NAME}" \
             --argjson claims_to_validate "${CLAIMS_RAW}" \
             --argjson navigation_paths "${NAV_RAW}" \
+            --argjson procedures "${PROCEDURES_RAW}" \
             --arg app_base_url "${APP_BASE_URL}" \
             --arg app_username "${APP_USERNAME}" \
             --arg app_password "${APP_PASSWORD}" \
@@ -182,6 +191,7 @@ jobs:
               feature_name: $feature_name,
               claims_to_validate: $claims_to_validate,
               navigation_paths: $navigation_paths,
+              procedures: $procedures,
               app: {
                 base_url: $app_base_url,
                 username: $app_username,
