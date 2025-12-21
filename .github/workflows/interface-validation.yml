@@ -154,19 +154,25 @@ jobs:
 
       - name: Write validation input JSON (safe)
         shell: bash
+        env:
+          CLAIMS_JSON: ${{ github.event.inputs.claims_json }}
+          NAV_JSON: ${{ github.event.inputs.navigation_paths_json }}
+          FEATURE_NAME: ${{ github.event.inputs.feature_name }}
         run: |
           set -euo pipefail
           mkdir -p .validation/input
 
-          CLAIMS_RAW='${{ github.event.inputs.claims_json }}'
-          NAV_RAW='${{ github.event.inputs.navigation_paths_json }}'
+          # Use environment variables to avoid shell escaping issues
+          CLAIMS_RAW="${CLAIMS_JSON}"
+          NAV_RAW="${NAV_JSON}"
           [ -z "${NAV_RAW}" ] && NAV_RAW='[]'
 
-          echo "${CLAIMS_RAW}" | jq -e . >/dev/null
-          echo "${NAV_RAW}" | jq -e . >/dev/null
+          # Validate JSON
+          echo "${CLAIMS_RAW}" | jq -e . >/dev/null || { echo "❌ Invalid claims JSON"; exit 1; }
+          echo "${NAV_RAW}" | jq -e . >/dev/null || { echo "❌ Invalid navigation JSON"; exit 1; }
 
           jq -n \
-            --arg feature_name '${{ github.event.inputs.feature_name }}' \
+            --arg feature_name "${FEATURE_NAME}" \
             --argjson claims_to_validate "${CLAIMS_RAW}" \
             --argjson navigation_paths "${NAV_RAW}" \
             --arg app_base_url "${APP_BASE_URL}" \
