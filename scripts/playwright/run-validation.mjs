@@ -279,6 +279,18 @@ function normalizeNavigationPaths(navigation_paths, appBaseUrl) {
     });
   }
 
+  // If object with explicit steps array containing actions (e.g., click_sequence)
+  // Use those steps directly instead of flattening
+  if (isPlainObject(navigation_paths) && Array.isArray(navigation_paths.steps)) {
+    const stepsWithActions = navigation_paths.steps.filter(s => s && s.action);
+    if (stepsWithActions.length > 0) {
+      return [{
+        name: "navigation_steps",
+        steps: stepsWithActions.slice(0, Math.max(0, MAX_NAV_PAGES)),
+      }];
+    }
+  }
+
   // If object-tree: flatten pages and create navigation checks
   if (isPlainObject(navigation_paths)) {
     const pages = flattenNavigationTree(navigation_paths);
