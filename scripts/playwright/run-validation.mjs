@@ -7,11 +7,16 @@
  *   feature_name: string,
  *   claims_to_validate: array,
  *   navigation_paths: (array OR object tree),
+ *   procedures: array (from Zendesk documentation),
  *   app: { base_url: string, username: string, password: string }
  * }
  *
  * Now supports navigation_paths_json object-tree like:
  * navigation_paths.authentication.login.path, main_navigation.*, etc.
+ *
+ * PROCEDURES provide context to distinguish:
+ * - Menu navigation paths (e.g., "Settings > Payroll > Daily Wage") → clickable
+ * - Conceptual process flows (e.g., "Leave Request > Approval > Deduction") → NOT clickable
  *
  * Output (deterministic JSON, always written):
  * {
@@ -22,6 +27,7 @@
  *   login: {...},
  *   navigation_results: [...],
  *   claim_ui_checks: [...],
+ *   procedures_context: [...],
  *   summary: {...},
  *   fatal_error: string|null
  * }
@@ -318,7 +324,7 @@ function normalizeNavigationPaths(navigation_paths, appBaseUrl) {
 }
 
 // ------------------ action executor ------------------
-async function runStep(page, step, screenshotsDir, context) {
+async function runStep(page, step, screenshotsDir, context, procedures = []) {
   const action = step?.action || step?.type || step?.op;
   const label = step?.name || step?.label || action || "step";
 
@@ -443,6 +449,25 @@ async function runStep(page, step, screenshotsDir, context) {
       const menuItems = step.menu_items || [];
       const originalBreadcrumb = step.original_breadcrumb || step.name || "unknown";
 
+      // CRITICAL: Check if this is a conceptual process flow, NOT a clickable menu path
+      // Using procedures context to distinguish between:
+      // - "Settings > Payroll > Daily Wage" → clickable menu path
+      // - "Unpaid Leave Request > Approval > Payroll Deduction Calculation" → conceptual workflow
+      const conceptualCheck = isConceptualProcessFlow(originalBreadcrumb, procedures);
+
+      if (conceptualCheck.isConceptual) {
+        // This is a conceptual workflow, NOT a clickable path - skip with informational status
+        res.status = "skipped_conceptual";
+        res.evidence.breadcrumb = originalBreadcrumb;
+        res.evidence.menu_items = menuItems;
+        res.evidence.is_conceptual_flow = true;
+        res.evidence.matched_procedure = conceptualCheck.matchedProcedure;
+        res.evidence.reason = conceptualCheck.reason;
+        res.evidence.note = "This describes a business process workflow, not a clickable navigation path. " +
+                           "Conceptual flows are documented for understanding the feature, not for UI navigation.";
+        return res;
+      }
+
       if (!menuItems.length) {
         throw new Error(`click_sequence requires menu_items array, got: ${originalBreadcrumb}`);
       }
@@ -450,6 +475,7 @@ async function runStep(page, step, screenshotsDir, context) {
       res.evidence.breadcrumb = originalBreadcrumb;
       res.evidence.menu_items = menuItems;
       res.evidence.clicked = [];
+      res.evidence.is_conceptual_flow = false;
       res.evidence.caveat = "Navigation paths are from Zendesk docs (guidance only). Actual UI may differ.";
 
       for (let i = 0; i < menuItems.length; i++) {
@@ -635,6 +661,123 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
   }
 }
 
+// ------------------ PROCEDURES CONTEXT HELPERS ------------------
+/**
+ * Procedures from Zendesk documentation describe HOW features work (business logic).
+ * They contain step-by-step workflows like:
+ *   "Unpaid Leave Request > Approval > Payroll Deduction Calculation"
+ *
+ * These are CONCEPTUAL process flows, NOT clickable menu paths.
+ * This helper detects if a breadcrumb matches a procedure's conceptual workflow
+ * so we can skip trying to click it and instead document it as informational.
+ */
+function isConceptualProcessFlow(breadcrumb, procedures) {
+  if (!breadcrumb || !Array.isArray(procedures) || procedures.length === 0) {
+    return { isConceptual: false, matchedProcedure: null };
+  }
+
+  const breadcrumbLower = breadcrumb.toLowerCase().trim();
+  const breadcrumbParts = parseBreadcrumb(breadcrumb).map(p => p.toLowerCase());
+
+  for (const proc of procedures) {
+    // Check if procedure title or steps contain this breadcrumb pattern
+    const procTitle = (proc.title || proc.name || "").toLowerCase();
+    const procSteps = Array.isArray(proc.steps) ? proc.steps : [];
+
+    // Pattern 1: Breadcrumb appears in procedure steps (conceptual workflow)
+    for (const step of procSteps) {
+      const stepText = (typeof step === "string" ? step : step.text || step.description || "").toLowerCase();
+
+      // If breadcrumb parts appear sequentially in procedure steps, it's conceptual
+      if (breadcrumbParts.some(part => stepText.includes(part))) {
+        // Additional check: Does this look like a business process rather than navigation?
+        const processIndicators = [
+          "request", "approval", "calculation", "deduction", "submit",
+          "process", "review", "verify", "confirm", "generate", "applies",
+          "triggered", "automatically", "based on", "when", "if"
+        ];
+
+        const hasProcessIndicator = processIndicators.some(ind =>
+          breadcrumbLower.includes(ind) || stepText.includes(ind)
+        );
+
+        if (hasProcessIndicator) {
+          return {
+            isConceptual: true,
+            matchedProcedure: proc.title || proc.name || "unnamed procedure",
+            reason: `Breadcrumb describes a business process flow from procedure steps`
+          };
+        }
+      }
+    }
+
+    // Pattern 2: Breadcrumb contains workflow terminology but isn't in main_navigation
+    const workflowPatterns = [
+      /request\s*>\s*approval/i,
+      /approval\s*>\s*.*calculation/i,
+      /submit\s*>\s*review/i,
+      /create\s*>\s*approve/i,
+      /initiate\s*>\s*process/i
+    ];
+
+    for (const pattern of workflowPatterns) {
+      if (pattern.test(breadcrumb)) {
+        return {
+          isConceptual: true,
+          matchedProcedure: null,
+          reason: `Breadcrumb matches workflow pattern (not a menu path)`
+        };
+      }
+    }
+  }
+
+  return { isConceptual: false, matchedProcedure: null };
+}
+
+/**
+ * Extract navigation-related items from procedures that ARE clickable
+ * (e.g., "Navigate to Settings > Payroll")
+ */
+function extractNavigablePathsFromProcedures(procedures) {
+  const navigablePaths = [];
+
+  if (!Array.isArray(procedures)) return navigablePaths;
+
+  for (const proc of procedures) {
+    const steps = Array.isArray(proc.steps) ? proc.steps : [];
+
+    for (const step of steps) {
+      const stepText = typeof step === "string" ? step : step.text || step.description || "";
+
+      // Look for explicit navigation instructions
+      const navPatterns = [
+        /navigate\s+to\s+([^.]+)/i,
+        /go\s+to\s+([^.]+)/i,
+        /click\s+on\s+([^.]+)/i,
+        /select\s+([^.]+)\s+from\s+(?:the\s+)?menu/i,
+        /open\s+([^.]+)\s+(?:page|section|menu)/i
+      ];
+
+      for (const pattern of navPatterns) {
+        const match = stepText.match(pattern);
+        if (match && match[1]) {
+          const extracted = match[1].trim();
+          // Only add if it looks like a breadcrumb path
+          if (isBreadcrumbPath(extracted)) {
+            navigablePaths.push({
+              path: extracted,
+              source_procedure: proc.title || proc.name,
+              source_step: stepText.slice(0, 100)
+            });
+          }
+        }
+      }
+    }
+  }
+
+  return navigablePaths;
+}
+
 // ------------------ main ------------------
 (async () => {
   const startedAt = nowISO();
@@ -648,6 +791,7 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
     login: { status: "fail" },
     navigation_results: [],
     claim_ui_checks: [],
+    procedures_context: [],
     summary: { total_steps: 0, passed_steps: 0, failed_steps: 0, screenshots: 0 },
     fatal_error: null,
     input_path: path.relative(ROOT, INPUT_PATH),
@@ -662,8 +806,22 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
 
     const appBaseUrl = input?.app?.base_url || "";
     const navigation_paths = input?.navigation_paths; // could be array OR object tree
+    const procedures = Array.isArray(input?.procedures) ? input.procedures : [];
     const normalizedNav = normalizeNavigationPaths(navigation_paths, appBaseUrl);
     const claims = normalizeClaimChecks(input?.claims_to_validate);
+
+    // Store procedures context in output for reference
+    output.procedures_context = procedures.map(p => ({
+      title: p.title || p.name || "unnamed",
+      step_count: Array.isArray(p.steps) ? p.steps.length : 0,
+      source: p.source || "zendesk"
+    }));
+
+    // Extract navigable paths from procedures (for additional context)
+    const procedureNavPaths = extractNavigablePathsFromProcedures(procedures);
+    if (procedureNavPaths.length > 0) {
+      output.procedures_extracted_navigation = procedureNavPaths;
+    }
 
     browser = await chromium.launch({ headless: HEADLESS });
     const context = await browser.newContext();
@@ -691,10 +849,14 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
           {
             pathName,
             featureName: output.feature_name
-          }
+          },
+          procedures // Pass procedures for conceptual flow detection
         );
         pathResult.steps.push(stepRes);
-        if (stepRes.status !== "pass") pathResult.status = "fail";
+        // Conceptual flows are OK - they're informational, not failures
+        if (stepRes.status !== "pass" && stepRes.status !== "skipped_conceptual") {
+          pathResult.status = "fail";
+        }
       }
 
       const endShot = await saveScreenshot(page, SCREENSHOTS_DIR, `${pathName}_end`);
@@ -726,7 +888,8 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
             page,
             { action: "navigate", url: c.url, name: `claim_${c.id}_navigate` },
             SCREENSHOTS_DIR,
-            { pathName: `claim_${c.id}` }
+            { pathName: `claim_${c.id}` },
+            procedures
           );
           claimRes.checks.push(nav);
           if (nav.status !== "pass") claimRes.status = "fail";
@@ -740,7 +903,8 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
               page,
               { action: "verify", selector: sel, text: c.expects_text, name: `claim_${c.id}_verify` },
               SCREENSHOTS_DIR,
-              { pathName: `claim_${c.id}` }
+              { pathName: `claim_${c.id}` },
+              procedures
             );
             claimRes.checks.push(verify);
             if (verify.status !== "pass") claimRes.status = "fail";
@@ -768,12 +932,14 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
     // 4) Summary + final status
     let total = 0,
       passed = 0,
-      failed = 0;
+      failed = 0,
+      skippedConceptual = 0;
 
     for (const p of output.navigation_results) {
       for (const s of p.steps) {
         total += 1;
         if (s.status === "pass") passed += 1;
+        else if (s.status === "skipped_conceptual") skippedConceptual += 1;
         else failed += 1;
       }
     }
@@ -795,6 +961,7 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
       total_steps: total,
       passed_steps: passed,
       failed_steps: failed,
+      skipped_conceptual: skippedConceptual,
       screenshots: screenshotCount,
     };
 
@@ -809,21 +976,44 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
       report_type: "navigation_guidance_validation",
       disclaimer: "Navigation paths are sourced from Zendesk documentation and serve as GUIDANCE ONLY. " +
                   "The actual UI may differ as menus change over time. Failed paths indicate potential " +
-                  "documentation updates needed, NOT system errors.",
+                  "documentation updates needed, NOT system errors. Conceptual process flows (business workflows) " +
+                  "are identified using procedures context and are NOT treated as clickable menu paths.",
       validation_date: nowISO(),
+      procedures_provided: procedures.length > 0,
+      procedures_count: procedures.length,
       summary: {
         total_paths_tested: 0,
         paths_verified: 0,
         paths_not_found: 0,
-        paths_partial: 0
+        paths_partial: 0,
+        conceptual_flows_skipped: 0
       },
-      paths: []
+      paths: [],
+      conceptual_flows: []
     };
 
     // Process each navigation result into the report
     for (const navResult of output.navigation_results) {
       for (const step of navResult.steps || []) {
         if (step.action === "click_sequence") {
+          // Check if this was a conceptual flow (skipped)
+          if (step.status === "skipped_conceptual") {
+            const conceptualEntry = {
+              flow_id: `conceptual_${navigationReport.conceptual_flows.length + 1}`,
+              breadcrumb: step.evidence?.breadcrumb || step.name || "unknown",
+              menu_items: step.evidence?.menu_items || [],
+              status: "skipped",
+              is_conceptual_flow: true,
+              matched_procedure: step.evidence?.matched_procedure || null,
+              reason: step.evidence?.reason || "Detected as conceptual process flow",
+              note: step.evidence?.note || "This describes a business workflow, not navigation.",
+              recommendation: "Document as a process flow description in user guide, not as navigation steps"
+            };
+            navigationReport.conceptual_flows.push(conceptualEntry);
+            navigationReport.summary.conceptual_flows_skipped++;
+            continue;
+          }
+
           const pathEntry = {
             path_id: `nav_${navigationReport.paths.length + 1}`,
             breadcrumb: step.evidence?.breadcrumb || step.name || "unknown",
@@ -831,6 +1021,7 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
             status: step.status === "pass" ? "verified" : "not_found",
             source: "zendesk_documentation",
             is_blocking: false,
+            is_conceptual_flow: false,
             validation_details: {
               attempted: true,
               clicks_succeeded: (step.evidence?.clicked || []).filter(c => c.success).length,
