@@ -636,6 +636,283 @@ function normalizeClaimChecks(claims_to_validate) {
   });
 }
 
+// ------------------ CLAIM CATEGORIZATION FOR SMART SCREENSHOTS ------------------
+/**
+ * Categorizes claims to avoid duplicate screenshots.
+ * Claims about similar topics (e.g., all "calculation" claims) should share one screenshot.
+ *
+ * Categories are determined by:
+ * 1. claim_type if available
+ * 2. Keywords in the claim text
+ * 3. Default category
+ */
+function getClaimCategory(claim) {
+  const claimText = (claim.text || "").toLowerCase();
+  const claimType = (claim.claim_type || "").toLowerCase();
+
+  // Known category mappings based on keywords
+  const categoryMappings = [
+    { keywords: ["calendar days", "calendar-based", "30 days", "365 days"], category: "calendar_days_calculation" },
+    { keywords: ["working days", "actual working"], category: "working_days_calculation" },
+    { keywords: ["leap year"], category: "leap_year_handling" },
+    { keywords: ["leave deduction", "leave pay", "unpaid leave"], category: "leave_deduction" },
+    { keywords: ["overtime", "ot calculation"], category: "overtime_calculation" },
+    { keywords: ["end of service", "eos", "gratuity", "termination"], category: "end_of_service" },
+    { keywords: ["calculation method", "method selection", "choose method"], category: "calculation_method_selection" },
+    { keywords: ["configuration", "settings", "setup", "configure"], category: "feature_configuration" },
+    { keywords: ["formula", "equation", "algorithm"], category: "calculation_formula" },
+    { keywords: ["compliance", "labor law", "legal"], category: "compliance_rules" },
+    { keywords: ["salary", "wage", "pay"], category: "salary_calculation" },
+    { keywords: ["accrual", "accumulate"], category: "accrual_rules" },
+    { keywords: ["pro-rata", "prorated", "proportional"], category: "prorated_calculation" },
+    { keywords: ["attendance", "absent", "present"], category: "attendance_tracking" },
+    { keywords: ["schedule", "shift", "roster"], category: "work_schedule" },
+  ];
+
+  // Check claim type first
+  if (claimType && claimType !== "unknown") {
+    // Normalize common claim types
+    const typeMapping = {
+      "calculation_rule": "calculation_rules",
+      "business_rule": "business_rules",
+      "configuration": "feature_configuration",
+      "ui_element": "interface_elements",
+      "navigation": "navigation_paths",
+      "workflow": "workflow_steps",
+    };
+    if (typeMapping[claimType]) {
+      return typeMapping[claimType];
+    }
+    return claimType.replace(/[^a-z0-9]/g, "_");
+  }
+
+  // Check against keyword mappings
+  for (const mapping of categoryMappings) {
+    if (mapping.keywords.some(kw => claimText.includes(kw))) {
+      return mapping.category;
+    }
+  }
+
+  // Fallback: Use claim ID prefix or generic category
+  const idMatch = (claim.id || "").match(/^([a-z]+)/i);
+  if (idMatch) {
+    return `claim_group_${idMatch[1].toLowerCase()}`;
+  }
+
+  return "general_claims";
+}
+
+// ------------------ NAVIGATE TO FEATURE PAGE FOR CLAIM VALIDATION ------------------
+/**
+ * Navigates to the feature-relevant page before validating claims.
+ * This ensures screenshots capture meaningful UI elements instead of a generic page state.
+ *
+ * Strategy:
+ * 1. Check if claim has a validation_hint with navigation info
+ * 2. Use feature context navigation hints
+ * 3. Try to navigate using breadcrumb clicking
+ * 4. Return the navigation result
+ */
+async function navigateToFeaturePageForClaims(page, featureContext) {
+  const result = {
+    status: "pending",
+    navigation_method: null,
+    navigation_path: null,
+    steps_taken: [],
+    final_url: null,
+    error: null
+  };
+
+  try {
+    // Define navigation paths for common feature domains
+    const featureNavigationMap = {
+      "daily wage": ["Settings", "Payroll", "Daily Wage Calculation"],
+      "daily rate": ["Settings", "Payroll", "Daily Wage Calculation"],
+      "payroll": ["Settings", "Payroll"],
+      "leave": ["Settings", "Leaves"],
+      "time off": ["Settings", "Time Off"],
+      "end of service": ["Settings", "Payroll", "End of Service"],
+      "eos": ["Settings", "Payroll", "End of Service"],
+      "attendance": ["Settings", "Attendance"],
+      "benefits": ["Benefits"],
+      "insurance": ["Insurance"],
+      "employees": ["Employees"],
+    };
+
+    // Determine navigation path from feature context
+    const featureName = (featureContext?.feature_name || "").toLowerCase();
+    let navPath = null;
+
+    // Check feature name against known navigation paths
+    for (const [keyword, path] of Object.entries(featureNavigationMap)) {
+      if (featureName.includes(keyword)) {
+        navPath = path;
+        result.navigation_method = "feature_name_match";
+        break;
+      }
+    }
+
+    // Fallback: Use navigation hints from feature context
+    if (!navPath && featureContext?.navigation_hints?.length > 0) {
+      // Look for hints that look like menu items
+      const menuHints = featureContext.navigation_hints.filter(h =>
+        !h.includes(">") && !h.includes("→") && h.length < 50
+      );
+      if (menuHints.length > 0) {
+        navPath = menuHints.slice(0, 3); // Take first 3 menu items
+        result.navigation_method = "navigation_hints";
+      }
+    }
+
+    if (!navPath || navPath.length === 0) {
+      result.status = "skipped";
+      result.error = "No navigation path determined from feature context";
+      return result;
+    }
+
+    result.navigation_path = navPath;
+    console.log(`📍 Navigating to feature page: ${navPath.join(" → ")}`);
+
+    // Click through the navigation path
+    for (let i = 0; i < navPath.length; i++) {
+      const menuItem = navPath[i];
+      const step = { item: menuItem, status: "pending", clicked: false };
+
+      // Try multiple selector strategies
+      const selectors = [
+        // Exact text match in buttons/links
+        `button:has-text("${menuItem}")`,
+        `a:has-text("${menuItem}")`,
+        `[role="menuitem"]:has-text("${menuItem}")`,
+        `[role="button"]:has-text("${menuItem}")`,
+        // Navigation items
+        `nav a:has-text("${menuItem}")`,
+        `nav button:has-text("${menuItem}")`,
+        // Sidebar items
+        `.sidebar :text("${menuItem}")`,
+        `[class*="sidebar"] :text("${menuItem}")`,
+        `[class*="menu"] :text("${menuItem}")`,
+        `[class*="nav"] :text("${menuItem}")`,
+        // Generic clickable with text
+        `:text("${menuItem}")`,
+      ];
+
+      let clicked = false;
+      for (const selector of selectors) {
+        try {
+          const element = page.locator(selector).first();
+          const isVisible = await element.isVisible({ timeout: 2000 }).catch(() => false);
+
+          if (isVisible) {
+            await element.click({ timeout: 5000 });
+            clicked = true;
+            step.status = "clicked";
+            step.clicked = true;
+            step.selector_used = selector;
+
+            // Wait for navigation/content change
+            await page.waitForTimeout(1500);
+
+            // Check if URL changed or new content appeared
+            const newUrl = page.url();
+            step.url_after = newUrl;
+
+            break;
+          }
+        } catch (e) {
+          // Try next selector
+        }
+      }
+
+      if (!clicked) {
+        step.status = "not_found";
+        step.error = `Could not find clickable element for: ${menuItem}`;
+      }
+
+      result.steps_taken.push(step);
+
+      // If we couldn't click this item, continue to next but log warning
+      if (!clicked && i < navPath.length - 1) {
+        console.log(`   ⚠️ Could not click "${menuItem}", continuing...`);
+      }
+    }
+
+    // Take screenshot after navigation
+    result.final_url = page.url();
+    result.status = result.steps_taken.some(s => s.clicked) ? "navigated" : "failed";
+
+    // Wait a bit more for any dynamic content to load
+    await page.waitForTimeout(2000);
+
+  } catch (error) {
+    result.status = "error";
+    result.error = safeString(error?.message || String(error));
+  }
+
+  return result;
+}
+
+/**
+ * Attempts to expand a dialog/modal or detailed view for better screenshots.
+ * Some claims refer to UI elements that require clicking to reveal.
+ */
+async function tryExpandRelevantUIElement(page, claim) {
+  const result = { expanded: false, element_clicked: null };
+
+  try {
+    // Keywords that suggest we need to click to see more
+    const expandTriggers = [
+      "dialog", "modal", "popup", "dropdown", "select", "calculation method",
+      "configuration", "settings", "options", "edit", "configure"
+    ];
+
+    const claimLower = (claim.text || "").toLowerCase();
+    const needsExpand = expandTriggers.some(t => claimLower.includes(t));
+
+    if (!needsExpand) return result;
+
+    // Try to find and click relevant buttons/links
+    const expandSelectors = [
+      // Configuration/Settings buttons
+      'button:has-text("Configure")',
+      'button:has-text("Edit")',
+      'button:has-text("Settings")',
+      // Specific to Daily Wage Calculation
+      'button:has-text("Daily Wage")',
+      '[class*="edit"]',
+      '[class*="configure"]',
+      // Dropdowns
+      '[role="combobox"]',
+      'select',
+      // Cards/expandable sections
+      '[class*="card"]:has-text("calculation")',
+      '[class*="expandable"]',
+    ];
+
+    for (const selector of expandSelectors) {
+      try {
+        const element = page.locator(selector).first();
+        const isVisible = await element.isVisible({ timeout: 1000 }).catch(() => false);
+
+        if (isVisible) {
+          await element.click({ timeout: 3000 });
+          result.expanded = true;
+          result.element_clicked = selector;
+          // Wait for content to appear
+          await page.waitForTimeout(1500);
+          break;
+        }
+      } catch {
+        // Continue to next selector
+      }
+    }
+  } catch {
+    // Non-critical failure
+  }
+
+  return result;
+}
+
 // ------------------ SEMANTIC CLAIM VALIDATION ------------------
 /**
  * Validates a claim without CSS selectors by searching for relevant keywords in page content.
@@ -646,9 +923,9 @@ function normalizeClaimChecks(claims_to_validate) {
  * 2. Get page content via accessibility tree and text content
  * 3. Search for keywords and related terms
  * 4. Score the match and determine if claim can be validated
- * 5. Take screenshot for evidence
+ * Note: Screenshots are handled in the main claim validation loop with category-based deduplication
  */
-async function performSemanticClaimValidation(page, claim, screenshotsDir) {
+async function performSemanticClaimValidation(page, claim) {
   const result = {
     action: "semantic_validation",
     name: `semantic_${claim.id}`,
@@ -761,12 +1038,7 @@ async function performSemanticClaimValidation(page, claim, screenshotsDir) {
       }
     }
 
-    // Take screenshot as evidence
-    const shot = await saveScreenshot(page, screenshotsDir, `semantic_${claim.id}`);
-    if (shot) {
-      result.evidence.screenshot = shot;
-    }
-
+    // Note: Screenshots are now handled in the main claim validation loop with category-based deduplication
     // Add page URL to evidence
     result.evidence.page_url = page.url();
 
@@ -1589,7 +1861,32 @@ function extractNavigablePathsFromProcedures(procedures) {
 
     // ========================================================================
     // STEP 6: CLAIM UI CHECKS (best-effort)
+    // Navigate to feature page ONCE, then validate all claims
     // ========================================================================
+
+    // First, navigate to the feature-relevant page for better screenshots
+    let featureNavigation = null;
+    if (output.login?.status === "pass" && claims.length > 0) {
+      console.log(`\n📸 Navigating to feature page for claim screenshots...`);
+      featureNavigation = await navigateToFeaturePageForClaims(page, featureContext);
+      output.claim_navigation = featureNavigation;
+
+      if (featureNavigation.status === "navigated") {
+        console.log(`   ✅ Navigated successfully: ${featureNavigation.navigation_path?.join(" → ")}`);
+
+        // Take screenshot after navigation to show the feature page
+        const featureShot = await saveScreenshot(page, SCREENSHOTS_DIR, "feature_page__after_navigation");
+        if (featureShot) {
+          console.log(`   📷 Captured feature page screenshot`);
+        }
+      } else {
+        console.log(`   ⚠️ Navigation result: ${featureNavigation.status}`);
+      }
+    }
+
+    // Track which claim categories we've captured screenshots for (to avoid duplicates)
+    const capturedCategories = new Set();
+
     for (const c of claims) {
       const claimRes = {
         id: c.id,
@@ -1612,8 +1909,14 @@ function extractNavigablePathsFromProcedures(procedures) {
         }
 
         if (!c.selectors.length) {
+          // Try to expand relevant UI elements for this specific claim
+          const expandResult = await tryExpandRelevantUIElement(page, c);
+          if (expandResult.expanded) {
+            claimRes.expanded_ui = expandResult.element_clicked;
+          }
+
           // SEMANTIC VALIDATION: No CSS selectors provided, try to validate claim by searching page content
-          const semanticResult = await performSemanticClaimValidation(page, c, SCREENSHOTS_DIR);
+          const semanticResult = await performSemanticClaimValidation(page, c);
           claimRes.checks.push(semanticResult);
           claimRes.status = semanticResult.status;
           claimRes.semantic_validation = true;
@@ -1631,15 +1934,30 @@ function extractNavigablePathsFromProcedures(procedures) {
           }
         }
 
-        const shot = await saveScreenshot(page, SCREENSHOTS_DIR, `claim_${c.id}`);
-        if (shot) {
-          claimRes.checks.push({
-            action: "screenshot",
-            name: `claim_${c.id}`,
-            status: "pass",
-            evidence: { screenshot: shot },
-            error: null,
-          });
+        // Smart screenshot deduplication: Categorize claims to avoid duplicate screenshots
+        // Claims about similar topics should share screenshots
+        const claimCategory = getClaimCategory(c);
+
+        if (!capturedCategories.has(claimCategory)) {
+          // First time seeing this category - take a unique screenshot
+          capturedCategories.add(claimCategory);
+
+          const shot = await saveScreenshot(page, SCREENSHOTS_DIR, `claim_${sanitizeFileName(claimCategory)}`);
+          if (shot) {
+            claimRes.checks.push({
+              action: "screenshot",
+              name: `claim_${claimCategory}`,
+              status: "pass",
+              evidence: { screenshot: shot },
+              category: claimCategory,
+              error: null,
+            });
+            claimRes.screenshot_category = claimCategory;
+          }
+        } else {
+          // Already captured this category - reference existing screenshot
+          claimRes.screenshot_category = claimCategory;
+          claimRes.screenshot_reused = true;
         }
       } catch (e) {
         claimRes.status = "fail";
