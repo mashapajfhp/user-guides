@@ -121,6 +121,7 @@ jobs:
           echo "start_time=$START_TIME" >> $GITHUB_OUTPUT
 
       - name: Generate User Guide
+        timeout-minutes: 20
         env:
           FEATURE_SLUG: ${{ inputs.feature_slug }}
           FEATURE_NAME: ${{ inputs.feature_name }}
@@ -142,7 +143,10 @@ jobs:
           export TEMPLATE_PATH="clean-template-reorganized.html"
           export OUTPUT_DIR="outputs/${FEATURE_SLUG}"
 
-          claude --print "Generate the complete user guide for the ${FEATURE_SLUG} feature (${FEATURE_NAME}).
+          # Run claude with timeout (15 minutes = 900 seconds)
+          # Using timeout command to prevent orphaned processes
+          echo "⏱️ Starting Claude with 15-minute timeout..."
+          timeout --signal=TERM --kill-after=30 900 claude --print "Generate the complete user guide for the ${FEATURE_SLUG} feature (${FEATURE_NAME}).
 
           FEATURE_SLUG: ${FEATURE_SLUG}
           FEATURE_NAME: ${FEATURE_NAME}
@@ -156,7 +160,16 @@ jobs:
           - Template: ${TEMPLATE_PATH}
 
           Output to: ${OUTPUT_DIR}/user-guide_v${VERSION}.html
-          Copy screenshots to: ${OUTPUT_DIR}/screenshots/"
+          Copy screenshots to: ${OUTPUT_DIR}/screenshots/" || {
+            EXIT_CODE=$?
+            if [ $EXIT_CODE -eq 124 ]; then
+              echo "❌ Claude timed out after 15 minutes"
+            else
+              echo "❌ Claude failed with exit code: $EXIT_CODE"
+            fi
+            exit $EXIT_CODE
+          }
+          echo "✅ Claude completed successfully"
 
       - name: Commit and push user guide
         id: commit
