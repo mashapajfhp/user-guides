@@ -7,6 +7,10 @@ on:
         description: "Feature name to validate"
         required: true
         type: string
+      feature_slug:
+        description: "Feature slug with underscores for folder paths (e.g., daily_wage_calculator)"
+        required: true
+        type: string
       claims_json:
         description: "Claims to validate (JSON string)"
         required: true
@@ -48,6 +52,28 @@ jobs:
           git config user.email "github-actions@github.com"
           git config rebase.autoStash true
           git pull --rebase --autostash origin main || true
+
+      # Calculate version number for this feature's validation run
+      - name: Calculate validation version
+        id: version
+        run: |
+          FEATURE_SLUG="${{ github.event.inputs.feature_slug }}"
+          VALIDATION_DIR=".validation/output/${FEATURE_SLUG}"
+
+          # Find existing versions
+          if [ -d "$VALIDATION_DIR" ]; then
+            LATEST_VERSION=$(ls -1d "$VALIDATION_DIR"/v*/ 2>/dev/null | sed 's/.*\/v\([0-9]*\)\//\1/' | sort -n | tail -1)
+            if [ -z "$LATEST_VERSION" ]; then
+              VERSION=1
+            else
+              VERSION=$((LATEST_VERSION + 1))
+            fi
+          else
+            VERSION=1
+          fi
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📊 Validation version: v$VERSION for ${FEATURE_SLUG}"
 
       - name: Verify Anthropic key present (safe)
         shell: bash
@@ -163,8 +189,15 @@ jobs:
           NAV_JSON: ${{ github.event.inputs.navigation_paths_json }}
           PROCEDURES_JSON: ${{ github.event.inputs.procedures_json }}
           FEATURE_NAME: ${{ github.event.inputs.feature_name }}
+          FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
+
+          # Create versioned folder structure: .validation/output/{feature_slug}/v{version}/
+          VERSIONED_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
+          echo "📁 Creating versioned directory: ${VERSIONED_DIR}"
+          mkdir -p "${VERSIONED_DIR}/screenshots"
           mkdir -p .validation/input
 
           # Use environment variables to avoid shell escaping issues
@@ -217,34 +250,47 @@ jobs:
 
       - name: Run Playwright validation (UI execution)
         shell: bash
+        env:
+          FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          mkdir -p .validation/output/screenshots
+          VERSIONED_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
+
+          echo "📸 Screenshots will be saved to: ${VERSIONED_DIR}/screenshots/"
           node scripts/playwright/run-validation.mjs \
             --input .validation/input/request.json \
-            --out .validation/output/pw_result.json \
-            --screenshots .validation/output/screenshots
+            --out "${VERSIONED_DIR}/pw_result.json" \
+            --screenshots "${VERSIONED_DIR}/screenshots"
 
       - name: Clean JSON Output (Playwright) - ensure valid JSON file exists
         shell: bash
+        env:
+          FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          test -f .validation/output/pw_result.json
-          jq -e . .validation/output/pw_result.json >/dev/null
-          echo "✅ pw_result.json is valid JSON"
+          VERSIONED_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
+          test -f "${VERSIONED_DIR}/pw_result.json"
+          jq -e . "${VERSIONED_DIR}/pw_result.json" >/dev/null
+          echo "✅ pw_result.json is valid JSON in ${VERSIONED_DIR}"
 
       - name: Run Interface Validator Agent (PURE, STRICT JSON)
         shell: bash
+        env:
+          FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          mkdir -p .validation/output
+          VERSIONED_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
+          mkdir -p "${VERSIONED_DIR}"
 
           INPUT_JSON="$(cat .validation/input/request.json)"
 
           # IMPORTANT:
           # - The heredoc BODY MUST be indented (it is) so YAML doesn't try to parse lines like "SYSTEM (NON-NEGOTIABLE)".
           # - Keep the closing marker at column 1 in bash terms; YAML will still treat it as part of the run block.
-          cat > .validation/output/agent_prompt.txt <<'__AGENT_PROMPT__'
+          cat > "${VERSIONED_DIR}/agent_prompt.txt" <<'__AGENT_PROMPT__'
           SYSTEM (NON-NEGOTIABLE)
 
           You are InterfaceValidatorAgent.
@@ -287,26 +333,31 @@ jobs:
 
           # Run Claude; capture raw output (Claude sometimes wraps JSON in ```json fences)
           claude -p --output-format text \
-            "$(cat .validation/output/agent_prompt.txt)
+            "$(cat "${VERSIONED_DIR}/agent_prompt.txt")
 
           INPUT_JSON:
           ${INPUT_JSON}
-          " > .validation/output/result_raw.txt
+          " > "${VERSIONED_DIR}/result_raw.txt"
 
-          echo "Saved: .validation/output/result_raw.txt"
-          cat .validation/output/result_raw.txt
+          echo "Saved: ${VERSIONED_DIR}/result_raw.txt"
+          cat "${VERSIONED_DIR}/result_raw.txt"
 
       # Clean any ```json fences / extra text and write valid JSON only
       - name: Clean JSON Output (strip fences / extract object)
         shell: bash
+        env:
+          FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
+          VERSIONED_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
 
-          python3 - <<'PY'
+          python3 - "${VERSIONED_DIR}" <<'PY'
           import json, re, pathlib, sys
 
-          raw_path = pathlib.Path(".validation/output/result_raw.txt")
-          out_path = pathlib.Path(".validation/output/result.json")
+          versioned_dir = pathlib.Path(sys.argv[1])
+          raw_path = versioned_dir / "result_raw.txt"
+          out_path = versioned_dir / "result.json"
 
           s = raw_path.read_text(encoding="utf-8", errors="replace").strip()
 
@@ -327,18 +378,18 @@ jobs:
           PY
 
           echo "Cleaned JSON:"
-          cat .validation/output/result.json
+          cat "${VERSIONED_DIR}/result.json"
 
           # Validate schema quickly
-          jq -e 'type=="object"' .validation/output/result.json >/dev/null
+          jq -e 'type=="object"' "${VERSIONED_DIR}/result.json" >/dev/null
 
-          STATUS="$(jq -r '.status // empty' .validation/output/result.json)"
+          STATUS="$(jq -r '.status // empty' "${VERSIONED_DIR}/result.json")"
 
           if [ "$STATUS" = "ok" ]; then
-            jq -e '.feature_name and (.validated_claims|type=="array") and .summary' .validation/output/result.json >/dev/null
+            jq -e '.feature_name and (.validated_claims|type=="array") and .summary' "${VERSIONED_DIR}/result.json" >/dev/null
             echo "✅ Output is valid JSON and matches required OK schema"
           elif [ "$STATUS" = "error" ]; then
-            jq -e '.reason' .validation/output/result.json >/dev/null
+            jq -e '.reason' "${VERSIONED_DIR}/result.json" >/dev/null
             echo "✅ Output is valid JSON and matches required ERROR schema"
           else
             echo "❌ Output JSON missing valid status (ok|error)"
@@ -348,18 +399,21 @@ jobs:
       - name: Upload validation output artifact
         uses: actions/upload-artifact@v4
         with:
-          name: interface-validation-${{ github.run_id }}
+          name: interface-validation-${{ github.event.inputs.feature_slug }}-v${{ steps.version.outputs.version }}-${{ github.run_id }}
           path: |
-            .validation/output/result.json
-            .validation/output/result_raw.txt
-            .validation/output/pw_result.json
-            .validation/output/screenshots/**
+            .validation/output/${{ github.event.inputs.feature_slug }}/v${{ steps.version.outputs.version }}/result.json
+            .validation/output/${{ github.event.inputs.feature_slug }}/v${{ steps.version.outputs.version }}/result_raw.txt
+            .validation/output/${{ github.event.inputs.feature_slug }}/v${{ steps.version.outputs.version }}/pw_result.json
+            .validation/output/${{ github.event.inputs.feature_slug }}/v${{ steps.version.outputs.version }}/screenshots/**
             .validation/input/request.json
           if-no-files-found: error
           retention-days: 7
 
       - name: Commit validation output
         shell: bash
+        env:
+          FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
           git config user.name "github-actions"
@@ -372,5 +426,6 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Interface validation: ${{ github.event.inputs.feature_name }}"
+          git commit -m "Interface validation v${VERSION}: ${{ github.event.inputs.feature_name }} (${FEATURE_SLUG})"
           git push
+          echo "✅ Committed validation outputs to: .validation/output/${FEATURE_SLUG}/v${VERSION}/"
