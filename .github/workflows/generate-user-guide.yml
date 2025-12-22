@@ -207,22 +207,12 @@ jobs:
           # Copy screenshots to output
           cp .validation/output/screenshots/*.png "outputs/${FEATURE_SLUG}/screenshots/" 2>/dev/null || echo "No screenshots to copy"
 
-          # Run claude with timeout (15 minutes = 900 seconds)
-          echo "⏱️ Starting Claude with 15-minute timeout..."
+          # Run claude (step-level timeout-minutes: 20 handles timeout on macOS)
+          echo "⏱️ Starting Claude generation..."
           echo "📄 Input prompt size: ${{ steps.preprocess.outputs.prompt_size }} bytes"
 
           # Pass prompt as argument to claude --print
-          timeout --signal=TERM --kill-after=30 900 bash -c '
-            claude --print "$(cat .generation-input/full-prompt.md)" > "outputs/'"${FEATURE_SLUG}"'/user-guide_v'"${VERSION}"'.html"
-          ' || {
-            EXIT_CODE=$?
-            if [ $EXIT_CODE -eq 124 ]; then
-              echo "❌ Claude timed out after 15 minutes"
-            else
-              echo "❌ Claude failed with exit code: $EXIT_CODE"
-            fi
-            exit $EXIT_CODE
-          }
+          claude --print "$(cat .generation-input/full-prompt.md)" > "outputs/${FEATURE_SLUG}/user-guide_v${VERSION}.html"
 
           # Verify output was created
           OUTPUT_FILE="outputs/${FEATURE_SLUG}/user-guide_v${VERSION}.html"
