@@ -162,6 +162,73 @@ Overwrite switch → Policy-specific override (conceptual)
 - **CONSISTENT FORMAT**: All access paths follow same structure: Navigation → Screenshot → What/Why/How explanation
 - **INTERFACE VALIDATION**: Screenshots must show actual navigation paths and interface elements described
 
+**🖼️ SCREENSHOT EMBEDDING STRUCTURE (MANDATORY FORMAT):**
+
+Every screenshot MUST follow this 3-part structure:
+
+**1. INTRODUCTION (Before Image):**
+- Brief context sentence explaining what the user will see
+- Purpose of the screenshot in the workflow
+- Example: "The following screenshot shows the Daily Wage Calculation dialog that appears after clicking the edit button."
+
+**2. IMAGE EMBED (The Screenshot):**
+```html
+<figure class="screenshot-container" style="margin: 20px 0; text-align: center;">
+    <img src="./screenshots/[filename].png"
+         alt="[Descriptive alt text for accessibility]"
+         style="max-width: 100%; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <figcaption style="margin-top: 12px; font-size: 14px; color: #666; font-style: italic;">
+        Figure X: [Concise caption describing what the image shows]
+    </figcaption>
+</figure>
+```
+
+**3. DETAILED DESCRIPTION (After Image):**
+- Explain each visible element in the screenshot
+- Describe what each option/button/field does
+- Connect to user workflow: "Selecting this option will..."
+- Highlight important areas: "Notice the dropdown in the top-right..."
+
+**COMPLETE EXAMPLE:**
+```html
+<div class="screenshot-section">
+    <!-- INTRODUCTION -->
+    <p>After navigating to Settings → Payroll and clicking the edit icon next to Daily Wage Calculation,
+    the configuration dialog opens. This dialog allows administrators to set how daily wages are calculated
+    across the organization.</p>
+
+    <!-- IMAGE EMBED -->
+    <figure class="screenshot-container" style="margin: 20px 0; text-align: center;">
+        <img src="./screenshots/daily_wage_dialog.png"
+             alt="Daily Wage Calculation configuration dialog showing calculation method dropdown with options for Calendar Days, Working Days, and Custom Days"
+             style="max-width: 100%; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <figcaption style="margin-top: 12px; font-size: 14px; color: #666; font-style: italic;">
+            Figure 1: Daily Wage Calculation configuration dialog with calculation method options
+        </figcaption>
+    </figure>
+
+    <!-- DETAILED DESCRIPTION -->
+    <div class="screenshot-explanation">
+        <p><strong>Key elements in this interface:</strong></p>
+        <ul>
+            <li><strong>Calculation Method Dropdown:</strong> Located at the top of the dialog, this dropdown
+            offers three options - Calendar Days (30 days), Working Days (22 days), and Custom Days.</li>
+            <li><strong>Salary Components Section:</strong> Below the dropdown, checkboxes allow selection
+            of which salary components to include in the daily wage calculation.</li>
+            <li><strong>Save Button:</strong> The blue "Save" button at the bottom applies the configuration
+            to all future payroll calculations.</li>
+        </ul>
+        <p>Selecting "Working Days" automatically excludes weekends and public holidays from the calculation,
+        resulting in higher daily rates compared to Calendar Days.</p>
+    </div>
+</div>
+```
+
+**ACCESSIBILITY REQUIREMENTS:**
+- **Alt text MUST describe**: What is shown, key elements, current state
+- **Alt text example**: "Payroll settings page showing Daily Wage Calculation section with edit button highlighted"
+- **Figure numbers**: Use sequential numbering (Figure 1, Figure 2, etc.)
+- **Captions**: Short, descriptive, focus on what the image demonstrates
 
 **CONTENT SOURCING WITH DIRECT CITATIONS:**
 - **FEATURE DEFINITION**: Extract from specific Zendesk articles → Cite: [Source: Zendesk Article #68682]
