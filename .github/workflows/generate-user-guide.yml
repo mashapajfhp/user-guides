@@ -37,6 +37,7 @@ env:
   SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   N8N_CALLBACK_URL: ${{ secrets.N8N_CALLBACK_URL }}
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
 jobs:
   generate:
@@ -120,21 +121,42 @@ jobs:
           echo "start_time=$START_TIME" >> $GITHUB_OUTPUT
 
       - name: Generate User Guide
+        env:
+          FEATURE_SLUG: ${{ inputs.feature_slug }}
+          FEATURE_NAME: ${{ inputs.feature_name }}
+          CLEAN_FEATURE_NAME: ${{ inputs.clean_feature_name }}
         run: |
+          # Normalize API key (remove any whitespace/newlines)
+          export ANTHROPIC_API_KEY=$(echo "$ANTHROPIC_API_KEY" | tr -d '[:space:]')
+
           VERSION="${{ steps.version.outputs.version }}"
-          echo "📝 Generating user guide v$VERSION for: ${{ inputs.feature_slug }}"
+          echo "📝 Generating user guide v$VERSION for: ${FEATURE_SLUG}"
 
-          claude --print "Using the comprehensive-user-guide-generator agent from the agents/ folder, generate the complete user guide for the ${{ inputs.feature_slug }} feature.
+          # Export all required variables for the agent
+          export REPO_ROOT="$(pwd)"
+          export OUTPUT_VERSION="${VERSION}"
+          export ZENDESK_REPORT="reports/zendesk/${FEATURE_SLUG}/versions/"
+          export JIRA_REPORT="reports/jira/${FEATURE_SLUG}/versions/v1/runs/"
+          export SCREENSHOTS_DIR=".validation/output/screenshots/"
+          export VALIDATION_DIR=".validation/output/"
+          export TEMPLATE_PATH="clean-template-reorganized.html"
+          export OUTPUT_DIR="outputs/${FEATURE_SLUG}"
 
-          Input files are in this repository:
-          - Zendesk report: reports/zendesk/${{ inputs.feature_slug }}/versions/ (use latest)
-          - Jira report: reports/jira/${{ inputs.feature_slug }}/versions/v1/runs/ (use latest)
-          - Screenshots: .validation/output/screenshots/
-          - Validation: .validation/output/result.json and pw_result.json
-          - Template: clean-template-reorganized.html
+          claude --print "Generate the complete user guide for the ${FEATURE_SLUG} feature (${FEATURE_NAME}).
 
-          Output to: outputs/${{ inputs.feature_slug }}/user-guide_v${VERSION}.html
-          Copy screenshots to: outputs/${{ inputs.feature_slug }}/screenshots/"
+          FEATURE_SLUG: ${FEATURE_SLUG}
+          FEATURE_NAME: ${FEATURE_NAME}
+          VERSION: ${VERSION}
+
+          Input files:
+          - Zendesk report: ${ZENDESK_REPORT} (use latest file)
+          - Jira report: ${JIRA_REPORT} (use latest file)
+          - Screenshots: ${SCREENSHOTS_DIR}
+          - Validation: ${VALIDATION_DIR}result.json and pw_result.json
+          - Template: ${TEMPLATE_PATH}
+
+          Output to: ${OUTPUT_DIR}/user-guide_v${VERSION}.html
+          Copy screenshots to: ${OUTPUT_DIR}/screenshots/"
 
       - name: Commit and push user guide
         id: commit
