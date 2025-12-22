@@ -120,7 +120,7 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           echo "📝 Generating user guide v$VERSION for: ${{ inputs.feature_slug }}"
 
-          claude --print "Using the comprehensive-user-guide-generator agent from the agents/ folder, generate the complete user guide for the ${{ inputs.feature_slug }} feature.
+          claude --print --model haiku "Using the comprehensive-user-guide-generator agent from the agents/ folder, generate the complete user guide for the ${{ inputs.feature_slug }} feature.
 
           Input files are in this repository:
           - Zendesk report: reports/zendesk/${{ inputs.feature_slug }}/versions/ (use latest)
@@ -217,55 +217,56 @@ jobs:
 
           echo "✅ Inserted into Supabase"
 
-      - name: Send Slack notification
-        if: always()
-        run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          STATUS="${{ job.status }}"
-
-          if [ "$STATUS" = "success" ]; then
-            EMOJI="✅"
-            COLOR="#36a64f"
-            MESSAGE="User guide v${VERSION} generated successfully!"
-          else
-            EMOJI="❌"
-            COLOR="#ff0000"
-            MESSAGE="User guide generation failed"
-          fi
-
-          curl -X POST "${{ env.SLACK_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "attachments": [{
-                "color": "'"$COLOR"'",
-                "blocks": [
-                  {
-                    "type": "header",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "'"$EMOJI"' User Guide Generation",
-                      "emoji": true
-                    }
-                  },
-                  {
-                    "type": "section",
-                    "fields": [
-                      {"type": "mrkdwn", "text": "*Feature:*\n${{ inputs.feature_name }}"},
-                      {"type": "mrkdwn", "text": "*Version:*\nv'"$VERSION"'"},
-                      {"type": "mrkdwn", "text": "*Screenshots:*\n${{ steps.verify.outputs.screenshot_count }}"},
-                      {"type": "mrkdwn", "text": "*Duration:*\n${{ steps.duration.outputs.duration }}s"}
-                    ]
-                  },
-                  {
-                    "type": "section",
-                    "text": {
-                      "type": "mrkdwn",
-                      "text": "*GitHub URL:*\n<${{ steps.commit.outputs.github_url }}|View User Guide>"
-                    }
-                  }
-                ]
-              }]
-            }' || echo "Slack notification failed (non-critical)"
+      # TODO: Uncomment when Slack webhook is approved
+      # - name: Send Slack notification
+      #   if: always()
+      #   run: |
+      #     VERSION="${{ steps.version.outputs.version }}"
+      #     STATUS="${{ job.status }}"
+      #
+      #     if [ "$STATUS" = "success" ]; then
+      #       EMOJI="✅"
+      #       COLOR="#36a64f"
+      #       MESSAGE="User guide v${VERSION} generated successfully!"
+      #     else
+      #       EMOJI="❌"
+      #       COLOR="#ff0000"
+      #       MESSAGE="User guide generation failed"
+      #     fi
+      #
+      #     curl -X POST "${{ env.SLACK_WEBHOOK_URL }}" \
+      #       -H "Content-Type: application/json" \
+      #       -d '{
+      #         "attachments": [{
+      #           "color": "'"$COLOR"'",
+      #           "blocks": [
+      #             {
+      #               "type": "header",
+      #               "text": {
+      #                 "type": "plain_text",
+      #                 "text": "'"$EMOJI"' User Guide Generation",
+      #                 "emoji": true
+      #               }
+      #             },
+      #             {
+      #               "type": "section",
+      #               "fields": [
+      #                 {"type": "mrkdwn", "text": "*Feature:*\n${{ inputs.feature_name }}"},
+      #                 {"type": "mrkdwn", "text": "*Version:*\nv'"$VERSION"'"},
+      #                 {"type": "mrkdwn", "text": "*Screenshots:*\n${{ steps.verify.outputs.screenshot_count }}"},
+      #                 {"type": "mrkdwn", "text": "*Duration:*\n${{ steps.duration.outputs.duration }}s"}
+      #               ]
+      #             },
+      #             {
+      #               "type": "section",
+      #               "text": {
+      #                 "type": "mrkdwn",
+      #                 "text": "*GitHub URL:*\n<${{ steps.commit.outputs.github_url }}|View User Guide>"
+      #               }
+      #             }
+      #           ]
+      #         }]
+      #       }' || echo "Slack notification failed (non-critical)"
 
       - name: Callback to n8n
         if: env.N8N_CALLBACK_URL != ''
