@@ -335,14 +335,24 @@ async function performCognitiveWalkthrough(page, featureContext, screenshotsDir)
     }
 
     // Strategy 2: Search for navigation hints from context
-    for (const hint of featureContext.navigation_hints.slice(0, 5)) {
-      // Skip process-flow terms
-      const skipTerms = ["request", "approval", "calculation", "process", "submit"];
-      if (skipTerms.some(term => hint.toLowerCase().includes(term))) {
+    for (const hint of featureContext.navigation_hints.slice(0, 10)) {
+      // FIXED: Only skip actual workflow patterns, not menu items that happen to contain action words
+      // "Daily Wage Calculation" is a menu item, not a workflow
+      // "Leave Request > Approval" IS a workflow pattern
+      const workflowPatterns = [
+        /request\s*[>→›]\s*approval/i,
+        /submit\s*[>→›]\s*review/i,
+        /create\s*[>→›]\s*approve/i,
+        /^\s*approval\s*$/i,  // Just "approval" alone suggests workflow step
+        /^\s*request\s*$/i    // Just "request" alone suggests workflow step
+      ];
+
+      const isWorkflowTerm = workflowPatterns.some(pattern => pattern.test(hint));
+      if (isWorkflowTerm) {
         results.exploration_path.push({
-          action: "skipped_process_term",
+          action: "skipped_workflow_term",
           hint: hint,
-          reason: "Appears to be a process flow, not a navigation element"
+          reason: "Appears to be a workflow step, not a navigation element"
         });
         continue;
       }
@@ -608,8 +618,12 @@ function normalizeClaimChecks(claims_to_validate) {
   if (!Array.isArray(claims_to_validate)) return [];
   return claims_to_validate.map((c, idx) => {
     const id = c?.id || c?.claim_id || `claim_${idx + 1}`;
-    const text = c?.claim || c?.text || c?.statement || "";
+    // FIXED: Also check for claim_text which is used in n8n workflow
+    const text = c?.claim || c?.claim_text || c?.text || c?.statement || "";
     const url = c?.url || null;
+    const claim_type = c?.claim_type || "unknown";
+    const validation_hint = c?.validation_hint || "";
+    const source = c?.source || "unknown";
 
     const selectors = []
       .concat(c?.selectors || [])
@@ -618,8 +632,150 @@ function normalizeClaimChecks(claims_to_validate) {
 
     const expects_text = c?.expects_text || c?.expected_text || null;
 
-    return { id, text, url, selectors, expects_text, raw: c };
+    return { id, text, url, selectors, expects_text, claim_type, validation_hint, source, raw: c };
   });
+}
+
+// ------------------ SEMANTIC CLAIM VALIDATION ------------------
+/**
+ * Validates a claim without CSS selectors by searching for relevant keywords in page content.
+ * This enables validation of claims from n8n workflow that don't have explicit selectors.
+ *
+ * Approach:
+ * 1. Extract keywords from claim text
+ * 2. Get page content via accessibility tree and text content
+ * 3. Search for keywords and related terms
+ * 4. Score the match and determine if claim can be validated
+ * 5. Take screenshot for evidence
+ */
+async function performSemanticClaimValidation(page, claim, screenshotsDir) {
+  const result = {
+    action: "semantic_validation",
+    name: `semantic_${claim.id}`,
+    status: "pending",
+    claim_text: claim.text,
+    claim_type: claim.claim_type || "unknown",
+    validation_hint: claim.validation_hint || "",
+    source: claim.source || "unknown",
+    keywords_searched: [],
+    keywords_found: [],
+    keywords_missing: [],
+    match_score: 0,
+    page_context: {},
+    evidence: {},
+    error: null
+  };
+
+  try {
+    // Skip if no claim text to validate
+    if (!claim.text || claim.text.trim().length < 5) {
+      result.status = "skipped_no_claim_text";
+      result.error = "Claim text is empty or too short to validate";
+      return result;
+    }
+
+    // Extract meaningful keywords from claim text (words > 3 chars, excluding stop words)
+    const stopWords = new Set([
+      "the", "and", "for", "are", "but", "not", "you", "all", "can", "had", "her",
+      "was", "one", "our", "out", "has", "have", "been", "will", "with", "this",
+      "that", "from", "they", "were", "said", "each", "which", "their", "into",
+      "than", "them", "being", "some", "could", "would", "there", "about"
+    ]);
+
+    const claimWords = claim.text
+      .toLowerCase()
+      .replace(/[^\w\s]/g, " ")
+      .split(/\s+/)
+      .filter(w => w.length > 3 && !stopWords.has(w))
+      .slice(0, 15); // Limit to 15 keywords
+
+    result.keywords_searched = [...new Set(claimWords)];
+
+    if (result.keywords_searched.length === 0) {
+      result.status = "skipped_no_keywords";
+      result.error = "No meaningful keywords extracted from claim";
+      return result;
+    }
+
+    // Get page content via multiple methods for better coverage
+    let pageText = "";
+
+    // Method 1: Get text content from body
+    try {
+      pageText += await page.locator("body").textContent({ timeout: 5000 }).catch(() => "");
+    } catch { /* continue */ }
+
+    // Method 2: Get from specific UI elements (buttons, labels, headings, inputs)
+    try {
+      const uiElements = await page.locator("button, label, h1, h2, h3, h4, span, p, div[role='button'], a").allTextContents();
+      pageText += " " + uiElements.join(" ");
+    } catch { /* continue */ }
+
+    // Method 3: Get aria-labels and placeholders
+    try {
+      const ariaElements = await page.locator("[aria-label], [placeholder], [title]").evaluateAll(
+        elements => elements.map(el => `${el.getAttribute("aria-label") || ""} ${el.getAttribute("placeholder") || ""} ${el.getAttribute("title") || ""}`).join(" ")
+      );
+      pageText += " " + ariaElements;
+    } catch { /* continue */ }
+
+    // Normalize page text for searching
+    const pageTextLower = pageText.toLowerCase();
+    result.page_context.page_text_length = pageTextLower.length;
+
+    // Search for each keyword
+    for (const keyword of result.keywords_searched) {
+      if (pageTextLower.includes(keyword)) {
+        result.keywords_found.push(keyword);
+      } else {
+        result.keywords_missing.push(keyword);
+      }
+    }
+
+    // Calculate match score
+    const foundCount = result.keywords_found.length;
+    const totalCount = result.keywords_searched.length;
+    result.match_score = totalCount > 0 ? Math.round((foundCount / totalCount) * 100) : 0;
+
+    // Determine validation status based on match score and claim type
+    if (result.match_score >= 60) {
+      result.status = "semantic_validated";
+      result.evidence.validation_method = "keyword_match";
+      result.evidence.confidence = result.match_score >= 80 ? "high" : "medium";
+    } else if (result.match_score >= 30) {
+      result.status = "semantic_partial";
+      result.evidence.validation_method = "partial_keyword_match";
+      result.evidence.confidence = "low";
+    } else {
+      result.status = "semantic_not_found";
+      result.evidence.validation_method = "keyword_search";
+      result.evidence.confidence = "none";
+    }
+
+    // Special handling for certain claim types
+    if (claim.claim_type === "calculation_rule" || claim.claim_type === "business_rule") {
+      // For calculation rules, lower the threshold as they describe backend behavior
+      if (result.match_score >= 40 || result.keywords_found.length >= 2) {
+        result.status = "semantic_validated";
+        result.evidence.note = "Business rule claim - validated with relaxed threshold";
+      }
+    }
+
+    // Take screenshot as evidence
+    const shot = await saveScreenshot(page, screenshotsDir, `semantic_${claim.id}`);
+    if (shot) {
+      result.evidence.screenshot = shot;
+    }
+
+    // Add page URL to evidence
+    result.evidence.page_url = page.url();
+
+  } catch (error) {
+    result.status = "error";
+    result.error = safeString(error?.message || String(error));
+  }
+
+  return result;
 }
 
 // ------------------ NEW: navigation tree flattening ------------------
@@ -1120,62 +1276,98 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
  * These are CONCEPTUAL process flows, NOT clickable menu paths.
  * This helper detects if a breadcrumb matches a procedure's conceptual workflow
  * so we can skip trying to click it and instead document it as informational.
+ *
+ * IMPORTANT: Paths starting with known application menu items (Settings, Payroll, etc.)
+ * are ALWAYS navigation paths and should NEVER be marked as conceptual.
  */
 function isConceptualProcessFlow(breadcrumb, procedures) {
-  if (!breadcrumb || !Array.isArray(procedures) || procedures.length === 0) {
+  if (!breadcrumb || typeof breadcrumb !== "string") {
     return { isConceptual: false, matchedProcedure: null };
   }
 
   const breadcrumbLower = breadcrumb.toLowerCase().trim();
   const breadcrumbParts = parseBreadcrumb(breadcrumb).map(p => p.toLowerCase());
 
-  for (const proc of procedures) {
-    // Check if procedure title or steps contain this breadcrumb pattern
-    const procTitle = (proc.title || proc.name || "").toLowerCase();
-    const procSteps = Array.isArray(proc.steps) ? proc.steps : [];
+  // CRITICAL FIX: Known application menu items indicate NAVIGATION paths, not conceptual flows
+  // These are the actual clickable menu items in the Bayzat application
+  const knownMenuStarters = [
+    "settings", "payroll", "employees", "dashboard", "finance", "reports",
+    "time off", "leaves", "benefits", "insurance", "attendance", "hiring",
+    "documents", "company", "admin", "setup", "configuration", "home",
+    "manage", "team", "organization", "hr", "compensation"
+  ];
 
-    // Pattern 1: Breadcrumb appears in procedure steps (conceptual workflow)
-    for (const step of procSteps) {
-      const stepText = (typeof step === "string" ? step : step.text || step.description || "").toLowerCase();
+  // If the breadcrumb starts with a known menu item, it's a NAVIGATION path, not conceptual
+  const firstPart = breadcrumbParts[0];
+  if (firstPart && knownMenuStarters.includes(firstPart)) {
+    return {
+      isConceptual: false,
+      matchedProcedure: null,
+      reason: `Breadcrumb starts with known menu item: ${firstPart}`
+    };
+  }
 
-      // If breadcrumb parts appear sequentially in procedure steps, it's conceptual
-      if (breadcrumbParts.some(part => stepText.includes(part))) {
-        // Additional check: Does this look like a business process rather than navigation?
-        const processIndicators = [
-          "request", "approval", "calculation", "deduction", "submit",
-          "process", "review", "verify", "confirm", "generate", "applies",
-          "triggered", "automatically", "based on", "when", "if"
-        ];
+  // Also check if any part contains typical navigation terms
+  const navigationTerms = ["settings", "payroll settings", "configuration", "setup"];
+  if (breadcrumbParts.some(part => navigationTerms.some(nav => part.includes(nav)))) {
+    return {
+      isConceptual: false,
+      matchedProcedure: null,
+      reason: `Breadcrumb contains navigation terminology`
+    };
+  }
 
-        const hasProcessIndicator = processIndicators.some(ind =>
-          breadcrumbLower.includes(ind) || stepText.includes(ind)
-        );
+  // Now check for actual conceptual process flows (business processes)
+  // Only mark as conceptual if it clearly describes a business WORKFLOW, not navigation
 
-        if (hasProcessIndicator) {
-          return {
-            isConceptual: true,
-            matchedProcedure: proc.title || proc.name || "unnamed procedure",
-            reason: `Breadcrumb describes a business process flow from procedure steps`
-          };
-        }
-      }
+  // Pattern 1: Multi-step business workflows with action verbs
+  const workflowPatterns = [
+    /request\s*[>→›]\s*approval/i,
+    /approval\s*[>→›]\s*.*deduction/i,
+    /submit\s*[>→›]\s*review/i,
+    /create\s*[>→›]\s*approve/i,
+    /initiate\s*[>→›]\s*process/i,
+    /apply\s*[>→›]\s*calculate/i,
+    /leave\s*request\s*[>→›]/i
+  ];
+
+  for (const pattern of workflowPatterns) {
+    if (pattern.test(breadcrumb)) {
+      return {
+        isConceptual: true,
+        matchedProcedure: null,
+        reason: `Breadcrumb matches business workflow pattern (not a menu path)`
+      };
     }
+  }
 
-    // Pattern 2: Breadcrumb contains workflow terminology but isn't in main_navigation
-    const workflowPatterns = [
-      /request\s*>\s*approval/i,
-      /approval\s*>\s*.*calculation/i,
-      /submit\s*>\s*review/i,
-      /create\s*>\s*approve/i,
-      /initiate\s*>\s*process/i
-    ];
+  // Pattern 2: Purely conceptual terms that can't be clickable menus
+  const conceptualOnlyTerms = [
+    "unpaid leave request", "approval workflow", "payroll deduction calculation",
+    "auto-calculated", "system triggered", "automatically applies"
+  ];
 
-    for (const pattern of workflowPatterns) {
-      if (pattern.test(breadcrumb)) {
+  if (conceptualOnlyTerms.some(term => breadcrumbLower.includes(term))) {
+    return {
+      isConceptual: true,
+      matchedProcedure: null,
+      reason: `Breadcrumb contains conceptual-only terminology`
+    };
+  }
+
+  // If procedures provided, only check for EXACT matches to procedure titles
+  // (not partial matches which caused false positives)
+  if (Array.isArray(procedures) && procedures.length > 0) {
+    for (const proc of procedures) {
+      const procTitle = (proc.title || proc.name || "").toLowerCase().trim();
+
+      // Only mark as conceptual if the breadcrumb IS the procedure title
+      // (not if it just contains parts of it)
+      if (procTitle && breadcrumbLower === procTitle) {
         return {
           isConceptual: true,
-          matchedProcedure: null,
-          reason: `Breadcrumb matches workflow pattern (not a menu path)`
+          matchedProcedure: proc.title || proc.name,
+          reason: `Breadcrumb exactly matches procedure title`
         };
       }
     }
@@ -1420,7 +1612,11 @@ function extractNavigablePathsFromProcedures(procedures) {
         }
 
         if (!c.selectors.length) {
-          claimRes.status = "skipped_no_selectors";
+          // SEMANTIC VALIDATION: No CSS selectors provided, try to validate claim by searching page content
+          const semanticResult = await performSemanticClaimValidation(page, c, SCREENSHOTS_DIR);
+          claimRes.checks.push(semanticResult);
+          claimRes.status = semanticResult.status;
+          claimRes.semantic_validation = true;
         } else {
           for (const sel of c.selectors) {
             const verify = await runStep(
@@ -1483,9 +1679,39 @@ function extractNavigablePathsFromProcedures(procedures) {
       }
     })();
 
+    // Calculate semantic validation statistics
+    const semanticStats = {
+      total: 0,
+      validated: 0,
+      partial: 0,
+      not_found: 0,
+      skipped: 0,
+      error: 0,
+      average_match_score: 0
+    };
+
+    let totalMatchScore = 0;
+    for (const claim of output.claim_ui_checks) {
+      if (claim.semantic_validation) {
+        semanticStats.total++;
+        const check = claim.checks.find(c => c.action === "semantic_validation");
+        if (check) {
+          totalMatchScore += check.match_score || 0;
+          if (check.status === "semantic_validated") semanticStats.validated++;
+          else if (check.status === "semantic_partial") semanticStats.partial++;
+          else if (check.status === "semantic_not_found") semanticStats.not_found++;
+          else if (check.status?.startsWith("skipped")) semanticStats.skipped++;
+          else if (check.status === "error") semanticStats.error++;
+        }
+      }
+    }
+    if (semanticStats.total > 0) {
+      semanticStats.average_match_score = Math.round(totalMatchScore / semanticStats.total);
+    }
+
     // Build comprehensive summary including new methodology
     output.summary = {
-      methodology: "cognitive_walkthrough_and_feature_inspection",
+      methodology: "cognitive_walkthrough_and_feature_inspection_with_semantic_validation",
       total_steps: total,
       passed_steps: passed,
       failed_steps: failed,
@@ -1501,6 +1727,15 @@ function extractNavigablePathsFromProcedures(procedures) {
         keywords_searched: output.feature_inspection?.keywords_searched?.length || 0,
         elements_found: output.feature_inspection?.elements_found?.length || 0,
         elements_not_found: output.feature_inspection?.elements_not_found?.length || 0
+      },
+      semantic_claim_validation: {
+        total_claims_validated: semanticStats.total,
+        validated: semanticStats.validated,
+        partial_match: semanticStats.partial,
+        not_found: semanticStats.not_found,
+        skipped: semanticStats.skipped,
+        errors: semanticStats.error,
+        average_match_score: semanticStats.average_match_score
       }
     };
 

@@ -56,20 +56,32 @@ jobs:
           FEATURE_SLUG="${{ inputs.feature_slug }}"
           OUTPUT_DIR="outputs/${FEATURE_SLUG}"
 
-          # Find existing versions
+          # Find existing versions - check both old and new structures
           if [ -d "$OUTPUT_DIR" ]; then
-            LATEST_VERSION=$(ls -1 "$OUTPUT_DIR"/user-guide_v*.html 2>/dev/null | sed 's/.*_v\([0-9]*\)\.html/\1/' | sort -n | tail -1)
-            if [ -z "$LATEST_VERSION" ]; then
-              VERSION=1
+            # New structure: outputs/{feature}/v{n}/user-guide.html
+            NEW_LATEST=$(ls -1d "$OUTPUT_DIR"/v* 2>/dev/null | sed 's/.*\/v\([0-9]*\)$/\1/' | sort -n | tail -1)
+
+            # Old structure (fallback): outputs/{feature}/user-guide_v{n}.html
+            OLD_LATEST=$(ls -1 "$OUTPUT_DIR"/user-guide_v*.html 2>/dev/null | sed 's/.*_v\([0-9]*\)\.html/\1/' | sort -n | tail -1)
+
+            # Use the higher of the two
+            if [ -n "$NEW_LATEST" ] && [ -n "$OLD_LATEST" ]; then
+              LATEST_VERSION=$((NEW_LATEST > OLD_LATEST ? NEW_LATEST : OLD_LATEST))
+            elif [ -n "$NEW_LATEST" ]; then
+              LATEST_VERSION=$NEW_LATEST
+            elif [ -n "$OLD_LATEST" ]; then
+              LATEST_VERSION=$OLD_LATEST
             else
-              VERSION=$((LATEST_VERSION + 1))
+              LATEST_VERSION=0
             fi
+
+            VERSION=$((LATEST_VERSION + 1))
           else
             VERSION=1
           fi
 
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "📊 Version: v$VERSION"
+          echo "📊 Version: v$VERSION (new versioned structure: outputs/${FEATURE_SLUG}/v${VERSION}/)"
 
       - name: Verify input files exist
         id: verify
@@ -95,20 +107,38 @@ jobs:
           echo "✅ Jira: $JIRA_FILE"
           echo "jira_file=$JIRA_FILE" >> $GITHUB_OUTPUT
 
-          # Check validation files
-          if [ ! -f ".validation/output/result.json" ]; then
-            echo "❌ Validation result.json not found"
-            exit 1
-          fi
-          echo "✅ Validation: .validation/output/result.json"
+          # Check validation files - use versioned path structure
+          VALIDATION_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
 
-          # Check screenshots
-          SCREENSHOT_COUNT=$(ls .validation/output/screenshots/*.png 2>/dev/null | wc -l | tr -d ' ')
-          if [ "$SCREENSHOT_COUNT" -eq 0 ]; then
-            echo "❌ No screenshots found"
+          # Fallback to flat structure if versioned doesn't exist (backwards compatibility)
+          if [ ! -d "$VALIDATION_DIR" ]; then
+            echo "⚠️ Versioned validation dir not found, checking flat structure..."
+            VALIDATION_DIR=".validation/output"
+          fi
+          echo "validation_dir=$VALIDATION_DIR" >> $GITHUB_OUTPUT
+
+          # Check for pw_result.json (primary) or result.json (fallback)
+          if [ -f "${VALIDATION_DIR}/pw_result.json" ]; then
+            echo "✅ Validation: ${VALIDATION_DIR}/pw_result.json"
+          elif [ -f "${VALIDATION_DIR}/result.json" ]; then
+            echo "✅ Validation: ${VALIDATION_DIR}/result.json"
+          else
+            echo "❌ Validation result not found in ${VALIDATION_DIR}"
             exit 1
           fi
-          echo "✅ Screenshots: $SCREENSHOT_COUNT files"
+
+          # Check screenshots - try versioned path first
+          if [ -d "${VALIDATION_DIR}/screenshots" ]; then
+            SCREENSHOT_COUNT=$(ls ${VALIDATION_DIR}/screenshots/*.png 2>/dev/null | wc -l | tr -d ' ')
+          else
+            SCREENSHOT_COUNT=0
+          fi
+
+          if [ "$SCREENSHOT_COUNT" -eq 0 ]; then
+            echo "❌ No screenshots found in ${VALIDATION_DIR}/screenshots/"
+            exit 1
+          fi
+          echo "✅ Screenshots: $SCREENSHOT_COUNT files in ${VALIDATION_DIR}/screenshots/"
           echo "screenshot_count=$SCREENSHOT_COUNT" >> $GITHUB_OUTPUT
 
           # Check template
@@ -140,17 +170,22 @@ jobs:
           echo "📄 Jira: $JIRA_FILE"
           cp "$JIRA_FILE" .generation-input/jira-report.md
 
-          # 3. Copy validation results
-          cp .validation/output/result.json .generation-input/validation-result.json
-          if [ -f ".validation/output/pw_result.json" ]; then
-            cp .validation/output/pw_result.json .generation-input/pw-result.json
+          # 3. Copy validation results - use versioned path from verify step
+          VALIDATION_DIR="${{ steps.verify.outputs.validation_dir }}"
+          echo "📂 Using validation directory: $VALIDATION_DIR"
+
+          if [ -f "${VALIDATION_DIR}/pw_result.json" ]; then
+            cp "${VALIDATION_DIR}/pw_result.json" .generation-input/pw-result.json
+            cp "${VALIDATION_DIR}/pw_result.json" .generation-input/validation-result.json
+          elif [ -f "${VALIDATION_DIR}/result.json" ]; then
+            cp "${VALIDATION_DIR}/result.json" .generation-input/validation-result.json
           fi
 
           # 4. Copy template
           cp clean-template-reorganized.html .generation-input/template.html
 
-          # 5. List screenshots
-          ls -1 .validation/output/screenshots/*.png > .generation-input/screenshot-list.txt 2>/dev/null || echo "No screenshots" > .generation-input/screenshot-list.txt
+          # 5. List screenshots from versioned directory
+          ls -1 ${VALIDATION_DIR}/screenshots/*.png > .generation-input/screenshot-list.txt 2>/dev/null || echo "No screenshots" > .generation-input/screenshot-list.txt
 
           # 6. Create consolidated prompt file with all content
           cat > .generation-input/full-prompt.md << 'PROMPT_END'
@@ -199,26 +234,54 @@ jobs:
           export ANTHROPIC_API_KEY=$(echo "$ANTHROPIC_API_KEY" | tr -d '[:space:]')
 
           VERSION="${{ steps.version.outputs.version }}"
+          VALIDATION_DIR="${{ steps.verify.outputs.validation_dir }}"
           echo "📝 Generating user guide v$VERSION for: ${FEATURE_SLUG} (${FEATURE_NAME})"
 
-          # Create output directory
-          mkdir -p "outputs/${FEATURE_SLUG}/screenshots"
+          # Create VERSIONED output directory structure
+          OUTPUT_DIR="outputs/${FEATURE_SLUG}/v${VERSION}"
+          mkdir -p "${OUTPUT_DIR}/screenshots"
+          echo "📁 Output directory: ${OUTPUT_DIR}"
 
-          # Copy screenshots to output
-          cp .validation/output/screenshots/*.png "outputs/${FEATURE_SLUG}/screenshots/" 2>/dev/null || echo "No screenshots to copy"
+          # Copy screenshots from versioned validation directory to versioned output
+          if [ -d "${VALIDATION_DIR}/screenshots" ]; then
+            cp ${VALIDATION_DIR}/screenshots/*.png "${OUTPUT_DIR}/screenshots/" 2>/dev/null && \
+              echo "✅ Copied screenshots from ${VALIDATION_DIR}/screenshots/" || \
+              echo "⚠️ No screenshots to copy"
+          else
+            echo "⚠️ Screenshots directory not found: ${VALIDATION_DIR}/screenshots/"
+          fi
+
+          # Copy Jira and Zendesk reports to versioned output for self-contained documentation
+          JIRA_FILE="${{ steps.verify.outputs.jira_file }}"
+          ZENDESK_FILE="${{ steps.verify.outputs.zendesk_file }}"
+
+          if [ -f "$JIRA_FILE" ]; then
+            cp "$JIRA_FILE" "${OUTPUT_DIR}/jira-report.md"
+            echo "✅ Copied Jira report to ${OUTPUT_DIR}/jira-report.md"
+          else
+            echo "⚠️ Jira report not found: $JIRA_FILE"
+          fi
+
+          if [ -f "$ZENDESK_FILE" ]; then
+            cp "$ZENDESK_FILE" "${OUTPUT_DIR}/zendesk-report.md"
+            echo "✅ Copied Zendesk report to ${OUTPUT_DIR}/zendesk-report.md"
+          else
+            echo "⚠️ Zendesk report not found: $ZENDESK_FILE"
+          fi
 
           # Run claude (step-level timeout-minutes: 20 handles timeout on macOS)
           echo "⏱️ Starting Claude generation..."
           echo "📄 Input prompt size: ${{ steps.preprocess.outputs.prompt_size }} bytes"
 
           # Pass prompt as argument to claude --print
-          claude --print "$(cat .generation-input/full-prompt.md)" > "outputs/${FEATURE_SLUG}/user-guide_v${VERSION}.html"
+          claude --print "$(cat .generation-input/full-prompt.md)" > "${OUTPUT_DIR}/user-guide.html"
 
           # Verify output was created
-          OUTPUT_FILE="outputs/${FEATURE_SLUG}/user-guide_v${VERSION}.html"
+          OUTPUT_FILE="${OUTPUT_DIR}/user-guide.html"
           if [ -f "$OUTPUT_FILE" ] && [ -s "$OUTPUT_FILE" ]; then
             OUTPUT_SIZE=$(wc -c < "$OUTPUT_FILE" | tr -d ' ')
             echo "✅ User guide generated: ${OUTPUT_SIZE} bytes"
+            echo "📁 Location: ${OUTPUT_FILE}"
           else
             echo "❌ Output file is empty or missing"
             exit 1
@@ -248,13 +311,17 @@ jobs:
             echo "committed=true" >> $GITHUB_OUTPUT
           fi
 
-          # Set output paths
-          FILE_PATH="outputs/${FEATURE_SLUG}/user-guide_v${VERSION}.html"
+          # Set VERSIONED output paths
+          OUTPUT_DIR="outputs/${FEATURE_SLUG}/v${VERSION}"
+          FILE_PATH="${OUTPUT_DIR}/user-guide.html"
+          SCREENSHOTS_PATH="${OUTPUT_DIR}/screenshots"
           GITHUB_URL="https://raw.githubusercontent.com/${{ github.repository }}/main/${FILE_PATH}"
           JIRA_GITHUB_URL="https://raw.githubusercontent.com/${{ github.repository }}/main/${{ steps.verify.outputs.jira_file }}"
           ZENDESK_GITHUB_URL="https://raw.githubusercontent.com/${{ github.repository }}/main/${{ steps.verify.outputs.zendesk_file }}"
 
+          echo "output_dir=$OUTPUT_DIR" >> $GITHUB_OUTPUT
           echo "file_path=$FILE_PATH" >> $GITHUB_OUTPUT
+          echo "screenshots_path=$SCREENSHOTS_PATH" >> $GITHUB_OUTPUT
           echo "github_url=$GITHUB_URL" >> $GITHUB_OUTPUT
           echo "jira_github_url=$JIRA_GITHUB_URL" >> $GITHUB_OUTPUT
           echo "zendesk_github_url=$ZENDESK_GITHUB_URL" >> $GITHUB_OUTPUT
@@ -271,8 +338,12 @@ jobs:
       - name: Count validated claims
         id: claims
         run: |
-          if [ -f ".validation/output/result.json" ]; then
-            CLAIMS_COUNT=$(cat .validation/output/result.json | python3 -c "import sys, json; d=json.load(sys.stdin); print(len(d.get('validated_claims', [])))" 2>/dev/null || echo "0")
+          VALIDATION_DIR="${{ steps.verify.outputs.validation_dir }}"
+          # Try pw_result.json first (Playwright output), then result.json
+          if [ -f "${VALIDATION_DIR}/pw_result.json" ]; then
+            CLAIMS_COUNT=$(cat "${VALIDATION_DIR}/pw_result.json" | python3 -c "import sys, json; d=json.load(sys.stdin); print(len(d.get('claim_ui_checks', [])))" 2>/dev/null || echo "0")
+          elif [ -f "${VALIDATION_DIR}/result.json" ]; then
+            CLAIMS_COUNT=$(cat "${VALIDATION_DIR}/result.json" | python3 -c "import sys, json; d=json.load(sys.stdin); print(len(d.get('validated_claims', [])))" 2>/dev/null || echo "0")
           else
             CLAIMS_COUNT=0
           fi
@@ -293,7 +364,9 @@ jobs:
               "feature_slug": "${{ inputs.feature_slug }}",
               "feature_name": "${{ inputs.feature_name }}",
               "version": '"$VERSION"',
+              "output_dir": "${{ steps.commit.outputs.output_dir }}",
               "file_path": "${{ steps.commit.outputs.file_path }}",
+              "screenshots_path": "${{ steps.commit.outputs.screenshots_path }}",
               "github_url": "${{ steps.commit.outputs.github_url }}",
               "jira_report_path": "${{ inputs.jira_report_path }}",
               "jira_report_github_url": "${{ steps.commit.outputs.jira_github_url }}",
@@ -384,8 +457,17 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           echo "🎉 User guide generation complete!"
-          echo "📁 Output: outputs/${{ inputs.feature_slug }}/user-guide_v${VERSION}.html"
+          echo ""
+          echo "📂 Versioned Output Structure (self-contained):"
+          echo "   outputs/${{ inputs.feature_slug }}/v${VERSION}/"
+          echo "   ├── user-guide.html"
+          echo "   ├── screenshots/*.png"
+          echo "   ├── jira-report.md"
+          echo "   └── zendesk-report.md"
+          echo ""
+          echo "📁 User Guide: ${{ steps.commit.outputs.file_path }}"
+          echo "📸 Screenshots: ${{ steps.commit.outputs.screenshots_path }}"
           echo "🔗 GitHub URL: ${{ steps.commit.outputs.github_url }}"
-          echo "📊 Screenshots: ${{ steps.verify.outputs.screenshot_count }}"
-          echo "📋 Validated claims: ${{ steps.claims.outputs.claims_count }}"
+          echo "📊 Screenshot Count: ${{ steps.verify.outputs.screenshot_count }}"
+          echo "📋 Validated Claims: ${{ steps.claims.outputs.claims_count }}"
           echo "⏱️ Duration: ${{ steps.duration.outputs.duration }}s"
