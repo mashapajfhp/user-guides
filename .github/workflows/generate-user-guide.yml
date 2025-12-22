@@ -211,9 +211,9 @@ jobs:
           echo "⏱️ Starting Claude with 15-minute timeout..."
           echo "📄 Input prompt size: ${{ steps.preprocess.outputs.prompt_size }} bytes"
 
-          # Use cat to pipe the prompt to claude
+          # Pass prompt as argument to claude --print
           timeout --signal=TERM --kill-after=30 900 bash -c '
-            cat .generation-input/full-prompt.md | claude --print "$(cat)" > "outputs/'"${FEATURE_SLUG}"'/user-guide_v'"${VERSION}"'.html"
+            claude --print "$(cat .generation-input/full-prompt.md)" > "outputs/'"${FEATURE_SLUG}"'/user-guide_v'"${VERSION}"'.html"
           ' || {
             EXIT_CODE=$?
             if [ $EXIT_CODE -eq 124 ]; then
