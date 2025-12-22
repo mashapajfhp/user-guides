@@ -120,47 +120,101 @@ jobs:
 
           echo "start_time=$START_TIME" >> $GITHUB_OUTPUT
 
+      - name: Preprocess input files
+        id: preprocess
+        env:
+          FEATURE_SLUG: ${{ inputs.feature_slug }}
+        run: |
+          echo "📂 Preprocessing input files for: ${FEATURE_SLUG}"
+
+          # Create temp directory for consolidated input
+          mkdir -p .generation-input
+
+          # 1. Get latest Zendesk report
+          ZENDESK_FILE=$(ls -t reports/zendesk/${FEATURE_SLUG}/versions/zendesk_md_*.md 2>/dev/null | head -1)
+          echo "📄 Zendesk: $ZENDESK_FILE"
+          cp "$ZENDESK_FILE" .generation-input/zendesk-report.md
+
+          # 2. Get latest Jira report
+          JIRA_FILE=$(ls -t reports/jira/${FEATURE_SLUG}/versions/v1/runs/jira-analysis_*.md 2>/dev/null | head -1)
+          echo "📄 Jira: $JIRA_FILE"
+          cp "$JIRA_FILE" .generation-input/jira-report.md
+
+          # 3. Copy validation results
+          cp .validation/output/result.json .generation-input/validation-result.json
+          if [ -f ".validation/output/pw_result.json" ]; then
+            cp .validation/output/pw_result.json .generation-input/pw-result.json
+          fi
+
+          # 4. Copy template
+          cp clean-template-reorganized.html .generation-input/template.html
+
+          # 5. List screenshots
+          ls -1 .validation/output/screenshots/*.png > .generation-input/screenshot-list.txt 2>/dev/null || echo "No screenshots" > .generation-input/screenshot-list.txt
+
+          # 6. Create consolidated prompt file with all content
+          cat > .generation-input/full-prompt.md << 'PROMPT_END'
+          # User Guide Generation Task
+
+          Generate a complete HTML user guide by filling in the template with content from the source files below.
+
+          ## Instructions
+          1. Read the ZENDESK REPORT for feature documentation and help content
+          2. Read the JIRA REPORT for known issues, limitations, and customer requests
+          3. Read the VALIDATION RESULT for verified interface elements and screenshots
+          4. Use the TEMPLATE structure - replace all [PLACEHOLDER] text with real content
+          5. Output ONLY the final HTML - no explanations, no markdown code blocks
+
+          PROMPT_END
+
+          echo -e "\n---\n## ZENDESK REPORT\n---\n" >> .generation-input/full-prompt.md
+          cat .generation-input/zendesk-report.md >> .generation-input/full-prompt.md
+
+          echo -e "\n---\n## JIRA REPORT\n---\n" >> .generation-input/full-prompt.md
+          cat .generation-input/jira-report.md >> .generation-input/full-prompt.md
+
+          echo -e "\n---\n## VALIDATION RESULT\n---\n" >> .generation-input/full-prompt.md
+          cat .generation-input/validation-result.json >> .generation-input/full-prompt.md
+
+          echo -e "\n---\n## AVAILABLE SCREENSHOTS\n---\n" >> .generation-input/full-prompt.md
+          cat .generation-input/screenshot-list.txt >> .generation-input/full-prompt.md
+
+          echo -e "\n---\n## HTML TEMPLATE (fill this in)\n---\n" >> .generation-input/full-prompt.md
+          cat .generation-input/template.html >> .generation-input/full-prompt.md
+
+          # Get file size
+          PROMPT_SIZE=$(wc -c < .generation-input/full-prompt.md | tr -d ' ')
+          echo "📊 Total prompt size: ${PROMPT_SIZE} bytes"
+          echo "prompt_size=$PROMPT_SIZE" >> $GITHUB_OUTPUT
+
+          echo "✅ Preprocessing complete"
+
       - name: Generate User Guide
         timeout-minutes: 20
         env:
           FEATURE_SLUG: ${{ inputs.feature_slug }}
           FEATURE_NAME: ${{ inputs.feature_name }}
-          CLEAN_FEATURE_NAME: ${{ inputs.clean_feature_name }}
         run: |
           # Normalize API key (remove any whitespace/newlines)
           export ANTHROPIC_API_KEY=$(echo "$ANTHROPIC_API_KEY" | tr -d '[:space:]')
 
           VERSION="${{ steps.version.outputs.version }}"
-          echo "📝 Generating user guide v$VERSION for: ${FEATURE_SLUG}"
+          echo "📝 Generating user guide v$VERSION for: ${FEATURE_SLUG} (${FEATURE_NAME})"
 
-          # Export all required variables for the agent
-          export REPO_ROOT="$(pwd)"
-          export OUTPUT_VERSION="${VERSION}"
-          export ZENDESK_REPORT="reports/zendesk/${FEATURE_SLUG}/versions/"
-          export JIRA_REPORT="reports/jira/${FEATURE_SLUG}/versions/v1/runs/"
-          export SCREENSHOTS_DIR=".validation/output/screenshots/"
-          export VALIDATION_DIR=".validation/output/"
-          export TEMPLATE_PATH="clean-template-reorganized.html"
-          export OUTPUT_DIR="outputs/${FEATURE_SLUG}"
+          # Create output directory
+          mkdir -p "outputs/${FEATURE_SLUG}/screenshots"
+
+          # Copy screenshots to output
+          cp .validation/output/screenshots/*.png "outputs/${FEATURE_SLUG}/screenshots/" 2>/dev/null || echo "No screenshots to copy"
 
           # Run claude with timeout (15 minutes = 900 seconds)
-          # Using timeout command to prevent orphaned processes
           echo "⏱️ Starting Claude with 15-minute timeout..."
-          timeout --signal=TERM --kill-after=30 900 claude --print "Generate the complete user guide for the ${FEATURE_SLUG} feature (${FEATURE_NAME}).
+          echo "📄 Input prompt size: ${{ steps.preprocess.outputs.prompt_size }} bytes"
 
-          FEATURE_SLUG: ${FEATURE_SLUG}
-          FEATURE_NAME: ${FEATURE_NAME}
-          VERSION: ${VERSION}
-
-          Input files:
-          - Zendesk report: ${ZENDESK_REPORT} (use latest file)
-          - Jira report: ${JIRA_REPORT} (use latest file)
-          - Screenshots: ${SCREENSHOTS_DIR}
-          - Validation: ${VALIDATION_DIR}result.json and pw_result.json
-          - Template: ${TEMPLATE_PATH}
-
-          Output to: ${OUTPUT_DIR}/user-guide_v${VERSION}.html
-          Copy screenshots to: ${OUTPUT_DIR}/screenshots/" || {
+          # Use cat to pipe the prompt to claude
+          timeout --signal=TERM --kill-after=30 900 bash -c '
+            cat .generation-input/full-prompt.md | claude --print "$(cat)" > "outputs/'"${FEATURE_SLUG}"'/user-guide_v'"${VERSION}"'.html"
+          ' || {
             EXIT_CODE=$?
             if [ $EXIT_CODE -eq 124 ]; then
               echo "❌ Claude timed out after 15 minutes"
@@ -169,7 +223,16 @@ jobs:
             fi
             exit $EXIT_CODE
           }
-          echo "✅ Claude completed successfully"
+
+          # Verify output was created
+          OUTPUT_FILE="outputs/${FEATURE_SLUG}/user-guide_v${VERSION}.html"
+          if [ -f "$OUTPUT_FILE" ] && [ -s "$OUTPUT_FILE" ]; then
+            OUTPUT_SIZE=$(wc -c < "$OUTPUT_FILE" | tr -d ' ')
+            echo "✅ User guide generated: ${OUTPUT_SIZE} bytes"
+          else
+            echo "❌ Output file is empty or missing"
+            exit 1
+          fi
 
       - name: Commit and push user guide
         id: commit
