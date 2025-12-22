@@ -2,10 +2,10 @@
   "feature_name": "Daily Wage Calculator",
   "claims_to_validate": [
     {
-      "claim_id": "daily_wage_calc_001",
+      "claim_id": "daily_pay_calculation_accuracy",
       "claim_type": "calculation_rule",
-      "claim_text": "Daily pay is calculated by dividing total salary by actual working days",
-      "validation_hint": "Verify calculation matches documented formula",
+      "claim_text": "Daily pay is calculated by dividing total salary by the number of actual working days, excluding public holidays",
+      "validation_hint": "Verify calculation matches: Salary / (Total Working Days - Public Holidays)",
       "source": "zendesk",
       "severity": "medium",
       "source_refs": [
@@ -13,10 +13,10 @@
       ]
     },
     {
-      "claim_id": "daily_wage_calc_002",
+      "claim_id": "leave_policy_flexibility",
       "claim_type": "system_behavior",
-      "claim_text": "Public holidays are automatically subtracted from working days calculation",
-      "validation_hint": "Check holiday subtraction in calculation",
+      "claim_text": "System supports both calendar days (30) and working days (22) leave policies",
+      "validation_hint": "Test daily pay calculation with both calendar and working day configurations",
       "source": "zendesk",
       "severity": "medium",
       "source_refs": [
@@ -24,10 +24,10 @@
       ]
     },
     {
-      "claim_id": "daily_wage_nav_001",
+      "claim_id": "navigation_path",
       "claim_type": "navigation",
-      "claim_text": "User can navigate to Daily Wage Calculator via Settings → Payroll → Daily Wage Calculation",
-      "validation_hint": "Verify navigation path exists",
+      "claim_text": "User can access Daily Wage Calculator via Settings → Payroll → Daily Wage Calculation",
+      "validation_hint": "Verify navigation path exists and leads to correct page",
       "source": "zendesk",
       "severity": "medium",
       "source_refs": [
@@ -35,21 +35,32 @@
       ]
     },
     {
-      "claim_id": "navigation_path_exists",
-      "claim_type": "navigation",
-      "claim_text": "Super admin can navigate to Settings > Payroll > Daily wage calculation",
-      "validation_hint": "Verify menu path accessibility",
-      "source": "zendesk",
-      "severity": "medium",
-      "source_refs": [
-        14243760419089
-      ]
-    },
-    {
-      "claim_id": "calculation_basis_selection",
+      "claim_id": "calculation_base_selection",
       "claim_type": "ui_step",
-      "claim_text": "User can select from custom days, calendar days, or working days calculation basis",
-      "validation_hint": "Verify dropdown/selection options are present",
+      "claim_text": "User can select between calendar days, working days, and custom days",
+      "validation_hint": "Check that all three calculation base options are available",
+      "source": "zendesk",
+      "severity": "medium",
+      "source_refs": [
+        14243704039185
+      ]
+    },
+    {
+      "claim_id": "salary_component_selection",
+      "claim_type": "ui_step",
+      "claim_text": "User can choose salary components: basic salary, basic salary plus allowances, or allowances only",
+      "validation_hint": "Verify all three salary component options can be selected",
+      "source": "zendesk",
+      "severity": "medium",
+      "source_refs": [
+        14243704039185
+      ]
+    },
+    {
+      "claim_id": "navigation_path_001",
+      "claim_type": "navigation",
+      "claim_text": "Super admin can navigate to Daily wage calculation via Settings > Payroll",
+      "validation_hint": "Verify UI path and accessibility",
       "source": "zendesk",
       "severity": "medium",
       "source_refs": [
@@ -57,31 +68,31 @@
       ]
     },
     {
-      "claim_id": "payroll_table_update",
+      "claim_id": "calculation_basis_001",
+      "claim_type": "calculation_rule",
+      "claim_text": "Supports three calculation bases: custom days, calendar days, working days",
+      "validation_hint": "Verify all three calculation methods are available and functional",
+      "source": "zendesk",
+      "severity": "medium",
+      "source_refs": [
+        14243760419089
+      ]
+    },
+    {
+      "claim_id": "system_behavior_001",
       "claim_type": "system_behavior",
-      "claim_text": "Changes to proration settings immediately affect all active (unpaid) amounts in payroll table",
-      "validation_hint": "Verify payroll table updates after saving proration settings",
+      "claim_text": "Changes to proration settings immediately affect all active (unpaid) payroll amounts",
+      "validation_hint": "Test impact of proration setting changes on payroll calculations",
       "source": "zendesk",
       "severity": "medium",
       "source_refs": [
         14243760419089
-      ]
-    },
-    {
-      "claim_id": "payroll_automation_gap",
-      "claim_type": "known_issue",
-      "claim_text": "The current Bayzat payroll system lacks automated salary calculation based on precise working days. The platform cannot dynamically adjust salaries proportionally when employees work more or fewer than the standard 26 working days.",
-      "validation_hint": "",
-      "source": "jira",
-      "severity": "high",
-      "source_refs": [
-        "TSSD-4905"
       ]
     },
     {
       "claim_id": "daily_wage_formula_override",
       "claim_type": "known_issue",
-      "claim_text": "The system shows a greyed-out formula in the leave policy that is overridden by the daily wage calculator configured in payroll settings. This creates user confusion about which formula is actually being applied for unpaid leave deductions.",
+      "claim_text": "The daily wage calculator in payroll settings intentionally overrides the formula configured in leave policy for unpaid leave. The leave policy formula appears greyed out, indicating it is not active. This creates user confusion about which formula is actually being applied for daily wage calculations.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -95,18 +106,19 @@
       "claim_text": "System failed to recalculate pending unpaid leave deductions when new salary configurations were created after leave request submission. Deductions were incorrectly based on previous salary configuration instead of current one, resulting in payroll calculation discrepancies.",
       "validation_hint": "",
       "source": "jira",
-      "severity": "high",
+      "severity": "high | medium",
       "source_refs": [
-        "TSSD-1581"
+        "TSSD-1581",
+        "TSSD-4368"
       ]
     },
     {
       "claim_id": "leap_year_calculation_error",
       "claim_type": "known_issue",
-      "claim_text": "The End of Service (EOS) gratuity calculator incorrectly handles leap years by defaulting to 365 days instead of 366 days for 2024, resulting in an inaccurate total service period and gratuity amount calculation.",
+      "claim_text": "The system incorrectly calculates service days by using 365 days instead of 366 days for 2024, resulting in an inaccurate gratuity amount. When calculating End of Service (EOS) gratuity, the system fails to recognize 2024 as a leap year, causing a calculation discrepancy of approximately AED 17.26.",
       "validation_hint": "",
       "source": "jira",
-      "severity": "high",
+      "severity": "medium",
       "source_refs": [
         "TSSD-4179"
       ]
@@ -123,20 +135,21 @@
       ]
     },
     {
-      "claim_id": "gratuity_calculation_discrepancy",
+      "claim_id": "gratuity_calculation_complexity",
       "claim_type": "known_issue",
-      "claim_text": "System gratuity calculation (AED 231,821) slightly differs from manual calculation (AED 252,485), with detailed breakdown showing system follows a specific calculation logic",
+      "claim_text": "The daily wage calculator's gratuity calculation involves complex logic for handling partial years of service, especially for periods above 5 years. The system uses different calculation approaches for complete and incomplete years, including specific handling for leap years by using 366 as a divisor when appropriate.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
       "source_refs": [
-        "TSSD-4742"
+        "TSSD-4742",
+        "TSSD-2252"
       ]
     },
     {
       "claim_id": "leap_year_day_calculation",
       "claim_type": "known_issue",
-      "claim_text": "The system's gratuity calculation may not consistently handle leap year days (specifically February 29th), causing minor discrepancies in total service days calculation. The system calculated 912 days, while manual calculation suggested 913 days by including the leap day.",
+      "claim_text": "System may not consistently account for February 29th when calculating service duration for gratuity, potentially causing minor discrepancies in total days worked (912 vs 913 days)",
       "validation_hint": "",
       "source": "jira",
       "severity": "low",
@@ -145,31 +158,20 @@
       ]
     },
     {
-      "claim_id": "gratuity_calculation_complexity",
+      "claim_id": "daily_wage_calculation_discrepancy",
       "claim_type": "known_issue",
-      "claim_text": "The daily wage calculator's gratuity calculation involves complex logic for handling partial years of service, especially for periods above 5 years. The system calculates service duration with specific rules for leap years, using 366 as a divisor when the partial year includes a leap year, which can differ from manual calculations.",
+      "claim_text": "Platform calculates days worked with a potential extra day (622 vs 623 days), causing slight variations in gratuity calculation. The system uses a fixed divisor of 30 days for daily wage, which may not align with all client calculation preferences.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
-      "source_refs": [
-        "TSSD-2252"
-      ]
-    },
-    {
-      "claim_id": "gratuity_calculation_days_mismatch",
-      "claim_type": "known_issue",
-      "claim_text": "System calculates 623 days instead of 622 days when computing job tenure, potentially causing slight variations in gratuity calculation. An extra day seems to be added incorrectly to the total working days.",
-      "validation_hint": "",
-      "source": "jira",
-      "severity": "low",
       "source_refs": [
         "TSSD-2043"
       ]
     },
     {
-      "claim_id": "daily_wage_divisor_calculation",
+      "claim_id": "daily_wage_divisor_configuration",
       "claim_type": "known_issue",
-      "claim_text": "System calculates leave salary based on predefined policy configuration, which may not align with user expectations about calendar days. The specific case showed a calculation using 30 days instead of 31 days, resulting in a slight salary amount difference (2940 SAR vs expected 2988 SAR).",
+      "claim_text": "System calculates leave salary based on predefined policy configuration, which may not align with user expectations about calendar days. The daily wage is divided by a configured number of days (30 vs 31), potentially causing salary calculation differences.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -178,9 +180,20 @@
       ]
     },
     {
+      "claim_id": "daily_wage_calculation_variation",
+      "claim_type": "known_issue",
+      "claim_text": "The daily wage calculator's 'working days' setting causes monthly fluctuations in leave salary accrual calculations. The daily wage rate changes based on the number of working days in each month, leading to inconsistent cumulative totals.",
+      "validation_hint": "",
+      "source": "jira",
+      "severity": "medium",
+      "source_refs": [
+        "TSSD-3648"
+      ]
+    },
+    {
       "claim_id": "daily_wage_divisor_mismatch",
       "claim_type": "known_issue",
-      "claim_text": "The system uses different divisors for leave salary and salary proration calculations. Leave salary uses a 30-day divisor, while salary proration uses a 30.42-day divisor, causing calculation discrepancies.",
+      "claim_text": "The system calculates leave salary and salary proration using different daily wage divisors (30 vs 30.42 days), causing calculation discrepancies. Leave salary uses a 30-day divisor while salary proration uses 30.42 days, leading to different prorated amounts.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -189,9 +202,9 @@
       ]
     },
     {
-      "claim_id": "proration_calculation_misunderstanding",
+      "claim_id": "working_days_calculation_misunderstanding",
       "claim_type": "known_issue",
-      "claim_text": "User initially misunderstood how working days are calculated based on work week configuration. The system calculates proration correctly using the configured work week, which in this case had all 7 days marked as working days.",
+      "claim_text": "User initially misunderstood how working days are calculated based on work week configuration. The system was calculating correctly, but the user did not initially understand that their specific work week (NVK Operations) had all 7 days configured as working days.",
       "validation_hint": "",
       "source": "jira",
       "severity": "low",
@@ -200,12 +213,12 @@
       ]
     },
     {
-      "claim_id": "salary_proration_future_departure",
+      "claim_id": "salary_proration_calculation_logic",
       "claim_type": "known_issue",
-      "claim_text": "The system fails to correctly prorate salaries when an employee's departure date is in the future relative to payroll processing. When payroll is processed earlier than the departure date, the system displays the full monthly salary instead of prorating based on actual working days.",
+      "claim_text": "The system fails to correctly prorate salaries when an employee's departure date is in the future relative to payroll processing date. When an employee is offboarded (e.g., on Nov 28th) and payroll is processed earlier (e.g., Nov 27th), the system displays the full monthly salary instead of a prorated amount.",
       "validation_hint": "",
       "source": "jira",
-      "severity": "medium",
+      "severity": "high",
       "source_refs": [
         "TSSD-3058"
       ]
@@ -213,7 +226,7 @@
     {
       "claim_id": "unpaid_leave_deduction_sync",
       "claim_type": "known_issue",
-      "claim_text": "When an unpaid leave request is approved and transaction submitted, then the daily wage calculation is changed and the transaction deleted to recalculate, the system creates duplicate deductions—one with the old calculation and one with the new. Deleting the leave request does not remove associated payroll deductions.",
+      "claim_text": "When an unpaid leave request is approved and transaction submitted, then the daily wage calculation is changed and the transaction deleted to recalculate, the system creates duplicate deductions—one with the old calculation and one with the new. Moving the leave request back to pending/accepted does not resolve the issue. Even after deleting the unpaid leave request entirely, the unpaid leave deduction persists in payroll deductions.",
       "validation_hint": "",
       "source": "jira",
       "severity": "high",
@@ -222,9 +235,9 @@
       ]
     },
     {
-      "claim_id": "unpaid_leave_calculation_mismatch",
+      "claim_id": "public_holiday_timing_calculation",
       "claim_type": "known_issue",
-      "claim_text": "When public holidays are added after a leave request is created, there is a timing mismatch between the Time Off and Payroll modules. This causes inconsistent daily wage calculations, resulting in incorrect salary deduction amounts that cannot be retroactively corrected.",
+      "claim_text": "When public holidays are added after a leave request is created, the daily wage calculation becomes inconsistent between Payroll and Time Off modules. This causes incorrect salary deduction amounts that cannot be retroactively corrected.",
       "validation_hint": "",
       "source": "jira",
       "severity": "high",
@@ -233,20 +246,9 @@
       ]
     },
     {
-      "claim_id": "unpaid_leave_calculation_complexity",
-      "claim_type": "known_issue",
-      "claim_text": "The system calculates unpaid leave deductions using a custom daily wage divisor (30.42 days) instead of calendar days, which can produce deduction amounts that differ from user expectations",
-      "validation_hint": "",
-      "source": "jira",
-      "severity": "medium",
-      "source_refs": [
-        "TSSD-4368"
-      ]
-    },
-    {
       "claim_id": "remark_display_mismatch",
       "claim_type": "known_issue",
-      "claim_text": "The system displays incorrect number of days (31 instead of 29) in remarks for February unpaid leave calculations, despite the actual calculation being mathematically correct. This is a display bug in the remarks field where the wrong number of days is referenced.",
+      "claim_text": "The platform currently displays incorrect remarks for daily wage calculations in February, showing 31 days instead of the actual 29 days for leap years. While the backend calculation remains accurate, the frontend display creates potential user confusion.",
       "validation_hint": "",
       "source": "jira",
       "severity": "low",
@@ -257,7 +259,7 @@
     {
       "claim_id": "unpaid_leave_calculation_override",
       "claim_type": "known_issue",
-      "claim_text": "The system applies a global daily rate configuration that supersedes individual leave policy calculations, potentially causing incorrect unpaid leave deductions by using gross salary instead of basic salary",
+      "claim_text": "The system applies a global daily rate configuration that overrides individual leave policy settings for unpaid leave calculations. This means the daily wage is calculated using a system-wide setting instead of policy-specific methods, potentially leading to incorrect salary deductions.",
       "validation_hint": "",
       "source": "jira",
       "severity": "high",
@@ -268,7 +270,7 @@
     {
       "claim_id": "daily_rate_display_mismatch",
       "claim_type": "known_issue",
-      "claim_text": "The system displays the daily rate from the payroll processing month (May) instead of the leave occurrence month (April), causing user confusion. The actual deduction amount is calculated correctly, but the displayed daily rate is inconsistent with the leave period.",
+      "claim_text": "The system shows the daily rate from the payroll month (May) instead of the leave occurrence month (April), causing user confusion. The actual deduction amount is calculated correctly, but the displayed daily rate does not match the month when leave occurred.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -277,9 +279,9 @@
       ]
     },
     {
-      "claim_id": "working_days_calculation",
+      "claim_id": "payroll_calculation_automation",
       "claim_type": "limitation",
-      "claim_text": "Salary is based on a 26 working days per month standard, calculated as 365 (Days yearly) - 52 (Weekly off) = 313 / 12 = 26.08 working days",
+      "claim_text": "The current Bayzat payroll system lacks automated salary calculation based on precise working days. The platform cannot dynamically adjust salaries proportionally when employees work more or fewer than the standard 26 working days.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -288,9 +290,9 @@
       ]
     },
     {
-      "claim_id": "payroll_configuration_precedence",
+      "claim_id": "daily_wage_formula_precedence",
       "claim_type": "limitation",
-      "claim_text": "For unpaid leave, the daily wage calculator in payroll settings takes precedence over the leave policy formula. The leave policy formula is greyed out and cannot be used.",
+      "claim_text": "Payroll daily wage calculator configuration overrides leave policy formula for unpaid leave calculations. The leave policy formula becomes inactive and is displayed as greyed out.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -299,9 +301,9 @@
       ]
     },
     {
-      "claim_id": "salary_configuration_timing",
+      "claim_id": "salary_configuration_update_timing",
       "claim_type": "limitation",
-      "claim_text": "Leave deduction calculations depend on salary configuration timing. If a new salary configuration is created after a leave request, the system may use outdated salary information for deduction calculations.",
+      "claim_text": "Unpaid leave deductions may not automatically update if salary configuration changes after leave request creation",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -310,9 +312,9 @@
       ]
     },
     {
-      "claim_id": "leap_year_day_count_limitation",
+      "claim_id": "leap_year_service_day_calculation",
       "claim_type": "limitation",
-      "claim_text": "System defaults to 365 days for all years, failing to recognize leap years with 366 days in gratuity calculations.",
+      "claim_text": "The system defaults to 365 days per year, failing to correctly account for leap years when calculating total service days for gratuity computation.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -321,9 +323,9 @@
       ]
     },
     {
-      "claim_id": "daily_wage_proration_calculation",
+      "claim_id": "daily_wage_calculation_precision",
       "claim_type": "limitation",
-      "claim_text": "Daily wage calculations (basic + allowances / 30) consistently produce slightly lower amounts due to decimal precision handling.",
+      "claim_text": "Pro-rated amounts are calculated using (basic + allowances / 30), but suffer from decimal precision errors that consistently underreport amounts.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -334,7 +336,7 @@
     {
       "claim_id": "leave_accrual_monthly_policy",
       "claim_type": "limitation",
-      "claim_text": "Leave days are only accrued at month-end, preventing prorated accrual for mid-month departures",
+      "claim_text": "Leave days are accrued at end of month, preventing inclusion of partial month leave in End of Service (EOS) calculations",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -345,7 +347,7 @@
     {
       "claim_id": "gratuity_calculation_methodology",
       "claim_type": "limitation",
-      "claim_text": "Unclear rules for counting service days, including departure date and leap year days",
+      "claim_text": "Unclear methodology for counting service days, including departure date and leap year days",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -354,9 +356,9 @@
       ]
     },
     {
-      "claim_id": "service_duration_calculation",
+      "claim_id": "calculation_methodology_complexity",
       "claim_type": "limitation",
-      "claim_text": "The system calculates service duration with granular precision, breaking down service periods into specific segments (e.g., years, months, days) with special handling for incomplete years and leap years.",
+      "claim_text": "The system calculates service duration with nuanced rules, including different approaches for years before and after 5 years of service, and specific handling of partial years.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -367,7 +369,7 @@
     {
       "claim_id": "daily_wage_calculation_method",
       "claim_type": "limitation",
-      "claim_text": "Daily wage is calculated using a fixed divisor of 30 days (Basic/30), which cannot be modified or configured to alternative formulas",
+      "claim_text": "Daily wage is calculated using a hardcoded divisor of 30 days (Basic/30), which cannot be modified or configured to alternative formulas like (Basic × 12/365)",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -376,9 +378,9 @@
       ]
     },
     {
-      "claim_id": "policy_driven_calculation_constraints",
+      "claim_id": "leave_salary_calculation_rigidity",
       "claim_type": "limitation",
-      "claim_text": "The platform's leave salary calculation follows predefined policy configurations that cannot be easily overridden for specific scenarios.",
+      "claim_text": "The platform cannot override the standard leave salary calculation method based on policy configurations. Users are bound by the predefined divisor settings for daily wage calculations.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -387,9 +389,9 @@
       ]
     },
     {
-      "claim_id": "working_days_calculation_variation",
+      "claim_id": "working_days_accrual_calculation",
       "claim_type": "limitation",
-      "claim_text": "The daily wage calculator's 'working days' setting causes monthly fluctuations in leave salary accrual calculations. This means the daily wage rate changes based on the number of working days in each month, leading to inconsistent cumulative totals.",
+      "claim_text": "Leave salary accrual is calculated based on working days, which varies month to month",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -400,7 +402,7 @@
     {
       "claim_id": "independent_daily_wage_configurations",
       "claim_type": "limitation",
-      "claim_text": "The system calculates leave salary and salary proration using independent configurations that cannot be automatically aligned.",
+      "claim_text": "The platform calculates leave salary and salary proration using separate configurations that cannot be automatically aligned without manual intervention.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -411,7 +413,7 @@
     {
       "claim_id": "work_week_proration_logic",
       "claim_type": "limitation",
-      "claim_text": "Daily wage proration is calculated based on the specific work week configuration, which may include all 7 days as working days",
+      "claim_text": "Salary proration is calculated based on the specific work week configuration, which may include all 7 days as working days",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -433,7 +435,7 @@
     {
       "claim_id": "leave_payroll_sync_limitation",
       "claim_type": "limitation",
-      "claim_text": "When leave transactions are modified or deleted, the payroll deduction module does not automatically reconcile or remove associated deductions.",
+      "claim_text": "Leave management system does not reliably sync deduction changes with payroll module when leave transactions are modified, deleted, or status is changed.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -442,9 +444,9 @@
       ]
     },
     {
-      "claim_id": "daily_wage_calculation_constraint",
+      "claim_id": "daily_wage_calculation_constraints",
       "claim_type": "limitation",
-      "claim_text": "Daily wage is calculated as: (basic salary + allowance) / working days, where working days exclude weekends and public holidays specific to the employee's country of residence.",
+      "claim_text": "Daily wage is calculated as: (basic salary + allowance) / working days, where working days exclude weekends and public holidays",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -453,9 +455,9 @@
       ]
     },
     {
-      "claim_id": "retroactive_recalculation_restriction",
+      "claim_id": "module_synchronization_limitation",
       "claim_type": "limitation",
-      "claim_text": "The system cannot automatically recalculate salary deductions retroactively when configuration changes occur after initial calculation.",
+      "claim_text": "Time Off module cannot send complete leave request details to Payroll module in real-time, causing calculation inconsistencies",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -464,20 +466,9 @@
       ]
     },
     {
-      "claim_id": "daily_wage_divisor_configuration",
+      "claim_id": "leap_year_calculation",
       "claim_type": "limitation",
-      "claim_text": "System uses 30.42 days as divisor for daily wage calculation, not standard calendar days",
-      "validation_hint": "",
-      "source": "jira",
-      "severity": "medium",
-      "source_refs": [
-        "TSSD-4368"
-      ]
-    },
-    {
-      "claim_id": "calendar_days_calculation",
-      "claim_type": "limitation",
-      "claim_text": "Daily wage calculations are based on the actual calendar days in a month, with specific handling required for months with varying days (especially February in leap years).",
+      "claim_text": "The system may default to 31 days when calculating daily rates for February, instead of using the correct 29 days in leap years.",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -499,7 +490,7 @@
     {
       "claim_id": "daily_rate_calculation_logic",
       "claim_type": "limitation",
-      "claim_text": "Daily rate is calculated as (Basic + Allowances) / Working Days, excluding public holidays. Working days are determined by subtracting public holidays from total calendar days.",
+      "claim_text": "Daily rate is calculated as (Basic + Allowances) / Working Days, excluding public holidays",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -508,9 +499,9 @@
       ]
     },
     {
-      "claim_id": "salary_proration_automation",
+      "claim_id": "automated_salary_calculation",
       "claim_type": "customer_request",
-      "claim_text": "Automated salary calculation based on actual working days",
+      "claim_text": "Automated salary calculation based on 26 working days per month",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -521,7 +512,7 @@
     {
       "claim_id": "formula_synchronization",
       "claim_type": "customer_request",
-      "claim_text": "Consistent Daily Wage Formula Across Leave Policy and Payroll",
+      "claim_text": "Synchronize daily wage formula between leave policy and payroll settings",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -532,7 +523,7 @@
     {
       "claim_id": "accurate_leap_year_calculation",
       "claim_type": "customer_request",
-      "claim_text": "Correct EOS gratuity calculation to properly account for leap years",
+      "claim_text": "Correct EOS Gratuity Calculation to Properly Account for Leap Years",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -543,7 +534,7 @@
     {
       "claim_id": "accurate_eos_calculation",
       "claim_type": "customer_request",
-      "claim_text": "Precise pro-rated End of Service amount calculation",
+      "claim_text": "Precise Pro-Rated End of Service Amount Calculation",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -552,9 +543,9 @@
       ]
     },
     {
-      "claim_id": "leave_balance_mid_month_inclusion",
+      "claim_id": "leave_balance_inclusion",
       "claim_type": "customer_request",
-      "claim_text": "Include October leave balance for mid-month departure in EOS calculation",
+      "claim_text": "Include leave balance for departure month in EOS calculation",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -574,9 +565,9 @@
       ]
     },
     {
-      "claim_id": "calculation_methodology_clarification",
+      "claim_id": "calculation_transparency",
       "claim_type": "customer_request",
-      "claim_text": "Detailed explanation of gratuity calculation logic",
+      "claim_text": "Detailed Explanation of Gratuity Calculation",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -585,31 +576,21 @@
       ]
     },
     {
-      "claim_id": "flexible_daily_wage_formula",
-      "claim_type": "customer_request",
-      "claim_text": "Allow alternative daily wage calculation method (Basic × 12 / 365)",
-      "validation_hint": "",
-      "source": "jira",
-      "severity": "medium",
-      "source_refs": [
-        "TSSD-2043"
-      ]
-    },
-    {
       "claim_id": "flexible_daily_wage_calculation",
       "claim_type": "customer_request",
-      "claim_text": "Ability to adjust daily wage divisor based on actual calendar days",
+      "claim_text": "Ability to adjust daily wage divisor based on actual month length",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
       "source_refs": [
+        "TSSD-2043",
         "TSSD-4731"
       ]
     },
     {
-      "claim_id": "consistent_accrual_calculation",
+      "claim_id": "consistent_leave_salary_calculation",
       "claim_type": "customer_request",
-      "claim_text": "Maintain consistent daily wage calculations across months",
+      "claim_text": "Maintain consistent leave salary accrual calculations across months",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -631,7 +612,7 @@
     {
       "claim_id": "accurate_offboarding_salary_calculation",
       "claim_type": "customer_request",
-      "claim_text": "Accurate salary proration for offboarded employees across all departure date scenarios",
+      "claim_text": "Accurate salary proration for offboarded employees",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -640,9 +621,9 @@
       ]
     },
     {
-      "claim_id": "deduction_recalculation_request",
+      "claim_id": "leave_deduction_recalculation",
       "claim_type": "customer_request",
-      "claim_text": "Reliable mechanism for recalculating unpaid leave deductions without generating duplicate entries",
+      "claim_text": "Reliable mechanism for recalculating unpaid leave deductions",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -651,9 +632,9 @@
       ]
     },
     {
-      "claim_id": "accurate_unpaid_leave_deduction",
+      "claim_id": "retroactive_deduction_recalculation",
       "claim_type": "customer_request",
-      "claim_text": "Accurate full month salary deduction for unpaid leave",
+      "claim_text": "Automatically recalculate salary deduction when public holidays are added after leave request",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -664,7 +645,7 @@
     {
       "claim_id": "unpaid_leave_deduction_clarity",
       "claim_type": "customer_request",
-      "claim_text": "Explanation of why unpaid leave deduction exceeds expected monthly salary",
+      "claim_text": "Explanation of Unpaid Leave Deduction Calculation",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -684,9 +665,9 @@
       ]
     },
     {
-      "claim_id": "daily_rate_display_clarity",
+      "claim_id": "daily_rate_transparency",
       "claim_type": "customer_request",
-      "claim_text": "Show daily rate for the specific leave occurrence month",
+      "claim_text": "Clear display of daily rate for the correct leave occurrence month",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -695,9 +676,9 @@
       ]
     },
     {
-      "claim_id": "attendance_based_salary_variation",
+      "claim_id": "working_days_calculation",
       "claim_type": "edge_case",
-      "claim_text": "Employees working more or fewer than 26 days per month",
+      "claim_text": "Calculating annual working days (365 - 52 weekly offs = 313 days, divided by 12 months = 26.08 working days per month)",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -706,20 +687,9 @@
       ]
     },
     {
-      "claim_id": "unpaid_leave_deduction_recalculation",
+      "claim_id": "leap_year_service_period_boundary",
       "claim_type": "edge_case",
-      "claim_text": "Salary Configuration Change After Leave Request",
-      "validation_hint": "",
-      "source": "jira",
-      "severity": "medium",
-      "source_refs": [
-        "TSSD-1581"
-      ]
-    },
-    {
-      "claim_id": "leap_year_service_period_calculation",
-      "claim_type": "edge_case",
-      "claim_text": "Calculating service days across a leap year (2024)",
+      "claim_text": "Calculating Service Days Across a Leap Year",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -728,9 +698,9 @@
       ]
     },
     {
-      "claim_id": "mid_month_departure_leave_accrual",
+      "claim_id": "mid_month_departure_handling",
       "claim_type": "edge_case",
-      "claim_text": "Employee departing before month-end with incomplete leave accrual",
+      "claim_text": "Employee leaving mid-month with partial leave accrual",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -741,7 +711,7 @@
     {
       "claim_id": "leap_year_service_duration",
       "claim_type": "edge_case",
-      "claim_text": "Calculating service duration across a leap year with February 29th",
+      "claim_text": "Calculating service duration in a leap year with February 29th",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -750,21 +720,9 @@
       ]
     },
     {
-      "claim_id": "leap_year_calculation",
+      "claim_id": "gratuity_calculation_precision",
       "claim_type": "edge_case",
-      "claim_text": "Handling of partial years including leap years",
-      "validation_hint": "",
-      "source": "jira",
-      "severity": "medium",
-      "source_refs": [
-        "TSSD-2252",
-        "TSSD-1301"
-      ]
-    },
-    {
-      "claim_id": "unpaid_leave_calculation",
-      "claim_type": "edge_case",
-      "claim_text": "Handling of unpaid leave in gratuity calculation",
+      "claim_text": "Discrepancy in days worked calculation between manual and system calculation",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -773,9 +731,20 @@
       ]
     },
     {
+      "claim_id": "month_length_salary_calculation",
+      "claim_type": "edge_case",
+      "claim_text": "Prorated salary calculation for months with different day counts",
+      "validation_hint": "",
+      "source": "jira",
+      "severity": "medium",
+      "source_refs": [
+        "TSSD-4731"
+      ]
+    },
+    {
       "claim_id": "non_standard_work_week",
       "claim_type": "edge_case",
-      "claim_text": "NVK Operations work week with all days configured as working days",
+      "claim_text": "All Days Configured as Working Days",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -784,9 +753,9 @@
       ]
     },
     {
-      "claim_id": "payroll_processing_before_departure",
+      "claim_id": "future_departure_date_proration",
       "claim_type": "edge_case",
-      "claim_text": "Payroll processed before employee's departure date",
+      "claim_text": "Payroll processing date differs from employee departure date",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -797,7 +766,7 @@
     {
       "claim_id": "leave_transaction_modification",
       "claim_type": "edge_case",
-      "claim_text": "Recalculating daily wage after leave request submission",
+      "claim_text": "Recalculating Daily Wage After Leave Approval",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -806,7 +775,7 @@
       ]
     },
     {
-      "claim_id": "public_holiday_timing_impact",
+      "claim_id": "public_holiday_configuration_timing",
       "claim_type": "edge_case",
       "claim_text": "Public holidays added after leave request creation cause calculation discrepancies",
       "validation_hint": "",
@@ -817,9 +786,9 @@
       ]
     },
     {
-      "claim_id": "full_month_absence_deduction",
+      "claim_id": "extended_leave_deduction_calculation",
       "claim_type": "edge_case",
-      "claim_text": "Deduction for full month of unpaid leave exceeds monthly salary",
+      "claim_text": "Full Month Unpaid Leave Deduction Exceeding Monthly Salary",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -828,7 +797,18 @@
       ]
     },
     {
-      "claim_id": "complex_work_schedule_calculation",
+      "claim_id": "february_leap_year_handling",
+      "claim_type": "edge_case",
+      "claim_text": "Unpaid Leave Deduction in February Leap Year",
+      "validation_hint": "",
+      "source": "jira",
+      "severity": "medium",
+      "source_refs": [
+        "TSSD-1301"
+      ]
+    },
+    {
+      "claim_id": "complex_work_week_calculation",
       "claim_type": "edge_case",
       "claim_text": "Handling 7-day work weeks with public holidays affecting daily wage calculations",
       "validation_hint": "",
@@ -839,9 +819,20 @@
       ]
     },
     {
-      "claim_id": "manual_salary_adjustment_workaround",
+      "claim_id": "payroll_month_vs_leave_month",
+      "claim_type": "edge_case",
+      "claim_text": "Leave request created in different month from payroll processing month",
+      "validation_hint": "",
+      "source": "jira",
+      "severity": "medium",
+      "source_refs": [
+        "TSSD-1807"
+      ]
+    },
+    {
+      "claim_id": "manual_payroll_workaround",
       "claim_type": "troubleshooting",
-      "claim_text": "Manual Salary Adjustment Workaround",
+      "claim_text": "Manual Payroll Workaround",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -850,15 +841,14 @@
       ]
     },
     {
-      "claim_id": "daily_wage_calculation_verification",
+      "claim_id": "daily_wage_formula_configuration",
       "claim_type": "troubleshooting",
-      "claim_text": "Daily Wage Calculation Verification",
+      "claim_text": "Daily Wage Formula Configuration",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
       "source_refs": [
-        "TSSD-2648",
-        "TSSD-2321"
+        "TSSD-2648"
       ]
     },
     {
@@ -873,21 +863,20 @@
       ]
     },
     {
-      "claim_id": "gratuity_calculation_verification",
+      "claim_id": "leap_year_calculation_verification",
       "claim_type": "troubleshooting",
-      "claim_text": "Gratuity Calculation Verification",
+      "claim_text": "Leap Year Calculation Verification",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
       "source_refs": [
-        "TSSD-4179",
-        "TSSD-2043"
+        "TSSD-4179"
       ]
     },
     {
-      "claim_id": "eos_calculation_troubleshooting",
+      "claim_id": "eos_amount_discrepancy_resolution",
       "claim_type": "troubleshooting",
-      "claim_text": "EOS Calculation Troubleshooting",
+      "claim_text": "EOS Amount Discrepancy Resolution",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -896,9 +885,9 @@
       ]
     },
     {
-      "claim_id": "eos_gratuity_manual_adjustment",
+      "claim_id": "gratuity_manual_calculation_method",
       "claim_type": "troubleshooting",
-      "claim_text": "EOS Gratuity Manual Adjustment",
+      "claim_text": "Gratuity Manual Calculation Method",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -907,20 +896,21 @@
       ]
     },
     {
-      "claim_id": "gratuity_day_counting",
+      "claim_id": "gratuity_calculation_verification",
       "claim_type": "troubleshooting",
-      "claim_text": "Gratuity Day Counting",
+      "claim_text": "Gratuity Calculation Verification",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
       "source_refs": [
-        "TSSD-1625"
+        "TSSD-1625",
+        "TSSD-2043"
       ]
     },
     {
-      "claim_id": "leave_salary_calculation_explanation",
+      "claim_id": "leave_salary_policy_configuration",
       "claim_type": "troubleshooting",
-      "claim_text": "Leave Salary Calculation Explanation",
+      "claim_text": "Leave Salary Policy Configuration",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -929,14 +919,25 @@
       ]
     },
     {
-      "claim_id": "leave_accrual_calculation_method",
+      "claim_id": "leave_encashment_configuration",
       "claim_type": "troubleshooting",
-      "claim_text": "Leave Accrual Calculation Method",
+      "claim_text": "Leave Encashment Configuration",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
       "source_refs": [
         "TSSD-3648"
+      ]
+    },
+    {
+      "claim_id": "daily_wage_calculation_verification",
+      "claim_type": "troubleshooting",
+      "claim_text": "Daily Wage Calculation Verification",
+      "validation_hint": "",
+      "source": "jira",
+      "severity": "medium",
+      "source_refs": [
+        "TSSD-2321"
       ]
     },
     {
@@ -951,9 +952,9 @@
       ]
     },
     {
-      "claim_id": "salary_proration_debugging",
+      "claim_id": "salary_proration_diagnosis",
       "claim_type": "troubleshooting",
-      "claim_text": "Salary Proration Debugging",
+      "claim_text": "Salary Proration Diagnosis",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -962,9 +963,9 @@
       ]
     },
     {
-      "claim_id": "deduction_removal_workaround",
+      "claim_id": "deduction_cleanup_process",
       "claim_type": "troubleshooting",
-      "claim_text": "Deduction Removal Workaround",
+      "claim_text": "Deduction Cleanup Process",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -973,9 +974,9 @@
       ]
     },
     {
-      "claim_id": "daily_wage_deduction_troubleshooting",
+      "claim_id": "manual_deduction_adjustment",
       "claim_type": "troubleshooting",
-      "claim_text": "Daily Wage Deduction Troubleshooting",
+      "claim_text": "Manual Deduction Adjustment",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -984,9 +985,20 @@
       ]
     },
     {
-      "claim_id": "unpaid_leave_deduction",
+      "claim_id": "daily_wage_deduction_calculation",
       "claim_type": "troubleshooting",
-      "claim_text": "Unpaid Leave Deduction",
+      "claim_text": "Daily Wage Deduction Calculation",
+      "validation_hint": "",
+      "source": "jira",
+      "severity": "medium",
+      "source_refs": [
+        "TSSD-4368"
+      ]
+    },
+    {
+      "claim_id": "unpaid_leave_calculation_verification",
+      "claim_type": "troubleshooting",
+      "claim_text": "Unpaid Leave Calculation Verification",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
@@ -995,25 +1007,14 @@
       ]
     },
     {
-      "claim_id": "daily_rate_calculation_verification",
+      "claim_id": "daily_rate_calculation_method",
       "claim_type": "troubleshooting",
-      "claim_text": "Daily Rate Calculation Verification",
+      "claim_text": "Daily Rate Calculation Method",
       "validation_hint": "",
       "source": "jira",
       "severity": "medium",
       "source_refs": [
         "TSSD-1753"
-      ]
-    },
-    {
-      "claim_id": "unpaid_leave_deduction_verification",
-      "claim_type": "troubleshooting",
-      "claim_text": "Unpaid Leave Deduction Verification",
-      "validation_hint": "",
-      "source": "jira",
-      "severity": "medium",
-      "source_refs": [
-        "TSSD-1807"
       ]
     }
   ],
@@ -1028,7 +1029,7 @@
       {
         "path": "Settings → Payroll → Daily Wage Calculation",
         "title": null,
-        "context": "Accessing the Daily Wage Calculator",
+        "context": "Accessing the daily wage calculator",
         "is_breadcrumb": true
       },
       {
@@ -1048,7 +1049,7 @@
       {
         "breadcrumb": "Settings → Payroll → Daily Wage Calculation",
         "title": null,
-        "context": "Accessing the Daily Wage Calculator",
+        "context": "Accessing the daily wage calculator",
         "source": "navigation_paths"
       },
       {
@@ -1084,7 +1085,7 @@
           "Daily Wage Calculation"
         ],
         "original_breadcrumb": "Settings → Payroll → Daily Wage Calculation",
-        "context": "Accessing the Daily Wage Calculator",
+        "context": "Accessing the daily wage calculator",
         "source": "navigation_paths",
         "screenshot_prefix": "daily_wage_calculator__nav__path_2",
         "description": "Navigate via: Settings → Payroll → Daily Wage Calculation"
@@ -1109,12 +1110,13 @@
   "procedures": [
     {
       "procedure_name": "Daily Pay Calculation",
-      "when_to_use": "For unpaid leave salary deductions",
+      "when_to_use": "When processing unpaid leave salary deductions",
       "steps": [
+        "Receive and approve unpaid leave request",
         "Determine leave policy (calendar or working days)",
         "Calculate total working days",
-        "Subtract public holidays",
-        "Divide total salary by working days",
+        "Subtract public holidays from working days",
+        "Calculate daily pay rate: Salary / Working Days",
         "Generate payroll deduction"
       ],
       "source_article_ids": [
@@ -1123,9 +1125,11 @@
     },
     {
       "procedure_name": "Daily Wage Calculation",
-      "when_to_use": "For prorating salaries, calculating leave encashment, and determining unpaid leave deductions",
+      "when_to_use": "For prorating salaries, calculating leave encashment, and deducting unpaid leave",
       "steps": [
-        "Navigate to Settings → Payroll → Daily Wage Calculation",
+        "Navigate to Settings",
+        "Select Payroll",
+        "Choose Daily Wage Calculation",
         "Select calculation base (calendar/working/custom days)",
         "Choose salary components to include",
         "Apply calculation"
@@ -1136,12 +1140,13 @@
     },
     {
       "procedure_name": "Update Salary Proration",
-      "when_to_use": "When adjusting salary calculation method for partial pay periods",
+      "when_to_use": "Adjusting salary calculations for new or departing employees",
       "steps": [
         "Go to Settings > Payroll > Daily wage calculation",
         "Select calculation basis (custom days, calendar days, or working days)",
         "Save changes",
-        "(Optional) Reject and resave existing prorated salary transactions"
+        "If payroll month is open, reject existing prorated salary transactions",
+        "Confirm new proration settings"
       ],
       "source_article_ids": [
         14243760419089
