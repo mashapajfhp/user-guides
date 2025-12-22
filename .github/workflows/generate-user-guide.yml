@@ -1,0 +1,100 @@
+name: Generate User Guide
+
+on:
+  workflow_dispatch:
+    inputs:
+      feature_slug:
+        description: 'Feature slug with underscores (e.g., daily_wage_calculator)'
+        required: true
+        type: string
+
+jobs:
+  generate:
+    runs-on: self-hosted
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify input files exist
+        run: |
+          echo "🔍 Checking input files for: ${{ inputs.feature_slug }}"
+
+          # Check Zendesk report
+          ZENDESK_FILE=$(ls -t reports/zendesk/${{ inputs.feature_slug }}/versions/zendesk_md_*.md 2>/dev/null | head -1)
+          if [ -z "$ZENDESK_FILE" ]; then
+            echo "❌ Zendesk report not found"
+            exit 1
+          fi
+          echo "✅ Zendesk: $ZENDESK_FILE"
+
+          # Check Jira report
+          JIRA_FILE=$(ls -t reports/jira/${{ inputs.feature_slug }}/versions/v1/runs/jira-analysis_*.md 2>/dev/null | head -1)
+          if [ -z "$JIRA_FILE" ]; then
+            echo "❌ Jira report not found"
+            exit 1
+          fi
+          echo "✅ Jira: $JIRA_FILE"
+
+          # Check validation files
+          if [ ! -f ".validation/output/result.json" ]; then
+            echo "❌ Validation result.json not found"
+            exit 1
+          fi
+          echo "✅ Validation: .validation/output/result.json"
+
+          # Check screenshots
+          SCREENSHOT_COUNT=$(ls .validation/output/screenshots/*.png 2>/dev/null | wc -l)
+          if [ "$SCREENSHOT_COUNT" -eq 0 ]; then
+            echo "❌ No screenshots found"
+            exit 1
+          fi
+          echo "✅ Screenshots: $SCREENSHOT_COUNT files"
+
+          # Check template
+          if [ ! -f "clean-template-reorganized.html" ]; then
+            echo "❌ Template not found"
+            exit 1
+          fi
+          echo "✅ Template: clean-template-reorganized.html"
+
+      - name: Generate User Guide
+        run: |
+          echo "📝 Generating user guide for: ${{ inputs.feature_slug }}"
+
+          claude --print "Using the comprehensive-user-guide-generator agent from the agents/ folder, generate the complete user guide for the ${{ inputs.feature_slug }} feature.
+
+          Input files are in this repository:
+          - Zendesk report: reports/zendesk/${{ inputs.feature_slug }}/versions/ (use latest)
+          - Jira report: reports/jira/${{ inputs.feature_slug }}/versions/v1/runs/ (use latest)
+          - Screenshots: .validation/output/screenshots/
+          - Validation: .validation/output/result.json and pw_result.json
+          - Template: clean-template-reorganized.html
+
+          Output to: outputs/${{ inputs.feature_slug }}/user-guide.html
+          Copy screenshots to: outputs/${{ inputs.feature_slug }}/screenshots/"
+
+      - name: Commit and push user guide
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add outputs/${{ inputs.feature_slug }}/ || true
+
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Generate user guide for ${{ inputs.feature_slug }}
+
+            🤖 Generated with Claude Code"
+            git push
+            echo "✅ User guide committed and pushed"
+          fi
+
+      - name: Output result
+        run: |
+          echo "🎉 User guide generation complete!"
+          echo "📁 Output: outputs/${{ inputs.feature_slug }}/user-guide.html"
