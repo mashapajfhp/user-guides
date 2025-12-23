@@ -115,14 +115,26 @@ function buildShotLabel(parts) {
   return clean || "shot";
 }
 
-async function saveScreenshot(page, screenshotsDir, label) {
+async function saveScreenshot(page, screenshotsDir, label, options = {}) {
   try {
     const file = `${sanitizeFileName(label)}.png`;
     const fullPath = path.join(screenshotsDir, file);
-    // Always capture viewport-only for contextually relevant screenshots
-    await page.screenshot({ path: fullPath, fullPage: false });
+
+    // Wait for animations/transitions to complete for cleaner screenshots
+    await page.waitForTimeout(200);
+
+    // Screenshot options for high quality
+    const screenshotOptions = {
+      path: fullPath,
+      fullPage: options.fullPage || false,  // Viewport by default, full page if specified
+      animations: 'disabled',                // Disable CSS animations for consistent captures
+      // Note: deviceScaleFactor is set at context level (2x for retina quality)
+    };
+
+    await page.screenshot(screenshotOptions);
     return path.relative(ROOT, fullPath);
-  } catch {
+  } catch (err) {
+    console.warn(`      ⚠️ Screenshot failed for ${label}: ${err.message}`);
     return null;
   }
 }
@@ -3279,7 +3291,12 @@ function extractNavigablePathsFromProcedures(procedures) {
     }
 
     browser = await chromium.launch({ headless: HEADLESS });
-    const context = await browser.newContext();
+    // Create context with high-quality screenshot settings
+    const context = await browser.newContext({
+      viewport: { width: 1920, height: 1080 },  // Full HD viewport
+      deviceScaleFactor: 2,                      // 2x resolution for retina-quality screenshots
+      colorScheme: 'light',                      // Consistent light theme
+    });
     const page = await context.newPage();
 
     // ========================================================================
