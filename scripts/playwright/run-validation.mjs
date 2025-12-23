@@ -1069,6 +1069,24 @@ async function performComprehensiveFeatureExploration(page, featureContext, scre
     if (config.services && config.services.length > 0) {
       console.log(`🔍 Step 3: Explore ${config.services.length} services`);
 
+      // PRE-STEP: Dismiss any announcement popups/tours before exploring services
+      console.log(`   📢 Dismissing any announcement popups before service exploration...`);
+      try {
+        // Multi-step announcement tour - click through all steps
+        for (let step = 0; step < 10; step++) {
+          const nextBtn = page.locator('button:has-text("Next"), button:has-text("Skip"), button:has-text("Got it"), button:has-text("Close")').first();
+          if (await nextBtn.isVisible({ timeout: 500 })) {
+            await nextBtn.click();
+            await page.waitForTimeout(300);
+          } else {
+            break;
+          }
+        }
+        // Try Escape as final dismissal
+        await page.keyboard.press("Escape");
+        await page.waitForTimeout(500);
+      } catch { /* non-critical */ }
+
       for (const service of config.services) {
         console.log(`   → Testing service: ${service.name}`);
         const serviceExploration = await exploreService(page, service, screenshotsDir);
@@ -1177,48 +1195,190 @@ async function exploreService(page, service, screenshotsDir) {
   };
 
   try {
+    // Step 0: Dismiss any announcement popups or overlays that might block clicks
+    console.log(`      Dismissing any popups/announcements...`);
+    try {
+      // Try to close announcement popups (look for X button or skip/next buttons)
+      const popupDismissSelectors = [
+        '[class*="announcement"] button:has-text("Next")',
+        '[class*="announcement"] [aria-label="Close"]',
+        '[class*="announcement"] button svg',
+        '[class*="onboarding"] button:has-text("Skip")',
+        '[class*="tour"] button:has-text("Skip")',
+        '[class*="modal"]:has-text("Step") button:has-text("Next")',
+        'button[aria-label="close"]',
+        '[class*="popup"] button:has-text("Close")',
+        '[class*="overlay"] button:has-text("Close")'
+      ];
+
+      for (const sel of popupDismissSelectors) {
+        try {
+          const dismissBtn = page.locator(sel).first();
+          if (await dismissBtn.isVisible({ timeout: 500 })) {
+            // Keep clicking Next until popup closes (for multi-step announcements)
+            for (let i = 0; i < 5; i++) {
+              if (await dismissBtn.isVisible({ timeout: 300 })) {
+                await dismissBtn.click();
+                await page.waitForTimeout(300);
+              } else {
+                break;
+              }
+            }
+          }
+        } catch { /* continue */ }
+      }
+
+      // Also try pressing Escape to close any modal
+      await page.keyboard.press("Escape");
+      await page.waitForTimeout(300);
+    } catch { /* non-critical */ }
+
     // Step 1: Find and click the edit icon for this service
     console.log(`      Finding edit icon for: ${service.name}`);
 
-    // First find the row containing the service name
+    // IMPROVED: More specific row selectors for table structures
     const rowSelectors = [
+      // Table rows - most specific
+      `tr:has(td:text-is("${service.name}"))`,
       `tr:has-text("${service.name}")`,
-      `div:has-text("${service.name}")`,
+      // Grid/list items
+      `[class*="table"] [class*="row"]:has-text("${service.name}")`,
+      `[class*="list"] [class*="item"]:has-text("${service.name}")`,
+      // Generic container with exact text match preferred
+      `div:has(> span:text-is("${service.name}"))`,
+      `div:has(> div:text-is("${service.name}"))`,
+      // Fallback to any containing element
       `[class*="row"]:has-text("${service.name}")`
+    ];
+
+    // IMPROVED: More specific edit icon selectors - pencil icons are typically SVGs or icon elements
+    const editIconSelectors = [
+      // Specific edit/pencil classes
+      '[class*="edit-icon"]',
+      '[class*="pencil-icon"]',
+      '[class*="EditIcon"]',
+      '[class*="PencilIcon"]',
+      'button[class*="edit"]',
+      // Data attributes
+      '[data-testid*="edit"]',
+      '[data-icon="pencil"]',
+      '[data-action="edit"]',
+      // Aria labels
+      '[aria-label*="edit" i]',
+      '[aria-label*="Edit" i]',
+      '[title*="edit" i]',
+      '[title*="Edit" i]',
+      // SVG icons (last resort - be more specific with path patterns)
+      'svg[class*="edit"]',
+      'svg[class*="pencil"]',
+      // Any clickable element at the end of the row (edit icons are usually last)
+      'button:last-child',
+      'svg:last-child',
+      '[class*="action"]:last-child'
     ];
 
     let editClicked = false;
     for (const rowSel of rowSelectors) {
+      if (editClicked) break;
       try {
         const row = page.locator(rowSel).first();
         if (await row.isVisible({ timeout: 2000 })) {
-          // Find edit icon within this row
-          const editIcon = row.locator('[class*="edit"], [class*="pencil"], svg, button').last();
-          if (await editIcon.isVisible({ timeout: 1000 })) {
-            await editIcon.click();
-            editClicked = true;
-            result.modal_opened = true;
-            await page.waitForTimeout(1500);
-            break;
+          console.log(`      Found row with selector: ${rowSel}`);
+
+          // Try each edit icon selector within this row
+          for (const iconSel of editIconSelectors) {
+            try {
+              const editIcon = row.locator(iconSel).last();
+              if (await editIcon.isVisible({ timeout: 500 })) {
+                // Scroll into view and click
+                await editIcon.scrollIntoViewIfNeeded();
+                await editIcon.click({ force: true }); // Force click to bypass any overlays
+                editClicked = true;
+                result.modal_opened = true;
+                console.log(`      ✓ Clicked edit icon with selector: ${iconSel}`);
+                await page.waitForTimeout(1500);
+                break;
+              }
+            } catch { /* continue to next selector */ }
+          }
+
+          // If no specific edit icon found, try the last clickable element in the row
+          if (!editClicked) {
+            try {
+              const lastClickable = row.locator('button, [role="button"], svg').last();
+              if (await lastClickable.isVisible({ timeout: 500 })) {
+                await lastClickable.scrollIntoViewIfNeeded();
+                await lastClickable.click({ force: true });
+                editClicked = true;
+                result.modal_opened = true;
+                console.log(`      ✓ Clicked last clickable element in row`);
+                await page.waitForTimeout(1500);
+              }
+            } catch { /* continue */ }
           }
         }
       } catch { /* continue */ }
     }
 
-    // Fallback: try clicking any edit icon near the service text
+    // Fallback: try clicking any edit icon near the service text using proximity
     if (!editClicked) {
+      console.log(`      Trying fallback: locate text and find nearby edit icon`);
       try {
         const serviceText = page.locator(`text="${service.name}"`).first();
         if (await serviceText.isVisible({ timeout: 1000 })) {
-          // Get parent and find edit icon
-          const parent = serviceText.locator("xpath=../..");
-          const editIcon = parent.locator('[class*="edit"], svg').last();
-          if (await editIcon.isVisible({ timeout: 1000 })) {
-            await editIcon.click();
-            editClicked = true;
-            result.modal_opened = true;
-            await page.waitForTimeout(1500);
+          // Get the row container (traverse up multiple levels)
+          for (const xpath of ["xpath=..", "xpath=../..", "xpath=../../.."]) {
+            if (editClicked) break;
+            try {
+              const parent = serviceText.locator(xpath);
+              for (const iconSel of editIconSelectors) {
+                try {
+                  const editIcon = parent.locator(iconSel).last();
+                  if (await editIcon.isVisible({ timeout: 300 })) {
+                    await editIcon.scrollIntoViewIfNeeded();
+                    await editIcon.click({ force: true });
+                    editClicked = true;
+                    result.modal_opened = true;
+                    console.log(`      ✓ Fallback: clicked edit icon via parent ${xpath}`);
+                    await page.waitForTimeout(1500);
+                    break;
+                  }
+                } catch { /* continue */ }
+              }
+            } catch { /* continue */ }
           }
+        }
+      } catch { /* non-critical */ }
+    }
+
+    // Last resort: Use JavaScript to find and click the edit icon
+    if (!editClicked) {
+      console.log(`      Trying JavaScript-based click...`);
+      try {
+        editClicked = await page.evaluate((serviceName) => {
+          // Find all elements containing the service name
+          const elements = document.querySelectorAll('*');
+          for (const el of elements) {
+            if (el.textContent?.trim() === serviceName || el.innerText?.trim() === serviceName) {
+              // Find the row container
+              let row = el.closest('tr') || el.closest('[class*="row"]') || el.parentElement?.parentElement;
+              if (row) {
+                // Find edit icon in the row
+                const editIcon = row.querySelector('[class*="edit"], [class*="pencil"], svg:last-child, button:last-child');
+                if (editIcon) {
+                  editIcon.click();
+                  return true;
+                }
+              }
+            }
+          }
+          return false;
+        }, service.name);
+
+        if (editClicked) {
+          result.modal_opened = true;
+          console.log(`      ✓ JavaScript click succeeded`);
+          await page.waitForTimeout(1500);
         }
       } catch { /* non-critical */ }
     }
