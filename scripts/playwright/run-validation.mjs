@@ -917,12 +917,23 @@ async function tryExpandRelevantUIElement(page, claim) {
 /**
  * Performs deep exploration of a feature by testing all UI components.
  * This is the level of depth needed for proper user guide documentation:
+ *
+ * KEY REQUIREMENTS:
  * - Expand accordions/cards
  * - Click edit icons to open modals
  * - Test all dropdowns (select each option, document changes)
  * - Test toggles and observe behavior
  * - Document all states and formula changes
  * - Take screenshots at each significant state
+ *
+ * CRITICAL - UI DESCRIPTION & LOGIC VALIDATION:
+ * - Describe WHAT YOU SEE on the UI in human-readable terms
+ * - Explain the PURPOSE of each UI element observed
+ * - Document the LOGIC and BUSINESS RULES visible in the interface
+ * - Validate that UI behavior matches expected business logic
+ * - Note any calculations, formulas, or rules displayed
+ * - Describe how different selections affect the output
+ * - Explain relationships between UI elements (e.g., toggle enables/disables fields)
  */
 async function performComprehensiveFeatureExploration(page, featureContext, screenshotsDir) {
   const exploration = {
@@ -937,12 +948,18 @@ async function performComprehensiveFeatureExploration(page, featureContext, scre
     formulas_documented: [],
     screenshots: [],
     discoveries: [],
-    errors: []
+    errors: [],
+    // NEW: UI descriptions and logic validation
+    ui_descriptions: [],      // Human-readable descriptions of what's visible
+    logic_validated: [],      // Business logic observed and validated
+    element_purposes: [],     // Purpose of each UI element
+    relationships: [],        // How elements relate to each other
+    business_rules: []        // Business rules derived from UI behavior
   };
 
   console.log(`\n🔬 COMPREHENSIVE FEATURE EXPLORATION`);
   console.log(`   Feature: ${exploration.feature_name}`);
-  console.log(`   Goal: Test all UI components and document behavior\n`);
+  console.log(`   Goal: Test all UI components, describe what you see, validate logic\n`);
 
   try {
     // ========================================================================
@@ -1138,6 +1155,7 @@ async function clickMenuItem(page, menuItem) {
 
 /**
  * Explores a single service: opens modal, tests all components, documents behavior
+ * CRITICAL: Must describe what's visible on screen and validate business logic
  */
 async function exploreService(page, service, screenshotsDir) {
   const result = {
@@ -1149,7 +1167,13 @@ async function exploreService(page, service, screenshotsDir) {
     formulas: [],
     leave_types: [],
     screenshots: [],
-    errors: []
+    errors: [],
+    // NEW: UI descriptions and logic validation
+    ui_description: null,       // Human-readable description of what's visible
+    business_logic: null,       // Business rules and logic observed
+    what_i_see: "",             // Plain text explanation of the screen
+    element_purposes: [],       // Purpose of each UI element
+    logic_validated: []         // Business logic that was validated
   };
 
   try {
@@ -1208,7 +1232,26 @@ async function exploreService(page, service, screenshotsDir) {
     const modalShot = await saveScreenshot(page, screenshotsDir, `modal_${sanitizeFileName(service.name)}_initial`);
     if (modalShot) result.screenshots.push({ stage: `${service.name}_modal_open`, path: modalShot });
 
-    // Step 2: Document modal content
+    // ========================================================================
+    // STEP 2: DESCRIBE WHAT YOU SEE - Generic UI Analysis
+    // This works for ANY feature, not just specific ones
+    // ========================================================================
+    console.log(`      📝 Analyzing screen and describing what's visible...`);
+    result.ui_description = await describeCurrentScreen(page, { name: service.name });
+    result.what_i_see = result.ui_description.what_i_see;
+    console.log(`      UI Elements found: ${result.ui_description.visible_elements.length}`);
+
+    // ========================================================================
+    // STEP 3: ANALYZE BUSINESS LOGIC - Generic Pattern Detection
+    // Detects formulas, conditions, rules - works for any feature
+    // ========================================================================
+    console.log(`      🔍 Analyzing business logic patterns...`);
+    const logicAnalysis = await analyzeBusinessLogic(page, { name: service.name });
+    result.business_logic = logicAnalysis;
+    result.logic_validated = logicAnalysis.rules_detected;
+    console.log(`      ${logicAnalysis.logic_summary}`);
+
+    // Step 4: Document modal content (enhanced with UI description)
     const modalSelectors = ['[role="dialog"]', '[class*="modal"]', '[class*="dialog"]', '[class*="popup"]'];
     let modalElement = null;
     for (const sel of modalSelectors) {
@@ -1226,17 +1269,33 @@ async function exploreService(page, service, screenshotsDir) {
       result.modal_content = {
         title: service.name,
         text_preview: modalText.substring(0, 500),
-        has_formula: modalText.includes("Daily wage =") || modalText.includes("formula")
+        has_formula: modalText.includes("=") && (modalText.includes("/") || modalText.includes("*")),
+        ui_explanation: result.ui_description?.ui_explanation || "",
+        elements_found: result.ui_description?.visible_elements || [],
+        patterns_detected: result.ui_description?.patterns_detected || []
       };
 
-      // Extract formula if present
-      const formulaMatch = modalText.match(/Daily wage\s*=\s*[^)]+\)/);
-      if (formulaMatch) {
-        result.formulas.push({ service: service.name, formula: formulaMatch[0] });
+      // Extract any formula patterns (generic - works for any calculation)
+      const formulaPatterns = [
+        /\w+\s*=\s*\([^)]+\)\s*[\/\*\+\-]\s*\(?[^)]+\)?/gi,
+        /\w+\s*=\s*[^.;]{10,100}/gi
+      ];
+      for (const pattern of formulaPatterns) {
+        const matches = modalText.match(pattern);
+        if (matches) {
+          for (const match of matches.slice(0, 3)) {
+            result.formulas.push({
+              context: service.name,
+              formula: match.trim(),
+              explanation: `Calculation formula found in ${service.name}`
+            });
+          }
+          break;
+        }
       }
     }
 
-    // Step 3: Test dropdown if present
+    // Step 5: Test dropdown if present
     if (service.hasDropdown) {
       console.log(`      Testing dropdown for: ${service.name}`);
       const dropdownResult = await testDropdown(page, service.name, screenshotsDir);
@@ -1245,7 +1304,7 @@ async function exploreService(page, service, screenshotsDir) {
       result.screenshots.push(...dropdownResult.screenshots);
     }
 
-    // Step 4: Test toggle if present
+    // Step 6: Test toggle if present
     if (service.hasToggle) {
       console.log(`      Testing toggle for: ${service.name}`);
       const toggleResult = await testToggle(page, service.name, screenshotsDir);
@@ -1253,14 +1312,15 @@ async function exploreService(page, service, screenshotsDir) {
       result.screenshots.push(...(toggleResult.screenshots || []));
     }
 
-    // Step 5: Document leave types table if present
-    if (service.hasLeaveTable) {
-      console.log(`      Documenting leave types for: ${service.name}`);
-      const leaveTypes = await extractLeaveTypesTable(page);
-      result.leave_types = leaveTypes;
+    // Step 7: GENERIC: Extract any table data present in the modal
+    console.log(`      📊 Extracting table data if present...`);
+    const tableData = await extractTableData(page);
+    if (tableData.rows.length > 0) {
+      result.table_data = tableData;
+      console.log(`      Found table: ${tableData.summary}`);
     }
 
-    // Step 6: Close the modal
+    // Step 8: Close the modal
     console.log(`      Closing modal for: ${service.name}`);
     await closeModal(page);
 
@@ -1282,13 +1342,15 @@ async function testDropdown(page, serviceName, screenshotsDir) {
   };
 
   try {
-    // Find dropdown (Month calculation dropdown)
+    // GENERIC: Find any dropdown/select element on the page
     const dropdownSelectors = [
       '[class*="select"]',
       'select',
       '[role="combobox"]',
+      '[role="listbox"]',
       '[class*="dropdown"]',
-      'button:has-text("days")'
+      '[aria-haspopup="listbox"]',
+      '[aria-haspopup="menu"]'
     ];
 
     let dropdown = null;
@@ -1332,11 +1394,10 @@ async function testDropdown(page, serviceName, screenshotsDir) {
       } catch { /* continue */ }
     }
 
-    // Known options for Daily Wage Calculation
-    const expectedOptions = ["Working days", "Calendar days", "Custom days"];
-    const optionsToTest = options.length > 0 ? options : expectedOptions;
+    // Use discovered options - no hardcoded fallbacks
+    const optionsToTest = options;
 
-    // Test each option
+    // Test each discovered option
     for (const optionText of optionsToTest) {
       try {
         // Click dropdown to open if closed
@@ -1351,21 +1412,40 @@ async function testDropdown(page, serviceName, screenshotsDir) {
           await optionElem.click();
           await page.waitForTimeout(800);
 
-          // Document the formula change
+          // GENERIC: Describe UI after selecting this option
+          const uiAfterSelection = await describeCurrentScreen(page, { name: `${serviceName}_${optionText}` });
+
+          // GENERIC: Look for any formula patterns (not feature-specific)
           const modalText = await page.locator('[role="dialog"], [class*="modal"]').first().textContent().catch(() => "");
-          const formulaMatch = modalText.match(/Daily wage\s*=\s*[^)]+\)/);
+          const formulaPatterns = [
+            /\w+\s*=\s*\([^)]+\)\s*[\/\*\+\-]\s*\(?[^)]+\)?/gi,
+            /\w+\s*=\s*[^.;]{10,100}/gi
+          ];
+
+          let foundFormula = null;
+          for (const pattern of formulaPatterns) {
+            const matches = modalText.match(pattern);
+            if (matches && matches[0]) {
+              foundFormula = matches[0].trim();
+              break;
+            }
+          }
 
           result.options.push({
             option: optionText,
             selected: true,
-            formula: formulaMatch ? formulaMatch[0] : null
+            formula: foundFormula,
+            what_changed: uiAfterSelection.what_i_see,
+            ui_elements: uiAfterSelection.visible_elements,
+            patterns_detected: uiAfterSelection.patterns_detected
           });
 
-          if (formulaMatch) {
+          if (foundFormula) {
             result.formulas.push({
-              service: serviceName,
+              context: serviceName,
               option: optionText,
-              formula: formulaMatch[0]
+              formula: foundFormula,
+              explanation: `Formula displayed when "${optionText}" is selected`
             });
           }
 
@@ -1384,7 +1464,9 @@ async function testDropdown(page, serviceName, screenshotsDir) {
 }
 
 /**
- * Tests a toggle and documents behavior changes
+ * Tests a toggle and documents behavior changes - GENERIC VERSION
+ * Works with any feature, not specific to any particular toggle or fields.
+ * Uses describeCurrentScreen() to capture state before/after toggle.
  */
 async function testToggle(page, serviceName, screenshotsDir) {
   const result = {
@@ -1393,11 +1475,14 @@ async function testToggle(page, serviceName, screenshotsDir) {
     initial_state: null,
     toggled_state: null,
     behavior_change: null,
+    ui_before: null,
+    ui_after: null,
+    what_changed: [],
     screenshots: []
   };
 
   try {
-    // Look for "Overwrite calculation in policies" toggle
+    // Generic toggle selectors - find ANY toggle on the page
     const toggleSelectors = [
       'input[type="checkbox"]',
       '[role="switch"]',
@@ -1419,28 +1504,51 @@ async function testToggle(page, serviceName, screenshotsDir) {
 
     if (!toggle) return result;
 
-    // Get toggle label
-    const toggleLabel = await page.locator('text="Overwrite calculation in policies"').first().textContent().catch(() => null);
-    result.label = toggleLabel || "Unknown toggle";
+    // GENERIC LABEL DISCOVERY - Try multiple strategies to find the toggle's label
+    let toggleLabel = null;
+    const labelStrategies = [
+      // Strategy 1: aria-label attribute
+      async () => await toggle.getAttribute('aria-label'),
+      // Strategy 2: Associated label element
+      async () => {
+        const id = await toggle.getAttribute('id');
+        if (id) {
+          return await page.locator(`label[for="${id}"]`).first().textContent().catch(() => null);
+        }
+        return null;
+      },
+      // Strategy 3: Parent label
+      async () => await toggle.locator('xpath=ancestor::label').first().textContent().catch(() => null),
+      // Strategy 4: Adjacent text (sibling or nearby element)
+      async () => await toggle.locator('xpath=..//*[self::span or self::label or self::div][normalize-space()]').first().textContent().catch(() => null),
+      // Strategy 5: Previous sibling text
+      async () => await toggle.locator('xpath=preceding-sibling::*[1]').first().textContent().catch(() => null)
+    ];
+
+    for (const strategy of labelStrategies) {
+      try {
+        const label = await strategy();
+        if (label && label.trim()) {
+          toggleLabel = label.trim();
+          break;
+        }
+      } catch { /* continue */ }
+    }
+    result.label = toggleLabel || "Toggle control";
 
     // Check initial state
     const initialChecked = await toggle.isChecked().catch(() => false);
     result.initial_state = initialChecked ? "ON" : "OFF";
 
+    // GENERIC: Capture complete UI state BEFORE toggle using describeCurrentScreen
+    result.ui_before = await describeCurrentScreen(page, { name: serviceName });
+
     // Screenshot before toggle
     const beforeShot = await saveScreenshot(page, screenshotsDir, `toggle_${sanitizeFileName(serviceName)}_before`);
     if (beforeShot) result.screenshots.push({ stage: `${serviceName}_toggle_before`, path: beforeShot });
 
-    // Document what's enabled/disabled in initial state
-    const salaryCompBefore = await page.locator('text="Salary Component"').first().locator("xpath=..").locator('select, [role="combobox"]').first().isDisabled().catch(() => true);
-    const monthCalcBefore = await page.locator('text="Month calculation"').first().locator("xpath=..").locator('select, [role="combobox"]').first().isDisabled().catch(() => true);
-
-    result.behavior_change = {
-      before: {
-        salary_component_disabled: salaryCompBefore,
-        month_calculation_disabled: monthCalcBefore
-      }
-    };
+    // GENERIC: Track all interactive elements' disabled state before toggle
+    const elementsStateBefore = await captureInteractiveElementsState(page);
 
     // Toggle the switch
     await toggle.click();
@@ -1448,18 +1556,24 @@ async function testToggle(page, serviceName, screenshotsDir) {
 
     result.toggled_state = initialChecked ? "OFF" : "ON";
 
+    // GENERIC: Capture complete UI state AFTER toggle
+    result.ui_after = await describeCurrentScreen(page, { name: serviceName });
+
     // Screenshot after toggle
     const afterShot = await saveScreenshot(page, screenshotsDir, `toggle_${sanitizeFileName(serviceName)}_after`);
     if (afterShot) result.screenshots.push({ stage: `${serviceName}_toggle_after`, path: afterShot });
 
-    // Document what's enabled/disabled after toggle
-    const salaryCompAfter = await page.locator('text="Salary Component"').first().locator("xpath=..").locator('select, [role="combobox"]').first().isDisabled().catch(() => true);
-    const monthCalcAfter = await page.locator('text="Month calculation"').first().locator("xpath=..").locator('select, [role="combobox"]').first().isDisabled().catch(() => true);
+    // GENERIC: Track all interactive elements' disabled state after toggle
+    const elementsStateAfter = await captureInteractiveElementsState(page);
 
-    result.behavior_change.after = {
-      salary_component_disabled: salaryCompAfter,
-      month_calculation_disabled: monthCalcAfter
+    // GENERIC: Compare before/after states to document what changed
+    result.behavior_change = {
+      before: elementsStateBefore,
+      after: elementsStateAfter
     };
+
+    // GENERIC: Identify specific changes
+    result.what_changed = identifyChanges(elementsStateBefore, elementsStateAfter);
 
     // Toggle back to original state
     await toggle.click();
@@ -1473,37 +1587,210 @@ async function testToggle(page, serviceName, screenshotsDir) {
 }
 
 /**
- * Extracts leave types from a table in the modal
+ * GENERIC: Captures the state of all interactive elements on the page.
+ * Used to detect what changes when a toggle is flipped.
  */
-async function extractLeaveTypesTable(page) {
-  const leaveTypes = [];
+async function captureInteractiveElementsState(page) {
+  const state = {
+    fields: [],
+    buttons: [],
+    selects: []
+  };
 
   try {
-    // Find table rows
-    const rows = await page.locator('table tr, [class*="table"] [class*="row"]').all();
+    // Find all input fields and their disabled state
+    const inputs = await page.locator('input:not([type="checkbox"]):not([type="hidden"])').all();
+    for (let i = 0; i < Math.min(inputs.length, 20); i++) {
+      const input = inputs[i];
+      try {
+        const isDisabled = await input.isDisabled().catch(() => false);
+        const isVisible = await input.isVisible().catch(() => false);
+        if (isVisible) {
+          // Try to get label for this field
+          const placeholder = await input.getAttribute('placeholder').catch(() => null);
+          const name = await input.getAttribute('name').catch(() => null);
+          const id = await input.getAttribute('id').catch(() => null);
+          let label = placeholder || name || id || `field_${i}`;
 
-    for (const row of rows) {
-      const text = await row.textContent().catch(() => "");
-      // Skip header row
-      if (text.includes("Eligible") || text.includes("Daily wage calculation")) continue;
+          // Try to find associated label
+          if (id) {
+            const labelText = await page.locator(`label[for="${id}"]`).first().textContent().catch(() => null);
+            if (labelText) label = labelText.trim();
+          }
 
-      // Extract leave type name and calculation method
-      const cells = await row.locator('td, [class*="cell"]').all();
-      if (cells.length >= 2) {
-        const name = await cells[0].textContent().catch(() => "");
-        const calculation = await cells[1].textContent().catch(() => "");
-        if (name.trim()) {
-          leaveTypes.push({
-            name: name.trim(),
-            calculation: calculation.trim()
-          });
+          state.fields.push({ label, disabled: isDisabled });
+        }
+      } catch { /* continue */ }
+    }
+
+    // Find all select/combobox elements and their disabled state
+    const selects = await page.locator('select, [role="combobox"], [role="listbox"]').all();
+    for (let i = 0; i < Math.min(selects.length, 20); i++) {
+      const select = selects[i];
+      try {
+        const isDisabled = await select.isDisabled().catch(() => false);
+        const isVisible = await select.isVisible().catch(() => false);
+        if (isVisible) {
+          const name = await select.getAttribute('name').catch(() => null);
+          const ariaLabel = await select.getAttribute('aria-label').catch(() => null);
+          const label = ariaLabel || name || `select_${i}`;
+          state.selects.push({ label, disabled: isDisabled });
+        }
+      } catch { /* continue */ }
+    }
+
+    // Find all buttons and their disabled state
+    const buttons = await page.locator('button').all();
+    for (let i = 0; i < Math.min(buttons.length, 10); i++) {
+      const button = buttons[i];
+      try {
+        const isDisabled = await button.isDisabled().catch(() => false);
+        const isVisible = await button.isVisible().catch(() => false);
+        if (isVisible) {
+          const text = await button.textContent().catch(() => `button_${i}`);
+          state.buttons.push({ label: text.trim(), disabled: isDisabled });
+        }
+      } catch { /* continue */ }
+    }
+
+  } catch (err) {
+    console.log(`      Error capturing element states: ${err.message}`);
+  }
+
+  return state;
+}
+
+/**
+ * GENERIC: Compares before/after states and identifies what changed.
+ */
+function identifyChanges(before, after) {
+  const changes = [];
+
+  // Compare fields
+  for (let i = 0; i < Math.min(before.fields.length, after.fields.length); i++) {
+    const b = before.fields[i];
+    const a = after.fields[i];
+    if (b.disabled !== a.disabled) {
+      changes.push({
+        element: b.label,
+        type: 'field',
+        change: a.disabled ? 'became disabled' : 'became enabled'
+      });
+    }
+  }
+
+  // Compare selects
+  for (let i = 0; i < Math.min(before.selects.length, after.selects.length); i++) {
+    const b = before.selects[i];
+    const a = after.selects[i];
+    if (b.disabled !== a.disabled) {
+      changes.push({
+        element: b.label,
+        type: 'select',
+        change: a.disabled ? 'became disabled' : 'became enabled'
+      });
+    }
+  }
+
+  // Compare buttons
+  for (let i = 0; i < Math.min(before.buttons.length, after.buttons.length); i++) {
+    const b = before.buttons[i];
+    const a = after.buttons[i];
+    if (b.disabled !== a.disabled) {
+      changes.push({
+        element: b.label,
+        type: 'button',
+        change: a.disabled ? 'became disabled' : 'became enabled'
+      });
+    }
+  }
+
+  return changes;
+}
+
+/**
+ * GENERIC: Extracts data from any table in a modal/page.
+ * Works with any feature - not specific to leave types.
+ * Returns an array of row objects with dynamically detected columns.
+ */
+async function extractTableData(page) {
+  const tableData = {
+    headers: [],
+    rows: [],
+    summary: null
+  };
+
+  try {
+    // Find table element
+    const table = page.locator('table, [class*="table"], [role="grid"]').first();
+    if (!await table.isVisible({ timeout: 2000 }).catch(() => false)) {
+      return tableData;
+    }
+
+    // GENERIC: Extract headers dynamically
+    const headerCells = await table.locator('thead th, thead td, [class*="header"] [class*="cell"], tr:first-child th').all();
+    for (const cell of headerCells) {
+      const text = await cell.textContent().catch(() => "");
+      if (text.trim()) {
+        tableData.headers.push(text.trim());
+      }
+    }
+
+    // If no headers found, try first row
+    if (tableData.headers.length === 0) {
+      const firstRow = await table.locator('tr:first-child td').all();
+      // Check if first row looks like a header (short text in each cell)
+      let looksLikeHeader = true;
+      for (const cell of firstRow) {
+        const text = await cell.textContent().catch(() => "");
+        if (text.length > 50) looksLikeHeader = false;
+      }
+      if (looksLikeHeader && firstRow.length > 0) {
+        for (const cell of firstRow) {
+          const text = await cell.textContent().catch(() => "");
+          tableData.headers.push(text.trim());
         }
       }
     }
-  } catch { /* non-critical */ }
 
-  return leaveTypes;
+    // GENERIC: Extract all data rows
+    const rows = await table.locator('tbody tr, [class*="table-body"] [class*="row"]').all();
+
+    // If no tbody, get all rows and skip first (header)
+    let dataRows = rows;
+    if (rows.length === 0) {
+      const allRows = await table.locator('tr').all();
+      dataRows = allRows.slice(tableData.headers.length > 0 ? 1 : 0);
+    }
+
+    for (const row of dataRows) {
+      const cells = await row.locator('td, [class*="cell"]').all();
+      if (cells.length === 0) continue;
+
+      const rowData = {};
+      for (let i = 0; i < cells.length; i++) {
+        const text = await cells[i].textContent().catch(() => "");
+        const header = tableData.headers[i] || `column_${i}`;
+        rowData[header] = text.trim();
+      }
+
+      // Only add row if it has content
+      const hasContent = Object.values(rowData).some(v => v && v.trim());
+      if (hasContent) {
+        tableData.rows.push(rowData);
+      }
+    }
+
+    // Generate summary
+    tableData.summary = `Table with ${tableData.headers.length} columns and ${tableData.rows.length} data rows`;
+
+  } catch (err) {
+    console.log(`      Table extraction note: ${err.message}`);
+  }
+
+  return tableData;
 }
+
 
 /**
  * Closes a modal dialog
@@ -1534,6 +1821,457 @@ async function closeModal(page) {
     await page.keyboard.press("Escape");
     await page.waitForTimeout(500);
   } catch { /* non-critical */ }
+}
+
+// ------------------ UI DESCRIPTION & LOGIC VALIDATION ------------------
+/**
+ * GENERIC UI ANALYZER - Works for ANY feature
+ * Analyzes the current screen and generates human-readable descriptions of:
+ * - What's visible on the UI (all element types)
+ * - The purpose of each element (inferred from context)
+ * - Business logic and rules observed (patterns detected)
+ * - Relationships between elements (dependencies)
+ *
+ * This is FEATURE-AGNOSTIC and works for any Bayzat screen.
+ */
+async function describeCurrentScreen(page, context = {}) {
+  const description = {
+    screen_title: null,
+    screen_context: context.name || context.service || "Unknown screen",
+    visible_elements: [],
+    ui_explanation: "",
+    what_i_see: "",              // Plain text narrative of the screen
+    business_logic: [],
+    element_relationships: [],
+    user_actions_available: [],
+    data_displayed: [],
+    warnings_or_notes: [],
+    patterns_detected: []         // Generic patterns found (formulas, rules, etc.)
+  };
+
+  try {
+    // Get screen title from various sources
+    const titleSelectors = ['h1', 'h2', '[class*="title"]', '[class*="header"] h3', '[role="heading"]', '[class*="modal-title"]'];
+    for (const sel of titleSelectors) {
+      try {
+        const title = await page.locator(sel).first().textContent({ timeout: 1000 });
+        if (title && title.trim().length > 2 && title.trim().length < 100) {
+          description.screen_title = title.trim();
+          break;
+        }
+      } catch { /* continue */ }
+    }
+
+    // Identify ALL visible UI elements and their purposes
+    const elementAnalysis = [];
+
+    // Check for dropdowns/selects (generic)
+    const dropdowns = await page.locator('select, [role="combobox"], [role="listbox"], [class*="select"]:not([class*="unselect"])').all();
+    for (const dropdown of dropdowns.slice(0, 10)) {
+      try {
+        // Try multiple ways to find the label
+        let label = await dropdown.getAttribute("aria-label").catch(() => null);
+        if (!label) {
+          label = await dropdown.locator('xpath=ancestor::*[1]/label | xpath=preceding-sibling::label | xpath=../label').first().textContent().catch(() => null);
+        }
+        if (!label) {
+          label = await dropdown.locator('xpath=ancestor::*[2]//label').first().textContent().catch(() => null);
+        }
+        const currentValue = await dropdown.textContent().catch(() => "");
+        elementAnalysis.push({
+          type: "dropdown",
+          label: label?.trim() || "Selection field",
+          current_value: currentValue.substring(0, 100).trim(),
+          purpose: `Selection control${label ? ` for choosing ${label.trim()}` : ""}`
+        });
+      } catch { /* continue */ }
+    }
+
+    // Check for toggles/switches (generic)
+    const toggles = await page.locator('[role="switch"], input[type="checkbox"], [class*="toggle"], [class*="switch"]').all();
+    for (const toggle of toggles.slice(0, 10)) {
+      try {
+        const isChecked = await toggle.isChecked().catch(() => false);
+        // Try multiple ways to find the label
+        let labelEl = await toggle.getAttribute("aria-label").catch(() => null);
+        if (!labelEl) {
+          labelEl = await toggle.locator('xpath=ancestor::label | xpath=following-sibling::span | xpath=../span | xpath=ancestor::*[2]//span').first().textContent().catch(() => null);
+        }
+        elementAnalysis.push({
+          type: "toggle",
+          label: labelEl?.trim() || "Toggle switch",
+          state: isChecked ? "ON" : "OFF",
+          purpose: `Toggle control${labelEl ? ` for ${labelEl.trim()}` : ""} - enables or disables a setting`
+        });
+      } catch { /* continue */ }
+    }
+
+    // Check for input fields (generic)
+    const inputs = await page.locator('input[type="text"], input[type="number"], input[type="email"], input[type="date"], textarea').all();
+    for (const input of inputs.slice(0, 10)) {
+      try {
+        const placeholder = await input.getAttribute("placeholder").catch(() => null);
+        const inputType = await input.getAttribute("type").catch(() => "text");
+        let label = await input.getAttribute("aria-label").catch(() => null);
+        if (!label) {
+          label = await input.locator('xpath=preceding-sibling::label | xpath=../label | xpath=ancestor::*[2]//label').first().textContent().catch(() => null);
+        }
+        const value = await input.inputValue().catch(() => "");
+        const isDisabled = await input.isDisabled().catch(() => false);
+        elementAnalysis.push({
+          type: "input",
+          input_type: inputType,
+          label: label?.trim() || placeholder || "Input field",
+          current_value: value,
+          is_disabled: isDisabled,
+          purpose: `${inputType} input field${label ? ` for ${label.trim()}` : ""}${isDisabled ? " (disabled)" : ""}`
+        });
+      } catch { /* continue */ }
+    }
+
+    // Check for buttons (generic)
+    const buttons = await page.locator('button:visible, [role="button"]:visible').all();
+    for (const button of buttons.slice(0, 15)) {
+      try {
+        const text = await button.textContent().catch(() => "");
+        const ariaLabel = await button.getAttribute("aria-label").catch(() => null);
+        const isDisabled = await button.isDisabled().catch(() => false);
+        const buttonText = text.trim() || ariaLabel || "";
+        if (buttonText && buttonText.length < 50) {
+          description.user_actions_available.push({
+            action: buttonText,
+            type: "button",
+            is_disabled: isDisabled
+          });
+        }
+      } catch { /* continue */ }
+    }
+
+    // Check for tables with data (generic)
+    const tables = await page.locator('table, [role="table"], [class*="table"]').all();
+    for (const table of tables.slice(0, 5)) {
+      try {
+        const headers = await table.locator('th, [role="columnheader"]').allTextContents();
+        const rowCount = await table.locator('tbody tr, [role="row"]').count();
+        if (headers.length > 0 || rowCount > 0) {
+          description.data_displayed.push({
+            type: "table",
+            columns: headers.slice(0, 10).map(h => h.trim()).filter(h => h),
+            row_count: rowCount,
+            purpose: headers.length > 0
+              ? `Data table with columns: ${headers.slice(0, 5).map(h => h.trim()).filter(h => h).join(", ")}`
+              : `Data table with ${rowCount} rows`
+          });
+        }
+      } catch { /* continue */ }
+    }
+
+    // Check for links (generic)
+    const links = await page.locator('a:visible').all();
+    for (const link of links.slice(0, 10)) {
+      try {
+        const text = await link.textContent().catch(() => "");
+        if (text.trim() && text.length < 50) {
+          description.user_actions_available.push({
+            action: text.trim(),
+            type: "link"
+          });
+        }
+      } catch { /* continue */ }
+    }
+
+    // GENERIC PATTERN DETECTION - Look for formulas, calculations, rules
+    const pageText = await page.locator('[role="dialog"], [class*="modal"], main, [class*="content"], body').first().textContent().catch(() => "");
+
+    // Generic formula patterns (not feature-specific)
+    const formulaPatterns = [
+      { pattern: /(\w+)\s*=\s*\([^)]+\)\s*[\/\*\+\-]\s*\(?[^)]+\)?/gi, type: "calculation" },
+      { pattern: /calculated?\s+(?:as|by|using)\s+[^.]+/gi, type: "calculation_method" },
+      { pattern: /formula[:\s]+[^.]+/gi, type: "formula_description" },
+      { pattern: /(\d+(?:\.\d+)?)\s*(?:days?|hours?|%|percent)/gi, type: "numeric_value" },
+      { pattern: /(?:total|sum|average|rate|ratio)[:\s]+[^.]+/gi, type: "aggregate" }
+    ];
+
+    for (const { pattern, type } of formulaPatterns) {
+      const matches = pageText.match(pattern);
+      if (matches) {
+        for (const match of matches.slice(0, 3)) {
+          description.patterns_detected.push({
+            type: type,
+            text: match.trim().substring(0, 200),
+            explanation: `${type.replace(/_/g, " ")} detected: ${match.trim().substring(0, 100)}`
+          });
+          description.business_logic.push({
+            type: type,
+            text: match.trim().substring(0, 200),
+            explanation: `${type.replace(/_/g, " ")} detected: ${match.trim().substring(0, 100)}`
+          });
+        }
+      }
+    }
+
+    // Look for informational text, notes, warnings (generic)
+    const noteSelectors = ['[class*="info"]', '[class*="note"]', '[class*="help"]', '[class*="description"]', '[class*="hint"]', '[class*="warning"]', '[class*="alert"]'];
+    for (const sel of noteSelectors) {
+      try {
+        const notes = await page.locator(sel).allTextContents();
+        for (const note of notes.slice(0, 5)) {
+          if (note.trim().length > 20 && note.trim().length < 500) {
+            description.warnings_or_notes.push(note.trim());
+          }
+        }
+      } catch { /* continue */ }
+    }
+
+    // Detect element relationships (what controls what)
+    for (const toggle of elementAnalysis.filter(e => e.type === "toggle")) {
+      // Check if any inputs become disabled/enabled based on toggle state
+      description.element_relationships.push({
+        controller: toggle.label,
+        controller_type: "toggle",
+        controller_state: toggle.state,
+        effect: `May control visibility or enabled state of related fields`
+      });
+    }
+
+    description.visible_elements = elementAnalysis;
+
+    // Generate human-readable explanation
+    description.ui_explanation = generateUIExplanation(description);
+
+    // Generate "what I see" narrative
+    description.what_i_see = generateWhatISee(description);
+
+  } catch (err) {
+    description.error = err.message;
+  }
+
+  return description;
+}
+
+/**
+ * Generates a human-readable explanation of the UI based on analyzed elements
+ * GENERIC - works for any screen
+ */
+function generateUIExplanation(description) {
+  const parts = [];
+
+  if (description.screen_title) {
+    parts.push(`This screen shows "${description.screen_title}".`);
+  }
+
+  // Describe dropdowns
+  const dropdowns = description.visible_elements.filter(e => e.type === "dropdown");
+  if (dropdowns.length > 0) {
+    parts.push(`There ${dropdowns.length === 1 ? "is" : "are"} ${dropdowns.length} dropdown${dropdowns.length > 1 ? "s" : ""} available:`);
+    for (const d of dropdowns) {
+      parts.push(`  - ${d.label}: currently showing "${d.current_value}"`);
+    }
+  }
+
+  // Describe toggles
+  const toggles = description.visible_elements.filter(e => e.type === "toggle");
+  if (toggles.length > 0) {
+    parts.push(`Toggle settings found:`);
+    for (const t of toggles) {
+      parts.push(`  - ${t.label}: currently ${t.state}`);
+    }
+  }
+
+  // Describe inputs
+  const inputs = description.visible_elements.filter(e => e.type === "input");
+  if (inputs.length > 0) {
+    parts.push(`Input fields present:`);
+    for (const i of inputs) {
+      const status = i.is_disabled ? " (disabled)" : "";
+      parts.push(`  - ${i.label}${i.current_value ? `: value is "${i.current_value}"` : ""}${status}`);
+    }
+  }
+
+  // Describe tables
+  if (description.data_displayed.length > 0) {
+    parts.push(`Data tables present:`);
+    for (const t of description.data_displayed) {
+      parts.push(`  - ${t.purpose} (${t.row_count} rows)`);
+    }
+  }
+
+  // Describe business logic/formulas
+  if (description.business_logic.length > 0) {
+    parts.push(`Business logic observed:`);
+    for (const bl of description.business_logic) {
+      parts.push(`  - ${bl.explanation}`);
+    }
+  }
+
+  // Available actions
+  const enabledActions = description.user_actions_available.filter(a => !a.is_disabled);
+  if (enabledActions.length > 0) {
+    const actions = enabledActions.map(a => a.action).join(", ");
+    parts.push(`Available actions: ${actions}`);
+  }
+
+  return parts.join("\n");
+}
+
+/**
+ * Generates a plain-text narrative of "what I see on screen"
+ * GENERIC - works for any screen
+ */
+function generateWhatISee(description) {
+  const parts = [];
+
+  // Opening statement
+  if (description.screen_title) {
+    parts.push(`I'm looking at a screen titled "${description.screen_title}".`);
+  } else {
+    parts.push(`I'm looking at a configuration screen.`);
+  }
+
+  // Describe main elements
+  const dropdowns = description.visible_elements.filter(e => e.type === "dropdown");
+  const toggles = description.visible_elements.filter(e => e.type === "toggle");
+  const inputs = description.visible_elements.filter(e => e.type === "input");
+
+  if (dropdowns.length > 0) {
+    parts.push(`I can see ${dropdowns.length} dropdown selection${dropdowns.length > 1 ? "s" : ""} that let${dropdowns.length === 1 ? "s" : ""} users choose from predefined options.`);
+    for (const d of dropdowns) {
+      if (d.current_value) {
+        parts.push(`The "${d.label}" dropdown is currently set to "${d.current_value}".`);
+      }
+    }
+  }
+
+  if (toggles.length > 0) {
+    parts.push(`There ${toggles.length === 1 ? "is" : "are"} ${toggles.length} toggle switch${toggles.length > 1 ? "es" : ""} for enabling/disabling settings.`);
+    for (const t of toggles) {
+      parts.push(`The "${t.label}" toggle is ${t.state}.`);
+    }
+  }
+
+  if (inputs.length > 0) {
+    const enabledInputs = inputs.filter(i => !i.is_disabled);
+    const disabledInputs = inputs.filter(i => i.is_disabled);
+    if (enabledInputs.length > 0) {
+      parts.push(`There ${enabledInputs.length === 1 ? "is" : "are"} ${enabledInputs.length} editable input field${enabledInputs.length > 1 ? "s" : ""}.`);
+    }
+    if (disabledInputs.length > 0) {
+      parts.push(`${disabledInputs.length} input field${disabledInputs.length > 1 ? "s are" : " is"} currently disabled.`);
+    }
+  }
+
+  // Describe tables
+  if (description.data_displayed.length > 0) {
+    for (const t of description.data_displayed) {
+      parts.push(`I can see a data table with ${t.row_count} rows${t.columns.length > 0 ? ` and columns: ${t.columns.join(", ")}` : ""}.`);
+    }
+  }
+
+  // Describe any formulas or calculations
+  if (description.patterns_detected.length > 0) {
+    parts.push(`I notice some business logic displayed:`);
+    for (const p of description.patterns_detected) {
+      parts.push(`- ${p.text}`);
+    }
+  }
+
+  // Available actions
+  const buttons = description.user_actions_available.filter(a => a.type === "button" && !a.is_disabled);
+  if (buttons.length > 0) {
+    parts.push(`The available action buttons are: ${buttons.map(b => b.action).join(", ")}.`);
+  }
+
+  // Notes or warnings
+  if (description.warnings_or_notes.length > 0) {
+    parts.push(`I also see some informational notes on the screen.`);
+  }
+
+  return parts.join(" ");
+}
+
+/**
+ * GENERIC Business Logic Analyzer
+ * Validates and documents business logic observed in the UI
+ * Works for ANY feature by detecting patterns, not hardcoded rules
+ */
+async function analyzeBusinessLogic(page, context = {}) {
+  const analysis = {
+    context: context.name || context.service || "screen",
+    rules_detected: [],
+    formulas_found: [],
+    conditions_found: [],
+    dependencies_found: [],
+    logic_summary: ""
+  };
+
+  try {
+    const pageText = await page.locator('[role="dialog"], [class*="modal"], main, [class*="content"], body').first().textContent().catch(() => "");
+
+    // Detect formulas (any pattern like: X = Y / Z)
+    const formulaMatches = pageText.match(/\w+\s*=\s*[^.;]+/gi) || [];
+    for (const formula of formulaMatches.slice(0, 5)) {
+      if (formula.length > 10 && formula.length < 200) {
+        analysis.formulas_found.push({
+          formula: formula.trim(),
+          explanation: `Formula detected: ${formula.trim()}`
+        });
+      }
+    }
+
+    // Detect conditional text (when X, if Y, based on Z)
+    const conditionalPatterns = [
+      /when\s+[^.]+/gi,
+      /if\s+[^.]+\s+then\s+[^.]+/gi,
+      /based\s+on\s+[^.]+/gi,
+      /depending\s+on\s+[^.]+/gi,
+      /applies\s+to\s+[^.]+/gi
+    ];
+
+    for (const pattern of conditionalPatterns) {
+      const matches = pageText.match(pattern) || [];
+      for (const match of matches.slice(0, 3)) {
+        analysis.conditions_found.push({
+          condition: match.trim(),
+          explanation: `Conditional logic: ${match.trim()}`
+        });
+      }
+    }
+
+    // Detect method/option descriptions
+    const methodPatterns = [
+      /(\w+(?:\s+\w+)?)\s*[-–:]\s*([^.]+)/gi  // "Option: description" pattern
+    ];
+
+    for (const pattern of methodPatterns) {
+      let match;
+      while ((match = pattern.exec(pageText)) !== null && analysis.rules_detected.length < 5) {
+        if (match[1].length > 3 && match[2].length > 10) {
+          analysis.rules_detected.push({
+            rule: match[1].trim(),
+            explanation: match[2].trim().substring(0, 200)
+          });
+        }
+      }
+    }
+
+    // Generate summary
+    const summaryParts = [];
+    if (analysis.formulas_found.length > 0) {
+      summaryParts.push(`Found ${analysis.formulas_found.length} formula(s) on the screen.`);
+    }
+    if (analysis.conditions_found.length > 0) {
+      summaryParts.push(`Detected ${analysis.conditions_found.length} conditional logic statement(s).`);
+    }
+    if (analysis.rules_detected.length > 0) {
+      summaryParts.push(`Identified ${analysis.rules_detected.length} business rule(s).`);
+    }
+    analysis.logic_summary = summaryParts.join(" ") || "No explicit business logic detected on this screen.";
+
+  } catch (err) {
+    analysis.error = err.message;
+  }
+
+  return analysis;
 }
 
 // ------------------ SEMANTIC CLAIM VALIDATION ------------------
