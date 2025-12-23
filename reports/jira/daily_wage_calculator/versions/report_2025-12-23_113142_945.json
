@@ -1,0 +1,2740 @@
+{
+  "schema_version": "jira_feature_report_v1",
+  "meta": {
+    "source": "jira",
+    "generated_at": "2025-12-23",
+    "feature_name": "daily_wage_calculator",
+    "feature_slug": "daily_wage_calculator",
+    "clean_feature_name": "daily_wage_calculator",
+    "tickets_received_count": 15,
+    "parsed_items": 19,
+    "input_items": 20,
+    "parse_failures_count": 1,
+    "total_reference_ticket_keys": 19,
+    "extracted_feature_name": null,
+    "feature_scope_match": null,
+    "feature_scope_notes": null,
+    "relation_to_requested_feature": null,
+    "requested_feature_dependency_evidence": null,
+    "module_area": "Payroll"
+  },
+  "feature": {
+    "name": "daily_wage_calculator",
+    "slug": "daily_wage_calculator",
+    "description": "Operationally, \"daily_wage_calculator\" is used to compute daily-rate based salary amounts (e.g., deductions, proration, or settlement-related calculations) based on configuration and payroll/leave context. Ticket evidence repeatedly connects this behaviour to unpaid leave deductions and leave-related payroll adjustments. Evidence indicates calculations may use either calendar days or working days (with weekends/holidays considerations) depending on configuration and scenario. Tickets highlight configuration precedence where global payroll settings can override policy-level settings, creating unexpected outcomes for users. Tickets also report UI/display mismatches (e.g., remarks showing different day counts) even when backend calculations are otherwise consistent. Several tickets suggest recalculation/synchronization gaps where changes (salary config, holidays, deleted requests) do not retroactively update already-generated results. Customer requests frequently ask for greater configurability, clearer transparency, and control over calculation bases and divisors."
+  },
+  "reference_ticket_keys": [
+    "TSSD-4905",
+    "TSSD-2648",
+    "TSSD-1581",
+    "TSSD-4179",
+    "TSSD-2605",
+    "TSSD-4742",
+    "TSSD-1625",
+    "TSSD-2043",
+    "TSSD-4731",
+    "TSSD-3648",
+    "TSSD-2321",
+    "TSSD-4292",
+    "TSSD-3058",
+    "TSSD-2532",
+    "TSSD-4464",
+    "TSSD-4368",
+    "TSSD-1301",
+    "TSSD-1753",
+    "TSSD-1807"
+  ],
+  "source_tickets": [
+    {
+      "ticket_key": "TSSD-4905"
+    },
+    {
+      "ticket_key": "TSSD-2648"
+    },
+    {
+      "ticket_key": "TSSD-1581"
+    },
+    {
+      "ticket_key": "TSSD-4179"
+    },
+    {
+      "ticket_key": "TSSD-2605"
+    },
+    {
+      "ticket_key": "TSSD-4742"
+    },
+    {
+      "ticket_key": "TSSD-1625"
+    },
+    {
+      "ticket_key": "TSSD-2043"
+    },
+    {
+      "ticket_key": "TSSD-4731"
+    },
+    {
+      "ticket_key": "TSSD-3648"
+    },
+    {
+      "ticket_key": "TSSD-2321"
+    },
+    {
+      "ticket_key": "TSSD-4292"
+    },
+    {
+      "ticket_key": "TSSD-3058"
+    },
+    {
+      "ticket_key": "TSSD-2532"
+    },
+    {
+      "ticket_key": "TSSD-4464"
+    },
+    {
+      "ticket_key": "TSSD-4368"
+    },
+    {
+      "ticket_key": "TSSD-1301"
+    },
+    {
+      "ticket_key": "TSSD-1753"
+    },
+    {
+      "ticket_key": "TSSD-1807"
+    }
+  ],
+  "operational_reality": {
+    "known_issues": [
+      {
+        "group_key": "payroll_calculation_automation_gap",
+        "group_title": "Payroll Calculation Automation Gap",
+        "title": "Lack of Automated Salary Calculation",
+        "issue_explanation": "The current system lacks automated salary calculation based on precise working days, requiring manual tracking and interventions for overtime and unpaid leaves.",
+        "severity_for_docs": "high",
+        "limitation_type": "feature_gap",
+        "limitation_statement": "The Bayzat payroll system cannot dynamically adjust salaries proportionally when employees work more or fewer than the standard 26 working days.",
+        "gap_candidate": true,
+        "gap_statement": "Significant product gap in attendance-driven salary calculation, with no support for automatic pro-rata salary adjustments per employee.",
+        "evidence_ticket_keys": [
+          "TSSD-4905"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_wage_formula_override",
+        "group_title": "Daily Wage Formula Override",
+        "title": "Payroll Settings Override Leave Policy Daily Wage Formula",
+        "issue_explanation": "The daily wage calculator in payroll settings intentionally overrides the leave policy formula for unpaid leave. The leave policy formula appears greyed out, indicating it is not active. This creates user confusion about which formula is actually being applied for daily wage calculations.",
+        "severity_for_docs": "medium",
+        "limitation_type": "ux_issue",
+        "limitation_statement": "The platform lacks clear visual communication about formula override mechanisms. Users cannot easily understand why formulas are greyed out or how payroll settings supersede leave policy configurations.",
+        "gap_candidate": true,
+        "gap_statement": "No synchronized mechanism exists for daily wage formula configuration between leave policy and payroll modules. Manual alignment is required.",
+        "evidence_ticket_keys": [
+          "TSSD-2648"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "unpaid_leave_deduction_calculation",
+        "title": "Unpaid Leave Deduction Calculation",
+        "issue_explanation": "System failed to recalculate pending unpaid leave deductions when new salary configurations were created after leave request submission. Deductions were incorrectly based on previous salary configuration instead of current one, resulting in payroll calculation discrepancies.",
+        "evidence_ticket_keys": [
+          "TSSD-1581",
+          "TSSD-4368"
+        ],
+        "severity_for_docs": "high | medium",
+        "limitation_type": "calculation_bug | calculation_method",
+        "gap_candidate": "true",
+        "gap_statement": "Product gap in dynamic salary configuration handling, specifically in automatically updating pending leave deductions when salary configurations change. | Lack of transparent explanation for complex payroll calculation methods, especially for leave deductions that might exceed monthly salary",
+        "all_ticket_keys": [
+          "TSSD-1581",
+          "TSSD-4368"
+        ]
+      },
+      {
+        "group_key": "leap_year_calculation_error",
+        "group_title": "Leap Year Calculation Error",
+        "title": "End of Service Gratuity Leap Year Miscalculation",
+        "issue_explanation": "The system incorrectly calculates service days by using 365 days instead of 366 days for leap years (specifically 2024), resulting in an inaccurate total service period and reduced gratuity amount.",
+        "severity_for_docs": "high",
+        "limitation_type": "calculation_bug",
+        "limitation_statement": "Gratuity calculation logic does not automatically adjust for leap years, causing potential underpayment of employee benefits.",
+        "gap_candidate": true,
+        "gap_statement": "The daily wage calculator lacks dynamic leap year recognition in service period computations.",
+        "evidence_ticket_keys": [
+          "TSSD-4179"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "eos_calculation_decimal_precision",
+        "group_title": "EOS Calculation Decimal Precision",
+        "title": "Pro-Rated End of Service Amount Calculation Error",
+        "issue_explanation": "End of Service (EOS) calculation is producing incorrect pro-rated amounts due to a rounding or decimal precision error. The daily wage formula (basic + allowances / 30) is configured correctly, but when calculating pro-rated EOS amounts, the system consistently shows amounts that are less than expected by 0.1 or 0.2 decimals.",
+        "severity_for_docs": "medium",
+        "limitation_type": "calculation_bug",
+        "limitation_statement": "The platform's current daily wage calculation engine has a decimal precision limitation that causes systematic undercalculation of pro-rated amounts.",
+        "gap_candidate": true,
+        "gap_statement": "There is a potential product gap in the precision of financial calculations, specifically in pro-rated salary computations. The system needs enhanced rounding and decimal handling mechanisms to ensure exact financial calculations.",
+        "evidence_ticket_keys": [
+          "TSSD-2605"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "gratuity_calculation_complexity",
+        "group_title": "Gratuity Calculation Complexity",
+        "title": "EOS Gratuity Calculation Discrepancy",
+        "issue_explanation": "System gratuity calculation shows slight differences from manual calculations due to complex service duration and daily wage formula",
+        "severity_for_docs": "medium",
+        "limitation_type": "calculation_complexity",
+        "limitation_statement": "Gratuity calculation involves multiple tiers and prorated calculations for service duration",
+        "gap_candidate": true,
+        "gap_statement": "Potential lack of transparency in how partial years and service duration tiers are calculated",
+        "evidence_ticket_keys": [
+          "TSSD-4742"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "leap_year_day_calculation",
+        "group_title": "Leap Year Day Calculation",
+        "title": "Gratuity Calculation Not Considering Leap Year Days",
+        "issue_explanation": "The system's gratuity calculation may not consistently handle leap year days (specifically February 29th), potentially causing minor discrepancies in service duration calculations. The system calculated 912 days, while manual calculation suggested 913 days including the leap day.",
+        "severity_for_docs": "low",
+        "limitation_type": "calculation_precision",
+        "limitation_statement": "Leap year day inclusion in service duration calculation is not transparently handled",
+        "gap_candidate": true,
+        "gap_statement": "Need for clear documentation on how leap year days are counted in service duration calculations",
+        "evidence_ticket_keys": [
+          "TSSD-1625"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "gratuity_calculation_days_discrepancy",
+        "group_title": "Gratuity Calculation Days Discrepancy",
+        "title": "Incorrect Days Calculation in Gratuity Computation",
+        "issue_explanation": "System calculates one extra day in job tenure (622 vs 623 days), potentially affecting gratuity calculation precision. The platform captures 623 days instead of the expected 622 days when computing years of service.",
+        "severity_for_docs": "low",
+        "limitation_type": "calculation_bug",
+        "limitation_statement": "Minor discrepancy in days worked calculation may cause slight variations in gratuity amount",
+        "gap_candidate": true,
+        "gap_statement": "Potential precision issue in days worked calculation logic",
+        "evidence_ticket_keys": [
+          "TSSD-2043"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_wage_calculation_policy",
+        "group_title": "Daily Wage Calculation Policy",
+        "title": "Leave Salary Calculation Discrepancy",
+        "issue_explanation": "System calculates leave salary based on predefined policy configuration, which may not align with user expectations about calendar days and prorated calculations. Users may misunderstand how daily wage is divided (31 vs 30 days) and resulting prorated salary amount.",
+        "severity_for_docs": "medium",
+        "limitation_type": "configuration_problem",
+        "limitation_statement": "Leave salary calculation is rigidly tied to predefined policy configurations that may not flexibly adapt to varying month lengths or specific employee scenarios.",
+        "gap_candidate": true,
+        "gap_statement": "Lack of transparent explanation about how leave salary calculations are performed, including clear documentation about daily rate divisor configurations and policy-driven calculations.",
+        "evidence_ticket_keys": [
+          "TSSD-4731"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "working_days_accrual_variation",
+        "group_title": "Working Days Accrual Variation",
+        "title": "Leave Salary Accrual Calculation Inconsistency",
+        "issue_explanation": "The daily wage calculator's 'working days' setting causes monthly fluctuations in leave salary accrual calculations. The daily wage rate changes based on the number of working days in each month, leading to inconsistent cumulative totals.",
+        "severity_for_docs": "medium",
+        "limitation_type": "configuration_problem",
+        "limitation_statement": "Daily wage calculations vary month-to-month due to different working day counts",
+        "gap_candidate": true,
+        "gap_statement": "The platform lacks a consistent method for calculating leave salary accruals across months with varying working days",
+        "evidence_ticket_keys": [
+          "TSSD-3648"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_wage_divisor_mismatch",
+        "group_title": "Daily Wage Divisor Mismatch",
+        "title": "Leave Salary Calculation Inconsistency",
+        "issue_explanation": "The system uses different divisors for leave salary and salary proration calculations. Leave salary uses a 30-day divisor, while salary proration uses a 30.42-day divisor, causing calculation discrepancies.",
+        "severity_for_docs": "medium",
+        "limitation_type": "calculation_configuration",
+        "limitation_statement": "Leave salary and salary proration daily wage calculations are configured independently with different divisors.",
+        "gap_candidate": true,
+        "gap_statement": "No unified daily wage calculation method across leave salary and salary proration scenarios",
+        "evidence_ticket_keys": [
+          "TSSD-2321"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "working_days_calculation_misunderstanding",
+        "group_title": "Working Days Calculation Misunderstanding",
+        "title": "Proration Calculation Confusion",
+        "issue_explanation": "User initially misunderstood how working days are calculated based on work week configuration. The system was actually calculating correctly, but the user did not initially understand that their specific work week (NVK Operations) had all 7 days configured as working days.",
+        "severity_for_docs": "low",
+        "limitation_type": "configuration_problem",
+        "limitation_statement": "Working days calculation depends entirely on work week configuration",
+        "gap_candidate": false,
+        "gap_statement": null,
+        "evidence_ticket_keys": [
+          "TSSD-4292"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "salary_proration_future_departure",
+        "group_title": "Salary Proration Future Departure",
+        "title": "Incorrect Salary Proration for Offboarded Employees",
+        "issue_explanation": "The system fails to correctly prorate salaries when an employee's departure date is in the future relative to payroll processing date. When processing payroll earlier than the departure date, the system displays the full monthly salary instead of a prorated amount.",
+        "severity_for_docs": "medium",
+        "limitation_type": "calculation_bug",
+        "limitation_statement": "Payroll system lacks robust date-sensitive proration logic for employees with future departure dates",
+        "gap_candidate": true,
+        "gap_statement": "Calculation logic does not handle dynamic proration scenarios for employees with departure dates different from payroll processing date",
+        "evidence_ticket_keys": [
+          "TSSD-3058"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "unpaid_leave_deduction_sync",
+        "group_title": "Unpaid Leave Deduction Synchronization",
+        "title": "Persistent Payroll Deductions After Leave Request Deletion",
+        "issue_explanation": "When an unpaid leave request is approved and transaction submitted, then the daily wage calculation is changed and the transaction deleted to recalculate, the system creates duplicate deductions—one with the old calculation and one with the new. Deleting the leave request does not remove associated payroll deductions.",
+        "severity_for_docs": "high",
+        "limitation_type": "data_inconsistency",
+        "limitation_statement": "The platform lacks robust synchronization logic between leave management and payroll deduction systems.",
+        "gap_candidate": true,
+        "gap_statement": "Product gap in leave-to-payroll transaction management, specifically around handling recalculations, deletions, and status changes of leave requests without creating orphaned or duplicate deductions.",
+        "evidence_ticket_keys": [
+          "TSSD-2532"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "public_holiday_calculation_mismatch",
+        "group_title": "Public Holiday Calculation Mismatch",
+        "title": "Unpaid Leave Deduction Calculation Inconsistency",
+        "issue_explanation": "When public holidays are added after a leave request is created, there is a timing mismatch between Payroll and Time Off modules causing incorrect daily wage calculations. The system cannot recalculate deductions retroactively, leading to inconsistent salary deduction amounts.",
+        "severity_for_docs": "high",
+        "limitation_type": "data_synchronization",
+        "limitation_statement": "The Bayzat platform lacks real-time synchronization between Time Off and Payroll modules, preventing automatic recalculation when public holidays are added after leave requests.",
+        "gap_candidate": true,
+        "gap_statement": "Need for module communication enhancement to ensure accurate working days calculation and consistent salary deduction across system configurations.",
+        "evidence_ticket_keys": [
+          "TSSD-4464"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "remarks_display_mismatch",
+        "group_title": "Remarks Display Mismatch",
+        "title": "Incorrect Days Displayed in Unpaid Leave Remarks",
+        "issue_explanation": "The system displays incorrect number of days (31 instead of 29) in the remarks section for February unpaid leave calculations, despite the backend calculation being mathematically correct.",
+        "severity_for_docs": "low",
+        "limitation_type": "ux_issue",
+        "limitation_statement": "The platform currently displays incorrect remarks for daily wage calculations in February, showing 31 days instead of the actual 29 days for leap years.",
+        "gap_candidate": true,
+        "gap_statement": "Need for a dynamic calendar days detection mechanism that automatically adjusts daily rate calculations and remarks based on the actual number of days in each month, especially for edge cases like February in leap years.",
+        "evidence_ticket_keys": [
+          "TSSD-1301"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "unpaid_leave_calculation_override",
+        "group_title": "Unpaid Leave Calculation Override",
+        "title": "Incorrect Unpaid Leave Deduction Calculation",
+        "issue_explanation": "The system applies a global daily rate configuration that overrides individual leave policy settings for unpaid leave deductions. Instead of using Basic Salary / Working Days as configured, the system uses a global daily rate that calculates deductions using gross salary, potentially leading to incorrect salary deductions.",
+        "severity_for_docs": "high",
+        "limitation_type": "configuration_problem",
+        "limitation_statement": "Global daily rate settings automatically override policy-specific unpaid leave calculation methods",
+        "gap_candidate": true,
+        "gap_statement": "Lack of transparency in configuration hierarchy and limited user controls for customizing leave deduction calculations across different work schedules",
+        "evidence_ticket_keys": [
+          "TSSD-1753"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_rate_display_mismatch",
+        "group_title": "Daily Rate Display Mismatch",
+        "title": "Incorrect Daily Rate Display Across Payroll Months",
+        "issue_explanation": "The system recalculates daily rates based on the payroll processing month instead of storing and displaying the rate from the original leave occurrence month, causing user confusion.",
+        "severity_for_docs": "medium",
+        "limitation_type": "ui_display",
+        "limitation_statement": "Daily rate display does not consistently show the rate from the leave occurrence month",
+        "gap_candidate": true,
+        "gap_statement": "Need a consistent daily rate display mechanism that preserves the initially calculated rate at the time of leave request",
+        "evidence_ticket_keys": [
+          "TSSD-1807"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      }
+    ],
+    "limitations": [
+      {
+        "group_key": "working_days_calculation",
+        "group_title": "Working Days Calculation",
+        "title": "Fixed 26 Working Days Monthly Calculation",
+        "limitation_type": "calculation_method",
+        "limitation_statement": "Salary is based on a standard 26 working days per month, calculated from 365 annual days minus 52 weekly offs, resulting in 313 working days per year divided by 12 months.",
+        "impact": "Requires manual adjustments for variations in actual worked days",
+        "evidence_ticket_keys": [
+          "TSSD-4905"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_wage_formula_precedence",
+        "group_title": "Daily Wage Formula Precedence",
+        "title": "Payroll Settings Take Precedence Over Leave Policy",
+        "limitation_type": "configuration_override",
+        "limitation_statement": "Payroll daily wage calculator configuration overrides leave policy formula for unpaid leave calculations. The payroll-side configuration always takes precedence.",
+        "impact": "Users cannot directly modify the daily wage formula in leave policy when payroll settings are configured",
+        "evidence_ticket_keys": [
+          "TSSD-2648"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "salary_configuration_timing",
+        "group_title": "Salary Configuration Timing",
+        "title": "Salary Config Dependency in Leave Deduction",
+        "limitation_type": "configuration_dependency",
+        "limitation_statement": "Unpaid leave deduction calculations are dependent on the timing of salary configuration creation relative to leave request submission.",
+        "impact": "Potential incorrect payroll deductions if salary configuration is not created before or updated with leave request",
+        "evidence_ticket_keys": [
+          "TSSD-1581"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "leap_year_day_count_limitation",
+        "group_title": "Leap Year Day Count Limitation",
+        "title": "Incorrect Leap Year Day Counting",
+        "limitation_type": "calculation_constraint",
+        "limitation_statement": "System defaults to 365 days per year, failing to recognize 366 days in leap years during service period calculations.",
+        "impact": "Potentially underpays end of service gratuity by miscalculating total working days",
+        "evidence_ticket_keys": [
+          "TSSD-4179"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_wage_calculation_precision",
+        "group_title": "Daily Wage Calculation Precision",
+        "title": "Decimal Precision Limitation in Pro-Rated Calculations",
+        "limitation_type": "calculation_precision",
+        "limitation_statement": "Daily wage calculations consistently produce amounts that are 0.1 or 0.2 less than expected when computing pro-rated End of Service amounts.",
+        "impact": "Potential financial discrepancies in employee final settlements",
+        "evidence_ticket_keys": [
+          "TSSD-2605"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "monthly_leave_accrual_policy",
+        "group_title": "Monthly Leave Accrual Policy",
+        "title": "Limited Mid-Month Leave Accrual Handling",
+        "limitation_type": "accrual_policy_constraint",
+        "limitation_statement": "Leave days are only accrued at the end of the month, preventing prorated accrual for mid-month departures",
+        "impact": "Employees departing mid-month cannot automatically include current month's leave balance in End of Service settlement",
+        "evidence_ticket_keys": [
+          "TSSD-4742"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "gratuity_calculation_methodology",
+        "group_title": "Gratuity Calculation Methodology",
+        "title": "Service Duration Calculation Rules",
+        "limitation_type": "calculation_logic",
+        "limitation_statement": "Unclear rules for counting service days, including whether departure date is considered a working day and how leap year days are handled",
+        "impact": "Potential minor discrepancies in gratuity amount calculations",
+        "evidence_ticket_keys": [
+          "TSSD-1625"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_wage_calculation_inflexibility",
+        "group_title": "Daily Wage Calculation Inflexibility",
+        "title": "Fixed Daily Wage Computation Method",
+        "limitation_type": "calculation_method",
+        "limitation_statement": "Daily wage is calculated using a hardcoded divisor of 30 days (Basic/30), which cannot be modified or configured to alternative formulas",
+        "impact": "Prevents customization of gratuity calculation methodology for different organizational requirements",
+        "evidence_ticket_keys": [
+          "TSSD-2043"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_rate_configuration_constraint",
+        "group_title": "Daily Rate Configuration Constraint",
+        "title": "Inflexible Daily Wage Divisor",
+        "limitation_type": "calculation_rigidity",
+        "limitation_statement": "The platform uses a fixed divisor for daily wage calculation based on policy configuration, which cannot be easily overridden for specific scenarios.",
+        "impact": "Users cannot modify the daily rate divisor to account for different month lengths or unique leave scenarios",
+        "evidence_ticket_keys": [
+          "TSSD-4731"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "working_days_calculation_method",
+        "group_title": "Working Days Calculation Method",
+        "title": "Monthly Variation in Daily Wage Calculation",
+        "limitation_type": "configuration_constraint",
+        "limitation_statement": "Leave encashment calculations are based on working days, which means the daily wage rate changes each month depending on the number of working days",
+        "impact": "Cumulative leave salary accruals will differ month-to-month due to varying working day counts",
+        "evidence_ticket_keys": [
+          "TSSD-3648"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "independent_daily_wage_configs",
+        "group_title": "Independent Daily Wage Configurations",
+        "title": "Separate Calculation Methods for Leave and Proration",
+        "limitation_type": "configuration_independence",
+        "limitation_statement": "The system calculates leave salary and salary proration using separate configurations that cannot be automatically aligned",
+        "impact": "Potential calculation discrepancies between leave salary and regular salary proration",
+        "evidence_ticket_keys": [
+          "TSSD-2321"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "work_week_configuration_impact",
+        "group_title": "Work Week Configuration Impact",
+        "title": "Proration Depends on Work Week Setup",
+        "limitation_type": "configuration_dependency",
+        "limitation_statement": "Salary proration is calculated based on the specific work week configuration, which can include all 7 days as working days",
+        "impact": "Proration calculation may differ based on unique work week setups",
+        "evidence_ticket_keys": [
+          "TSSD-4292"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "proration_date_logic",
+        "group_title": "Proration Date Logic",
+        "title": "Inconsistent Salary Proration Based on Departure Date",
+        "limitation_type": "calculation_logic",
+        "limitation_statement": "Salary proration works correctly only when departure date is in the past, but fails when departure date is in the future",
+        "impact": "Potential incorrect salary calculations for offboarded employees",
+        "evidence_ticket_keys": [
+          "TSSD-3058"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "leave_payroll_sync_logic",
+        "group_title": "Leave and Payroll Synchronization",
+        "title": "Incomplete Transaction Reconciliation",
+        "limitation_type": "synchronization_failure",
+        "limitation_statement": "The system does not automatically reconcile or remove payroll deductions when leave transactions are modified or deleted.",
+        "impact": "Users may experience persistent incorrect payroll deductions that require manual intervention",
+        "evidence_ticket_keys": [
+          "TSSD-2532"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_wage_calculation_constraint",
+        "group_title": "Daily Wage Calculation Constraint",
+        "title": "Daily Wage Calculation Method",
+        "limitation_type": "calculation_method",
+        "limitation_statement": "Daily wage is calculated as: (basic salary + allowance) / working days, where working days exclude weekends and public holidays specific to the employee's country of residence.",
+        "impact": "Affects unpaid leave deduction calculations and requires precise tracking of working days",
+        "evidence_ticket_keys": [
+          "TSSD-4464"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_wage_divisor_configuration",
+        "group_title": "Daily Wage Divisor Configuration",
+        "title": "Fixed 30.42 Days Divisor for Wage Calculation",
+        "limitation_type": "calculation_configuration",
+        "limitation_statement": "Unpaid leave policy uses a fixed 30.42 day divisor instead of calendar days for daily wage calculation",
+        "impact": "Deduction amounts may not precisely match expected monthly salary",
+        "evidence_ticket_keys": [
+          "TSSD-4368"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "calendar_days_calculation",
+        "group_title": "Calendar Days Calculation",
+        "title": "Month-Specific Daily Rate Calculation",
+        "limitation_type": "calculation_logic",
+        "limitation_statement": "Daily wage calculations are based on the actual calendar days in a month, with specific handling required for months with varying days (especially February in leap years).",
+        "impact": "Ensures accurate unpaid leave deductions by using the precise number of calendar days for each month",
+        "evidence_ticket_keys": [
+          "TSSD-1301"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "global_configuration_precedence",
+        "group_title": "Global Configuration Precedence",
+        "title": "Global Settings Override Policy-Level Configurations",
+        "limitation_type": "configuration_hierarchy",
+        "limitation_statement": "The platform has a global configuration that supersedes individual policy-level settings for unpaid leave calculations",
+        "impact": "Users cannot customize leave deduction calculations at the policy level when a global setting exists",
+        "evidence_ticket_keys": [
+          "TSSD-1753"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_rate_calculation_logic",
+        "group_title": "Daily Rate Calculation Logic",
+        "title": "Daily Rate Calculation Method",
+        "limitation_type": "calculation_method",
+        "limitation_statement": "Daily rate is calculated as Basic + Allowances / Working Days, excluding public holidays",
+        "impact": "Affects unpaid leave deduction calculations across different months",
+        "evidence_ticket_keys": [
+          "TSSD-1807"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      }
+    ],
+    "customer_requests": [
+      {
+        "group_key": "automated_salary_proration",
+        "group_title": "Automated Salary Proration",
+        "request": "Automated salary calculation based on actual working days",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Client wants an automated system that prorates salary dynamically based on actual days worked, without manual interventions",
+        "why_requested": "To eliminate manual salary adjustments and create a more precise, automated payroll process",
+        "evidence_ticket_keys": [
+          "TSSD-4905"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "formula_synchronization",
+        "group_title": "Formula Synchronization",
+        "request": "Synchronize daily wage formula between leave policy and payroll settings",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "User wants consistent daily wage calculation method across leave policy and payroll modules",
+        "why_requested": "Reduce confusion about which formula is actually being applied for unpaid leave calculations",
+        "evidence_ticket_keys": [
+          "TSSD-2648"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "accurate_eos_gratuity_calculation",
+        "group_title": "Accurate EOS Gratuity Calculation",
+        "request": "Correct gratuity calculation to accurately account for leap years",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Customer needs precise End of Service (EOS) gratuity calculation that correctly handles leap years",
+        "why_requested": "To ensure accurate compensation based on total service days",
+        "evidence_ticket_keys": [
+          "TSSD-4179"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "accurate_eos_calculation",
+        "group_title": "Accurate EOS Calculation",
+        "request": "Accurate pro-rated End of Service amount calculation",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Customer wants precise daily wage calculations that correctly reflect an employee's proportional salary for their departure date",
+        "why_requested": "Ensure exact financial settlements for employees leaving mid-month",
+        "evidence_ticket_keys": [
+          "TSSD-2605"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "leave_balance_mid_month_inclusion",
+        "group_title": "Leave Balance Mid-Month Inclusion",
+        "request": "Include partial month leave balance in EOS calculation",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Admin wants leave days for departure month to be prorated or included in EOS calculation",
+        "why_requested": "Current system only accrues leave at month-end, excluding mid-month departure scenarios",
+        "evidence_ticket_keys": [
+          "TSSD-4742"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "gratuity_calculation_clarification",
+        "group_title": "Gratuity Calculation Clarification",
+        "request": "Transparent explanation of gratuity calculation methodology",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Customer seeking clear understanding of how service days are counted and converted to years for gratuity computation",
+        "why_requested": "Confusion about precise calculation method and day counting logic",
+        "evidence_ticket_keys": [
+          "TSSD-1625"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_wage_formula_customization",
+        "group_title": "Daily Wage Formula Customization",
+        "request": "Allow alternative daily wage calculation method (Basic × 12 / 365)",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Client wants flexibility in computing daily wage for gratuity calculations",
+        "why_requested": "Different organizations have varying gratuity calculation methodologies",
+        "evidence_ticket_keys": [
+          "TSSD-2043"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "flexible_daily_wage_calculation",
+        "group_title": "Flexible Daily Wage Calculation",
+        "request": "Ability to adjust daily wage calculation method for different month lengths",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Employee wanted to calculate leave salary using 31 days instead of the system's configured 30-day divisor",
+        "why_requested": "Desire for more precise and flexible leave salary proration",
+        "evidence_ticket_keys": [
+          "TSSD-4731"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "consistent_leave_accrual_calculation",
+        "group_title": "Consistent Leave Accrual Calculation",
+        "request": "Maintain consistent cumulative leave salary accrual amounts across months",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Client wants predictable leave salary accrual totals that don't vary with monthly working day differences",
+        "why_requested": "To have a more stable and understandable leave salary accrual reporting method",
+        "evidence_ticket_keys": [
+          "TSSD-3648"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "consistent_daily_wage_calculation",
+        "group_title": "Consistent Daily Wage Calculation",
+        "request": "Unified daily wage formula for leave salary and salary proration",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Customer wants a consistent daily wage calculation method using (Basic salary + allowances / 30.42 days) for both leave salary and salary proration",
+        "why_requested": "To ensure accurate and consistent salary calculations across different payroll scenarios",
+        "evidence_ticket_keys": [
+          "TSSD-2321"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "salary_proration_clarification",
+        "group_title": "Salary Proration Clarification",
+        "request": "Understand how daily wage proration is calculated",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Customer wanted to understand why salary proration was not calculating as expected for daily wage settings",
+        "why_requested": "Confusion about working days calculation method",
+        "evidence_ticket_keys": [
+          "TSSD-4292"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "accurate_offboarding_proration",
+        "group_title": "Accurate Offboarding Proration",
+        "request": "Accurate salary proration for offboarded employees",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Customer wants system to calculate prorated salary based on exact departure date, regardless of payroll processing timing",
+        "why_requested": "Ensure fair and accurate salary calculation for employees leaving mid-month",
+        "evidence_ticket_keys": [
+          "TSSD-3058"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "deduction_recalculation",
+        "group_title": "Deduction Recalculation",
+        "request": "Reliable mechanism for recalculating unpaid leave deductions",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Ability to modify daily wage calculations and delete leave transactions without generating duplicate payroll entries",
+        "why_requested": "Current system creates inconsistent and persistent payroll deductions during leave transaction modifications",
+        "evidence_ticket_keys": [
+          "TSSD-2532"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "accurate_unpaid_leave_deduction",
+        "group_title": "Accurate Unpaid Leave Deduction",
+        "request": "Accurate full month salary deduction for unpaid leave",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Customer wants precise deduction of full month salary (3,700 AED) for unpaid leave, but system calculates a different amount (3,557.69 AED)",
+        "why_requested": "Ensure correct and consistent payroll calculations",
+        "evidence_ticket_keys": [
+          "TSSD-4464"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "deduction_amount_clarification",
+        "group_title": "Deduction Amount Clarification",
+        "request": "Understand why unpaid leave deduction exceeds expected monthly salary",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Customer wants to understand why a full month's unpaid leave results in a deduction of 4,381.99 AED instead of exactly 4,300 AED",
+        "why_requested": "Seeking clarity on payroll deduction calculation method",
+        "evidence_ticket_keys": [
+          "TSSD-4368"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "accurate_leave_deduction_calculation",
+        "group_title": "Accurate Leave Deduction Calculation",
+        "request": "Customize unpaid leave deduction calculations based on specific leave policy configurations",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Users expect the system to calculate deductions using basic salary divided by working days",
+        "why_requested": "Current global configuration prevents accurate, policy-specific leave deduction calculations",
+        "evidence_ticket_keys": [
+          "TSSD-1753"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_rate_month_consistency",
+        "group_title": "Daily Rate Month Consistency",
+        "request": "Display daily rate matching the leave occurrence month, not the payroll processing month",
+        "support_status": "NOT_SUPPORTED",
+        "request_context": "Customer wants clarity on how daily rates are calculated and displayed across different payroll months",
+        "why_requested": "Prevent confusion in unpaid leave deduction calculations",
+        "evidence_ticket_keys": [
+          "TSSD-1807"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      }
+    ],
+    "edge_cases": [
+      {
+        "group_key": "salary_adjustment_scenarios",
+        "group_title": "Salary Adjustment Scenarios",
+        "edge_case": "Handling extra or fewer worked days",
+        "risk": "Current system requires manual tracking of overtime and unpaid leaves on a per-employee basis",
+        "evidence_ticket_keys": [
+          "TSSD-4905"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "leap_year_service_period_calculation",
+        "group_title": "Leap Year Service Period Calculation",
+        "edge_case": "Calculating service days across a leap year (2024)",
+        "risk": "Potential underpayment of employee benefits due to incorrect day counting",
+        "evidence_ticket_keys": [
+          "TSSD-4179"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "mid_month_departure_handling",
+        "group_title": "Mid-Month Departure Handling",
+        "edge_case": "Employee leaving before month-end with partial leave accrual",
+        "risk": "Potential loss of earned leave days or manual adjustment requirement",
+        "evidence_ticket_keys": [
+          "TSSD-4742"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "leap_year_service_duration",
+        "group_title": "Leap Year Service Duration",
+        "edge_case": "Calculating service duration across a leap year with February 29th",
+        "risk": "Potential minor calculation discrepancies in gratuity amount",
+        "evidence_ticket_keys": [
+          "TSSD-1625"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "unpaid_leave_calculation",
+        "group_title": "Unpaid Leave Calculation",
+        "edge_case": "Handling unpaid leave in gratuity computation",
+        "risk": "Potential miscalculation of service days when unpaid leave is present",
+        "evidence_ticket_keys": [
+          "TSSD-2043"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "month_length_calculation_variance",
+        "group_title": "Month Length Calculation Variance",
+        "edge_case": "Inconsistent daily wage calculation across months with different lengths",
+        "risk": "Potential salary discrepancies due to fixed divisor configuration",
+        "evidence_ticket_keys": [
+          "TSSD-4731"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "payroll_processing_timing",
+        "group_title": "Payroll Processing Timing",
+        "edge_case": "Payroll processed before employee departure date",
+        "risk": "Potential full salary calculation instead of prorated amount",
+        "evidence_ticket_keys": [
+          "TSSD-3058"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "leave_transaction_modification",
+        "group_title": "Leave Transaction Modification",
+        "edge_case": "Recalculating Daily Wage During Approved Leave",
+        "risk": "System creates multiple conflicting deductions when changing leave calculations after initial approval",
+        "evidence_ticket_keys": [
+          "TSSD-2532"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "public_holiday_timing_impact",
+        "group_title": "Public Holiday Timing Impact",
+        "edge_case": "Late addition of public holidays affects leave calculation",
+        "risk": "Inconsistent salary deduction due to retroactive public holiday configuration changes",
+        "evidence_ticket_keys": [
+          "TSSD-4464"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "extended_leave_deduction_complexity",
+        "group_title": "Extended Leave Deduction Complexity",
+        "edge_case": "Deduction for extended unpaid leave period (60 days)",
+        "risk": "Potential user confusion due to non-intuitive deduction calculation method",
+        "evidence_ticket_keys": [
+          "TSSD-4368"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "leap_year_calculation",
+        "group_title": "Leap Year Calculation",
+        "edge_case": "February Leap Year Daily Rate Calculation",
+        "risk": "Potential miscalculation if system defaults to 31 days instead of 29 days in February",
+        "evidence_ticket_keys": [
+          "TSSD-1301"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "complex_work_week_calculation",
+        "group_title": "Complex Work Week Calculation",
+        "edge_case": "Handling 7-day work weeks with public holidays affecting daily wage calculations",
+        "risk": "Incorrect daily rate calculation when work schedules include varying work weeks and public holidays",
+        "evidence_ticket_keys": [
+          "TSSD-1753"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "payroll_month_leave_month_mismatch",
+        "group_title": "Payroll Month Leave Month Mismatch",
+        "edge_case": "Leave request created in one month, payroll processed in another month",
+        "risk": "Incorrect daily rate display and potential user confusion",
+        "evidence_ticket_keys": [
+          "TSSD-1807"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      }
+    ],
+    "troubleshooting_notes": [
+      {
+        "group_key": "manual_payroll_workaround",
+        "group_title": "Manual Payroll Workaround",
+        "symptom": "Inability to automatically adjust salary based on working days",
+        "likely_cause_or_explanation": "Lack of automated payroll calculation workflow",
+        "workaround_or_resolution": "Manually track unpaid leaves and overtime separately for each employee",
+        "evidence_ticket_keys": [
+          "TSSD-4905"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_wage_calculation_verification",
+        "title": "Daily Wage Calculation Verification",
+        "note": null,
+        "evidence_ticket_keys": [
+          "TSSD-2648",
+          "TSSD-2321"
+        ],
+        "all_ticket_keys": [
+          "TSSD-2648",
+          "TSSD-2321"
+        ]
+      },
+      {
+        "group_key": "unpaid_leave_deduction_workaround",
+        "group_title": "Unpaid Leave Deduction Workaround",
+        "symptom": "Incorrect unpaid leave deduction amount",
+        "likely_cause_or_explanation": "Deduction calculated based on outdated salary configuration",
+        "workaround_or_resolution": "Delete the leave request and recreate it if the deduction has not been processed yet",
+        "evidence_ticket_keys": [
+          "TSSD-1581"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "eos_gratuity_calculation_verification",
+        "group_title": "EOS Gratuity Calculation Verification",
+        "symptom": "Discrepancy in gratuity amount calculation",
+        "likely_cause_or_explanation": "System incorrectly calculates service days by using 365 days instead of 366 days for leap years",
+        "workaround_or_resolution": "Manually verify and adjust calculation to include 366 days for leap years",
+        "evidence_ticket_keys": [
+          "TSSD-4179"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "eos_calculation_troubleshooting",
+        "group_title": "EOS Calculation Troubleshooting",
+        "symptom": "Pro-rated End of Service amounts show consistently lower amounts by small decimal points",
+        "likely_cause_or_explanation": "Decimal precision issue in daily wage calculation formula (basic + allowances / 30)",
+        "workaround_or_resolution": "Manually verify and potentially adjust final settlement amounts",
+        "evidence_ticket_keys": [
+          "TSSD-2605"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "eos_gratuity_manual_adjustment",
+        "group_title": "EOS Gratuity Manual Adjustment",
+        "symptom": "Discrepancy between system and manual gratuity calculations",
+        "likely_cause_or_explanation": "Complex calculation involving service duration tiers and daily wage formula",
+        "workaround_or_resolution": "Manually adjust EOS balance in the system or verify calculation details with support",
+        "evidence_ticket_keys": [
+          "TSSD-4742"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "gratuity_manual_override",
+        "group_title": "Gratuity Manual Override",
+        "symptom": "Discrepancy between system-calculated and manually edited gratuity amount",
+        "likely_cause_or_explanation": "System calculates gratuity based on specific logic, but allows manual editing by users",
+        "workaround_or_resolution": "Verify calculation method and manually adjust if needed",
+        "evidence_ticket_keys": [
+          "TSSD-1625"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "gratuity_calculation_verification",
+        "group_title": "Gratuity Calculation Verification",
+        "symptom": "Discrepancy between manual and system gratuity calculations",
+        "likely_cause_or_explanation": "Fixed daily wage divisor (30 days) and precise days worked calculation method differ from manual computation approaches",
+        "workaround_or_resolution": "Manually verify system calculations, especially for complex employment tenures",
+        "evidence_ticket_keys": [
+          "TSSD-2043"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "leave_salary_calculation_support",
+        "group_title": "Leave Salary Calculation Support",
+        "symptom": "Discrepancy between expected and calculated leave salary",
+        "likely_cause_or_explanation": "System calculates leave salary based on predefined policy configuration, which uses a fixed daily rate divisor",
+        "workaround_or_resolution": "Verify daily rate configuration in leave policy and understand the system's calculation logic",
+        "evidence_ticket_keys": [
+          "TSSD-4731"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "leave_encashment_configuration",
+        "group_title": "Leave Encashment Configuration",
+        "symptom": "Unexpected differences in monthly leave salary accrual totals",
+        "likely_cause_or_explanation": "Daily wage calculator is set to use working days for leave encashment, causing monthly variations",
+        "workaround_or_resolution": "Consider using custom days setting for more consistent leave encashment calculations",
+        "evidence_ticket_keys": [
+          "TSSD-3648"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_wage_proration_verification",
+        "group_title": "Daily Wage Proration Verification",
+        "symptom": "Perceived incorrect salary proration calculation",
+        "likely_cause_or_explanation": "System calculates working days based on work week configuration, which can include all 7 days as working days",
+        "workaround_or_resolution": "Verify employee's work week configuration to understand proration calculation",
+        "evidence_ticket_keys": [
+          "TSSD-4292"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "salary_proration_diagnosis",
+        "group_title": "Salary Proration Diagnosis",
+        "symptom": "Full monthly salary displayed for offboarded employees",
+        "likely_cause_or_explanation": "Calculation logic does not handle departure dates relative to payroll processing date",
+        "workaround_or_resolution": "Manually adjust salary calculations or wait for system fix",
+        "evidence_ticket_keys": [
+          "TSSD-3058"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "deduction_removal_process",
+        "group_title": "Deduction Removal Process",
+        "symptom": "Duplicate payroll deductions persist after leave request deletion",
+        "likely_cause_or_explanation": "Lack of automatic cleanup in leave-to-payroll synchronization logic",
+        "workaround_or_resolution": "Manual intervention required to remove orphaned payroll deductions",
+        "evidence_ticket_keys": [
+          "TSSD-2532"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "unpaid_leave_deduction_resolution",
+        "group_title": "Unpaid Leave Deduction Resolution",
+        "symptom": "Incorrect salary deduction for unpaid leave",
+        "likely_cause_or_explanation": "Mismatch between Payroll and Time Off module calculations due to late public holiday additions",
+        "workaround_or_resolution": "Manual deduction adjustment or waiting for future module enhancement to improve synchronization",
+        "evidence_ticket_keys": [
+          "TSSD-4464"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "unpaid_leave_deduction_calculation_method",
+        "group_title": "Unpaid Leave Deduction Calculation Method",
+        "symptom": "Deduction amount differs from expected monthly salary",
+        "likely_cause_or_explanation": "System uses 30.42 days divisor to calculate daily wage: (4300/30.42 = 141.35 daily rate) × 31 days = 4,381.99 AED",
+        "workaround_or_resolution": "Understand that system uses a custom divisor (30.42 days) for daily wage calculation, which may result in deductions slightly different from monthly salary",
+        "evidence_ticket_keys": [
+          "TSSD-4368"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "unpaid_leave_deduction_verification",
+        "group_title": "Unpaid Leave Deduction Verification",
+        "symptom": "Discrepancy between displayed daily rate and actual calculation",
+        "likely_cause_or_explanation": "Remarks field shows incorrect number of days, but underlying calculation remains accurate",
+        "workaround_or_resolution": "Verify actual deduction amount by calculating daily rate using correct calendar days (29 for February in leap years)",
+        "evidence_ticket_keys": [
+          "TSSD-1301"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "daily_rate_calculation_verification",
+        "group_title": "Daily Rate Calculation Verification",
+        "symptom": "Discrepancies in unpaid leave deduction calculations",
+        "likely_cause_or_explanation": "Global daily rate configuration overriding policy-specific calculation methods",
+        "workaround_or_resolution": "Verify global unpaid leave daily rate settings and understand their precedence over policy-level configurations",
+        "evidence_ticket_keys": [
+          "TSSD-1753"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      },
+      {
+        "group_key": "unpaid_leave_deduction_calculation",
+        "group_title": "Unpaid Leave Deduction Calculation",
+        "symptom": "Daily rate shows incorrect month for leave deduction",
+        "likely_cause_or_explanation": "System recalculates daily rate based on payroll processing month instead of leave occurrence month",
+        "workaround_or_resolution": "A fix was deployed to store the initially calculated daily rate and display that amount",
+        "evidence_ticket_keys": [
+          "TSSD-1807"
+        ],
+        "evidence_ticket_idxs": [
+          0
+        ]
+      }
+    ]
+  },
+  "glossary_terms": [
+    {
+      "group_key": "working_days_definition",
+      "group_title": "Working Days Definition",
+      "term": "Working Days Calculation",
+      "meaning_from_evidence": "Annual working days calculated as 365 days - 52 weekly offs = 313 days, divided by 12 months to get 26.08 working days per month",
+      "evidence_ticket_keys": [
+        "TSSD-4905"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "daily_wage_formula_components",
+      "group_title": "Daily Wage Formula Components",
+      "term": "Daily Wage Formula",
+      "meaning_from_evidence": "Calculation method for determining per-day salary, typically involving dividing total salary components by number of days. Can include basic salary only or basic salary plus allowances depending on configuration.",
+      "evidence_ticket_keys": [
+        "TSSD-2648"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "daily_wage_calculation",
+      "group_title": "Daily Wage Calculation",
+      "term": "Daily Pay Calculation",
+      "meaning_from_evidence": "Calculated by dividing total monthly salary by 30.41 (average days in a month) to determine daily wage for deduction purposes",
+      "evidence_ticket_keys": [
+        "TSSD-1581"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "eos_gratuity_calculation_terms",
+      "group_title": "EOS Gratuity Calculation Terms",
+      "term": "End of Service (EOS) Gratuity",
+      "meaning_from_evidence": "Calculated benefit paid to an employee upon leaving, based on total service days and daily wage rate",
+      "evidence_ticket_keys": [
+        "TSSD-4179"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "daily_wage_terminology",
+      "group_title": "Daily Wage Terminology",
+      "term": "Pro-Rated Amount",
+      "meaning_from_evidence": "Proportional salary calculation for partial month based on (basic salary + allowances) / 30 days",
+      "evidence_ticket_keys": [
+        "TSSD-2605"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "accrual_policy_types",
+      "group_title": "Accrual Policy Types",
+      "term": "Monthly Accrual",
+      "meaning_from_evidence": "Leave days are earned and available only at the end of each month, not prorated for partial months",
+      "evidence_ticket_keys": [
+        "TSSD-4742"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "accrual_policy_types",
+      "group_title": "Accrual Policy Types",
+      "term": "Conditional Accrual",
+      "meaning_from_evidence": "Alternative leave accrual policy where leave days are earned daily instead of monthly",
+      "evidence_ticket_keys": [
+        "TSSD-4742"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "service_duration_calculation",
+      "group_title": "Service Duration Calculation",
+      "term": "Service Days",
+      "meaning_from_evidence": "Total days worked, calculated by dividing total days by 365, potentially including or excluding departure date and leap year days",
+      "evidence_ticket_keys": [
+        "TSSD-1625"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "gratuity_calculation_terms",
+      "group_title": "Gratuity Calculation Terms",
+      "term": "Daily Wage",
+      "meaning_from_evidence": "Calculated method for converting monthly basic salary to a per-day rate, currently fixed as Basic Salary / 30 days",
+      "evidence_ticket_keys": [
+        "TSSD-2043"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "daily_rate_divisor",
+      "group_title": "Daily Rate Divisor",
+      "term": "Daily Rate Divisor",
+      "meaning_from_evidence": "The number of days used to calculate the daily wage in leave salary calculations, typically configured in the leave policy (e.g., 30 or 31 days)",
+      "evidence_ticket_keys": [
+        "TSSD-4731"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "leave_salary_accrual",
+      "group_title": "Leave Salary Accrual",
+      "term": "Leave Salary Accrual",
+      "meaning_from_evidence": "Cumulative calculation of vacation leave monetary value, which can vary based on monthly working days when using the 'working days' calculation method",
+      "evidence_ticket_keys": [
+        "TSSD-3648"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "daily_wage_divisor",
+      "group_title": "Daily Wage Divisor",
+      "term": "Daily Wage Divisor",
+      "meaning_from_evidence": "The number of days used to calculate the daily rate of salary (can be 30 or 30.42 days depending on the specific calculation method)",
+      "evidence_ticket_keys": [
+        "TSSD-2321"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "working_days_definition",
+      "group_title": "Working Days Definition",
+      "term": "Working Days",
+      "meaning_from_evidence": "Days considered for salary calculation, which can be configured to include all 7 days of the week depending on work week setup",
+      "evidence_ticket_keys": [
+        "TSSD-4292"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "salary_proration_definition",
+      "group_title": "Salary Proration Definition",
+      "term": "Prorated Salary",
+      "meaning_from_evidence": "Partial salary calculation based on actual days worked, calculated by dividing monthly salary by total days in month and multiplying by days worked",
+      "evidence_ticket_keys": [
+        "TSSD-3058"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "payroll_deduction_terminology",
+      "group_title": "Payroll Deduction Terminology",
+      "term": "Unpaid Leave Deduction",
+      "meaning_from_evidence": "Salary reduction applied when an employee takes leave without pay, which can be complicated by system calculation and synchronization issues",
+      "evidence_ticket_keys": [
+        "TSSD-2532"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "daily_wage_definition",
+      "group_title": "Daily Wage Definition",
+      "term": "Daily Wage",
+      "meaning_from_evidence": "Calculated as basic salary plus allowance divided by working days, excluding weekends and public holidays specific to the employee's country of residence",
+      "evidence_ticket_keys": [
+        "TSSD-4464"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "daily_wage_divisor",
+      "group_title": "Daily Wage Divisor",
+      "term": "30.42 Days Divisor",
+      "meaning_from_evidence": "A fixed divisor used to calculate daily wage by dividing monthly salary, instead of using exact calendar days",
+      "evidence_ticket_keys": [
+        "TSSD-4368"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "daily_wage_terminology",
+      "group_title": "Daily Wage Terminology",
+      "term": "Unpaid Leave Deduction",
+      "meaning_from_evidence": "Calculation of salary reduction based on actual calendar days of absence, divided by total calendar days in the month",
+      "evidence_ticket_keys": [
+        "TSSD-1301"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "daily_rate_terminology",
+      "group_title": "Daily Rate Terminology",
+      "term": "Daily Rate Calculation",
+      "meaning_from_evidence": "Method of calculating per-day salary by dividing total salary (basic or gross) by the number of working days",
+      "evidence_ticket_keys": [
+        "TSSD-1753"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    },
+    {
+      "group_key": "daily_wage_calculation_terms",
+      "group_title": "Daily Wage Calculation Terms",
+      "term": "Working Days",
+      "meaning_from_evidence": "Total calendar days minus public holidays (e.g., in April, 22 total days minus 5 Eid holidays = 17 working days)",
+      "evidence_ticket_keys": [
+        "TSSD-1807"
+      ],
+      "evidence_ticket_idxs": [
+        0
+      ]
+    }
+  ],
+  "claims_to_validate": [
+    {
+      "claim_id": "payroll_calculation_automation_gap",
+      "claim_type": "known_issue",
+      "title": "Lack of Automated Salary Calculation",
+      "statement": "The current system lacks automated salary calculation based on precise working days, requiring manual tracking and interventions for overtime and unpaid leaves.",
+      "severity_for_docs": "high",
+      "limitation_type": "feature_gap",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4905"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_wage_formula_override",
+      "claim_type": "known_issue",
+      "title": "Payroll Settings Override Leave Policy Daily Wage Formula",
+      "statement": "The daily wage calculator in payroll settings intentionally overrides the leave policy formula for unpaid leave. The leave policy formula appears greyed out, indicating it is not active. This creates user confusion about which formula is actually being applied for daily wage calculations.",
+      "severity_for_docs": "medium",
+      "limitation_type": "ux_issue",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2648"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "unpaid_leave_deduction_calculation",
+      "claim_type": "known_issue",
+      "title": "Unpaid Leave Deduction Calculation",
+      "statement": "System failed to recalculate pending unpaid leave deductions when new salary configurations were created after leave request submission. Deductions were incorrectly based on previous salary configuration instead of current one, resulting in payroll calculation discrepancies.",
+      "severity_for_docs": "high | medium",
+      "limitation_type": "calculation_bug | calculation_method",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1581",
+        "TSSD-4368"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "leap_year_calculation_error",
+      "claim_type": "known_issue",
+      "title": "End of Service Gratuity Leap Year Miscalculation",
+      "statement": "The system incorrectly calculates service days by using 365 days instead of 366 days for leap years (specifically 2024), resulting in an inaccurate total service period and reduced gratuity amount.",
+      "severity_for_docs": "high",
+      "limitation_type": "calculation_bug",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4179"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "eos_calculation_decimal_precision",
+      "claim_type": "known_issue",
+      "title": "Pro-Rated End of Service Amount Calculation Error",
+      "statement": "End of Service (EOS) calculation is producing incorrect pro-rated amounts due to a rounding or decimal precision error. The daily wage formula (basic + allowances / 30) is configured correctly, but when calculating pro-rated EOS amounts, the system consistently shows amounts that are less than expected by 0.1 or 0.2 decimals.",
+      "severity_for_docs": "medium",
+      "limitation_type": "calculation_bug",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2605"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "gratuity_calculation_complexity",
+      "claim_type": "known_issue",
+      "title": "EOS Gratuity Calculation Discrepancy",
+      "statement": "System gratuity calculation shows slight differences from manual calculations due to complex service duration and daily wage formula",
+      "severity_for_docs": "medium",
+      "limitation_type": "calculation_complexity",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4742"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "leap_year_day_calculation",
+      "claim_type": "known_issue",
+      "title": "Gratuity Calculation Not Considering Leap Year Days",
+      "statement": "The system's gratuity calculation may not consistently handle leap year days (specifically February 29th), potentially causing minor discrepancies in service duration calculations. The system calculated 912 days, while manual calculation suggested 913 days including the leap day.",
+      "severity_for_docs": "low",
+      "limitation_type": "calculation_precision",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1625"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "gratuity_calculation_days_discrepancy",
+      "claim_type": "known_issue",
+      "title": "Incorrect Days Calculation in Gratuity Computation",
+      "statement": "System calculates one extra day in job tenure (622 vs 623 days), potentially affecting gratuity calculation precision. The platform captures 623 days instead of the expected 622 days when computing years of service.",
+      "severity_for_docs": "low",
+      "limitation_type": "calculation_bug",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2043"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_wage_calculation_policy",
+      "claim_type": "known_issue",
+      "title": "Leave Salary Calculation Discrepancy",
+      "statement": "System calculates leave salary based on predefined policy configuration, which may not align with user expectations about calendar days and prorated calculations. Users may misunderstand how daily wage is divided (31 vs 30 days) and resulting prorated salary amount.",
+      "severity_for_docs": "medium",
+      "limitation_type": "configuration_problem",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4731"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "working_days_accrual_variation",
+      "claim_type": "known_issue",
+      "title": "Leave Salary Accrual Calculation Inconsistency",
+      "statement": "The daily wage calculator's 'working days' setting causes monthly fluctuations in leave salary accrual calculations. The daily wage rate changes based on the number of working days in each month, leading to inconsistent cumulative totals.",
+      "severity_for_docs": "medium",
+      "limitation_type": "configuration_problem",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-3648"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_wage_divisor_mismatch",
+      "claim_type": "known_issue",
+      "title": "Leave Salary Calculation Inconsistency",
+      "statement": "The system uses different divisors for leave salary and salary proration calculations. Leave salary uses a 30-day divisor, while salary proration uses a 30.42-day divisor, causing calculation discrepancies.",
+      "severity_for_docs": "medium",
+      "limitation_type": "calculation_configuration",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2321"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "working_days_calculation_misunderstanding",
+      "claim_type": "known_issue",
+      "title": "Proration Calculation Confusion",
+      "statement": "User initially misunderstood how working days are calculated based on work week configuration. The system was actually calculating correctly, but the user did not initially understand that their specific work week (NVK Operations) had all 7 days configured as working days.",
+      "severity_for_docs": "low",
+      "limitation_type": "configuration_problem",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4292"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "salary_proration_future_departure",
+      "claim_type": "known_issue",
+      "title": "Incorrect Salary Proration for Offboarded Employees",
+      "statement": "The system fails to correctly prorate salaries when an employee's departure date is in the future relative to payroll processing date. When processing payroll earlier than the departure date, the system displays the full monthly salary instead of a prorated amount.",
+      "severity_for_docs": "medium",
+      "limitation_type": "calculation_bug",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-3058"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "unpaid_leave_deduction_sync",
+      "claim_type": "known_issue",
+      "title": "Persistent Payroll Deductions After Leave Request Deletion",
+      "statement": "When an unpaid leave request is approved and transaction submitted, then the daily wage calculation is changed and the transaction deleted to recalculate, the system creates duplicate deductions—one with the old calculation and one with the new. Deleting the leave request does not remove associated payroll deductions.",
+      "severity_for_docs": "high",
+      "limitation_type": "data_inconsistency",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2532"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "public_holiday_calculation_mismatch",
+      "claim_type": "known_issue",
+      "title": "Unpaid Leave Deduction Calculation Inconsistency",
+      "statement": "When public holidays are added after a leave request is created, there is a timing mismatch between Payroll and Time Off modules causing incorrect daily wage calculations. The system cannot recalculate deductions retroactively, leading to inconsistent salary deduction amounts.",
+      "severity_for_docs": "high",
+      "limitation_type": "data_synchronization",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4464"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "remarks_display_mismatch",
+      "claim_type": "known_issue",
+      "title": "Incorrect Days Displayed in Unpaid Leave Remarks",
+      "statement": "The system displays incorrect number of days (31 instead of 29) in the remarks section for February unpaid leave calculations, despite the backend calculation being mathematically correct.",
+      "severity_for_docs": "low",
+      "limitation_type": "ux_issue",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1301"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "unpaid_leave_calculation_override",
+      "claim_type": "known_issue",
+      "title": "Incorrect Unpaid Leave Deduction Calculation",
+      "statement": "The system applies a global daily rate configuration that overrides individual leave policy settings for unpaid leave deductions. Instead of using Basic Salary / Working Days as configured, the system uses a global daily rate that calculates deductions using gross salary, potentially leading to incorrect salary deductions.",
+      "severity_for_docs": "high",
+      "limitation_type": "configuration_problem",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1753"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_rate_display_mismatch",
+      "claim_type": "known_issue",
+      "title": "Incorrect Daily Rate Display Across Payroll Months",
+      "statement": "The system recalculates daily rates based on the payroll processing month instead of storing and displaying the rate from the original leave occurrence month, causing user confusion.",
+      "severity_for_docs": "medium",
+      "limitation_type": "ui_display",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1807"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": false
+    },
+    {
+      "claim_id": "working_days_calculation",
+      "claim_type": "limitation",
+      "title": "Fixed 26 Working Days Monthly Calculation",
+      "statement": "Salary is based on a standard 26 working days per month, calculated from 365 annual days minus 52 weekly offs, resulting in 313 working days per year divided by 12 months.",
+      "severity_for_docs": null,
+      "limitation_type": "calculation_method",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4905"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_wage_formula_precedence",
+      "claim_type": "limitation",
+      "title": "Payroll Settings Take Precedence Over Leave Policy",
+      "statement": "Payroll daily wage calculator configuration overrides leave policy formula for unpaid leave calculations. The payroll-side configuration always takes precedence.",
+      "severity_for_docs": null,
+      "limitation_type": "configuration_override",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2648"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "salary_configuration_timing",
+      "claim_type": "limitation",
+      "title": "Salary Config Dependency in Leave Deduction",
+      "statement": "Unpaid leave deduction calculations are dependent on the timing of salary configuration creation relative to leave request submission.",
+      "severity_for_docs": null,
+      "limitation_type": "configuration_dependency",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1581"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "leap_year_day_count_limitation",
+      "claim_type": "limitation",
+      "title": "Incorrect Leap Year Day Counting",
+      "statement": "System defaults to 365 days per year, failing to recognize 366 days in leap years during service period calculations.",
+      "severity_for_docs": null,
+      "limitation_type": "calculation_constraint",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4179"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_wage_calculation_precision",
+      "claim_type": "limitation",
+      "title": "Decimal Precision Limitation in Pro-Rated Calculations",
+      "statement": "Daily wage calculations consistently produce amounts that are 0.1 or 0.2 less than expected when computing pro-rated End of Service amounts.",
+      "severity_for_docs": null,
+      "limitation_type": "calculation_precision",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2605"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "monthly_leave_accrual_policy",
+      "claim_type": "limitation",
+      "title": "Limited Mid-Month Leave Accrual Handling",
+      "statement": "Leave days are only accrued at the end of the month, preventing prorated accrual for mid-month departures",
+      "severity_for_docs": null,
+      "limitation_type": "accrual_policy_constraint",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4742"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "gratuity_calculation_methodology",
+      "claim_type": "limitation",
+      "title": "Service Duration Calculation Rules",
+      "statement": "Unclear rules for counting service days, including whether departure date is considered a working day and how leap year days are handled",
+      "severity_for_docs": null,
+      "limitation_type": "calculation_logic",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1625"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_wage_calculation_inflexibility",
+      "claim_type": "limitation",
+      "title": "Fixed Daily Wage Computation Method",
+      "statement": "Daily wage is calculated using a hardcoded divisor of 30 days (Basic/30), which cannot be modified or configured to alternative formulas",
+      "severity_for_docs": null,
+      "limitation_type": "calculation_method",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2043"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_rate_configuration_constraint",
+      "claim_type": "limitation",
+      "title": "Inflexible Daily Wage Divisor",
+      "statement": "The platform uses a fixed divisor for daily wage calculation based on policy configuration, which cannot be easily overridden for specific scenarios.",
+      "severity_for_docs": null,
+      "limitation_type": "calculation_rigidity",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4731"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "working_days_calculation_method",
+      "claim_type": "limitation",
+      "title": "Monthly Variation in Daily Wage Calculation",
+      "statement": "Leave encashment calculations are based on working days, which means the daily wage rate changes each month depending on the number of working days",
+      "severity_for_docs": null,
+      "limitation_type": "configuration_constraint",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-3648"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "independent_daily_wage_configs",
+      "claim_type": "limitation",
+      "title": "Separate Calculation Methods for Leave and Proration",
+      "statement": "The system calculates leave salary and salary proration using separate configurations that cannot be automatically aligned",
+      "severity_for_docs": null,
+      "limitation_type": "configuration_independence",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2321"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "work_week_configuration_impact",
+      "claim_type": "limitation",
+      "title": "Proration Depends on Work Week Setup",
+      "statement": "Salary proration is calculated based on the specific work week configuration, which can include all 7 days as working days",
+      "severity_for_docs": null,
+      "limitation_type": "configuration_dependency",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4292"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "proration_date_logic",
+      "claim_type": "limitation",
+      "title": "Inconsistent Salary Proration Based on Departure Date",
+      "statement": "Salary proration works correctly only when departure date is in the past, but fails when departure date is in the future",
+      "severity_for_docs": null,
+      "limitation_type": "calculation_logic",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-3058"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "leave_payroll_sync_logic",
+      "claim_type": "limitation",
+      "title": "Incomplete Transaction Reconciliation",
+      "statement": "The system does not automatically reconcile or remove payroll deductions when leave transactions are modified or deleted.",
+      "severity_for_docs": null,
+      "limitation_type": "synchronization_failure",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2532"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_wage_calculation_constraint",
+      "claim_type": "limitation",
+      "title": "Daily Wage Calculation Method",
+      "statement": "Daily wage is calculated as: (basic salary + allowance) / working days, where working days exclude weekends and public holidays specific to the employee's country of residence.",
+      "severity_for_docs": null,
+      "limitation_type": "calculation_method",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4464"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_wage_divisor_configuration",
+      "claim_type": "limitation",
+      "title": "Fixed 30.42 Days Divisor for Wage Calculation",
+      "statement": "Unpaid leave policy uses a fixed 30.42 day divisor instead of calendar days for daily wage calculation",
+      "severity_for_docs": null,
+      "limitation_type": "calculation_configuration",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4368"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "calendar_days_calculation",
+      "claim_type": "limitation",
+      "title": "Month-Specific Daily Rate Calculation",
+      "statement": "Daily wage calculations are based on the actual calendar days in a month, with specific handling required for months with varying days (especially February in leap years).",
+      "severity_for_docs": null,
+      "limitation_type": "calculation_logic",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1301"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "global_configuration_precedence",
+      "claim_type": "limitation",
+      "title": "Global Settings Override Policy-Level Configurations",
+      "statement": "The platform has a global configuration that supersedes individual policy-level settings for unpaid leave calculations",
+      "severity_for_docs": null,
+      "limitation_type": "configuration_hierarchy",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1753"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_rate_calculation_logic",
+      "claim_type": "limitation",
+      "title": "Daily Rate Calculation Method",
+      "statement": "Daily rate is calculated as Basic + Allowances / Working Days, excluding public holidays",
+      "severity_for_docs": null,
+      "limitation_type": "calculation_method",
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1807"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "automated_salary_proration",
+      "claim_type": "customer_request",
+      "title": "Automated Salary Proration",
+      "statement": "Automated salary calculation based on actual working days",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-4905"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "formula_synchronization",
+      "claim_type": "customer_request",
+      "title": "Formula Synchronization",
+      "statement": "Synchronize daily wage formula between leave policy and payroll settings",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-2648"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": false
+    },
+    {
+      "claim_id": "accurate_eos_gratuity_calculation",
+      "claim_type": "customer_request",
+      "title": "Accurate EOS Gratuity Calculation",
+      "statement": "Correct gratuity calculation to accurately account for leap years",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-4179"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "accurate_eos_calculation",
+      "claim_type": "customer_request",
+      "title": "Accurate EOS Calculation",
+      "statement": "Accurate pro-rated End of Service amount calculation",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-2605"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "leave_balance_mid_month_inclusion",
+      "claim_type": "customer_request",
+      "title": "Leave Balance Mid-Month Inclusion",
+      "statement": "Include partial month leave balance in EOS calculation",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-4742"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "gratuity_calculation_clarification",
+      "claim_type": "customer_request",
+      "title": "Gratuity Calculation Clarification",
+      "statement": "Transparent explanation of gratuity calculation methodology",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-1625"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_wage_formula_customization",
+      "claim_type": "customer_request",
+      "title": "Daily Wage Formula Customization",
+      "statement": "Allow alternative daily wage calculation method (Basic × 12 / 365)",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-2043"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "flexible_daily_wage_calculation",
+      "claim_type": "customer_request",
+      "title": "Flexible Daily Wage Calculation",
+      "statement": "Ability to adjust daily wage calculation method for different month lengths",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-4731"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "consistent_leave_accrual_calculation",
+      "claim_type": "customer_request",
+      "title": "Consistent Leave Accrual Calculation",
+      "statement": "Maintain consistent cumulative leave salary accrual amounts across months",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-3648"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "consistent_daily_wage_calculation",
+      "claim_type": "customer_request",
+      "title": "Consistent Daily Wage Calculation",
+      "statement": "Unified daily wage formula for leave salary and salary proration",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-2321"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "salary_proration_clarification",
+      "claim_type": "customer_request",
+      "title": "Salary Proration Clarification",
+      "statement": "Understand how daily wage proration is calculated",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-4292"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "accurate_offboarding_proration",
+      "claim_type": "customer_request",
+      "title": "Accurate Offboarding Proration",
+      "statement": "Accurate salary proration for offboarded employees",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-3058"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "deduction_recalculation",
+      "claim_type": "customer_request",
+      "title": "Deduction Recalculation",
+      "statement": "Reliable mechanism for recalculating unpaid leave deductions",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-2532"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "accurate_unpaid_leave_deduction",
+      "claim_type": "customer_request",
+      "title": "Accurate Unpaid Leave Deduction",
+      "statement": "Accurate full month salary deduction for unpaid leave",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-4464"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "deduction_amount_clarification",
+      "claim_type": "customer_request",
+      "title": "Deduction Amount Clarification",
+      "statement": "Understand why unpaid leave deduction exceeds expected monthly salary",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-4368"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "accurate_leave_deduction_calculation",
+      "claim_type": "customer_request",
+      "title": "Accurate Leave Deduction Calculation",
+      "statement": "Customize unpaid leave deduction calculations based on specific leave policy configurations",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-1753"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_rate_month_consistency",
+      "claim_type": "customer_request",
+      "title": "Daily Rate Month Consistency",
+      "statement": "Display daily rate matching the leave occurrence month, not the payroll processing month",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": "NOT_SUPPORTED",
+      "evidence_ticket_keys": [
+        "TSSD-1807"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": false
+    },
+    {
+      "claim_id": "salary_adjustment_scenarios",
+      "claim_type": "edge_case",
+      "title": "Salary Adjustment Scenarios",
+      "statement": "Handling extra or fewer worked days",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4905"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": false
+    },
+    {
+      "claim_id": "leap_year_service_period_calculation",
+      "claim_type": "edge_case",
+      "title": "Leap Year Service Period Calculation",
+      "statement": "Calculating service days across a leap year (2024)",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4179"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "mid_month_departure_handling",
+      "claim_type": "edge_case",
+      "title": "Mid-Month Departure Handling",
+      "statement": "Employee leaving before month-end with partial leave accrual",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4742"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "leap_year_service_duration",
+      "claim_type": "edge_case",
+      "title": "Leap Year Service Duration",
+      "statement": "Calculating service duration across a leap year with February 29th",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1625"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": false
+    },
+    {
+      "claim_id": "unpaid_leave_calculation",
+      "claim_type": "edge_case",
+      "title": "Unpaid Leave Calculation",
+      "statement": "Handling unpaid leave in gratuity computation",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2043"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "month_length_calculation_variance",
+      "claim_type": "edge_case",
+      "title": "Month Length Calculation Variance",
+      "statement": "Inconsistent daily wage calculation across months with different lengths",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4731"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "payroll_processing_timing",
+      "claim_type": "edge_case",
+      "title": "Payroll Processing Timing",
+      "statement": "Payroll processed before employee departure date",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-3058"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": false
+    },
+    {
+      "claim_id": "leave_transaction_modification",
+      "claim_type": "edge_case",
+      "title": "Leave Transaction Modification",
+      "statement": "Recalculating Daily Wage During Approved Leave",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2532"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": false
+    },
+    {
+      "claim_id": "public_holiday_timing_impact",
+      "claim_type": "edge_case",
+      "title": "Public Holiday Timing Impact",
+      "statement": "Late addition of public holidays affects leave calculation",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4464"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "extended_leave_deduction_complexity",
+      "claim_type": "edge_case",
+      "title": "Extended Leave Deduction Complexity",
+      "statement": "Deduction for extended unpaid leave period (60 days)",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4368"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "leap_year_calculation",
+      "claim_type": "edge_case",
+      "title": "Leap Year Calculation",
+      "statement": "February Leap Year Daily Rate Calculation",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1301"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "complex_work_week_calculation",
+      "claim_type": "edge_case",
+      "title": "Complex Work Week Calculation",
+      "statement": "Handling 7-day work weeks with public holidays affecting daily wage calculations",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1753"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "payroll_month_leave_month_mismatch",
+      "claim_type": "edge_case",
+      "title": "Payroll Month Leave Month Mismatch",
+      "statement": "Leave request created in one month, payroll processed in another month",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1807"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": false
+    },
+    {
+      "claim_id": "manual_payroll_workaround",
+      "claim_type": "troubleshooting",
+      "title": "Manual Payroll Workaround",
+      "statement": "Manual Payroll Workaround",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4905"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": false
+    },
+    {
+      "claim_id": "daily_wage_calculation_verification",
+      "claim_type": "troubleshooting",
+      "title": "Daily Wage Calculation Verification",
+      "statement": "Daily Wage Calculation Verification",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2648",
+        "TSSD-2321"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "unpaid_leave_deduction_workaround",
+      "claim_type": "troubleshooting",
+      "title": "Unpaid Leave Deduction Workaround",
+      "statement": "Unpaid Leave Deduction Workaround",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1581"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "eos_gratuity_calculation_verification",
+      "claim_type": "troubleshooting",
+      "title": "EOS Gratuity Calculation Verification",
+      "statement": "EOS Gratuity Calculation Verification",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4179"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "eos_calculation_troubleshooting",
+      "claim_type": "troubleshooting",
+      "title": "EOS Calculation Troubleshooting",
+      "statement": "EOS Calculation Troubleshooting",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2605"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "eos_gratuity_manual_adjustment",
+      "claim_type": "troubleshooting",
+      "title": "EOS Gratuity Manual Adjustment",
+      "statement": "EOS Gratuity Manual Adjustment",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4742"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "gratuity_manual_override",
+      "claim_type": "troubleshooting",
+      "title": "Gratuity Manual Override",
+      "statement": "Gratuity Manual Override",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1625"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "gratuity_calculation_verification",
+      "claim_type": "troubleshooting",
+      "title": "Gratuity Calculation Verification",
+      "statement": "Gratuity Calculation Verification",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2043"
+      ],
+      "ui_verifiable": true,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "leave_salary_calculation_support",
+      "claim_type": "troubleshooting",
+      "title": "Leave Salary Calculation Support",
+      "statement": "Leave Salary Calculation Support",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4731"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "leave_encashment_configuration",
+      "claim_type": "troubleshooting",
+      "title": "Leave Encashment Configuration",
+      "statement": "Leave Encashment Configuration",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-3648"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": false
+    },
+    {
+      "claim_id": "daily_wage_proration_verification",
+      "claim_type": "troubleshooting",
+      "title": "Daily Wage Proration Verification",
+      "statement": "Daily Wage Proration Verification",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4292"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "salary_proration_diagnosis",
+      "claim_type": "troubleshooting",
+      "title": "Salary Proration Diagnosis",
+      "statement": "Salary Proration Diagnosis",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-3058"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "deduction_removal_process",
+      "claim_type": "troubleshooting",
+      "title": "Deduction Removal Process",
+      "statement": "Deduction Removal Process",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-2532"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "unpaid_leave_deduction_resolution",
+      "claim_type": "troubleshooting",
+      "title": "Unpaid Leave Deduction Resolution",
+      "statement": "Unpaid Leave Deduction Resolution",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4464"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "unpaid_leave_deduction_calculation_method",
+      "claim_type": "troubleshooting",
+      "title": "Unpaid Leave Deduction Calculation Method",
+      "statement": "Unpaid Leave Deduction Calculation Method",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-4368"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "unpaid_leave_deduction_verification",
+      "claim_type": "troubleshooting",
+      "title": "Unpaid Leave Deduction Verification",
+      "statement": "Unpaid Leave Deduction Verification",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1301"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    },
+    {
+      "claim_id": "daily_rate_calculation_verification",
+      "claim_type": "troubleshooting",
+      "title": "Daily Rate Calculation Verification",
+      "statement": "Daily Rate Calculation Verification",
+      "severity_for_docs": null,
+      "limitation_type": null,
+      "support_status": null,
+      "evidence_ticket_keys": [
+        "TSSD-1753"
+      ],
+      "ui_verifiable": false,
+      "requires_test_data": true
+    }
+  ]
+}
