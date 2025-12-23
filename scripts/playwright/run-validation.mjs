@@ -913,6 +913,629 @@ async function tryExpandRelevantUIElement(page, claim) {
   return result;
 }
 
+// ------------------ COMPREHENSIVE FEATURE EXPLORATION ------------------
+/**
+ * Performs deep exploration of a feature by testing all UI components.
+ * This is the level of depth needed for proper user guide documentation:
+ * - Expand accordions/cards
+ * - Click edit icons to open modals
+ * - Test all dropdowns (select each option, document changes)
+ * - Test toggles and observe behavior
+ * - Document all states and formula changes
+ * - Take screenshots at each significant state
+ */
+async function performComprehensiveFeatureExploration(page, featureContext, screenshotsDir) {
+  const exploration = {
+    status: "pending",
+    feature_name: featureContext?.feature_name || "unknown",
+    navigation: { path: [], success: false },
+    accordions_found: [],
+    services_explored: [],
+    modals_tested: [],
+    dropdowns_tested: [],
+    toggles_tested: [],
+    formulas_documented: [],
+    screenshots: [],
+    discoveries: [],
+    errors: []
+  };
+
+  console.log(`\n🔬 COMPREHENSIVE FEATURE EXPLORATION`);
+  console.log(`   Feature: ${exploration.feature_name}`);
+  console.log(`   Goal: Test all UI components and document behavior\n`);
+
+  try {
+    // ========================================================================
+    // STEP 1: NAVIGATE TO FEATURE LOCATION
+    // ========================================================================
+    console.log(`📍 Step 1: Navigate to feature location`);
+
+    // Define feature-specific navigation configs
+    const featureConfigs = {
+      "daily wage": {
+        navPath: ["Settings", "Payroll"],
+        accordionText: "Daily Wage Calculation",
+        services: [
+          { name: "Salary proration", editIcon: true, hasDropdown: true, hasNumberInput: true },
+          { name: "EOS leave encashment", editIcon: true, hasToggle: true, hasLeaveTable: true },
+          { name: "Unpaid leave deduction", editIcon: true, hasToggle: true, hasLeaveTable: true }
+        ]
+      },
+      "end of service": {
+        navPath: ["Settings", "Payroll"],
+        accordionText: "End of Service",
+        services: []
+      },
+      "leave": {
+        navPath: ["Settings", "Leaves"],
+        services: []
+      }
+    };
+
+    // Find matching config
+    const featureLower = (exploration.feature_name || "").toLowerCase();
+    let config = null;
+    for (const [key, cfg] of Object.entries(featureConfigs)) {
+      if (featureLower.includes(key)) {
+        config = cfg;
+        break;
+      }
+    }
+
+    if (!config) {
+      exploration.status = "no_config";
+      exploration.errors.push(`No exploration config for feature: ${exploration.feature_name}`);
+      return exploration;
+    }
+
+    // Navigate through menu items
+    for (const menuItem of config.navPath) {
+      const clicked = await clickMenuItem(page, menuItem);
+      exploration.navigation.path.push({ item: menuItem, clicked });
+      if (clicked) {
+        await page.waitForTimeout(1000);
+        const shot = await saveScreenshot(page, screenshotsDir, `nav_after_${sanitizeFileName(menuItem)}`);
+        if (shot) exploration.screenshots.push({ stage: `nav_${menuItem}`, path: shot });
+      }
+    }
+    exploration.navigation.success = exploration.navigation.path.every(p => p.clicked);
+
+    // ========================================================================
+    // STEP 2: FIND AND EXPAND ACCORDION/CARD
+    // ========================================================================
+    if (config.accordionText) {
+      console.log(`📂 Step 2: Expand accordion: "${config.accordionText}"`);
+
+      // Find accordion by text
+      const accordionSelectors = [
+        `button:has-text("${config.accordionText}")`,
+        `[class*="accordion"]:has-text("${config.accordionText}")`,
+        `[class*="card"]:has-text("${config.accordionText}")`,
+        `h6:has-text("${config.accordionText}")`,
+        `:text("${config.accordionText}")`
+      ];
+
+      let accordionClicked = false;
+      for (const sel of accordionSelectors) {
+        try {
+          const elem = page.locator(sel).first();
+          if (await elem.isVisible({ timeout: 2000 })) {
+            await elem.click();
+            accordionClicked = true;
+            exploration.accordions_found.push({ text: config.accordionText, selector: sel });
+            await page.waitForTimeout(1500);
+
+            // Screenshot of expanded accordion
+            const shot = await saveScreenshot(page, screenshotsDir, `accordion_expanded_${sanitizeFileName(config.accordionText)}`);
+            if (shot) exploration.screenshots.push({ stage: "accordion_expanded", path: shot });
+            break;
+          }
+        } catch { /* continue */ }
+      }
+
+      if (!accordionClicked) {
+        // Try clicking on the card area instead
+        try {
+          const cardArea = page.locator(`text="${config.accordionText}"`).first();
+          if (await cardArea.isVisible({ timeout: 1000 })) {
+            await cardArea.click();
+            accordionClicked = true;
+            await page.waitForTimeout(1500);
+          }
+        } catch { /* non-critical */ }
+      }
+    }
+
+    // ========================================================================
+    // STEP 3: EXPLORE EACH SERVICE
+    // ========================================================================
+    if (config.services && config.services.length > 0) {
+      console.log(`🔍 Step 3: Explore ${config.services.length} services`);
+
+      for (const service of config.services) {
+        console.log(`   → Testing service: ${service.name}`);
+        const serviceExploration = await exploreService(page, service, screenshotsDir);
+        exploration.services_explored.push(serviceExploration);
+
+        // Aggregate discoveries
+        if (serviceExploration.modal_content) {
+          exploration.modals_tested.push(serviceExploration.modal_content);
+        }
+        if (serviceExploration.dropdown_options) {
+          exploration.dropdowns_tested.push(...serviceExploration.dropdown_options);
+        }
+        if (serviceExploration.toggle_states) {
+          exploration.toggles_tested.push(serviceExploration.toggle_states);
+        }
+        if (serviceExploration.formulas) {
+          exploration.formulas_documented.push(...serviceExploration.formulas);
+        }
+        if (serviceExploration.screenshots) {
+          exploration.screenshots.push(...serviceExploration.screenshots);
+        }
+      }
+    }
+
+    // ========================================================================
+    // STEP 4: DOCUMENT DISCOVERIES
+    // ========================================================================
+    console.log(`📝 Step 4: Document discoveries`);
+
+    // Look for any undocumented UI elements on the page
+    const pageText = await page.locator("body").textContent().catch(() => "");
+    const keywordMatches = [
+      "Daily Wage", "calculation", "proration", "allowances", "salary",
+      "working days", "calendar days", "custom days", "EOS", "encashment",
+      "leave", "deduction", "formula"
+    ];
+
+    for (const keyword of keywordMatches) {
+      if (pageText.toLowerCase().includes(keyword.toLowerCase())) {
+        exploration.discoveries.push({ keyword, found: true });
+      }
+    }
+
+    exploration.status = "completed";
+    console.log(`\n✅ Comprehensive exploration completed`);
+    console.log(`   Screenshots taken: ${exploration.screenshots.length}`);
+    console.log(`   Services explored: ${exploration.services_explored.length}`);
+    console.log(`   Dropdowns tested: ${exploration.dropdowns_tested.length}`);
+    console.log(`   Formulas documented: ${exploration.formulas_documented.length}`);
+
+  } catch (err) {
+    exploration.status = "error";
+    exploration.errors.push(err.message);
+    console.log(`❌ Exploration error: ${err.message}`);
+  }
+
+  return exploration;
+}
+
+/**
+ * Helper to click a menu item using multiple selector strategies
+ */
+async function clickMenuItem(page, menuItem) {
+  const selectors = [
+    `span:has-text("${menuItem}")`,
+    `a:has-text("${menuItem}")`,
+    `button:has-text("${menuItem}")`,
+    `[role="menuitem"]:has-text("${menuItem}")`,
+    `nav :text("${menuItem}")`,
+    `:text("${menuItem}")`
+  ];
+
+  for (const sel of selectors) {
+    try {
+      const elem = page.locator(sel).first();
+      if (await elem.isVisible({ timeout: 2000 })) {
+        await elem.click();
+        return true;
+      }
+    } catch { /* continue */ }
+  }
+  return false;
+}
+
+/**
+ * Explores a single service: opens modal, tests all components, documents behavior
+ */
+async function exploreService(page, service, screenshotsDir) {
+  const result = {
+    name: service.name,
+    modal_opened: false,
+    modal_content: null,
+    dropdown_options: [],
+    toggle_states: null,
+    formulas: [],
+    leave_types: [],
+    screenshots: [],
+    errors: []
+  };
+
+  try {
+    // Step 1: Find and click the edit icon for this service
+    console.log(`      Finding edit icon for: ${service.name}`);
+
+    // First find the row containing the service name
+    const rowSelectors = [
+      `tr:has-text("${service.name}")`,
+      `div:has-text("${service.name}")`,
+      `[class*="row"]:has-text("${service.name}")`
+    ];
+
+    let editClicked = false;
+    for (const rowSel of rowSelectors) {
+      try {
+        const row = page.locator(rowSel).first();
+        if (await row.isVisible({ timeout: 2000 })) {
+          // Find edit icon within this row
+          const editIcon = row.locator('[class*="edit"], [class*="pencil"], svg, button').last();
+          if (await editIcon.isVisible({ timeout: 1000 })) {
+            await editIcon.click();
+            editClicked = true;
+            result.modal_opened = true;
+            await page.waitForTimeout(1500);
+            break;
+          }
+        }
+      } catch { /* continue */ }
+    }
+
+    // Fallback: try clicking any edit icon near the service text
+    if (!editClicked) {
+      try {
+        const serviceText = page.locator(`text="${service.name}"`).first();
+        if (await serviceText.isVisible({ timeout: 1000 })) {
+          // Get parent and find edit icon
+          const parent = serviceText.locator("xpath=../..");
+          const editIcon = parent.locator('[class*="edit"], svg').last();
+          if (await editIcon.isVisible({ timeout: 1000 })) {
+            await editIcon.click();
+            editClicked = true;
+            result.modal_opened = true;
+            await page.waitForTimeout(1500);
+          }
+        }
+      } catch { /* non-critical */ }
+    }
+
+    if (!result.modal_opened) {
+      result.errors.push(`Could not open modal for service: ${service.name}`);
+      return result;
+    }
+
+    // Screenshot of modal initial state
+    const modalShot = await saveScreenshot(page, screenshotsDir, `modal_${sanitizeFileName(service.name)}_initial`);
+    if (modalShot) result.screenshots.push({ stage: `${service.name}_modal_open`, path: modalShot });
+
+    // Step 2: Document modal content
+    const modalSelectors = ['[role="dialog"]', '[class*="modal"]', '[class*="dialog"]', '[class*="popup"]'];
+    let modalElement = null;
+    for (const sel of modalSelectors) {
+      try {
+        const elem = page.locator(sel).first();
+        if (await elem.isVisible({ timeout: 1000 })) {
+          modalElement = elem;
+          break;
+        }
+      } catch { /* continue */ }
+    }
+
+    if (modalElement) {
+      const modalText = await modalElement.textContent().catch(() => "");
+      result.modal_content = {
+        title: service.name,
+        text_preview: modalText.substring(0, 500),
+        has_formula: modalText.includes("Daily wage =") || modalText.includes("formula")
+      };
+
+      // Extract formula if present
+      const formulaMatch = modalText.match(/Daily wage\s*=\s*[^)]+\)/);
+      if (formulaMatch) {
+        result.formulas.push({ service: service.name, formula: formulaMatch[0] });
+      }
+    }
+
+    // Step 3: Test dropdown if present
+    if (service.hasDropdown) {
+      console.log(`      Testing dropdown for: ${service.name}`);
+      const dropdownResult = await testDropdown(page, service.name, screenshotsDir);
+      result.dropdown_options = dropdownResult.options;
+      result.formulas.push(...dropdownResult.formulas);
+      result.screenshots.push(...dropdownResult.screenshots);
+    }
+
+    // Step 4: Test toggle if present
+    if (service.hasToggle) {
+      console.log(`      Testing toggle for: ${service.name}`);
+      const toggleResult = await testToggle(page, service.name, screenshotsDir);
+      result.toggle_states = toggleResult;
+      result.screenshots.push(...(toggleResult.screenshots || []));
+    }
+
+    // Step 5: Document leave types table if present
+    if (service.hasLeaveTable) {
+      console.log(`      Documenting leave types for: ${service.name}`);
+      const leaveTypes = await extractLeaveTypesTable(page);
+      result.leave_types = leaveTypes;
+    }
+
+    // Step 6: Close the modal
+    console.log(`      Closing modal for: ${service.name}`);
+    await closeModal(page);
+
+  } catch (err) {
+    result.errors.push(err.message);
+  }
+
+  return result;
+}
+
+/**
+ * Tests a dropdown by selecting each option and documenting changes
+ */
+async function testDropdown(page, serviceName, screenshotsDir) {
+  const result = {
+    options: [],
+    formulas: [],
+    screenshots: []
+  };
+
+  try {
+    // Find dropdown (Month calculation dropdown)
+    const dropdownSelectors = [
+      '[class*="select"]',
+      'select',
+      '[role="combobox"]',
+      '[class*="dropdown"]',
+      'button:has-text("days")'
+    ];
+
+    let dropdown = null;
+    for (const sel of dropdownSelectors) {
+      try {
+        const elem = page.locator(sel).first();
+        if (await elem.isVisible({ timeout: 2000 })) {
+          dropdown = elem;
+          break;
+        }
+      } catch { /* continue */ }
+    }
+
+    if (!dropdown) return result;
+
+    // Click to open dropdown
+    await dropdown.click();
+    await page.waitForTimeout(500);
+
+    // Screenshot of open dropdown
+    const dropdownOpenShot = await saveScreenshot(page, screenshotsDir, `dropdown_${sanitizeFileName(serviceName)}_open`);
+    if (dropdownOpenShot) result.screenshots.push({ stage: `${serviceName}_dropdown_open`, path: dropdownOpenShot });
+
+    // Find and collect all options
+    const optionSelectors = [
+      '[role="option"]',
+      '[class*="option"]',
+      'li[class*="menu"]',
+      '[class*="listbox"] > div'
+    ];
+
+    const options = [];
+    for (const optSel of optionSelectors) {
+      try {
+        const opts = await page.locator(optSel).all();
+        for (const opt of opts) {
+          const text = await opt.textContent().catch(() => "");
+          if (text.trim()) options.push(text.trim());
+        }
+        if (options.length > 0) break;
+      } catch { /* continue */ }
+    }
+
+    // Known options for Daily Wage Calculation
+    const expectedOptions = ["Working days", "Calendar days", "Custom days"];
+    const optionsToTest = options.length > 0 ? options : expectedOptions;
+
+    // Test each option
+    for (const optionText of optionsToTest) {
+      try {
+        // Click dropdown to open if closed
+        if (!await page.locator('[role="listbox"], [class*="menu"]:visible').isVisible().catch(() => false)) {
+          await dropdown.click();
+          await page.waitForTimeout(300);
+        }
+
+        // Select the option
+        const optionElem = page.locator(`text="${optionText}"`).first();
+        if (await optionElem.isVisible({ timeout: 1000 })) {
+          await optionElem.click();
+          await page.waitForTimeout(800);
+
+          // Document the formula change
+          const modalText = await page.locator('[role="dialog"], [class*="modal"]').first().textContent().catch(() => "");
+          const formulaMatch = modalText.match(/Daily wage\s*=\s*[^)]+\)/);
+
+          result.options.push({
+            option: optionText,
+            selected: true,
+            formula: formulaMatch ? formulaMatch[0] : null
+          });
+
+          if (formulaMatch) {
+            result.formulas.push({
+              service: serviceName,
+              option: optionText,
+              formula: formulaMatch[0]
+            });
+          }
+
+          // Screenshot of this option selected
+          const optShot = await saveScreenshot(page, screenshotsDir, `dropdown_${sanitizeFileName(serviceName)}_${sanitizeFileName(optionText)}`);
+          if (optShot) result.screenshots.push({ stage: `${serviceName}_option_${optionText}`, path: optShot });
+        }
+      } catch { /* continue to next option */ }
+    }
+
+  } catch (err) {
+    console.log(`      Dropdown test error: ${err.message}`);
+  }
+
+  return result;
+}
+
+/**
+ * Tests a toggle and documents behavior changes
+ */
+async function testToggle(page, serviceName, screenshotsDir) {
+  const result = {
+    found: false,
+    label: null,
+    initial_state: null,
+    toggled_state: null,
+    behavior_change: null,
+    screenshots: []
+  };
+
+  try {
+    // Look for "Overwrite calculation in policies" toggle
+    const toggleSelectors = [
+      'input[type="checkbox"]',
+      '[role="switch"]',
+      '[class*="toggle"]',
+      '[class*="switch"]'
+    ];
+
+    let toggle = null;
+    for (const sel of toggleSelectors) {
+      try {
+        const elem = page.locator(sel).first();
+        if (await elem.isVisible({ timeout: 2000 })) {
+          toggle = elem;
+          result.found = true;
+          break;
+        }
+      } catch { /* continue */ }
+    }
+
+    if (!toggle) return result;
+
+    // Get toggle label
+    const toggleLabel = await page.locator('text="Overwrite calculation in policies"').first().textContent().catch(() => null);
+    result.label = toggleLabel || "Unknown toggle";
+
+    // Check initial state
+    const initialChecked = await toggle.isChecked().catch(() => false);
+    result.initial_state = initialChecked ? "ON" : "OFF";
+
+    // Screenshot before toggle
+    const beforeShot = await saveScreenshot(page, screenshotsDir, `toggle_${sanitizeFileName(serviceName)}_before`);
+    if (beforeShot) result.screenshots.push({ stage: `${serviceName}_toggle_before`, path: beforeShot });
+
+    // Document what's enabled/disabled in initial state
+    const salaryCompBefore = await page.locator('text="Salary Component"').first().locator("xpath=..").locator('select, [role="combobox"]').first().isDisabled().catch(() => true);
+    const monthCalcBefore = await page.locator('text="Month calculation"').first().locator("xpath=..").locator('select, [role="combobox"]').first().isDisabled().catch(() => true);
+
+    result.behavior_change = {
+      before: {
+        salary_component_disabled: salaryCompBefore,
+        month_calculation_disabled: monthCalcBefore
+      }
+    };
+
+    // Toggle the switch
+    await toggle.click();
+    await page.waitForTimeout(800);
+
+    result.toggled_state = initialChecked ? "OFF" : "ON";
+
+    // Screenshot after toggle
+    const afterShot = await saveScreenshot(page, screenshotsDir, `toggle_${sanitizeFileName(serviceName)}_after`);
+    if (afterShot) result.screenshots.push({ stage: `${serviceName}_toggle_after`, path: afterShot });
+
+    // Document what's enabled/disabled after toggle
+    const salaryCompAfter = await page.locator('text="Salary Component"').first().locator("xpath=..").locator('select, [role="combobox"]').first().isDisabled().catch(() => true);
+    const monthCalcAfter = await page.locator('text="Month calculation"').first().locator("xpath=..").locator('select, [role="combobox"]').first().isDisabled().catch(() => true);
+
+    result.behavior_change.after = {
+      salary_component_disabled: salaryCompAfter,
+      month_calculation_disabled: monthCalcAfter
+    };
+
+    // Toggle back to original state
+    await toggle.click();
+    await page.waitForTimeout(500);
+
+  } catch (err) {
+    console.log(`      Toggle test error: ${err.message}`);
+  }
+
+  return result;
+}
+
+/**
+ * Extracts leave types from a table in the modal
+ */
+async function extractLeaveTypesTable(page) {
+  const leaveTypes = [];
+
+  try {
+    // Find table rows
+    const rows = await page.locator('table tr, [class*="table"] [class*="row"]').all();
+
+    for (const row of rows) {
+      const text = await row.textContent().catch(() => "");
+      // Skip header row
+      if (text.includes("Eligible") || text.includes("Daily wage calculation")) continue;
+
+      // Extract leave type name and calculation method
+      const cells = await row.locator('td, [class*="cell"]').all();
+      if (cells.length >= 2) {
+        const name = await cells[0].textContent().catch(() => "");
+        const calculation = await cells[1].textContent().catch(() => "");
+        if (name.trim()) {
+          leaveTypes.push({
+            name: name.trim(),
+            calculation: calculation.trim()
+          });
+        }
+      }
+    }
+  } catch { /* non-critical */ }
+
+  return leaveTypes;
+}
+
+/**
+ * Closes a modal dialog
+ */
+async function closeModal(page) {
+  try {
+    // Try close button first
+    const closeSelectors = [
+      'button:has-text("Cancel")',
+      'button:has-text("Close")',
+      '[aria-label="Close"]',
+      '[class*="close"]',
+      'button svg' // X icon
+    ];
+
+    for (const sel of closeSelectors) {
+      try {
+        const btn = page.locator(sel).first();
+        if (await btn.isVisible({ timeout: 1000 })) {
+          await btn.click();
+          await page.waitForTimeout(500);
+          return;
+        }
+      } catch { /* continue */ }
+    }
+
+    // Fallback: press Escape
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(500);
+  } catch { /* non-critical */ }
+}
+
 // ------------------ SEMANTIC CLAIM VALIDATION ------------------
 /**
  * Validates a claim without CSS selectors by searching for relevant keywords in page content.
@@ -1800,10 +2423,30 @@ function extractNavigablePathsFromProcedures(procedures) {
       console.log(`   Result: ${output.feature_inspection.status}`);
       console.log(`   Elements found: ${output.feature_inspection.elements_found?.length || 0}`);
       console.log(`   Elements not found: ${output.feature_inspection.elements_not_found?.length || 0}`);
+
+      // ========================================================================
+      // STEP 4.5: COMPREHENSIVE FEATURE EXPLORATION
+      // Deep exploration of feature - test all UI components, document behavior
+      // ========================================================================
+      console.log(`\n🔬 Starting Comprehensive Feature Exploration...`);
+      output.comprehensive_exploration = await performComprehensiveFeatureExploration(
+        page,
+        featureContext,
+        SCREENSHOTS_DIR
+      );
+
+      console.log(`   Status: ${output.comprehensive_exploration.status}`);
+      console.log(`   Services explored: ${output.comprehensive_exploration.services_explored?.length || 0}`);
+      console.log(`   Dropdowns tested: ${output.comprehensive_exploration.dropdowns_tested?.length || 0}`);
+      console.log(`   Toggles tested: ${output.comprehensive_exploration.toggles_tested?.length || 0}`);
+      console.log(`   Formulas documented: ${output.comprehensive_exploration.formulas_documented?.length || 0}`);
+      console.log(`   Screenshots: ${output.comprehensive_exploration.screenshots?.length || 0}`);
+
     } else {
       console.log(`\n⚠️ Skipping exploration - login failed`);
       output.cognitive_walkthrough = { status: "skipped", reason: "login_failed" };
       output.feature_inspection = { status: "skipped", reason: "login_failed" };
+      output.comprehensive_exploration = { status: "skipped", reason: "login_failed" };
     }
 
     // ========================================================================
