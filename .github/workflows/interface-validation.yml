@@ -38,6 +38,7 @@ permissions:
 jobs:
   validate-interface:
     runs-on: self-hosted
+    timeout-minutes: 20
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
@@ -293,8 +294,11 @@ jobs:
 
       - name: Run Playwright validation (UI execution)
         shell: bash
+        timeout-minutes: 10
         env:
           VERSIONED_DIR: ${{ steps.write_input.outputs.versioned_dir }}
+          PLAYWRIGHT_GOTO_TIMEOUT_MS: "30000"
+          PLAYWRIGHT_STEP_TIMEOUT_MS: "10000"
         run: |
           set -euo pipefail
           echo "📸 Screenshots will be saved to: ${VERSIONED_DIR}/screenshots/"
