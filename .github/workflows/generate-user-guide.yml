@@ -11,12 +11,20 @@ on:
         description: 'Human-readable feature name (e.g., Daily Wage Calculator)'
         required: true
         type: string
+      folder_path:
+        description: 'Versioned folder path from n8n (e.g., daily-wage-calculator/v28) - primary source for all files'
+        required: false
+        type: string
+      next_version:
+        description: 'Version number from n8n (e.g., v28) - used when folder_path is provided'
+        required: false
+        type: string
       jira_report_path:
-        description: 'Path to Jira analysis report'
+        description: 'Path to Jira analysis report (legacy - prefer folder_path)'
         required: false
         type: string
       zendesk_report_path:
-        description: 'Path to Zendesk analysis report'
+        description: 'Path to Zendesk analysis report (legacy - prefer folder_path)'
         required: false
         type: string
       validation_artifact_path:
@@ -54,44 +62,92 @@ jobs:
         id: version
         run: |
           FEATURE_SLUG="${{ inputs.feature_slug }}"
-          OUTPUT_DIR="outputs/${FEATURE_SLUG}"
+          FOLDER_PATH="${{ inputs.folder_path }}"
+          NEXT_VERSION="${{ inputs.next_version }}"
 
-          # Find existing versions - check both old and new structures
-          if [ -d "$OUTPUT_DIR" ]; then
-            # New structure: outputs/{feature}/v{n}/user-guide.html
-            NEW_LATEST=$(ls -1d "$OUTPUT_DIR"/v* 2>/dev/null | sed 's/.*\/v\([0-9]*\)$/\1/' | sort -n | tail -1)
+          # If n8n provided folder_path, use its version
+          if [ -n "$FOLDER_PATH" ]; then
+            echo "📦 Using folder_path from n8n: ${FOLDER_PATH}"
 
-            # Old structure (fallback): outputs/{feature}/user-guide_v{n}.html
-            OLD_LATEST=$(ls -1 "$OUTPUT_DIR"/user-guide_v*.html 2>/dev/null | sed 's/.*_v\([0-9]*\)\.html/\1/' | sort -n | tail -1)
-
-            # Use the higher of the two
-            if [ -n "$NEW_LATEST" ] && [ -n "$OLD_LATEST" ]; then
-              LATEST_VERSION=$((NEW_LATEST > OLD_LATEST ? NEW_LATEST : OLD_LATEST))
-            elif [ -n "$NEW_LATEST" ]; then
-              LATEST_VERSION=$NEW_LATEST
-            elif [ -n "$OLD_LATEST" ]; then
-              LATEST_VERSION=$OLD_LATEST
+            # Extract version from folder_path (e.g., daily-wage-calculator/v28 -> 28)
+            if [ -n "$NEXT_VERSION" ]; then
+              VERSION="${NEXT_VERSION#v}"  # Remove 'v' prefix if present
             else
-              LATEST_VERSION=0
+              VERSION=$(echo "$FOLDER_PATH" | sed 's/.*\/v\([0-9]*\)$/\1/')
             fi
 
-            VERSION=$((LATEST_VERSION + 1))
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "folder_path=$FOLDER_PATH" >> $GITHUB_OUTPUT
+            echo "📊 Using n8n version: v$VERSION (folder: ${FOLDER_PATH})"
           else
-            VERSION=1
-          fi
+            # Fallback: calculate version locally
+            echo "⚠️ No folder_path from n8n, calculating version locally..."
+            OUTPUT_DIR="outputs/${FEATURE_SLUG}"
 
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "📊 Version: v$VERSION (new versioned structure: outputs/${FEATURE_SLUG}/v${VERSION}/)"
+            # Find existing versions - check both old and new structures
+            if [ -d "$OUTPUT_DIR" ]; then
+              # New structure: outputs/{feature}/v{n}/user-guide.html
+              NEW_LATEST=$(ls -1d "$OUTPUT_DIR"/v* 2>/dev/null | sed 's/.*\/v\([0-9]*\)$/\1/' | sort -n | tail -1)
+
+              # Old structure (fallback): outputs/{feature}/user-guide_v{n}.html
+              OLD_LATEST=$(ls -1 "$OUTPUT_DIR"/user-guide_v*.html 2>/dev/null | sed 's/.*_v\([0-9]*\)\.html/\1/' | sort -n | tail -1)
+
+              # Use the higher of the two
+              if [ -n "$NEW_LATEST" ] && [ -n "$OLD_LATEST" ]; then
+                LATEST_VERSION=$((NEW_LATEST > OLD_LATEST ? NEW_LATEST : OLD_LATEST))
+              elif [ -n "$NEW_LATEST" ]; then
+                LATEST_VERSION=$NEW_LATEST
+              elif [ -n "$OLD_LATEST" ]; then
+                LATEST_VERSION=$OLD_LATEST
+              else
+                LATEST_VERSION=0
+              fi
+
+              VERSION=$((LATEST_VERSION + 1))
+            else
+              VERSION=1
+            fi
+
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "folder_path=" >> $GITHUB_OUTPUT
+            echo "📊 Calculated local version: v$VERSION (outputs/${FEATURE_SLUG}/v${VERSION}/)"
+          fi
 
       - name: Verify input files exist
         id: verify
+        env:
+          N8N_FOLDER_PATH: ${{ inputs.folder_path }}
+          FEATURE_SLUG: ${{ inputs.feature_slug }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          echo "🔍 Checking input files for: ${{ inputs.feature_slug }}"
+          echo "🔍 Checking input files for: ${FEATURE_SLUG}"
           START_TIME=$(date +%s)
 
+          # Determine source paths based on n8n folder_path
+          if [ -n "${N8N_FOLDER_PATH}" ]; then
+            echo "📦 Using n8n folder_path: ${N8N_FOLDER_PATH}"
+
+            # n8n folder structure: {folder_path}/jira/, {folder_path}/zendesk/, {folder_path}/validation/
+            ZENDESK_FILE=$(ls -t "${N8N_FOLDER_PATH}/zendesk/"*.md 2>/dev/null | head -1)
+            JIRA_FILE=$(ls -t "${N8N_FOLDER_PATH}/jira/"*.md 2>/dev/null | head -1)
+            VALIDATION_DIR="${N8N_FOLDER_PATH}/validation"
+          else
+            echo "⚠️ No n8n folder_path, using legacy paths..."
+
+            # Legacy paths: reports/zendesk/..., reports/jira/..., .validation/output/...
+            ZENDESK_FILE=$(ls -t reports/zendesk/${FEATURE_SLUG}/versions/zendesk_md_*.md 2>/dev/null | head -1)
+            JIRA_FILE=$(ls -t reports/jira/${FEATURE_SLUG}/versions/v1/runs/jira-analysis_*.md 2>/dev/null | head -1)
+            VALIDATION_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
+
+            # Fallback to flat structure if versioned doesn't exist
+            if [ ! -d "$VALIDATION_DIR" ]; then
+              echo "⚠️ Versioned validation dir not found, checking flat structure..."
+              VALIDATION_DIR=".validation/output"
+            fi
+          fi
+
           # Check Zendesk report
-          ZENDESK_FILE=$(ls -t reports/zendesk/${{ inputs.feature_slug }}/versions/zendesk_md_*.md 2>/dev/null | head -1)
-          if [ -z "$ZENDESK_FILE" ]; then
+          if [ -z "$ZENDESK_FILE" ] || [ ! -f "$ZENDESK_FILE" ]; then
             echo "❌ Zendesk report not found"
             exit 1
           fi
@@ -99,22 +155,13 @@ jobs:
           echo "zendesk_file=$ZENDESK_FILE" >> $GITHUB_OUTPUT
 
           # Check Jira report
-          JIRA_FILE=$(ls -t reports/jira/${{ inputs.feature_slug }}/versions/v1/runs/jira-analysis_*.md 2>/dev/null | head -1)
-          if [ -z "$JIRA_FILE" ]; then
+          if [ -z "$JIRA_FILE" ] || [ ! -f "$JIRA_FILE" ]; then
             echo "❌ Jira report not found"
             exit 1
           fi
           echo "✅ Jira: $JIRA_FILE"
           echo "jira_file=$JIRA_FILE" >> $GITHUB_OUTPUT
 
-          # Check validation files - use versioned path structure
-          VALIDATION_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
-
-          # Fallback to flat structure if versioned doesn't exist (backwards compatibility)
-          if [ ! -d "$VALIDATION_DIR" ]; then
-            echo "⚠️ Versioned validation dir not found, checking flat structure..."
-            VALIDATION_DIR=".validation/output"
-          fi
           echo "validation_dir=$VALIDATION_DIR" >> $GITHUB_OUTPUT
 
           # Check for pw_result.json (primary) or result.json (fallback)
@@ -127,7 +174,7 @@ jobs:
             exit 1
           fi
 
-          # Check screenshots - try versioned path first
+          # Check screenshots
           if [ -d "${VALIDATION_DIR}/screenshots" ]; then
             SCREENSHOT_COUNT=$(ls ${VALIDATION_DIR}/screenshots/*.png 2>/dev/null | wc -l | tr -d ' ')
           else
@@ -154,24 +201,24 @@ jobs:
         id: preprocess
         env:
           FEATURE_SLUG: ${{ inputs.feature_slug }}
+          ZENDESK_FILE: ${{ steps.verify.outputs.zendesk_file }}
+          JIRA_FILE: ${{ steps.verify.outputs.jira_file }}
+          VALIDATION_DIR: ${{ steps.verify.outputs.validation_dir }}
         run: |
           echo "📂 Preprocessing input files for: ${FEATURE_SLUG}"
 
           # Create temp directory for consolidated input
           mkdir -p .generation-input
 
-          # 1. Get latest Zendesk report
-          ZENDESK_FILE=$(ls -t reports/zendesk/${FEATURE_SLUG}/versions/zendesk_md_*.md 2>/dev/null | head -1)
+          # 1. Copy Zendesk report (path from verify step)
           echo "📄 Zendesk: $ZENDESK_FILE"
           cp "$ZENDESK_FILE" .generation-input/zendesk-report.md
 
-          # 2. Get latest Jira report
-          JIRA_FILE=$(ls -t reports/jira/${FEATURE_SLUG}/versions/v1/runs/jira-analysis_*.md 2>/dev/null | head -1)
+          # 2. Copy Jira report (path from verify step)
           echo "📄 Jira: $JIRA_FILE"
           cp "$JIRA_FILE" .generation-input/jira-report.md
 
-          # 3. Copy validation results - use versioned path from verify step
-          VALIDATION_DIR="${{ steps.verify.outputs.validation_dir }}"
+          # 3. Copy validation results - use versioned path from verify step (env already set)
           echo "📂 Using validation directory: $VALIDATION_DIR"
 
           if [ -f "${VALIDATION_DIR}/pw_result.json" ]; then
@@ -229,16 +276,24 @@ jobs:
         env:
           FEATURE_SLUG: ${{ inputs.feature_slug }}
           FEATURE_NAME: ${{ inputs.feature_name }}
+          N8N_FOLDER_PATH: ${{ inputs.folder_path }}
+          VALIDATION_DIR: ${{ steps.verify.outputs.validation_dir }}
         run: |
           # Normalize API key (remove any whitespace/newlines)
           export ANTHROPIC_API_KEY=$(echo "$ANTHROPIC_API_KEY" | tr -d '[:space:]')
 
           VERSION="${{ steps.version.outputs.version }}"
-          VALIDATION_DIR="${{ steps.verify.outputs.validation_dir }}"
           echo "📝 Generating user guide v$VERSION for: ${FEATURE_SLUG} (${FEATURE_NAME})"
 
-          # Create VERSIONED output directory structure
-          OUTPUT_DIR="outputs/${FEATURE_SLUG}/v${VERSION}"
+          # Determine output directory - use n8n folder_path if provided
+          if [ -n "${N8N_FOLDER_PATH}" ]; then
+            OUTPUT_DIR="${N8N_FOLDER_PATH}"
+            echo "📦 Using n8n folder_path for output: ${OUTPUT_DIR}"
+          else
+            OUTPUT_DIR="outputs/${FEATURE_SLUG}/v${VERSION}"
+            echo "📁 Using legacy output directory: ${OUTPUT_DIR}"
+          fi
+
           mkdir -p "${OUTPUT_DIR}/screenshots"
           echo "📁 Output directory: ${OUTPUT_DIR}"
 
@@ -289,6 +344,8 @@ jobs:
 
       - name: Commit and push user guide
         id: commit
+        env:
+          N8N_FOLDER_PATH: ${{ inputs.folder_path }}
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           FEATURE_SLUG="${{ inputs.feature_slug }}"
@@ -296,7 +353,15 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add outputs/${FEATURE_SLUG}/ || true
+          # Determine output directory - use n8n folder_path if provided
+          if [ -n "${N8N_FOLDER_PATH}" ]; then
+            OUTPUT_DIR="${N8N_FOLDER_PATH}"
+            # Add the n8n folder_path (contains all outputs: jira, zendesk, validation, user-guide)
+            git add "${N8N_FOLDER_PATH}" || true
+          else
+            OUTPUT_DIR="outputs/${FEATURE_SLUG}/v${VERSION}"
+            git add outputs/${FEATURE_SLUG}/ || true
+          fi
 
           if git diff --staged --quiet; then
             echo "No changes to commit"
@@ -312,7 +377,6 @@ jobs:
           fi
 
           # Set VERSIONED output paths
-          OUTPUT_DIR="outputs/${FEATURE_SLUG}/v${VERSION}"
           FILE_PATH="${OUTPUT_DIR}/user-guide.html"
           SCREENSHOTS_PATH="${OUTPUT_DIR}/screenshots"
           GITHUB_URL="https://raw.githubusercontent.com/${{ github.repository }}/main/${FILE_PATH}"

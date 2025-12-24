@@ -11,6 +11,14 @@ on:
         description: "Feature slug with underscores for folder paths (e.g., daily_wage_calculator)"
         required: true
         type: string
+      folder_path:
+        description: "Versioned folder path from n8n (e.g., daily-wage-calculator/v28) - if provided, skips version calculation"
+        required: false
+        type: string
+      next_version:
+        description: "Version number from n8n (e.g., v28) - used when folder_path is provided"
+        required: false
+        type: string
       claims_json:
         description: "Claims to validate (JSON string)"
         required: true
@@ -54,26 +62,48 @@ jobs:
           git pull --rebase --autostash origin main || true
 
       # Calculate version number for this feature's validation run
+      # Uses folder_path from n8n if provided, otherwise calculates locally
       - name: Calculate validation version
         id: version
         run: |
           FEATURE_SLUG="${{ github.event.inputs.feature_slug }}"
-          VALIDATION_DIR=".validation/output/${FEATURE_SLUG}"
+          FOLDER_PATH="${{ github.event.inputs.folder_path }}"
+          NEXT_VERSION="${{ github.event.inputs.next_version }}"
 
-          # Find existing versions
-          if [ -d "$VALIDATION_DIR" ]; then
-            LATEST_VERSION=$(ls -1d "$VALIDATION_DIR"/v*/ 2>/dev/null | sed 's/.*\/v\([0-9]*\)\//\1/' | sort -n | tail -1)
-            if [ -z "$LATEST_VERSION" ]; then
-              VERSION=1
+          # If n8n provided folder_path, use it directly
+          if [ -n "$FOLDER_PATH" ]; then
+            echo "📦 Using folder_path from n8n: ${FOLDER_PATH}"
+
+            # Extract version from folder_path (e.g., daily-wage-calculator/v28 -> v28)
+            if [ -n "$NEXT_VERSION" ]; then
+              VERSION="${NEXT_VERSION#v}"  # Remove 'v' prefix if present
             else
-              VERSION=$((LATEST_VERSION + 1))
+              VERSION=$(echo "$FOLDER_PATH" | sed 's/.*\/v\([0-9]*\)$/\1/')
             fi
-          else
-            VERSION=1
-          fi
 
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "📊 Validation version: v$VERSION for ${FEATURE_SLUG}"
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "folder_path=$FOLDER_PATH" >> $GITHUB_OUTPUT
+            echo "📊 Using n8n version: v$VERSION (folder: ${FOLDER_PATH})"
+          else
+            # Fallback: calculate version locally
+            echo "⚠️ No folder_path from n8n, calculating version locally..."
+            VALIDATION_DIR=".validation/output/${FEATURE_SLUG}"
+
+            if [ -d "$VALIDATION_DIR" ]; then
+              LATEST_VERSION=$(ls -1d "$VALIDATION_DIR"/v*/ 2>/dev/null | sed 's/.*\/v\([0-9]*\)\//\1/' | sort -n | tail -1)
+              if [ -z "$LATEST_VERSION" ]; then
+                VERSION=1
+              else
+                VERSION=$((LATEST_VERSION + 1))
+              fi
+            else
+              VERSION=1
+            fi
+
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "folder_path=" >> $GITHUB_OUTPUT
+            echo "📊 Calculated local version: v$VERSION for ${FEATURE_SLUG}"
+          fi
 
       - name: Verify Anthropic key present (safe)
         shell: bash
@@ -183,6 +213,7 @@ jobs:
           echo "✅ APP_PASSWORD present (len=${#APP_PASSWORD})"
 
       - name: Write validation input JSON (safe)
+        id: write_input
         shell: bash
         env:
           CLAIMS_JSON: ${{ github.event.inputs.claims_json }}
@@ -191,14 +222,26 @@ jobs:
           FEATURE_NAME: ${{ github.event.inputs.feature_name }}
           FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
           VERSION: ${{ steps.version.outputs.version }}
+          N8N_FOLDER_PATH: ${{ github.event.inputs.folder_path }}
         run: |
           set -euo pipefail
 
-          # Create versioned folder structure: .validation/output/{feature_slug}/v{version}/
-          VERSIONED_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
+          # Use n8n folder_path if provided, otherwise construct from feature_slug/version
+          if [ -n "${N8N_FOLDER_PATH}" ]; then
+            # n8n provides folder like "daily-wage-calculator/v28" - use it directly
+            VERSIONED_DIR="${N8N_FOLDER_PATH}/validation"
+            echo "📦 Using n8n folder_path: ${N8N_FOLDER_PATH}"
+          else
+            # Fallback: construct from feature_slug and calculated version
+            VERSIONED_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
+          fi
+
           echo "📁 Creating versioned directory: ${VERSIONED_DIR}"
           mkdir -p "${VERSIONED_DIR}/screenshots"
           mkdir -p .validation/input
+
+          # Output versioned_dir for use in subsequent steps
+          echo "versioned_dir=${VERSIONED_DIR}" >> $GITHUB_OUTPUT
 
           # Use environment variables to avoid shell escaping issues
           CLAIMS_RAW="${CLAIMS_JSON}"
@@ -251,12 +294,9 @@ jobs:
       - name: Run Playwright validation (UI execution)
         shell: bash
         env:
-          FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
-          VERSION: ${{ steps.version.outputs.version }}
+          VERSIONED_DIR: ${{ steps.write_input.outputs.versioned_dir }}
         run: |
           set -euo pipefail
-          VERSIONED_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
-
           echo "📸 Screenshots will be saved to: ${VERSIONED_DIR}/screenshots/"
           node scripts/playwright/run-validation.mjs \
             --input .validation/input/request.json \
@@ -266,11 +306,9 @@ jobs:
       - name: Clean JSON Output (Playwright) - ensure valid JSON file exists
         shell: bash
         env:
-          FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
-          VERSION: ${{ steps.version.outputs.version }}
+          VERSIONED_DIR: ${{ steps.write_input.outputs.versioned_dir }}
         run: |
           set -euo pipefail
-          VERSIONED_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
           test -f "${VERSIONED_DIR}/pw_result.json"
           jq -e . "${VERSIONED_DIR}/pw_result.json" >/dev/null
           echo "✅ pw_result.json is valid JSON in ${VERSIONED_DIR}"
@@ -278,11 +316,9 @@ jobs:
       - name: Run Interface Validator Agent (PURE, STRICT JSON)
         shell: bash
         env:
-          FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
-          VERSION: ${{ steps.version.outputs.version }}
+          VERSIONED_DIR: ${{ steps.write_input.outputs.versioned_dir }}
         run: |
           set -euo pipefail
-          VERSIONED_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
           mkdir -p "${VERSIONED_DIR}"
 
           INPUT_JSON="$(cat .validation/input/request.json)"
@@ -346,11 +382,9 @@ jobs:
       - name: Clean JSON Output (strip fences / extract object)
         shell: bash
         env:
-          FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
-          VERSION: ${{ steps.version.outputs.version }}
+          VERSIONED_DIR: ${{ steps.write_input.outputs.versioned_dir }}
         run: |
           set -euo pipefail
-          VERSIONED_DIR=".validation/output/${FEATURE_SLUG}/v${VERSION}"
 
           python3 - "${VERSIONED_DIR}" <<'PY'
           import json, re, pathlib, sys
@@ -396,15 +430,24 @@ jobs:
             exit 1
           fi
 
+      - name: Prepare artifact paths
+        id: artifact_paths
+        env:
+          VERSIONED_DIR: ${{ steps.write_input.outputs.versioned_dir }}
+        run: |
+          echo "versioned_dir=${VERSIONED_DIR}" >> $GITHUB_OUTPUT
+          # Create artifact path list dynamically
+          echo "📦 Validation outputs at: ${VERSIONED_DIR}"
+
       - name: Upload validation output artifact
         uses: actions/upload-artifact@v4
         with:
           name: interface-validation-${{ github.event.inputs.feature_slug }}-v${{ steps.version.outputs.version }}-${{ github.run_id }}
           path: |
-            .validation/output/${{ github.event.inputs.feature_slug }}/v${{ steps.version.outputs.version }}/result.json
-            .validation/output/${{ github.event.inputs.feature_slug }}/v${{ steps.version.outputs.version }}/result_raw.txt
-            .validation/output/${{ github.event.inputs.feature_slug }}/v${{ steps.version.outputs.version }}/pw_result.json
-            .validation/output/${{ github.event.inputs.feature_slug }}/v${{ steps.version.outputs.version }}/screenshots/**
+            ${{ steps.write_input.outputs.versioned_dir }}/result.json
+            ${{ steps.write_input.outputs.versioned_dir }}/result_raw.txt
+            ${{ steps.write_input.outputs.versioned_dir }}/pw_result.json
+            ${{ steps.write_input.outputs.versioned_dir }}/screenshots/**
             .validation/input/request.json
           if-no-files-found: error
           retention-days: 7
@@ -412,20 +455,28 @@ jobs:
       - name: Commit validation output
         shell: bash
         env:
-          FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
+          VERSIONED_DIR: ${{ steps.write_input.outputs.versioned_dir }}
           VERSION: ${{ steps.version.outputs.version }}
+          N8N_FOLDER_PATH: ${{ github.event.inputs.folder_path }}
         run: |
           set -euo pipefail
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          git add .validation || true
+          # Add validation outputs - use n8n folder_path if provided
+          if [ -n "${N8N_FOLDER_PATH}" ]; then
+            # n8n folder structure - add the entire version folder
+            git add "${N8N_FOLDER_PATH}" || true
+          else
+            # Fallback: old .validation structure
+            git add .validation || true
+          fi
 
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0
           fi
 
-          git commit -m "Interface validation v${VERSION}: ${{ github.event.inputs.feature_name }} (${FEATURE_SLUG})"
+          git commit -m "Interface validation v${VERSION}: ${{ github.event.inputs.feature_name }}"
           git push
-          echo "✅ Committed validation outputs to: .validation/output/${FEATURE_SLUG}/v${VERSION}/"
+          echo "✅ Committed validation outputs to: ${VERSIONED_DIR}/"
