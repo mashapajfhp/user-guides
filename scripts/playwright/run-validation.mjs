@@ -153,32 +153,41 @@ function buildShotLabel(parts) {
  * @param {boolean} options.waitForNetwork - Wait for network idle (default: true)
  * @returns {Object} { ready: boolean, waitedFor: string[], duration: number }
  */
+// Track recent page ready waits to avoid redundant waiting
+let lastPageReadyTime = 0;
+const PAGE_READY_COOLDOWN_MS = 2000; // Skip waiting if we waited recently
+
 async function waitForPageReady(page, options = {}) {
   const timeout = options.timeout || 10000;
   const waitForNetwork = options.waitForNetwork !== false;
   const startTime = Date.now();
   const waitedFor = [];
 
-  // Common loading indicator selectors
+  // Skip if we recently waited (within cooldown period)
+  if (Date.now() - lastPageReadyTime < PAGE_READY_COOLDOWN_MS && !options.forceWait) {
+    return {
+      ready: true,
+      contentFound: true,
+      waitedFor: ['skipped_recent'],
+      duration: 0,
+    };
+  }
+
+  // Common loading indicator selectors - more specific to avoid false positives
   const loadingSelectors = [
-    // Spinners
-    '[class*="spinner"]',
-    '[class*="loading"]',
-    '[class*="loader"]',
+    // Spinners - more specific
     '.ant-spin-spinning',
     '.ant-spin-dot',
-    '[data-testid*="loading"]',
-    '[data-testid*="spinner"]',
+    '[data-testid="loading"]',
+    '[data-testid="spinner"]',
+    // Only match visible spinning/loading states
+    '[class*="spinner"]:not([class*="hidden"])',
+    '[class*="loader"]:not([class*="hidden"])',
     // Skeleton screens
-    '[class*="skeleton"]',
-    '.ant-skeleton',
-    '[class*="placeholder"]',
+    '.ant-skeleton-active',
+    '[class*="skeleton-loading"]',
     // Progress indicators
-    '[role="progressbar"]',
-    '[class*="progress"]',
-    // SVG spinners (animated circles)
-    'svg[class*="animate"]',
-    'circle[class*="animate"]',
+    '[role="progressbar"][aria-busy="true"]',
   ];
 
   try {
@@ -201,17 +210,18 @@ async function waitForPageReady(page, options = {}) {
       // Continue anyway
     }
 
-    // 3. Wait for all loading indicators to disappear
+    // 3. Wait for loading indicators to disappear (with max 2 second wait per indicator)
+    const maxWaitPerIndicator = 2000; // Reduced from 5000ms
     for (const selector of loadingSelectors) {
       try {
         const locator = page.locator(selector);
         const isVisible = await locator.first().isVisible({ timeout: 100 }).catch(() => false);
 
         if (isVisible) {
-          // Wait for this loading indicator to disappear
+          // Wait for this loading indicator to disappear (max 2s)
           await locator.first().waitFor({
             state: 'hidden',
-            timeout: Math.min(timeout - (Date.now() - startTime), 5000)
+            timeout: Math.min(timeout - (Date.now() - startTime), maxWaitPerIndicator)
           }).catch(() => {});
           waitedFor.push(`hidden:${selector.slice(0, 30)}`);
         }
@@ -254,6 +264,7 @@ async function waitForPageReady(page, options = {}) {
     }
 
     const duration = Date.now() - startTime;
+    lastPageReadyTime = Date.now(); // Update cooldown timestamp
     return {
       ready: true,
       contentFound,
@@ -263,6 +274,7 @@ async function waitForPageReady(page, options = {}) {
 
   } catch (err) {
     const duration = Date.now() - startTime;
+    lastPageReadyTime = Date.now(); // Update even on error to prevent infinite loops
     return {
       ready: false,
       error: err.message,
