@@ -130,6 +130,139 @@ Claim statuses:
 
 No other values allowed.
 
+---
+
+## 3.5) DEEP EXPLORATION PHILOSOPHY (CRITICAL)
+
+**Claims are CONTEXT SETTERS, not ENDPOINTS.**
+
+When you reach a claim destination (e.g., "Daily Wage Calculation accordion exists"), you MUST NOT stop there. The claim tells you WHERE to go — your job is to EXHAUSTIVELY EXPLORE what you find.
+
+### Exploration Protocol
+
+After reaching any claim waypoint:
+
+1. **IDENTIFY ALL INTERACTIVE ELEMENTS**
+   - Accordions (click to expand)
+   - Edit icons/buttons (click to open popups/dialogs)
+   - Dropdowns (click to reveal options)
+   - Toggles/switches (observe current state, note what they control)
+   - Tabs (click each to reveal content)
+   - Links (note destinations)
+
+2. **EXPLORE EACH ELEMENT SYSTEMATICALLY**
+
+   For **Accordions**:
+   - Click to expand
+   - Document all child elements revealed
+   - Screenshot expanded state: `claim-XX-accordion-expanded.png`
+
+   For **Edit buttons/icons**:
+   - Click to open popup/dialog
+   - Screenshot the popup: `claim-XX-popup-opened.png`
+   - Document ALL fields in the popup:
+     - Dropdowns: list ALL selectable options
+     - Toggles: note current state (ON/OFF) and label
+     - Input fields: note field names and any default values
+     - Radio buttons: list all options
+
+   For **Toggles/Switches**:
+   - Document current state
+   - Note what fields become enabled/disabled when toggled
+   - Screenshot both states if safe: `claim-XX-toggle-on.png`, `claim-XX-toggle-off.png`
+
+   For **Dropdowns**:
+   - Click to open
+   - Screenshot open state showing ALL options: `claim-XX-dropdown-options.png`
+   - Document every selectable value
+
+3. **DOCUMENT PROGRESSIVE STATE CHANGES**
+
+   When interactions cause UI changes:
+   - Screenshot BEFORE state
+   - Perform interaction
+   - Screenshot AFTER state
+   - Note what changed (fields enabled/disabled, values updated, sections revealed)
+
+4. **EXHAUSTIVE SERVICE/ITEM EXPLORATION**
+
+   If you find multiple similar items (e.g., 3 services in an accordion):
+   - Explore EACH one individually
+   - Open EACH popup/dialog
+   - Document differences between them
+   - Example: Daily Wage Calculation has 3 services:
+     - Salary proration → open its popup, document fields
+     - EOS leave encashment → open its popup, document fields
+     - Unpaid leave deduction → open its popup, document fields
+
+### Screenshot Naming for Exploration
+
+```
+claim-XX-accordion-expanded.png
+claim-XX-popup-{service-name}.png
+claim-XX-dropdown-{field-name}-options.png
+claim-XX-toggle-{field-name}-{on|off}.png
+claim-XX-fields-enabled.png
+claim-XX-fields-disabled.png
+```
+
+### Exploration Evidence in Claims JSON
+
+For each claim, add an `exploration` object:
+
+```json
+{
+  "claim_id": "ui_001",
+  "statement": "Daily Wage Calculation accordion exists",
+  "status": "pass",
+  "exploration": {
+    "interactive_elements_found": [
+      {
+        "type": "accordion",
+        "label": "Daily Wage Calculation",
+        "action": "expanded",
+        "children_discovered": ["Salary proration", "EOS leave encashment", "Unpaid leave deduction"]
+      }
+    ],
+    "popups_opened": [
+      {
+        "trigger": "Edit icon on Salary proration",
+        "popup_title": "Salary Proration Settings",
+        "fields_documented": [
+          {"name": "Calculation method", "type": "dropdown", "options": ["Calendar days", "Working days"]},
+          {"name": "Overwrite calculation in policies", "type": "toggle", "state": "OFF"},
+          {"name": "Include public holidays", "type": "toggle", "state": "ON", "enabled": false}
+        ]
+      }
+    ],
+    "state_changes_observed": [
+      {
+        "trigger": "Toggle 'Overwrite calculation in policies' ON",
+        "effect": "Fields 'Include public holidays' and 'Week start day' became enabled"
+      }
+    ],
+    "screenshots": [
+      "claim-01-accordion-expanded.png",
+      "claim-01-popup-salary-proration.png",
+      "claim-01-toggle-overwrite-on.png"
+    ]
+  }
+}
+```
+
+### Why This Matters
+
+The claim "accordion exists" is just a waypoint. The REAL documentation value comes from:
+- What's INSIDE the accordion
+- What popups open from edit buttons
+- What options are in each dropdown
+- How toggles affect other fields
+- What configuration is possible
+
+**Never stop at "element exists" — always ask "what can I do with this element?"**
+
+---
+
 ## 4) EXECUTION MODES
 
 ### MODE A — STEP 5 (DEFAULT)
@@ -167,7 +300,47 @@ Write ONE JSON object:
     }
   },
   "navigation_paths": [],
-  "claims": [],
+  "claims": [
+    {
+      "claim_id": "string",
+      "statement": "string",
+      "status": "pass|fail|not_confirmed",
+      "evidence_screenshots": ["string"],
+      "notes": "string",
+      "exploration": {
+        "interactive_elements_found": [
+          {
+            "type": "accordion|button|dropdown|toggle|tab|link",
+            "label": "string",
+            "action": "expanded|clicked|opened",
+            "children_discovered": ["string"]
+          }
+        ],
+        "popups_opened": [
+          {
+            "trigger": "string",
+            "popup_title": "string",
+            "fields_documented": [
+              {
+                "name": "string",
+                "type": "dropdown|toggle|input|radio|checkbox",
+                "options": ["string"],
+                "state": "string",
+                "enabled": true
+              }
+            ]
+          }
+        ],
+        "state_changes_observed": [
+          {
+            "trigger": "string",
+            "effect": "string"
+          }
+        ],
+        "screenshots": ["string"]
+      }
+    }
+  ],
   "discrepancies": [],
   "step7_document_validation": {
     "performed": false,
@@ -184,7 +357,10 @@ Write ONE JSON object:
     "paths_pass": 0,
     "paths_fail": 0,
     "paths_not_confirmed": 0,
-    "screenshots_count": 0
+    "screenshots_count": 0,
+    "elements_explored": 0,
+    "popups_documented": 0,
+    "state_changes_captured": 0
   }
 }
 ```
@@ -224,12 +400,20 @@ Mode: {{run_mode}}
 3. Capture `step-00-start.png`
 4. Establish session → `step-01-login.png`
 5. Validate navigation paths → `path-XX.png`
-6. Validate claims → `claim-XX-*.png`
+6. **Validate claims WITH DEEP EXPLORATION** → `claim-XX-*.png`
+   - For each claim:
+     a. Navigate to claim waypoint
+     b. Verify claim statement (pass/fail/not_confirmed)
+     c. **EXPLORE**: Identify all interactive elements at this location
+     d. **INTERACT**: Click accordions, open popups, expand dropdowns
+     e. **DOCUMENT**: Record all fields, options, toggle states
+     f. **OBSERVE**: Note state changes when interacting with toggles/buttons
+     g. **SCREENSHOT**: Capture each significant state
 7. Capture `final-state.png`
 8. Write:
    - screenshots manifest
-   - evidence JSON
-   - summary Markdown
+   - evidence JSON (with `exploration` objects for each claim)
+   - summary Markdown (with exploration findings)
 
 ## 9) STEP 7 WORKFLOW (OPTIONAL)
 
