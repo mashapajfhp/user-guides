@@ -263,6 +263,211 @@ The claim "accordion exists" is just a waypoint. The REAL documentation value co
 
 ---
 
+## 3.6) THINK ALOUD PROTOCOL (MANDATORY)
+
+**Narrate your exploration process in real-time.**
+
+As you validate and explore, you MUST verbalize your observations, decisions, and discoveries. This creates a transparent audit trail and helps identify assumptions.
+
+### Think Aloud Format
+
+Use this structure for each validation step:
+
+```
+🎯 TESTING: [The claim/goal I'm validating - state it clearly upfront]
+
+🔍 OBSERVING: [What I see on screen]
+💭 THINKING: [What this means, what I expect, what I'm looking for]
+👆 ACTING: [What I'm about to do and why]
+📸 CAPTURING: [What I'm screenshotting and why it matters]
+✅ CONFIRMING: [What I verified] OR ❌ UNEXPECTED: [What surprised me]
+
+✨ WHAT FINALLY WORKED: [Summary of the successful path and key discoveries]
+```
+
+### Example Think Aloud Sequence
+
+```
+🎯 TESTING: Claim UI_001 - "Daily Wage Calculation accordion exists in Payroll settings"
+   This is my waypoint. After confirming the accordion exists, I will explore its
+   contents to document all configurable options.
+
+---
+
+🔍 OBSERVING: I've navigated to Settings → Payroll. I see a page with multiple
+   accordion sections. One is labeled "Daily Wage Calculation" with a chevron
+   indicating it can be expanded.
+
+💭 THINKING: This matches the claim "Daily Wage Calculation accordion exists".
+   But the claim is just my waypoint. I need to explore what's inside this
+   accordion. I expect to find configuration options based on the feature name.
+
+👆 ACTING: Clicking the "Daily Wage Calculation" accordion to expand it.
+
+📸 CAPTURING: claim-01-accordion-expanded.png — Shows the accordion in its
+   expanded state revealing 3 services: Salary proration, EOS leave encashment,
+   Unpaid leave deduction. Each has an edit icon.
+
+🔍 OBSERVING: The accordion expanded. I see 3 service rows:
+   1. "Salary proration" — with an edit (pencil) icon on the right
+   2. "EOS leave encashment" — with an edit icon
+   3. "Unpaid leave deduction" — with an edit icon
+   Each row shows the service name and appears to have a current setting displayed.
+
+💭 THINKING: These edit icons likely open configuration popups. I need to click
+   each one to document what fields are available. I'll start with "Salary
+   proration" as it's first.
+
+👆 ACTING: Clicking the edit icon next to "Salary proration".
+
+📸 CAPTURING: claim-01-popup-salary-proration.png — Popup opened showing
+   configuration form.
+
+🔍 OBSERVING: A modal popup appeared titled "Salary Proration". I see:
+   - A dropdown labeled "Calculation method" currently set to "Calendar days"
+   - A toggle labeled "Overwrite calculation in policies" currently OFF
+   - Two more toggles below that appear grayed out/disabled
+
+💭 THINKING: The grayed out toggles suggest they're controlled by the
+   "Overwrite calculation in policies" toggle. Let me document the dropdown
+   options first, then test the toggle behavior.
+
+👆 ACTING: Clicking the "Calculation method" dropdown to see all options.
+
+📸 CAPTURING: claim-01-dropdown-calc-method.png — Shows dropdown expanded with
+   options visible.
+
+🔍 OBSERVING: Dropdown shows 2 options:
+   - "Calendar days" (currently selected)
+   - "Working days"
+
+✅ CONFIRMING: Dropdown has exactly 2 calculation method options as expected.
+
+👆 ACTING: Now testing the "Overwrite calculation in policies" toggle.
+   Currently OFF. I'll click it to see what fields become enabled.
+
+📸 CAPTURING: claim-01-toggle-overwrite-before.png — Toggle in OFF state,
+   showing which fields are disabled.
+
+👆 ACTING: Clicking the toggle to turn it ON.
+
+🔍 OBSERVING: Toggle is now ON. The two previously grayed toggles are now
+   enabled and interactive:
+   - "Include public holidays" — toggle, now enabled
+   - "Week start day" — appears to be a dropdown, now enabled
+
+📸 CAPTURING: claim-01-toggle-overwrite-after.png — Toggle ON, showing newly
+   enabled fields.
+
+✅ CONFIRMING: The "Overwrite" toggle controls the enabled/disabled state of
+   dependent configuration fields. This is a state change worth documenting.
+
+---
+
+✨ WHAT FINALLY WORKED:
+
+To configure Daily Wage Calculation:
+1. Navigate: Settings → Payroll
+2. Expand: "Daily Wage Calculation" accordion (click chevron)
+3. For each service (Salary proration, EOS leave encashment, Unpaid leave deduction):
+   - Click the edit (pencil) icon to open configuration popup
+   - In the popup:
+     • "Calculation method" dropdown: Choose "Calendar days" or "Working days"
+     • "Overwrite calculation in policies" toggle: Turn ON to unlock additional options
+     • When Overwrite is ON, configure:
+       - "Include public holidays" toggle
+       - "Week start day" dropdown
+     • Click Save to apply changes
+
+KEY DISCOVERIES:
+- 3 services are configurable independently
+- "Overwrite" toggle is a master switch for policy-level overrides
+- Dependent fields are disabled until Overwrite is enabled
+- 2 calculation methods available: Calendar days, Working days
+
+GOTCHAS:
+- Some options invisible until Overwrite toggle is ON
+- Must click Save - no auto-save behavior
+```
+
+### Think Aloud in Evidence JSON
+
+Add `testing`, `think_aloud_log`, and `what_worked` to each claim's exploration:
+
+```json
+{
+  "claim_id": "ui_001",
+  "statement": "Daily Wage Calculation accordion exists in Payroll settings",
+  "status": "pass",
+  "exploration": {
+    "testing": {
+      "claim": "Daily Wage Calculation accordion exists in Payroll settings",
+      "goal": "Confirm accordion exists, then explore all configurable options inside"
+    },
+    "think_aloud_log": [
+      {
+        "step": 1,
+        "observe": "Accordion labeled 'Daily Wage Calculation' visible with expand chevron",
+        "think": "This is my waypoint. Need to explore contents.",
+        "act": "Clicking accordion to expand",
+        "result": "Expanded, revealing 3 services with edit icons"
+      },
+      {
+        "step": 2,
+        "observe": "3 services visible: Salary proration, EOS leave encashment, Unpaid leave deduction",
+        "think": "Each has edit icon - likely opens configuration popup",
+        "act": "Clicking edit icon on Salary proration",
+        "result": "Popup opened with form fields"
+      },
+      {
+        "step": 3,
+        "observe": "Popup has dropdown, toggle, and 2 disabled toggles",
+        "think": "Disabled toggles may be controlled by main toggle",
+        "act": "Testing toggle behavior",
+        "result": "Confirmed: Overwrite toggle enables/disables dependent fields"
+      }
+    ],
+    "what_worked": {
+      "summary": "Successfully explored Daily Wage Calculation with all 3 services configured",
+      "successful_path": [
+        "Settings → Payroll",
+        "Expand 'Daily Wage Calculation' accordion",
+        "Click edit icon on each service",
+        "Configure dropdown and toggle options",
+        "Click Save"
+      ],
+      "key_discoveries": [
+        "'Overwrite calculation in policies' toggle enables dependent fields",
+        "3 services configurable independently",
+        "2 calculation methods: Calendar days, Working days"
+      ],
+      "gotchas": [
+        "Some fields only visible when Overwrite toggle is ON",
+        "Must click Save - no auto-save"
+      ]
+    },
+    "screenshots": [
+      "claim-01-accordion-expanded.png",
+      "claim-01-popup-salary-proration.png",
+      "claim-01-dropdown-calc-method.png",
+      "claim-01-toggle-overwrite-before.png",
+      "claim-01-toggle-overwrite-after.png"
+    ]
+  }
+}
+```
+
+### Why This Protocol Matters
+
+1. **🎯 TESTING**: Grounds the exploration in a clear objective
+2. **🔍💭👆📸✅**: Creates a transparent audit trail of reasoning
+3. **✨ WHAT WORKED**: Provides ready-to-use content for user guides
+4. **GOTCHAS**: Feeds directly into troubleshooting documentation
+
+**If you're not narrating, you're not exploring thoroughly enough.**
+
+---
+
 ## 4) EXECUTION MODES
 
 ### MODE A — STEP 5 (DEFAULT)
