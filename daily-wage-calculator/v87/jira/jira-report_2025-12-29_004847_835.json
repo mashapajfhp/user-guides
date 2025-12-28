@@ -1,0 +1,190 @@
+{
+  "schema_version": "v87",
+  "folder_path": "daily-wage-calculator/v87",
+  "meta": {
+    "source": "jira",
+    "generated_at": "2025-12-28",
+    "feature_name": "daily wage calculator",
+    "feature_slug": "daily_wage_calculator",
+    "tickets_analyzed_count": 9,
+    "module_area": "Payroll",
+    "findings_count": 3,
+    "troubleshooting_count": 2,
+    "glossary_count": 2,
+    "claims_count": 2
+  },
+  "requested_feature_name": "daily wage calculator",
+  "requested_clean_feature_name": "daily_wage_calculator",
+  "feature_slug": "daily_wage_calculator",
+  "feature": {
+    "name": "daily wage calculator",
+    "slug": "daily_wage_calculator",
+    "description": "Operational reality summary for \"daily wage calculator\" based on Jira evidence: - Findings / issues / limitations: 3 - Troubleshooting / edge cases / requests: 2 - Evidence suggests asynchronous updates or synchronization considerations. - Evidence includes UI/visibility or copy/label concerns."
+  },
+  "operational_reality": {
+    "findings": [
+      {
+        "group_key": "leap_year_calculation_gap",
+        "group_description": "System struggles with precise leap year day calculations in service duration and gratuity computations",
+        "issue_explanation": "Multiple tickets revealed inconsistent handling of leap year days, particularly in calculating service duration and gratuity amounts",
+        "limitation_statement": "Cannot automatically adjust calculations to include 366 days in leap years",
+        "gap_statement": "Lack of dynamic leap year day handling in financial calculations",
+        "severity_for_docs": "high",
+        "finding_type": "limitation",
+        "evidence_ticket_keys": [
+          "TSSD-4179",
+          "TSSD-1625",
+          "TSSD-2252"
+        ]
+      },
+      {
+        "group_key": "daily_wage_configuration_complexity",
+        "group_description": "Inconsistent and complex daily wage calculation methods across different system modules",
+        "issue_explanation": "Different modules (Leave, Payroll, End of Service) use varying daily wage calculation methods with no standardized approach",
+        "limitation_statement": "No unified mechanism for configuring daily wage divisors and calculation methods",
+        "gap_statement": "Lack of flexible, configurable daily wage calculation framework",
+        "severity_for_docs": "high",
+        "finding_type": "configuration_problem",
+        "evidence_ticket_keys": [
+          "TSSD-2321",
+          "TSSD-4368",
+          "TSSD-1753"
+        ]
+      },
+      {
+        "group_key": "module_synchronization_issues",
+        "group_description": "Poor communication between Time Off and Payroll modules leads to calculation inconsistencies",
+        "issue_explanation": "Public holiday additions and leave request timing cause mismatches in salary deduction calculations",
+        "limitation_statement": "Cannot dynamically update calculations when configuration changes mid-cycle",
+        "gap_statement": "Modules lack real-time synchronization for accurate financial calculations",
+        "severity_for_docs": "critical",
+        "finding_type": "data_inconsistency",
+        "evidence_ticket_keys": [
+          "TSSD-4464",
+          "TSSD-2532"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "group_key": "leap_year_gratuity_workaround",
+        "group_description": "Manual verification required for gratuity calculations involving leap years",
+        "workaround_or_resolution": "1. Manually verify total service days, ensuring 366 days are counted for 2024\n2. Double-check calculations using both 365 and 366 day divisors\n3. Confirm final amount with manual spreadsheet calculation",
+        "evidence_ticket_keys": [
+          "TSSD-4179",
+          "TSSD-1625"
+        ]
+      },
+      {
+        "group_key": "daily_wage_configuration_alignment",
+        "group_description": "Strategies for aligning daily wage calculations across modules",
+        "workaround_or_resolution": "1. Review global vs policy-level daily wage settings\n2. Verify daily rate divisor in each module\n3. Manually adjust calculations if global settings override policy configurations\n4. Document specific calculation method used for each scenario",
+        "evidence_ticket_keys": [
+          "TSSD-1753",
+          "TSSD-2321"
+        ]
+      }
+    ]
+  },
+  "glossary": [
+    {
+      "term": "Daily Wage Divisor",
+      "definition": "The number of days used to calculate an employee's daily rate, which can vary between 30, 30.42, and 365/366 depending on system configuration",
+      "evidence_ticket_keys": [
+        "TSSD-4368",
+        "TSSD-2321"
+      ]
+    },
+    {
+      "term": "Working Days",
+      "definition": "Days considered for salary calculation, which may exclude weekends and public holidays based on employee's work week configuration",
+      "evidence_ticket_keys": [
+        "TSSD-4292",
+        "TSSD-1753"
+      ]
+    }
+  ],
+  "claims_to_validate": [
+    {
+      "claim_id": "JIRA_001",
+      "claim_type": "system_behavior",
+      "title": "Leap Year Day Calculation",
+      "test_hypothesis": "Does the system correctly handle 366-day years in service duration calculations?",
+      "evidence_summary": "Gratuity and service duration calculations may not automatically adjust for leap years",
+      "statement": "Does the system correctly handle 366-day years in service duration calculations?",
+      "suggested_path": null,
+      "indicators": [
+        "Year length",
+        "Service duration calculation"
+      ],
+      "selector_hints": [
+        "Gratuity calculator",
+        "Service years display",
+        "Year length",
+        "Service duration calculation"
+      ],
+      "preconditions": [
+        "Prepare test data to reproduce the scenario described by the ticket(s)"
+      ],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim"
+      ],
+      "expected": [
+        "366 days recognized for 2024",
+        "Correct service duration calculation",
+        "Leap year day included",
+        "Result is observable (in UI or logs) and consistent with the claim statement"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-4179",
+        "TSSD-1625"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": "Settings > Payroll > End of Service Eligibility > Calculation Method"
+    },
+    {
+      "claim_id": "JIRA_002",
+      "claim_type": "system_behavior",
+      "title": "Flexible Working Days Configuration",
+      "test_hypothesis": "Can the system handle custom work week definitions?",
+      "evidence_summary": "Working days can include all 7 days based on employee's work week configuration",
+      "statement": "Can the system handle custom work week definitions?",
+      "suggested_path": null,
+      "indicators": [
+        "Work week settings",
+        "Public holiday configuration"
+      ],
+      "selector_hints": [
+        "Weekend toggle",
+        "Holiday exclusion checkbox",
+        "Work week settings",
+        "Public holiday configuration"
+      ],
+      "preconditions": [],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim",
+        "Open the relevant Settings / Configuration section for the feature"
+      ],
+      "expected": [
+        "Configurable work week",
+        "Custom weekend definition",
+        "Public holiday exclusion",
+        "Result is observable (in UI or logs) and consistent with the claim statement"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-4292",
+        "TSSD-1753"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": "Settings > Leaves > Work Week Configuration"
+    }
+  ]
+}
