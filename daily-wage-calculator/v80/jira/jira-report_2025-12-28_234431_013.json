@@ -1,0 +1,186 @@
+{
+  "schema_version": "v80",
+  "folder_path": "daily-wage-calculator/v80",
+  "meta": {
+    "source": "jira",
+    "generated_at": "2025-12-28",
+    "feature_name": "daily wage calculator",
+    "feature_slug": "daily_wage_calculator",
+    "tickets_analyzed_count": 9,
+    "module_area": "Payroll",
+    "findings_count": 3,
+    "troubleshooting_count": 2,
+    "glossary_count": 2,
+    "claims_count": 2
+  },
+  "requested_feature_name": "daily wage calculator",
+  "requested_clean_feature_name": "daily_wage_calculator",
+  "feature_slug": "daily_wage_calculator",
+  "feature": {
+    "name": "daily wage calculator",
+    "slug": "daily_wage_calculator",
+    "description": "Operational reality summary for \"daily wage calculator\" based on Jira evidence: - Findings / issues / limitations: 3 - Troubleshooting / edge cases / requests: 2 - Evidence suggests asynchronous updates or synchronization considerations. - Evidence includes UI/visibility or copy/label concerns."
+  },
+  "operational_reality": {
+    "findings": [
+      {
+        "group_key": "leap_year_calculation_gap",
+        "group_description": "The system lacks consistent handling of leap year days in service duration and gratuity calculations.",
+        "issue_explanation": "Multiple tickets revealed that the platform does not uniformly account for 366 days in leap years, potentially causing slight discrepancies in service period and benefit calculations.",
+        "limitation_statement": "Gratuity and service duration calculations do not automatically adjust for leap year variations.",
+        "gap_statement": "Need enhanced leap year logic that dynamically recognizes and incorporates 366-day years in service computations.",
+        "severity_for_docs": "medium",
+        "finding_type": "gap",
+        "evidence_ticket_keys": [
+          "TSSD-4179",
+          "TSSD-1625",
+          "TSSD-2252"
+        ]
+      },
+      {
+        "group_key": "daily_wage_configuration_complexity",
+        "group_description": "The daily wage calculator has complex, sometimes opaque configuration methods that can produce unexpected calculation results.",
+        "issue_explanation": "Users encounter difficulties understanding how daily wage is calculated across different scenarios like leave, proration, and gratuity.",
+        "limitation_statement": "Multiple independent configuration paths exist for daily wage calculation without clear hierarchy or synchronization.",
+        "gap_statement": "Need a more transparent, unified approach to daily wage configuration that provides clear documentation of calculation methods.",
+        "severity_for_docs": "high",
+        "finding_type": "configuration_problem",
+        "evidence_ticket_keys": [
+          "TSSD-2321",
+          "TSSD-4731",
+          "TSSD-1753"
+        ]
+      },
+      {
+        "group_key": "proration_calculation_inconsistency",
+        "group_description": "Salary and leave proration calculations exhibit inconsistent behaviors across different system modules.",
+        "issue_explanation": "Discrepancies exist between how salary is prorated for different scenarios like unpaid leave, offboarding, and partial month calculations.",
+        "limitation_statement": "No standardized proration method exists across different payroll and leave management contexts.",
+        "gap_statement": "Require a consistent, configurable proration calculation methodology that works uniformly across system modules.",
+        "severity_for_docs": "high",
+        "finding_type": "calculation_bug",
+        "evidence_ticket_keys": [
+          "TSSD-3058",
+          "TSSD-4464",
+          "TSSD-2043"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "group_key": "leap_year_manual_verification",
+        "group_description": "When calculating end of service benefits, manually verify service duration accounting for leap years.",
+        "workaround_or_resolution": "1. Count actual days worked, ensuring 366 days are used for 2024\n2. Divide total days by 366 for leap years, 365 for standard years\n3. Verify gratuity calculation matches manual computation",
+        "evidence_ticket_keys": [
+          "TSSD-4179",
+          "TSSD-1625"
+        ]
+      },
+      {
+        "group_key": "daily_wage_configuration_alignment",
+        "group_description": "Align daily wage configurations across different system modules to ensure consistent calculations.",
+        "workaround_or_resolution": "1. Check global daily rate settings\n2. Verify policy-level configurations match global settings\n3. Use consistent salary component (basic vs gross)\n4. Confirm divisor used (30, 30.42, working days)",
+        "evidence_ticket_keys": [
+          "TSSD-1753",
+          "TSSD-2321"
+        ]
+      }
+    ]
+  },
+  "glossary": [
+    {
+      "term": "Daily Wage",
+      "definition": "Calculated by dividing monthly salary by a specific number of days (typically 30, 30.42, or working days), used for prorating salary, leave calculations, and end of service benefits.",
+      "evidence_ticket_keys": [
+        "TSSD-2321"
+      ]
+    },
+    {
+      "term": "Working Days",
+      "definition": "Days considered for salary calculation, which may exclude weekends and public holidays based on the specific work week configuration.",
+      "evidence_ticket_keys": [
+        "TSSD-4292"
+      ]
+    }
+  ],
+  "claims_to_validate": [
+    {
+      "claim_id": "JIRA_001",
+      "claim_type": "system_behavior",
+      "title": "Leap Year Service Duration Handling",
+      "test_hypothesis": "How might we verify that the system correctly handles service duration in leap years?",
+      "evidence_summary": "System must use 366 days for 2024 when calculating service duration and gratuity.",
+      "statement": "How might we verify that the system correctly handles service duration in leap years?",
+      "suggested_path": null,
+      "indicators": [
+        "Leap year day inclusion",
+        "Service duration calculation"
+      ],
+      "selector_hints": [
+        "text:Leap Year",
+        "text:Service Duration",
+        "Leap year day inclusion",
+        "Service duration calculation"
+      ],
+      "preconditions": [],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim"
+      ],
+      "expected": [
+        "Leap year days are correctly counted in calculations",
+        "Result is observable (in UI or logs) and consistent with the claim statement"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-4179",
+        "TSSD-1625"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": null
+    },
+    {
+      "claim_id": "JIRA_002",
+      "claim_type": "ui_state",
+      "title": "Unpaid Leave Deduction Configuration",
+      "test_hypothesis": "How might we verify the configuration options for unpaid leave deduction calculations?",
+      "evidence_summary": "Users can configure unpaid leave deductions using basic salary or gross salary divided by working days.",
+      "statement": "How might we verify the configuration options for unpaid leave deduction calculations?",
+      "suggested_path": null,
+      "indicators": [
+        "Salary component selection",
+        "Working days configuration"
+      ],
+      "selector_hints": [
+        "text:Basic Salary",
+        "text:Gross Salary",
+        "text:Working Days",
+        "Salary component selection",
+        "Working days configuration"
+      ],
+      "preconditions": [
+        "Prepare test data to reproduce the scenario described by the ticket(s)"
+      ],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim",
+        "Open the relevant Settings / Configuration section for the feature"
+      ],
+      "expected": [
+        "Multiple salary components available for deduction calculation",
+        "Result is observable (in UI or logs) and consistent with the claim statement"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-1753",
+        "TSSD-4464"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": null
+    }
+  ]
+}
