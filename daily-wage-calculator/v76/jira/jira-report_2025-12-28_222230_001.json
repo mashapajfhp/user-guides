@@ -1,0 +1,226 @@
+{
+  "schema_version": "v76",
+  "folder_path": "daily-wage-calculator/v76",
+  "meta": {
+    "source": "jira",
+    "generated_at": "2025-12-28",
+    "feature_name": "daily wage calculator",
+    "feature_slug": "daily_wage_calculator",
+    "tickets_analyzed_count": 10,
+    "module_area": "Payroll",
+    "findings_count": 3,
+    "troubleshooting_count": 2,
+    "glossary_count": 2,
+    "claims_count": 3
+  },
+  "requested_feature_name": "daily wage calculator",
+  "requested_clean_feature_name": "daily_wage_calculator",
+  "feature_slug": "daily_wage_calculator",
+  "feature": {
+    "name": "daily wage calculator",
+    "slug": "daily_wage_calculator",
+    "description": "Operational reality summary for \"daily wage calculator\" based on Jira evidence: - Findings / issues / limitations: 3 - Troubleshooting / edge cases / requests: 2 - Evidence suggests asynchronous updates or synchronization considerations. - Evidence includes UI/visibility or copy/label concerns."
+  },
+  "operational_reality": {
+    "findings": [
+      {
+        "group_key": "calculation_complexity",
+        "group_description": "Daily wage calculations involve complex configurations with multiple potential divisors and calculation methods.",
+        "issue_explanation": "The system supports multiple approaches to calculating daily wage, including basic salary divided by 30, 30.42, or working days, with variations in how public holidays and weekends are handled.",
+        "limitation_statement": "The platform lacks a unified, transparent method for daily wage calculations across different scenarios.",
+        "gap_statement": "Users need clearer documentation explaining how different divisors and configuration settings impact daily wage computations.",
+        "severity_for_docs": "high",
+        "finding_type": "limitation",
+        "evidence_ticket_keys": [
+          "TSSD-2321",
+          "TSSD-4731",
+          "TSSD-3648"
+        ]
+      },
+      {
+        "group_key": "leap_year_handling",
+        "group_description": "Inconsistent handling of leap year days in service duration and gratuity calculations.",
+        "issue_explanation": "The system sometimes fails to correctly account for 366 days in leap years, potentially impacting end-of-service calculations.",
+        "limitation_statement": "Leap year logic is not consistently applied across different calculation scenarios.",
+        "gap_statement": "Enhanced leap year detection and handling mechanisms are needed to ensure accurate calculations.",
+        "severity_for_docs": "high",
+        "finding_type": "bug",
+        "evidence_ticket_keys": [
+          "TSSD-4179",
+          "TSSD-1625",
+          "TSSD-2252"
+        ]
+      },
+      {
+        "group_key": "configuration_override",
+        "group_description": "Global configurations can override policy-level settings in daily wage and leave calculations.",
+        "issue_explanation": "System-wide settings can supersede individual policy configurations, creating unexpected calculation behaviors.",
+        "limitation_statement": "Users have limited control over calculation methods when global settings are present.",
+        "gap_statement": "More transparent configuration hierarchy and user controls are needed.",
+        "severity_for_docs": "medium",
+        "finding_type": "configuration_problem",
+        "evidence_ticket_keys": [
+          "TSSD-1753"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "group_key": "proration_workaround",
+        "group_description": "Manual adjustments required when automated proration fails",
+        "workaround_or_resolution": "For inconsistent salary prorations, users may need to manually add or subtract small amounts to balance payroll calculations.",
+        "evidence_ticket_keys": [
+          "TSSD-2605",
+          "TSSD-4368"
+        ]
+      },
+      {
+        "group_key": "leave_deduction_sync",
+        "group_description": "Handling persistent deductions after leave request modifications",
+        "workaround_or_resolution": "Delete and recreate leave requests if deductions do not update correctly. Verify daily wage configurations before processing.",
+        "evidence_ticket_keys": [
+          "TSSD-2532"
+        ]
+      }
+    ]
+  },
+  "glossary": [
+    {
+      "term": "Daily Wage",
+      "definition": "Calculated rate of daily compensation, typically computed by dividing monthly salary by a specified number of days (30, 30.42, or working days).",
+      "evidence_ticket_keys": [
+        "TSSD-2321"
+      ]
+    },
+    {
+      "term": "Working Days",
+      "definition": "Days considered for salary calculation, which may exclude weekends and public holidays based on specific work week configurations.",
+      "evidence_ticket_keys": [
+        "TSSD-4292"
+      ]
+    }
+  ],
+  "claims_to_validate": [
+    {
+      "claim_id": "JIRA_001",
+      "claim_type": "ui_state",
+      "title": "Leap Year Day Handling",
+      "test_hypothesis": "How might we verify that leap year days are correctly counted in service duration calculations?",
+      "evidence_summary": "System sometimes fails to consistently handle 366 days in leap years for service calculations.",
+      "statement": "How might we verify that leap year days are correctly counted in service duration calculations?",
+      "suggested_path": null,
+      "indicators": [
+        "Year calculation field",
+        "Service duration display"
+      ],
+      "selector_hints": [
+        "text:Days",
+        "text:Years",
+        "text:Service Duration",
+        "Year calculation field",
+        "Service duration display"
+      ],
+      "preconditions": [
+        "Prepare test data to reproduce the scenario described by the ticket(s)"
+      ],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim"
+      ],
+      "expected": [
+        "Leap years are counted with 366 days",
+        "Partial year calculations use correct divisor",
+        "Result is observable (in UI or logs) and consistent with the claim statement"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-4179",
+        "TSSD-1625"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": null
+    },
+    {
+      "claim_id": "JIRA_002",
+      "claim_type": "system_behavior",
+      "title": "Global Configuration Precedence",
+      "test_hypothesis": "How might we verify that global settings override policy-level leave calculations?",
+      "evidence_summary": "System-wide configurations can supersede individual leave policy calculation methods.",
+      "statement": "How might we verify that global settings override policy-level leave calculations?",
+      "suggested_path": null,
+      "indicators": [
+        "Policy settings",
+        "Global configuration toggle"
+      ],
+      "selector_hints": [
+        "text:Global Settings",
+        "text:Override",
+        "Policy settings",
+        "Global configuration toggle"
+      ],
+      "preconditions": [
+        "Prepare test data to reproduce the scenario described by the ticket(s)"
+      ],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim",
+        "Open the relevant Settings / Configuration section for the feature",
+        "Locate the UI element referenced in the claim (label/field/value/tooltip/etc.)"
+      ],
+      "expected": [
+        "Global settings take precedence over policy configurations",
+        "Policy-level calculations can be overridden",
+        "UI state matches the claim expectation and does not show contradictory information"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-1753"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": null
+    },
+    {
+      "claim_id": "JIRA_003",
+      "claim_type": "ui_state",
+      "title": "Multiple Daily Wage Divisor Options",
+      "test_hypothesis": "How might we verify that users can select between different daily wage divisors?",
+      "evidence_summary": "System supports configuring daily wage calculations using 30, 30.42, or working days divisors.",
+      "statement": "How might we verify that users can select between different daily wage divisors?",
+      "suggested_path": null,
+      "indicators": [
+        "Divisor selection dropdown",
+        "Configuration settings"
+      ],
+      "selector_hints": [
+        "text:Divisor",
+        "text:Working Days",
+        "text:Calendar Days",
+        "Divisor selection dropdown",
+        "Configuration settings"
+      ],
+      "preconditions": [],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim"
+      ],
+      "expected": [
+        "Multiple divisor options are available",
+        "Users can choose between different calculation methods",
+        "Result is observable (in UI or logs) and consistent with the claim statement"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-2321",
+        "TSSD-4731"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": "Settings > Payroll > Daily Wage Calculation"
+    }
+  ]
+}
