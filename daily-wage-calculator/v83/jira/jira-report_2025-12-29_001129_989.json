@@ -1,0 +1,189 @@
+{
+  "schema_version": "v83",
+  "folder_path": "daily-wage-calculator/v83",
+  "meta": {
+    "source": "jira",
+    "generated_at": "2025-12-28",
+    "feature_name": "daily wage calculator",
+    "feature_slug": "daily_wage_calculator",
+    "tickets_analyzed_count": 6,
+    "module_area": "Payroll",
+    "findings_count": 3,
+    "troubleshooting_count": 2,
+    "glossary_count": 2,
+    "claims_count": 2
+  },
+  "requested_feature_name": "daily wage calculator",
+  "requested_clean_feature_name": "daily_wage_calculator",
+  "feature_slug": "daily_wage_calculator",
+  "feature": {
+    "name": "daily wage calculator",
+    "slug": "daily_wage_calculator",
+    "description": "Operational reality summary for \"daily wage calculator\" based on Jira evidence: - Findings / issues / limitations: 3 - Troubleshooting / edge cases / requests: 2 - Evidence includes UI/visibility or copy/label concerns."
+  },
+  "operational_reality": {
+    "findings": [
+      {
+        "group_key": "calculation_precision_limitations",
+        "group_description": "The daily wage calculator has multiple precision and calculation nuances that can lead to unexpected results across different scenarios.",
+        "issue_explanation": "Calculation methods for daily wage involve complex logic around divisors, leap years, and configuration settings that can produce slight variations in expected outcomes.",
+        "limitation_statement": "The system lacks transparent, configurable calculation methods for daily wage computations across different use cases.",
+        "gap_statement": "Need for more flexible daily wage calculation configurations and clearer documentation of calculation methodologies.",
+        "severity_for_docs": "high",
+        "finding_type": "limitation",
+        "evidence_ticket_keys": [
+          "TSSD-2252",
+          "TSSD-1625",
+          "TSSD-4179"
+        ]
+      },
+      {
+        "group_key": "leap_year_calculation_gap",
+        "group_description": "The system inconsistently handles leap year calculations in service duration and daily wage computations.",
+        "issue_explanation": "Leap years are not consistently processed, causing minor discrepancies in gratuity and service duration calculations.",
+        "limitation_statement": "Leap year logic is not transparently implemented across different calculation scenarios.",
+        "gap_statement": "Need for standardized leap year handling in all daily wage and service duration calculations.",
+        "severity_for_docs": "medium",
+        "finding_type": "calculation_bug",
+        "evidence_ticket_keys": [
+          "TSSD-4179",
+          "TSSD-1625"
+        ]
+      },
+      {
+        "group_key": "configuration_override_complexity",
+        "group_description": "Global configuration settings can unexpectedly override policy-level daily wage calculation methods.",
+        "issue_explanation": "Users cannot always customize leave deduction calculations due to hidden global configuration precedence.",
+        "limitation_statement": "Policy-level settings are subordinate to system-wide global configurations.",
+        "gap_statement": "Need for more transparent configuration hierarchy and user controls in daily wage calculations.",
+        "severity_for_docs": "high",
+        "finding_type": "configuration_problem",
+        "evidence_ticket_keys": [
+          "TSSD-1753",
+          "TSSD-2321"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "group_key": "unpaid_leave_deduction_workaround",
+        "group_description": "When unpaid leave deductions produce unexpected results, manual adjustments might be necessary.",
+        "workaround_or_resolution": "1. Verify global daily rate configuration\n2. Check policy-level settings\n3. If discrepancy persists, create manual deduction to reconcile differences",
+        "evidence_ticket_keys": [
+          "TSSD-4464",
+          "TSSD-1753"
+        ]
+      },
+      {
+        "group_key": "leap_year_calculation_verification",
+        "group_description": "Manually verify service duration calculations during leap years.",
+        "workaround_or_resolution": "1. Count exact days, accounting for February 29th\n2. Divide by 366 for leap years instead of 365\n3. Double-check manual calculations against system output",
+        "evidence_ticket_keys": [
+          "TSSD-4179",
+          "TSSD-1625"
+        ]
+      }
+    ]
+  },
+  "glossary": [
+    {
+      "term": "Daily Wage Divisor",
+      "definition": "The number of days used to calculate an employee's daily rate, which can vary between 30, 30.42, or working days depending on system configuration.",
+      "evidence_ticket_keys": [
+        "TSSD-2321"
+      ]
+    },
+    {
+      "term": "Working Days",
+      "definition": "Days counted for salary calculations, which may exclude weekends and public holidays based on the employee's work week configuration.",
+      "evidence_ticket_keys": [
+        "TSSD-4292"
+      ]
+    }
+  ],
+  "claims_to_validate": [
+    {
+      "claim_id": "JIRA_001",
+      "claim_type": "ui_state",
+      "title": "Leap Year Day Inclusion in Calculations",
+      "test_hypothesis": "How might we verify that the system correctly handles February 29th in service duration calculations?",
+      "evidence_summary": "System sometimes fails to consistently include leap year days in calculations.",
+      "statement": "How might we verify that the system correctly handles February 29th in service duration calculations?",
+      "suggested_path": null,
+      "indicators": [
+        "Calculation result",
+        "Service duration display"
+      ],
+      "selector_hints": [
+        "text:Days",
+        "text:Years",
+        "text:Service Duration",
+        "Calculation result",
+        "Service duration display"
+      ],
+      "preconditions": [
+        "Prepare test data to reproduce the scenario described by the ticket(s)"
+      ],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim"
+      ],
+      "expected": [
+        "Leap year includes 366 days",
+        "February 29th is counted in service duration",
+        "Result is observable (in UI or logs) and consistent with the claim statement"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-4179",
+        "TSSD-1625"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": null
+    },
+    {
+      "claim_id": "JIRA_002",
+      "claim_type": "system_boundary",
+      "title": "Global Settings Override Policy Configurations",
+      "test_hypothesis": "How might we verify that global daily rate settings take precedence over policy-level configurations?",
+      "evidence_summary": "System has a global configuration that can override individual policy settings for daily wage calculations.",
+      "statement": "How might we verify that global daily rate settings take precedence over policy-level configurations?",
+      "suggested_path": null,
+      "indicators": [
+        "Global configuration toggle",
+        "Policy settings section"
+      ],
+      "selector_hints": [
+        "text:Global Settings",
+        "text:Override",
+        "checkbox",
+        "Global configuration toggle",
+        "Policy settings section"
+      ],
+      "preconditions": [
+        "Prepare test data to reproduce the scenario described by the ticket(s)"
+      ],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim",
+        "Open the relevant Settings / Configuration section for the feature",
+        "Locate the UI element referenced in the claim (label/field/value/tooltip/etc.)"
+      ],
+      "expected": [
+        "Global daily rate configuration exists",
+        "Global settings can override policy-level calculations",
+        "UI state matches the claim expectation and does not show contradictory information"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-1753"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": null
+    }
+  ]
+}
