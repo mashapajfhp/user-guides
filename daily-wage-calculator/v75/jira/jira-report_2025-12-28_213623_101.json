@@ -1,0 +1,236 @@
+{
+  "schema_version": "v75",
+  "folder_path": "daily-wage-calculator/v75",
+  "meta": {
+    "source": "jira",
+    "generated_at": "2025-12-28",
+    "feature_name": "daily wage calculator",
+    "feature_slug": "daily_wage_calculator",
+    "tickets_analyzed_count": 12,
+    "module_area": "Payroll",
+    "findings_count": 4,
+    "troubleshooting_count": 1,
+    "glossary_count": 2,
+    "claims_count": 3
+  },
+  "requested_feature_name": "daily wage calculator",
+  "requested_clean_feature_name": "daily_wage_calculator",
+  "feature_slug": "daily_wage_calculator",
+  "feature": {
+    "name": "daily wage calculator",
+    "slug": "daily_wage_calculator",
+    "description": "Operational reality summary for \"daily wage calculator\" based on Jira evidence: - Findings / issues / limitations: 4 - Troubleshooting / edge cases / requests: 1 - Evidence suggests asynchronous updates or synchronization considerations. - Evidence includes UI/visibility or copy/label concerns."
+  },
+  "operational_reality": {
+    "findings": [
+      {
+        "group_key": "daily_wage_calculation_complexity",
+        "group_description": "The daily wage calculator has complex calculation logic with multiple configuration challenges and potential inconsistencies across different payroll scenarios.",
+        "issue_explanation": "Users encounter difficulties with calculation methods, especially around handling working days, leap years, and different salary components.",
+        "limitation_statement": "The system cannot flexibly adapt daily wage calculations across different leave and salary proration scenarios.",
+        "gap_statement": "Lack of transparent, configurable daily wage calculation methods that can handle varied organizational requirements.",
+        "severity_for_docs": "high",
+        "finding_type": "limitation",
+        "evidence_ticket_keys": [
+          "TSSD-2648",
+          "TSSD-2321",
+          "TSSD-4179",
+          "TSSD-2252"
+        ]
+      },
+      {
+        "group_key": "calculation_override_complexity",
+        "group_description": "Global configurations can override policy-level daily wage calculation settings, creating potential misunderstandings and unexpected results.",
+        "issue_explanation": "System-wide settings can supersede individual policy configurations for daily wage calculations.",
+        "limitation_statement": "Users cannot easily customize leave deduction calculations at the policy level when global settings exist.",
+        "gap_statement": "Need for more transparent configuration hierarchy and user controls for daily wage calculations.",
+        "severity_for_docs": "medium",
+        "finding_type": "configuration_problem",
+        "evidence_ticket_keys": [
+          "TSSD-1753",
+          "TSSD-2648"
+        ]
+      },
+      {
+        "group_key": "proration_calculation_inconsistencies",
+        "group_description": "Salary and leave proration calculations produce inconsistent results due to varying divisor methods and configuration challenges.",
+        "issue_explanation": "Different calculation methods for daily wage lead to unexpected deduction amounts and user confusion.",
+        "limitation_statement": "The system uses different divisors (30, 30.42, working days) that can produce varying results.",
+        "gap_statement": "Need for a unified, configurable daily wage calculation approach across different payroll scenarios.",
+        "severity_for_docs": "high",
+        "finding_type": "calculation_bug",
+        "evidence_ticket_keys": [
+          "TSSD-4368",
+          "TSSD-2321",
+          "TSSD-4731"
+        ]
+      },
+      {
+        "group_key": "leap_year_calculation_limitations",
+        "group_description": "Current system struggles with accurately calculating service periods and gratuity during leap years.",
+        "issue_explanation": "Calculation logic does not consistently handle 366-day years, leading to potential benefit miscalculations.",
+        "limitation_statement": "Platform cannot automatically adjust calculations for leap years in service period and benefit computations.",
+        "gap_statement": "Need for robust leap year handling in daily wage and service duration calculations.",
+        "severity_for_docs": "high",
+        "finding_type": "calculation_bug",
+        "evidence_ticket_keys": [
+          "TSSD-4179",
+          "TSSD-1625",
+          "TSSD-2252"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "group_key": "daily_wage_recalculation_workaround",
+        "group_description": "When calculation discrepancies occur, manual intervention or system-specific workarounds are required.",
+        "workaround_or_resolution": "1. Delete and recreate leave requests to trigger recalculation. 2. Manually adjust deductions to reconcile differences. 3. Verify global and policy-level daily wage configurations.",
+        "evidence_ticket_keys": [
+          "TSSD-1581",
+          "TSSD-2532"
+        ]
+      }
+    ]
+  },
+  "glossary": [
+    {
+      "term": "Daily Wage",
+      "definition": "Calculation of an employee's per-day salary rate, typically computed by dividing total salary by a specific number of days (30, 30.42, or working days).",
+      "evidence_ticket_keys": [
+        "TSSD-2321"
+      ]
+    },
+    {
+      "term": "Working Days",
+      "definition": "Days considered as working in a month, which may exclude weekends and public holidays based on specific work week configurations.",
+      "evidence_ticket_keys": [
+        "TSSD-4292"
+      ]
+    }
+  ],
+  "claims_to_validate": [
+    {
+      "claim_id": "JIRA_001",
+      "claim_type": "ui_state",
+      "title": "Daily Wage Configuration Options",
+      "test_hypothesis": "How might we verify that users can view and configure daily wage calculation methods?",
+      "evidence_summary": "Multiple tickets indicate complex configuration options for daily wage calculations.",
+      "statement": "How might we verify that users can view and configure daily wage calculation methods?",
+      "suggested_path": null,
+      "indicators": [
+        "Daily wage divisor selection",
+        "Salary component choices"
+      ],
+      "selector_hints": [
+        "text:Daily Wage",
+        "text:Divisor",
+        "select:Calculation Method",
+        "Daily wage divisor selection",
+        "Salary component choices"
+      ],
+      "preconditions": [
+        "Prepare test data to reproduce the scenario described by the ticket(s)"
+      ],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim",
+        "Open the relevant Settings / Configuration section for the feature"
+      ],
+      "expected": [
+        "Users can select divisor method (30 days, 30.42 days, working days)",
+        "Ability to choose salary components (basic, gross)",
+        "Result is observable (in UI or logs) and consistent with the claim statement"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-2321",
+        "TSSD-1753",
+        "TSSD-4368"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": null
+    },
+    {
+      "claim_id": "JIRA_002",
+      "claim_type": "system_behavior",
+      "title": "Leave Salary Calculation Persistence",
+      "test_hypothesis": "How might we verify that leave salary calculations use the initially calculated daily rate?",
+      "evidence_summary": "System should store and display the daily rate from the leave occurrence month.",
+      "statement": "How might we verify that leave salary calculations use the initially calculated daily rate?",
+      "suggested_path": null,
+      "indicators": [
+        "Stored daily rate",
+        "Month of leave occurrence"
+      ],
+      "selector_hints": [
+        "text:Initial Rate",
+        "text:Leave Month",
+        "Stored daily rate",
+        "Month of leave occurrence"
+      ],
+      "preconditions": [
+        "Prepare test data to reproduce the scenario described by the ticket(s)"
+      ],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim"
+      ],
+      "expected": [
+        "Daily rate reflects month when leave was taken",
+        "Rate not recalculated based on payroll processing month",
+        "Result is observable (in UI or logs) and consistent with the claim statement"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-1807"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": null
+    },
+    {
+      "claim_id": "JIRA_003",
+      "claim_type": "ui_state",
+      "title": "Work Week Configuration Visibility",
+      "test_hypothesis": "How might we verify that work week configurations impact working days calculations?",
+      "evidence_summary": "Work week settings determine how working days are counted for salary calculations.",
+      "statement": "How might we verify that work week configurations impact working days calculations?",
+      "suggested_path": null,
+      "indicators": [
+        "Weekend configuration",
+        "Public holiday settings"
+      ],
+      "selector_hints": [
+        "text:Work Week",
+        "text:Weekend",
+        "text:Public Holidays",
+        "Weekend configuration",
+        "Public holiday settings"
+      ],
+      "preconditions": [
+        "Prepare test data to reproduce the scenario described by the ticket(s)"
+      ],
+      "steps": [
+        "Log in as a user who can access the feature (admin if required)",
+        "Navigate to the feature area relevant to this claim",
+        "Open the relevant Settings / Configuration section for the feature"
+      ],
+      "expected": [
+        "Users can configure which days count as working days",
+        "System respects custom work week definitions",
+        "Result is observable (in UI or logs) and consistent with the claim statement"
+      ],
+      "playwright_verifiable": false,
+      "verification_blocker": "NEEDS_ZENDESK_NAVIGATION",
+      "ui_verifiable": true,
+      "evidence_ticket_keys": [
+        "TSSD-4292"
+      ],
+      "claim_origin": "jira",
+      "navigation_hint": null
+    }
+  ]
+}
