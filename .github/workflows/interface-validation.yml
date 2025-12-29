@@ -19,16 +19,38 @@ on:
         description: "Version number from n8n (e.g., v28) - used when folder_path is provided"
         required: false
         type: string
-      claims_json:
-        description: "Claims to validate (JSON string)"
-        required: true
+      # New format: issues_to_validate from n8n AI node
+      issues_json:
+        description: "Issues to validate from n8n AI node (JSON string array of issue objects with validation_steps)"
+        required: false
         type: string
+      # New format: navigation_paths_from_zendesk (object)
+      navigation_paths_from_zendesk_json:
+        description: "Navigation paths object from Zendesk {path_id: 'Menu → Path'} (JSON string)"
+        required: false
+        type: string
+      # New format: configuration_areas_to_document
+      config_areas_json:
+        description: "Configuration areas to document from n8n AI node (JSON string array)"
+        required: false
+        type: string
+      # Legacy format: claims_to_validate (kept for backward compatibility)
+      claims_json:
+        description: "[LEGACY] Claims to validate as string array (JSON string) - use issues_json for new format"
+        required: false
+        type: string
+      # Legacy format: navigation_paths (kept for backward compatibility)
       navigation_paths_json:
-        description: "Navigation paths (JSON string)"
+        description: "[LEGACY] Navigation paths as string array (JSON string) - use navigation_paths_from_zendesk_json for new format"
         required: false
         type: string
       procedures_json:
         description: "Procedures from Zendesk documentation (JSON string)"
+        required: false
+        type: string
+      # Validation config overrides
+      validation_config_json:
+        description: "Validation configuration overrides (JSON string)"
         required: false
         type: string
 
@@ -217,9 +239,16 @@ jobs:
         id: write_input
         shell: bash
         env:
+          # New format inputs
+          ISSUES_JSON: ${{ github.event.inputs.issues_json }}
+          NAV_ZENDESK_JSON: ${{ github.event.inputs.navigation_paths_from_zendesk_json }}
+          CONFIG_AREAS_JSON: ${{ github.event.inputs.config_areas_json }}
+          VALIDATION_CONFIG_JSON: ${{ github.event.inputs.validation_config_json }}
+          # Legacy format inputs
           CLAIMS_JSON: ${{ github.event.inputs.claims_json }}
           NAV_JSON: ${{ github.event.inputs.navigation_paths_json }}
           PROCEDURES_JSON: ${{ github.event.inputs.procedures_json }}
+          # Common inputs
           FEATURE_NAME: ${{ github.event.inputs.feature_name }}
           FEATURE_SLUG: ${{ github.event.inputs.feature_slug }}
           VERSION: ${{ steps.version.outputs.version }}
@@ -244,35 +273,89 @@ jobs:
           # Output versioned_dir for use in subsequent steps
           echo "versioned_dir=${VERSIONED_DIR}" >> $GITHUB_OUTPUT
 
-          # Use environment variables to avoid shell escaping issues
-          CLAIMS_RAW="${CLAIMS_JSON}"
-          NAV_RAW="${NAV_JSON}"
-          PROCEDURES_RAW="${PROCEDURES_JSON}"
-          [ -z "${NAV_RAW}" ] && NAV_RAW='[]'
-          [ -z "${PROCEDURES_RAW}" ] && PROCEDURES_RAW='[]'
+          # Determine format: new (issues_to_validate) vs legacy (claims_to_validate)
+          USE_NEW_FORMAT="false"
+          if [ -n "${ISSUES_JSON:-}" ] && [ "${ISSUES_JSON}" != "null" ] && [ "${ISSUES_JSON}" != "" ]; then
+            USE_NEW_FORMAT="true"
+            echo "📊 Using NEW format (issues_to_validate from n8n AI node)"
+          else
+            echo "📊 Using LEGACY format (claims_to_validate)"
+          fi
 
-          # Validate JSON
-          echo "${CLAIMS_RAW}" | jq -e . >/dev/null || { echo "❌ Invalid claims JSON"; exit 1; }
-          echo "${NAV_RAW}" | jq -e . >/dev/null || { echo "❌ Invalid navigation JSON"; exit 1; }
-          echo "${PROCEDURES_RAW}" | jq -e . >/dev/null || { echo "❌ Invalid procedures JSON"; exit 1; }
+          # Set defaults for all inputs
+          [ -z "${ISSUES_JSON:-}" ] && ISSUES_JSON='[]'
+          [ -z "${NAV_ZENDESK_JSON:-}" ] && NAV_ZENDESK_JSON='{}'
+          [ -z "${CONFIG_AREAS_JSON:-}" ] && CONFIG_AREAS_JSON='[]'
+          [ -z "${VALIDATION_CONFIG_JSON:-}" ] && VALIDATION_CONFIG_JSON='{}'
+          [ -z "${CLAIMS_JSON:-}" ] && CLAIMS_JSON='[]'
+          [ -z "${NAV_JSON:-}" ] && NAV_JSON='[]'
+          [ -z "${PROCEDURES_JSON:-}" ] && PROCEDURES_JSON='[]'
 
+          # Validate JSON inputs
+          echo "${ISSUES_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid issues JSON, using empty array"; ISSUES_JSON='[]'; }
+          echo "${NAV_ZENDESK_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid nav zendesk JSON, using empty object"; NAV_ZENDESK_JSON='{}'; }
+          echo "${CONFIG_AREAS_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid config areas JSON, using empty array"; CONFIG_AREAS_JSON='[]'; }
+          echo "${VALIDATION_CONFIG_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid validation config JSON, using empty object"; VALIDATION_CONFIG_JSON='{}'; }
+          echo "${CLAIMS_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid claims JSON, using empty array"; CLAIMS_JSON='[]'; }
+          echo "${NAV_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid navigation JSON, using empty array"; NAV_JSON='[]'; }
+          echo "${PROCEDURES_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid procedures JSON, using empty array"; PROCEDURES_JSON='[]'; }
+
+          # Generate clean_feature_name from feature_slug
+          CLEAN_FEATURE_NAME=$(echo "${FEATURE_SLUG}" | tr '-' '_')
+
+          # Build the request.json with both new and legacy fields
           jq -n \
             --arg feature_name "${FEATURE_NAME}" \
-            --argjson claims_to_validate "${CLAIMS_RAW}" \
-            --argjson navigation_paths "${NAV_RAW}" \
-            --argjson procedures "${PROCEDURES_RAW}" \
+            --arg clean_feature_name "${CLEAN_FEATURE_NAME}" \
+            --arg use_new_format "${USE_NEW_FORMAT}" \
+            --argjson issues_to_validate "${ISSUES_JSON}" \
+            --argjson navigation_paths_from_zendesk "${NAV_ZENDESK_JSON}" \
+            --argjson configuration_areas_to_document "${CONFIG_AREAS_JSON}" \
+            --argjson validation_config_overrides "${VALIDATION_CONFIG_JSON}" \
+            --argjson claims_to_validate "${CLAIMS_JSON}" \
+            --argjson navigation_paths "${NAV_JSON}" \
+            --argjson procedures "${PROCEDURES_JSON}" \
             --arg app_base_url "${APP_BASE_URL}" \
             --arg app_username "${APP_USERNAME}" \
             --arg app_password "${APP_PASSWORD}" \
+            --arg screenshots_dir "${VERSIONED_DIR}/screenshots" \
+            --arg reports_dir "${VERSIONED_DIR}" \
+            --arg evidence_file "${VERSIONED_DIR}/evidence.json" \
+            --arg summary_file "${VERSIONED_DIR}/validation-summary.md" \
             '{
               feature_name: $feature_name,
+              clean_feature_name: $clean_feature_name,
+              input_format: (if $use_new_format == "true" then "new" else "legacy" end),
+              # New format fields
+              issues_to_validate: $issues_to_validate,
+              navigation_paths_from_zendesk: $navigation_paths_from_zendesk,
+              configuration_areas_to_document: $configuration_areas_to_document,
+              # Legacy format fields
               claims_to_validate: $claims_to_validate,
               navigation_paths: $navigation_paths,
               procedures: $procedures,
+              # Validation config (merged with defaults)
+              validation_config: ({
+                base_url: $app_base_url,
+                login_required: true,
+                required_role: "Superadmin",
+                max_attempts_per_validation: 2,
+                screenshot_on_each_step: true,
+                timeout_ms: 30000,
+                wait_after_navigation_ms: 2000
+              } * $validation_config_overrides),
+              # App credentials
               app: {
                 base_url: $app_base_url,
                 username: $app_username,
                 password: $app_password
+              },
+              # Output configuration (required by interface-validator)
+              output_configuration: {
+                screenshots_dir: $screenshots_dir,
+                reports_dir: $reports_dir,
+                evidence_file: $evidence_file,
+                summary_file: $summary_file
               }
             }' > .validation/input/request.json
 

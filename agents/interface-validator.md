@@ -49,7 +49,60 @@ Called by: **GitHub Actions** (`interface-validation.yml`) after n8n triggers th
 
 You are invoked with a prompt pointing to an **input JSON file**.
 
-Example structure:
+The input comes from the **n8n Playwright Validation Payload Generator** which produces structured validation payloads based on Jira tickets and Zendesk articles.
+
+### Primary Input Format (from n8n AI Node):
+
+```json
+{
+  "feature_name": "string",
+  "clean_feature_name": "string (snake_case)",
+  "validation_purpose": "string",
+  "validation_timestamp": "ISO 8601 timestamp",
+  "navigation_paths_from_zendesk": {
+    "path_id": "Menu → Submenu → Page"
+  },
+  "issues_to_validate": [
+    {
+      "issue_id": "VAL-001",
+      "jira_key": "TSSD-1234",
+      "issue_summary": "string",
+      "reported_behavior": "string",
+      "validation_steps": [
+        {"step": 1, "action": "navigate|click|observe|capture|select|type|toggle|wait_for", "target": "string", "expected": "string (optional)", "screenshot": "string (optional)"}
+      ],
+      "observable_indicators": ["string"],
+      "priority": "high|medium|low"
+    }
+  ],
+  "configuration_areas_to_document": [
+    {
+      "area_id": "CONFIG-001",
+      "name": "string",
+      "path": "string",
+      "expected_sections": ["string"],
+      "screenshots_needed": ["string"]
+    }
+  ],
+  "validation_config": {
+    "base_url": "string",
+    "login_required": true,
+    "required_role": "string",
+    "max_attempts_per_validation": 2,
+    "screenshot_on_each_step": true,
+    "timeout_ms": 30000,
+    "wait_after_navigation_ms": 2000
+  },
+  "output_configuration": {
+    "screenshots_dir": "path",
+    "reports_dir": "path",
+    "evidence_file": "path",
+    "summary_file": "path"
+  }
+}
+```
+
+### Legacy Input Format (backward compatibility):
 
 ```json
 {
@@ -71,7 +124,23 @@ Example structure:
 ### Contract enforcement
 - Missing `feature_name` → HARD FAIL
 - Missing or incomplete `output_configuration` → HARD FAIL
-- Missing claims or paths → treat as empty arrays
+- Missing `issues_to_validate` AND `claims_to_validate` → treat as empty arrays
+- If `issues_to_validate` is present, use it (new format)
+- If only `claims_to_validate` is present, use legacy format
+- Missing `navigation_paths_from_zendesk` AND `navigation_paths` → treat as empty
+
+### Validation Step Actions (from issues_to_validate)
+
+| Action | Purpose | Target Description |
+|--------|---------|-------------------|
+| `navigate` | Go to a page/menu | Full navigation path |
+| `click` | Click an element | Element description |
+| `observe` | Check element presence/state | What to observe (uses `expected` field) |
+| `capture` | Take screenshot | Description (uses `screenshot` field) |
+| `select` | Choose dropdown option | Dropdown name/option |
+| `type` | Enter text | Input field (uses `text` field) |
+| `toggle` | Switch on/off | Toggle/checkbox description |
+| `wait_for` | Wait for element | Element or text description |
 
 ---
 
@@ -497,6 +566,7 @@ Write ONE JSON object:
 {
   "meta": {
     "feature_name": "",
+    "clean_feature_name": "",
     "run_mode": "step5|step7|step5_step7",
     "generated_at": "",
     "environment": {
@@ -504,15 +574,29 @@ Write ONE JSON object:
       "notes": ""
     }
   },
-  "navigation_paths": [],
+  "navigation_paths": [
+    {
+      "path_id": "string",
+      "path": "Menu → Submenu → Page",
+      "status": "pass|fail|not_confirmed",
+      "evidence": ["screenshot-filename.png"],
+      "notes": "string"
+    }
+  ],
   "claims": [
     {
-      "claim_id": "string",
-      "statement": "string",
+      "claim_id": "VAL-001 (from issue_id)",
+      "jira_key": "TSSD-1234 (if available)",
+      "claim": "string (from reported_behavior or statement)",
       "status": "pass|fail|not_confirmed",
-      "evidence_screenshots": ["string"],
+      "observed_truth": "string (what was actually observed)",
+      "evidence": ["screenshot-filename.png"],
       "notes": "string",
       "exploration": {
+        "testing": {
+          "claim": "string (the claim being tested)",
+          "goal": "string (what we're trying to verify)"
+        },
         "interactive_elements_found": [
           {
             "type": "accordion|button|dropdown|toggle|tab|link",
@@ -542,6 +626,21 @@ Write ONE JSON object:
             "effect": "string"
           }
         ],
+        "think_aloud_log": [
+          {
+            "step": 1,
+            "observe": "string",
+            "think": "string",
+            "act": "string",
+            "result": "string"
+          }
+        ],
+        "what_worked": {
+          "summary": "string",
+          "successful_path": ["string"],
+          "key_discoveries": ["string"],
+          "gotchas": ["string"]
+        },
         "screenshots": ["string"]
       }
     }
@@ -569,6 +668,20 @@ Write ONE JSON object:
   }
 }
 ```
+
+### Mapping from Input to Evidence
+
+When processing `issues_to_validate` (new format):
+- `issue_id` → `claim_id` (e.g., "VAL-001")
+- `jira_key` → `jira_key` (e.g., "TSSD-1234")
+- `reported_behavior` → `claim`
+- `validation_steps` → Execute each step and document results
+- `observable_indicators` → Use to verify claim status
+
+When processing `claims_to_validate` (legacy format):
+- Generate sequential `claim_id` (e.g., "claim-01")
+- `claim` = the string from the array
+- No `jira_key` field
 
 ## 7) SUMMARY MARKDOWN STRUCTURE
 
