@@ -400,6 +400,18 @@ jobs:
           jq -e . "${VERSIONED_DIR}/pw_result.json" >/dev/null
           echo "✅ pw_result.json is valid JSON in ${VERSIONED_DIR}"
 
+      # Copy pw_result.json to root location for n8n to fetch via static URL
+      - name: Copy pw_result.json to root output
+        shell: bash
+        env:
+          VERSIONED_DIR: ${{ steps.write_input.outputs.versioned_dir }}
+        run: |
+          set -euo pipefail
+          ROOT_OUTPUT=".validation/output"
+          mkdir -p "${ROOT_OUTPUT}"
+          cp "${VERSIONED_DIR}/pw_result.json" "${ROOT_OUTPUT}/pw_result.json"
+          echo "✅ Copied pw_result.json to ${ROOT_OUTPUT}/pw_result.json (for n8n static URL)"
+
       - name: Run Interface Validator Agent (PURE, STRICT JSON)
         shell: bash
         env:
@@ -550,6 +562,9 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
+          # Always add root pw_result.json for n8n static URL access
+          git add .validation/output/pw_result.json || true
+
           # Add validation outputs - use n8n folder_path if provided
           if [ -n "${N8N_FOLDER_PATH}" ]; then
             # n8n folder structure - add the entire version folder
@@ -567,3 +582,4 @@ jobs:
           git commit -m "Interface validation v${VERSION}: ${{ github.event.inputs.feature_name }}"
           git push
           echo "✅ Committed validation outputs to: ${VERSIONED_DIR}/"
+          echo "✅ Root pw_result.json updated at .validation/output/pw_result.json"
