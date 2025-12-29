@@ -1,5 +1,224 @@
 {
-  "feature_name": "Unknown Feature",
+  "feature_name": "Daily Wage Calculator",
+  "clean_feature_name": "daily_wage_calculator",
+  "input_format": "new",
+  "issues_to_validate": [
+    {
+      "issue_id": "VAL-001",
+      "jira_key": "TSSD-2648",
+      "issue_summary": "Difference in daily wage formula between leave policy and payroll settings",
+      "reported_behavior": "Daily wage formula configured in payroll settings overrides leave policy formula for unpaid leave, but the override is not clearly communicated. Leave policy shows greyed-out formula that is overridden by payroll daily wage calculator configuration.",
+      "validation_steps": [
+        {
+          "step": 1,
+          "action": "navigate",
+          "target": "Payroll → Settings → Daily Wage Calculator"
+        },
+        {
+          "step": 2,
+          "action": "observe",
+          "target": "Daily wage formula configuration",
+          "expected": "Formula visible and editable (e.g., basic + allowances / number of days)"
+        },
+        {
+          "step": 3,
+          "action": "capture",
+          "target": "Daily wage calculator formula display",
+          "screenshot": "val-001-payroll-daily-wage-formula"
+        },
+        {
+          "step": 4,
+          "action": "navigate",
+          "target": "Leave Management → Leave Policies → [Policy Name] → Daily Wage"
+        },
+        {
+          "step": 5,
+          "action": "observe",
+          "target": "Leave policy daily wage formula field",
+          "expected": "Formula appears greyed out or disabled, indicating override from payroll settings"
+        },
+        {
+          "step": 6,
+          "action": "capture",
+          "target": "Leave policy daily wage formula display with override indicator",
+          "screenshot": "val-001-leave-policy-greyed-formula"
+        }
+      ],
+      "observable_indicators": [
+        "Payroll daily wage calculator formula is editable",
+        "Leave policy formula field is greyed out or disabled",
+        "No visual indicator explaining the override relationship",
+        "Formula values differ between payroll and leave policy displays"
+      ],
+      "priority": "medium"
+    },
+    {
+      "issue_id": "VAL-002",
+      "jira_key": "TSSD-1581",
+      "issue_summary": "Unpaid leave deduction not recalculated when salary configuration changes",
+      "reported_behavior": "When a new salary configuration is created after an unpaid leave request, the system does not automatically update the pending leave deduction amount. Deduction remains based on previous salary configuration instead of current one.",
+      "validation_steps": [
+        {
+          "step": 1,
+          "action": "navigate",
+          "target": "Payroll → Salary Configuration"
+        },
+        {
+          "step": 2,
+          "action": "observe",
+          "target": "Salary configuration list or creation interface",
+          "expected": "Ability to create or view multiple salary configurations for same employee"
+        },
+        {
+          "step": 3,
+          "action": "navigate",
+          "target": "Leave Management → Leave Requests"
+        },
+        {
+          "step": 4,
+          "action": "observe",
+          "target": "Unpaid leave request deduction amount display",
+          "expected": "Deduction amount shown for unpaid leave request"
+        },
+        {
+          "step": 5,
+          "action": "capture",
+          "target": "Unpaid leave deduction amount before and after salary config change",
+          "screenshot": "val-002-unpaid-leave-deduction-amount"
+        },
+        {
+          "step": 6,
+          "action": "observe",
+          "target": "Leave request status and deduction recalculation indicator",
+          "expected": "No automatic recalculation visible; deduction remains unchanged after salary config update"
+        }
+      ],
+      "observable_indicators": [
+        "Unpaid leave deduction amount displayed in leave request",
+        "Deduction amount does not update after new salary configuration created",
+        "No warning or notification about stale deduction calculation",
+        "Leave request remains in pending state with outdated deduction"
+      ],
+      "priority": "high"
+    },
+    {
+      "issue_id": "VAL-003",
+      "jira_key": "TSSD-4179",
+      "issue_summary": "EOS gratuity calculator does not account for leap years",
+      "reported_behavior": "End of Service gratuity calculation fails to recognize leap years (366 days). System counts 365 days for leap year (e.g., 2024), resulting in incorrect total service days and lower gratuity amount than correct calculation.",
+      "validation_steps": [
+        {
+          "step": 1,
+          "action": "navigate",
+          "target": "Payroll → Reports → End of Service Gratuity"
+        },
+        {
+          "step": 2,
+          "action": "observe",
+          "target": "EOS gratuity calculator or report interface",
+          "expected": "Gratuity calculation form or results display"
+        },
+        {
+          "step": 3,
+          "action": "capture",
+          "target": "EOS gratuity calculation for employee with service spanning leap year",
+          "screenshot": "val-003-eos-gratuity-calculation"
+        },
+        {
+          "step": 4,
+          "action": "observe",
+          "target": "Service period calculation display (total days worked)",
+          "expected": "Total service days shown; verify if leap year (366 days) is counted or hardcoded as 365"
+        },
+        {
+          "step": 5,
+          "action": "observe",
+          "target": "Gratuity amount calculation breakdown",
+          "expected": "Calculation shows daily wage × service years × applicable days per year formula"
+        },
+        {
+          "step": 6,
+          "action": "capture",
+          "target": "Service period and gratuity amount details",
+          "screenshot": "val-003-eos-service-days-breakdown"
+        }
+      ],
+      "observable_indicators": [
+        "Total service days calculation shown in gratuity report",
+        "Service days count uses 365 instead of 366 for leap years",
+        "Gratuity amount lower than expected (e.g., AED 10,476.98 vs AED 10,494.24)",
+        "No leap year indicator or adjustment in calculation display",
+        "Year-by-year service breakdown does not show 366 days for leap year"
+      ],
+      "priority": "high"
+    }
+  ],
+  "navigation_paths_from_zendesk": {},
+  "configuration_areas_to_document": [
+    {
+      "area_id": "CONFIG-001",
+      "name": "Daily Wage Calculator Configuration",
+      "path": "Payroll → Settings → Daily Wage Calculator",
+      "expected_sections": [
+        "Formula configuration (salary component selection, divisor)",
+        "Applicable leave types (unpaid leave, leave encashment)",
+        "Salary component selection (basic, basic + allowances)"
+      ],
+      "screenshots_needed": [
+        "full-page",
+        "formula-configuration-section",
+        "leave-type-applicability-section"
+      ]
+    },
+    {
+      "area_id": "CONFIG-002",
+      "name": "Leave Policy Daily Wage Settings",
+      "path": "Leave Management → Leave Policies → [Policy Name] → Daily Wage",
+      "expected_sections": [
+        "Daily wage formula field (greyed out if overridden)",
+        "Override indicator or explanation",
+        "Payroll settings reference or link"
+      ],
+      "screenshots_needed": [
+        "full-page",
+        "daily-wage-field-with-override-state"
+      ]
+    },
+    {
+      "area_id": "CONFIG-003",
+      "name": "Salary Configuration Management",
+      "path": "Payroll → Salary Configuration",
+      "expected_sections": [
+        "Salary configuration creation/edit form",
+        "Effective date field",
+        "Salary components and amounts",
+        "Configuration history or versioning"
+      ],
+      "screenshots_needed": [
+        "full-page",
+        "salary-configuration-list",
+        "salary-configuration-form"
+      ]
+    },
+    {
+      "area_id": "CONFIG-004",
+      "name": "End of Service Gratuity Calculator",
+      "path": "Payroll → Reports → End of Service Gratuity",
+      "expected_sections": [
+        "Employee selection and date range",
+        "Service period calculation breakdown",
+        "Daily wage calculation",
+        "Gratuity amount calculation with formula",
+        "Year-by-year service days breakdown"
+      ],
+      "screenshots_needed": [
+        "full-page",
+        "gratuity-calculation-form",
+        "service-period-breakdown",
+        "gratuity-amount-details"
+      ]
+    }
+  ],
   "claims_to_validate": [],
   "navigation_paths": {
     "paths": [],
@@ -7,9 +226,24 @@
     "steps": []
   },
   "procedures": [],
+  "validation_config": {
+    "base_url": "https://app.bayzat.com",
+    "login_required": true,
+    "required_role": "Superadmin",
+    "max_attempts_per_validation": 2,
+    "screenshot_on_each_step": false,
+    "timeout_ms": 30000,
+    "wait_after_navigation_ms": 2000
+  },
   "app": {
     "base_url": "https://app.bayzat.com/",
     "username": "bayzlander@bayzat.com",
     "password": "landofbayzat123"
+  },
+  "output_configuration": {
+    "screenshots_dir": ".validation/output/daily_wage_calculator/v8/screenshots",
+    "reports_dir": ".validation/output/daily_wage_calculator/v8",
+    "evidence_file": ".validation/output/daily_wage_calculator/v8/evidence.json",
+    "summary_file": ".validation/output/daily_wage_calculator/v8/validation-summary.md"
   }
 }
