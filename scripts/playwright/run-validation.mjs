@@ -1056,6 +1056,105 @@ function normalizeClaimChecks(claims_to_validate) {
   });
 }
 
+// ------------------ INPUT FORMAT CONVERSION ------------------
+/**
+ * Converts "new" format input (from n8n workflow) to legacy format expected by this script.
+ *
+ * New format fields:
+ *   - issues_to_validate (array)
+ *   - navigation_paths_from_zendesk (object)
+ *   - configuration_areas_to_document (array)
+ *
+ * Legacy format fields:
+ *   - claims_to_validate (array)
+ *   - navigation_paths (array or object)
+ *   - procedures (array)
+ */
+function convertInputFormat(input) {
+  if (!input) return input;
+
+  // Detect input format
+  const isNewFormat = input.input_format === "new" ||
+                      Array.isArray(input.issues_to_validate) ||
+                      input.navigation_paths_from_zendesk !== undefined ||
+                      Array.isArray(input.configuration_areas_to_document);
+
+  if (!isNewFormat) {
+    console.log("📋 Input format: legacy (no conversion needed)");
+    return input;
+  }
+
+  console.log("📋 Input format: new (converting to legacy format)");
+  const converted = { ...input };
+
+  // Convert issues_to_validate → claims_to_validate
+  // Only skip if legacy field exists AND has content
+  const hasLegacyClaims = Array.isArray(input.claims_to_validate) && input.claims_to_validate.length > 0;
+  if (Array.isArray(input.issues_to_validate) && input.issues_to_validate.length > 0 && !hasLegacyClaims) {
+    converted.claims_to_validate = input.issues_to_validate.map(issue => ({
+      id: issue.issue_id || issue.id,
+      claim_id: issue.issue_id || issue.id,
+      claim: issue.reported_behavior || issue.issue_summary,
+      claim_text: issue.reported_behavior || issue.issue_summary,
+      text: issue.reported_behavior || issue.issue_summary,
+      claim_type: "issue_validation",
+      validation_hint: issue.issue_summary,
+      source: "jira",
+      severity: issue.priority || "medium",
+      source_refs: issue.jira_key ? [issue.jira_key] : [],
+      // Preserve validation steps as validation hints
+      validation_steps: issue.validation_steps,
+      // Observable indicators can guide what to look for
+      observable_indicators: issue.observable_indicators || [],
+      // Store original for reference
+      raw: issue
+    }));
+    console.log(`   Converted ${converted.claims_to_validate.length} issues to claims`);
+  }
+
+  // Convert navigation_paths_from_zendesk → navigation_paths
+  // Check if legacy navigation_paths is empty or has no content
+  const hasLegacyNavPaths = input.navigation_paths &&
+    (Array.isArray(input.navigation_paths) ? input.navigation_paths.length > 0 :
+     typeof input.navigation_paths === 'object' && Object.keys(input.navigation_paths).length > 0 &&
+     !(input.navigation_paths.paths?.length === 0 && input.navigation_paths.steps?.length === 0));
+  const navObj = input.navigation_paths_from_zendesk;
+  const hasNewNavPaths = navObj && typeof navObj === 'object' && Object.keys(navObj).length > 0;
+
+  if (hasNewNavPaths && !hasLegacyNavPaths) {
+    // navigation_paths_from_zendesk is an object like {"path_id": "Menu → Submenu"}
+    // Convert to array format for compatibility
+    if (!Array.isArray(navObj)) {
+      converted.navigation_paths = Object.entries(navObj).map(([id, path]) => ({
+        path_id: id,
+        path: path,
+        steps: path.split(' → ').map(s => s.trim())
+      }));
+      console.log(`   Converted ${converted.navigation_paths.length} navigation paths`);
+    } else {
+      converted.navigation_paths = navObj;
+    }
+  }
+
+  // Convert configuration_areas_to_document → procedures
+  // Only skip if legacy procedures has content
+  const hasLegacyProcedures = Array.isArray(input.procedures) && input.procedures.length > 0;
+  if (Array.isArray(input.configuration_areas_to_document) && input.configuration_areas_to_document.length > 0 && !hasLegacyProcedures) {
+    converted.procedures = input.configuration_areas_to_document.map(area => ({
+      title: area.name,
+      name: area.name,
+      path: area.path,
+      steps: area.expected_sections || [],
+      screenshots_needed: area.screenshots_needed || [],
+      source: "zendesk",
+      area_id: area.area_id
+    }));
+    console.log(`   Converted ${converted.procedures.length} configuration areas to procedures`);
+  }
+
+  return converted;
+}
+
 // ------------------ CLAIM CATEGORIZATION FOR SMART SCREENSHOTS ------------------
 /**
  * Categorizes claims to avoid duplicate screenshots.
@@ -5094,7 +5193,9 @@ function extractUseCases(procedures, featureContext) {
   try {
     ensureDir(SCREENSHOTS_DIR);
 
-    const input = readJSON(INPUT_PATH);
+    const rawInput = readJSON(INPUT_PATH);
+    // Convert new format to legacy format if needed
+    const input = convertInputFormat(rawInput);
     output.feature_name = input?.feature_name || null;
 
     const appBaseUrl = input?.app?.base_url || "";
