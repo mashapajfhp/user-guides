@@ -244,7 +244,7 @@ Keep run-validation.mjs as cognitive walkthrough. Document that:
 **Pros**: No code changes needed
 **Cons**: Structured steps not leveraged
 
-### Option B: Enhance Runner to Use validation_steps (Recommended)
+### Option B: Enhance Runner to Use validation_steps
 
 Add step execution to run-validation.mjs:
 
@@ -291,19 +291,58 @@ async function validateByCheckType(page, target, expected, checkType) {
 **Pros**: Full alignment with payload structure, type-specific validation
 **Cons**: Requires runner code changes
 
-### Option C: Use Agent Instead of Runner
+### Option C: Use Agent Instead of Runner ✅ CHOSEN
 
 Replace run-validation.mjs with interface-validator.md agent invocation:
 - Agent already interprets validation_steps
 - Produces evidence JSON
 - Uses Playwright MCP
 
-**Pros**: Already aligned, more flexible
+**Pros**: Already aligned, more flexible, LLM adaptability, deterministic evidence output
 **Cons**: Requires Claude API calls (cost), different integration pattern
 
 ---
 
-## 7. Immediate Action Items
+## 7. Decision Summary
+
+**Selected: Option C** — Use `interface-validator.md` agent for formal validation runs.
+
+### Rationale
+
+| Criteria | Option A | Option B | Option C |
+|----------|----------|----------|----------|
+| Stability | Medium | Low | **High** |
+| Determinism | Low | High | **High** |
+| Payload alignment | Poor | Full | **Full** |
+| Maintenance burden | None | High | **Low** |
+| Check type handling | None | Custom code | **LLM interprets** |
+| UI change resilience | High | Low | **Medium-High** |
+
+### Key Factors
+
+1. **Already aligned** — Agent interprets `validation_steps` as instructions
+2. **No new code to maintain** — Runner step executor would be ~200+ lines of brittle code
+3. **LLM adaptability** — Handles minor UI variations without breaking
+4. **Deterministic evidence** — Produces structured JSON with defined schema
+5. **Built-in audit trail** — Decision Log Protocol provides traceable execution
+
+### Recommended Architecture
+
+```
+n8n workflow
+    ↓
+flattened-plans-to-validator-input.mjs (adapter v2.1)
+    ↓
+interface-validator.md (Claude agent via Playwright MCP)
+    ↓
+evidence.json + summary.md + screenshots
+```
+
+The runner (`run-validation.mjs`) remains available for quick exploratory validation when needed.
+
+---
+
+## 8. Action Items
 
 1. ~~**Update adapter** (v2.1)~~ ✅ COMPLETED - check_type and description promoted to top level:
    ```json
@@ -322,11 +361,14 @@ Replace run-validation.mjs with interface-validator.md agent invocation:
    - Lists check type handling limitations
    - References interface-validator.md agent as alternative
 
-3. **Create step executor** (if Option B chosen) - New function in run-validation.mjs
+3. ~~**Alignment decision**~~ ✅ COMPLETED - Option C chosen (use agent instead of runner)
+   - Runner remains for exploratory validation
+   - Agent used for formal validation runs
+   - No step executor implementation needed
 
 ---
 
-## 8. File Locations
+## 9. File Locations
 
 | Component | Path |
 |-----------|------|
