@@ -5,6 +5,11 @@
  * Deterministic adapter that converts flattened Playwright plan payloads
  * into the Interface Reality Validator agent's Primary Input Format.
  *
+ * v2.1 - Changes:
+ *   - Promoted check_type to top-level in observe steps (easier parsing)
+ *   - Added description field to observe steps
+ *   - Cleaner step structure for both runner and agent consumption
+ *
  * v2.0 - Fixes:
  *   1. Skip navigation checks (avoid duplication with navigate step)
  *   2. Stable screenshot names using plan_id/claim_key slug
@@ -267,12 +272,14 @@ function transformPlansToValidatorInput(plans, config) {
       validationSteps.push({
         step: stepNum++,
         action: 'observe',
+        // v2.1: Promoted check_type to top-level for easier parsing
+        check_type: check.type || 'ui_element',
+        // v2.1: Added description field
+        description: check.description || '',
         target: target,
         expected: check.assertion || '',
         screenshot: screenshotName,
-        // FIX #3: Include check_type in step metadata
         metadata: {
-          check_type: check.type || 'unknown',
           check_id: check.check_id
         }
       });

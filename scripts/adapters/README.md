@@ -1,6 +1,14 @@
-# Flattened Plans to Validator Input Adapter (v2.0)
+# Flattened Plans to Validator Input Adapter (v2.1)
 
 Deterministic adapter that converts flattened Playwright plan payloads (from n8n) into the Interface Reality Validator agent's Primary Input Format.
+
+## v2.1 Changes
+
+| Change | Description |
+|--------|-------------|
+| Promoted check_type | `check_type` moved from metadata to top-level in observe steps |
+| Added description | `description` field added to observe steps for context |
+| Cleaner structure | Step structure optimized for runner and agent consumption |
 
 ## v2.0 Changes
 
@@ -55,23 +63,23 @@ The adapter supports two input shapes:
 ```json
 [
   {
-    "feature_name": "daily wage calculator",
-    "feature_slug": "daily_wage_calculator",
-    "generated_at": "2025-04-10T12:00:00Z",
-    "plan_id": "plan_jira_tssd_2648_02",
-    "claim_key": "jira_tssd_2648_02",
-    "source": "jira",
+    "feature_name": "<feature_name>",
+    "feature_slug": "<feature_slug>",
+    "generated_at": "<ISO_timestamp>",
+    "plan_id": "plan_<source>_<project>_<issue_num>_<seq>",
+    "claim_key": "<source>_<project>_<issue_num>_<seq>",
+    "source": "jira|zendesk",
     "nav": {
-      "canonical": "Settings > Payroll > Daily Wage",
-      "breadcrumb_array": ["Settings", "Payroll", "Daily Wage"]
+      "canonical": "<Menu> > <Submenu> > <Page>",
+      "breadcrumb_array": ["<Menu>", "<Submenu>", "<Page>"]
     },
     "checks": [
       {
-        "check_id": "jira_tssd_2648_02_chk01",
-        "type": "navigation",
-        "description": "Verify daily wage toggle exists",
-        "selector_hint": "[data-testid='daily-wage-toggle']",
-        "assertion": "Toggle should be visible and enabled"
+        "check_id": "<claim_key>_chk01",
+        "type": "<check_type>",
+        "description": "<check_description>",
+        "selector_hint": "<selector>",
+        "assertion": "<assertion>"
       }
     ]
   }
@@ -82,15 +90,15 @@ The adapter supports two input shapes:
 
 ```json
 {
-  "feature_name": "daily wage calculator",
-  "feature_slug": "daily_wage_calculator",
-  "generated_at": "2025-04-10T12:00:00Z",
+  "feature_name": "<feature_name>",
+  "feature_slug": "<feature_slug>",
+  "generated_at": "<ISO_timestamp>",
   "plans": [
     {
-      "plan_id": "plan_jira_tssd_2648_02",
-      "claim_key": "jira_tssd_2648_02",
-      "source": "jira",
-      "nav": { "canonical": "Settings > Payroll > Daily Wage" },
+      "plan_id": "plan_<source>_<project>_<issue_num>_<seq>",
+      "claim_key": "<source>_<project>_<issue_num>_<seq>",
+      "source": "jira|zendesk",
+      "nav": { "canonical": "<Menu> > <Submenu> > <Page>" },
       "checks": []
     }
   ]
@@ -103,59 +111,60 @@ The adapter produces a single JSON object matching the Interface Reality Validat
 
 ```json
 {
-  "feature_name": "daily wage calculator",
-  "clean_feature_name": "daily_wage_calculator",
+  "feature_name": "<feature_name>",
+  "clean_feature_name": "<feature_slug>",
   "validation_purpose": "UI validation from Jira/Zendesk plans",
-  "validation_timestamp": "2025-04-10T14:30:00.000Z",
+  "validation_timestamp": "<ISO_timestamp>",
   "navigation_paths_from_zendesk": {
-    "path_01": "Help Center → Daily Wage → Setup Guide"
+    "path_01": "<zendesk_path_1>"
   },
   "issues_to_validate": [
     {
       "issue_id": "VAL-001",
-      "jira_key": "TSSD-2648",
-      "issue_summary": "plan_jira_tssd_2648_02",
-      "reported_behavior": "jira_tssd_2648_02: Verify daily wage toggle exists",
+      "jira_key": "<PROJECT>-<issue_num>",
+      "issue_summary": "<plan_id>",
+      "reported_behavior": "<claim_key>: <description>",
       "validation_steps": [
         {
           "step": 1,
           "action": "navigate",
-          "target": "Settings → Payroll → Daily Wage",
+          "target": "<Menu> → <Submenu> → <Page>",
           "metadata": {
-            "breadcrumbs": ["Settings", "Payroll", "Daily Wage"]
+            "breadcrumbs": ["<Menu>", "<Submenu>", "<Page>"]
           }
         },
         {
           "step": 2,
           "action": "observe",
-          "target": "[data-testid='daily-wage-toggle']",
-          "expected": "Toggle should be visible and enabled",
-          "screenshot": "plan-plan-jira-tssd-2648-02-chk01.png",
+          "check_type": "<type>",
+          "description": "<description>",
+          "target": "<selector>",
+          "expected": "<assertion>",
+          "screenshot": "plan-<plan_slug>-<check_id>.png",
           "metadata": {
-            "check_type": "ui_element",
-            "check_id": "jira_tssd_2648_02_chk01"
+            "check_id": "<check_id>"
           }
         },
         {
           "step": 3,
           "action": "capture",
           "target": "final state for VAL-001",
-          "screenshot": "plan-plan-jira-tssd-2648-02-final.png"
+          "screenshot": "plan-<plan_slug>-final.png"
         }
       ],
-      "observable_indicators": ["Toggle should be visible and enabled"],
-      "priority": "high",
+      "observable_indicators": ["<assertion>"],
+      "priority": "high|medium",
       "metadata": {
-        "source": "jira",
-        "plan_id": "plan_jira_tssd_2648_02",
-        "claim_key": "jira_tssd_2648_02",
-        "navigation_breadcrumbs": ["Settings", "Payroll", "Daily Wage"]
+        "source": "jira|zendesk",
+        "plan_id": "<plan_id>",
+        "claim_key": "<claim_key>",
+        "navigation_breadcrumbs": ["<Menu>", "<Submenu>", "<Page>"]
       }
     }
   ],
   "configuration_areas_to_document": [],
   "validation_config": {
-    "base_url": "https://app.bayzat.com",
+    "base_url": "<base_url>",
     "login_required": true,
     "required_role": "",
     "max_attempts_per_validation": 2,
@@ -164,10 +173,10 @@ The adapter produces a single JSON object matching the Interface Reality Validat
     "wait_after_navigation_ms": 2000
   },
   "output_configuration": {
-    "screenshots_dir": "/runs/run-001/screenshots",
-    "reports_dir": "/runs/run-001/reports",
-    "evidence_file": "/runs/run-001/reports/evidence.json",
-    "summary_file": "/runs/run-001/reports/summary.md"
+    "screenshots_dir": "<screenshots_dir>",
+    "reports_dir": "<reports_dir>",
+    "evidence_file": "<evidence_file>",
+    "summary_file": "<summary_file>"
   }
 }
 ```
@@ -184,20 +193,22 @@ The adapter produces a single JSON object matching the Interface Reality Validat
 | `issues_to_validate[].jira_key` | Extracted from `claim_key` pattern (supports TSSD, OS, FIN, HR, PAY, etc.) |
 | `issues_to_validate[].priority` | `high` if `source === "jira"`, else `medium` |
 | `issues_to_validate[].metadata` | Contains `source`, `plan_id`, `claim_key`, `navigation_breadcrumbs` |
-| `validation_steps[].metadata` | Contains `breadcrumbs` (navigate) or `check_type`, `check_id` (observe) |
+| `validation_steps[].check_type` | (v2.1) Top-level field on observe steps: `override_indicator`, `content_presence`, `ui_state`, `options`, etc. |
+| `validation_steps[].description` | (v2.1) Check description from source payload |
+| `validation_steps[].metadata` | Contains `breadcrumbs` (navigate) or `check_id` (observe) |
 
 ## Example Command
 
 ```bash
 node scripts/adapters/flattened-plans-to-validator-input.mjs \
   --in ./n8n-output/flattened-plans.json \
-  --out ./validator-input/daily-wage-validator-input.json \
-  --base-url "https://app.bayzat.com" \
+  --out ./validator-input/<feature_slug>-validator-input.json \
+  --base-url "<base_url>" \
   --login-required true \
-  --screenshots-dir "/runs/daily-wage-001/screenshots" \
-  --reports-dir "/runs/daily-wage-001/reports" \
-  --evidence-file "/runs/daily-wage-001/reports/evidence.json" \
-  --summary-file "/runs/daily-wage-001/reports/summary.md"
+  --screenshots-dir "/runs/<feature_slug>-<run_id>/screenshots" \
+  --reports-dir "/runs/<feature_slug>-<run_id>/reports" \
+  --evidence-file "/runs/<feature_slug>-<run_id>/reports/evidence.json" \
+  --summary-file "/runs/<feature_slug>-<run_id>/reports/summary.md"
 ```
 
 ## Notes
@@ -205,8 +216,9 @@ node scripts/adapters/flattened-plans-to-validator-input.mjs \
 - The adapter does NOT create directories; it only generates JSON
 - Output is deterministic with stable ordering and IDs
 - Navigation paths use " → " arrows (replaces " > ")
-- JIRA keys extracted from multiple project patterns: `{project}_{number}` (e.g., `tssd_2648`, `os_123`, `fin_456`)
+- JIRA keys extracted from multiple project patterns: `{project}_{number}`
 - Navigation-type checks are skipped (only `navigate` step is generated once)
 - Screenshot names use stable slugs: `plan-{slug}-{check_id}.png` (max 40 chars)
 - Non-string inputs to path conversion handled safely (returns "unknown navigation path")
 - Metadata preserved at issue and step level for debugging
+- v2.1: `check_type` and `description` promoted to top-level in observe steps
