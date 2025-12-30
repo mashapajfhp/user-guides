@@ -5,6 +5,14 @@
  * Deterministic adapter that converts flattened Playwright plan payloads
  * into the Interface Reality Validator agent's Primary Input Format.
  *
+ * v2.0 - Fixes:
+ *   1. Skip navigation checks (avoid duplication with navigate step)
+ *   2. Stable screenshot names using plan_id/claim_key slug
+ *   3. Preserve breadcrumbs and check.type in output
+ *   4. Prefer non-navigation check for reported_behavior
+ *   5. Safe toArrowNotation (handles non-strings)
+ *   6. Extended Jira key extraction (TSSD, OS, FIN, etc.)
+ *
  * Usage:
  *   node flattened-plans-to-validator-input.mjs \
  *     --in <input.json> \
@@ -78,6 +86,7 @@ function parseArgs(argv) {
  * Convert string to snake_case
  */
 function toSnakeCase(str) {
+  if (typeof str !== 'string') return 'unknown';
   return str
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '_')
@@ -86,26 +95,54 @@ function toSnakeCase(str) {
 }
 
 /**
+ * Convert string to kebab-case slug (safe for filenames)
+ * Max 40 chars for filename safety
+ */
+function toSlug(str) {
+  if (typeof str !== 'string' || !str.trim()) return 'unknown';
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-+/g, '-')
+    .slice(0, 40);
+}
+
+/**
  * Replace " > " with " → " for navigation arrows
+ * FIX #5: Safe handling of non-string values
  */
 function toArrowNotation(path) {
+  if (typeof path !== 'string') {
+    return 'unknown navigation path';
+  }
   return path.replace(/ > /g, ' → ');
 }
 
 /**
- * Extract JIRA key from claim_key (e.g., "jira_tssd_2648_02" → "TSSD-2648")
+ * Extract JIRA key from claim_key
+ * FIX #6: Extended to support multiple project prefixes
+ * Examples:
+ *   "jira_tssd_2648_02" → "TSSD-2648"
+ *   "jira_os_123_01" → "OS-123"
+ *   "jira_fin_456_02" → "FIN-456"
  */
 function extractJiraKey(claimKey) {
-  if (!claimKey) return '';
-  const match = claimKey.match(/tssd_(\d+)/i);
+  if (!claimKey || typeof claimKey !== 'string') return '';
+
+  // Match pattern: {prefix}_{PROJECT}_{NUMBER} where PROJECT is letters, NUMBER is digits
+  // Common projects: TSSD, OS, FIN, HR, PAY, etc.
+  const match = claimKey.match(/(?:jira_)?([a-z]+)_(\d+)/i);
   if (match) {
-    return `TSSD-${match[1]}`;
+    const project = match[1].toUpperCase();
+    const number = match[2];
+    return `${project}-${number}`;
   }
   return '';
 }
 
 /**
- * Zero-pad a number to 2 digits
+ * Zero-pad a number to specified digits
  */
 function zeroPad(num, digits = 2) {
   return String(num).padStart(digits, '0');
@@ -116,6 +153,21 @@ function zeroPad(num, digits = 2) {
  */
 function generateIssueId(index) {
   return `VAL-${zeroPad(index + 1, 3)}`;
+}
+
+/**
+ * Check if a check is a navigation-type check
+ */
+function isNavigationCheck(check) {
+  return check && check.type === 'navigation';
+}
+
+/**
+ * Get the first non-navigation check from checks array
+ */
+function getFirstNonNavigationCheck(checks) {
+  if (!Array.isArray(checks)) return null;
+  return checks.find(check => !isNavigationCheck(check)) || null;
 }
 
 // ============================================================================
@@ -147,23 +199,31 @@ function transformPlansToValidatorInput(plans, config) {
   // Build issues_to_validate
   const issuesToValidate = plans.map((plan, index) => {
     const issueId = generateIssueId(index);
-    const valNum = zeroPad(index + 1);
     const jiraKey = extractJiraKey(plan.claim_key);
     const checks = plan.checks || [];
+
+    // FIX #2: Use plan_id or claim_key for stable screenshot naming
+    const planSlug = toSlug(plan.plan_id || plan.claim_key || `plan-${index + 1}`);
 
     // Issue summary
     const issueSummary = plan.plan_id || plan.claim_key || `plan-${index + 1}`;
 
-    // Reported behavior: claim_key + first check description
+    // FIX #4: Prefer first non-navigation check for reported_behavior
     let reportedBehavior = plan.claim_key || '';
-    if (checks.length > 0 && checks[0].description) {
+    const primaryCheck = getFirstNonNavigationCheck(checks);
+    if (primaryCheck && primaryCheck.description) {
+      reportedBehavior += `: ${primaryCheck.description}`;
+    } else if (checks.length > 0 && checks[0].description) {
+      // Fallback to first check if no non-navigation check exists
       reportedBehavior += `: ${checks[0].description}`;
     }
 
-    // Observable indicators: deduplicated assertions from checks
+    // Observable indicators: deduplicated assertions from NON-navigation checks
     const observableIndicators = [];
     const seenAssertions = new Set();
     for (const check of checks) {
+      // Skip navigation checks for observable indicators
+      if (isNavigationCheck(check)) continue;
       if (check.assertion && !seenAssertions.has(check.assertion)) {
         seenAssertions.add(check.assertion);
         observableIndicators.push(check.assertion);
@@ -173,41 +233,57 @@ function transformPlansToValidatorInput(plans, config) {
     // Priority: high for jira, medium otherwise
     const priority = plan.source === 'jira' ? 'high' : 'medium';
 
+    // FIX #3: Preserve navigation breadcrumbs
+    const navigationBreadcrumbs = Array.isArray(plan.nav?.breadcrumb_array)
+      ? plan.nav.breadcrumb_array
+      : [];
+
     // Build validation steps
     const validationSteps = [];
     let stepNum = 1;
 
-    // Step 1: Navigation
-    const navTarget = plan.nav?.canonical
-      ? toArrowNotation(plan.nav.canonical)
-      : 'unknown navigation path';
+    // Step 1: Navigation (with breadcrumbs metadata)
+    const navTarget = toArrowNotation(plan.nav?.canonical);
 
     validationSteps.push({
       step: stepNum++,
       action: 'navigate',
-      target: navTarget
+      target: navTarget,
+      // FIX #3: Include breadcrumbs in navigate step metadata
+      metadata: {
+        breadcrumbs: navigationBreadcrumbs
+      }
     });
 
-    // Steps for each check
+    // FIX #1: Steps for each NON-navigation check only
     for (const check of checks) {
+      // Skip navigation checks - we already have the navigate step above
+      if (isNavigationCheck(check)) continue;
+
       const target = check.selector_hint || check.description || 'unknown element';
-      const screenshotName = `claim-${valNum}-${check.check_id}.png`;
+      // FIX #2: Stable screenshot name using plan slug
+      const screenshotName = `plan-${planSlug}-${check.check_id}.png`;
 
       validationSteps.push({
         step: stepNum++,
         action: 'observe',
         target: target,
         expected: check.assertion || '',
-        screenshot: screenshotName
+        screenshot: screenshotName,
+        // FIX #3: Include check_type in step metadata
+        metadata: {
+          check_type: check.type || 'unknown',
+          check_id: check.check_id
+        }
       });
     }
 
-    // Final capture step
+    // Final capture step with stable screenshot name
     validationSteps.push({
       step: stepNum++,
       action: 'capture',
       target: `final state for ${issueId}`,
-      screenshot: `claim-${valNum}-final.png`
+      screenshot: `plan-${planSlug}-final.png`
     });
 
     return {
@@ -217,7 +293,14 @@ function transformPlansToValidatorInput(plans, config) {
       reported_behavior: reportedBehavior,
       validation_steps: validationSteps,
       observable_indicators: observableIndicators,
-      priority: priority
+      priority: priority,
+      // FIX #3: Preserve source metadata at issue level
+      metadata: {
+        source: plan.source || 'unknown',
+        plan_id: plan.plan_id || null,
+        claim_key: plan.claim_key || null,
+        navigation_breadcrumbs: navigationBreadcrumbs
+      }
     };
   });
 
@@ -318,6 +401,8 @@ function main() {
   }
 
   console.log(`SUCCESS: Validator input written to ${args['out']}`);
+  console.log(`  - Issues: ${output.issues_to_validate.length}`);
+  console.log(`  - Navigation paths: ${Object.keys(output.navigation_paths_from_zendesk).length}`);
 }
 
 main();
