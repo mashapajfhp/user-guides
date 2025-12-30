@@ -1,0 +1,77 @@
+{
+  "status": "ok",
+  "feature_name": "Daily Wage Calculator",
+  "validated_claims": [
+    {
+      "issue_id": "VAL-001",
+      "jira_key": "TSSD-2648",
+      "validation_result": "claim_validated",
+      "confidence": "high",
+      "evidence": {
+        "observable_indicators_present": [
+          "Greyed out formula field in leave policy",
+          "Formula text showing basic salary only in leave policy",
+          "Formula text showing basic + allowances in payroll settings",
+          "No visual indicator explaining override behavior",
+          "Disabled/read-only state of leave policy formula field"
+        ],
+        "navigation_feasibility": "confirmed",
+        "ui_elements_accessible": true,
+        "validation_approach": "visual_inspection",
+        "expected_screenshots": [
+          "val-001-formula-override-indicator"
+        ]
+      },
+      "validation_notes": "Formula override behavior can be validated by comparing Payroll Settings → Daily Wage Calculator formula configuration against Leave Management → Leave Policies → Unpaid Leave formula field. The greyed-out state and formula text differences are directly observable UI indicators.",
+      "priority": "medium"
+    },
+    {
+      "issue_id": "VAL-002",
+      "jira_key": "TSSD-1581",
+      "validation_result": "claim_validated",
+      "confidence": "high",
+      "evidence": {
+        "observable_indicators_present": [
+          "Unpaid leave deduction amount shown in leave request",
+          "Salary configuration date associated with leave request",
+          "Daily wage calculation visible in leave deduction breakdown",
+          "No auto-update indicator after salary configuration change",
+          "Deduction amount field (editable or read-only state)"
+        ],
+        "navigation_feasibility": "confirmed",
+        "ui_elements_accessible": true,
+        "validation_approach": "data_inspection",
+        "expected_screenshots": [
+          "val-002-leave-deduction-salary-config"
+        ]
+      },
+      "validation_notes": "Salary configuration date mismatch can be validated by inspecting leave request deduction details and comparing against current salary configuration dates. The absence of auto-recalculation after salary updates is determinable from timestamp and amount comparisons.",
+      "priority": "high"
+    },
+    {
+      "issue_id": "VAL-003",
+      "jira_key": "TSSD-4179",
+      "validation_result": "claim_validated",
+      "confidence": "high",
+      "evidence": {
+        "observable_indicators_present": [
+          "Service period calculation showing total working days",
+          "Year-by-year breakdown of days (if visible)",
+          "2024 day count displayed (should show 366 for leap year)",
+          "Total years of service calculation",
+          "Final gratuity amount",
+          "Daily wage rate used in calculation"
+        ],
+        "navigation_feasibility": "confirmed",
+        "ui_elements_accessible": true,
+        "validation_approach": "calculation_verification",
+        "expected_screenshots": [
+          "val-003-eos-gratuity-leap-year"
+        ]
+      },
+      "validation_notes": "Leap year handling can be validated by inspecting gratuity calculation breakdown for service periods spanning 2024. Observable day counts (365 vs 366) in year-by-year breakdown or total service days directly indicate whether leap year logic is implemented. Mathematical verification possible by comparing expected vs actual gratuity amounts.",
+      "priority": "high"
+    }
+  ],
+  "summary": "All 3 validation claims are logically feasible and can be validated through observable UI indicators. VAL-001 (formula override) is validated via visual state inspection of greyed-out fields and formula text comparison. VAL-002 (salary configuration staleness) is validated via data inspection of timestamps and deduction amounts. VAL-003 (leap year calculation) is validated via mathematical verification of day counts in service period breakdown. All navigation paths are accessible and required UI elements exist in specified locations."
+}
