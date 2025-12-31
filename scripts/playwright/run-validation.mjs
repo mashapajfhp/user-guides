@@ -83,6 +83,15 @@ import path from "path";
 import process from "process";
 import { chromium } from "@playwright/test";
 
+// Exploration-first UI validation utilities
+import {
+  UIExplorer,
+  NavigationExplorer,
+  runExplorationForCheck,
+  DEFAULT_LIMITS,
+  extractKeywords
+} from "./ui-explorer.mjs";
+
 // ------------------ CLI args ------------------
 function getArg(name, def = null) {
   const i = process.argv.indexOf(name);
@@ -5205,12 +5214,22 @@ async function executeValidationPlans(page, validationPlans, screenshotsDir) {
       plan_id: planId,
       claim_key: plan.claim_key,
       source: plan.source,
+      methodology: 'exploration_first', // New methodology indicator
       navigation: {
         path: plan.nav?.canonical || '',
         breadcrumbs: plan.nav?.breadcrumb_array || [],
         status: 'pending',
         steps_completed: [],
-        steps_failed: []
+        steps_failed: [],
+        fallback_used: false,
+        fallback_method: null
+      },
+      exploration: {
+        status: 'pending',
+        discoveries: [],
+        observations: [],
+        screenshots: [],
+        safe_mode_skips: 0
       },
       checks: [],
       status: 'pending',
@@ -5218,17 +5237,51 @@ async function executeValidationPlans(page, validationPlans, screenshotsDir) {
     };
 
     try {
-      // STEP 1: Navigate using breadcrumb array
+      // STEP 1: Navigate using breadcrumb array with FALLBACK strategies
       if (plan.nav?.breadcrumb_array?.length > 0) {
         console.log(`   📍 Navigating: ${plan.nav.breadcrumb_array.join(' → ')}`);
 
+        // First try the direct breadcrumb path
         const navResult = await navigateBreadcrumbPath(page, plan.nav.breadcrumb_array, screenshotsDir, planId);
         planResult.navigation = navResult;
 
         if (navResult.status === 'pass') {
           console.log(`   ✅ Navigation successful`);
         } else {
-          console.log(`   ⚠️ Navigation partial/failed: ${navResult.error || 'unknown'}`);
+          // FALLBACK: Try alternative navigation strategies
+          console.log(`   ⚠️ Primary navigation partial/failed - trying fallbacks...`);
+
+          const navExplorer = new NavigationExplorer(page, {
+            screenshotsDir,
+            screenshotPrefix: `plan_${sanitizeFileName(planId)}_fallback`
+          });
+
+          // Extract target from the last breadcrumb item
+          const targetPage = plan.nav.breadcrumb_array[plan.nav.breadcrumb_array.length - 1];
+          const targetKeywords = extractKeywords(targetPage);
+
+          const fallbackResult = await navExplorer.navigateWithFallbacks({
+            breadcrumbs: plan.nav.breadcrumb_array,
+            targetKeywords
+          });
+
+          if (fallbackResult.success) {
+            console.log(`   ✅ Fallback navigation succeeded via: ${fallbackResult.method}`);
+            planResult.navigation = {
+              ...navResult,
+              status: 'pass',
+              fallback_used: true,
+              fallback_method: fallbackResult.method,
+              fallback_steps: fallbackResult.steps || []
+            };
+          } else {
+            console.log(`   ❌ All navigation attempts failed`);
+            planResult.navigation = {
+              ...navResult,
+              fallback_attempted: true,
+              fallback_methods_tried: fallbackResult.methodsTried || []
+            };
+          }
         }
       }
 
@@ -5239,14 +5292,93 @@ async function executeValidationPlans(page, validationPlans, screenshotsDir) {
         results.screenshots.push(navScreenshot);
       }
 
-      // STEP 2: Execute each check
+      // STEP 1.5: EXPLORATION PASS - Discover UI controls before running checks
+      // This prepares the page (expands accordions, reveals hidden content) for validation
+      console.log(`   🔍 Running exploration pass...`);
+      const explorer = new UIExplorer(page, {
+        screenshotsDir,
+        screenshotPrefix: `plan_${sanitizeFileName(planId)}`,
+        safeMode: true, // Skip Save/Delete/Confirm buttons
+        limits: DEFAULT_LIMITS
+      });
+
+      let explorationResult = null;
+      try {
+        // Run comprehensive page exploration
+        explorationResult = await explorer.explorePage();
+        planResult.exploration = {
+          status: 'completed',
+          discoveries: explorationResult.discoveries || [],
+          observations: explorationResult.observations || [],
+          screenshots: explorationResult.shots || [],
+          steps: explorationResult.steps || [],
+          safe_mode_skips: explorationResult.safeModeSaveSkipped ? 1 : 0
+        };
+
+        // Log exploration findings
+        const accordions = explorationResult.discoveries.filter(d => d.type === 'accordion').length;
+        const tabs = explorationResult.discoveries.filter(d => d.type === 'tab').length;
+        const dropdowns = explorationResult.discoveries.filter(d => d.type === 'dropdown').length;
+        const toggles = explorationResult.discoveries.filter(d => d.type === 'toggle').length;
+        const tables = explorationResult.discoveries.filter(d => d.type === 'table').length;
+
+        if (explorationResult.discoveries.length > 0) {
+          console.log(`      📦 Found: ${accordions} accordions, ${tabs} tabs, ${dropdowns} dropdowns, ${toggles} toggles, ${tables} tables`);
+        } else {
+          console.log(`      📦 No interactive controls discovered`);
+        }
+
+        // Add exploration screenshots to results
+        if (explorationResult.shots?.length > 0) {
+          for (const shot of explorationResult.shots) {
+            planResult.screenshots.push({ stage: 'exploration', filename: shot });
+          }
+        }
+
+      } catch (exploreError) {
+        console.log(`      ⚠️ Exploration error: ${exploreError.message}`);
+        planResult.exploration = {
+          status: 'error',
+          error: safeString(exploreError.message),
+          discoveries: [],
+          observations: []
+        };
+      }
+
+      // STEP 2: Execute each check with exploration-enhanced validation
       if (plan.checks?.length > 0) {
         console.log(`   🔍 Running ${plan.checks.length} checks...`);
 
         for (const check of plan.checks) {
           console.log(`      - ${check.check_id}: ${check.type}`);
 
-          const checkResult = await executeCheck(page, check, screenshotsDir, planId);
+          // Use exploration-first approach: run targeted exploration for this check
+          let checkResult;
+          try {
+            // Run exploration-first check validation
+            const explorationEvidence = await runExplorationForCheck(page, check, {
+              screenshotsDir,
+              screenshotPrefix: `check_${sanitizeFileName(check.check_id)}`,
+              safeMode: true,
+              priorDiscoveries: explorationResult?.discoveries || []
+            });
+
+            // Merge exploration evidence with traditional check result
+            checkResult = await executeCheckWithExploration(
+              page, check, screenshotsDir, planId, explorationEvidence
+            );
+
+            // Add exploration steps to check result
+            checkResult.exploration_steps = explorationEvidence.steps || [];
+            checkResult.exploration_discoveries = explorationEvidence.discoveries || [];
+            checkResult.exploration_shots = explorationEvidence.shots || [];
+
+          } catch (exploreCheckError) {
+            console.log(`        ⚠️ Exploration-first check failed, falling back to standard: ${exploreCheckError.message}`);
+            // Fallback to standard check execution
+            checkResult = await executeCheck(page, check, screenshotsDir, planId);
+          }
+
           planResult.checks.push(checkResult);
 
           if (checkResult.status === 'pass') {
@@ -5463,6 +5595,137 @@ async function clickNavigationItem(page, itemText) {
     }
   } catch {
     // Continue
+  }
+
+  return result;
+}
+
+/**
+ * Execute a check with exploration evidence enhancement
+ * Uses exploration results to inform validation and provide richer evidence
+ */
+async function executeCheckWithExploration(page, check, screenshotsDir, planId, explorationEvidence) {
+  const result = {
+    check_id: check.check_id,
+    type: check.type,
+    description: check.description,
+    selector_hint: check.selector_hint,
+    assertion: check.assertion,
+    status: 'pending',
+    details: null,
+    evidence: {},
+    screenshot: null,
+    methodology: 'exploration_first'
+  };
+
+  try {
+    // Check if exploration already found relevant evidence
+    const explorationFound = explorationEvidence.discoveries?.length > 0 ||
+                             explorationEvidence.observations?.length > 0;
+
+    if (explorationFound) {
+      // Use exploration findings as primary evidence
+      result.evidence = {
+        exploration_based: true,
+        discoveries: explorationEvidence.discoveries || [],
+        observations: explorationEvidence.observations || [],
+        steps_taken: explorationEvidence.steps?.map(s => ({
+          kind: s.kind,
+          action: s.action,
+          outcome: s.outcome
+        })) || [],
+        assertion: check.assertion
+      };
+
+      // Check if exploration found what the assertion was looking for
+      const assertionKeywords = extractKeywords(check.assertion || check.description || '');
+      const foundTexts = [
+        ...explorationEvidence.observations || [],
+        ...(explorationEvidence.discoveries?.map(d => d.label || d.text || '') || [])
+      ].join(' ').toLowerCase();
+
+      const matchedKeywords = assertionKeywords.filter(kw =>
+        foundTexts.includes(kw.toLowerCase())
+      );
+
+      result.evidence.assertion_keywords = assertionKeywords;
+      result.evidence.matched_keywords = matchedKeywords;
+      result.evidence.found = matchedKeywords.length > 0;
+      result.evidence.assertion_met = matchedKeywords.length >= Math.ceil(assertionKeywords.length * 0.5);
+
+      // Additional type-specific validation using exploration data
+      switch (check.type) {
+        case 'content_presence':
+          result.evidence.content_found = explorationEvidence.observations?.some(obs =>
+            assertionKeywords.some(kw => obs.toLowerCase().includes(kw.toLowerCase()))
+          ) || false;
+          break;
+
+        case 'ui_state':
+          result.evidence.ui_elements_found = explorationEvidence.discoveries?.filter(d =>
+            ['toggle', 'checkbox', 'radio', 'switch'].includes(d.type)
+          ) || [];
+          break;
+
+        case 'options':
+          result.evidence.options_found = explorationEvidence.discoveries?.filter(d =>
+            ['dropdown', 'select', 'option'].includes(d.type)
+          ) || [];
+          break;
+
+        case 'override_indicator':
+          result.evidence.indicators_found = explorationEvidence.discoveries?.filter(d =>
+            d.label?.toLowerCase().includes('override') ||
+            d.label?.toLowerCase().includes('greyed') ||
+            d.label?.toLowerCase().includes('disabled')
+          ) || [];
+          break;
+      }
+
+    } else {
+      // No exploration findings - fall back to traditional check
+      switch (check.type) {
+        case 'navigation':
+          result.evidence = await checkNavigation(page, check);
+          break;
+        case 'content_presence':
+          result.evidence = await checkContentPresence(page, check);
+          break;
+        case 'ui_state':
+          result.evidence = await checkUIState(page, check);
+          break;
+        case 'override_indicator':
+          result.evidence = await checkOverrideIndicator(page, check);
+          break;
+        case 'options':
+          result.evidence = await checkOptions(page, check);
+          break;
+        default:
+          result.evidence = await checkGenericPresence(page, check);
+      }
+    }
+
+    // Take screenshot for the check
+    const checkShot = await saveScreenshot(page, screenshotsDir, `check_${sanitizeFileName(check.check_id)}_exp`);
+    if (checkShot) {
+      result.screenshot = checkShot;
+    }
+
+    // Determine status from evidence
+    if (result.evidence.found && result.evidence.assertion_met) {
+      result.status = 'pass';
+    } else if (result.evidence.found || result.evidence.partial || explorationFound) {
+      result.status = 'partial';
+      result.details = result.evidence.reason || 'Exploration found elements but assertion not fully verified';
+    } else {
+      result.status = 'fail';
+      result.details = result.evidence.reason || 'No relevant elements found through exploration';
+    }
+
+  } catch (error) {
+    result.status = 'error';
+    result.details = error.message;
+    result.evidence = { error: error.message, methodology: 'exploration_first' };
   }
 
   return result;
