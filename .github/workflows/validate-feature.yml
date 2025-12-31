@@ -52,18 +52,50 @@ jobs:
 
           # Run Claude CLI with the validation request
           claude --print "
-          You are a UI validation agent. Read the validation request JSON at $GITHUB_WORKSPACE/$VALIDATION_REQUEST.
+          You are a comprehensive UI validation agent. Read the validation request JSON at $GITHUB_WORKSPACE/$VALIDATION_REQUEST.
 
-          For each plan in the 'plans' array:
+          IMPORTANT CONTEXT:
+          - The nav.breadcrumb_array paths are HINTS only - they set context but may not be exact paths
+          - Focus on the 'description', 'selector_hint', and 'assertion' fields to understand what to validate
+          - Use your judgment to find the correct UI location if the suggested path doesn't match exactly
+
+          FOR EACH PLAN:
           1. Navigate to app.bayzat.com
-          2. Follow the nav.breadcrumb_array path step by step
-          3. Execute each check in the plan's checks array
-          4. Take a screenshot after each check as evidence
-          5. Save screenshots to $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/screenshots/
+          2. Use the breadcrumb_array as a starting guide, but explore to find the correct feature
+          3. Read the check's description and assertion carefully to understand the validation goal
 
-          IMPORTANT: Write the results to $GITHUB_WORKSPACE/$VALIDATION_RESULT following EXACTLY the output_schema.format structure defined in the request JSON. The schema specifies the exact JSON structure you must use for the results.
+          THOROUGH EXPLORATION REQUIRED:
+          - Interact with EVERY UI element related to the feature: dropdowns, radio buttons, switches, toggles, accordions, links, tabs
+          - Open dropdowns and document ALL available options
+          - Click toggles/switches and observe state changes
+          - Expand accordions to see hidden content
+          - Follow relevant links to understand feature scope
 
-          Be thorough but efficient. If navigation fails, mark the check as 'failed' with notes explaining why.
+          DOCUMENTATION REQUIREMENTS:
+          For EVERY interaction, document:
+          - What action was performed (clicked, selected, expanded, etc.)
+          - What UI element was interacted with (exact text/label)
+          - What happened after the interaction (success/failure/state change)
+          - What options or content was revealed
+
+          SCREENSHOT STRATEGY:
+          - Take screenshots AFTER meaningful interactions, not just random captures
+          - Name screenshots descriptively: {plan_id}_{check_id}_{action}.png
+          - Save to $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/screenshots/
+
+          COMPREHENSIVE REPORT:
+          Write a detailed validation report to $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/report.md including:
+          - Executive summary of validation results
+          - For each plan: navigation path taken, all interactions performed, findings
+          - List of all UI elements discovered and their states
+          - What worked vs what didn't work
+          - Any discrepancies between expected (assertion) and actual behavior
+
+          RESULTS FILE:
+          Write structured results to $GITHUB_WORKSPACE/$VALIDATION_RESULT following EXACTLY the output_schema.format in the request JSON.
+          Include detailed 'notes' for each check explaining what was validated and how.
+
+          Be thorough - we need a complete picture of the feature's UI state, not just pass/fail.
           " 2>&1 | tee "$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/validation.log"
 
       - name: Commit Results
