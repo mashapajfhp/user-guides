@@ -182,9 +182,7 @@ If source is "zendesk" or pattern doesn't match → jira_key = ""
 
 **Playwright targeting:**
 - Use `check.selector_hint` as the PRIMARY search target
-- `selector_hint` may be a CSS selector (e.g., `#daily-wage-toggle`) OR a human-readable element description (e.g., `"Daily Wage Calculation toggle"`)
-- If `selector_hint` looks like CSS → try `browser_snapshot` element search first
-- If `selector_hint` is descriptive text → search visible labels in the page snapshot
+- Treat `selector_hint` as natural-language guidance unless it is clearly a valid selector; prefer role/text-based locators
 - Fall back to visible labels implied by `check.description` only if `selector_hint` is not actionable
 
 #### D) Check Types
