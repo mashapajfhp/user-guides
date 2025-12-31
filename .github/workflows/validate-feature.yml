@@ -38,7 +38,13 @@ jobs:
           echo "folder=$FOLDER" >> $GITHUB_OUTPUT
           echo "request_file=$FOLDER/validation/request.json" >> $GITHUB_OUTPUT
           echo "result_file=$FOLDER/validation/result.json" >> $GITHUB_OUTPUT
+          echo "screenshots_dir=$FOLDER/validation/screenshots" >> $GITHUB_OUTPUT
           echo "Found validation request: $FOLDER"
+
+      - name: Prepare Screenshots Directory
+        if: steps.detect.outputs.folder != ''
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
 
       - name: Run Playwright MCP Validation
         if: steps.detect.outputs.folder != ''
@@ -46,9 +52,11 @@ jobs:
           VALIDATION_REQUEST: ${{ steps.detect.outputs.request_file }}
           VALIDATION_RESULT: ${{ steps.detect.outputs.result_file }}
           FEATURE_FOLDER: ${{ steps.detect.outputs.folder }}
+          SCREENSHOTS_DIR: ${{ steps.detect.outputs.screenshots_dir }}
         run: |
           echo "Starting validation for: $FEATURE_FOLDER"
           echo "Request file: $VALIDATION_REQUEST"
+          echo "Screenshots directory: $SCREENSHOTS_DIR"
 
           # Run Claude CLI with the validation request
           claude --print "
@@ -78,10 +86,69 @@ jobs:
           - What happened after the interaction (success/failure/state change)
           - What options or content was revealed
 
-          SCREENSHOT STRATEGY:
-          - Take screenshots AFTER meaningful interactions, not just random captures
-          - Name screenshots descriptively: {plan_id}_{check_id}_{action}.png
-          - Save to $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/screenshots/
+          ============================================================
+          SCREENSHOT SPECIFICATIONS (MANDATORY)
+          ============================================================
+
+          SCREENSHOT PHILOSOPHY:
+          - SMART SCREENSHOTS: Focused captures only, NO full page screenshots
+          - Capture specific UI elements, not entire browser windows
+          - Every screenshot must serve a validation purpose
+
+          DETERMINISTIC NAMING CONVENTION:
+          All screenshots saved to: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/
+
+          Required Baseline Screenshots:
+          - step-00-start.png      (initial state before any action)
+          - step-01-login.png      (after authentication)
+          - final-state.png        (end state after all validations)
+
+          Navigation Path Screenshots:
+          - path-01.png            (first navigation step)
+          - path-02.png            (second navigation step)
+          - path-NN.png            (continue with zero-padded numbers)
+
+          Claim Validation Screenshots (one per claim):
+          - claim-01-pass.png           (claim validated successfully)
+          - claim-01-fail.png           (claim failed validation)
+          - claim-01-not-confirmed.png  (claim could not be verified)
+          - claim-02-pass.png           (next claim, etc.)
+
+          Evidence Screenshots (optional, for additional proof):
+          - claim-01-evidence-01.png    (supporting evidence for claim 01)
+          - claim-01-evidence-02.png    (additional evidence if needed)
+
+          Extra Captures (for unexpected findings):
+          - extra-01-dropdown-options.png
+          - extra-02-error-message.png
+          - extra-NN-<short-slug>.png
+
+          NAMING RULES (STRICT):
+          - Format: .png ONLY (no .jpg, .jpeg, .webp)
+          - Numbers: Zero-padded (01, 02, ... 99)
+          - Slugs: kebab-case only (lowercase, hyphens)
+          - Characters: ASCII only (no unicode, no spaces)
+          - Length: Slug portion max 30 characters
+
+          SCREENSHOT MANIFEST:
+          After all screenshots, create manifest at:
+          $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/manifest.json
+
+          Manifest format:
+          {
+            \"generated_at\": \"ISO-8601 timestamp\",
+            \"total_screenshots\": N,
+            \"screenshots\": [
+              {
+                \"filename\": \"step-00-start.png\",
+                \"category\": \"baseline\",
+                \"description\": \"Initial dashboard state\",
+                \"timestamp\": \"ISO-8601\"
+              }
+            ]
+          }
+
+          ============================================================
 
           COMPREHENSIVE REPORT:
           Write a detailed validation report to $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/report.md including:
@@ -90,13 +157,26 @@ jobs:
           - List of all UI elements discovered and their states
           - What worked vs what didn't work
           - Any discrepancies between expected (assertion) and actual behavior
+          - Screenshot inventory with descriptions
 
           RESULTS FILE:
           Write structured results to $GITHUB_WORKSPACE/$VALIDATION_RESULT following EXACTLY the output_schema.format in the request JSON.
           Include detailed 'notes' for each check explaining what was validated and how.
+          Include 'screenshots' array referencing captured evidence.
 
           Be thorough - we need a complete picture of the feature's UI state, not just pass/fail.
           " 2>&1 | tee "$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/validation.log"
+
+      - name: Validate Screenshot Manifest
+        if: steps.detect.outputs.folder != ''
+        run: |
+          MANIFEST="$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}/manifest.json"
+          if [ -f "$MANIFEST" ]; then
+            echo "Screenshot manifest found:"
+            cat "$MANIFEST" | jq '.total_screenshots, .screenshots | length'
+          else
+            echo "Warning: No screenshot manifest generated"
+          fi
 
       - name: Commit Results
         if: steps.detect.outputs.folder != ''
@@ -111,10 +191,12 @@ jobs:
         if: always() && steps.detect.outputs.folder != ''
         run: |
           STATUS="${{ job.status }}"
+          SCREENSHOT_COUNT=$(cat "$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}/manifest.json" 2>/dev/null | jq '.total_screenshots // 0' || echo "0")
           curl -s -X POST "https://automation-wh.bayzat.com/webhook/validation-complete" \
             -H "Content-Type: application/json" \
             -d "{
               \"feature_folder\": \"${{ steps.detect.outputs.folder }}\",
               \"status\": \"$STATUS\",
+              \"screenshot_count\": $SCREENSHOT_COUNT,
               \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
             }" || echo "Webhook failed (non-blocking)"
