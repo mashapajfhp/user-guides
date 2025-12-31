@@ -622,6 +622,40 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+      # ============================================================================
+      # PERSIST RUN-SCOPED INPUT AND OUTPUT
+      # Store executed input + output together for full reproducibility
+      # ============================================================================
+      - name: Persist run-scoped input and output
+        shell: bash
+        env:
+          VERSIONED_DIR: ${{ steps.write_input.outputs.versioned_dir }}
+        run: |
+          set -euo pipefail
+
+          RUN_ID="${GITHUB_RUN_ID:-local}"
+          BASE_PATH="${VERSIONED_DIR}/run_${RUN_ID}"
+
+          echo "📦 Creating run-scoped folder: ${BASE_PATH}"
+
+          mkdir -p "$BASE_PATH/input"
+          mkdir -p "$BASE_PATH/output"
+
+          # Persist executed input
+          cp .validation/input/request.json "$BASE_PATH/input/request.json"
+          echo "✅ Copied input to: $BASE_PATH/input/request.json"
+
+          # Persist output
+          if [ -f "${VERSIONED_DIR}/pw_result.json" ]; then
+            cp "${VERSIONED_DIR}/pw_result.json" "$BASE_PATH/output/pw_result.json"
+            echo "✅ Copied output to: $BASE_PATH/output/pw_result.json"
+          else
+            echo "⚠️ pw_result.json not found at ${VERSIONED_DIR}/pw_result.json"
+          fi
+
+          echo "📁 Run-scoped folder structure:"
+          find "$BASE_PATH" -type f | head -20
+
       - name: Commit validation output
         shell: bash
         env:
@@ -632,6 +666,8 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+
+          RUN_ID="${GITHUB_RUN_ID:-local}"
 
           # Always add root pw_result.json for n8n static URL access
           git add .validation/output/pw_result.json || true
@@ -645,12 +681,16 @@ jobs:
             git add .validation || true
           fi
 
+          # Add run-scoped folder explicitly
+          git add "${VERSIONED_DIR}/run_${RUN_ID}" || true
+
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0
           fi
 
-          git commit -m "Interface validation v${VERSION}: ${{ github.event.inputs.feature_name }}"
+          git commit -m "Interface validation v${VERSION}: ${{ github.event.inputs.feature_name }} (run ${RUN_ID})"
           git push
           echo "✅ Committed validation outputs to: ${VERSIONED_DIR}/"
+          echo "✅ Run-scoped input/output at: ${VERSIONED_DIR}/run_${RUN_ID}/"
           echo "✅ Root pw_result.json updated at .validation/output/pw_result.json"
