@@ -15,6 +15,22 @@ import fs from "fs";
 import path from "path";
 
 // ============================================================================
+// DEBUG MODE
+// ============================================================================
+
+/**
+ * Debug mode for detailed exploration logging
+ * Enable with DEBUG_EXPLORER=1 environment variable
+ */
+const DEBUG_EXPLORER = process.env.DEBUG_EXPLORER === "1" || process.env.DEBUG_EXPLORER === "true";
+
+function debugLog(log, ...args) {
+  if (DEBUG_EXPLORER) {
+    log("[DEBUG]", ...args);
+  }
+}
+
+// ============================================================================
 // TYPES & CONSTANTS
 // ============================================================================
 
@@ -87,6 +103,46 @@ const DEFAULT_LIMITS = {
   maxTabs: 6,
   maxLinks: 5
 };
+
+/**
+ * Accordion candidate selectors - exported for debugging
+ */
+const ACCORDION_SELECTORS = [
+  'button[aria-expanded]',
+  '[role="button"][aria-expanded]',
+  '[data-testid*="accordion"]',
+  '[data-testid*="expand"]',
+  '[class*="accordion"] button',
+  '[class*="Accordion"] button',
+  '[class*="collapsible"] button',
+  '[class*="expandable"] button',
+  'button:has([data-icon*="chevron" i])',
+  'button:has([class*="chevron" i])',
+  'button:has([class*="arrow" i])',
+  '[class*="panel-header"]',
+  '[class*="card-header"] button'
+];
+
+/**
+ * Debug artifact writer for accordion analysis
+ */
+async function writeDebugArtifact(outputDir, data) {
+  if (!DEBUG_EXPLORER) return null;
+
+  try {
+    const debugDir = path.join(outputDir, "debug");
+    if (!fs.existsSync(debugDir)) {
+      fs.mkdirSync(debugDir, { recursive: true });
+    }
+
+    const filepath = path.join(debugDir, "explorer_accordions.json");
+    fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
+    return filepath;
+  } catch (e) {
+    console.error("[DEBUG] Failed to write accordion debug artifact:", e.message);
+    return null;
+  }
+}
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -312,22 +368,9 @@ export class UIExplorer {
 
   async expandAccordions(scope) {
     const root = scope || this.page.locator("body");
+    const selectorString = ACCORDION_SELECTORS.join(', ');
 
-    const candidates = root.locator([
-      'button[aria-expanded]',
-      '[role="button"][aria-expanded]',
-      '[data-testid*="accordion"]',
-      '[data-testid*="expand"]',
-      '[class*="accordion"] button',
-      '[class*="Accordion"] button',
-      '[class*="collapsible"] button',
-      '[class*="expandable"] button',
-      'button:has([data-icon*="chevron" i])',
-      'button:has([class*="chevron" i])',
-      'button:has([class*="arrow" i])',
-      '[class*="panel-header"]',
-      '[class*="card-header"] button'
-    ].join(', '));
+    const candidates = root.locator(selectorString);
 
     const count = await candidates.count().catch(() => 0);
     const toTry = Math.min(count, this.opts.limits.maxAccordions);
@@ -335,6 +378,137 @@ export class UIExplorer {
     if (count > 0) {
       this.opts.log(`[Accordions] Found ${count} candidates, will try ${toTry}`);
     }
+
+    // ========== DEBUG INSTRUMENTATION ==========
+    if (DEBUG_EXPLORER && count > 0) {
+      this.opts.log(`[DEBUG] Accordion selector used:\n${selectorString}`);
+
+      // Take BEFORE screenshot
+      const beforeExploreShot = await this.screenshot("debug_accordion_before_discovery");
+      this.opts.log(`[DEBUG] Before-discovery screenshot: ${beforeExploreShot}`);
+
+      // Collect samples and histograms
+      const samples = [];
+      const roleHistogram = {};
+      const tagHistogram = {};
+      let ariaExpandedTrueCount = 0;
+      let ariaExpandedFalseCount = 0;
+      let ariaExpandedNullCount = 0;
+      let hasTestIdCount = 0;
+      let visibleCount = 0;
+      let hiddenCount = 0;
+
+      const sampleLimit = Math.min(count, 30);
+      this.opts.log(`[DEBUG] Analyzing ${sampleLimit} of ${count} accordion candidates...`);
+
+      for (let i = 0; i < sampleLimit; i++) {
+        try {
+          const el = candidates.nth(i);
+          const isVisible = await el.isVisible().catch(() => false);
+
+          // Get element details via evaluate
+          const details = await el.evaluate(e => ({
+            tag: e.tagName,
+            role: e.getAttribute('role'),
+            ariaExpanded: e.getAttribute('aria-expanded'),
+            ariaControls: e.getAttribute('aria-controls'),
+            id: e.id || null,
+            className: (e.className || '').toString().slice(0, 120),
+            testid: e.getAttribute('data-testid'),
+            text: (e.innerText || e.textContent || '').trim().slice(0, 80)
+          })).catch(() => ({}));
+
+          // Get bounding box
+          const bbox = await el.boundingBox().catch(() => null);
+
+          // Update histograms
+          const role = details.role || '(none)';
+          const tag = details.tag || '(unknown)';
+          roleHistogram[role] = (roleHistogram[role] || 0) + 1;
+          tagHistogram[tag] = (tagHistogram[tag] || 0) + 1;
+
+          if (details.ariaExpanded === 'true') ariaExpandedTrueCount++;
+          else if (details.ariaExpanded === 'false') ariaExpandedFalseCount++;
+          else ariaExpandedNullCount++;
+
+          if (details.testid) hasTestIdCount++;
+          if (isVisible) visibleCount++;
+          else hiddenCount++;
+
+          samples.push({
+            index: i,
+            tag: details.tag,
+            role: details.role,
+            ariaExpanded: details.ariaExpanded,
+            ariaControls: details.ariaControls,
+            id: details.id,
+            className: details.className,
+            testid: details.testid,
+            text: details.text,
+            visible: isVisible,
+            bbox: bbox ? { x: Math.round(bbox.x), y: Math.round(bbox.y), w: Math.round(bbox.width), h: Math.round(bbox.height) } : null
+          });
+        } catch (e) {
+          samples.push({ index: i, error: e.message });
+        }
+      }
+
+      // Log histogram summaries
+      this.opts.log(`[DEBUG] === ACCORDION CANDIDATE ANALYSIS ===`);
+      this.opts.log(`[DEBUG] Total count: ${count}`);
+      this.opts.log(`[DEBUG] Role histogram: ${JSON.stringify(roleHistogram)}`);
+      this.opts.log(`[DEBUG] Tag histogram: ${JSON.stringify(tagHistogram)}`);
+      this.opts.log(`[DEBUG] aria-expanded: true=${ariaExpandedTrueCount}, false=${ariaExpandedFalseCount}, null=${ariaExpandedNullCount}`);
+      this.opts.log(`[DEBUG] Has data-testid: ${hasTestIdCount}`);
+      this.opts.log(`[DEBUG] Visibility: visible=${visibleCount}, hidden=${hiddenCount}`);
+
+      // Log first 10 samples
+      this.opts.log(`[DEBUG] === FIRST 10 SAMPLES ===`);
+      for (let i = 0; i < Math.min(10, samples.length); i++) {
+        const s = samples[i];
+        if (s.error) {
+          this.opts.log(`[DEBUG] [${i}] ERROR: ${s.error}`);
+        } else {
+          this.opts.log(`[DEBUG] [${i}] ${s.tag} role=${s.role} aria-expanded=${s.ariaExpanded} visible=${s.visible} id=${s.id} class="${s.className?.slice(0, 60)}..." text="${s.text?.slice(0, 40)}..."`);
+        }
+      }
+
+      // Take AFTER screenshot (after discovery, before any clicks)
+      const afterDiscoveryShot = await this.screenshot("debug_accordion_after_discovery");
+      this.opts.log(`[DEBUG] After-discovery screenshot: ${afterDiscoveryShot}`);
+
+      // Write debug artifact JSON
+      const debugArtifact = {
+        url: this.page.url(),
+        timestamp: new Date().toISOString(),
+        selectorUsed: selectorString,
+        totalCount: count,
+        sampledCount: sampleLimit,
+        roleHistogram,
+        tagHistogram,
+        ariaExpandedStats: {
+          true: ariaExpandedTrueCount,
+          false: ariaExpandedFalseCount,
+          null: ariaExpandedNullCount
+        },
+        hasTestIdCount,
+        visibleCount,
+        hiddenCount,
+        samples,
+        screenshots: {
+          beforeDiscovery: beforeExploreShot,
+          afterDiscovery: afterDiscoveryShot
+        }
+      };
+
+      const artifactPath = await writeDebugArtifact(this.opts.screenshotsDir, debugArtifact);
+      if (artifactPath) {
+        this.opts.log(`[DEBUG] Accordion debug artifact written to: ${artifactPath}`);
+      }
+
+      this.opts.log(`[DEBUG] === END ACCORDION ANALYSIS ===`);
+    }
+    // ========== END DEBUG INSTRUMENTATION ==========
 
     for (let i = 0; i < toTry; i++) {
       if (this.counters.accordions >= this.opts.limits.maxAccordions) {
@@ -1353,4 +1527,4 @@ export async function runNavigationWithFallbacks(page, navConfig, options) {
   );
 }
 
-export { DEFAULT_LIMITS, extractKeywords, slugify };
+export { DEFAULT_LIMITS, extractKeywords, slugify, ACCORDION_SELECTORS, DEBUG_EXPLORER };

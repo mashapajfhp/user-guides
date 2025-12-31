@@ -439,9 +439,13 @@ jobs:
           VERSIONED_DIR: ${{ steps.write_input.outputs.versioned_dir }}
           PLAYWRIGHT_GOTO_TIMEOUT_MS: "30000"
           PLAYWRIGHT_STEP_TIMEOUT_MS: "10000"
+          # Enable DEBUG_EXPLORER to analyze accordion detection
+          # Set to "1" to enable detailed logging and debug artifacts
+          DEBUG_EXPLORER: "1"
         run: |
           set -euo pipefail
           echo "📸 Screenshots will be saved to: ${VERSIONED_DIR}/screenshots/"
+          echo "🔍 DEBUG_EXPLORER=${DEBUG_EXPLORER:-0} (set to 1 for detailed accordion analysis)"
           node scripts/playwright/run-validation.mjs \
             --input .validation/input/request.json \
             --out "${VERSIONED_DIR}/pw_result.json" \
