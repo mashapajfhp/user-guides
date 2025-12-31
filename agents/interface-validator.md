@@ -182,6 +182,9 @@ If source is "zendesk" or pattern doesn't match → jira_key = ""
 
 **Playwright targeting:**
 - Use `check.selector_hint` as the PRIMARY search target
+- `selector_hint` may be a CSS selector (e.g., `#daily-wage-toggle`) OR a human-readable element description (e.g., `"Daily Wage Calculation toggle"`)
+- If `selector_hint` looks like CSS → try `browser_snapshot` element search first
+- If `selector_hint` is descriptive text → search visible labels in the page snapshot
 - Fall back to visible labels implied by `check.description` only if `selector_hint` is not actionable
 
 #### D) Check Types
@@ -198,10 +201,10 @@ If source is "zendesk" or pattern doesn't match → jira_key = ""
 
 ### 1.2) Output Configuration Resolution
 
-Resolve `output_configuration` from ONE of these sources (in priority order):
+Resolve `output_configuration` using the following priority order:
 
-1. **Input JSON** — If input is wrapper object with `output_configuration`
-2. **Environment Variables** — If input is plans array (or wrapper lacks `output_configuration`)
+1. **Environment Variables** — ALWAYS checked first (safer for CI runs)
+2. **Input JSON** — Fallback if wrapper object includes `output_configuration`
 
 **Environment Variables:**
 
@@ -213,7 +216,8 @@ Resolve `output_configuration` from ONE of these sources (in priority order):
 | `VALIDATOR_SUMMARY_FILE` | `output_configuration.summary_file` |
 
 **Resolution Rules:**
-- All four paths MUST be resolvable (from input OR env vars)
+- Environment variables OVERRIDE input JSON values (when both are present)
+- All four paths MUST be resolvable after applying priority order
 - If ANY required path is missing after resolution → HARD FAIL
 - The "do not create directories" rule still applies
 - The "if evidence_file or summary_file already exists → HARD FAIL" rule still applies
@@ -222,10 +226,10 @@ Resolve `output_configuration` from ONE of these sources (in priority order):
 
 ### 1.3) Validation Config Resolution
 
-Resolve `validation_config` from ONE of these sources (in priority order):
+Resolve `validation_config` using the following priority order:
 
-1. **Input JSON** — If wrapper object includes `validation_config`
-2. **Environment Variables** — If input is plans array (or wrapper lacks `validation_config`)
+1. **Environment Variables** — ALWAYS checked first (safer for CI runs)
+2. **Input JSON** — Fallback if wrapper object includes `validation_config`
 
 **Environment Variables:**
 
@@ -236,7 +240,8 @@ Resolve `validation_config` from ONE of these sources (in priority order):
 | `VALIDATOR_REQUIRED_ROLE` | `validation_config.required_role` | NO (default: `""`) |
 
 **Resolution Rules:**
-- `base_url` MUST be resolvable → if missing, HARD FAIL
+- Environment variables OVERRIDE input JSON values (when both are present)
+- `base_url` MUST be resolvable after applying priority order → if missing, HARD FAIL
 - `login_required` defaults to `true` if not specified
 - `required_role` defaults to empty string if not specified
 
@@ -245,15 +250,10 @@ Resolve `validation_config` from ONE of these sources (in priority order):
 ## 2) FILE I/O CONTRACT (MANDATORY)
 
 You MUST write:
-- Evidence JSON → resolved `screenshots_dir`
+- Evidence JSON → resolved `evidence_file`
 - Summary Markdown → resolved `summary_file`
 - Screenshots → resolved `screenshots_dir`
 - Screenshot manifest → `${reports_dir}/screenshots-manifest.json`
-
-**Resolution preference:**
-- When input is a plans array, resolve paths from environment variables
-- When input is wrapper object with `output_configuration`, use those paths
-- Environment variables take precedence if both are present
 
 **Pre-flight safety checks (MANDATORY):**
 - If `evidence_file` already exists → HARD FAIL
@@ -442,14 +442,16 @@ Write ONE JSON object:
     "clean_feature_name": "",
     "run_mode": "step5|step7|step5_step7",
     "generated_at": "",
-    "input_format": "plans_array|wrapper_object",
-    "plans_count": 0,
     "run_log": [
       "CODE|what|result|evidence"
     ],
     "environment": {
       "base_url": "",
       "notes": ""
+    },
+    "extensions": {
+      "input_format": "plans_array|wrapper_object",
+      "plans_count": 0
     }
   },
   "navigation_paths": [
@@ -466,16 +468,18 @@ Write ONE JSON object:
       "claim_id": "VAL-001",
       "jira_key": "TSSD-1234",
       "claim": "string",
-      "check_type": "override_indicator|content_presence|ui_state|options",
       "status": "pass|fail|not_confirmed",
       "observed_truth": "string (AUTHORITATIVE)",
       "evidence": ["claim-01-pass.png"],
       "notes": "",
-      "provenance": {
-        "plan_id": "",
-        "claim_key": "",
-        "check_id": "",
-        "selector_hint": ""
+      "extensions": {
+        "check_type": "override_indicator|content_presence|ui_state|options",
+        "provenance": {
+          "plan_id": "",
+          "claim_key": "",
+          "check_id": "",
+          "selector_hint": ""
+        }
       },
       "exploration": {
         "decision_log": [
@@ -524,6 +528,13 @@ Write ONE JSON object:
 }
 ```
 
+### Extensions (Backward Compatibility)
+
+The `extensions` objects at `meta.extensions` and `claims[].extensions` are **OPTIONAL**.
+- Downstream consumers MUST NOT fail if these objects are missing
+- These contain supplementary metadata (input format, plans count, check type, provenance)
+- If upgrading from an older evidence format, extensions may be absent
+
 ### Decision Log Schema Constraints
 
 **meta.run_log:**
@@ -549,8 +560,10 @@ Write ONE JSON object:
 
 Generated: {{timestamp}}
 Mode: {{run_mode}}
-Input Format: {{plans_array|wrapper_object}}
-Plans Processed: {{count}}
+{{#if meta.extensions}}
+Input Format: {{meta.extensions.input_format}}
+Plans Processed: {{meta.extensions.plans_count}}
+{{/if}}
 
 ## Outcome
 - Claims: {{pass}} pass, {{fail}} fail, {{not_confirmed}} not confirmed
@@ -561,7 +574,7 @@ Plans Processed: {{count}}
 - Path → Status → Evidence → Notes
 
 ## Claim Results
-- Claim → Check Type → Status → Observed truth → Evidence → Notes
+- Claim → {{#if extensions.check_type}}Check Type → {{/if}}Status → Observed truth → Evidence → Notes
 
 ## Discrepancies & Required Doc Changes
 - Bullet list with evidence references
@@ -600,11 +613,16 @@ Only if `user_guide_path` exists:
 
 ## 10) FAILURE BEHAVIOR
 
-If blocked by contract issues:
+**If blocked by contract issues AND `output_configuration` IS resolved:**
 - Write evidence JSON marking everything `not_confirmed`
 - Write summary explaining failure
 - Capture screenshot if possible
 - Stop
+
+**If blocked by contract issues AND `output_configuration` is NOT resolved:**
+- HARD FAIL immediately
+- Do NOT run Playwright
+- Do NOT write any files anywhere
 
 ## FINAL ACCEPTANCE CRITERIA
 
