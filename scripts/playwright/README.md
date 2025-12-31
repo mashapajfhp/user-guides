@@ -32,6 +32,25 @@ The runner skips potentially destructive actions:
 - Confirm/Yes buttons
 - Any button with destructive styling
 
+### MCP Mode (Recommended)
+
+The runner supports **MCP-style accessibility snapshot navigation**, which is more reliable than CSS selectors:
+
+```bash
+# Enable MCP mode via CLI flag
+node run-validation.mjs --input input.json --out output.json --mcp-mode
+
+# Or via environment variable
+PLAYWRIGHT_MCP_MODE=true node run-validation.mjs --input input.json --out output.json
+```
+
+**Benefits of MCP Mode:**
+- Uses accessibility tree snapshots instead of brittle CSS selectors
+- Finds elements by semantic role and name (like `button "Settings"`)
+- Handles overlays and popups automatically (presses Escape to dismiss)
+- More resilient to UI changes and dynamic content
+- Matches how the Playwright MCP server works
+
 ### Fallback Navigation
 
 When primary breadcrumb navigation fails, the runner tries:
@@ -171,10 +190,18 @@ Each check uses exploration evidence:
 ## Usage
 
 ```bash
+# Standard mode (CSS selectors with fallbacks)
 node scripts/playwright/run-validation.mjs \
   --input <input.json> \
   --out <output.json> \
   --screenshots <screenshots_dir>
+
+# MCP mode (recommended - uses accessibility snapshots)
+node scripts/playwright/run-validation.mjs \
+  --input <input.json> \
+  --out <output.json> \
+  --screenshots <screenshots_dir> \
+  --mcp-mode
 ```
 
 ## UI Explorer Module
@@ -223,6 +250,7 @@ DEFAULT_LIMITS = {
 | Component | Path |
 |-----------|------|
 | Runner | `/scripts/playwright/run-validation.mjs` |
+| Snapshot Navigator | `/scripts/playwright/snapshot-navigator.mjs` |
 | UI Explorer | `/scripts/playwright/ui-explorer.mjs` |
 | Adapter | `/scripts/adapters/flattened-plans-to-validator-input.mjs` |
 | Agent | `/agents/interface-validator.md` |

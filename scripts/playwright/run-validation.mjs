@@ -92,6 +92,17 @@ import {
   extractKeywords
 } from "./ui-explorer.mjs";
 
+// MCP-style accessibility snapshot navigation (more reliable than CSS selectors)
+import {
+  navigateWithSnapshots,
+  explorePageWithSnapshots,
+  executeCheckWithSnapshot,
+  getAccessibilitySnapshot,
+  flattenAccessibilityTree,
+  getTextObservations,
+  clickByAccessibility
+} from "./snapshot-navigator.mjs";
+
 // ------------------ CLI args ------------------
 function getArg(name, def = null) {
   const i = process.argv.indexOf(name);
@@ -114,6 +125,11 @@ const HEADLESS = (process.env.PLAYWRIGHT_HEADLESS ?? "true") !== "false";
 // Bound navigation checks so we don't explode CI time on huge trees.
 // You can raise this later if needed.
 const MAX_NAV_PAGES = Number(process.env.PLAYWRIGHT_MAX_NAV_PAGES || 30);
+
+// MCP-style navigation mode (uses accessibility snapshots instead of CSS selectors)
+// Enable with --mcp-mode flag or PLAYWRIGHT_MCP_MODE=true environment variable
+const MCP_MODE = getArg("--mcp-mode", process.env.PLAYWRIGHT_MCP_MODE) === "true" ||
+                 process.argv.includes("--mcp-mode");
 
 // ------------------ helpers ------------------
 function nowISO() {
@@ -5237,50 +5253,79 @@ async function executeValidationPlans(page, validationPlans, screenshotsDir) {
     };
 
     try {
-      // STEP 1: Navigate using breadcrumb array with FALLBACK strategies
+      // STEP 1: Navigate using breadcrumb array
       if (plan.nav?.breadcrumb_array?.length > 0) {
         console.log(`   📍 Navigating: ${plan.nav.breadcrumb_array.join(' → ')}`);
 
-        // First try the direct breadcrumb path
-        const navResult = await navigateBreadcrumbPath(page, plan.nav.breadcrumb_array, screenshotsDir, planId);
-        planResult.navigation = navResult;
-
-        if (navResult.status === 'pass') {
-          console.log(`   ✅ Navigation successful`);
-        } else {
-          // FALLBACK: Try alternative navigation strategies
-          console.log(`   ⚠️ Primary navigation partial/failed - trying fallbacks...`);
-
-          const navExplorer = new NavigationExplorer(page, {
+        // Use MCP-style accessibility snapshot navigation if enabled
+        if (MCP_MODE) {
+          console.log(`   🔧 Using MCP-style accessibility snapshot navigation`);
+          const mcpNavResult = await navigateWithSnapshots(page, plan.nav.breadcrumb_array, {
+            timeout: STEP_TIMEOUT,
             screenshotsDir,
-            screenshotPrefix: `plan_${sanitizeFileName(planId)}_fallback`
+            planId
           });
 
-          // Extract target from the last breadcrumb item
-          const targetPage = plan.nav.breadcrumb_array[plan.nav.breadcrumb_array.length - 1];
-          const targetKeywords = extractKeywords(targetPage);
-
-          const fallbackResult = await navExplorer.navigateWithFallbacks({
+          planResult.navigation = {
+            path: plan.nav.canonical || plan.nav.breadcrumb_array.join(' → '),
             breadcrumbs: plan.nav.breadcrumb_array,
-            targetKeywords
-          });
+            methodology: 'accessibility_snapshot',
+            status: mcpNavResult.status,
+            steps_completed: mcpNavResult.steps.filter(s => s.status === 'pass').map(s => ({ item: s.item, method: s.method })),
+            steps_failed: mcpNavResult.steps.filter(s => s.status === 'not_found').map(s => ({ item: s.item, error: s.error })),
+            current_url: mcpNavResult.current_url,
+            mcp_details: mcpNavResult.steps
+          };
 
-          if (fallbackResult.success) {
-            console.log(`   ✅ Fallback navigation succeeded via: ${fallbackResult.method}`);
-            planResult.navigation = {
-              ...navResult,
-              status: 'pass',
-              fallback_used: true,
-              fallback_method: fallbackResult.method,
-              fallback_steps: fallbackResult.steps || []
-            };
+          if (mcpNavResult.status === 'pass') {
+            console.log(`   ✅ MCP navigation successful`);
+          } else if (mcpNavResult.status === 'partial') {
+            console.log(`   ⚠️ MCP navigation partial - some steps completed`);
           } else {
-            console.log(`   ❌ All navigation attempts failed`);
-            planResult.navigation = {
-              ...navResult,
-              fallback_attempted: true,
-              fallback_methods_tried: fallbackResult.methodsTried || []
-            };
+            console.log(`   ❌ MCP navigation failed`);
+          }
+        } else {
+          // Original selector-based navigation with fallbacks
+          const navResult = await navigateBreadcrumbPath(page, plan.nav.breadcrumb_array, screenshotsDir, planId);
+          planResult.navigation = navResult;
+
+          if (navResult.status === 'pass') {
+            console.log(`   ✅ Navigation successful`);
+          } else {
+            // FALLBACK: Try alternative navigation strategies
+            console.log(`   ⚠️ Primary navigation partial/failed - trying fallbacks...`);
+
+            const navExplorer = new NavigationExplorer(page, {
+              screenshotsDir,
+              screenshotPrefix: `plan_${sanitizeFileName(planId)}_fallback`
+            });
+
+            // Extract target from the last breadcrumb item
+            const targetPage = plan.nav.breadcrumb_array[plan.nav.breadcrumb_array.length - 1];
+            const targetKeywords = extractKeywords(targetPage);
+
+            const fallbackResult = await navExplorer.navigateWithFallbacks({
+              breadcrumbs: plan.nav.breadcrumb_array,
+              targetKeywords
+            });
+
+            if (fallbackResult.success) {
+              console.log(`   ✅ Fallback navigation succeeded via: ${fallbackResult.method}`);
+              planResult.navigation = {
+                ...navResult,
+                status: 'pass',
+                fallback_used: true,
+                fallback_method: fallbackResult.method,
+                fallback_steps: fallbackResult.steps || []
+              };
+            } else {
+              console.log(`   ❌ All navigation attempts failed`);
+              planResult.navigation = {
+                ...navResult,
+                fallback_attempted: true,
+                fallback_methods_tried: fallbackResult.methodsTried || []
+              };
+            }
           }
         }
       }
@@ -5295,54 +5340,109 @@ async function executeValidationPlans(page, validationPlans, screenshotsDir) {
       // STEP 1.5: EXPLORATION PASS - Discover UI controls before running checks
       // This prepares the page (expands accordions, reveals hidden content) for validation
       console.log(`   🔍 Running exploration pass...`);
-      const explorer = new UIExplorer(page, {
-        screenshotsDir,
-        screenshotPrefix: `plan_${sanitizeFileName(planId)}`,
-        safeMode: true, // Skip Save/Delete/Confirm buttons
-        limits: DEFAULT_LIMITS
-      });
 
       let explorationResult = null;
-      try {
-        // Run comprehensive page exploration
-        explorationResult = await explorer.explorePage();
-        planResult.exploration = {
-          status: 'completed',
-          discoveries: explorationResult.discoveries || [],
-          observations: explorationResult.observations || [],
-          screenshots: explorationResult.shots || [],
-          steps: explorationResult.steps || [],
-          safe_mode_skips: explorationResult.safeModeSaveSkipped ? 1 : 0
-        };
 
-        // Log exploration findings
-        const accordions = explorationResult.discoveries.filter(d => d.type === 'accordion').length;
-        const tabs = explorationResult.discoveries.filter(d => d.type === 'tab').length;
-        const dropdowns = explorationResult.discoveries.filter(d => d.type === 'dropdown').length;
-        const toggles = explorationResult.discoveries.filter(d => d.type === 'toggle').length;
-        const tables = explorationResult.discoveries.filter(d => d.type === 'table').length;
+      if (MCP_MODE) {
+        // MCP-style exploration using accessibility snapshots
+        console.log(`   🔧 Using MCP-style accessibility snapshot exploration`);
+        try {
+          explorationResult = await explorePageWithSnapshots(page, {
+            screenshotsDir,
+            screenshotPrefix: `plan_${sanitizeFileName(planId)}`,
+            safeMode: true
+          });
 
-        if (explorationResult.discoveries.length > 0) {
-          console.log(`      📦 Found: ${accordions} accordions, ${tabs} tabs, ${dropdowns} dropdowns, ${toggles} toggles, ${tables} tables`);
-        } else {
-          console.log(`      📦 No interactive controls discovered`);
-        }
+          planResult.exploration = {
+            status: 'completed',
+            methodology: 'accessibility_snapshot',
+            discoveries: explorationResult.discoveries || [],
+            observations: explorationResult.observations || [],
+            screenshots: explorationResult.shots || [],
+            steps: explorationResult.steps || [],
+            safe_mode_skips: explorationResult.safeModeSaveSkipped ? 1 : 0
+          };
 
-        // Add exploration screenshots to results
-        if (explorationResult.shots?.length > 0) {
-          for (const shot of explorationResult.shots) {
-            planResult.screenshots.push({ stage: 'exploration', filename: shot });
+          // Log exploration findings
+          const accordions = explorationResult.discoveries.filter(d => d.type === 'accordion').length;
+          const tabs = explorationResult.discoveries.filter(d => d.type === 'tab').length;
+          const dropdowns = explorationResult.discoveries.filter(d => d.type === 'dropdown').length;
+          const toggles = explorationResult.discoveries.filter(d => d.type === 'toggle').length;
+          const buttons = explorationResult.discoveries.filter(d => d.type === 'button').length;
+
+          if (explorationResult.discoveries.length > 0) {
+            console.log(`      📦 MCP Found: ${accordions} accordions, ${tabs} tabs, ${dropdowns} dropdowns, ${toggles} toggles, ${buttons} buttons`);
+          } else {
+            console.log(`      📦 No interactive controls discovered via MCP`);
           }
-        }
 
-      } catch (exploreError) {
-        console.log(`      ⚠️ Exploration error: ${exploreError.message}`);
-        planResult.exploration = {
-          status: 'error',
-          error: safeString(exploreError.message),
-          discoveries: [],
-          observations: []
-        };
+          // Add exploration screenshots to results
+          if (explorationResult.shots?.length > 0) {
+            for (const shot of explorationResult.shots) {
+              planResult.screenshots.push({ stage: 'exploration', filename: shot });
+            }
+          }
+
+        } catch (mcpExploreError) {
+          console.log(`      ⚠️ MCP Exploration error: ${mcpExploreError.message}`);
+          planResult.exploration = {
+            status: 'error',
+            methodology: 'accessibility_snapshot',
+            error: safeString(mcpExploreError.message),
+            discoveries: [],
+            observations: []
+          };
+        }
+      } else {
+        // Original selector-based exploration
+        const explorer = new UIExplorer(page, {
+          screenshotsDir,
+          screenshotPrefix: `plan_${sanitizeFileName(planId)}`,
+          safeMode: true, // Skip Save/Delete/Confirm buttons
+          limits: DEFAULT_LIMITS
+        });
+
+        try {
+          // Run comprehensive page exploration
+          explorationResult = await explorer.explorePage();
+          planResult.exploration = {
+            status: 'completed',
+            discoveries: explorationResult.discoveries || [],
+            observations: explorationResult.observations || [],
+            screenshots: explorationResult.shots || [],
+            steps: explorationResult.steps || [],
+            safe_mode_skips: explorationResult.safeModeSaveSkipped ? 1 : 0
+          };
+
+          // Log exploration findings
+          const accordions = explorationResult.discoveries.filter(d => d.type === 'accordion').length;
+          const tabs = explorationResult.discoveries.filter(d => d.type === 'tab').length;
+          const dropdowns = explorationResult.discoveries.filter(d => d.type === 'dropdown').length;
+          const toggles = explorationResult.discoveries.filter(d => d.type === 'toggle').length;
+          const tables = explorationResult.discoveries.filter(d => d.type === 'table').length;
+
+          if (explorationResult.discoveries.length > 0) {
+            console.log(`      📦 Found: ${accordions} accordions, ${tabs} tabs, ${dropdowns} dropdowns, ${toggles} toggles, ${tables} tables`);
+          } else {
+            console.log(`      📦 No interactive controls discovered`);
+          }
+
+          // Add exploration screenshots to results
+          if (explorationResult.shots?.length > 0) {
+            for (const shot of explorationResult.shots) {
+              planResult.screenshots.push({ stage: 'exploration', filename: shot });
+            }
+          }
+
+        } catch (exploreError) {
+          console.log(`      ⚠️ Exploration error: ${exploreError.message}`);
+          planResult.exploration = {
+            status: 'error',
+            error: safeString(exploreError.message),
+            discoveries: [],
+            observations: []
+          };
+        }
       }
 
       // STEP 2: Execute each check with exploration-enhanced validation
@@ -5352,31 +5452,59 @@ async function executeValidationPlans(page, validationPlans, screenshotsDir) {
         for (const check of plan.checks) {
           console.log(`      - ${check.check_id}: ${check.type}`);
 
-          // Use exploration-first approach: run targeted exploration for this check
           let checkResult;
-          try {
-            // Run exploration-first check validation
-            const explorationEvidence = await runExplorationForCheck(page, check, {
-              screenshotsDir,
-              screenshotPrefix: `check_${sanitizeFileName(check.check_id)}`,
-              safeMode: true,
-              priorDiscoveries: explorationResult?.discoveries || []
-            });
 
-            // Merge exploration evidence with traditional check result
-            checkResult = await executeCheckWithExploration(
-              page, check, screenshotsDir, planId, explorationEvidence
-            );
+          if (MCP_MODE) {
+            // MCP-style check execution using accessibility snapshots
+            console.log(`        🔧 Using MCP-style accessibility snapshot check`);
+            try {
+              checkResult = await executeCheckWithSnapshot(page, check, {
+                screenshotsDir,
+                screenshotPrefix: `check_${sanitizeFileName(check.check_id)}`,
+                priorDiscoveries: explorationResult?.discoveries || [],
+                priorObservations: explorationResult?.observations || []
+              });
 
-            // Add exploration steps to check result
-            checkResult.exploration_steps = explorationEvidence.steps || [];
-            checkResult.exploration_discoveries = explorationEvidence.discoveries || [];
-            checkResult.exploration_shots = explorationEvidence.shots || [];
+              // Mark methodology
+              checkResult.methodology = 'accessibility_snapshot';
 
-          } catch (exploreCheckError) {
-            console.log(`        ⚠️ Exploration-first check failed, falling back to standard: ${exploreCheckError.message}`);
-            // Fallback to standard check execution
-            checkResult = await executeCheck(page, check, screenshotsDir, planId);
+            } catch (mcpCheckError) {
+              console.log(`        ⚠️ MCP check failed: ${mcpCheckError.message}`);
+              checkResult = {
+                check_id: check.check_id,
+                type: check.type,
+                methodology: 'accessibility_snapshot',
+                status: 'fail',
+                error: safeString(mcpCheckError.message),
+                evidence: {}
+              };
+            }
+          } else {
+            // Original exploration-first approach
+            try {
+              // Run exploration-first check validation
+              const explorationEvidence = await runExplorationForCheck(page, check, {
+                screenshotsDir,
+                screenshotPrefix: `check_${sanitizeFileName(check.check_id)}`,
+                safeMode: true,
+                priorDiscoveries: explorationResult?.discoveries || []
+              });
+
+              // Merge exploration evidence with traditional check result
+              checkResult = await executeCheckWithExploration(
+                page, check, screenshotsDir, planId, explorationEvidence
+              );
+
+              // Add exploration steps to check result
+              checkResult.exploration_steps = explorationEvidence.steps || [];
+              checkResult.exploration_discoveries = explorationEvidence.discoveries || [];
+              checkResult.exploration_shots = explorationEvidence.shots || [];
+
+            } catch (exploreCheckError) {
+              console.log(`        ⚠️ Exploration-first check failed, falling back to standard: ${exploreCheckError.message}`);
+              // Fallback to standard check execution
+              checkResult = await executeCheck(page, check, screenshotsDir, planId);
+            }
           }
 
           planResult.checks.push(checkResult);
@@ -6453,6 +6581,9 @@ function extractSearchTerms(selectorHint, assertion) {
         console.log(`\n📋 Starting Direct Plan Execution...`);
         console.log(`   Plans to execute: ${validationPlans.length}`);
         console.log(`   Methodology: Following explicit navigation paths and check types`);
+        if (MCP_MODE) {
+          console.log(`   🔧 MCP Mode: ENABLED (using accessibility snapshots instead of CSS selectors)`);
+        }
 
         output.plan_execution = await executeValidationPlans(
           page,
