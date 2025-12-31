@@ -24,6 +24,23 @@ on:
         description: "Flattened validation plans array (JSON string) - new format with nav/checks structure"
         required: false
         type: string
+      # NEW: Plans metadata (extracted from plans_json for convenience)
+      plan_count:
+        description: "Number of validation plans"
+        required: false
+        type: string
+      sources:
+        description: "Comma-separated list of sources (e.g., 'jira,zendesk')"
+        required: false
+        type: string
+      check_types:
+        description: "Comma-separated list of check types (e.g., 'navigation,content_presence,ui_state')"
+        required: false
+        type: string
+      plans_nav_json:
+        description: "Extracted navigation paths from plans [{plan_id, nav, breadcrumbs}] (JSON string)"
+        required: false
+        type: string
       # Intermediate format: issues_to_validate from n8n AI node
       issues_json:
         description: "Issues to validate from n8n AI node (JSON string array of issue objects with validation_steps)"
@@ -246,6 +263,11 @@ jobs:
         env:
           # NEW: Flattened plans array (preferred)
           PLANS_JSON: ${{ github.event.inputs.plans_json }}
+          # NEW: Plans metadata
+          PLAN_COUNT: ${{ github.event.inputs.plan_count }}
+          SOURCES: ${{ github.event.inputs.sources }}
+          CHECK_TYPES: ${{ github.event.inputs.check_types }}
+          PLANS_NAV_JSON: ${{ github.event.inputs.plans_nav_json }}
           # Intermediate format inputs
           ISSUES_JSON: ${{ github.event.inputs.issues_json }}
           NAV_ZENDESK_JSON: ${{ github.event.inputs.navigation_paths_from_zendesk_json }}
@@ -294,6 +316,10 @@ jobs:
 
           # Set defaults for all inputs
           [ -z "${PLANS_JSON:-}" ] && PLANS_JSON='[]'
+          [ -z "${PLAN_COUNT:-}" ] && PLAN_COUNT='0'
+          [ -z "${SOURCES:-}" ] && SOURCES=''
+          [ -z "${CHECK_TYPES:-}" ] && CHECK_TYPES=''
+          [ -z "${PLANS_NAV_JSON:-}" ] && PLANS_NAV_JSON='[]'
           [ -z "${ISSUES_JSON:-}" ] && ISSUES_JSON='[]'
           [ -z "${NAV_ZENDESK_JSON:-}" ] && NAV_ZENDESK_JSON='{}'
           [ -z "${CONFIG_AREAS_JSON:-}" ] && CONFIG_AREAS_JSON='[]'
@@ -304,6 +330,7 @@ jobs:
 
           # Validate JSON inputs
           echo "${PLANS_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid plans JSON, using empty array"; PLANS_JSON='[]'; }
+          echo "${PLANS_NAV_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid plans nav JSON, using empty array"; PLANS_NAV_JSON='[]'; }
           echo "${ISSUES_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid issues JSON, using empty array"; ISSUES_JSON='[]'; }
           echo "${NAV_ZENDESK_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid nav zendesk JSON, using empty object"; NAV_ZENDESK_JSON='{}'; }
           echo "${CONFIG_AREAS_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid config areas JSON, using empty array"; CONFIG_AREAS_JSON='[]'; }
@@ -321,6 +348,10 @@ jobs:
             --arg clean_feature_name "${CLEAN_FEATURE_NAME}" \
             --arg input_format "${INPUT_FORMAT}" \
             --argjson validation_plans "${PLANS_JSON}" \
+            --arg plan_count "${PLAN_COUNT}" \
+            --arg sources "${SOURCES}" \
+            --arg check_types "${CHECK_TYPES}" \
+            --argjson plans_navigation "${PLANS_NAV_JSON}" \
             --argjson issues_to_validate "${ISSUES_JSON}" \
             --argjson navigation_paths_from_zendesk "${NAV_ZENDESK_JSON}" \
             --argjson configuration_areas_to_document "${CONFIG_AREAS_JSON}" \
@@ -341,6 +372,11 @@ jobs:
               input_format: $input_format,
               # NEW: Flattened validation plans array
               validation_plans: $validation_plans,
+              # NEW: Plans metadata (extracted for convenience)
+              plan_count: ($plan_count | tonumber),
+              sources: $sources,
+              check_types: $check_types,
+              plans_navigation: $plans_navigation,
               # Intermediate format fields
               issues_to_validate: $issues_to_validate,
               navigation_paths_from_zendesk: $navigation_paths_from_zendesk,
