@@ -46,6 +46,13 @@ jobs:
         run: |
           mkdir -p "$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
 
+      - name: Install Playwright Browsers
+        if: steps.detect.outputs.folder != ''
+        run: |
+          echo "Installing Playwright browsers..."
+          npx -y playwright install chromium
+          echo "Playwright browsers installed"
+
       - name: Run Playwright MCP Validation
         if: steps.detect.outputs.folder != ''
         env:
