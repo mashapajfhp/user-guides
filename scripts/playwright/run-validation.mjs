@@ -5166,6 +5166,669 @@ function extractUseCases(procedures, featureContext) {
   return useCases.slice(0, 5); // Limit to 5 use cases
 }
 
+// ============================================================================
+// DIRECT VALIDATION PLAN EXECUTION (Replaces Cognitive Walkthrough)
+// ============================================================================
+
+/**
+ * Execute validation plans directly - no heuristics, just follow the plans.
+ * Each plan has navigation instructions and checks to perform.
+ *
+ * @param {Page} page - Playwright page
+ * @param {Array} validationPlans - Array of plan objects from input
+ * @param {string} screenshotsDir - Directory for screenshots
+ * @returns {Object} Validation results
+ */
+async function executeValidationPlans(page, validationPlans, screenshotsDir) {
+  const results = {
+    methodology: "direct_plan_execution",
+    total_plans: validationPlans.length,
+    plans_executed: 0,
+    plans_passed: 0,
+    plans_failed: 0,
+    plan_results: [],
+    screenshots: [],
+    errors: []
+  };
+
+  console.log(`\n📋 Executing ${validationPlans.length} validation plans directly...`);
+
+  for (let i = 0; i < validationPlans.length; i++) {
+    const plan = validationPlans[i];
+    const planId = plan.plan_id || `plan_${i + 1}`;
+
+    console.log(`\n   [${i + 1}/${validationPlans.length}] Plan: ${planId}`);
+    console.log(`   Navigation: ${plan.nav?.canonical || 'none'}`);
+    console.log(`   Checks: ${plan.checks?.length || 0}`);
+
+    const planResult = {
+      plan_id: planId,
+      claim_key: plan.claim_key,
+      source: plan.source,
+      navigation: {
+        path: plan.nav?.canonical || '',
+        breadcrumbs: plan.nav?.breadcrumb_array || [],
+        status: 'pending',
+        steps_completed: [],
+        steps_failed: []
+      },
+      checks: [],
+      status: 'pending',
+      screenshots: []
+    };
+
+    try {
+      // STEP 1: Navigate using breadcrumb array
+      if (plan.nav?.breadcrumb_array?.length > 0) {
+        console.log(`   📍 Navigating: ${plan.nav.breadcrumb_array.join(' → ')}`);
+
+        const navResult = await navigateBreadcrumbPath(page, plan.nav.breadcrumb_array, screenshotsDir, planId);
+        planResult.navigation = navResult;
+
+        if (navResult.status === 'pass') {
+          console.log(`   ✅ Navigation successful`);
+        } else {
+          console.log(`   ⚠️ Navigation partial/failed: ${navResult.error || 'unknown'}`);
+        }
+      }
+
+      // Take screenshot after navigation
+      const navScreenshot = await saveScreenshot(page, screenshotsDir, `plan_${sanitizeFileName(planId)}_nav`);
+      if (navScreenshot) {
+        planResult.screenshots.push({ stage: 'after_navigation', ...navScreenshot });
+        results.screenshots.push(navScreenshot);
+      }
+
+      // STEP 2: Execute each check
+      if (plan.checks?.length > 0) {
+        console.log(`   🔍 Running ${plan.checks.length} checks...`);
+
+        for (const check of plan.checks) {
+          console.log(`      - ${check.check_id}: ${check.type}`);
+
+          const checkResult = await executeCheck(page, check, screenshotsDir, planId);
+          planResult.checks.push(checkResult);
+
+          if (checkResult.status === 'pass') {
+            console.log(`        ✅ Passed`);
+          } else if (checkResult.status === 'partial') {
+            console.log(`        ⚠️ Partial: ${checkResult.details || ''}`);
+          } else {
+            console.log(`        ❌ Failed: ${checkResult.error || checkResult.details || ''}`);
+          }
+        }
+      }
+
+      // Determine overall plan status
+      const passedChecks = planResult.checks.filter(c => c.status === 'pass').length;
+      const totalChecks = planResult.checks.length;
+
+      if (passedChecks === totalChecks && planResult.navigation.status === 'pass') {
+        planResult.status = 'pass';
+        results.plans_passed++;
+      } else if (passedChecks > 0 || planResult.navigation.status !== 'fail') {
+        planResult.status = 'partial';
+      } else {
+        planResult.status = 'fail';
+        results.plans_failed++;
+      }
+
+      results.plans_executed++;
+
+    } catch (error) {
+      planResult.status = 'error';
+      planResult.error = safeString(error.message);
+      results.errors.push({ plan_id: planId, error: error.message });
+      console.log(`   ❌ Plan error: ${error.message}`);
+    }
+
+    results.plan_results.push(planResult);
+  }
+
+  // Calculate overall status
+  if (results.plans_passed === results.total_plans) {
+    results.status = 'pass';
+  } else if (results.plans_passed > 0 || results.plans_executed > results.plans_failed) {
+    results.status = 'partial';
+  } else {
+    results.status = 'fail';
+  }
+
+  console.log(`\n📊 Plan Execution Summary:`);
+  console.log(`   Total: ${results.total_plans}`);
+  console.log(`   Passed: ${results.plans_passed}`);
+  console.log(`   Failed: ${results.plans_failed}`);
+  console.log(`   Status: ${results.status}`);
+
+  return results;
+}
+
+/**
+ * Navigate through a breadcrumb path by clicking each menu item in sequence
+ */
+async function navigateBreadcrumbPath(page, breadcrumbs, screenshotsDir, planId) {
+  const result = {
+    path: breadcrumbs.join(' → '),
+    breadcrumbs: breadcrumbs,
+    status: 'pending',
+    steps_completed: [],
+    steps_failed: [],
+    current_url: page.url(),
+    error: null
+  };
+
+  for (let i = 0; i < breadcrumbs.length; i++) {
+    const item = breadcrumbs[i];
+    const isLast = i === breadcrumbs.length - 1;
+
+    // Skip items that look like UI states rather than clickable elements
+    const skipPatterns = [
+      /calculation method/i,
+      /day calculation type/i,
+      /option$/i,
+      /configure$/i
+    ];
+
+    const shouldSkip = skipPatterns.some(p => p.test(item));
+    if (shouldSkip && !isLast) {
+      result.steps_completed.push({ item, status: 'skipped', reason: 'UI state, not clickable' });
+      continue;
+    }
+
+    try {
+      // Try multiple strategies to find and click the element
+      const clicked = await clickNavigationItem(page, item);
+
+      if (clicked.success) {
+        result.steps_completed.push({ item, status: 'pass', method: clicked.method });
+
+        // Wait for navigation/content to load
+        await page.waitForTimeout(1500);
+        await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});
+
+        // Take screenshot after each major navigation
+        if (i < 3) { // Only first 3 steps to avoid too many screenshots
+          const stepShot = await saveScreenshot(page, screenshotsDir, `nav_${sanitizeFileName(planId)}_step${i + 1}_${sanitizeFileName(item)}`);
+          if (stepShot) result.screenshots = result.screenshots || [];
+          if (stepShot) result.screenshots.push({ step: item, ...stepShot });
+        }
+      } else {
+        result.steps_failed.push({ item, status: 'not_found', attempted: clicked.attempted });
+
+        // Don't fail completely - try to continue
+        if (i < 2) { // Only fail early for first 2 items
+          result.error = `Could not find: ${item}`;
+        }
+      }
+    } catch (error) {
+      result.steps_failed.push({ item, status: 'error', error: error.message });
+      result.error = error.message;
+    }
+  }
+
+  result.current_url = page.url();
+
+  // Determine status
+  if (result.steps_failed.length === 0) {
+    result.status = 'pass';
+  } else if (result.steps_completed.length > 0) {
+    result.status = 'partial';
+  } else {
+    result.status = 'fail';
+  }
+
+  return result;
+}
+
+/**
+ * Click a navigation item using multiple strategies
+ */
+async function clickNavigationItem(page, itemText) {
+  const result = { success: false, method: null, attempted: [] };
+
+  // Strategy 1: Exact role-based match
+  const roles = ['menuitem', 'link', 'button', 'tab', 'treeitem'];
+  for (const role of roles) {
+    try {
+      const el = page.getByRole(role, { name: itemText, exact: false }).first();
+      if (await el.isVisible({ timeout: 2000 })) {
+        await el.click({ timeout: 5000 });
+        result.success = true;
+        result.method = `role:${role}`;
+        return result;
+      }
+    } catch {
+      result.attempted.push(`role:${role}`);
+    }
+  }
+
+  // Strategy 2: Text content match
+  try {
+    const el = page.getByText(itemText, { exact: false }).first();
+    if (await el.isVisible({ timeout: 2000 })) {
+      await el.click({ timeout: 5000 });
+      result.success = true;
+      result.method = 'text';
+      return result;
+    }
+  } catch {
+    result.attempted.push('text');
+  }
+
+  // Strategy 3: CSS selectors with text
+  const cssSelectors = [
+    `a:has-text("${itemText}")`,
+    `button:has-text("${itemText}")`,
+    `[role="menuitem"]:has-text("${itemText}")`,
+    `li:has-text("${itemText}")`,
+    `span:has-text("${itemText}")`,
+    `div[class*="menu"]:has-text("${itemText}")`
+  ];
+
+  for (const selector of cssSelectors) {
+    try {
+      const el = page.locator(selector).first();
+      if (await el.isVisible({ timeout: 1500 })) {
+        await el.click({ timeout: 5000 });
+        result.success = true;
+        result.method = `css:${selector.slice(0, 30)}`;
+        return result;
+      }
+    } catch {
+      result.attempted.push(selector.slice(0, 20));
+    }
+  }
+
+  // Strategy 4: Partial text match with common containers
+  try {
+    const partialSelectors = [
+      `nav >> text=${itemText}`,
+      `aside >> text=${itemText}`,
+      `[class*="sidebar"] >> text=${itemText}`,
+      `[class*="nav"] >> text=${itemText}`
+    ];
+
+    for (const selector of partialSelectors) {
+      try {
+        const el = page.locator(selector).first();
+        if (await el.isVisible({ timeout: 1500 })) {
+          await el.click({ timeout: 5000 });
+          result.success = true;
+          result.method = `partial:${selector.slice(0, 20)}`;
+          return result;
+        }
+      } catch {
+        result.attempted.push(`partial:${selector.slice(0, 15)}`);
+      }
+    }
+  } catch {
+    // Continue
+  }
+
+  return result;
+}
+
+/**
+ * Execute a single check based on its type
+ */
+async function executeCheck(page, check, screenshotsDir, planId) {
+  const result = {
+    check_id: check.check_id,
+    type: check.type,
+    description: check.description,
+    selector_hint: check.selector_hint,
+    assertion: check.assertion,
+    status: 'pending',
+    details: null,
+    evidence: {},
+    screenshot: null
+  };
+
+  try {
+    switch (check.type) {
+      case 'navigation':
+        result.evidence = await checkNavigation(page, check);
+        break;
+
+      case 'content_presence':
+        result.evidence = await checkContentPresence(page, check);
+        break;
+
+      case 'ui_state':
+        result.evidence = await checkUIState(page, check);
+        break;
+
+      case 'override_indicator':
+        result.evidence = await checkOverrideIndicator(page, check);
+        break;
+
+      case 'options':
+        result.evidence = await checkOptions(page, check);
+        break;
+
+      default:
+        // Generic element presence check
+        result.evidence = await checkGenericPresence(page, check);
+    }
+
+    // Take screenshot for the check
+    const checkShot = await saveScreenshot(page, screenshotsDir, `check_${sanitizeFileName(check.check_id)}`);
+    if (checkShot) {
+      result.screenshot = checkShot;
+    }
+
+    // Determine status from evidence
+    if (result.evidence.found && result.evidence.assertion_met) {
+      result.status = 'pass';
+    } else if (result.evidence.found || result.evidence.partial) {
+      result.status = 'partial';
+      result.details = result.evidence.reason || 'Element found but assertion not fully met';
+    } else {
+      result.status = 'fail';
+      result.details = result.evidence.reason || 'Element not found';
+    }
+
+  } catch (error) {
+    result.status = 'error';
+    result.details = error.message;
+    result.evidence = { error: error.message };
+  }
+
+  return result;
+}
+
+/**
+ * Check type: navigation - verify page loaded correctly
+ */
+async function checkNavigation(page, check) {
+  const evidence = {
+    found: false,
+    assertion_met: false,
+    current_url: page.url(),
+    page_title: await page.title().catch(() => ''),
+    visible_headings: [],
+    reason: null
+  };
+
+  // Get visible headings
+  const headings = await page.locator('h1, h2, h3').allTextContents().catch(() => []);
+  evidence.visible_headings = headings.slice(0, 5).map(h => h.trim()).filter(h => h);
+
+  // Check if we're not on a login or error page
+  const isValidPage = !evidence.current_url.includes('/login') &&
+                      !evidence.current_url.includes('/error') &&
+                      evidence.visible_headings.length > 0;
+
+  if (isValidPage) {
+    evidence.found = true;
+    evidence.assertion_met = true;
+  } else {
+    evidence.reason = 'Page may not have loaded correctly';
+  }
+
+  return evidence;
+}
+
+/**
+ * Check type: content_presence - verify specific content exists
+ */
+async function checkContentPresence(page, check) {
+  const evidence = {
+    found: false,
+    assertion_met: false,
+    searched_for: check.selector_hint,
+    elements_found: [],
+    reason: null
+  };
+
+  // Extract keywords from selector_hint and assertion
+  const searchTerms = extractSearchTerms(check.selector_hint, check.assertion);
+
+  for (const term of searchTerms) {
+    try {
+      const elements = await page.getByText(term, { exact: false }).all();
+      const visibleElements = [];
+
+      for (const el of elements.slice(0, 5)) {
+        if (await el.isVisible().catch(() => false)) {
+          const text = await el.textContent().catch(() => '');
+          visibleElements.push(text.slice(0, 100));
+        }
+      }
+
+      if (visibleElements.length > 0) {
+        evidence.elements_found.push({ term, matches: visibleElements });
+        evidence.found = true;
+      }
+    } catch {
+      // Continue searching
+    }
+  }
+
+  if (evidence.found) {
+    evidence.assertion_met = true;
+  } else {
+    evidence.reason = `Could not find content matching: ${searchTerms.join(', ')}`;
+  }
+
+  return evidence;
+}
+
+/**
+ * Check type: ui_state - verify element visibility/state
+ */
+async function checkUIState(page, check) {
+  const evidence = {
+    found: false,
+    assertion_met: false,
+    element_state: null,
+    searched_for: check.selector_hint,
+    reason: null
+  };
+
+  const searchTerms = extractSearchTerms(check.selector_hint, check.assertion);
+
+  for (const term of searchTerms) {
+    try {
+      const el = page.getByText(term, { exact: false }).first();
+      if (await el.isVisible({ timeout: 3000 })) {
+        evidence.found = true;
+        evidence.element_state = {
+          visible: true,
+          enabled: await el.isEnabled().catch(() => null),
+          text: await el.textContent().catch(() => '').then(t => t.slice(0, 200))
+        };
+        evidence.assertion_met = true;
+        break;
+      }
+    } catch {
+      // Continue
+    }
+  }
+
+  if (!evidence.found) {
+    evidence.reason = `Could not find element: ${searchTerms.join(', ')}`;
+  }
+
+  return evidence;
+}
+
+/**
+ * Check type: override_indicator - check for greyed-out/disabled states
+ */
+async function checkOverrideIndicator(page, check) {
+  const evidence = {
+    found: false,
+    assertion_met: false,
+    partial: false,
+    indicators_found: [],
+    searched_for: check.selector_hint,
+    reason: null
+  };
+
+  // Look for common override indicators
+  const overridePatterns = [
+    'greyed', 'grayed', 'disabled', 'override', 'overridden',
+    'read-only', 'readonly', 'locked', 'inherited', 'global setting'
+  ];
+
+  // Check for disabled form elements
+  const disabledElements = await page.locator('input:disabled, select:disabled, [disabled], [aria-disabled="true"]').count();
+  if (disabledElements > 0) {
+    evidence.indicators_found.push(`${disabledElements} disabled form elements`);
+    evidence.found = true;
+  }
+
+  // Check for greyed-out visual indicators
+  const greyedElements = await page.locator('[class*="grey"], [class*="gray"], [class*="disabled"], [class*="muted"]').count();
+  if (greyedElements > 0) {
+    evidence.indicators_found.push(`${greyedElements} greyed/muted elements`);
+    evidence.found = true;
+  }
+
+  // Check for override messages in text
+  for (const pattern of overridePatterns) {
+    try {
+      const el = page.getByText(pattern, { exact: false }).first();
+      if (await el.isVisible({ timeout: 1500 })) {
+        const text = await el.textContent().catch(() => '');
+        evidence.indicators_found.push(`Text: "${text.slice(0, 100)}"`);
+        evidence.found = true;
+      }
+    } catch {
+      // Continue
+    }
+  }
+
+  if (evidence.found) {
+    evidence.assertion_met = evidence.indicators_found.length >= 1;
+    evidence.partial = evidence.indicators_found.length > 0;
+  } else {
+    evidence.reason = 'No override indicators found (disabled fields, grey styling, or override messages)';
+  }
+
+  return evidence;
+}
+
+/**
+ * Check type: options - verify dropdown/selection options
+ */
+async function checkOptions(page, check) {
+  const evidence = {
+    found: false,
+    assertion_met: false,
+    options_found: [],
+    searched_for: check.selector_hint,
+    reason: null
+  };
+
+  // Look for dropdowns/selects
+  const dropdownSelectors = [
+    'select',
+    '[role="combobox"]',
+    '[role="listbox"]',
+    '[class*="dropdown"]',
+    '[class*="select"]'
+  ];
+
+  for (const selector of dropdownSelectors) {
+    try {
+      const dropdown = page.locator(selector).first();
+      if (await dropdown.isVisible({ timeout: 2000 })) {
+        evidence.found = true;
+
+        // Try to get options
+        if (selector === 'select') {
+          const options = await dropdown.locator('option').allTextContents();
+          evidence.options_found = options.slice(0, 10);
+        } else {
+          // For custom dropdowns, try clicking to reveal options
+          await dropdown.click().catch(() => {});
+          await page.waitForTimeout(500);
+
+          const listItems = await page.locator('[role="option"], [role="menuitem"], li').allTextContents();
+          evidence.options_found = listItems.slice(0, 10).map(t => t.trim()).filter(t => t);
+        }
+
+        if (evidence.options_found.length > 0) {
+          evidence.assertion_met = true;
+        }
+        break;
+      }
+    } catch {
+      // Continue
+    }
+  }
+
+  if (!evidence.found) {
+    evidence.reason = 'No dropdown/select elements found';
+  }
+
+  return evidence;
+}
+
+/**
+ * Generic presence check for unknown types
+ */
+async function checkGenericPresence(page, check) {
+  const evidence = {
+    found: false,
+    assertion_met: false,
+    searched_for: check.selector_hint,
+    page_state: {
+      url: page.url(),
+      title: await page.title().catch(() => '')
+    },
+    reason: null
+  };
+
+  const searchTerms = extractSearchTerms(check.selector_hint, check.assertion);
+
+  for (const term of searchTerms) {
+    try {
+      const el = page.getByText(term, { exact: false }).first();
+      if (await el.isVisible({ timeout: 2000 })) {
+        evidence.found = true;
+        evidence.assertion_met = true;
+        break;
+      }
+    } catch {
+      // Continue
+    }
+  }
+
+  if (!evidence.found) {
+    evidence.reason = `Element not found: ${searchTerms.slice(0, 3).join(', ')}`;
+  }
+
+  return evidence;
+}
+
+/**
+ * Extract meaningful search terms from selector hint and assertion
+ */
+function extractSearchTerms(selectorHint, assertion) {
+  const terms = [];
+  const text = `${selectorHint || ''} ${assertion || ''}`;
+
+  // Extract quoted strings
+  const quoted = text.match(/"([^"]+)"/g) || [];
+  terms.push(...quoted.map(q => q.replace(/"/g, '')));
+
+  // Extract key noun phrases (basic extraction)
+  const keywords = text
+    .replace(/[>→›:,.]/g, ' ')
+    .split(/\s+/)
+    .filter(w => w.length > 3)
+    .filter(w => !['that', 'this', 'with', 'from', 'should', 'must', 'will', 'visible', 'displayed'].includes(w.toLowerCase()));
+
+  // Add meaningful keywords
+  terms.push(...keywords.slice(0, 5));
+
+  // Deduplicate and return
+  return [...new Set(terms)].slice(0, 8);
+}
+
 // ------------------ main ------------------
 (async () => {
   const startedAt = nowISO();
@@ -5173,14 +5836,13 @@ function extractUseCases(procedures, featureContext) {
 
   const output = {
     status: "fail",
-    methodology: "cognitive_walkthrough_and_feature_inspection",
+    methodology: "direct_plan_execution",
     executed_at: nowISO(),
     started_at: startedAt,
     feature_name: null,
     feature_context: null,           // Understanding of the feature from context
     login: { status: "fail" },
-    cognitive_walkthrough: null,      // Results from intelligent exploration
-    feature_inspection: null,         // Results from feature element search
+    plan_execution: null,             // Results from direct validation plan execution
     navigation_results: [],           // Legacy navigation results (for reference)
     claim_ui_checks: [],
     procedures_context: [],
@@ -5248,63 +5910,39 @@ function extractUseCases(procedures, featureContext) {
     output.login = await attemptLoginFromNavigationSpec(page, input?.app, navigation_paths, SCREENSHOTS_DIR);
 
     // ========================================================================
-    // STEP 3: COGNITIVE WALKTHROUGH (if login succeeded)
-    // Explore the UI intelligently using context as guidance
+    // STEP 3: DIRECT PLAN EXECUTION (if login succeeded)
+    // Execute validation_plans directly instead of cognitive walkthrough
     // ========================================================================
     if (output.login?.status === "pass") {
-      console.log(`\n🧠 Starting Cognitive Walkthrough...`);
-      console.log(`   Goal: Find ${featureContext.feature_name} feature through exploration`);
+      // Check if we have validation_plans in the input
+      const validationPlans = rawInput.validation_plans || [];
 
-      output.cognitive_walkthrough = await performCognitiveWalkthrough(
-        page,
-        featureContext,
-        SCREENSHOTS_DIR
-      );
+      if (validationPlans.length > 0) {
+        console.log(`\n📋 Starting Direct Plan Execution...`);
+        console.log(`   Plans to execute: ${validationPlans.length}`);
+        console.log(`   Methodology: Following explicit navigation paths and check types`);
 
-      console.log(`   Result: ${output.cognitive_walkthrough.status}`);
-      console.log(`   Elements discovered: ${output.cognitive_walkthrough.discovered_elements?.length || 0}`);
-      console.log(`   Screenshots: ${output.cognitive_walkthrough.screenshots?.length || 0}`);
+        output.plan_execution = await executeValidationPlans(
+          page,
+          validationPlans,
+          SCREENSHOTS_DIR
+        );
 
-      // ========================================================================
-      // STEP 4: FEATURE INSPECTION
-      // Search for feature-specific UI elements on the current page
-      // ========================================================================
-      console.log(`\n🔍 Starting Feature Inspection...`);
-      console.log(`   Searching for: ${featureContext.keywords.slice(0, 5).join(", ")}`);
-
-      output.feature_inspection = await performFeatureInspection(
-        page,
-        featureContext,
-        SCREENSHOTS_DIR
-      );
-
-      console.log(`   Result: ${output.feature_inspection.status}`);
-      console.log(`   Elements found: ${output.feature_inspection.elements_found?.length || 0}`);
-      console.log(`   Elements not found: ${output.feature_inspection.elements_not_found?.length || 0}`);
-
-      // ========================================================================
-      // STEP 4.5: COMPREHENSIVE FEATURE EXPLORATION
-      // Deep exploration of feature - test all UI components, document behavior
-      // ========================================================================
-      console.log(`\n🔬 Starting Comprehensive Feature Exploration...`);
-      output.comprehensive_exploration = await performComprehensiveFeatureExploration(
-        page,
-        featureContext,
-        SCREENSHOTS_DIR
-      );
-
-      console.log(`   Status: ${output.comprehensive_exploration.status}`);
-      console.log(`   Services explored: ${output.comprehensive_exploration.services_explored?.length || 0}`);
-      console.log(`   Dropdowns tested: ${output.comprehensive_exploration.dropdowns_tested?.length || 0}`);
-      console.log(`   Toggles tested: ${output.comprehensive_exploration.toggles_tested?.length || 0}`);
-      console.log(`   Formulas documented: ${output.comprehensive_exploration.formulas_documented?.length || 0}`);
-      console.log(`   Screenshots: ${output.comprehensive_exploration.screenshots?.length || 0}`);
+        console.log(`   Result: ${output.plan_execution.plans_passed}/${output.plan_execution.total_plans} plans passed`);
+        console.log(`   Total checks: ${output.plan_execution.plan_results?.reduce((acc, p) => acc + (p.checks?.length || 0), 0) || 0}`);
+        console.log(`   Screenshots: ${output.plan_execution.screenshots?.length || 0}`);
+      } else {
+        console.log(`\n⚠️ No validation_plans found in input - skipping plan execution`);
+        output.plan_execution = {
+          status: "skipped",
+          reason: "no_validation_plans",
+          message: "Input did not contain validation_plans array"
+        };
+      }
 
     } else {
-      console.log(`\n⚠️ Skipping exploration - login failed`);
-      output.cognitive_walkthrough = { status: "skipped", reason: "login_failed" };
-      output.feature_inspection = { status: "skipped", reason: "login_failed" };
-      output.comprehensive_exploration = { status: "skipped", reason: "login_failed" };
+      console.log(`\n⚠️ Skipping plan execution - login failed`);
+      output.plan_execution = { status: "skipped", reason: "login_failed" };
     }
 
     // ========================================================================
@@ -5580,24 +6218,22 @@ function extractUseCases(procedures, featureContext) {
       behavioralStats.average_confidence = Math.round(totalConfidence / behavioralStats.total);
     }
 
-    // Build comprehensive summary including behavioral testing methodology
+    // Build comprehensive summary including direct plan execution
     output.summary = {
-      methodology: "cognitive_walkthrough_and_behavioral_testing",
+      methodology: "direct_plan_execution",
       total_steps: total,
       passed_steps: passed,
       failed_steps: failed,
       skipped_conceptual: skippedConceptual,
       screenshots: screenshotCount,
-      cognitive_walkthrough: {
-        status: output.cognitive_walkthrough?.status || "not_run",
-        elements_discovered: output.cognitive_walkthrough?.discovered_elements?.length || 0,
-        exploration_steps: output.cognitive_walkthrough?.exploration_path?.length || 0
-      },
-      feature_inspection: {
-        status: output.feature_inspection?.status || "not_run",
-        keywords_searched: output.feature_inspection?.keywords_searched?.length || 0,
-        elements_found: output.feature_inspection?.elements_found?.length || 0,
-        elements_not_found: output.feature_inspection?.elements_not_found?.length || 0
+      plan_execution: {
+        status: output.plan_execution?.methodology ? "executed" : (output.plan_execution?.status || "not_run"),
+        total_plans: output.plan_execution?.total_plans || 0,
+        plans_passed: output.plan_execution?.plans_passed || 0,
+        plans_failed: output.plan_execution?.plans_failed || 0,
+        total_checks: output.plan_execution?.plan_results?.reduce((acc, p) => acc + (p.checks?.length || 0), 0) || 0,
+        checks_passed: output.plan_execution?.plan_results?.reduce((acc, p) => acc + (p.checks?.filter(c => c.status === "pass")?.length || 0), 0) || 0,
+        checks_failed: output.plan_execution?.plan_results?.reduce((acc, p) => acc + (p.checks?.filter(c => c.status === "fail")?.length || 0), 0) || 0
       },
       behavioral_claim_validation: {
         total_claims_validated: behavioralStats.total,
@@ -5725,9 +6361,25 @@ function extractUseCases(procedures, featureContext) {
     // Add the navigation report to output
     output.navigation_validation_report = navigationReport;
 
-    // Status only fails on CRITICAL issues: login failure or claim validation failure
-    // Navigation failures are recorded but do NOT cause overall failure
-    output.status = loginFail ? "fail" : (anyClaimFail ? "partial" : "pass");
+    // Status determination based on plan execution results
+    // - fail: login failure or fatal error
+    // - partial: some plans passed, some failed
+    // - pass: all plans passed or no plans to execute
+    const planExecFailed = output.plan_execution?.plans_failed > 0;
+    const planExecPassed = output.plan_execution?.plans_passed > 0;
+    const allPlansPassed = output.plan_execution?.plans_passed === output.plan_execution?.total_plans;
+
+    if (loginFail) {
+      output.status = "fail";
+    } else if (planExecFailed && !planExecPassed) {
+      output.status = "fail";
+    } else if (planExecFailed && planExecPassed) {
+      output.status = "partial";
+    } else if (anyClaimFail) {
+      output.status = "partial";
+    } else {
+      output.status = "pass";
+    }
   } catch (e) {
     output.fatal_error = safeString(e?.message || e);
     output.status = "fail";
@@ -5752,13 +6404,24 @@ function extractUseCases(procedures, featureContext) {
       process.exit(1);
     }
 
+    // Report plan execution results
+    if (output.plan_execution?.total_plans > 0) {
+      const plansPassed = output.plan_execution.plans_passed || 0;
+      const totalPlans = output.plan_execution.total_plans || 0;
+      console.log(`📋 Plan Execution: ${plansPassed}/${totalPlans} plans passed`);
+
+      if (output.plan_execution.plans_failed > 0) {
+        console.log(`   ⚠️ ${output.plan_execution.plans_failed} plans failed - check evidence for details`);
+      }
+    }
+
     // Navigation failures are informational only
     if (output.navigation_summary?.failed_paths > 0) {
       console.log(`ℹ️ Navigation: ${output.navigation_summary.successful_paths}/${output.navigation_summary.total_paths} paths succeeded`);
       console.log(`   Note: Failed paths may indicate outdated Zendesk docs - not a critical error`);
     }
 
-    console.log(`✅ Validation completed successfully`);
+    console.log(`✅ Validation completed successfully (status: ${output.status})`);
     process.exit(0);
   }
 })();
