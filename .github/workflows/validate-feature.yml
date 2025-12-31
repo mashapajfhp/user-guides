@@ -53,14 +53,25 @@ jobs:
           VALIDATION_RESULT: ${{ steps.detect.outputs.result_file }}
           FEATURE_FOLDER: ${{ steps.detect.outputs.folder }}
           SCREENSHOTS_DIR: ${{ steps.detect.outputs.screenshots_dir }}
+          APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          APP_USERNAME: ${{ secrets.APP_USERNAME }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           echo "Starting validation for: $FEATURE_FOLDER"
           echo "Request file: $VALIDATION_REQUEST"
           echo "Screenshots directory: $SCREENSHOTS_DIR"
+          echo "Target URL: $APP_BASE_URL"
 
           # Run Claude CLI with the validation request
           claude --print "
           You are a comprehensive UI validation agent. Read the validation request JSON at $GITHUB_WORKSPACE/$VALIDATION_REQUEST.
+
+          AUTHENTICATION:
+          - Navigate to: $APP_BASE_URL
+          - Username: $APP_USERNAME
+          - Password: $APP_PASSWORD
+          - Complete login before proceeding with validation
 
           IMPORTANT CONTEXT:
           - The nav.breadcrumb_array paths are HINTS only - they set context but may not be exact paths
