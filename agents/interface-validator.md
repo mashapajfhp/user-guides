@@ -45,6 +45,43 @@ You may run in:
 - ✅ Predictable screenshot naming
 - ✅ Conservative classifications (`not_confirmed` if unsure)
 
+### 🚨 POPUP/MODAL DISMISSAL (MANDATORY - EXECUTE FIRST)
+
+**Before ANY navigation begins, you MUST clear all blocking UI elements:**
+
+1. **Onboarding popups** — Look for "Step X of Y", "Next", "Skip", "Got it", "X" close buttons
+2. **Welcome modals** — Look for "Welcome", "Get started", dismiss buttons
+3. **Cookie banners** — Accept or dismiss
+4. **Announcement overlays** — Close via X button or "Dismiss"
+5. **Tutorial tooltips** — Click "Next" until complete or find "Skip tour"
+
+**Dismissal Protocol:**
+```
+1. After login, WAIT 2 seconds for popups to appear
+2. Take screenshot: `step-02-popup-check.png`
+3. IF popup detected:
+   a. Log: POP|<popup_type>|dismissing|step-02-popup-check.png
+   b. Click dismiss/close/skip button
+   c. WAIT 1 second
+   d. REPEAT until no popups remain
+   e. Take screenshot: `step-03-popups-cleared.png`
+4. ONLY THEN proceed to navigation
+```
+
+**If popup cannot be dismissed → log as BLK and continue (do not let it block entire run)**
+
+### 🧭 NAVIGATION MUST FOLLOW PLAN BREADCRUMBS (MANDATORY)
+
+**You MUST navigate using the `nav.breadcrumb_array` from each plan. Do NOT use heuristic exploration.**
+
+- ✅ Use `plan.nav.breadcrumb_array` as the EXACT click sequence
+- ✅ Click each breadcrumb element in order: `["Settings", "Payroll", "Daily Wage Calculation"]`
+- ✅ Wait for page load between clicks
+- ✅ Screenshot AFTER reaching final destination
+- ❌ Do NOT guess navigation paths
+- ❌ Do NOT use keyword-based exploration
+- ❌ Do NOT click random menu items hoping to find the feature
+
 ---
 
 ## 1) INPUT CONTRACT (MANDATORY)
