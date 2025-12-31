@@ -19,7 +19,12 @@ on:
         description: "Version number from n8n (e.g., v28) - used when folder_path is provided"
         required: false
         type: string
-      # New format: issues_to_validate from n8n AI node
+      # NEW: Flattened validation plans array (preferred format)
+      plans_json:
+        description: "Flattened validation plans array (JSON string) - new format with nav/checks structure"
+        required: false
+        type: string
+      # Intermediate format: issues_to_validate from n8n AI node
       issues_json:
         description: "Issues to validate from n8n AI node (JSON string array of issue objects with validation_steps)"
         required: false
@@ -239,7 +244,9 @@ jobs:
         id: write_input
         shell: bash
         env:
-          # New format inputs
+          # NEW: Flattened plans array (preferred)
+          PLANS_JSON: ${{ github.event.inputs.plans_json }}
+          # Intermediate format inputs
           ISSUES_JSON: ${{ github.event.inputs.issues_json }}
           NAV_ZENDESK_JSON: ${{ github.event.inputs.navigation_paths_from_zendesk_json }}
           CONFIG_AREAS_JSON: ${{ github.event.inputs.config_areas_json }}
@@ -273,16 +280,20 @@ jobs:
           # Output versioned_dir for use in subsequent steps
           echo "versioned_dir=${VERSIONED_DIR}" >> $GITHUB_OUTPUT
 
-          # Determine format: new (issues_to_validate) vs legacy (claims_to_validate)
-          USE_NEW_FORMAT="false"
-          if [ -n "${ISSUES_JSON:-}" ] && [ "${ISSUES_JSON}" != "null" ] && [ "${ISSUES_JSON}" != "" ]; then
-            USE_NEW_FORMAT="true"
-            echo "📊 Using NEW format (issues_to_validate from n8n AI node)"
+          # Determine format: plans (new) vs issues (intermediate) vs claims (legacy)
+          INPUT_FORMAT="legacy"
+          if [ -n "${PLANS_JSON:-}" ] && [ "${PLANS_JSON}" != "null" ] && [ "${PLANS_JSON}" != "[]" ] && [ "${PLANS_JSON}" != "" ]; then
+            INPUT_FORMAT="plans"
+            echo "📊 Using PLANS format (flattened validation plans array)"
+          elif [ -n "${ISSUES_JSON:-}" ] && [ "${ISSUES_JSON}" != "null" ] && [ "${ISSUES_JSON}" != "[]" ] && [ "${ISSUES_JSON}" != "" ]; then
+            INPUT_FORMAT="issues"
+            echo "📊 Using ISSUES format (issues_to_validate from n8n AI node)"
           else
             echo "📊 Using LEGACY format (claims_to_validate)"
           fi
 
           # Set defaults for all inputs
+          [ -z "${PLANS_JSON:-}" ] && PLANS_JSON='[]'
           [ -z "${ISSUES_JSON:-}" ] && ISSUES_JSON='[]'
           [ -z "${NAV_ZENDESK_JSON:-}" ] && NAV_ZENDESK_JSON='{}'
           [ -z "${CONFIG_AREAS_JSON:-}" ] && CONFIG_AREAS_JSON='[]'
@@ -292,6 +303,7 @@ jobs:
           [ -z "${PROCEDURES_JSON:-}" ] && PROCEDURES_JSON='[]'
 
           # Validate JSON inputs
+          echo "${PLANS_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid plans JSON, using empty array"; PLANS_JSON='[]'; }
           echo "${ISSUES_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid issues JSON, using empty array"; ISSUES_JSON='[]'; }
           echo "${NAV_ZENDESK_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid nav zendesk JSON, using empty object"; NAV_ZENDESK_JSON='{}'; }
           echo "${CONFIG_AREAS_JSON}" | jq -e . >/dev/null 2>&1 || { echo "⚠️ Invalid config areas JSON, using empty array"; CONFIG_AREAS_JSON='[]'; }
@@ -303,11 +315,12 @@ jobs:
           # Generate clean_feature_name from feature_slug
           CLEAN_FEATURE_NAME=$(echo "${FEATURE_SLUG}" | tr '-' '_')
 
-          # Build the request.json with both new and legacy fields
+          # Build the request.json with all format fields
           jq -n \
             --arg feature_name "${FEATURE_NAME}" \
             --arg clean_feature_name "${CLEAN_FEATURE_NAME}" \
-            --arg use_new_format "${USE_NEW_FORMAT}" \
+            --arg input_format "${INPUT_FORMAT}" \
+            --argjson validation_plans "${PLANS_JSON}" \
             --argjson issues_to_validate "${ISSUES_JSON}" \
             --argjson navigation_paths_from_zendesk "${NAV_ZENDESK_JSON}" \
             --argjson configuration_areas_to_document "${CONFIG_AREAS_JSON}" \
@@ -325,8 +338,10 @@ jobs:
             '{
               feature_name: $feature_name,
               clean_feature_name: $clean_feature_name,
-              input_format: (if $use_new_format == "true" then "new" else "legacy" end),
-              # New format fields
+              input_format: $input_format,
+              # NEW: Flattened validation plans array
+              validation_plans: $validation_plans,
+              # Intermediate format fields
               issues_to_validate: $issues_to_validate,
               navigation_paths_from_zendesk: $navigation_paths_from_zendesk,
               configuration_areas_to_document: $configuration_areas_to_document,
