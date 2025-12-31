@@ -51,8 +51,20 @@ jobs:
           echo "Request file: $VALIDATION_REQUEST"
 
           # Run Claude CLI with the validation request
-          claude --print "Read the validation request JSON at $GITHUB_WORKSPACE/$VALIDATION_REQUEST. For each validation plan, use Playwright MCP to: 1) Navigate to app.bayzat.com, 2) Follow the nav.breadcrumb_array path, 3) Execute each check, 4) Take screenshots as evidence. Write a JSON result summary to $GITHUB_WORKSPACE/$VALIDATION_RESULT with pass/fail status for each check." \
-            2>&1 | tee "$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/validation.log"
+          claude --print "
+          You are a UI validation agent. Read the validation request JSON at $GITHUB_WORKSPACE/$VALIDATION_REQUEST.
+
+          For each plan in the 'plans' array:
+          1. Navigate to app.bayzat.com
+          2. Follow the nav.breadcrumb_array path step by step
+          3. Execute each check in the plan's checks array
+          4. Take a screenshot after each check as evidence
+          5. Save screenshots to $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/screenshots/
+
+          IMPORTANT: Write the results to $GITHUB_WORKSPACE/$VALIDATION_RESULT following EXACTLY the output_schema.format structure defined in the request JSON. The schema specifies the exact JSON structure you must use for the results.
+
+          Be thorough but efficient. If navigation fails, mark the check as 'failed' with notes explaining why.
+          " 2>&1 | tee "$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/validation.log"
 
       - name: Commit Results
         if: steps.detect.outputs.folder != ''
