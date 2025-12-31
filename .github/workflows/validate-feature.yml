@@ -1,0 +1,76 @@
+name: Validate Feature Guide
+
+on:
+  push:
+    paths:
+      - '**/validation/request.json'
+  workflow_dispatch:
+    inputs:
+      feature_folder:
+        description: 'Feature folder to validate (e.g., daily-wage-calculator/v5)'
+        required: true
+
+jobs:
+  validate:
+    runs-on: [self-hosted, validation]
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect validation request
+        id: detect
+        run: |
+          if [ -n "${{ github.event.inputs.feature_folder }}" ]; then
+            FOLDER="${{ github.event.inputs.feature_folder }}"
+          else
+            FOLDER=$(git diff --name-only HEAD~1 HEAD | grep 'validation/request.json' | head -1 | sed 's|/validation/request.json||')
+          fi
+
+          if [ -z "$FOLDER" ]; then
+            echo "No validation request found"
+            exit 0
+          fi
+
+          echo "folder=$FOLDER" >> $GITHUB_OUTPUT
+          echo "request_file=$FOLDER/validation/request.json" >> $GITHUB_OUTPUT
+          echo "result_file=$FOLDER/validation/result.json" >> $GITHUB_OUTPUT
+          echo "Found validation request: $FOLDER"
+
+      - name: Run Playwright MCP Validation
+        if: steps.detect.outputs.folder != ''
+        env:
+          VALIDATION_REQUEST: ${{ steps.detect.outputs.request_file }}
+          VALIDATION_RESULT: ${{ steps.detect.outputs.result_file }}
+          FEATURE_FOLDER: ${{ steps.detect.outputs.folder }}
+        run: |
+          echo "Starting validation for: $FEATURE_FOLDER"
+          echo "Request file: $VALIDATION_REQUEST"
+
+          # Run Claude CLI with the validation request
+          claude --print "Read the validation request JSON at $GITHUB_WORKSPACE/$VALIDATION_REQUEST. For each validation plan, use Playwright MCP to: 1) Navigate to app.bayzat.com, 2) Follow the nav.breadcrumb_array path, 3) Execute each check, 4) Take screenshots as evidence. Write a JSON result summary to $GITHUB_WORKSPACE/$VALIDATION_RESULT with pass/fail status for each check." \
+            2>&1 | tee "$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/validation.log"
+
+      - name: Commit Results
+        if: steps.detect.outputs.folder != ''
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add "${{ steps.detect.outputs.folder }}/validation/" || true
+          git commit -m "validation: results for ${{ steps.detect.outputs.folder }}" || echo "No changes to commit"
+          git push || echo "Push failed"
+
+      - name: Notify n8n Complete
+        if: always() && steps.detect.outputs.folder != ''
+        run: |
+          STATUS="${{ job.status }}"
+          curl -s -X POST "https://automation-wh.bayzat.com/webhook/webhook/validation-complete" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"feature_folder\": \"${{ steps.detect.outputs.folder }}\",
+              \"status\": \"$STATUS\",
+              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+            }" || echo "Webhook failed (non-blocking)"
