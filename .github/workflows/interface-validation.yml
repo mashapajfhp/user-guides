@@ -375,6 +375,12 @@ jobs:
           npm ci
           npx playwright install --with-deps
 
+      # ============================================================================
+      # PRIMARY VALIDATION: Playwright Runner (run-validation.mjs)
+      # - Performs ACTUAL UI validation using cognitive walkthrough methodology
+      # - Produces pw_result.json with real browser-based validation results
+      # - This is the authoritative validation output used by n8n
+      # ============================================================================
       - name: Run Playwright validation (UI execution)
         shell: bash
         timeout-minutes: 10
@@ -412,10 +418,24 @@ jobs:
           cp "${VERSIONED_DIR}/pw_result.json" "${ROOT_OUTPUT}/pw_result.json"
           echo "✅ Copied pw_result.json to ${ROOT_OUTPUT}/pw_result.json (for n8n static URL)"
 
+      # ============================================================================
+      # SECONDARY: Logic-Only Validation (Placeholder for future agent integration)
+      # - Currently runs a generic Claude prompt for LOGIC-ONLY validation
+      # - Does NOT invoke agents/interface-validator.md agent
+      # - Does NOT perform actual UI automation
+      # - Produces result.json for schema validation purposes
+      # - TODO: Replace with proper interface-validator.md agent invocation
+      # See: docs/PAYLOAD-ALIGNMENT-ANALYSIS.md for architecture details
+      # ============================================================================
       - name: Run Interface Validator Agent (PURE, STRICT JSON)
         shell: bash
         env:
           VERSIONED_DIR: ${{ steps.write_input.outputs.versioned_dir }}
+          # VALIDATOR_* env vars for future interface-validator.md integration
+          VALIDATOR_SCREENSHOTS_DIR: ${{ steps.write_input.outputs.versioned_dir }}/screenshots
+          VALIDATOR_REPORTS_DIR: ${{ steps.write_input.outputs.versioned_dir }}
+          VALIDATOR_EVIDENCE_FILE: ${{ steps.write_input.outputs.versioned_dir }}/evidence.json
+          VALIDATOR_SUMMARY_FILE: ${{ steps.write_input.outputs.versioned_dir }}/validation-summary.md
         run: |
           set -euo pipefail
           mkdir -p "${VERSIONED_DIR}"
