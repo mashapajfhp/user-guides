@@ -200,3 +200,77 @@ jobs:
               \"screenshot_count\": $SCREENSHOT_COUNT,
               \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
             }" || echo "Webhook failed (non-blocking)"
+
+      - name: Notify Slack
+        if: always() && steps.detect.outputs.folder != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not configured, skipping Slack notification"
+            exit 0
+          fi
+
+          STATUS="${{ job.status }}"
+          FOLDER="${{ steps.detect.outputs.folder }}"
+          SCREENSHOT_COUNT=$(cat "$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}/manifest.json" 2>/dev/null | jq '.total_screenshots // 0' || echo "0")
+
+          # Extract feature name and version from folder path
+          FEATURE_NAME=$(echo "$FOLDER" | cut -d'/' -f1)
+          VERSION=$(echo "$FOLDER" | cut -d'/' -f2)
+
+          # Set emoji based on status
+          if [ "$STATUS" = "success" ]; then
+            EMOJI=":white_check_mark:"
+            COLOR="good"
+          else
+            EMOJI=":x:"
+            COLOR="danger"
+          fi
+
+          # Build GitHub links
+          REPO_URL="https://github.com/${{ github.repository }}"
+          VALIDATION_URL="$REPO_URL/tree/main/$FOLDER/validation"
+          RUN_URL="$REPO_URL/actions/runs/${{ github.run_id }}"
+
+          curl -s -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"attachments\": [{
+                \"color\": \"$COLOR\",
+                \"blocks\": [
+                  {
+                    \"type\": \"header\",
+                    \"text\": {
+                      \"type\": \"plain_text\",
+                      \"text\": \"$EMOJI Feature Validation Complete\",
+                      \"emoji\": true
+                    }
+                  },
+                  {
+                    \"type\": \"section\",
+                    \"fields\": [
+                      {\"type\": \"mrkdwn\", \"text\": \"*Feature:*\n$FEATURE_NAME\"},
+                      {\"type\": \"mrkdwn\", \"text\": \"*Version:*\n$VERSION\"},
+                      {\"type\": \"mrkdwn\", \"text\": \"*Status:*\n$STATUS\"},
+                      {\"type\": \"mrkdwn\", \"text\": \"*Screenshots:*\n$SCREENSHOT_COUNT\"}
+                    ]
+                  },
+                  {
+                    \"type\": \"actions\",
+                    \"elements\": [
+                      {
+                        \"type\": \"button\",
+                        \"text\": {\"type\": \"plain_text\", \"text\": \"View Results\"},
+                        \"url\": \"$VALIDATION_URL\"
+                      },
+                      {
+                        \"type\": \"button\",
+                        \"text\": {\"type\": \"plain_text\", \"text\": \"View Run\"},
+                        \"url\": \"$RUN_URL\"
+                      }
+                    ]
+                  }
+                ]
+              }]
+            }" || echo "Slack notification failed (non-blocking)"
