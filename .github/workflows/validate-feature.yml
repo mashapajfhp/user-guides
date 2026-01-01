@@ -247,6 +247,32 @@ jobs:
           ============================================================
           SECTION 2: SCREENSHOT RULES
           ============================================================
+
+          CRITICAL: VIEWPORT-ONLY SCREENSHOTS (NO FULL-PAGE COMPOSITES):
+          - NEVER take full-page or scrolling composite screenshots
+          - Each screenshot MUST be a single viewport capture (what fits on screen)
+          - WRONG: Long stitched images showing entire page (800x2853 pixels)
+          - CORRECT: Clean viewport screenshots (~1400x900 pixels)
+          - Full-page composites are hard to read and don't represent user experience
+
+          TARGETED SECTION CAPTURE (MANDATORY APPROACH):
+          For each section you need to document:
+          1. SCROLL the page until the target section is visible in the viewport
+          2. EXPAND the accordion/section if collapsed
+          3. WAIT for content to load completely
+          4. TAKE SCREENSHOT of the current viewport only
+          5. The screenshot should show the section header + its expanded content
+
+          Example - End of Service Eligibility:
+          - WRONG: Take full-page screenshot showing entire Payroll settings page
+          - CORRECT: Scroll down to 'End of service eligibility', expand it, screenshot just that section
+          - The result should show: section header, table with leave types, Configure button
+
+          Example - Daily Wage Calculation:
+          - WRONG: Screenshot entire page from top to bottom
+          - CORRECT: Scroll to Daily Wage Calculation section, expand it, screenshot the table
+          - The result should show: section header, Service/Daily Wage Calculation table rows
+
           SKIP DASHBOARD/HOME PAGE SCREENSHOTS:
           - Do NOT screenshot the dashboard/home page unless the feature being validated IS the dashboard
           - The first meaningful screenshot should be the navigation TO the feature (with side menu open)
@@ -263,6 +289,7 @@ jobs:
           - Use descriptive kebab-case names (max 50 characters)
           - Format: .png ONLY
           - Examples: settings-payroll-config.png, leave-policy-modal.png
+          - Each screenshot should be ~1400x900 pixels (viewport size), NOT tall composites
 
           ============================================================
           SECTION 3: EXHAUSTIVE UI EXPLORATION PATTERNS
@@ -272,9 +299,12 @@ jobs:
           Pages often have content BELOW the visible viewport. You MUST scroll to find it.
           - After loading any page, scroll down to check for content below the fold
           - Look for: additional form fields, tables, configuration sections, buttons
-          - Take screenshots of BOTH the top and scrolled views if content exists below
+          - Take SEPARATE viewport screenshots at different scroll positions
+          - WRONG: One tall composite image of entire page
+          - CORRECT: Multiple viewport-sized screenshots at different scroll positions
+          - Example: screenshot-1-top-of-page.png, screenshot-2-middle-section.png, screenshot-3-bottom-section.png
           - Use browser_snapshot to detect scrollable areas
-          - Critical: Some settings pages have 3-4 sections that require scrolling
+          - Critical: Some settings pages have 3-4 sections - each needs its own viewport screenshot
 
           PATTERN 2 - CONDITIONAL UI / BUTTON GROUP EXPLORATION:
           Some UI elements only appear AFTER selecting specific options.
