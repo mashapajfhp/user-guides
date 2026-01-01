@@ -29,6 +29,44 @@ You may run in:
 
 ## 0) HARD RULES (ZERO TOLERANCE)
 
+### 🚨 MANDATORY COMPLETION (CRITICAL - READ FIRST)
+
+**YOU MUST COMPLETE 100% OF ALL PLANS AND ALL CHECKS. NO EXCEPTIONS.**
+
+| Rule | Enforcement |
+|------|-------------|
+| Complete ALL plans in request.json | **MANDATORY** |
+| Complete ALL checks within each plan | **MANDATORY** |
+| Navigate to ALL unique paths | **MANDATORY** |
+| Click ALL interactive elements (Configure buttons, dropdowns, dialogs) | **MANDATORY** |
+| Take screenshots for EVERY check | **MANDATORY** |
+
+**FORBIDDEN EXCUSES (will cause validation rejection):**
+- ❌ "Time constraints prevented exploration" — **INVALID. You have no time limit.**
+- ❌ "Due to time constraints, skipping..." — **INVALID. Complete everything.**
+- ❌ "Would require entering the Configure dialog" — **INVALID. Enter the dialog.**
+- ❌ "Not verified in current session" — **INVALID. Verify it now.**
+- ❌ "Did not navigate to..." — **INVALID. Navigate there.**
+- ❌ "Requires navigation to..." — **INVALID. Do the navigation.**
+
+**VALID REASONS TO SKIP (only these):**
+- ✅ Element genuinely does not exist in UI after thorough search
+- ✅ Permission/MFA block prevents access (with screenshot evidence)
+- ✅ Feature is disabled/hidden for current user role (with screenshot evidence)
+- ✅ Page returns error/404 (with screenshot evidence)
+
+**COMPLETION CHECKLIST (verify before finishing):**
+1. [ ] Every plan in request.json has been processed
+2. [ ] Every check in every plan has a status (pass/fail/not_confirmed)
+3. [ ] Every unique navigation path has been visited with screenshot
+4. [ ] Every "Configure" button has been clicked and dialog explored
+5. [ ] Every dropdown has been opened and options documented
+6. [ ] Screenshots exist for ALL checks, not just some
+
+**IF YOU STOP EARLY, THE ENTIRE VALIDATION IS INVALID.**
+
+---
+
 ### Evidence & truthfulness
 - ✅ Validate ONLY what you can observe in the UI or input files.
 - ❌ Never invent UI behavior, labels, buttons, workflows, or permissions.
@@ -44,43 +82,6 @@ You may run in:
 - ✅ One summary Markdown
 - ✅ Predictable screenshot naming
 - ✅ Conservative classifications (`not_confirmed` if unsure)
-
-### 🚨 POPUP/MODAL DISMISSAL (MANDATORY - EXECUTE FIRST)
-
-**Before ANY navigation begins, you MUST clear all blocking UI elements:**
-
-1. **Onboarding popups** — Look for "Step X of Y", "Next", "Skip", "Got it", "X" close buttons
-2. **Welcome modals** — Look for "Welcome", "Get started", dismiss buttons
-3. **Cookie banners** — Accept or dismiss
-4. **Announcement overlays** — Close via X button or "Dismiss"
-5. **Tutorial tooltips** — Click "Next" until complete or find "Skip tour"
-
-**Dismissal Protocol:**
-```
-1. After login, WAIT 2 seconds for popups to appear
-2. Take screenshot: `step-02-popup-check.png`
-3. IF popup detected:
-   a. Log: POP|<popup_type>|dismissing|step-02-popup-check.png
-   b. Click dismiss/close/skip button
-   c. WAIT 1 second
-   d. REPEAT until no popups remain
-   e. Take screenshot: `step-03-popups-cleared.png`
-4. ONLY THEN proceed to navigation
-```
-
-**If popup cannot be dismissed → log as BLK and continue (do not let it block entire run)**
-
-### 🧭 NAVIGATION MUST FOLLOW PLAN BREADCRUMBS (MANDATORY)
-
-**You MUST navigate using the `nav.breadcrumb_array` from each plan. Do NOT use heuristic exploration.**
-
-- ✅ Use `plan.nav.breadcrumb_array` as the EXACT click sequence
-- ✅ Click each breadcrumb element in order: `["Settings", "Payroll", "Daily Wage Calculation"]`
-- ✅ Wait for page load between clicks
-- ✅ Screenshot AFTER reaching final destination
-- ❌ Do NOT guess navigation paths
-- ❌ Do NOT use keyword-based exploration
-- ❌ Do NOT click random menu items hoping to find the feature
 
 ---
 
@@ -622,21 +623,65 @@ Plans Processed: {{meta.extensions.plans_count}}
 
 ## 8) STEP 5 WORKFLOW (MANDATORY)
 
+### Pre-Execution Analysis (REQUIRED)
+
+**Before starting browser automation, you MUST:**
+
+1. **Count all unique navigation paths** in request.json
+2. **List them explicitly** (e.g., "I need to visit 3 unique paths: Settings > Payroll > ..., Settings > Leaves > ..., ...")
+3. **Count total checks** across all plans
+4. **Commit to completing all** — state "I will complete all X plans with Y total checks"
+
+### Execution Steps
+
 1. Read input JSON
 2. Detect input format (plans array vs wrapper object)
 3. Normalize input → extract feature identity, navigation paths, claims
-4. Resolve output_configuration (from input OR env vars)
-5. Resolve validation_config (from input OR env vars)
-6. Validate all required paths/config present → HARD FAIL if missing
-7. Capture `step-00-start.png`
-8. Establish session → `step-01-login.png`
-9. Validate navigation paths → `path-XX.png`
-10. Validate claims → `claim-XX-*.png`
-11. Capture `final-state.png`
-12. Write:
+4. **ANALYZE SCOPE:** Count unique paths, total plans, total checks — state your completion commitment
+5. Resolve output_configuration (from input OR env vars)
+6. Resolve validation_config (from input OR env vars)
+7. Validate all required paths/config present → HARD FAIL if missing
+8. Capture `step-00-start.png`
+9. Establish session → `step-01-login.png`
+10. **FOR EACH UNIQUE NAVIGATION PATH:**
+    - Navigate to the path
+    - Take screenshot `path-XX.png`
+    - **Click ALL interactive elements** (Configure buttons, edit icons, dropdowns)
+    - **Explore ALL dialogs/modals** that open
+    - Take screenshots of every expanded state
+11. Validate ALL claims → `claim-XX-*.png` (one for EACH check, no skipping)
+12. Capture `final-state.png`
+13. **COMPLETION VERIFICATION:** Before writing output, verify:
+    - All plans processed? (count should match)
+    - All checks have status? (no "skipped" without valid reason)
+    - All unique paths visited? (count screenshots)
+14. Write:
     - screenshots manifest
     - evidence JSON
     - summary Markdown
+
+### Path Coverage Enforcement
+
+**Extract ALL unique paths from request.json BEFORE starting:**
+
+```
+Example request.json has these unique paths:
+1. Settings > Payroll > Daily Wage Calculation
+2. Settings > Payroll > End of Service eligibility > Configure
+3. Settings > Leaves > Leave Policies > Add new policy > Unpaid Leave option
+
+YOU MUST VISIT ALL 3 PATHS. Not 1. Not 2. ALL 3.
+```
+
+**Common mistake to AVOID:**
+- ❌ Visiting only Payroll section and declaring "complete"
+- ❌ Seeing "Configure" button but not clicking it
+- ❌ Stopping after first few plans because they share a path
+
+**Correct behavior:**
+- ✅ Visit Settings > Payroll > Daily Wage Calculation (Plans 1, 3)
+- ✅ Visit Settings > Payroll > EOS eligibility AND CLICK Configure (Plan 2)
+- ✅ Visit Settings > Leaves > Leave Policies > Add new > Unpaid (Plans 4, 5, 7, 8, 9)
 
 ## 9) STEP 7 WORKFLOW (OPTIONAL)
 
@@ -667,4 +712,52 @@ This run is valid ONLY IF:
 - Screenshots exist in resolved `screenshots_dir`
 - Screenshot manifest exists in resolved `reports_dir`
 
+### Completion Requirements (MANDATORY)
+
+| Metric | Requirement |
+|--------|-------------|
+| Plans processed | 100% of plans in request.json |
+| Checks with status | 100% of checks across all plans |
+| Unique paths visited | 100% of distinct navigation paths |
+| Screenshots captured | ≥1 per check (more for complex checks) |
+| "Skipped" checks | ONLY with valid reason + evidence |
+
+### Invalid Completion Indicators
+
+The following in result.json will cause **VALIDATION REJECTION**:
+
+```json
+// ❌ INVALID - lazy excuse
+"notes": "Time constraints prevented exploration"
+
+// ❌ INVALID - didn't do the work
+"notes": "Did not navigate to Settings > Leaves"
+
+// ❌ INVALID - saw button but didn't click
+"notes": "Would require entering Configure dialog"
+
+// ❌ INVALID - vague non-reason
+"notes": "Not verified in current session"
+```
+
+### Valid Skip Reasons (with required evidence)
+
+```json
+// ✅ VALID - element genuinely missing
+"status": "not_confirmed",
+"notes": "Element not found after searching entire page. Screenshot shows page without expected element.",
+"evidence": "claim-XX-not-confirmed.png"
+
+// ✅ VALID - permission block
+"status": "not_confirmed",
+"notes": "Access denied - 403 error when navigating to path. User lacks required permission.",
+"evidence": "claim-XX-permission-denied.png"
+
+// ✅ VALID - feature not available
+"status": "not_confirmed",
+"notes": "Feature toggle disabled for this account. Settings page shows feature as unavailable.",
+"evidence": "claim-XX-feature-disabled.png"
+```
+
 **Zero tolerance for writing evidence anywhere else.**
+**Zero tolerance for incomplete validation runs.**
