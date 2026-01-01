@@ -10,10 +10,20 @@ on:
         description: 'Feature folder to validate (e.g., daily-wage-calculator/v5)'
         required: true
 
+env:
+  # Pin versions for stability
+  PLAYWRIGHT_MCP_VERSION: "0.0.42"  # Avoid v0.0.47 screenshot corruption bug
+  NODE_VERSION: "20"
+
 jobs:
   validate:
     runs-on: [self-hosted, validation]
     timeout-minutes: 30
+
+    outputs:
+      validation_status: ${{ steps.validate_outputs.outputs.status }}
+      screenshot_count: ${{ steps.validate_outputs.outputs.screenshot_count }}
+      error_message: ${{ steps.validate_outputs.outputs.error_message }}
 
     steps:
       - name: Checkout
@@ -32,56 +42,155 @@ jobs:
 
           if [ -z "$FOLDER" ]; then
             echo "No validation request found"
+            echo "skip=true" >> $GITHUB_OUTPUT
             exit 0
           fi
 
           echo "folder=$FOLDER" >> $GITHUB_OUTPUT
           echo "request_file=$FOLDER/validation/request.json" >> $GITHUB_OUTPUT
           echo "result_file=$FOLDER/validation/result.json" >> $GITHUB_OUTPUT
+          echo "report_file=$FOLDER/validation/report.md" >> $GITHUB_OUTPUT
           echo "screenshots_dir=$FOLDER/validation/screenshots" >> $GITHUB_OUTPUT
-          echo "Found validation request: $FOLDER"
+          echo "log_file=$FOLDER/validation/validation.log" >> $GITHUB_OUTPUT
+          echo "error_file=$FOLDER/validation/error.log" >> $GITHUB_OUTPUT
+          echo "skip=false" >> $GITHUB_OUTPUT
+          echo "✅ Found validation request: $FOLDER"
 
-      - name: Prepare Screenshots Directory
-        if: steps.detect.outputs.folder != ''
+      # ============================================================
+      # PRE-FLIGHT CHECKS
+      # ============================================================
+      - name: Pre-flight Health Checks
+        id: preflight
+        if: steps.detect.outputs.skip != 'true'
+        run: |
+          echo "🔍 Running pre-flight checks..."
+          ERRORS=""
+
+          # Check ANTHROPIC_API_KEY
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            ERRORS="${ERRORS}❌ ANTHROPIC_API_KEY not configured\n"
+          else
+            echo "✅ ANTHROPIC_API_KEY configured"
+          fi
+
+          # Check APP credentials
+          if [ -z "${{ secrets.APP_BASE_URL }}" ]; then
+            ERRORS="${ERRORS}❌ APP_BASE_URL not configured\n"
+          else
+            echo "✅ APP_BASE_URL configured"
+          fi
+
+          # Check request.json exists
+          if [ ! -f "$GITHUB_WORKSPACE/${{ steps.detect.outputs.request_file }}" ]; then
+            ERRORS="${ERRORS}❌ Request file not found: ${{ steps.detect.outputs.request_file }}\n"
+          else
+            echo "✅ Request file exists"
+            # Validate JSON syntax
+            if ! jq empty "$GITHUB_WORKSPACE/${{ steps.detect.outputs.request_file }}" 2>/dev/null; then
+              ERRORS="${ERRORS}❌ Request file is not valid JSON\n"
+            else
+              echo "✅ Request file is valid JSON"
+            fi
+          fi
+
+          # Check disk space (need at least 2GB for browsers)
+          AVAILABLE_GB=$(df -g "$GITHUB_WORKSPACE" | tail -1 | awk '{print $4}')
+          if [ "$AVAILABLE_GB" -lt 2 ]; then
+            ERRORS="${ERRORS}❌ Low disk space: ${AVAILABLE_GB}GB available (need 2GB)\n"
+          else
+            echo "✅ Disk space OK: ${AVAILABLE_GB}GB available"
+          fi
+
+          if [ -n "$ERRORS" ]; then
+            echo "❌ Pre-flight checks failed:"
+            echo -e "$ERRORS"
+            echo "preflight_passed=false" >> $GITHUB_OUTPUT
+            echo "preflight_errors=$ERRORS" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+          echo "preflight_passed=true" >> $GITHUB_OUTPUT
+          echo "✅ All pre-flight checks passed"
+
+      - name: Prepare Output Directories
+        if: steps.detect.outputs.skip != 'true'
         run: |
           mkdir -p "$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
+          echo "✅ Screenshots directory ready"
 
+      # ============================================================
+      # INSTALLATION (with caching hints)
+      # ============================================================
       - name: Install Claude CLI
-        if: steps.detect.outputs.folder != ''
+        if: steps.detect.outputs.skip != 'true'
         run: |
           echo "Installing Claude CLI..."
           npm install -g @anthropic-ai/claude-code
-          # Add npm global bin to PATH
           export PATH="$(npm prefix -g)/bin:$PATH"
-          echo "PATH=$PATH"
-          which claude
+
+          # Verify installation
+          if ! command -v claude &> /dev/null; then
+            echo "❌ Claude CLI installation failed"
+            exit 1
+          fi
+
           claude --version
           echo "✅ Claude CLI installed"
 
       - name: Install Playwright MCP and Browsers
-        if: steps.detect.outputs.folder != ''
+        if: steps.detect.outputs.skip != 'true'
         run: |
-          echo "Pre-installing Playwright MCP package..."
-          npm install -g @playwright/mcp 2>/dev/null || npx -y @playwright/mcp --version
+          echo "Installing Playwright MCP v${PLAYWRIGHT_MCP_VERSION}..."
+
+          # Install specific version for stability
+          npm install -g @playwright/mcp@${PLAYWRIGHT_MCP_VERSION}
+
           echo "Installing Playwright browsers..."
           npx -y playwright install chromium
-          echo "✅ Playwright MCP and browsers ready"
+
+          # Verify browser installation
+          if [ ! -d ~/.cache/ms-playwright ]; then
+            echo "⚠️ Browser cache directory not found, attempting reinstall..."
+            npx -y playwright install chromium --force
+          fi
+
+          echo "✅ Playwright MCP v${PLAYWRIGHT_MCP_VERSION} and browsers ready"
 
       - name: Setup MCP Configuration
-        if: steps.detect.outputs.folder != ''
+        if: steps.detect.outputs.skip != 'true'
         run: |
           echo "Setting up MCP configuration..."
-          # Remove any existing config and create fresh
           rm -f "$GITHUB_WORKSPACE/.mcp.json"
-          # Configure Playwright MCP with screenshot output directory
-          SCREENSHOT_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
-          echo "Screenshot output directory: $SCREENSHOT_PATH"
-          echo "{\"mcpServers\":{\"playwright\":{\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp\",\"--output-dir\",\"$SCREENSHOT_PATH\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
-          echo "MCP config created at: $GITHUB_WORKSPACE/.mcp.json"
-          cat "$GITHUB_WORKSPACE/.mcp.json"
 
+          SCREENSHOT_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
+
+          # Use pinned version with output directory and trace for debugging
+          cat > "$GITHUB_WORKSPACE/.mcp.json" << EOF
+          {
+            "mcpServers": {
+              "playwright": {
+                "command": "npx",
+                "args": [
+                  "-y",
+                  "@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}",
+                  "--output-dir", "${SCREENSHOT_PATH}",
+                  "--headless"
+                ]
+              }
+            }
+          }
+          EOF
+
+          echo "MCP config:"
+          cat "$GITHUB_WORKSPACE/.mcp.json"
+          echo "✅ MCP configuration ready"
+
+      # ============================================================
+      # VALIDATION EXECUTION
+      # ============================================================
       - name: Run Playwright MCP Validation
-        if: steps.detect.outputs.folder != ''
+        id: validation
+        if: steps.detect.outputs.skip != 'true'
         env:
           VALIDATION_REQUEST: ${{ steps.detect.outputs.request_file }}
           VALIDATION_RESULT: ${{ steps.detect.outputs.result_file }}
@@ -92,25 +201,31 @@ jobs:
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          echo "Starting validation for: $FEATURE_FOLDER"
+          echo "============================================================"
+          echo "🚀 Starting validation for: $FEATURE_FOLDER"
+          echo "============================================================"
           echo "Request file: $VALIDATION_REQUEST"
           echo "Screenshots directory: $SCREENSHOTS_DIR"
           echo "Target URL: $APP_BASE_URL"
-          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          echo "Current directory: $(pwd)"
-          echo "MCP config location: $GITHUB_WORKSPACE/.mcp.json"
-          ls -la "$GITHUB_WORKSPACE/.mcp.json" || echo "MCP config not found!"
+          echo "Playwright MCP version: ${PLAYWRIGHT_MCP_VERSION}"
+          echo "Start time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "============================================================"
 
-          # Change to workspace directory to ensure MCP loads correctly
           cd "$GITHUB_WORKSPACE"
-
-          # Add npm global bin to PATH
           export PATH="$(npm prefix -g)/bin:$PATH"
 
-          # Run Claude CLI (job-level timeout-minutes handles overall timeout)
-          # macOS doesn't have 'timeout' command, using job timeout instead
-          claude --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" --mcp-config ".mcp.json" --print "
+          # Create marker file to track execution
+          echo "started" > "$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status"
+
+          # Run Claude CLI and capture exit code
+          set +e  # Don't exit on error
+
+          claude --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
+                 --mcp-config ".mcp.json" \
+                 --print "
           You are a comprehensive UI validation agent. Read the validation request JSON at $GITHUB_WORKSPACE/$VALIDATION_REQUEST.
+
+          CRITICAL: You MUST complete all tasks and write all output files before finishing.
 
           AUTHENTICATION:
           - Navigate to: $APP_BASE_URL
@@ -124,7 +239,7 @@ jobs:
           - Look for an X button (close icon) in the top-right corner of the onboarding popup
           - Click the X to dismiss the onboarding modal completely
           - Wait for the overlay to close and the main dashboard to be fully visible
-          - Take a screenshot AFTER dismissing onboarding (step-02-onboarding-dismissed.png)
+          - Take a screenshot AFTER dismissing onboarding (02-onboarding-dismissed.png)
           - Only proceed with feature navigation once the dashboard is clear of overlays
 
           IMPORTANT CONTEXT:
@@ -138,177 +253,238 @@ jobs:
           3. Read the check's description and assertion carefully to understand the validation goal
 
           THOROUGH EXPLORATION REQUIRED:
-          - Interact with EVERY UI element related to the feature: dropdowns, radio buttons, switches, toggles, accordions, links, tabs
+          - Interact with EVERY UI element related to the feature
           - Open dropdowns and document ALL available options
           - Click toggles/switches and observe state changes
           - Expand accordions to see hidden content
-          - Follow relevant links to understand feature scope
 
-          DOCUMENTATION REQUIREMENTS:
-          For EVERY interaction, document:
-          - What action was performed (clicked, selected, expanded, etc.)
-          - What UI element was interacted with (exact text/label)
-          - What happened after the interaction (success/failure/state change)
-          - What options or content was revealed
-
-          ============================================================
-          SCREENSHOT SPECIFICATIONS (MANDATORY)
-          ============================================================
-
-          SCREENSHOT PHILOSOPHY:
-          - SMART SCREENSHOTS: Focused captures only, NO full page screenshots
-          - Capture specific UI elements, not entire browser windows
-          - Every screenshot must serve a validation purpose
-
-          CONTEXTUAL NAMING CONVENTION (MANDATORY):
+          SCREENSHOT SPECIFICATIONS:
           All screenshots saved to: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/
+          Use descriptive names like: daily-wage-calculation-config.png, eos-eligibility-settings.png
+          Format: .png ONLY, kebab-case, max 50 characters
 
-          NAMING PHILOSOPHY:
-          Screenshot names MUST describe the SCREEN/FEATURE being captured, NOT generic claim numbers.
-          Names should be self-documenting - anyone reading the filename should understand what it shows.
+          MANDATORY OUTPUT FILES (YOU MUST CREATE ALL OF THESE):
+          1. Screenshot manifest: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/manifest.json
+          2. Validation report: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/report.md
+          3. Structured results: $GITHUB_WORKSPACE/$VALIDATION_RESULT
 
-          Required Baseline Screenshots:
-          - 00-login-page.png                    (login screen before authentication)
-          - 01-dashboard-after-login.png         (main dashboard after successful login)
-          - 02-onboarding-dismissed.png          (dashboard after closing onboarding modal)
-          - final-validation-complete.png        (end state after all validations)
+          After completing validation, write 'completed' to: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status
+          " 2>&1 | tee "$GITHUB_WORKSPACE/${{ steps.detect.outputs.log_file }}"
 
-          Navigation Screenshots (describe the destination):
-          - nav-settings-menu.png                (settings menu opened)
-          - nav-payroll-section.png              (payroll settings section)
-          - nav-leaves-section.png               (leaves settings section)
-          - nav-[section]-[subsection].png       (pattern: nav-payroll-daily-wage.png)
+          CLAUDE_EXIT_CODE=$?
+          set -e
 
-          Feature Validation Screenshots (describe the feature/screen):
-          - daily-wage-calculation-config.png         (daily wage calculation configuration screen)
-          - daily-wage-calculation-options.png        (showing available calculation options)
-          - eos-eligibility-settings.png              (end of service eligibility settings)
-          - eos-salary-components-dropdown.png        (salary components dropdown expanded)
-          - leave-policy-unpaid-config.png            (unpaid leave policy configuration)
-          - leave-policy-deduction-formula.png        (deduction formula display)
-          - proration-settings-calendar-days.png      (proration with calendar days selected)
-          - proration-settings-working-days.png       (proration with working days selected)
-          - proration-settings-custom-days.png        (proration with custom days selected)
+          echo "claude_exit_code=$CLAUDE_EXIT_CODE" >> $GITHUB_OUTPUT
+          echo "============================================================"
+          echo "Claude CLI exit code: $CLAUDE_EXIT_CODE"
+          echo "End time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "============================================================"
 
-          UI State Screenshots (describe what state is being shown):
-          - dropdown-calculation-basis-expanded.png   (dropdown showing all options)
-          - radio-salary-components-basic-selected.png
-          - toggle-override-enabled.png
-          - warning-payroll-month-impact.png
-          - error-validation-failed.png
-
-          Evidence Screenshots (describe the evidence):
-          - evidence-formula-display.png
-          - evidence-override-indicator-visible.png
-          - evidence-greyed-out-field.png
-
-          NAMING RULES (STRICT):
-          - Format: .png ONLY (no .jpg, .jpeg, .webp)
-          - Pattern: [context]-[feature]-[detail].png
-          - Slugs: kebab-case only (lowercase, hyphens)
-          - Characters: ASCII only (no unicode, no spaces)
-          - Length: Max 50 characters total
-          - MUST be descriptive of screen content, NOT generic numbers
-
-          SCREENSHOT MANIFEST:
-          After all screenshots, create manifest at:
-          $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/manifest.json
-
-          Manifest format:
-          {
-            \"generated_at\": \"ISO-8601 timestamp\",
-            \"total_screenshots\": N,
-            \"screenshots\": [
-              {
-                \"filename\": \"step-00-start.png\",
-                \"category\": \"baseline\",
-                \"description\": \"Initial dashboard state\",
-                \"timestamp\": \"ISO-8601\"
-              }
-            ]
-          }
-
-          ============================================================
-
-          COMPREHENSIVE REPORT:
-          Write a detailed validation report to $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/report.md including:
-          - Executive summary of validation results
-          - For each plan: navigation path taken, all interactions performed, findings
-          - List of all UI elements discovered and their states
-          - What worked vs what didn't work
-          - Any discrepancies between expected (assertion) and actual behavior
-          - Screenshot inventory with descriptions
-
-          RESULTS FILE:
-          Write structured results to $GITHUB_WORKSPACE/$VALIDATION_RESULT following EXACTLY the output_schema.format in the request JSON.
-          Include detailed 'notes' for each check explaining what was validated and how.
-          Include 'screenshots' array referencing captured evidence.
-
-          Be thorough - we need a complete picture of the feature's UI state, not just pass/fail.
-          " 2>&1 | tee "$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/validation.log"
-
-      - name: Cleanup Browser Processes
-        if: always() && steps.detect.outputs.folder != ''
+      # ============================================================
+      # OUTPUT VALIDATION
+      # ============================================================
+      - name: Validate Outputs
+        id: validate_outputs
+        if: always() && steps.detect.outputs.skip != 'true'
         run: |
-          # Kill any orphaned browser/MCP processes (runs even if validation fails/hangs)
+          echo "🔍 Validating output files..."
+
+          FOLDER="${{ steps.detect.outputs.folder }}"
+          SCREENSHOTS_DIR="${{ steps.detect.outputs.screenshots_dir }}"
+          RESULT_FILE="${{ steps.detect.outputs.result_file }}"
+          REPORT_FILE="${{ steps.detect.outputs.report_file }}"
+          LOG_FILE="${{ steps.detect.outputs.log_file }}"
+
+          STATUS="success"
+          ERROR_MESSAGE=""
+          SCREENSHOT_COUNT=0
+
+          # Check execution status
+          EXEC_STATUS=$(cat "$GITHUB_WORKSPACE/$FOLDER/validation/.execution_status" 2>/dev/null || echo "unknown")
+          echo "Execution status: $EXEC_STATUS"
+
+          # Check validation log
+          LOG_SIZE=$(wc -c < "$GITHUB_WORKSPACE/$LOG_FILE" 2>/dev/null || echo "0")
+          echo "Validation log size: $LOG_SIZE bytes"
+          if [ "$LOG_SIZE" -lt 100 ]; then
+            STATUS="failed"
+            ERROR_MESSAGE="Validation log is empty or too small (${LOG_SIZE} bytes)"
+            echo "❌ $ERROR_MESSAGE"
+          else
+            echo "✅ Validation log has content"
+          fi
+
+          # Check screenshots
+          if [ -d "$GITHUB_WORKSPACE/$SCREENSHOTS_DIR" ]; then
+            SCREENSHOT_COUNT=$(find "$GITHUB_WORKSPACE/$SCREENSHOTS_DIR" -name "*.png" | wc -l | tr -d ' ')
+            echo "Screenshots found: $SCREENSHOT_COUNT"
+            if [ "$SCREENSHOT_COUNT" -eq 0 ]; then
+              STATUS="failed"
+              ERROR_MESSAGE="${ERROR_MESSAGE}; No screenshots captured"
+              echo "❌ No screenshots found"
+            else
+              echo "✅ $SCREENSHOT_COUNT screenshots captured"
+            fi
+          else
+            STATUS="failed"
+            ERROR_MESSAGE="${ERROR_MESSAGE}; Screenshots directory missing"
+            echo "❌ Screenshots directory not found"
+          fi
+
+          # Check manifest
+          MANIFEST="$GITHUB_WORKSPACE/$SCREENSHOTS_DIR/manifest.json"
+          if [ -f "$MANIFEST" ]; then
+            if jq empty "$MANIFEST" 2>/dev/null; then
+              echo "✅ Screenshot manifest is valid JSON"
+            else
+              echo "⚠️ Screenshot manifest is not valid JSON"
+            fi
+          else
+            echo "⚠️ Screenshot manifest not found (will be created)"
+          fi
+
+          # Check result.json
+          if [ -f "$GITHUB_WORKSPACE/$RESULT_FILE" ]; then
+            if jq empty "$GITHUB_WORKSPACE/$RESULT_FILE" 2>/dev/null; then
+              echo "✅ result.json exists and is valid"
+            else
+              STATUS="failed"
+              ERROR_MESSAGE="${ERROR_MESSAGE}; result.json is not valid JSON"
+              echo "❌ result.json is not valid JSON"
+            fi
+          else
+            STATUS="failed"
+            ERROR_MESSAGE="${ERROR_MESSAGE}; result.json not generated"
+            echo "❌ result.json not found"
+          fi
+
+          # Check report.md
+          if [ -f "$GITHUB_WORKSPACE/$REPORT_FILE" ]; then
+            REPORT_SIZE=$(wc -c < "$GITHUB_WORKSPACE/$REPORT_FILE")
+            if [ "$REPORT_SIZE" -gt 500 ]; then
+              echo "✅ report.md exists ($REPORT_SIZE bytes)"
+            else
+              echo "⚠️ report.md is suspiciously small ($REPORT_SIZE bytes)"
+            fi
+          else
+            STATUS="failed"
+            ERROR_MESSAGE="${ERROR_MESSAGE}; report.md not generated"
+            echo "❌ report.md not found"
+          fi
+
+          # Generate manifest if missing but screenshots exist
+          if [ ! -f "$MANIFEST" ] && [ "$SCREENSHOT_COUNT" -gt 0 ]; then
+            echo "📝 Generating screenshot manifest..."
+            echo "{" > "$MANIFEST"
+            echo "  \"generated_at\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"," >> "$MANIFEST"
+            echo "  \"total_screenshots\": $SCREENSHOT_COUNT," >> "$MANIFEST"
+            echo "  \"screenshots\": [" >> "$MANIFEST"
+            FIRST=true
+            for f in "$GITHUB_WORKSPACE/$SCREENSHOTS_DIR"/*.png; do
+              if [ -f "$f" ]; then
+                FILENAME=$(basename "$f")
+                if [ "$FIRST" = true ]; then
+                  FIRST=false
+                else
+                  echo "," >> "$MANIFEST"
+                fi
+                echo -n "    {\"filename\": \"$FILENAME\", \"category\": \"auto-detected\"}" >> "$MANIFEST"
+              fi
+            done
+            echo "" >> "$MANIFEST"
+            echo "  ]" >> "$MANIFEST"
+            echo "}" >> "$MANIFEST"
+            echo "✅ Generated manifest with $SCREENSHOT_COUNT screenshots"
+          fi
+
+          # Output results
+          echo "status=$STATUS" >> $GITHUB_OUTPUT
+          echo "screenshot_count=$SCREENSHOT_COUNT" >> $GITHUB_OUTPUT
+          echo "error_message=$ERROR_MESSAGE" >> $GITHUB_OUTPUT
+
+          echo "============================================================"
+          echo "📊 Validation Summary"
+          echo "============================================================"
+          echo "Status: $STATUS"
+          echo "Screenshots: $SCREENSHOT_COUNT"
+          echo "Errors: ${ERROR_MESSAGE:-none}"
+          echo "============================================================"
+
+      # ============================================================
+      # CLEANUP & COMMIT
+      # ============================================================
+      - name: Cleanup Browser Processes
+        if: always() && steps.detect.outputs.skip != 'true'
+        run: |
           pkill -f "mcp-server-playwright" 2>/dev/null || true
           pkill -f "chrome.*playwright" 2>/dev/null || true
           pkill -f "Google Chrome.*--remote-debugging" 2>/dev/null || true
+          pkill -f "Chromium" 2>/dev/null || true
           echo "✅ Browser cleanup complete"
 
-      - name: Validate Screenshot Manifest
-        if: steps.detect.outputs.folder != ''
-        run: |
-          MANIFEST="$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}/manifest.json"
-          if [ -f "$MANIFEST" ]; then
-            echo "Screenshot manifest found:"
-            cat "$MANIFEST" | jq '.total_screenshots, .screenshots | length'
-          else
-            echo "Warning: No screenshot manifest generated"
-          fi
-
       - name: Commit Results
-        if: steps.detect.outputs.folder != ''
+        if: steps.detect.outputs.skip != 'true'
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+
+          # Remove execution status file (internal use only)
+          rm -f "$GITHUB_WORKSPACE/${{ steps.detect.outputs.folder }}/validation/.execution_status"
+
           git add "${{ steps.detect.outputs.folder }}/validation/" || true
-          git commit -m "validation: results for ${{ steps.detect.outputs.folder }}" || echo "No changes to commit"
+
+          COMMIT_MSG="validation: ${{ steps.validate_outputs.outputs.status }} for ${{ steps.detect.outputs.folder }}"
+          if [ "${{ steps.validate_outputs.outputs.status }}" = "failed" ]; then
+            COMMIT_MSG="validation: ❌ FAILED for ${{ steps.detect.outputs.folder }}"
+          fi
+
+          git commit -m "$COMMIT_MSG" || echo "No changes to commit"
           git push || echo "Push failed"
 
+      # ============================================================
+      # NOTIFICATIONS
+      # ============================================================
       - name: Notify n8n Complete
-        if: always() && steps.detect.outputs.folder != ''
+        if: always() && steps.detect.outputs.skip != 'true'
         run: |
-          STATUS="${{ job.status }}"
-          SCREENSHOT_COUNT=$(cat "$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}/manifest.json" 2>/dev/null | jq '.total_screenshots // 0' || echo "0")
+          STATUS="${{ steps.validate_outputs.outputs.status }}"
+          SCREENSHOT_COUNT="${{ steps.validate_outputs.outputs.screenshot_count }}"
+          ERROR_MESSAGE="${{ steps.validate_outputs.outputs.error_message }}"
+          CLAUDE_EXIT="${{ steps.validation.outputs.claude_exit_code }}"
+
+          # Build comprehensive payload
           curl -s -X POST "https://automation-wh.bayzat.com/webhook/validation-complete" \
             -H "Content-Type: application/json" \
             -d "{
               \"feature_folder\": \"${{ steps.detect.outputs.folder }}\",
               \"status\": \"$STATUS\",
-              \"screenshot_count\": $SCREENSHOT_COUNT,
-              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+              \"screenshot_count\": ${SCREENSHOT_COUNT:-0},
+              \"claude_exit_code\": ${CLAUDE_EXIT:-1},
+              \"error_message\": \"$ERROR_MESSAGE\",
+              \"run_id\": \"${{ github.run_id }}\",
+              \"run_url\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\",
+              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",
+              \"playwright_mcp_version\": \"${PLAYWRIGHT_MCP_VERSION}\"
             }" || echo "Webhook failed (non-blocking)"
 
       - name: Notify Slack
-        if: always() && steps.detect.outputs.folder != ''
+        if: always() && steps.detect.outputs.skip != 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
-            echo "SLACK_WEBHOOK_URL not configured, skipping Slack notification"
+            echo "SLACK_WEBHOOK_URL not configured, skipping"
             exit 0
           fi
 
-          STATUS="${{ job.status }}"
+          STATUS="${{ steps.validate_outputs.outputs.status }}"
           FOLDER="${{ steps.detect.outputs.folder }}"
-          SCREENSHOT_COUNT=$(cat "$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}/manifest.json" 2>/dev/null | jq '.total_screenshots // 0' || echo "0")
+          SCREENSHOT_COUNT="${{ steps.validate_outputs.outputs.screenshot_count }}"
+          ERROR_MESSAGE="${{ steps.validate_outputs.outputs.error_message }}"
 
-          # Extract feature name and version from folder path
           FEATURE_NAME=$(echo "$FOLDER" | cut -d'/' -f1)
           VERSION=$(echo "$FOLDER" | cut -d'/' -f2)
 
-          # Set emoji based on status
           if [ "$STATUS" = "success" ]; then
             EMOJI=":white_check_mark:"
             COLOR="good"
@@ -317,10 +493,15 @@ jobs:
             COLOR="danger"
           fi
 
-          # Build GitHub links
           REPO_URL="https://github.com/${{ github.repository }}"
           VALIDATION_URL="$REPO_URL/tree/main/$FOLDER/validation"
           RUN_URL="$REPO_URL/actions/runs/${{ github.run_id }}"
+
+          # Build error block if needed
+          ERROR_BLOCK=""
+          if [ -n "$ERROR_MESSAGE" ] && [ "$ERROR_MESSAGE" != "null" ]; then
+            ERROR_BLOCK=",{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"*Error:* $ERROR_MESSAGE\"}}"
+          fi
 
           curl -s -X POST "$SLACK_WEBHOOK_URL" \
             -H "Content-Type: application/json" \
@@ -332,7 +513,7 @@ jobs:
                     \"type\": \"header\",
                     \"text\": {
                       \"type\": \"plain_text\",
-                      \"text\": \"$EMOJI Feature Validation Complete\",
+                      \"text\": \"$EMOJI Feature Validation: $STATUS\",
                       \"emoji\": true
                     }
                   },
@@ -342,9 +523,10 @@ jobs:
                       {\"type\": \"mrkdwn\", \"text\": \"*Feature:*\n$FEATURE_NAME\"},
                       {\"type\": \"mrkdwn\", \"text\": \"*Version:*\n$VERSION\"},
                       {\"type\": \"mrkdwn\", \"text\": \"*Status:*\n$STATUS\"},
-                      {\"type\": \"mrkdwn\", \"text\": \"*Screenshots:*\n$SCREENSHOT_COUNT\"}
+                      {\"type\": \"mrkdwn\", \"text\": \"*Screenshots:*\n${SCREENSHOT_COUNT:-0}\"}
                     ]
-                  },
+                  }
+                  $ERROR_BLOCK,
                   {
                     \"type\": \"actions\",
                     \"elements\": [
