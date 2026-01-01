@@ -355,6 +355,184 @@ After reaching any claim waypoint:
 3. **DOCUMENT PROGRESSIVE STATE CHANGES** - Screenshot before/after, note what changed
 4. **EXHAUSTIVE SERVICE/ITEM EXPLORATION** - If multiple items exist, explore EACH one
 
+---
+
+## 3.5.1) EXHAUSTIVE UI EXPLORATION (MANDATORY - FEATURE AGNOSTIC)
+
+**This section defines exploration patterns that apply to ANY feature, not just specific ones.**
+
+### PATTERN 1: TABLE/LIST ROW EXPLORATION
+
+When you encounter a **table or list with multiple rows**, each with edit/configure buttons:
+
+```
+❌ WRONG: Click only the first row's edit button
+✅ CORRECT: Click EVERY row's edit button, one by one
+```
+
+**Protocol:**
+1. Count total rows with interactive elements (edit icons, configure buttons, links)
+2. Screenshot the table overview
+3. Click Row 1's edit/configure → Screenshot modal → Explore modal fully → Close
+4. Click Row 2's edit/configure → Screenshot modal → Explore modal fully → Close
+5. Continue until ALL rows explored
+6. Screenshot final state
+
+**Example - Configuration Tables:**
+```
+If page shows:
+| Service                  | Configuration              | Action   |
+| Salary proration         | Basic salary + allowances  | ✏️ Edit  |
+| EOS leave encashment     | Basic salary + allowances  | ✏️ Edit  |
+| Unpaid leave deduction   | Basic salary + allowances  | ✏️ Edit  |
+
+YOU MUST: Click Edit on ALL 3 rows, not just one.
+```
+
+### PATTERN 2: MODAL/DIALOG EXPLORATION
+
+When a **modal or dialog opens**, you MUST explore it COMPLETELY:
+
+```
+❌ WRONG: Screenshot the modal and close it
+✅ CORRECT: Interact with EVERY element in the modal
+```
+
+**Protocol:**
+1. Screenshot modal initial state
+2. Find ALL dropdowns → Click EACH one to show options → Screenshot with options visible
+3. Find ALL checkboxes → Note their state (checked/unchecked)
+4. Find ALL expandable sections → Expand each one
+5. Find ALL tabs within modal → Click each tab
+6. Find ALL input fields → Note their values and states (enabled/disabled)
+7. Screenshot final state before closing
+
+**Dropdown Exploration (MANDATORY):**
+```
+If modal has a dropdown labeled "Month calculation":
+1. Click dropdown to open it
+2. Screenshot showing ALL options (e.g., "Working days", "Calendar days", "Custom days")
+3. If options have sub-fields (like "Number of days" for Custom), explore those too
+4. Repeat for EVERY dropdown in the modal
+```
+
+**Checkbox with Dependencies:**
+```
+If modal has checkbox like "Override calculation in policies":
+1. Note current state (checked/unchecked)
+2. Screenshot current state
+3. If checking/unchecking reveals/hides fields, document the difference
+```
+
+### PATTERN 3: ACCORDION/EXPANDABLE SECTION EXPLORATION
+
+When you encounter **expandable sections or accordions**:
+
+```
+❌ WRONG: Look at section headers and move on
+✅ CORRECT: Expand EVERY section and explore contents
+```
+
+**Protocol:**
+1. Identify all expandable sections (chevrons, +/- icons, collapsible headers)
+2. Screenshot collapsed state
+3. Expand Section 1 → Screenshot → Explore contents
+4. Expand Section 2 → Screenshot → Explore contents
+5. Continue until ALL sections expanded and documented
+
+### PATTERN 4: NESTED NAVIGATION EXPLORATION
+
+When a **page has multiple sub-sections or tabs**:
+
+```
+❌ WRONG: Visit only the first visible section
+✅ CORRECT: Navigate to ALL sub-sections, sub-tabs, and nested pages
+```
+
+**Protocol:**
+1. From main section, identify ALL navigation options (sidebar items, tabs, links)
+2. List them: "I see 4 sub-sections: A, B, C, D"
+3. Navigate to A → Screenshot → Explore fully
+4. Navigate to B → Screenshot → Explore fully
+5. Continue until ALL sub-sections visited
+
+**Example - Settings Page:**
+```
+If "Leave settings" page shows:
+- Leave Policies (with "Learn More" link)
+- Leave Calendar
+- Leave Cycle
+
+YOU MUST: Explore ALL three sections, AND click "Learn More" or any action buttons.
+```
+
+### PATTERN 5: FORM FIELD EXPLORATION
+
+When a **form or configuration panel** is displayed:
+
+```
+❌ WRONG: Screenshot the form as-is
+✅ CORRECT: Document all field types, options, and states
+```
+
+**Protocol:**
+1. For each dropdown → Click to show all options → Screenshot
+2. For each radio button group → Note all options
+3. For each toggle/switch → Note current state
+4. For disabled fields → Note WHY they're disabled (look for info icons, tooltips)
+5. For linked text (like "Configured in X setting") → Note the relationship
+
+### PATTERN 6: LEAVE POLICY / DETAILED CONFIGURATION PAGES
+
+When exploring **policy configuration or detailed settings**:
+
+```
+❌ WRONG: View the policy list and declare complete
+✅ CORRECT: Enter policy edit mode and explore all configuration tabs/sections
+```
+
+**Protocol:**
+1. From policy list, click to edit/view a policy
+2. Inside policy editor, explore ALL sections:
+   - General settings
+   - Calculation settings (like "Leave pay rate")
+   - Restrictions
+   - Related configurations
+3. For each section with options → Open dropdowns, document choices
+4. Look for linked configurations ("Configured in X" messages)
+
+### EXPLORATION CHECKLIST (Verify Before Closing Each Page)
+
+Before leaving ANY page, verify:
+- [ ] All table rows with edit buttons → Clicked and explored?
+- [ ] All modals opened → All dropdowns clicked?
+- [ ] All accordions → Expanded?
+- [ ] All tabs → Clicked?
+- [ ] All sub-navigation → Visited?
+- [ ] All "Configure" buttons → Clicked?
+- [ ] All "Learn More" / info links → Noted?
+- [ ] All disabled fields → Reason documented?
+
+### SCREENSHOT QUANTITY GUIDANCE
+
+**Minimum screenshots per exploration pattern:**
+
+| Pattern | Minimum Screenshots |
+|---------|---------------------|
+| Table with N rows | N+1 (overview + each modal) |
+| Modal with M dropdowns | M+2 (initial + each dropdown open + final) |
+| Page with K accordions | K+1 (collapsed + each expanded) |
+| Form with checkboxes | 1 per significant state change |
+
+**For the Daily Wage Calculator example, this means:**
+- DWC table overview: 1 screenshot
+- Salary Proration modal: 3+ screenshots (initial, dropdown open, different selection)
+- EOS Leave Encashment modal: 4+ screenshots (initial, leave types table, each dropdown, checkbox states)
+- Unpaid Leave Deduction modal: 3+ screenshots (same pattern as above)
+- Leave Policy configuration: 3+ screenshots (overview, leave pay rate section, options)
+
+**Total expected: 15-20 screenshots minimum for a feature of this complexity.**
+
 ### Exploration Evidence in Claims JSON
 
 ```json
