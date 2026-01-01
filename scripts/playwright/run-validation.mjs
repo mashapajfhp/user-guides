@@ -120,7 +120,7 @@ const SCREENSHOTS_DIR = getArg("--screenshots", path.join(ROOT, ".validation/out
 // timeouts / limits
 const GOTO_TIMEOUT = Number(process.env.PLAYWRIGHT_GOTO_TIMEOUT_MS || 45000);
 const STEP_TIMEOUT = Number(process.env.PLAYWRIGHT_STEP_TIMEOUT_MS || 15000);
-const HEADLESS = (process.env.PLAYWRIGHT_HEADLESS ?? "true") !== "false";
+const HEADLESS = false; // Visible browser for debugging
 
 // Bound navigation checks so we don't explode CI time on huge trees.
 // You can raise this later if needed.
@@ -4382,6 +4382,211 @@ async function attemptLoginFromNavigationSpec(page, app, navigation_paths, scree
   }
 }
 
+// ------------------ MODAL DISMISSAL ------------------
+/**
+ * Dismiss any onboarding modals, tours, or popups that might block navigation.
+ * These commonly appear after login and can interfere with UI automation.
+ *
+ * Strategy:
+ * 1. Look for common modal indicators (role="dialog", tour steps, etc.)
+ * 2. Try to close via X button, Close button, or Skip button
+ * 3. Fall back to clicking outside the modal or pressing Escape
+ * 4. Repeat until no modals are found (some apps have multi-step tours)
+ */
+async function dismissModals(page, options = {}) {
+  const maxAttempts = options.maxAttempts || 10;  // Handle multi-step tours (up to 10 steps)
+  const timeout = options.timeout || 3000;
+  let dismissed = 0;
+
+  console.log('   🔍 Checking for blocking modals/popups...');
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    let modalFound = false;
+
+    try {
+      // Check for various modal patterns
+      const modalSelectors = [
+        '[role="dialog"]',
+        '[aria-modal="true"]',
+        '.modal:visible',
+        '.popup:visible',
+        '.overlay:visible',
+        '[class*="tour"]:visible',
+        '[class*="onboarding"]:visible',
+        '[class*="walkthrough"]:visible',
+        '[class*="tooltip"][class*="step"]:visible'
+      ];
+
+      for (const selector of modalSelectors) {
+        try {
+          const isVisible = await page.locator(selector).first().isVisible({ timeout: 500 });
+          if (isVisible) {
+            modalFound = true;
+            break;
+          }
+        } catch { /* continue checking */ }
+      }
+
+      // Also check for step indicators like "Step 1 of 4"
+      if (!modalFound) {
+        try {
+          const stepIndicator = await page.getByText(/step\s+\d+\s+(of|\/)\s+\d+/i).first().isVisible({ timeout: 500 });
+          if (stepIndicator) modalFound = true;
+        } catch { /* no step indicator */ }
+      }
+
+      if (!modalFound) {
+        if (dismissed > 0) {
+          console.log(`   ✓ Dismissed ${dismissed} modal(s)/popup(s)`);
+        } else {
+          console.log('   ✓ No blocking modals detected');
+        }
+        return { dismissed, success: true };
+      }
+
+      // Try to dismiss the modal
+      console.log(`   🚫 Modal detected (attempt ${attempt + 1}/${maxAttempts}), trying to dismiss...`);
+
+      // Strategy 0: For "Step X of Y" tour modals, find X button in the same container
+      // This is the most reliable approach for onboarding tours
+      let closed = false;
+      try {
+        const stepText = page.getByText(/step\s+\d+\s+(of|\/)\s+\d+/i).first();
+        if (await stepText.isVisible({ timeout: 500 })) {
+          // Find the parent container of the step indicator, then look for X button there
+          const tourContainer = stepText.locator('xpath=ancestor::div[contains(@class, "tour") or contains(@class, "modal") or contains(@class, "popup") or contains(@class, "onboarding") or .//button]').first();
+
+          // Look for X/close button within or near the tour container
+          const closeInTour = tourContainer.locator('button:has(svg), button[class*="close"], button[class*="icon"]').first();
+          if (await closeInTour.isVisible({ timeout: 500 })) {
+            await closeInTour.click({ timeout: 1000 });
+            await page.waitForTimeout(500);
+            dismissed++;
+            console.log('      ✓ Closed tour via: X button in tour container');
+            continue;  // Move to next iteration to check if more modals
+          }
+
+          // Alternative: Click the × character button directly
+          const xButton = page.locator('button:has-text("×"), button:has-text("✕"), button:has-text("✖")').first();
+          if (await xButton.isVisible({ timeout: 300 })) {
+            await xButton.click({ timeout: 1000 });
+            await page.waitForTimeout(500);
+            dismissed++;
+            console.log('      ✓ Closed tour via: × button');
+            continue;
+          }
+        }
+      } catch { /* Strategy 0 failed, continue to other strategies */ }
+
+      // Strategy 1: Look for close/X buttons (general approach)
+      const closeButtonSelectors = [
+        // Specific X close buttons with aria labels
+        'button[aria-label*="close" i]',
+        'button[aria-label*="dismiss" i]',
+        '[role="button"][aria-label*="close" i]',
+        // SVG-based close icons
+        'button:has(svg[class*="close"])',
+        // Class-based close buttons
+        '[class*="close-button"]',
+        '[class*="close-btn"]',
+        '[class*="dismiss"]',
+        '.modal-close',
+        '.modal button[class*="close"]',
+        // Modal/dialog specific
+        '[role="dialog"] button:has-text("×")',
+        '[role="dialog"] button:has-text("X")',
+        // Skip buttons (for tours)
+        'button:has-text("Skip")',
+        'button:has-text("Skip tour")',
+        'button:has-text("Skip all")',
+        'a:has-text("Skip")',
+        // Later/Not now buttons
+        'button:has-text("Later")',
+        'button:has-text("Not now")',
+        'button:has-text("Maybe later")',
+        // Got it / Done buttons
+        'button:has-text("Got it")',
+        'button:has-text("Done")',
+        'button:has-text("OK")',
+        'button:has-text("Okay")'
+      ];
+
+      // closed is already declared in Strategy 0
+      for (const selector of closeButtonSelectors) {
+        try {
+          const btn = page.locator(selector).first();
+          if (await btn.isVisible({ timeout: 300 })) {
+            await btn.click({ timeout: 1000 });
+            await page.waitForTimeout(500);
+            closed = true;
+            dismissed++;
+            console.log(`      ✓ Closed via: ${selector}`);
+            break;
+          }
+        } catch { /* try next selector */ }
+      }
+
+      // Strategy 2: Try clicking outside the modal (backdrop click)
+      if (!closed) {
+        try {
+          // Click on a far corner of the viewport to dismiss
+          await page.mouse.click(10, 10);
+          await page.waitForTimeout(500);
+
+          // Check if modal is still there
+          const stillVisible = await page.locator('[role="dialog"], [aria-modal="true"]').first().isVisible({ timeout: 300 }).catch(() => false);
+          if (!stillVisible) {
+            closed = true;
+            dismissed++;
+            console.log('      ✓ Closed via backdrop click');
+          }
+        } catch { /* backdrop click failed */ }
+      }
+
+      // Strategy 3: Press Escape key
+      if (!closed) {
+        try {
+          await page.keyboard.press('Escape');
+          await page.waitForTimeout(500);
+
+          const stillVisible = await page.locator('[role="dialog"], [aria-modal="true"]').first().isVisible({ timeout: 300 }).catch(() => false);
+          if (!stillVisible) {
+            closed = true;
+            dismissed++;
+            console.log('      ✓ Closed via Escape key');
+          }
+        } catch { /* Escape failed */ }
+      }
+
+      // If nothing worked this round, try clicking any visible button in the modal as last resort
+      if (!closed) {
+        try {
+          // Try to find and click any button inside a dialog/modal
+          const modalButton = page.locator('[role="dialog"] button:visible, [aria-modal="true"] button:visible').first();
+          if (await modalButton.isVisible({ timeout: 300 })) {
+            await modalButton.click({ timeout: 1000 });
+            await page.waitForTimeout(500);
+            dismissed++;
+            console.log('      ⚠️ Clicked generic modal button (may advance tour)');
+          }
+        } catch { /* no modal button found */ }
+      }
+
+    } catch (err) {
+      // Continue to next attempt even if this one errored
+      console.log(`      ⚠️ Modal check error: ${err.message}`);
+    }
+
+    // Small delay before next check
+    await page.waitForTimeout(300);
+  }
+
+  if (dismissed > 0) {
+    console.log(`   ✓ Dismissed ${dismissed} modal(s)/popup(s)`);
+  }
+  return { dismissed, success: true };
+}
+
 // ------------------ PROCEDURES CONTEXT HELPERS ------------------
 /**
  * Procedures from Zendesk documentation describe HOW features work (business logic).
@@ -6558,7 +6763,7 @@ function extractSearchTerms(selectorHint, assertion) {
     browser = await chromium.launch({ headless: HEADLESS });
     // Create context with high-quality screenshot settings
     const context = await browser.newContext({
-      viewport: { width: 1920, height: 1080 },  // Full HD viewport
+      viewport: { width: 1280, height: 1020 },  // Standard laptop viewport with extra height for menu
       deviceScaleFactor: 2,                      // 2x resolution for retina-quality screenshots
       colorScheme: 'light',                      // Consistent light theme
     });
@@ -6568,6 +6773,18 @@ function extractSearchTerms(selectorHint, assertion) {
     // STEP 2: LOGIN
     // ========================================================================
     output.login = await attemptLoginFromNavigationSpec(page, input?.app, navigation_paths, SCREENSHOTS_DIR);
+
+    // ========================================================================
+    // STEP 2.5: DISMISS ANY BLOCKING MODALS
+    // After login, apps often show onboarding tours, announcements, or popups
+    // that can block navigation. This clears them before proceeding.
+    // ========================================================================
+    if (output.login?.status === "pass") {
+      console.log('\n📋 Clearing any post-login popups...');
+      await page.waitForTimeout(2000);  // Give modals time to appear
+      const modalResult = await dismissModals(page, { maxAttempts: 10 });
+      output.modal_dismissal = modalResult;
+    }
 
     // ========================================================================
     // STEP 3: DIRECT PLAN EXECUTION (if login succeeded)
