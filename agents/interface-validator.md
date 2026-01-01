@@ -533,6 +533,152 @@ Before leaving ANY page, verify:
 
 **Total expected: 15-20 screenshots minimum for a feature of this complexity.**
 
+---
+
+## 3.5.2) ADVANCED UI EXPLORATION PATTERNS (MANDATORY)
+
+### PATTERN 7: INITIAL NAVIGATION WITH SIDE MENU
+
+**ALWAYS capture the navigation structure with side menu expanded BEFORE diving into content.**
+
+```
+❌ WRONG: Navigate directly to destination, screenshot only the content
+✅ CORRECT: Expand side menu, screenshot showing navigation hierarchy, then proceed
+```
+
+**Protocol:**
+1. Before navigating to any feature page, expand the side menu/navigation
+2. Screenshot showing:
+   - All main menu items visible (Home, Company, Payroll, Finance Ops, Time, etc.)
+   - The path to your destination highlighted/visible
+3. This documents HOW users navigate to the feature
+4. Then proceed to the destination page
+
+**Screenshot naming:** `nav-01-menu-expanded.png`
+
+### PATTERN 8: SCROLLING AND VIEWPORT EXPLORATION
+
+**Pages often have content BELOW the visible viewport. You MUST scroll to find it.**
+
+```
+❌ WRONG: Screenshot only what's visible, assume that's everything
+✅ CORRECT: Scroll down the page to discover ALL content sections
+```
+
+**Protocol:**
+1. After page loads, screenshot the initial viewport
+2. Scroll down incrementally (use `browser_press_key` with "PageDown" or scroll action)
+3. Look for additional sections, contextual text, info boxes
+4. Screenshot each new section discovered
+5. Continue until reaching page bottom
+6. Note any guiding text like "How should X be calculated?" or explanatory paragraphs
+
+**What to look for below the fold:**
+- Contextual questions and explanatory text
+- Info banners with blue/yellow backgrounds
+- Links to related settings ("Configured in X setting")
+- Restrictions or additional configuration sections
+- Additional form fields not visible on initial load
+
+### PATTERN 9: CONDITIONAL UI / BUTTON GROUP EXPLORATION
+
+**Some UI elements only appear AFTER selecting specific options. You MUST click ALL options to discover conditional content.**
+
+```
+❌ WRONG: See button group, screenshot current selection, move on
+✅ CORRECT: Click EACH button in the group, document what appears/disappears
+```
+
+**Protocol for Button Groups:**
+1. Identify button group with multiple options (e.g., radio-style selection chips)
+2. Note which option is currently selected
+3. Screenshot current state
+4. Click Option 1 → Screenshot → Note what content is visible
+5. Click Option 2 → Screenshot → Note what NEW content appears/disappears
+6. Click Option 3 → Screenshot → Note what NEW content appears/disappears
+7. Document the conditional behavior
+
+**What to document:**
+- Which options reveal additional fields
+- Which options hide certain sections
+- Any fields that change state (enabled/disabled) based on selection
+- Any contextual messages that appear conditionally
+
+**Screenshot each state - conditional UI often hides critical configuration options!**
+
+### PATTERN 10: DISABLED/GREYED OUT FIELD DOCUMENTATION
+
+**Disabled fields are CRITICAL evidence. They show configuration hierarchy and linked settings.**
+
+```
+❌ WRONG: See greyed out field, ignore it
+✅ CORRECT: Document WHY it's disabled, capture the link/message, explain the relationship
+```
+
+**Protocol:**
+1. When you see greyed/disabled fields:
+   - Screenshot showing the disabled state clearly
+   - Look for "Configured in X" or "Managed by X" text nearby
+   - Look for info icons (ℹ️) with tooltips
+   - Look for links to the controlling setting
+2. Document in notes:
+   - Which fields are disabled
+   - WHY they're disabled (the controlling setting)
+   - Where the user must go to change the values
+3. If there's a link to another setting → NOTE this configuration hierarchy relationship
+
+**This documents OVERRIDE INDICATORS - where global settings control local fields.**
+
+### PATTERN 11: INFO BANNER AND CONTEXTUAL MESSAGE CAPTURE
+
+**Info banners and contextual messages explain business logic. ALWAYS capture them.**
+
+```
+❌ WRONG: See info box, don't read it
+✅ CORRECT: Read, capture, and document the message content
+```
+
+**Protocol:**
+1. Identify info banners (usually blue or yellow background with ℹ️ icon)
+2. Identify contextual questions/guidance text (usually above form fields)
+3. Screenshot with message fully visible
+4. Transcribe the message in your notes
+5. Explain what business logic or user guidance it provides
+
+**Types of messages to capture:**
+- Questions guiding user input ("How should X be calculated?")
+- Explanation of automatic behaviors ("X will be automatically added to Y")
+- Warnings about impact ("This change will affect...")
+- Configuration hierarchy notes ("Configured in X setting")
+
+### PATTERN 12: LINK RELATIONSHIP DOCUMENTATION
+
+**When UI shows "Configured in X setting" with a clickable link, this is CRITICAL configuration hierarchy evidence.**
+
+```
+❌ WRONG: Note there's a link, move on
+✅ CORRECT: Document the relationship, explain what it controls
+```
+
+**Protocol:**
+1. When you see "Configured in [linked setting]":
+   - Capture the exact link text
+   - Note which fields are controlled/disabled by this relationship
+   - Document: "Changes to these fields must be made in [linked setting], not here"
+2. This is the UI's way of showing OVERRIDE INDICATORS
+
+### EXPLORATION CHECKLIST FOR LONG-FORM PAGES
+
+Before leaving any configuration page with multiple sections:
+- [ ] Side menu navigation captured?
+- [ ] Scrolled to bottom of page?
+- [ ] All accordion sections expanded?
+- [ ] All button groups - clicked each option?
+- [ ] All disabled fields - documented why?
+- [ ] All info banners - text captured?
+- [ ] All "Configured in X" links - noted?
+- [ ] All contextual guidance text - captured?
+
 ### Exploration Evidence in Claims JSON
 
 ```json
