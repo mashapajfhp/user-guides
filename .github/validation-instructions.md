@@ -199,13 +199,29 @@ LEVEL 1 - CHECK STATUS: passed | failed | not_applicable
 LEVEL 2 - PLAN STATUS: Computed from checks (passed if all passed, failed if any failed, partial otherwise)
 LEVEL 3 - OVERALL STATUS: Computed from plans - THIS IS WHAT N8N USES
 
+**CRITICAL: YOU MUST COMPUTE AND SET THE TOP-LEVEL "status" FIELD**
+- The `"status"` field at the root of result.json MUST be "passed", "partial", or "failed"
+- NEVER leave status as null or omit it
+- N8N workflow checks this field to determine success/failure
+
+**MANDATORY STATUS COMPUTATION:**
 ```
 IF summary.failed > 0:
-  OVERALL status = "failed"
+  status = "failed"
 ELSE IF summary.passed == summary.total_plans:
-  OVERALL status = "passed"
+  status = "passed"
 ELSE:
-  OVERALL status = "partial"
+  status = "partial"
+```
+
+**EXAMPLE - CORRECT result.json:**
+```json
+{
+  "feature_name": "daily wage calculator",
+  "status": "passed",  <-- REQUIRED: Must be "passed", "partial", or "failed"
+  "summary": { "total_plans": 9, "passed": 9, "failed": 0 },
+  ...
+}
 ```
 
 ## SECTION 6: SELF-VERIFICATION BEFORE FINISHING
@@ -215,6 +231,9 @@ BEFORE writing result.json, verify:
 2. Count total checks across all plans - Did you address ALL of them?
 3. Search your result for 'skipped' - If found, FIX IT
 4. For each 'not_applicable' - Is it truly state-dependent?
+5. **CRITICAL: Is the top-level "status" field set to "passed", "partial", or "failed"?**
+   - If status is null or missing - COMPUTE IT using the formula above
+   - If summary.failed == 0 AND summary.passed == summary.total_plans -> status = "passed"
 
 If you find you missed navigating to a path:
 - GO BACK and navigate to that path
