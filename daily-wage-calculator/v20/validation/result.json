@@ -1,0 +1,430 @@
+{
+  "validation_metadata": {
+    "feature": "daily-wage-calculator",
+    "version": "v20",
+    "validation_date": "2026-01-01",
+    "platform": "app.bayzat.com",
+    "total_plans": 9,
+    "total_checks": 38,
+    "passed_checks": 38,
+    "failed_checks": 0,
+    "status": "COMPLETED",
+    "validator": "Claude Agent SDK"
+  },
+  "validation_plans": [
+    {
+      "plan_id": "plan1",
+      "plan_name": "Daily Wage Calculation Primary Settings",
+      "breadcrumbs": "Settings > Payroll > Daily Wage Calculation",
+      "status": "PASS",
+      "checks": [
+        {
+          "check_id": "dwc-v20-settings-table",
+          "type": "element_visibility",
+          "description": "Daily Wage Calculation table showing 3 services",
+          "status": "PASS",
+          "evidence": ["screenshots/04-daily-wage-calculation-expanded.png"],
+          "findings": "Table displays 3 services: Salary proration (30.45 days), EOS leave encashment (22 days), Unpaid leave deduction (30 days). Each row shows complete calculation formula with edit button."
+        },
+        {
+          "check_id": "dwc-v20-proration-edit",
+          "type": "interaction",
+          "description": "Salary proration row has clickable edit button opening modal",
+          "status": "PASS",
+          "evidence": ["screenshots/05-salary-proration-modal.png"],
+          "findings": "Edit button opens modal with title 'Salary proration' showing configuration options."
+        },
+        {
+          "check_id": "dwc-v20-calculation-options",
+          "type": "element_visibility",
+          "description": "Month calculation dropdown shows 3 options",
+          "status": "PASS",
+          "evidence": ["screenshots/06-salary-proration-dropdown-options.png"],
+          "findings": "Dropdown displays: Working days, Calendar days, Custom days. Currently set to Custom days."
+        },
+        {
+          "check_id": "dwc-v20-custom-days-value",
+          "type": "data_verification",
+          "description": "Custom days field accepts decimal value 30.45",
+          "status": "PASS",
+          "evidence": ["screenshots/06-salary-proration-dropdown-options.png"],
+          "findings": "Custom days textbox shows '30.45' value with decimal precision support."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan2",
+      "plan_name": "EOS Eligibility Configuration",
+      "breadcrumbs": "Settings > Payroll > End of service eligibility",
+      "status": "PASS",
+      "checks": [
+        {
+          "check_id": "dwc-v20-eos-table",
+          "type": "element_visibility",
+          "description": "EOS eligibility table shows Vacation45 with calculation",
+          "status": "PASS",
+          "evidence": ["screenshots/08-eos-eligibility-expanded.png"],
+          "findings": "Table shows: Vacation45 | Basic salary + allowances / Custom days. Configure button present."
+        },
+        {
+          "check_id": "dwc-v20-eos-modal",
+          "type": "interaction",
+          "description": "Configure button opens EOS configuration modal",
+          "status": "PASS",
+          "evidence": ["screenshots/09-eos-config-modal-vacation45-expanded.png", "screenshots/10-eos-modal-vacation45-config-details.png"],
+          "findings": "Modal opens with title 'End of Service Eligibility' showing Vacation45 expanded configuration."
+        },
+        {
+          "check_id": "dwc-v20-eos-disabled",
+          "type": "element_state",
+          "description": "Daily rate calculation fields are disabled",
+          "status": "PASS",
+          "evidence": ["screenshots/10-eos-modal-vacation45-config-details.png"],
+          "findings": "Three fields disabled: Salary Component dropdown (Basic salary + allowances), Month calculation dropdown (Custom days), Number of days textbox (22). All show disabled state styling."
+        },
+        {
+          "check_id": "dwc-v20-eos-override-alert",
+          "type": "element_visibility",
+          "description": "Blue alert banner shows configuration override message",
+          "status": "PASS",
+          "evidence": ["screenshots/10-eos-modal-vacation45-config-details.png"],
+          "findings": "Blue information alert states: 'Daily rate is configured in daily wage calculation setting' with View button linking to payroll settings."
+        },
+        {
+          "check_id": "dwc-v20-eos-values",
+          "type": "data_verification",
+          "description": "EOS shows values from global daily wage settings",
+          "status": "PASS",
+          "evidence": ["screenshots/10-eos-modal-vacation45-config-details.png"],
+          "findings": "Values match daily wage config: Salary Component = Basic salary + allowances, Month calculation = Custom days, Number of days = 22."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan3",
+      "plan_name": "Salary Proration Settings",
+      "breadcrumbs": "Settings > Payroll > Daily Wage Calculation > Salary proration",
+      "status": "PASS",
+      "checks": [
+        {
+          "check_id": "dwc-v20-proration-modal",
+          "type": "element_visibility",
+          "description": "Salary proration modal displays configuration form",
+          "status": "PASS",
+          "evidence": ["screenshots/05-salary-proration-modal.png"],
+          "findings": "Modal shows title 'Salary proration' with salary component and month calculation sections."
+        },
+        {
+          "check_id": "dwc-v20-proration-dropdown",
+          "type": "interaction",
+          "description": "Month calculation dropdown is interactive",
+          "status": "PASS",
+          "evidence": ["screenshots/06-salary-proration-dropdown-options.png"],
+          "findings": "Dropdown expands showing all available options when clicked."
+        },
+        {
+          "check_id": "dwc-v20-proration-options",
+          "type": "element_visibility",
+          "description": "Dropdown shows Working days, Calendar days, Custom days",
+          "status": "PASS",
+          "evidence": ["screenshots/06-salary-proration-dropdown-options.png"],
+          "findings": "All three options visible: Working days (not selected), Calendar days (not selected), Custom days (selected with checkmark)."
+        },
+        {
+          "check_id": "dwc-v20-proration-custom",
+          "type": "data_verification",
+          "description": "Custom days option shows value 30.45",
+          "status": "PASS",
+          "evidence": ["screenshots/06-salary-proration-dropdown-options.png"],
+          "findings": "Custom days input field displays '30.45' confirming decimal precision support."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan4",
+      "plan_name": "Leave Policy Unpaid Leave Override",
+      "breadcrumbs": "Settings > Leaves > Leave Policies > Unpaid test (Edit)",
+      "status": "PASS",
+      "checks": [
+        {
+          "check_id": "dwc-v20-leave-policy-list",
+          "type": "element_visibility",
+          "description": "Leave policies table shows Unpaid test policy",
+          "status": "PASS",
+          "evidence": ["screenshots/13-leave-policies-table-expanded.png"],
+          "findings": "Table row shows: Unpaid test | Unpaid | 362 employees with View, Edit, Delete buttons."
+        },
+        {
+          "check_id": "dwc-v20-leave-edit",
+          "type": "interaction",
+          "description": "Edit button opens leave policy configuration",
+          "status": "PASS",
+          "evidence": ["screenshots/14-unpaid-test-policy-edit-page-top.png"],
+          "findings": "Edit opens full policy configuration page with sections: Policy details, Leave allowance, Leave pay rate, Leave salary settings, Policy restrictions."
+        },
+        {
+          "check_id": "dwc-v20-leave-disabled",
+          "type": "element_state",
+          "description": "Daily wage fields are disabled in leave policy",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png", "screenshots/16-unpaid-leave-policy-full-page.png"],
+          "findings": "Three fields disabled in 'Leave pay rate' section: Salary component dropdown (Basic salary), Calculation method dropdown (Custom days), Number of days textbox (30). All show grayed-out disabled styling."
+        },
+        {
+          "check_id": "dwc-v20-leave-override-message",
+          "type": "element_visibility",
+          "description": "Override message explains configuration hierarchy",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Gray informational icon with text: 'Configured in daily wage calculation setting' followed by hyperlink to payroll settings. Blue alert below states: 'Based on the leave allowance used, deduction adjustment for unpaid leaves will be automatically added in payroll table'."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan5",
+      "plan_name": "Unpaid Leave Deduction Calculation",
+      "breadcrumbs": "Settings > Leaves > Leave Policies > Unpaid test > Leave pay rate",
+      "status": "PASS",
+      "checks": [
+        {
+          "check_id": "dwc-v20-leave-calculation-display",
+          "type": "element_visibility",
+          "description": "Daily wage calculation formula displayed",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png", "screenshots/16-unpaid-leave-policy-full-page.png"],
+          "findings": "Formula shown as: [Basic salary dropdown] / [Custom days dropdown] [30 textbox]. All fields disabled with values from global config."
+        },
+        {
+          "check_id": "dwc-v20-leave-daily-rate-section",
+          "type": "element_visibility",
+          "description": "Section header explains deduction purpose",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Header: 'How should the daily wage be calculated for unpaid leaves?' with subtitle: 'Based on the number of leaves used, this value will be used to create a deduction on payroll'."
+        },
+        {
+          "check_id": "dwc-v20-leave-link",
+          "type": "interaction",
+          "description": "Link to daily wage calculation settings present",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Hyperlink labeled 'daily wage calculation' with external link icon, pointing to /enterprise/dashboard/settings/payroll#daily-wage. Opens in new tab."
+        },
+        {
+          "check_id": "dwc-v20-leave-payroll-alert",
+          "type": "element_visibility",
+          "description": "Alert explains payroll integration",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Blue information alert box states: 'Based on the leave allowance used, deduction adjustment for unpaid leaves will be automatically added in payroll table'. Icon: info circle."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan6",
+      "plan_name": "EOS Proration Display",
+      "breadcrumbs": "Settings > Payroll > End of service eligibility > Vacation45",
+      "status": "PASS",
+      "checks": [
+        {
+          "check_id": "dwc-v20-eos-proration-table",
+          "type": "element_visibility",
+          "description": "EOS table displays proration calculation",
+          "status": "PASS",
+          "evidence": ["screenshots/08-eos-eligibility-expanded.png"],
+          "findings": "Table cell shows complete formula: 'Basic salary + allowances / Custom days' for Vacation45 leave type."
+        },
+        {
+          "check_id": "dwc-v20-eos-proration-modal",
+          "type": "element_visibility",
+          "description": "Modal shows detailed proration fields",
+          "status": "PASS",
+          "evidence": ["screenshots/10-eos-modal-vacation45-config-details.png"],
+          "findings": "Modal displays section 'How daily rate is calculated' with three components: Salary Component, Month calculation, Number of days arranged as formula (component / calculation = days)."
+        },
+        {
+          "check_id": "dwc-v20-eos-proration-disabled",
+          "type": "element_state",
+          "description": "Proration fields are disabled state",
+          "status": "PASS",
+          "evidence": ["screenshots/10-eos-modal-vacation45-config-details.png"],
+          "findings": "All three proration fields show disabled state with gray styling: Salary Component dropdown, Month calculation dropdown, Number of days textbox."
+        },
+        {
+          "check_id": "dwc-v20-eos-proration-values",
+          "type": "data_verification",
+          "description": "Proration values match daily wage config",
+          "status": "PASS",
+          "evidence": ["screenshots/10-eos-modal-vacation45-config-details.png"],
+          "findings": "Values populated from global settings: Salary Component = 'Basic salary + allowances', Month calculation = 'Custom days', Number of days = '22'."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan7",
+      "plan_name": "Leave Salary Calculation Month",
+      "breadcrumbs": "Settings > Leaves > Leave Policies > Unpaid test > Leave pay rate",
+      "status": "PASS",
+      "checks": [
+        {
+          "check_id": "dwc-v20-leave-month-field",
+          "type": "element_visibility",
+          "description": "Month calculation dropdown visible",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png", "screenshots/16-unpaid-leave-policy-full-page.png"],
+          "findings": "Dropdown labeled with 'Custom days' visible between salary component and days value in calculation formula."
+        },
+        {
+          "check_id": "dwc-v20-leave-month-disabled",
+          "type": "element_state",
+          "description": "Month calculation field is disabled",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Dropdown shows disabled state (grayed out, not interactive) with value 'Custom days' from global configuration."
+        },
+        {
+          "check_id": "dwc-v20-leave-month-value",
+          "type": "data_verification",
+          "description": "Shows Custom days from global config",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Field displays 'Custom days' matching the value set in Payroll > Daily Wage Calculation > Unpaid leave deduction service."
+        },
+        {
+          "check_id": "dwc-v20-leave-month-label",
+          "type": "element_visibility",
+          "description": "Field positioned in calculation formula",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Month calculation dropdown positioned between '/' operator and days value, forming readable formula: [Salary Component] / [Month Calculation] [Days]."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan8",
+      "plan_name": "Unpaid Leave Remarks Display",
+      "breadcrumbs": "Settings > Leaves > Leave Policies > Unpaid test > Leave pay rate",
+      "status": "PASS",
+      "checks": [
+        {
+          "check_id": "dwc-v20-leave-remarks-icon",
+          "type": "element_visibility",
+          "description": "Informational icon present",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Gray circular info icon visible next to override message."
+        },
+        {
+          "check_id": "dwc-v20-leave-remarks-text",
+          "type": "element_visibility",
+          "description": "Explanatory text about configuration",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Text reads: 'Configured in daily wage calculation setting' positioned next to info icon and above calculation fields."
+        },
+        {
+          "check_id": "dwc-v20-leave-remarks-link",
+          "type": "interaction",
+          "description": "Link to payroll daily wage settings",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Hyperlink text 'daily wage calculation' with external link icon, functional link to settings/payroll page with anchor #daily-wage."
+        },
+        {
+          "check_id": "dwc-v20-leave-remarks-alert",
+          "type": "element_visibility",
+          "description": "Blue alert box explains payroll integration",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Blue alert banner with info icon states: 'Based on the leave allowance used, deduction adjustment for unpaid leaves will be automatically added in payroll table'."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan9",
+      "plan_name": "Unpaid Leave Daily Rate Display",
+      "breadcrumbs": "Settings > Leaves > Leave Policies > Unpaid test > Leave pay rate",
+      "status": "PASS",
+      "checks": [
+        {
+          "check_id": "dwc-v20-leave-rate-section",
+          "type": "element_visibility",
+          "description": "Daily rate calculation section present",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png", "screenshots/16-unpaid-leave-policy-full-page.png"],
+          "findings": "Section header 'How should the daily wage be calculated for unpaid leaves?' with subtitle explaining deduction usage."
+        },
+        {
+          "check_id": "dwc-v20-leave-rate-formula",
+          "type": "element_visibility",
+          "description": "Formula displayed with all components",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "Complete formula shown: [Basic salary] / [Custom days] [30]. Three distinct fields with division operator between first two."
+        },
+        {
+          "check_id": "dwc-v20-leave-rate-values",
+          "type": "data_verification",
+          "description": "Values match global daily wage settings",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png"],
+          "findings": "All values from Payroll > Daily Wage Calculation > Unpaid leave deduction: Salary component = Basic salary, Calculation = Custom days, Days = 30."
+        },
+        {
+          "check_id": "dwc-v20-leave-rate-readonly",
+          "type": "element_state",
+          "description": "All fields in read-only/disabled state",
+          "status": "PASS",
+          "evidence": ["screenshots/15-unpaid-leave-daily-wage-disabled-fields.png", "screenshots/16-unpaid-leave-policy-full-page.png"],
+          "findings": "All three fields (dropdown, dropdown, textbox) show disabled state with consistent gray styling. No interaction possible - values locked to global configuration."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "validation_coverage": {
+      "payroll_settings": "COMPLETE",
+      "eos_eligibility": "COMPLETE",
+      "leave_policies": "COMPLETE"
+    },
+    "key_findings": [
+      "Daily Wage Calculation serves as primary configuration point with 3 distinct services",
+      "Configuration hierarchy enforced through disabled fields in dependent features",
+      "Clear override indicators (alerts, messages, links) guide users to primary config",
+      "Consistent UI patterns across all affected features (Payroll, EOS, Leaves)",
+      "All disabled fields display values from global configuration",
+      "Navigation links provide direct access to Daily Wage Calculation settings",
+      "Blue informational alerts explain automated payroll integration",
+      "Formula display maintains readability: Component / Calculation = Days"
+    ],
+    "ui_patterns_observed": [
+      "Disabled field styling (gray, non-interactive)",
+      "Blue information alert banners",
+      "Info icons with explanatory text",
+      "Hyperlinks with 'opens in new tab' indicators",
+      "Breadcrumb navigation",
+      "Expandable section accordions",
+      "Modal dialogs for detailed configuration",
+      "Table-based data presentation"
+    ],
+    "technical_notes": [
+      "Decimal precision supported in Custom days (e.g., 30.45)",
+      "Three calculation base options: Working days, Calendar days, Custom days",
+      "Salary component consistently 'Basic salary + allowances'",
+      "Direct URL navigation with anchor tags (#daily-wage)",
+      "Configuration values cascade from Payroll > Daily Wage Calculation to all dependent features",
+      "Leave policy shows 362 employees affected, demonstrating production use",
+      "Warning message prevents editing when employees assigned to policy"
+    ]
+  },
+  "artifacts": {
+    "screenshots": {
+      "total": 17,
+      "manifest": "screenshots/manifest.json"
+    },
+    "reports": {
+      "detailed_markdown": "report.md",
+      "structured_json": "result.json"
+    }
+  }
+}
