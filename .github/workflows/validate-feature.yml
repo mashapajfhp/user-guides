@@ -50,7 +50,7 @@ jobs:
         if: steps.detect.outputs.folder != ''
         run: |
           echo "Pre-installing Playwright MCP package..."
-          npm install -g @anthropic-ai/playwright-mcp 2>/dev/null || npx -y @anthropic-ai/playwright-mcp --version
+          npm install -g @playwright/mcp 2>/dev/null || npx -y @playwright/mcp --version
           echo "Installing Playwright browsers..."
           npx -y playwright install chromium
           echo "✅ Playwright MCP and browsers ready"
@@ -62,7 +62,7 @@ jobs:
           # Remove any existing config and create fresh
           rm -f "$GITHUB_WORKSPACE/.mcp.json"
           # Headed mode: browser window visible for live monitoring
-          echo '{"mcpServers":{"playwright":{"command":"npx","args":["-y","@anthropic-ai/playwright-mcp","--headless=false"]}}}' > "$GITHUB_WORKSPACE/.mcp.json"
+          echo '{"mcpServers":{"playwright":{"command":"npx","args":["-y","@playwright/mcp","--headless"]}}}' > "$GITHUB_WORKSPACE/.mcp.json"
           echo "MCP config created at: $GITHUB_WORKSPACE/.mcp.json"
           cat "$GITHUB_WORKSPACE/.mcp.json"
 
