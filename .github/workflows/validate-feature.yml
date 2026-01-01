@@ -51,6 +51,10 @@ jobs:
         run: |
           echo "Installing Claude CLI..."
           npm install -g @anthropic-ai/claude-code
+          # Add npm global bin to PATH
+          export PATH="$(npm prefix -g)/bin:$PATH"
+          echo "PATH=$PATH"
+          which claude
           claude --version
           echo "✅ Claude CLI installed"
 
@@ -97,6 +101,9 @@ jobs:
 
           # Change to workspace directory to ensure MCP loads correctly
           cd "$GITHUB_WORKSPACE"
+
+          # Add npm global bin to PATH
+          export PATH="$(npm prefix -g)/bin:$PATH"
 
           # Run Claude CLI with the validation request (allowedTools for CI security)
           claude --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" --mcp-config ".mcp.json" --print "
