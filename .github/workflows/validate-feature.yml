@@ -73,8 +73,10 @@ jobs:
           echo "Setting up MCP configuration..."
           # Remove any existing config and create fresh
           rm -f "$GITHUB_WORKSPACE/.mcp.json"
-          # Headed mode: browser window visible for live monitoring on self-hosted runner
-          echo '{"mcpServers":{"playwright":{"command":"npx","args":["-y","@playwright/mcp"]}}}' > "$GITHUB_WORKSPACE/.mcp.json"
+          # Configure Playwright MCP with screenshot output directory
+          SCREENSHOT_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
+          echo "Screenshot output directory: $SCREENSHOT_PATH"
+          echo "{\"mcpServers\":{\"playwright\":{\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp\",\"--output-dir\",\"$SCREENSHOT_PATH\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
           echo "MCP config created at: $GITHUB_WORKSPACE/.mcp.json"
           cat "$GITHUB_WORKSPACE/.mcp.json"
 
