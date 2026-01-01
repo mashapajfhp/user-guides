@@ -228,7 +228,9 @@ jobs:
 
           CRITICAL: You MUST complete all tasks and write all output files before finishing.
 
-          AUTHENTICATION:
+          ============================================================
+          SECTION 1: AUTHENTICATION
+          ============================================================
           - Navigate to: $APP_BASE_URL
           - Username: $APP_USERNAME
           - Password: $APP_PASSWORD
@@ -240,36 +242,142 @@ jobs:
           - Look for an X button (close icon) in the top-right corner of the onboarding popup
           - Click the X to dismiss the onboarding modal completely
           - Wait for the overlay to close and the main dashboard to be fully visible
-          - Take a screenshot AFTER dismissing onboarding (02-onboarding-dismissed.png)
           - Only proceed with feature navigation once the dashboard is clear of overlays
+
+          ============================================================
+          SECTION 2: SCREENSHOT RULES
+          ============================================================
+          SKIP DASHBOARD/HOME PAGE SCREENSHOTS:
+          - Do NOT screenshot the dashboard/home page unless the feature being validated IS the dashboard
+          - The first meaningful screenshot should be the navigation TO the feature (with side menu open)
+          - Exception: If validating dashboard widgets or landing page features, then screenshot dashboard
+
+          NAVIGATION WITH SIDE MENU:
+          - When documenting how to reach a feature, capture the side menu in EXPANDED state
+          - Show the menu hierarchy that leads to the feature
+          - This helps users understand the navigation path
+          - Screenshot naming: 01-navigation-menu-expanded.png or similar
+
+          SCREENSHOT SPECIFICATIONS:
+          - All screenshots saved to: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/
+          - Use descriptive kebab-case names (max 50 characters)
+          - Format: .png ONLY
+          - Examples: settings-payroll-config.png, leave-policy-modal.png
+
+          ============================================================
+          SECTION 3: EXHAUSTIVE UI EXPLORATION PATTERNS
+          ============================================================
+
+          PATTERN 1 - SCROLL AND VIEWPORT EXPLORATION:
+          Pages often have content BELOW the visible viewport. You MUST scroll to find it.
+          - After loading any page, scroll down to check for content below the fold
+          - Look for: additional form fields, tables, configuration sections, buttons
+          - Take screenshots of BOTH the top and scrolled views if content exists below
+          - Use browser_snapshot to detect scrollable areas
+          - Critical: Some settings pages have 3-4 sections that require scrolling
+
+          PATTERN 2 - CONDITIONAL UI / BUTTON GROUP EXPLORATION:
+          Some UI elements only appear AFTER selecting specific options.
+          - Identify ALL button groups, radio buttons, tabs, and toggle switches
+          - Click EACH option systematically, not just the currently selected one
+          - After each click, check if NEW UI elements appear
+          - Screenshot the UI state for EACH option
+          - Document what appears/disappears based on selection
+          - Example: A 'Custom days' radio might reveal a number input field
+
+          PATTERN 3 - DISABLED/GREYED OUT FIELD DOCUMENTATION:
+          Disabled fields are CRITICAL evidence of configuration hierarchy.
+          - When you find greyed-out or disabled fields, DO NOT skip them
+          - Document WHY they are disabled (look for info text, tooltips, or banners)
+          - Look for phrases like 'Configured in [X] setting' or 'Controlled by [Y]'
+          - These indicate linked configurations that users need to understand
+          - Screenshot disabled fields with their explanatory messages visible
+
+          PATTERN 4 - INFO BANNER AND CONTEXTUAL MESSAGE CAPTURE:
+          Info banners and contextual messages explain business logic.
+          - Look for blue/yellow/grey information boxes at top of sections
+          - Capture warning messages about impacts of changes
+          - Document helper text that appears below form fields
+          - These messages are essential for user guide accuracy
+          - Screenshot the full context including the banner AND related fields
+
+          PATTERN 5 - LINK RELATIONSHIP DOCUMENTATION:
+          When UI shows 'Configured in X setting' with a clickable link:
+          - This is CRITICAL configuration hierarchy evidence
+          - Click the link to verify where it leads
+          - Document the relationship between settings
+          - Take screenshots showing: the link text, where it navigates to
+          - This helps users understand cross-setting dependencies
+
+          PATTERN 6 - TABLE ROW EXPLORATION:
+          When a table has multiple rows with Edit/Configure buttons:
+          - Click the Edit/Configure button for EACH row, not just the first
+          - Each row may have different configuration options
+          - Document variations between row configurations
+          - Take screenshots of each unique configuration modal
+          - Example: A table with 3 service types needs 3 modal screenshots
+
+          PATTERN 7 - COMPLETE MODAL EXPLORATION:
+          When opening any modal/dialog:
+          - Identify ALL interactive elements within the modal
+          - Open EVERY dropdown within the modal to see available options
+          - Screenshot dropdown options in their expanded state
+          - Look for tabs or sections within the modal
+          - Scroll within the modal if it has scrollable content
+          - Document any disabled fields and their explanations
+
+          PATTERN 8 - DROPDOWN DOCUMENTATION:
+          For every dropdown/select element:
+          - Click to expand and see ALL available options
+          - Take screenshot with dropdown OPEN showing all options
+          - Note the currently selected value
+          - Document what each option means if help text exists
+
+          ============================================================
+          SECTION 4: VALIDATION EXECUTION
+          ============================================================
 
           IMPORTANT CONTEXT:
           - The nav.breadcrumb_array paths are HINTS only - they set context but may not be exact paths
           - Focus on the 'description', 'selector_hint', and 'assertion' fields to understand what to validate
           - Use your judgment to find the correct UI location if the suggested path doesn't match exactly
 
-          FOR EACH PLAN:
-          1. Navigate to app.bayzat.com
-          2. Use the breadcrumb_array as a starting guide, but explore to find the correct feature
-          3. Read the check's description and assertion carefully to understand the validation goal
+          FOR EACH VALIDATION PLAN:
+          1. Navigate using breadcrumb_array as a guide
+          2. Apply ALL exploration patterns above to the feature area
+          3. Read each check's description and assertion carefully
+          4. Capture comprehensive screenshot evidence
+          5. Document any UI elements that don't match expected behavior
 
-          THOROUGH EXPLORATION REQUIRED:
-          - Interact with EVERY UI element related to the feature
-          - Open dropdowns and document ALL available options
-          - Click toggles/switches and observe state changes
-          - Expand accordions to see hidden content
+          COMPLETION CHECKLIST FOR EACH FEATURE AREA:
+          - Scrolled to bottom of page to find hidden content
+          - Clicked all button group options to discover conditional UI
+          - Opened all edit/configure buttons in tables
+          - Expanded all dropdowns within modals
+          - Documented all disabled fields with their explanations
+          - Captured all info banners and contextual messages
+          - Followed 'Configured in X' links to document relationships
 
-          SCREENSHOT SPECIFICATIONS:
-          All screenshots saved to: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/
-          Use descriptive names like: daily-wage-calculation-config.png, eos-eligibility-settings.png
-          Format: .png ONLY, kebab-case, max 50 characters
+          ============================================================
+          SECTION 5: MANDATORY OUTPUT FILES
+          ============================================================
+          YOU MUST CREATE ALL OF THESE FILES:
 
-          MANDATORY OUTPUT FILES (YOU MUST CREATE ALL OF THESE):
           1. Screenshot manifest: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/manifest.json
-          2. Validation report: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/report.md
-          3. Structured results: $GITHUB_WORKSPACE/$VALIDATION_RESULT
+             - List all screenshots with descriptions
+             - Map screenshots to validation checks
 
-          After completing validation, write 'completed' to: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status
+          2. Validation report: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/report.md
+             - Executive summary with pass/fail counts
+             - Detailed findings for each validation plan
+             - Evidence references (screenshot filenames)
+             - Key findings and recommendations
+
+          3. Structured results: $GITHUB_WORKSPACE/$VALIDATION_RESULT
+             - JSON format with plan statuses and check results
+             - Include evidence references and notes for each check
+
+          After completing ALL validation, write 'completed' to: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status
           " 2>&1 | tee "$GITHUB_WORKSPACE/${{ steps.detect.outputs.log_file }}"
 
           CLAUDE_EXIT_CODE=$?
