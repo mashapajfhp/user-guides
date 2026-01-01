@@ -595,7 +595,7 @@ jobs:
                \"feature_name\": \"[from request]\",
                \"feature_slug\": \"[from request]\",
                \"validated_at\": \"[ISO8601 timestamp]\",
-               \"status\": \"passed | partial | failed\",  // ← OVERALL STATUS (computed from all plans)
+               \"status\": \"passed | partial | failed\",
                \"navigation_paths_visited\": [...],
                \"summary\": {
                  \"total_plans\": [number],
@@ -612,11 +612,11 @@ jobs:
                    \"plan_id\": \"[from request]\",
                    \"nav_path\": \"[canonical path]\",
                    \"nav_visited\": true,
-                   \"status\": \"passed | failed | partial\",  // ← PLAN STATUS (computed from checks)
+                   \"status\": \"passed | failed | partial\",
                    \"checks\": [
                      {
                        \"check_id\": \"[from request]\",
-                       \"status\": \"passed | failed | not_applicable\",  // ← CHECK STATUS
+                       \"status\": \"passed | failed | not_applicable\",
                        \"evidence\": \"screenshot-filename.png or null\",
                        \"notes\": \"Explanation\"
                      }
@@ -624,6 +624,11 @@ jobs:
                  }
                ]
              }
+
+             FIELD HIERARCHY (which status is which):
+             - Root level \"status\" = OVERALL validation result (used by n8n)
+             - plans[].status = Individual plan result
+             - plans[].checks[].status = Individual check result
 
              ============================================================
              STATUS HIERARCHY (THREE LEVELS - READ CAREFULLY)
