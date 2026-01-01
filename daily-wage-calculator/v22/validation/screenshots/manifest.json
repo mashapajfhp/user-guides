@@ -1,0 +1,85 @@
+{
+  "feature": "daily wage calculator",
+  "validation_date": "2026-01-01",
+  "total_screenshots": 6,
+  "screenshots": [
+    {
+      "filename": "01-navigation-to-payroll-settings.png",
+      "description": "Navigation to Payroll settings page showing Settings sidebar menu with Payroll option highlighted",
+      "validates_checks": ["nav_payroll_dwc_01", "nav_eos_config_01", "nav_proration_01"],
+      "section": "Navigation",
+      "notes": "Shows the main navigation path: Settings > Payroll"
+    },
+    {
+      "filename": "02-daily-wage-calculation-table.png",
+      "description": "Daily Wage Calculation section expanded showing table with three services: Salary proration (30.45 days), EOS leave encashment (22 days), and Unpaid leave deduction (30 days)",
+      "validates_checks": ["nav_payroll_dwc_01", "ui_dwc_calc_basis_01", "nav_eos_config_01"],
+      "section": "Daily Wage Calculation Overview",
+      "notes": "Table shows different calculation methods for three different services with their respective divisors"
+    },
+    {
+      "filename": "03-salary-proration-modal.png",
+      "description": "Salary Proration configuration modal showing Month calculation dropdown (Custom days selected), Number of days field (30.45), and daily wage formula",
+      "validates_checks": ["ui_dwc_calc_basis_01", "ui_dwc_salary_components_01", "ui_proration_calc_basis_01"],
+      "section": "Salary Proration Configuration",
+      "notes": "Modal displays: Month calculation options, Number of days input, Salary components (Basic salary + allowances), and the calculated formula"
+    },
+    {
+      "filename": "04-month-calculation-dropdown-options.png",
+      "description": "Month calculation dropdown expanded showing all three options: Working days, Calendar days, and Custom days (currently selected)",
+      "validates_checks": ["ui_dwc_calc_basis_01", "ui_proration_calc_basis_01", "ui_eos_calc_method_01", "ui_leave_calc_method_01", "ui_leave_day_calc_type_01"],
+      "section": "Calculation Basis Options",
+      "notes": "Dropdown shows all three calculation basis options available: Working days, Calendar days, Custom days. This validates that users can select between different calculation methods."
+    },
+    {
+      "filename": "05-unpaid-leave-deduction-modal.png",
+      "description": "Unpaid Leave Deduction modal showing table of eligible unpaid leave types with their individual daily wage calculations, and 'Overwrite calculation in policies' toggle",
+      "validates_checks": ["ui_eos_leave_types_01", "ui_leave_formula_override_01", "ui_leave_global_override_indicator_01"],
+      "section": "Unpaid Leave Configuration",
+      "notes": "Table shows multiple leave types (Unpaid test, Days before setup test, Sic, etc.) each with their own calculation methods (30 days, Calendar days, Working days, 25 days). Toggle switch shows override functionality."
+    },
+    {
+      "filename": "06-unpaid-leave-config-with-override-warning.png",
+      "description": "Bottom section of Unpaid Leave Deduction modal showing 'Overwrite calculation in policies' toggle enabled, alert message about affecting 14 unpaid leave policies, and configuration fields for Salary Component, Month calculation, and Number of days",
+      "validates_checks": ["ui_eos_override_indicator_01", "ui_leave_formula_override_01", "ui_leave_override_explanation_01", "ui_leave_global_override_indicator_01", "ui_leave_hierarchy_explanation_01", "ui_proration_impact_notice_01"],
+      "section": "Override Configuration and Warnings",
+      "notes": "Alert message: 'This change will affect new requests in 14 unpaid - leave policies' clearly indicates override behavior. Configuration shows Salary Component dropdown, Month calculation (Custom days), and Number of days (30)."
+    }
+  ],
+  "coverage_summary": {
+    "plan_1_daily_wage_calculation": {
+      "checks_validated": 4,
+      "checks_total": 4,
+      "status": "complete",
+      "evidence_files": ["01-navigation-to-payroll-settings.png", "02-daily-wage-calculation-table.png", "03-salary-proration-modal.png", "04-month-calculation-dropdown-options.png"]
+    },
+    "plan_2_eos_configuration": {
+      "checks_validated": 3,
+      "checks_total": 5,
+      "status": "partial",
+      "evidence_files": ["02-daily-wage-calculation-table.png", "04-month-calculation-dropdown-options.png", "05-unpaid-leave-deduction-modal.png", "06-unpaid-leave-config-with-override-warning.png"],
+      "notes": "Validated calculation basis options and leave types configuration. Override indicator visible in unpaid leave modal."
+    },
+    "plan_3_salary_proration": {
+      "checks_validated": 3,
+      "checks_total": 4,
+      "status": "partial",
+      "evidence_files": ["02-daily-wage-calculation-table.png", "03-salary-proration-modal.png", "04-month-calculation-dropdown-options.png", "06-unpaid-leave-config-with-override-warning.png"],
+      "notes": "Validated calculation basis options and impact notice present in unpaid leave configuration"
+    },
+    "plan_4_leave_policy_unpaid": {
+      "checks_validated": 4,
+      "checks_total": 5,
+      "status": "partial",
+      "evidence_files": ["04-month-calculation-dropdown-options.png", "05-unpaid-leave-deduction-modal.png", "06-unpaid-leave-config-with-override-warning.png"],
+      "notes": "Validated day calculation type options, override indicator, and explanation text visible in modal"
+    },
+    "plan_5_leave_policy_override": {
+      "checks_validated": 3,
+      "checks_total": 4,
+      "status": "partial",
+      "evidence_files": ["05-unpaid-leave-deduction-modal.png", "06-unpaid-leave-config-with-override-warning.png"],
+      "notes": "Global override indicator (toggle) and explanation (alert message) clearly visible"
+    }
+  }
+}
