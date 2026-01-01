@@ -105,9 +105,9 @@ jobs:
           # Add npm global bin to PATH
           export PATH="$(npm prefix -g)/bin:$PATH"
 
-          # Run Claude CLI with timeout (15 min max) and cleanup on exit
-          # Using timeout to prevent indefinite hangs when MCP browser doesn't close
-          timeout 900 claude --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" --mcp-config ".mcp.json" --print "
+          # Run Claude CLI (job-level timeout-minutes handles overall timeout)
+          # macOS doesn't have 'timeout' command, using job timeout instead
+          claude --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" --mcp-config ".mcp.json" --print "
           You are a comprehensive UI validation agent. Read the validation request JSON at $GITHUB_WORKSPACE/$VALIDATION_REQUEST.
 
           AUTHENTICATION:
@@ -245,10 +245,14 @@ jobs:
           Be thorough - we need a complete picture of the feature's UI state, not just pass/fail.
           " 2>&1 | tee "$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/validation.log"
 
-          # Cleanup: Kill any orphaned browser/MCP processes
+      - name: Cleanup Browser Processes
+        if: always() && steps.detect.outputs.folder != ''
+        run: |
+          # Kill any orphaned browser/MCP processes (runs even if validation fails/hangs)
           pkill -f "mcp-server-playwright" 2>/dev/null || true
           pkill -f "chrome.*playwright" 2>/dev/null || true
-          echo "✅ Cleanup complete"
+          pkill -f "Google Chrome.*--remote-debugging" 2>/dev/null || true
+          echo "✅ Browser cleanup complete"
 
       - name: Validate Screenshot Manifest
         if: steps.detect.outputs.folder != ''
