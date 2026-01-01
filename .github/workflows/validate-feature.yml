@@ -57,16 +57,18 @@ jobs:
         if: steps.detect.outputs.folder != ''
         run: |
           echo "Setting up MCP configuration..."
-          cat > "$GITHUB_WORKSPACE/.mcp.json" << 'EOF'
-          {
-            "mcpServers": {
-              "playwright": {
-                "command": "npx",
-                "args": ["-y", "@anthropic-ai/playwright-mcp", "--headless=false"]
-              }
-            }
-          }
-          EOF
+          # Remove any existing config and create fresh
+          rm -f "$GITHUB_WORKSPACE/.mcp.json"
+          cat > "$GITHUB_WORKSPACE/.mcp.json" << 'MCPEOF'
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/playwright-mcp", "--headless=false"]
+    }
+  }
+}
+MCPEOF
           echo "MCP config created at: $GITHUB_WORKSPACE/.mcp.json"
           cat "$GITHUB_WORKSPACE/.mcp.json"
 
@@ -103,6 +105,15 @@ jobs:
           - Username: $APP_USERNAME
           - Password: $APP_PASSWORD
           - Complete login before proceeding with validation
+
+          POST-LOGIN ONBOARDING DISMISSAL (CRITICAL):
+          - After successful login, an onboarding overlay may appear showing 'Step 1 of 4' or similar
+          - This modal blocks the main UI and MUST be dismissed before any navigation
+          - Look for an X button (close icon) in the top-right corner of the onboarding popup
+          - Click the X to dismiss the onboarding modal completely
+          - Wait for the overlay to close and the main dashboard to be fully visible
+          - Take a screenshot AFTER dismissing onboarding (step-02-onboarding-dismissed.png)
+          - Only proceed with feature navigation once the dashboard is clear of overlays
 
           IMPORTANT CONTEXT:
           - The nav.breadcrumb_array paths are HINTS only - they set context but may not be exact paths
