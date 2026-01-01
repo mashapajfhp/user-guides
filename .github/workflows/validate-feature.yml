@@ -59,16 +59,7 @@ jobs:
           echo "Setting up MCP configuration..."
           # Remove any existing config and create fresh
           rm -f "$GITHUB_WORKSPACE/.mcp.json"
-          cat > "$GITHUB_WORKSPACE/.mcp.json" << 'MCPEOF'
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": ["-y", "@anthropic-ai/playwright-mcp", "--headless=false"]
-    }
-  }
-}
-MCPEOF
+          echo '{"mcpServers":{"playwright":{"command":"npx","args":["-y","@anthropic-ai/playwright-mcp"]}}}' > "$GITHUB_WORKSPACE/.mcp.json"
           echo "MCP config created at: $GITHUB_WORKSPACE/.mcp.json"
           cat "$GITHUB_WORKSPACE/.mcp.json"
 
@@ -148,40 +139,55 @@ MCPEOF
           - Capture specific UI elements, not entire browser windows
           - Every screenshot must serve a validation purpose
 
-          DETERMINISTIC NAMING CONVENTION:
+          CONTEXTUAL NAMING CONVENTION (MANDATORY):
           All screenshots saved to: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/
 
+          NAMING PHILOSOPHY:
+          Screenshot names MUST describe the SCREEN/FEATURE being captured, NOT generic claim numbers.
+          Names should be self-documenting - anyone reading the filename should understand what it shows.
+
           Required Baseline Screenshots:
-          - step-00-start.png      (initial state before any action)
-          - step-01-login.png      (after authentication)
-          - final-state.png        (end state after all validations)
+          - 00-login-page.png                    (login screen before authentication)
+          - 01-dashboard-after-login.png         (main dashboard after successful login)
+          - 02-onboarding-dismissed.png          (dashboard after closing onboarding modal)
+          - final-validation-complete.png        (end state after all validations)
 
-          Navigation Path Screenshots:
-          - path-01.png            (first navigation step)
-          - path-02.png            (second navigation step)
-          - path-NN.png            (continue with zero-padded numbers)
+          Navigation Screenshots (describe the destination):
+          - nav-settings-menu.png                (settings menu opened)
+          - nav-payroll-section.png              (payroll settings section)
+          - nav-leaves-section.png               (leaves settings section)
+          - nav-[section]-[subsection].png       (pattern: nav-payroll-daily-wage.png)
 
-          Claim Validation Screenshots (one per claim):
-          - claim-01-pass.png           (claim validated successfully)
-          - claim-01-fail.png           (claim failed validation)
-          - claim-01-not-confirmed.png  (claim could not be verified)
-          - claim-02-pass.png           (next claim, etc.)
+          Feature Validation Screenshots (describe the feature/screen):
+          - daily-wage-calculation-config.png         (daily wage calculation configuration screen)
+          - daily-wage-calculation-options.png        (showing available calculation options)
+          - eos-eligibility-settings.png              (end of service eligibility settings)
+          - eos-salary-components-dropdown.png        (salary components dropdown expanded)
+          - leave-policy-unpaid-config.png            (unpaid leave policy configuration)
+          - leave-policy-deduction-formula.png        (deduction formula display)
+          - proration-settings-calendar-days.png      (proration with calendar days selected)
+          - proration-settings-working-days.png       (proration with working days selected)
+          - proration-settings-custom-days.png        (proration with custom days selected)
 
-          Evidence Screenshots (optional, for additional proof):
-          - claim-01-evidence-01.png    (supporting evidence for claim 01)
-          - claim-01-evidence-02.png    (additional evidence if needed)
+          UI State Screenshots (describe what state is being shown):
+          - dropdown-calculation-basis-expanded.png   (dropdown showing all options)
+          - radio-salary-components-basic-selected.png
+          - toggle-override-enabled.png
+          - warning-payroll-month-impact.png
+          - error-validation-failed.png
 
-          Extra Captures (for unexpected findings):
-          - extra-01-dropdown-options.png
-          - extra-02-error-message.png
-          - extra-NN-<short-slug>.png
+          Evidence Screenshots (describe the evidence):
+          - evidence-formula-display.png
+          - evidence-override-indicator-visible.png
+          - evidence-greyed-out-field.png
 
           NAMING RULES (STRICT):
           - Format: .png ONLY (no .jpg, .jpeg, .webp)
-          - Numbers: Zero-padded (01, 02, ... 99)
+          - Pattern: [context]-[feature]-[detail].png
           - Slugs: kebab-case only (lowercase, hyphens)
           - Characters: ASCII only (no unicode, no spaces)
-          - Length: Slug portion max 30 characters
+          - Length: Max 50 characters total
+          - MUST be descriptive of screen content, NOT generic numbers
 
           SCREENSHOT MANIFEST:
           After all screenshots, create manifest at:
