@@ -30,6 +30,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
+          persist-credentials: false
 
       - name: Detect validation request
         id: detect
@@ -263,15 +264,15 @@ jobs:
           4. TAKE SCREENSHOT of the current viewport only
           5. The screenshot should show the section header + its expanded content
 
-          Example - End of Service Eligibility:
-          - WRONG: Take full-page screenshot showing entire Payroll settings page
-          - CORRECT: Scroll down to 'End of service eligibility', expand it, screenshot just that section
-          - The result should show: section header, table with leave types, Configure button
+          Example - Accordion Section:
+          - WRONG: Take full-page screenshot showing entire settings page
+          - CORRECT: Scroll down to target section, expand accordion, screenshot just that section
+          - The result should show: section header + expanded content (table, form fields, buttons)
 
-          Example - Daily Wage Calculation:
+          Example - Configuration Table:
           - WRONG: Screenshot entire page from top to bottom
-          - CORRECT: Scroll to Daily Wage Calculation section, expand it, screenshot the table
-          - The result should show: section header, Service/Daily Wage Calculation table rows
+          - CORRECT: Scroll to the specific table/section, screenshot the viewport
+          - The result should show: table header + visible rows + any action buttons
 
           SKIP DASHBOARD/HOME PAGE SCREENSHOTS:
           - Do NOT screenshot the dashboard/home page unless the feature being validated IS the dashboard
@@ -288,7 +289,7 @@ jobs:
           - All screenshots saved to: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/
           - Use descriptive kebab-case names (max 50 characters)
           - Format: .png ONLY
-          - Examples: settings-payroll-config.png, leave-policy-modal.png
+          - Examples: 01-navigation-menu.png, 02-settings-section-expanded.png, 03-config-modal.png
           - Each screenshot should be ~1400x900 pixels (viewport size), NOT tall composites
 
           ============================================================
@@ -563,9 +564,14 @@ jobs:
 
       - name: Commit Results
         if: steps.detect.outputs.skip != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+
+          # Configure git to use GITHUB_TOKEN for push (since persist-credentials is false)
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
 
           # Remove execution status file (internal use only)
           rm -f "$GITHUB_WORKSPACE/${{ steps.detect.outputs.folder }}/validation/.execution_status"
