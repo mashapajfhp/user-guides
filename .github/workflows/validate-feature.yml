@@ -46,6 +46,14 @@ jobs:
         run: |
           mkdir -p "$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
 
+      - name: Install Claude CLI
+        if: steps.detect.outputs.folder != ''
+        run: |
+          echo "Installing Claude CLI..."
+          npm install -g @anthropic-ai/claude-code
+          claude --version
+          echo "✅ Claude CLI installed"
+
       - name: Install Playwright MCP and Browsers
         if: steps.detect.outputs.folder != ''
         run: |
@@ -90,8 +98,8 @@ jobs:
           # Change to workspace directory to ensure MCP loads correctly
           cd "$GITHUB_WORKSPACE"
 
-          # Run Claude CLI with the validation request (skip permissions for CI)
-          claude --dangerously-skip-permissions --mcp-config ".mcp.json" --print "
+          # Run Claude CLI with the validation request (allowedTools for CI security)
+          claude --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" --mcp-config ".mcp.json" --print "
           You are a comprehensive UI validation agent. Read the validation request JSON at $GITHUB_WORKSPACE/$VALIDATION_REQUEST.
 
           AUTHENTICATION:
