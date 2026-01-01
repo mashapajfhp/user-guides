@@ -524,12 +524,11 @@ Before leaving ANY page, verify:
 | Page with K accordions | K+1 (collapsed + each expanded) |
 | Form with checkboxes | 1 per significant state change |
 
-**For the Daily Wage Calculator example, this means:**
-- DWC table overview: 1 screenshot
-- Salary Proration modal: 3+ screenshots (initial, dropdown open, different selection)
-- EOS Leave Encashment modal: 4+ screenshots (initial, leave types table, each dropdown, checkbox states)
-- Unpaid Leave Deduction modal: 3+ screenshots (same pattern as above)
-- Leave Policy configuration: 3+ screenshots (overview, leave pay rate section, options)
+**Example calculation for a complex feature:**
+- Configuration table with 3 rows: 4 screenshots (overview + 3 modals)
+- Each modal with 2 dropdowns: 3 screenshots each (initial + dropdowns open)
+- Policy page with 3 sections: 4 screenshots (overview + each section)
+- Button group with 3 options: 3 screenshots (each state)
 
 **Total expected: 15-20 screenshots minimum for a feature of this complexity.**
 
@@ -537,26 +536,49 @@ Before leaving ANY page, verify:
 
 ## 3.5.2) ADVANCED UI EXPLORATION PATTERNS (MANDATORY)
 
-### PATTERN 7: INITIAL NAVIGATION WITH SIDE MENU
+### PATTERN 7: SKIP DASHBOARD/HOME PAGE SCREENSHOTS
 
-**ALWAYS capture the navigation structure with side menu expanded BEFORE diving into content.**
+**Do NOT screenshot the dashboard/home page unless the feature being validated IS the dashboard.**
 
 ```
-❌ WRONG: Navigate directly to destination, screenshot only the content
-✅ CORRECT: Expand side menu, screenshot showing navigation hierarchy, then proceed
+❌ WRONG: Screenshot the home page "Good to see you..." before navigating
+✅ CORRECT: Navigate directly to the feature, skip the home page
+```
+
+**When to screenshot the home page:**
+- ONLY if the feature being validated is about the home/dashboard page itself
+- ONLY if showing the side menu navigation structure (see below)
+
+**When NOT to screenshot the home page:**
+- When validating settings features
+- When validating payroll features
+- When validating any feature that lives in a different section
+
+The home page with posts, tasks, and welcome messages is NOT relevant evidence for most features.
+
+### PATTERN 8: NAVIGATION WITH SIDE MENU (WHEN RELEVANT)
+
+**Capture the navigation structure with side menu expanded ONLY when documenting how to reach the feature.**
+
+```
+❌ WRONG: Always screenshot the home page with menu
+✅ CORRECT: Screenshot menu expanded WHILE navigating to the feature destination
 ```
 
 **Protocol:**
-1. Before navigating to any feature page, expand the side menu/navigation
-2. Screenshot showing:
-   - All main menu items visible (Home, Company, Payroll, Finance Ops, Time, etc.)
-   - The path to your destination highlighted/visible
-3. This documents HOW users navigate to the feature
-4. Then proceed to the destination page
+1. Navigate toward the feature
+2. When you reach a menu item relevant to the feature, expand the side menu
+3. Screenshot showing:
+   - The relevant menu section expanded/highlighted
+   - The path to your destination visible
+4. This documents HOW users navigate to the feature
+5. Then proceed to the destination page
 
 **Screenshot naming:** `nav-01-menu-expanded.png`
 
-### PATTERN 8: SCROLLING AND VIEWPORT EXPLORATION
+**Note:** This is the ONLY valid use of a home-area screenshot - to show the navigation path, not the dashboard content.
+
+### PATTERN 9: SCROLLING AND VIEWPORT EXPLORATION
 
 **Pages often have content BELOW the visible viewport. You MUST scroll to find it.**
 
@@ -580,7 +602,7 @@ Before leaving ANY page, verify:
 - Restrictions or additional configuration sections
 - Additional form fields not visible on initial load
 
-### PATTERN 9: CONDITIONAL UI / BUTTON GROUP EXPLORATION
+### PATTERN 10: CONDITIONAL UI / BUTTON GROUP EXPLORATION
 
 **Some UI elements only appear AFTER selecting specific options. You MUST click ALL options to discover conditional content.**
 
@@ -606,7 +628,7 @@ Before leaving ANY page, verify:
 
 **Screenshot each state - conditional UI often hides critical configuration options!**
 
-### PATTERN 10: DISABLED/GREYED OUT FIELD DOCUMENTATION
+### PATTERN 11: DISABLED/GREYED OUT FIELD DOCUMENTATION
 
 **Disabled fields are CRITICAL evidence. They show configuration hierarchy and linked settings.**
 
@@ -629,7 +651,7 @@ Before leaving ANY page, verify:
 
 **This documents OVERRIDE INDICATORS - where global settings control local fields.**
 
-### PATTERN 11: INFO BANNER AND CONTEXTUAL MESSAGE CAPTURE
+### PATTERN 12: INFO BANNER AND CONTEXTUAL MESSAGE CAPTURE
 
 **Info banners and contextual messages explain business logic. ALWAYS capture them.**
 
@@ -651,7 +673,7 @@ Before leaving ANY page, verify:
 - Warnings about impact ("This change will affect...")
 - Configuration hierarchy notes ("Configured in X setting")
 
-### PATTERN 12: LINK RELATIONSHIP DOCUMENTATION
+### PATTERN 13: LINK RELATIONSHIP DOCUMENTATION
 
 **When UI shows "Configured in X setting" with a clickable link, this is CRITICAL configuration hierarchy evidence.**
 
