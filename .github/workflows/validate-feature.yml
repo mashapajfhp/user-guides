@@ -365,20 +365,93 @@ jobs:
           - Document what each option means if help text exists
 
           ============================================================
-          SECTION 4: VALIDATION EXECUTION
+          SECTION 4: VALIDATION EXECUTION - ZERO SKIP POLICY
           ============================================================
 
-          IMPORTANT CONTEXT:
-          - The nav.breadcrumb_array paths are HINTS only - they set context but may not be exact paths
-          - Focus on the 'description', 'selector_hint', and 'assertion' fields to understand what to validate
-          - Use your judgment to find the correct UI location if the suggested path doesn't match exactly
+          CRITICAL: EVERY CHECK MUST BE VALIDATED - NO SKIPPING ALLOWED
 
-          FOR EACH VALIDATION PLAN:
-          1. Navigate using breadcrumb_array as a guide
-          2. Apply ALL exploration patterns above to the feature area
-          3. Read each check's description and assertion carefully
-          4. Capture comprehensive screenshot evidence
-          5. Document any UI elements that don't match expected behavior
+          Each check in the validation plan MUST have one of these statuses:
+          - 'passed': UI element exists and matches assertion
+          - 'failed': UI element missing, incorrect, or assertion not met
+          - 'not_applicable': ONLY for state-dependent checks that require specific data conditions
+
+          NEVER USE 'skipped' STATUS. If you didn't navigate somewhere, that's YOUR failure to complete validation.
+
+          ============================================================
+          MANDATORY NAVIGATION RULES
+          ============================================================
+
+          1. ANALYZE ALL UNIQUE NAVIGATION PATHS FIRST:
+             - Read the entire validation request JSON
+             - Identify ALL unique nav.canonical paths across all plans
+             - Group plans by their navigation destination
+             - Example paths you might find:
+               * Settings > Payroll > Daily Wage Calculation
+               * Settings > Payroll > End of Service eligibility > Configure
+               * Settings > Leaves > Leave Policies > [Policy] > Edit
+
+          2. NAVIGATE TO EVERY UNIQUE PATH:
+             - You MUST visit EVERY unique navigation path in the validation plans
+             - If Plan A needs 'Settings > Payroll' and Plan B needs 'Settings > Leaves', visit BOTH
+             - Complete all checks for each location before moving to the next
+             - DO NOT stay in one section and skip others
+
+          3. CLICK INTO MODALS AND CONFIGURATION SCREENS:
+             - If a path ends with 'Configure' or 'Edit', you MUST click that button
+             - If a path mentions a modal (e.g., 'End of Service eligibility > Configure'), open the modal
+             - Take screenshots INSIDE the modal, not just the button that opens it
+
+          4. EXPLORE RELATED NAVIGATION SECTIONS:
+             - 'Settings > Payroll' and 'Settings > Leaves' are DIFFERENT sections
+             - You must navigate to the sidebar and click into each required section
+             - Don't assume content from one section exists in another
+
+          ============================================================
+          CHECK STATUS DECISION TREE
+          ============================================================
+
+          For each check, follow this decision tree:
+
+          1. CAN YOU NAVIGATE TO THE LOCATION?
+             - YES → Continue to step 2
+             - NO (page doesn't exist, permission denied) → Status: 'failed', Note: 'Navigation path not accessible: [reason]'
+
+          2. DOES THE UI ELEMENT EXIST?
+             - YES → Continue to step 3
+             - NO (element not found after thorough search) → Status: 'failed', Note: 'UI element not found: [searched locations]'
+
+          3. DOES THE ELEMENT MATCH THE ASSERTION?
+             - YES → Status: 'passed', Evidence: [screenshot], Note: [what you found]
+             - NO → Status: 'failed', Evidence: [screenshot], Note: 'Assertion not met: [actual vs expected]'
+
+          4. IS THIS A STATE-DEPENDENT CHECK? (e.g., 'warning when payroll month is open')
+             - If the check requires a specific application state that cannot be triggered:
+             - Status: 'not_applicable', Note: 'Requires [specific state] which cannot be triggered in validation environment. To verify: [what would need to happen]'
+
+          IMPORTANT: 'not_applicable' is ONLY for checks like:
+          - 'Verify warning when payroll month has existing transactions' (requires payroll data)
+          - 'Verify February shows 28/29 days' (requires viewing February leave data)
+          - 'Verify rate consistency across payroll cycles' (requires historical transaction data)
+
+          'not_applicable' is NOT valid for:
+          - 'Verify navigation to Settings > Leaves' (you CAN navigate there)
+          - 'Verify dropdown options exist' (you CAN click the dropdown)
+          - 'Verify modal shows formula' (you CAN open the modal)
+
+          ============================================================
+          EXECUTION SEQUENCE
+          ============================================================
+
+          1. READ the entire validation request JSON
+          2. LIST all unique navigation paths (you will output this list)
+          3. FOR EACH navigation path:
+             a. Navigate to that location
+             b. Take evidence screenshot
+             c. Complete ALL checks that belong to this path
+             d. Open any modals/configurations required
+             e. Take screenshots inside modals
+          4. VERIFY you have addressed every check in every plan
+          5. Write output files with NO 'skipped' statuses
 
           COMPLETION CHECKLIST FOR EACH FEATURE AREA:
           - Scrolled to bottom of page to find hidden content
@@ -388,6 +461,8 @@ jobs:
           - Documented all disabled fields with their explanations
           - Captured all info banners and contextual messages
           - Followed 'Configured in X' links to document relationships
+          - Visited EVERY navigation path specified in the plans
+          - Opened EVERY modal/configuration screen mentioned in paths
 
           ============================================================
           SECTION 5: MANDATORY OUTPUT FILES
@@ -405,10 +480,67 @@ jobs:
              - Key findings and recommendations
 
           3. Structured results: $GITHUB_WORKSPACE/$VALIDATION_RESULT
-             - JSON format with plan statuses and check results
-             - Include evidence references and notes for each check
+             CRITICAL: Use this EXACT JSON structure:
+
+             {
+               \"feature_name\": \"[from request]\",
+               \"feature_slug\": \"[from request]\",
+               \"validated_at\": \"[ISO8601 timestamp]\",
+               \"navigation_paths_visited\": [
+                 \"Settings > Payroll > Daily Wage Calculation\",
+                 \"Settings > Payroll > End of Service eligibility > Configure\",
+                 \"Settings > Leaves > Leave Policies\"
+               ],
+               \"summary\": {
+                 \"total_plans\": [number],
+                 \"passed\": [plans where all checks passed],
+                 \"failed\": [plans with any failed checks],
+                 \"partial\": [plans with mix of passed/not_applicable],
+                 \"total_checks\": [number],
+                 \"checks_passed\": [number],
+                 \"checks_failed\": [number],
+                 \"checks_not_applicable\": [number]
+               },
+               \"plans\": [
+                 {
+                   \"plan_id\": \"[from request]\",
+                   \"nav_path\": \"[canonical path from request]\",
+                   \"nav_visited\": true,
+                   \"status\": \"passed | failed | partial\",
+                   \"checks\": [
+                     {
+                       \"check_id\": \"[from request]\",
+                       \"status\": \"passed | failed | not_applicable\",
+                       \"evidence\": \"screenshot-filename.png\" or null,
+                       \"notes\": \"Detailed explanation of what was found or why status was assigned\"
+                     }
+                   ]
+                 }
+               ]
+             }
+
+             VALIDATION RULES FOR result.json:
+             - NEVER use status 'skipped' - this status is FORBIDDEN
+             - Every check MUST have: check_id, status, evidence (or null), notes
+             - Every plan MUST have: nav_visited: true (you must visit every path)
+             - summary.checks_passed + checks_failed + checks_not_applicable MUST equal total_checks
 
           After completing ALL validation, write 'completed' to: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status
+
+          ============================================================
+          SECTION 6: SELF-VERIFICATION BEFORE FINISHING
+          ============================================================
+
+          BEFORE writing result.json, verify:
+          1. Count unique navigation paths in request → Did you visit ALL of them?
+          2. Count total checks across all plans → Did you address ALL of them?
+          3. Search your result for 'skipped' → If found, FIX IT (change to passed/failed/not_applicable)
+          4. For each 'not_applicable' → Is it truly state-dependent? Or did you just not navigate there?
+
+          If you find you missed navigating to a path:
+          - GO BACK and navigate to that path
+          - Complete the checks for that path
+          - Then write the complete result.json
           " 2>&1 | tee "$GITHUB_WORKSPACE/${{ steps.detect.outputs.log_file }}"
 
           CLAUDE_EXIT_CODE=$?
