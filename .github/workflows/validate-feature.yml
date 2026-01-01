@@ -73,8 +73,8 @@ jobs:
           echo "Setting up MCP configuration..."
           # Remove any existing config and create fresh
           rm -f "$GITHUB_WORKSPACE/.mcp.json"
-          # Headed mode: browser window visible for live monitoring
-          echo '{"mcpServers":{"playwright":{"command":"npx","args":["-y","@playwright/mcp","--headless"]}}}' > "$GITHUB_WORKSPACE/.mcp.json"
+          # Headed mode: browser window visible for live monitoring on self-hosted runner
+          echo '{"mcpServers":{"playwright":{"command":"npx","args":["-y","@playwright/mcp"]}}}' > "$GITHUB_WORKSPACE/.mcp.json"
           echo "MCP config created at: $GITHUB_WORKSPACE/.mcp.json"
           cat "$GITHUB_WORKSPACE/.mcp.json"
 
@@ -105,8 +105,9 @@ jobs:
           # Add npm global bin to PATH
           export PATH="$(npm prefix -g)/bin:$PATH"
 
-          # Run Claude CLI with the validation request (allowedTools for CI security)
-          claude --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" --mcp-config ".mcp.json" --print "
+          # Run Claude CLI with timeout (15 min max) and cleanup on exit
+          # Using timeout to prevent indefinite hangs when MCP browser doesn't close
+          timeout 900 claude --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" --mcp-config ".mcp.json" --print "
           You are a comprehensive UI validation agent. Read the validation request JSON at $GITHUB_WORKSPACE/$VALIDATION_REQUEST.
 
           AUTHENTICATION:
@@ -243,6 +244,11 @@ jobs:
 
           Be thorough - we need a complete picture of the feature's UI state, not just pass/fail.
           " 2>&1 | tee "$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/validation.log"
+
+          # Cleanup: Kill any orphaned browser/MCP processes
+          pkill -f "mcp-server-playwright" 2>/dev/null || true
+          pkill -f "chrome.*playwright" 2>/dev/null || true
+          echo "✅ Cleanup complete"
 
       - name: Validate Screenshot Manifest
         if: steps.detect.outputs.folder != ''
