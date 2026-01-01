@@ -595,16 +595,13 @@ jobs:
                \"feature_name\": \"[from request]\",
                \"feature_slug\": \"[from request]\",
                \"validated_at\": \"[ISO8601 timestamp]\",
-               \"navigation_paths_visited\": [
-                 \"Settings > Payroll > Daily Wage Calculation\",
-                 \"Settings > Payroll > End of Service eligibility > Configure\",
-                 \"Settings > Leaves > Leave Policies\"
-               ],
+               \"status\": \"passed | partial | failed\",  // ← OVERALL STATUS (computed from all plans)
+               \"navigation_paths_visited\": [...],
                \"summary\": {
                  \"total_plans\": [number],
-                 \"passed\": [plans where all checks passed],
-                 \"failed\": [plans with any failed checks],
-                 \"partial\": [plans with mix of passed/not_applicable],
+                 \"passed\": [count of plans with status=passed],
+                 \"failed\": [count of plans with status=failed],
+                 \"partial\": [count of plans with status=partial],
                  \"total_checks\": [number],
                  \"checks_passed\": [number],
                  \"checks_failed\": [number],
@@ -613,26 +610,77 @@ jobs:
                \"plans\": [
                  {
                    \"plan_id\": \"[from request]\",
-                   \"nav_path\": \"[canonical path from request]\",
+                   \"nav_path\": \"[canonical path]\",
                    \"nav_visited\": true,
-                   \"status\": \"passed | failed | partial\",
+                   \"status\": \"passed | failed | partial\",  // ← PLAN STATUS (computed from checks)
                    \"checks\": [
                      {
                        \"check_id\": \"[from request]\",
-                       \"status\": \"passed | failed | not_applicable\",
-                       \"evidence\": \"screenshot-filename.png\" or null,
-                       \"notes\": \"Detailed explanation of what was found or why status was assigned\"
+                       \"status\": \"passed | failed | not_applicable\",  // ← CHECK STATUS
+                       \"evidence\": \"screenshot-filename.png or null\",
+                       \"notes\": \"Explanation\"
                      }
                    ]
                  }
                ]
              }
 
+             ============================================================
+             STATUS HIERARCHY (THREE LEVELS - READ CAREFULLY)
+             ============================================================
+
+             LEVEL 1: CHECK STATUS (lowest level)
+             Each individual check has a status:
+             - \"passed\": UI element exists and matches assertion
+             - \"failed\": UI element missing, incorrect, or assertion not met
+             - \"not_applicable\": State-dependent check that requires specific data conditions
+             - NEVER use \"skipped\" - this is FORBIDDEN
+
+             LEVEL 2: PLAN STATUS (middle level)
+             Each plan's status is computed from its checks:
+             - \"passed\": ALL checks in this plan are passed
+             - \"failed\": ANY check in this plan is failed
+             - \"partial\": Mix of passed and not_applicable checks (no failures)
+
+             LEVEL 3: OVERALL STATUS (top level) ← THIS IS WHAT N8N USES
+             The top-level \"status\" field is computed from all plans:
+
+             IF summary.failed > 0:
+               OVERALL status = \"failed\"
+             ELSE IF summary.passed == summary.total_plans:
+               OVERALL status = \"passed\"
+             ELSE:
+               OVERALL status = \"partial\"
+
+             ============================================================
+             EXAMPLE CALCULATIONS
+             ============================================================
+
+             Example 1: All plans passed
+             - Plan A: 5 checks passed → plan status = \"passed\"
+             - Plan B: 3 checks passed → plan status = \"passed\"
+             - summary: passed=2, failed=0, partial=0
+             - OVERALL status = \"passed\" ✅
+
+             Example 2: One plan failed
+             - Plan A: 5 checks passed → plan status = \"passed\"
+             - Plan B: 2 passed, 1 failed → plan status = \"failed\"
+             - summary: passed=1, failed=1, partial=0
+             - OVERALL status = \"failed\" ❌
+
+             Example 3: Partial validation
+             - Plan A: 5 checks passed → plan status = \"passed\"
+             - Plan B: 2 passed, 1 not_applicable → plan status = \"partial\"
+             - summary: passed=1, failed=0, partial=1
+             - OVERALL status = \"partial\" ⚠️
+
+             ============================================================
+
              VALIDATION RULES FOR result.json:
-             - NEVER use status 'skipped' - this status is FORBIDDEN
+             - NEVER use status 'skipped' at any level - this status is FORBIDDEN
              - Every check MUST have: check_id, status, evidence (or null), notes
-             - Every plan MUST have: nav_visited: true (you must visit every path)
-             - summary.checks_passed + checks_failed + checks_not_applicable MUST equal total_checks
+             - Every plan MUST have: plan_id, nav_path, nav_visited, status, checks
+             - The top-level \"status\" field is MANDATORY - n8n uses this for routing
 
           After completing ALL validation, write 'completed' to: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status
 
