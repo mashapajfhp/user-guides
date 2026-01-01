@@ -154,6 +154,36 @@ YOU MUST CREATE ALL OF THESE FILES:
 1. Screenshot manifest: [screenshots_dir]/manifest.json
 2. Validation report: [feature_folder]/validation/report.md
 3. Structured results: [feature_folder]/validation/result.json
+4. **Validation log: [feature_folder]/validation/validation.log** (CRITICAL - workflow fails if empty)
+
+### validation.log Requirements (CRITICAL)
+
+**THE WORKFLOW WILL FAIL IF validation.log IS LESS THAN 100 BYTES**
+
+You MUST write a validation log with the following content:
+```
+=== VALIDATION LOG ===
+Feature: [feature_name]
+Started: [ISO8601 timestamp]
+Plans to validate: [count]
+
+--- Navigation Progress ---
+[timestamp] Navigated to: Settings > Payroll > Daily Wage Calculation
+[timestamp] Navigated to: Settings > Payroll > End of Service eligibility
+[timestamp] Navigated to: Settings > Leaves
+
+--- Validation Summary ---
+Total plans: [count]
+Passed: [count]
+Failed: [count]
+Not applicable checks: [count]
+
+Completed: [ISO8601 timestamp]
+Status: [passed/failed/partial]
+=== END LOG ===
+```
+
+**WRITE THIS LOG FILE BEFORE result.json**
 
 ### result.json Structure
 
@@ -234,6 +264,9 @@ BEFORE writing result.json, verify:
 5. **CRITICAL: Is the top-level "status" field set to "passed", "partial", or "failed"?**
    - If status is null or missing - COMPUTE IT using the formula above
    - If summary.failed == 0 AND summary.passed == summary.total_plans -> status = "passed"
+6. **CRITICAL: Did you write validation.log with at least 100 bytes of content?**
+   - The workflow WILL FAIL if validation.log is empty or too small
+   - Write the log BEFORE writing result.json
 
 If you find you missed navigating to a path:
 - GO BACK and navigate to that path
