@@ -190,8 +190,8 @@ jobs:
       # ============================================================
       # VALIDATION EXECUTION
       # ============================================================
-      - name: Run Playwright MCP Validation
-        id: validation
+      - name: Prepare Validation Prompt
+        id: prepare_prompt
         if: steps.detect.outputs.skip != 'true'
         env:
           VALIDATION_REQUEST: ${{ steps.detect.outputs.request_file }}
@@ -201,14 +201,51 @@ jobs:
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
           APP_USERNAME: ${{ secrets.APP_USERNAME }}
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+        run: |
+          # Read instructions from file and substitute variables
+          INSTRUCTIONS_FILE="$GITHUB_WORKSPACE/.github/validation-instructions.md"
+          PROMPT_FILE="$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.prompt.txt"
+
+          # Create prompt with context header
+          cat > "$PROMPT_FILE" << 'PROMPT_HEADER'
+          You are a comprehensive UI validation agent. Your task is to validate UI features against a request JSON file.
+
+          CRITICAL: You MUST complete all tasks and write all output files before finishing.
+
+          PROMPT_HEADER
+
+          # Add authentication section with actual credentials
+          cat >> "$PROMPT_FILE" << EOF
+          ## AUTHENTICATION CREDENTIALS
+          - Navigate to: $APP_BASE_URL
+          - Username: $APP_USERNAME
+          - Password: $APP_PASSWORD
+
+          ## FILE PATHS
+          - Request JSON: $GITHUB_WORKSPACE/$VALIDATION_REQUEST
+          - Result JSON: $GITHUB_WORKSPACE/$VALIDATION_RESULT
+          - Screenshots: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/
+          - Report: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/report.md
+          - Manifest: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/manifest.json
+          - Completion marker: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status
+
+          EOF
+
+          # Append the main instructions (without the header which we already added)
+          tail -n +3 "$INSTRUCTIONS_FILE" >> "$PROMPT_FILE"
+
+          echo "✅ Validation prompt prepared ($(wc -c < "$PROMPT_FILE") bytes)"
+
+      - name: Run Playwright MCP Validation
+        id: validation
+        if: steps.detect.outputs.skip != 'true'
+        env:
+          FEATURE_FOLDER: ${{ steps.detect.outputs.folder }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           echo "============================================================"
           echo "🚀 Starting validation for: $FEATURE_FOLDER"
           echo "============================================================"
-          echo "Request file: $VALIDATION_REQUEST"
-          echo "Screenshots directory: $SCREENSHOTS_DIR"
-          echo "Target URL: $APP_BASE_URL"
           echo "Playwright MCP version: ${PLAYWRIGHT_MCP_VERSION}"
           echo "Start time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "============================================================"
@@ -219,494 +256,21 @@ jobs:
           # Create marker file to track execution
           echo "started" > "$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status"
 
+          # Read the prepared prompt
+          PROMPT_FILE="$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.prompt.txt"
+
           # Run Claude CLI and capture exit code
           set +e  # Don't exit on error
 
           claude --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
                  --mcp-config ".mcp.json" \
-                 --print "
-          You are a comprehensive UI validation agent. Read the validation request JSON at $GITHUB_WORKSPACE/$VALIDATION_REQUEST.
-
-          CRITICAL: You MUST complete all tasks and write all output files before finishing.
-
-          ============================================================
-          SECTION 1: AUTHENTICATION
-          ============================================================
-          - Navigate to: $APP_BASE_URL
-          - Username: $APP_USERNAME
-          - Password: $APP_PASSWORD
-          - Complete login before proceeding with validation
-
-          POST-LOGIN ONBOARDING DISMISSAL (CRITICAL):
-          - After successful login, an onboarding overlay may appear showing 'Step 1 of 4' or similar
-          - This modal blocks the main UI and MUST be dismissed before any navigation
-          - Look for an X button (close icon) in the top-right corner of the onboarding popup
-          - Click the X to dismiss the onboarding modal completely
-          - Wait for the overlay to close and the main dashboard to be fully visible
-          - Only proceed with feature navigation once the dashboard is clear of overlays
-
-          ============================================================
-          SECTION 2: SCREENSHOT RULES
-          ============================================================
-
-          CRITICAL: VIEWPORT-ONLY SCREENSHOTS (NO FULL-PAGE COMPOSITES):
-          - NEVER take full-page or scrolling composite screenshots
-          - Each screenshot MUST be a single viewport capture (what fits on screen)
-          - WRONG: Long stitched images showing entire page (800x2853 pixels)
-          - CORRECT: Clean viewport screenshots (~1400x900 pixels)
-          - Full-page composites are hard to read and don't represent user experience
-
-          TARGETED SECTION CAPTURE (MANDATORY APPROACH):
-          For each section you need to document:
-          1. SCROLL the page until the target section is visible in the viewport
-          2. EXPAND the accordion/section if collapsed
-          3. WAIT for content to load completely
-          4. TAKE SCREENSHOT of the current viewport only
-          5. The screenshot should show the section header + its expanded content
-
-          Example - Accordion Section:
-          - WRONG: Take full-page screenshot showing entire settings page
-          - CORRECT: Scroll down to target section, expand accordion, screenshot just that section
-          - The result should show: section header + expanded content (table, form fields, buttons)
-
-          Example - Configuration Table:
-          - WRONG: Screenshot entire page from top to bottom
-          - CORRECT: Scroll to the specific table/section, screenshot the viewport
-          - The result should show: table header + visible rows + any action buttons
-
-          SKIP DASHBOARD/HOME PAGE SCREENSHOTS:
-          - Do NOT screenshot the dashboard/home page unless the feature being validated IS the dashboard
-          - The first meaningful screenshot should be the navigation TO the feature (with side menu open)
-          - Exception: If validating dashboard widgets or landing page features, then screenshot dashboard
-
-          NAVIGATION WITH SIDE MENU:
-          - When documenting how to reach a feature, capture the side menu in EXPANDED state
-          - Show the menu hierarchy that leads to the feature
-          - This helps users understand the navigation path
-          - Screenshot naming: 01-navigation-menu-expanded.png or similar
-
-          SCREENSHOT SPECIFICATIONS:
-          - All screenshots saved to: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/
-          - Use descriptive kebab-case names (max 50 characters)
-          - Format: .png ONLY
-          - Examples: 01-navigation-menu.png, 02-settings-section-expanded.png, 03-config-modal.png
-          - Each screenshot should be ~1400x900 pixels (viewport size), NOT tall composites
-
-          ============================================================
-          SECTION 3: EXHAUSTIVE UI EXPLORATION PATTERNS
-          ============================================================
-
-          PATTERN 1 - SCROLL AND VIEWPORT EXPLORATION:
-          Pages often have content BELOW the visible viewport. You MUST scroll to find it.
-          - After loading any page, scroll down to check for content below the fold
-          - Look for: additional form fields, tables, configuration sections, buttons
-          - Take SEPARATE viewport screenshots at different scroll positions
-          - WRONG: One tall composite image of entire page
-          - CORRECT: Multiple viewport-sized screenshots at different scroll positions
-          - Example: screenshot-1-top-of-page.png, screenshot-2-middle-section.png, screenshot-3-bottom-section.png
-          - Use browser_snapshot to detect scrollable areas
-          - Critical: Some settings pages have 3-4 sections - each needs its own viewport screenshot
-
-          PATTERN 2 - CONDITIONAL UI / BUTTON GROUP EXPLORATION:
-          Some UI elements only appear AFTER selecting specific options.
-          - Identify ALL button groups, radio buttons, tabs, and toggle switches
-          - Click EACH option systematically, not just the currently selected one
-          - After each click, check if NEW UI elements appear
-          - Screenshot the UI state for EACH option
-          - Document what appears/disappears based on selection
-          - Example: A 'Custom days' radio might reveal a number input field
-
-          PATTERN 3 - DISABLED/GREYED OUT FIELD DOCUMENTATION:
-          Disabled fields are CRITICAL evidence of configuration hierarchy.
-          - When you find greyed-out or disabled fields, DO NOT skip them
-          - Document WHY they are disabled (look for info text, tooltips, or banners)
-          - Look for phrases like 'Configured in [X] setting' or 'Controlled by [Y]'
-          - These indicate linked configurations that users need to understand
-          - Screenshot disabled fields with their explanatory messages visible
-
-          PATTERN 4 - INFO BANNER AND CONTEXTUAL MESSAGE CAPTURE:
-          Info banners and contextual messages explain business logic.
-          - Look for blue/yellow/grey information boxes at top of sections
-          - Capture warning messages about impacts of changes
-          - Document helper text that appears below form fields
-          - These messages are essential for user guide accuracy
-          - Screenshot the full context including the banner AND related fields
-
-          PATTERN 5 - LINK RELATIONSHIP DOCUMENTATION:
-          When UI shows 'Configured in X setting' with a clickable link:
-          - This is CRITICAL configuration hierarchy evidence
-          - Click the link to verify where it leads
-          - Document the relationship between settings
-          - Take screenshots showing: the link text, where it navigates to
-          - This helps users understand cross-setting dependencies
-
-          PATTERN 6 - TABLE ROW EXPLORATION:
-          When a table has multiple rows with Edit/Configure buttons:
-          - Click the Edit/Configure button for EACH row, not just the first
-          - Each row may have different configuration options
-          - Document variations between row configurations
-          - Take screenshots of each unique configuration modal
-          - Example: A table with 3 service types needs 3 modal screenshots
-
-          PATTERN 7 - COMPLETE MODAL EXPLORATION:
-          When opening any modal/dialog:
-          - Identify ALL interactive elements within the modal
-          - Open EVERY dropdown within the modal to see available options
-          - Screenshot dropdown options in their expanded state
-          - Look for tabs or sections within the modal
-          - Scroll within the modal if it has scrollable content
-          - Document any disabled fields and their explanations
-
-          PATTERN 8 - DROPDOWN DOCUMENTATION:
-          For every dropdown/select element:
-          - Click to expand and see ALL available options
-          - Take screenshot with dropdown OPEN showing all options
-          - Note the currently selected value
-          - Document what each option means if help text exists
-
-          ============================================================
-          SECTION 3B: SHERLOCK HOLMES EXPLORATION MINDSET
-          ============================================================
-
-          YOU ARE AN INVESTIGATOR, NOT A SCRIPT FOLLOWER.
-          The validation plan gives you HINTS, not exact instructions.
-          Your job is to DISCOVER and DOCUMENT what actually exists.
-
-          CORE PRINCIPLES:
-
-          1. CLICK EVERY BUTTON YOU SEE:
-             - See a 'Configure' button? CLICK IT.
-             - See a 'View' button? CLICK IT.
-             - See an 'Edit' button? CLICK IT.
-             - See a link in an info banner? CLICK IT.
-             - NEVER say 'Requires clicking X' - just CLICK X!
-
-          2. EXPAND MULTIPLE ITEMS TO FIND PATTERNS:
-             - If there's a list of items with expandable accordions:
-               * Expand the FIRST one - screenshot and document
-               * Expand the SECOND one - screenshot and document
-               * Expand the THIRD one - screenshot and document
-             - Look for PATTERNS: Do different items have different settings?
-             - Example: Item A might use 'Option X' while Item B uses 'Option Y (value: 22)'
-             - Document these variations - they are CRITICAL for user guides
-
-          3. FOLLOW EVERY LEAD:
-             - Info banner says 'This setting is configured in [another section]' with a 'View' button?
-               * CLICK the View button
-               * Screenshot where it takes you
-               * Document the relationship between settings
-             - This is GOLD for understanding configuration hierarchy
-
-          4. DOCUMENT GREYED-OUT/DISABLED FIELDS:
-             - When you see greyed-out fields, this is EVIDENCE of configuration precedence
-             - Screenshot the disabled state
-             - Look for explanatory text nearby
-             - Note WHY the field is disabled (e.g., 'controlled by global settings')
-
-          5. INVESTIGATE WRONG NAVIGATION PATHS:
-             - If the plan says 'Settings > [Section] > [Subsection] > Add new item'
-             - But you find the actual path is 'Settings > [Section] > [Subsection] > [existing item] > Edit'
-             - DOCUMENT BOTH:
-               * 'Provided navigation: Settings > [Section] > [Subsection] > Add new item'
-               * 'Actual navigation found: Settings > [Section] > [Subsection] > [item name] > Edit'
-               * 'Correction: The configuration is accessed via existing item edit, not add new item'
-
-          6. EXPLORE RELATED UI ELEMENTS:
-             - If you're in a modal and see checkboxes for different items:
-               * Check/uncheck different items to see what UI changes
-               * Does selecting Item A show different fields than selecting Item B?
-               * Screenshot each variation
-             - If there are tabs in the modal, click ALL tabs
-
-          7. SCROLL WITHIN MODALS:
-             - Modals often have scrollable content
-             - Scroll to the bottom to find additional options
-             - Screenshot different scroll positions if there's more content
-
-          CONCRETE EXAMPLE - CONFIGURATION MODAL WITH LIST ITEMS:
-
-          WRONG (lazy) approach:
-          - See a section with 'Configure' button
-          - DON'T click it
-          - Write: 'skipped - requires clicking Configure button'
-
-          CORRECT (investigator) approach:
-          1. See 'Configure' button → CLICK IT
-          2. Modal opens → Screenshot the modal
-          3. See info banner with 'View' button → CLICK View button
-          4. Document where View takes you → Screenshot
-          5. Go back to modal
-          6. See list of items with expandable accordions or checkboxes
-          7. Click/expand the FIRST item → See configuration section expand
-          8. Screenshot - note any GREYED OUT or disabled fields
-          9. Click/expand the SECOND item → See its configuration
-          10. Screenshot - document the DIFFERENCE between items
-          11. Click/expand the THIRD item → See its configuration
-          12. Screenshot - document any patterns
-          13. Scroll down in modal to see if there are more items
-          14. Document total count of available items
-          15. Note variations in configuration between different items
-
-          ANOTHER EXAMPLE - LIST/TABLE WITH MULTIPLE ENTRIES:
-
-          WRONG (lazy) approach:
-          - Plan says 'Settings > [Section] > [Subsection] > Add new item'
-          - Don't navigate there
-          - Write: 'skipped - requires navigating to [Subsection]'
-
-          CORRECT (investigator) approach:
-          1. Navigate to Settings → [Section] → [Subsection]
-          2. Screenshot the list/table view
-          3. See multiple existing entries
-          4. Click into the FIRST entry → Screenshot its configuration
-          5. Click into the SECOND entry → Screenshot - look for patterns/differences
-          6. Click into a THIRD entry → Screenshot
-          7. Look for 'Add new' or 'Create' button - click it if it exists
-          8. Screenshot the creation flow
-          9. Document: 'Existing entries show X configuration options'
-          10. Document: 'Create new flow shows Y steps'
-          11. If create button doesn't exist, document: 'No create button found - entries may be system-managed'
-
-          REMEMBER: Your goal is to DISCOVER THE TRUTH about the UI.
-          - Don't assume what a button does - CLICK IT
-          - Don't assume what a section contains - OPEN IT
-          - Don't assume a path is correct - VERIFY IT
-          - If something is different from the plan, DOCUMENT THE DIFFERENCE
-
-          ============================================================
-          SECTION 4: VALIDATION EXECUTION - ZERO SKIP POLICY
-          ============================================================
-
-          CRITICAL: EVERY CHECK MUST BE VALIDATED - NO SKIPPING ALLOWED
-
-          Each check in the validation plan MUST have one of these statuses:
-          - 'passed': UI element exists and matches assertion
-          - 'failed': UI element missing, incorrect, or assertion not met
-          - 'not_applicable': ONLY for state-dependent checks that require specific data conditions
-
-          NEVER USE 'skipped' STATUS. If you didn't navigate somewhere, that's YOUR failure to complete validation.
-
-          ============================================================
-          MANDATORY NAVIGATION RULES
-          ============================================================
-
-          1. ANALYZE ALL UNIQUE NAVIGATION PATHS FIRST:
-             - Read the entire validation request JSON
-             - Identify ALL unique nav.canonical paths across all plans
-             - Group plans by their navigation destination
-             - Example paths you might find:
-               * Settings > Payroll > Daily Wage Calculation
-               * Settings > Payroll > End of Service eligibility > Configure
-               * Settings > Leaves > Leave Policies > [Policy] > Edit
-
-          2. NAVIGATE TO EVERY UNIQUE PATH:
-             - You MUST visit EVERY unique navigation path in the validation plans
-             - If Plan A needs 'Settings > Payroll' and Plan B needs 'Settings > Leaves', visit BOTH
-             - Complete all checks for each location before moving to the next
-             - DO NOT stay in one section and skip others
-
-          3. CLICK INTO MODALS AND CONFIGURATION SCREENS:
-             - If a path ends with 'Configure' or 'Edit', you MUST click that button
-             - If a path mentions a modal (e.g., 'End of Service eligibility > Configure'), open the modal
-             - Take screenshots INSIDE the modal, not just the button that opens it
-
-          4. EXPLORE RELATED NAVIGATION SECTIONS:
-             - 'Settings > Payroll' and 'Settings > Leaves' are DIFFERENT sections
-             - You must navigate to the sidebar and click into each required section
-             - Don't assume content from one section exists in another
-
-          ============================================================
-          CHECK STATUS DECISION TREE
-          ============================================================
-
-          For each check, follow this decision tree:
-
-          1. CAN YOU NAVIGATE TO THE LOCATION?
-             - YES → Continue to step 2
-             - NO (page doesn't exist, permission denied) → Status: 'failed', Note: 'Navigation path not accessible: [reason]'
-
-          2. DOES THE UI ELEMENT EXIST?
-             - YES → Continue to step 3
-             - NO (element not found after thorough search) → Status: 'failed', Note: 'UI element not found: [searched locations]'
-
-          3. DOES THE ELEMENT MATCH THE ASSERTION?
-             - YES → Status: 'passed', Evidence: [screenshot], Note: [what you found]
-             - NO → Status: 'failed', Evidence: [screenshot], Note: 'Assertion not met: [actual vs expected]'
-
-          4. IS THIS A STATE-DEPENDENT CHECK? (e.g., 'warning when payroll month is open')
-             - If the check requires a specific application state that cannot be triggered:
-             - Status: 'not_applicable', Note: 'Requires [specific state] which cannot be triggered in validation environment. To verify: [what would need to happen]'
-
-          IMPORTANT: 'not_applicable' is ONLY for checks like:
-          - 'Verify warning when payroll month has existing transactions' (requires payroll data)
-          - 'Verify February shows 28/29 days' (requires viewing February leave data)
-          - 'Verify rate consistency across payroll cycles' (requires historical transaction data)
-
-          'not_applicable' is NOT valid for:
-          - 'Verify navigation to Settings > Leaves' (you CAN navigate there)
-          - 'Verify dropdown options exist' (you CAN click the dropdown)
-          - 'Verify modal shows formula' (you CAN open the modal)
-
-          ============================================================
-          EXECUTION SEQUENCE
-          ============================================================
-
-          1. READ the entire validation request JSON
-          2. LIST all unique navigation paths (you will output this list)
-          3. FOR EACH navigation path:
-             a. Navigate to that location
-             b. Take evidence screenshot
-             c. Complete ALL checks that belong to this path
-             d. Open any modals/configurations required
-             e. Take screenshots inside modals
-          4. VERIFY you have addressed every check in every plan
-          5. Write output files with NO 'skipped' statuses
-
-          COMPLETION CHECKLIST FOR EACH FEATURE AREA:
-          - Scrolled to bottom of page to find hidden content
-          - Clicked all button group options to discover conditional UI
-          - Opened all edit/configure buttons in tables
-          - Expanded all dropdowns within modals
-          - Documented all disabled fields with their explanations
-          - Captured all info banners and contextual messages
-          - Followed 'Configured in X' links to document relationships
-          - Visited EVERY navigation path specified in the plans
-          - Opened EVERY modal/configuration screen mentioned in paths
-
-          ============================================================
-          SECTION 5: MANDATORY OUTPUT FILES
-          ============================================================
-          YOU MUST CREATE ALL OF THESE FILES:
-
-          1. Screenshot manifest: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/manifest.json
-             - List all screenshots with descriptions
-             - Map screenshots to validation checks
-
-          2. Validation report: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/report.md
-             - Executive summary with pass/fail counts
-             - Detailed findings for each validation plan
-             - Evidence references (screenshot filenames)
-             - Key findings and recommendations
-
-          3. Structured results: $GITHUB_WORKSPACE/$VALIDATION_RESULT
-             CRITICAL: Use this EXACT JSON structure:
-
-             {
-               \"feature_name\": \"[from request]\",
-               \"feature_slug\": \"[from request]\",
-               \"validated_at\": \"[ISO8601 timestamp]\",
-               \"status\": \"passed | partial | failed\",
-               \"navigation_paths_visited\": [...],
-               \"summary\": {
-                 \"total_plans\": [number],
-                 \"passed\": [count of plans with status=passed],
-                 \"failed\": [count of plans with status=failed],
-                 \"partial\": [count of plans with status=partial],
-                 \"total_checks\": [number],
-                 \"checks_passed\": [number],
-                 \"checks_failed\": [number],
-                 \"checks_not_applicable\": [number]
-               },
-               \"plans\": [
-                 {
-                   \"plan_id\": \"[from request]\",
-                   \"nav_path\": \"[canonical path]\",
-                   \"nav_visited\": true,
-                   \"status\": \"passed | failed | partial\",
-                   \"checks\": [
-                     {
-                       \"check_id\": \"[from request]\",
-                       \"status\": \"passed | failed | not_applicable\",
-                       \"evidence\": \"screenshot-filename.png or null\",
-                       \"notes\": \"Explanation\"
-                     }
-                   ]
-                 }
-               ]
-             }
-
-             FIELD HIERARCHY (which status is which):
-             - Root level \"status\" = OVERALL validation result (used by n8n)
-             - plans[].status = Individual plan result
-             - plans[].checks[].status = Individual check result
-
-             ============================================================
-             STATUS HIERARCHY (THREE LEVELS - READ CAREFULLY)
-             ============================================================
-
-             LEVEL 1: CHECK STATUS (lowest level)
-             Each individual check has a status:
-             - \"passed\": UI element exists and matches assertion
-             - \"failed\": UI element missing, incorrect, or assertion not met
-             - \"not_applicable\": State-dependent check that requires specific data conditions
-             - NEVER use \"skipped\" - this is FORBIDDEN
-
-             LEVEL 2: PLAN STATUS (middle level)
-             Each plan's status is computed from its checks:
-             - \"passed\": ALL checks in this plan are passed
-             - \"failed\": ANY check in this plan is failed
-             - \"partial\": Mix of passed and not_applicable checks (no failures)
-
-             LEVEL 3: OVERALL STATUS (top level) ← THIS IS WHAT N8N USES
-             The top-level \"status\" field is computed from all plans:
-
-             IF summary.failed > 0:
-               OVERALL status = \"failed\"
-             ELSE IF summary.passed == summary.total_plans:
-               OVERALL status = \"passed\"
-             ELSE:
-               OVERALL status = \"partial\"
-
-             ============================================================
-             EXAMPLE CALCULATIONS
-             ============================================================
-
-             Example 1: All plans passed
-             - Plan A: 5 checks passed → plan status = \"passed\"
-             - Plan B: 3 checks passed → plan status = \"passed\"
-             - summary: passed=2, failed=0, partial=0
-             - OVERALL status = \"passed\" ✅
-
-             Example 2: One plan failed
-             - Plan A: 5 checks passed → plan status = \"passed\"
-             - Plan B: 2 passed, 1 failed → plan status = \"failed\"
-             - summary: passed=1, failed=1, partial=0
-             - OVERALL status = \"failed\" ❌
-
-             Example 3: Partial validation
-             - Plan A: 5 checks passed → plan status = \"passed\"
-             - Plan B: 2 passed, 1 not_applicable → plan status = \"partial\"
-             - summary: passed=1, failed=0, partial=1
-             - OVERALL status = \"partial\" ⚠️
-
-             ============================================================
-
-             VALIDATION RULES FOR result.json:
-             - NEVER use status 'skipped' at any level - this status is FORBIDDEN
-             - Every check MUST have: check_id, status, evidence (or null), notes
-             - Every plan MUST have: plan_id, nav_path, nav_visited, status, checks
-             - The top-level \"status\" field is MANDATORY - n8n uses this for routing
-
-          After completing ALL validation, write 'completed' to: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status
-
-          ============================================================
-          SECTION 6: SELF-VERIFICATION BEFORE FINISHING
-          ============================================================
-
-          BEFORE writing result.json, verify:
-          1. Count unique navigation paths in request → Did you visit ALL of them?
-          2. Count total checks across all plans → Did you address ALL of them?
-          3. Search your result for 'skipped' → If found, FIX IT (change to passed/failed/not_applicable)
-          4. For each 'not_applicable' → Is it truly state-dependent? Or did you just not navigate there?
-
-          If you find you missed navigating to a path:
-          - GO BACK and navigate to that path
-          - Complete the checks for that path
-          - Then write the complete result.json
-          " 2>&1 | tee "$GITHUB_WORKSPACE/${{ steps.detect.outputs.log_file }}"
+                 --print "$(cat "$PROMPT_FILE")" 2>&1 | tee "$GITHUB_WORKSPACE/${{ steps.detect.outputs.log_file }}"
 
           CLAUDE_EXIT_CODE=$?
           set -e
+
+          # Cleanup prompt file
+          rm -f "$PROMPT_FILE"
 
           echo "claude_exit_code=$CLAUDE_EXIT_CODE" >> $GITHUB_OUTPUT
           echo "============================================================"
