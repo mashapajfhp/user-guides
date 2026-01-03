@@ -175,8 +175,7 @@ jobs:
                   "-y",
                   "@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}",
                   "--output-dir", "${SCREENSHOT_PATH}",
-                  "--headless",
-                  "--save-trace"
+                  "--headless"
                 ]
               }
             }
@@ -190,9 +189,40 @@ jobs:
       # ============================================================
       # VALIDATION EXECUTION
       # ============================================================
+      - name: Check for Recent Validation
+        id: cache_check
+        if: steps.detect.outputs.skip != 'true'
+        run: |
+          RESULT_FILE="${{ steps.detect.outputs.result_file }}"
+
+          if [ -f "$GITHUB_WORKSPACE/$RESULT_FILE" ]; then
+            # Check if result.json is valid and recent (less than 1 hour old)
+            if jq empty "$GITHUB_WORKSPACE/$RESULT_FILE" 2>/dev/null; then
+              # Get file age in minutes (macOS compatible)
+              FILE_TIME=$(stat -f %m "$GITHUB_WORKSPACE/$RESULT_FILE" 2>/dev/null || stat -c %Y "$GITHUB_WORKSPACE/$RESULT_FILE" 2>/dev/null)
+              CURRENT_TIME=$(date +%s)
+              AGE_MINUTES=$(( (CURRENT_TIME - FILE_TIME) / 60 ))
+
+              if [ "$AGE_MINUTES" -lt 60 ]; then
+                echo "⏭️ Skipping validation - valid result.json exists (${AGE_MINUTES} minutes old)"
+                echo "skip_validation=true" >> $GITHUB_OUTPUT
+                echo "cache_age_minutes=$AGE_MINUTES" >> $GITHUB_OUTPUT
+              else
+                echo "🔄 Result.json is ${AGE_MINUTES} minutes old - will re-validate"
+                echo "skip_validation=false" >> $GITHUB_OUTPUT
+              fi
+            else
+              echo "⚠️ Existing result.json is invalid - will re-validate"
+              echo "skip_validation=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "📝 No existing result.json - will run validation"
+            echo "skip_validation=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Prepare Validation Prompt
         id: prepare_prompt
-        if: steps.detect.outputs.skip != 'true'
+        if: steps.detect.outputs.skip != 'true' && steps.cache_check.outputs.skip_validation != 'true'
         env:
           VALIDATION_REQUEST: ${{ steps.detect.outputs.request_file }}
           VALIDATION_RESULT: ${{ steps.detect.outputs.result_file }}
@@ -238,7 +268,7 @@ jobs:
 
       - name: Run Playwright MCP Validation
         id: validation
-        if: steps.detect.outputs.skip != 'true'
+        if: steps.detect.outputs.skip != 'true' && steps.cache_check.outputs.skip_validation != 'true'
         env:
           FEATURE_FOLDER: ${{ steps.detect.outputs.folder }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -262,7 +292,8 @@ jobs:
           # Run Claude CLI and capture exit code
           set +e  # Don't exit on error
 
-          claude --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
+          claude --model haiku \
+                 --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
                  --mcp-config ".mcp.json" \
                  --print "$(cat "$PROMPT_FILE")" 2>&1 | tee "$GITHUB_WORKSPACE/${{ steps.detect.outputs.log_file }}"
 
