@@ -1,0 +1,783 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Wage Calculator - User Guide | Bayzat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #9647FF;
+            --primary-dark: #5A2B99;
+            --primary-light: #F3EEFF;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --bg-light: #F9FAFB;
+            --spacing: 16px;
+            --radius: 8px;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            background: #ffffff;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: calc(var(--spacing) * 4) var(--spacing);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: calc(var(--spacing) / 2) var(--spacing);
+            border-radius: calc(var(--radius) * 2);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-subtitle {
+            font-size: 1.125rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: calc(var(--spacing) * 2) var(--spacing);
+        }
+
+        .section {
+            margin-bottom: calc(var(--spacing) * 4);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: calc(var(--spacing) * 2);
+            padding-bottom: var(--spacing);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .section-subtitle {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: calc(var(--spacing) * 2) 0 var(--spacing) 0;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: var(--spacing);
+        }
+
+        .grid {
+            display: grid;
+            gap: var(--spacing);
+            margin-bottom: calc(var(--spacing) * 2);
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .screenshot-container {
+            margin: calc(var(--spacing) * 2) 0;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: var(--bg-light);
+        }
+
+        .screenshot {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        figcaption {
+            padding: var(--spacing);
+            background: white;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+        }
+
+        .citation {
+            position: relative;
+            border-bottom: 1px dotted var(--primary);
+            cursor: help;
+        }
+
+        .citation:hover::after {
+            content: attr(data-source);
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: var(--text-primary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .alert {
+            padding: var(--spacing);
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing);
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #EFF6FF;
+            border-color: #3B82F6;
+            color: #1E40AF;
+        }
+
+        .alert-success {
+            background: #F0FDF4;
+            border-color: var(--success);
+            color: #166534;
+        }
+
+        .alert-warning {
+            background: #FFFBEB;
+            border-color: var(--warning);
+            color: #92400E;
+        }
+
+        .alert-error {
+            background: #FEF2F2;
+            border-color: var(--error);
+            color: #991B1B;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            margin-bottom: calc(var(--spacing) * 1.5);
+            padding-left: calc(var(--spacing) * 3);
+            position: relative;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: var(--primary);
+            color: white;
+            width: calc(var(--spacing) * 2);
+            height: calc(var(--spacing) * 2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing) 0;
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: var(--spacing);
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+
+        .journey-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: calc(var(--spacing) * 1.5);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .journey-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(150, 71, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .journey-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing);
+        }
+
+        .journey-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+
+        .journey-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: var(--bg-light);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.875em;
+            color: var(--primary-dark);
+        }
+
+        .formula {
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: var(--radius);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: calc(var(--radius) / 2);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+
+        .tag-primary {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .tag-success {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .tag-warning {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .journey-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .validation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--success);
+            color: white;
+            padding: 8px 16px;
+            border-radius: calc(var(--radius) * 2);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: var(--spacing);
+        }
+
+        .validation-badge::before {
+            content: "✓";
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="badge">PAYROLL CONFIGURATION</div>
+        <h1>Daily Wage Calculator</h1>
+        <p class="header-subtitle">
+            <span class="citation" data-source="zendesk" data-ref="14243704039185">
+                Centralized system for calculating daily wages across salary proration, leave encashment, and unpaid leave deductions
+            </span>
+        </p>
+        <div class="validation-badge">UI Validated: January 4, 2026</div>
+    </header>
+
+    <div class="container">
+        <!-- SECTION 1: WHAT IS DAILY WAGE CALCULATOR? -->
+        <section class="section">
+            <h2 class="section-title">What is Daily Wage Calculator?</h2>
+            
+            <figure class="screenshot-container">
+                <img src="screenshots/02-daily-wage-calc-expanded.png" alt="Daily Wage Calculator interface showing configuration table with salary proration, EOS eligibility, and unpaid leave settings" class="screenshot">
+                <figcaption>Daily Wage Calculator configuration interface displaying three calculation contexts with their respective day counts and salary components</figcaption>
+            </figure>
+
+            <div class="card">
+                <p style="margin-bottom: var(--spacing);">
+                    <span class="citation" data-source="zendesk" data-ref="14243704039185">
+                        The Daily Wage Calculator is a flexible and customizable system that provides a unified method for calculating daily wages across multiple payroll scenarios including salary proration, leave encashment, and unpaid leave deductions.
+                    </span>
+                </p>
+                
+                <p style="margin-bottom: var(--spacing);">
+                    <span class="citation" data-source="zendesk" data-ref="14243704039185">
+                        This feature allows organizations to select calculation bases (calendar days, working days, or custom days) and choose which salary components to factor into calculations, ensuring compliance with regional labor laws while maintaining flexibility for organizational policies.
+                    </span>
+                </p>
+
+                <div class="alert alert-info">
+                    <strong>Strategic Context:</strong> 
+                    <span class="citation" data-source="zendesk" data-ref="14243704039185">
+                        Most UAE and KSA companies use 30 custom days to align with labor law requirements, while the system accommodates varying month lengths (31 days in January, 28 days in February) through flexible calculation methods.
+                    </span>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">Platform Coverage</h3>
+            <div class="grid grid-3">
+                <div class="card">
+                    <div class="card-title">Salary Proration</div>
+                    <p><span class="citation" data-source="validation" data-ref="plan_salary_proration_config">Adjusts employee salary proportionally based on actual days worked, affecting first salary and end-of-service settlement</span></p>
+                    <div class="formula">
+                        <span class="citation" data-source="screenshot" data-ref="02-daily-wage-calc-expanded.png">
+                            30.45 days (custom)
+                        </span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">EOS Leave Encashment</div>
+                    <p><span class="citation" data-source="validation" data-ref="plan_eos_config_primary">Calculates leave encashment values for end-of-service settlements with configurable leave types</span></p>
+                    <div class="formula">
+                        <span class="citation" data-source="screenshot" data-ref="02-daily-wage-calc-expanded.png">
+                            22 days (working days)
+                        </span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Unpaid Leave Deductions</div>
+                    <p><span class="citation" data-source="validation" data-ref="plan_leaves_unpaid_policy">Calculates daily deductions for unpaid leave taken by employees</span></p>
+                    <div class="formula">
+                        <span class="citation" data-source="screenshot" data-ref="02-daily-wage-calc-expanded.png">
+                            30 days (custom)
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: PRODUCT FOUNDATION OVERVIEW -->
+        <section class="section">
+            <h2 class="section-title">Product Foundation Overview</h2>
+            
+            <div class="grid grid-3">
+                <div class="card">
+                    <div class="card-title">Business Problem Solved</div>
+                    <ul style="list-style-position: inside; color: var(--text-secondary);">
+                        <li style="margin-bottom: 8px;">
+                            <span class="citation" data-source="zendesk" data-ref="14154746403601">
+                                Eliminates manual calculation errors in daily pay deductions for unpaid leave
+                            </span>
+                        </li>
+                        <li style="margin-bottom: 8px;">
+                            <span class="citation" data-source="zendesk" data-ref="14243704039185">
+                                Provides consistent daily wage calculation methodology across multiple payroll scenarios
+                            </span>
+                        </li>
+                        <li style="margin-bottom: 8px;">
+                            <span class="citation" data-source="zendesk" data-ref="14243760419089">
+                                Ensures accurate salary proration for partial month employment periods
+                            </span>
+                        </li>
+                        <li>
+                            <span class="citation" data-source="zendesk" data-ref="14243768433425">
+                                Standardizes leave encashment calculations for end-of-service settlements
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Revenue & Efficiency Impact</div>
+                    <ul style="list-style-position: inside; color: var(--text-secondary);">
+                        <li style="margin-bottom: 8px;">
+                            <span class="citation" data-source="zendesk" data-ref="14154746403601">
+                                Automates pay deduction generation, reducing payroll processing time
+                            </span>
+                        </li>
+                        <li style="margin-bottom: 8px;">
+                            <span class="citation" data-source="zendesk" data-ref="14243760419089">
+                                Reduces manual intervention by automatically calculating prorated salaries
+                            </span>
+                        </li>
+                        <li style="margin-bottom: 8px;">
+                            <span class="citation" data-source="zendesk" data-ref="14243704039185">
+                                Minimizes compliance risks through standardized calculation methods aligned with labor laws
+                            </span>
+                        </li>
+                        <li>
+                            Improves payroll accuracy by eliminating calculation discrepancies across different scenarios
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Technical Architecture</div>
+                    <ul style="list-style-position: inside; color: var(--text-secondary);">
+                        <li style="margin-bottom: 8px;">
+                            <span class="citation" data-source="validation" data-ref="plan_payroll_dwc_primary">
+                                Centralized configuration accessible via Settings → Payroll → Daily Wage Calculation
+                            </span>
+                        </li>
+                        <li style="margin-bottom: 8px;">
+                            <span class="citation" data-source="validation" data-ref="plan_eos_config_primary">
+                                Hierarchical override system where payroll settings control EOS and leave policy calculations
+                            </span>
+                        </li>
+                        <li style="margin-bottom: 8px;">
+                            <span class="citation" data-source="validation" data-ref="plan_leaves_unpaid_policy">
+                                Policy-level fields disabled when global daily wage calculation is configured
+                            </span>
+                        </li>
+                        <li>
+                            <span class="citation" data-source="zendesk" data-ref="14154746403601">
+                                Integrates with payroll system to automatically reflect deductions in payroll table
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: COMPLETE USER JOURNEY GUIDE -->
+        <section class="section">
+            <h2 class="section-title">Complete User Journey Guide</h2>
+            
+            <div class="journey-grid">
+                <div class="journey-card">
+                    <div class="journey-icon">🔍</div>
+                    <div class="journey-title">Discovery</div>
+                    <div class="journey-description">
+                        <span class="citation" data-source="validation" data-ref="check_dwc_nav_payroll">
+                            Navigate to Settings → Payroll → Daily Wage Calculation to access the configuration interface
+                        </span>
+                    </div>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">⚙️</div>
+                    <div class="journey-title">Configuration</div>
+                    <div class="journey-description">
+                        <span class="citation" data-source="validation" data-ref="check_dwc_calc_basis_options">
+                            Select calculation basis (working days, calendar days, or custom days) for each payroll scenario
+                        </span>
+                    </div>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">💰</div>
+                    <div class="journey-title">Salary Components</div>
+                    <div class="journey-description">
+                        <span class="citation" data-source="validation" data-ref="check_dwc_salary_components">
+                            Choose which salary components to include: Basic Only, Basic + Allowances, or Allowances Only
+                        </span>
+                    </div>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">📊</div>
+                    <div class="journey-title">Proration Setup</div>
+                    <div class="journey-description">
+                        <span class="citation" data-source="validation" data-ref="plan_salary_proration_config">
+                            Configure salary proration calculation for partial month employment periods
+                        </span>
+                    </div>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">🏖️</div>
+                    <div class="journey-title">EOS Configuration</div>
+                    <div class="journey-description">
+                        <span class="citation" data-source="validation" data-ref="check_eos_leave_type_config">
+                            Set up leave encashment calculations for end-of-service settlements with eligible leave types
+                        </span>
+                    </div>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">📅</div>
+                    <div class="journey-title">Unpaid Leave Setup</div>
+                    <div class="journey-description">
+                        <span class="citation" data-source="validation" data-ref="check_unpaid_formula_override_state">
+                            Configure unpaid leave deduction calculations with automatic override from global settings
+                        </span>
+                    </div>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">🔄</div>
+                    <div class="journey-title">Validation</div>
+                    <div class="journey-description">
+                        <span class="citation" data-source="validation" data-ref="check_dwc_month_length_awareness">
+                            Verify different day counts display correctly: 30.45 for proration, 22 for EOS, 30 for unpaid
+                        </span>
+                    </div>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">✅</div>
+                    <div class="journey-title">Activation</div>
+                    <div class="journey-description">
+                        <span class="citation" data-source="zendesk" data-ref="14243760419089">
+                            Save changes to apply configuration to all active (unpaid) amounts in the payroll table
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: PRE-IMPLEMENTATION -->
+        <section class="section">
+            <h2 class="section-title">Pre-Implementation Requirements</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>Description</th>
+                        <th>Validation Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>User Role</strong></td>
+                        <td>
+                            <span class="citation" data-source="zendesk" data-ref="14243704039185">
+                                Super Admin access required for configuration
+                            </span>
+                        </td>
+                        <td><span class="tag tag-success">Required</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Payroll Module</strong></td>
+                        <td>
+                            <span class="citation" data-source="validation" data-ref="check_dwc_nav_payroll">
+                                Active payroll module with access to Settings → Payroll
+                            </span>
+                        </td>
+                        <td><span class="tag tag-success">Verified</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Company Calendar</strong></td>
+                        <td>
+                            <span class="citation" data-source="zendesk" data-ref="14243704039185">
+                                Company-specific public holiday calendar configured for working days calculation
+                            </span>
+                        </td>
+                        <td><span class="tag tag-warning">Recommended</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Salary Structure</strong></td>
+                        <td>
+                            <span class="citation" data-source="validation" data-ref="check_dwc_salary_components">
+                                Defined salary components (Basic salary and Allowances) in employee records
+                            </span>
+                        </td>
+                        <td><span class="tag tag-success">Required</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Leave Policies</strong></td>
+                        <td>
+                            <span class="citation" data-source="zendesk" data-ref="14244040988689">
+                                Existing leave policies configured for unpaid leave deduction integration
+                            </span>
+                        </td>
+                        <td><span class="tag tag-warning">Conditional</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert alert-warning">
+                <strong>Important:</strong> 
+                <span class="citation" data-source="zendesk" data-ref="14243760419089">
+                    Changes to daily wage calculation settings will affect all active (unpaid) amounts in the payroll table. When payroll month is open, existing prorated salary transactions must be rejected and resaved after configuration changes.
+                </span>
+            </div>
+        </section>
+
+        <!-- SECTION 5: FEATURE DISCOVERY -->
+        <section class="section">
+            <h2 class="section-title">Feature Discovery</h2>
+            
+            <h3 class="section-subtitle">Navigation Path</h3>
+            <div class="card">
+                <ol class="step-list">
+                    <li>
+                        <span class="citation" data-source="validation" data-ref="check_dwc_nav_payroll">
+                            Log in to Bayzat platform with Super Admin credentials
+                        </span>
+                    </li>
+                    <li>
+                        <span class="citation" data-source="validation" data-ref="check_dwc_nav_payroll">
+                            Navigate to <strong>Settings</strong> from the main navigation menu
+                        </span>
+                    </li>
+                    <li>
+                        <span class="citation" data-source="validation" data-ref="check_dwc_nav_payroll">
+                            Select <strong>Payroll</strong> from the settings categories
+                        </span>
+                    </li>
+                    <li>
+                        <span class="citation" data-source="validation" data-ref="check_dwc_nav_payroll">
+                            Click on <strong>Daily Wage Calculation</strong> to access the configuration page
+                        </span>
+                    </li>
+                </ol>
+            </div>
+
+            <figure class="screenshot-container">
+                <img src="screenshots/01-payroll-settings-page.png" alt="Payroll settings page showing Daily Wage Calculation section among other payroll configuration options" class="screenshot">
+                <figcaption>Payroll settings page with Daily Wage Calculation section accessible from the left navigation panel</figcaption>
+            </figure>
+
+            <h3 class="section-subtitle">Access Methods by Context</h3>
+            <div class="grid grid-3">
+                <div class="card">
+                    <div class="card-title">Salary Proration Access</div>
+                    <p style="margin-bottom: var(--spacing);">
+                        <span class="citation" data-source="validation" data-ref="plan_salary_proration_config">
+                            Settings → Payroll → Daily Wage Calculation → Salary Proration row
+                        </span>
+                    </p>
+                    <span class="tag tag-primary">Primary Path</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">EOS Configuration Access</div>
+                    <p style="margin-bottom: var(--spacing);">
+                        <span class="citation" data-source="validation" data-ref="check_eos_nav_config">
+                            Settings → Payroll → End of Service Eligibility → Configure button
+                        </span>
+                    </p>
+                    <span class="tag tag-primary">Secondary Path</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Unpaid Leave Access</div>
+                    <p style="margin-bottom: var(--spacing);">
+                        <span class="citation" data-source="validation" data-ref="check_leaves_nav_unpaid">
+                            Settings → Leaves → Leave Policies → Unpaid Leave policy
+                        </span>
+                    </p>
+                    <span class="tag tag-primary">Policy-Level Path</span>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>Navigation Note:</strong> 
+                <span class="citation" data-source="validation" data-ref="check_eos_override_indicator">
+                    When accessing EOS or unpaid leave configurations, override indicators display showing that daily rate is configured in the central daily wage calculation setting.
+                </span>
+            </div>
+        </section>
+
+        <!-- SECTION 6: SETUP PROCESS -->
+        <section class="section">
+            <h2 class="section-title">Setup Process</h2>
+            
+            <h3 class="section-subtitle">Step 1: Configure Salary Proration</h3>
+            <div class="card">
+                <ol class="step-list">
+                    <li>
+                        <span class="citation" data-source="validation" data-ref="plan_salary_proration_config">
+                            Navigate to Settings → Payroll → Daily Wage Calculation
+                        </span>
+                    </li>
+                    <li>
+                        <span class="citation" data-source="screenshot" data-ref="02 
