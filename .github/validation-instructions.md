@@ -43,6 +43,14 @@ CRITICAL: You MUST complete all tasks and write all output files before finishin
 
 ## SECTION 2: SCREENSHOT RULES
 
+**CRITICAL: FILENAME ONLY - NO PATHS**
+- When taking screenshots, use ONLY the filename (e.g., `08-leave-settings.png`)
+- Do NOT include any directory path in the screenshot name
+- The MCP server's `--output-dir` already handles where screenshots are saved
+- WRONG: `daily-wage-calculator/v34/validation/screenshots/08-file.png`
+- WRONG: `/full/path/to/screenshots/08-file.png`
+- CORRECT: `08-leave-settings.png`
+
 CRITICAL: VIEWPORT-ONLY SCREENSHOTS (NO FULL-PAGE COMPOSITES):
 - NEVER take full-page or scrolling composite screenshots
 - Each screenshot MUST be a single viewport capture (what fits on screen)
