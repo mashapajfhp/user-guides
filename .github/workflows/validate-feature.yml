@@ -234,6 +234,7 @@ jobs:
         run: |
           # Read instructions from file and substitute variables
           INSTRUCTIONS_FILE="$GITHUB_WORKSPACE/.github/validation-instructions.md"
+          LEARNINGS_FILE="$GITHUB_WORKSPACE/LEARNINGS_AND_FEEDBACK.md"
           PROMPT_FILE="$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.prompt.txt"
 
           # Create prompt with context header
@@ -263,6 +264,21 @@ jobs:
 
           # Append the main instructions (without the header which we already added)
           tail -n +3 "$INSTRUCTIONS_FILE" >> "$PROMPT_FILE"
+
+          # Append learnings and feedback for screenshot quality guidance
+          if [ -f "$LEARNINGS_FILE" ]; then
+            echo "" >> "$PROMPT_FILE"
+            echo "---" >> "$PROMPT_FILE"
+            echo "" >> "$PROMPT_FILE"
+            echo "# SCREENSHOT QUALITY LEARNINGS (READ CAREFULLY)" >> "$PROMPT_FILE"
+            echo "" >> "$PROMPT_FILE"
+            echo "The following learnings are from previous validation runs. Apply these rules strictly:" >> "$PROMPT_FILE"
+            echo "" >> "$PROMPT_FILE"
+            cat "$LEARNINGS_FILE" >> "$PROMPT_FILE"
+            echo "✅ Learnings file appended to prompt"
+          else
+            echo "⚠️ Learnings file not found at $LEARNINGS_FILE"
+          fi
 
           echo "✅ Validation prompt prepared ($(wc -c < "$PROMPT_FILE") bytes)"
 
