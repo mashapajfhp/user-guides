@@ -43,6 +43,51 @@ CRITICAL: You MUST complete all tasks and write all output files before finishin
 
 ## SECTION 2: SCREENSHOT RULES
 
+### CRITICAL: FEATURE RELEVANCE VERIFICATION (READ FIRST)
+
+**BEFORE taking ANY screenshot, verify the screen is RELEVANT to the feature:**
+
+1. **The screenshot MUST contain visible reference to the feature being documented**
+   - If documenting "daily wage calculation" - the words "daily wage", "daily rate", or the calculation formula MUST be visible on screen
+   - If documenting "end of service" - those words or related configuration MUST be visible
+
+2. **EXCLUDE irrelevant screenshots:**
+   - Generic settings pages WITHOUT feature-specific content = IRRELEVANT
+   - "Leave settings" page without "daily wage" reference = DO NOT CAPTURE
+   - "Edit Leave Policy" wizard without daily rate config = DO NOT CAPTURE
+
+3. **PRE-SCREENSHOT CHECKLIST:**
+   - [ ] Is the feature name/keyword visible on this screen?
+   - [ ] Does this screenshot add value to the user guide?
+   - [ ] Would a user learning about this feature benefit from seeing this?
+   - If ANY answer is NO - DO NOT take the screenshot
+
+### SCREENSHOT FRAMING & FOCUS RULES
+
+**CRITICAL: NO CUT-OFF CONTENT**
+
+WRONG (Avoid These):
+- Section header cut off at top of screenshot
+- Important labels like "Unpaid leave deductions" cut off at bottom
+- Modal buttons not visible
+- Form fields partially visible
+
+CORRECT (Do These):
+- Section header visible near TOP of viewport (not cut off)
+- ALL content of the target section visible
+- For modals: ENTIRE modal visible including title AND action buttons
+- For tables: ALL relevant rows visible
+
+**SCROLL POSITIONING BEFORE CAPTURE:**
+```
+1. Identify the target section you want to capture
+2. Scroll UP so the section HEADER is ~100px from top of viewport
+3. Verify the BOTTOM of the section content is also visible
+4. If content is too tall: take MULTIPLE viewport screenshots
+5. Wait 500ms for content to settle
+6. THEN take screenshot
+```
+
 **CRITICAL: FILENAME ONLY - NO PATHS**
 - When taking screenshots, use ONLY the filename (e.g., `08-leave-settings.png`)
 - Do NOT include any directory path in the screenshot name
@@ -56,18 +101,28 @@ CRITICAL: VIEWPORT-ONLY SCREENSHOTS (NO FULL-PAGE COMPOSITES):
 - Each screenshot MUST be a single viewport capture (what fits on screen)
 - WRONG: Long stitched images showing entire page (800x2853 pixels)
 - CORRECT: Clean viewport screenshots (~1400x900 pixels)
+- VIEWPORT SIZE: 1400x900 standard, zoom at 100%
 
 TARGETED SECTION CAPTURE:
-1. SCROLL the page until the target section is visible in the viewport
+1. SCROLL so section header is near TOP of viewport (not cut off!)
 2. EXPAND the accordion/section if collapsed
-3. WAIT for content to load completely
-4. TAKE SCREENSHOT of the current viewport only
-5. The screenshot should show the section header + its expanded content
+3. WAIT for content to load completely (500ms minimum)
+4. VERIFY: Is the section header visible? Is the bottom content visible?
+5. TAKE SCREENSHOT of the current viewport only
+6. The screenshot should show the section header + its COMPLETE expanded content
+
+**MODAL SCREENSHOT RULES:**
+- Modal title MUST be visible
+- All form fields MUST be visible
+- Cancel/Save buttons MUST be visible
+- If modal has scrollable content, take multiple screenshots at different scroll positions
+- Center the modal in the viewport before capture
 
 SCREENSHOT SPECIFICATIONS:
 - Use descriptive kebab-case names (max 50 characters)
 - Format: .png ONLY
-- Examples: 01-navigation-menu.png, 02-settings-section-expanded.png, 03-config-modal.png
+- Examples: 01-navigation-menu.png, 02-daily-wage-section.png, 03-salary-proration-modal.png
+- Include feature context in name: `daily-wage-unpaid-leave-config.png` NOT `settings-config.png`
 
 ## SECTION 3: UI EXPLORATION PATTERNS
 
@@ -280,3 +335,23 @@ If you find you missed navigating to a path:
 - GO BACK and navigate to that path
 - Complete the checks for that path
 - Then write the complete result.json
+
+## SECTION 7: LEARNINGS REFERENCE
+
+**IMPORTANT: Review the learnings file before starting validation:**
+
+The file `LEARNINGS_AND_FEEDBACK.md` in the repository root contains:
+- Screenshot quality rules learned from previous runs
+- Feature-specific insights (which screens to capture/exclude)
+- Common issues and fixes
+- Good/bad screenshot examples
+
+**Key learnings to apply:**
+1. **Feature relevance**: Every screenshot must show the feature being documented
+2. **No cut-off content**: Scroll so headers AND content are fully visible
+3. **Modal completeness**: Always capture entire modals including buttons
+4. **Exclude irrelevant screens**: Generic settings pages without feature reference are NOT useful
+
+**After validation, if you discover new patterns or issues:**
+- Document them in your validation notes
+- These will be added to LEARNINGS_AND_FEEDBACK.md for future runs
