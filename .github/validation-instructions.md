@@ -74,33 +74,101 @@ MANDATORY RESPONSE TO ABANDON DIALOG:
 
 **RULE: NEVER let a dialog block your navigation. Always dismiss and proceed.**
 
-## SECTION 1B: EXTRACT KEYWORDS FROM REQUEST
+## SECTION 1B: PARSE THE REQUEST PAYLOAD - THIS IS YOUR ROADMAP
 
-**BEFORE starting validation, extract feature keywords from request.json:**
+**THE REQUEST PAYLOAD CONTAINS EVERYTHING YOU NEED. PARSE IT CAREFULLY.**
+
+### PAYLOAD STRUCTURE YOU WILL RECEIVE:
+
+```json
+{
+  "plans": [
+    {
+      "feature_name": "daily wage calculator",
+      "feature_slug": "daily_wage_calculator",
+      "plan_id": "plan_payroll_dwc_primary",
+      "nav": {
+        "canonical": "Settings > Payroll > Daily Wage Calculation",
+        "breadcrumb_array": ["Settings", "Payroll", "Daily Wage Calculation"]
+      },
+      "checks": [
+        {
+          "check_id": "nav_payroll_dwc_01",
+          "type": "navigation",
+          "description": "Verify navigation to Daily Wage Calculation settings",
+          "selector_hint": "Settings menu > Payroll section > Daily Wage Calculation link",
+          "assertion": "Page should load with Daily Wage Calculation configuration interface"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### CRITICAL FIELDS YOU MUST USE:
+
+| Field | What It Tells You | How To Use It |
+|-------|-------------------|---------------|
+| `nav.canonical` | The EXACT click path | Follow this path: "Settings > Payroll > Daily Wage Calculation" means click Settings, then Payroll, then Daily Wage Calculation |
+| `nav.breadcrumb_array` | Step-by-step navigation | `["Settings", "Payroll", "Daily Wage Calculation"]` = Click "Settings" → Click "Payroll" → Click "Daily Wage Calculation" |
+| `selector_hint` | WHERE to look/click | "Settings menu > Payroll section" tells you exactly where to find the element |
+| `assertion` | WHAT should be visible | "Page should load with Daily Wage Calculation configuration interface" = this text/UI must be visible |
+| `description` | What to verify | The specific thing you're checking |
+
+### KEYWORD EXTRACTION FROM PAYLOAD:
+
+**Extract keywords from these fields:**
+1. `feature_name` → "daily wage calculator" → keywords: "daily wage", "wage calculator", "daily rate"
+2. `nav.canonical` → "Daily Wage Calculation" → keyword: "Daily Wage Calculation"
+3. `nav.breadcrumb_array` → Last item is usually the feature page name
+4. `selector_hint` → Contains UI element names to look for
+5. `assertion` → Contains expected UI text to verify
+
+### MANDATORY: EVERY CHECK MUST HAVE A SCREENSHOT
+
+**CRITICAL RULE: If a check has a `nav` path, it MUST have a screenshot.**
 
 ```
-KEYWORD EXTRACTION PROCEDURE:
-1. Read the "feature_name" field from request.json
-2. Read the "feature_slug" field from request.json
-3. Check for "keywords" array if present
-4. Generate variations:
-   - "daily wage calculator" → "daily wage", "daily rate", "wage calculation"
-   - "end of service" → "end of service", "EOS", "gratuity", "service eligibility"
-   - Convert slug to readable: "daily-wage-calculator" → "daily wage calculator"
+FOR EACH check in plans:
+  1. READ nav.canonical → This is WHERE to go
+  2. READ nav.breadcrumb_array → This is HOW to get there (click each item)
+  3. READ selector_hint → This is WHAT to look for on screen
+  4. READ assertion → This is WHAT must be visible
+  5. NAVIGATE to the path
+  6. FIND the element described in selector_hint
+  7. VERIFY the assertion
+  8. TAKE SCREENSHOT as evidence
+  9. RECORD in result.json with screenshot filename
 ```
 
-**STORE THESE KEYWORDS and scan for them on EVERY page you visit.**
+**THERE IS NO EXCUSE FOR A CHECK WITHOUT A SCREENSHOT.**
+Every check in the payload has a navigation path. Follow it. Screenshot it.
 
-If request.json has these fields, use them:
-- `feature_name`: Primary feature name
-- `feature_slug`: Slug version (convert hyphens to spaces)
-- `keywords`: Array of keywords to search for
-- `search_terms`: Alternative array of terms
+### EXAMPLE WORKFLOW:
 
-**If keywords are NOT in request.json:**
-- Derive them from feature_name
-- Use common variations (singular/plural, with/without spaces)
-- Ask: "What text would appear in UI for this feature?"
+Given this check:
+```json
+{
+  "nav": {
+    "canonical": "Settings > Leaves > Leave Policies > Add new policy",
+    "breadcrumb_array": ["Settings", "Leaves", "Leave Policies", "Add new policy"]
+  },
+  "selector_hint": "Unpaid Leave option > calculation method > day calculation type",
+  "assertion": "Day calculation type options should be selectable"
+}
+```
+
+**YOUR ACTIONS:**
+1. Click "Settings" in sidebar
+2. Click "Leaves" in Settings submenu
+3. Click "Leave Policies"
+4. Click "Add new policy" button
+5. In the modal/wizard, find "Unpaid Leave option"
+6. Look for "calculation method" section
+7. Find "day calculation type" options
+8. Verify options are selectable
+9. SCREENSHOT showing the day calculation type options
+10. Record evidence in result.json
 
 ## SECTION 1C: MANDATORY ACTIONS - YOU MUST DO THESE
 
@@ -370,11 +438,50 @@ Each check MUST have one of these statuses:
 
 NEVER USE 'skipped' STATUS.
 
+### MANDATORY: EVERY CHECK MUST HAVE SCREENSHOT EVIDENCE
+
+**CRITICAL RULE: No check is complete without a screenshot.**
+
+```
+CHECK COMPLETION REQUIREMENTS:
+□ Status set (passed/failed/not_applicable)
+□ Screenshot taken and filename recorded in "evidence" field
+□ Notes explaining what was found
+```
+
+**EVIDENCE FIELD IS REQUIRED:**
+```json
+{
+  "check_id": "nav_payroll_dwc_01",
+  "status": "passed",
+  "evidence": "01-daily-wage-calculation-settings.png",  // REQUIRED - must have screenshot
+  "notes": "Daily Wage Calculation page loaded with all options visible"
+}
+```
+
+**WRONG - Missing evidence:**
+```json
+{
+  "check_id": "nav_payroll_dwc_01",
+  "status": "passed",
+  "evidence": null,  // WRONG - every check needs a screenshot
+  "notes": "Verified"
+}
+```
+
+### SCREENSHOT NAMING FOR CHECKS
+
+Name screenshots to match their check:
+- `01-nav-payroll-dwc.png` for `nav_payroll_dwc_01`
+- `02-calc-basis-options.png` for `ui_calc_basis_options_01`
+- Use sequential numbering (01, 02, 03...)
+
 MANDATORY NAVIGATION RULES:
 1. ANALYZE ALL UNIQUE NAVIGATION PATHS FIRST
 2. NAVIGATE TO EVERY UNIQUE PATH
 3. CLICK INTO MODALS AND CONFIGURATION SCREENS
 4. EXPLORE RELATED NAVIGATION SECTIONS
+5. **SCREENSHOT EACH CHECK - NO EXCEPTIONS**
 
 CHECK STATUS DECISION TREE:
 1. CAN YOU NAVIGATE TO THE LOCATION?
@@ -496,22 +603,66 @@ ELSE:
 
 ## SECTION 6: SELF-VERIFICATION BEFORE FINISHING
 
+### PRE-COMPLETION CHECKLIST - DO NOT SKIP
+
+**STOP. Before writing result.json, complete this checklist:**
+
+```
+SCREENSHOT VERIFICATION:
+□ Count total checks in request.json: ____
+□ Count screenshots taken: ____
+□ Are these numbers equal or close? If screenshots < checks, GO BACK
+
+EVIDENCE VERIFICATION:
+□ Does EVERY check in result.json have an "evidence" field with a filename?
+□ If any check has evidence: null, GO BACK and take the screenshot
+
+NAVIGATION VERIFICATION:
+□ Count unique nav.canonical paths in request: ____
+□ Count paths actually visited: ____
+□ If visited < total paths, GO BACK and visit missing paths
+
+QUALITY VERIFICATION:
+□ Did I scroll on EVERY page before capturing?
+□ Did I expand accordions to find hidden content?
+□ Did I click Edit/Configure buttons to see configuration screens?
+□ Did I handle any "Abandon unsaved changes" dialogs?
+```
+
+### MANDATORY COUNTS
+
+**For a typical feature with 9 plans and ~35 checks:**
+- Expected screenshots: 15-25 unique screenshots
+- Minimum screenshots: 10
+- If you have fewer than 10 screenshots: YOU MISSED CONTENT
+
+**CRITICAL: 5 screenshots = FAILURE**
+- 5 screenshots means you only captured landing pages
+- You MUST click into configurations, expand accordions, explore modals
+
 BEFORE writing result.json, verify:
 1. Count unique navigation paths in request - Did you visit ALL of them?
 2. Count total checks across all plans - Did you address ALL of them?
-3. Search your result for 'skipped' - If found, FIX IT
-4. For each 'not_applicable' - Is it truly state-dependent?
-5. **CRITICAL: Is the top-level "status" field set to "passed", "partial", or "failed"?**
+3. **Count screenshots taken - Is it >= 10? If not, GO BACK**
+4. **Does EVERY check have screenshot evidence? If not, GO BACK**
+5. Search your result for 'skipped' - If found, FIX IT
+6. For each 'not_applicable' - Is it truly state-dependent?
+7. **CRITICAL: Is the top-level "status" field set to "passed", "partial", or "failed"?**
    - If status is null or missing - COMPUTE IT using the formula above
    - If summary.failed == 0 AND summary.passed == summary.total_plans -> status = "passed"
-6. **CRITICAL: Did you write validation.log with at least 100 bytes of content?**
+8. **CRITICAL: Did you write validation.log with at least 100 bytes of content?**
    - The workflow WILL FAIL if validation.log is empty or too small
    - Write the log BEFORE writing result.json
+
+### IF CHECKLIST FAILS - DO NOT PROCEED
 
 If you find you missed navigating to a path:
 - GO BACK and navigate to that path
 - Complete the checks for that path
+- Take screenshots for those checks
 - Then write the complete result.json
+
+**DO NOT write result.json until ALL checks have screenshot evidence.**
 
 ## SECTION 7: LEARNINGS REFERENCE
 
