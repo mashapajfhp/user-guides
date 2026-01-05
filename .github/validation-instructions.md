@@ -637,7 +637,7 @@ CHECK STATUS DECISION TREE:
 
 **DO NOT GIVE UP ON THE FIRST RECORD THAT DOESN'T HAVE RELEVANT DATA**
 
-When validating features that depend on specific data conditions (e.g., employee records, transactions, configurations), the first record you click may not have the data needed to validate the claims. This is NOT a reason to mark checks as 'not_applicable'.
+When validating features that depend on specific data conditions (e.g., records, transactions, configurations), the first record you click may not have the data needed to validate the claims. This is NOT a reason to mark checks as 'not_applicable'.
 
 **PERSISTENCE PROTOCOL:**
 ```
@@ -737,7 +737,7 @@ On every screen, scan for:
 
 **STATE-SPECIFIC VALIDATION:**
 
-When a claim requires validating a specific state (e.g., "offboarded employees", "inactive status"):
+When a claim requires validating a specific state (e.g., "inactive status", "completed state", "archived records"):
 ```
 1. Go to the record list
 2. Use filters or scan for records with that state
