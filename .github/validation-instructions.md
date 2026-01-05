@@ -685,6 +685,120 @@ CORRECT (Persistent approach):
 4. If a list has pagination, check records on different pages
 5. Use filters/search to find records likely to have relevant data
 
+### CRITICAL: COMPREHENSIVE EXPLORATION - DOCUMENT HOW THE SYSTEM WORKS
+
+**YOUR GOAL: Explore and document how the feature actually works, not just verify static elements.**
+
+The validation agent should behave like a user learning the system - click everything, try different inputs, and document what happens.
+
+**IDENTIFY ALL INTERACTIVE ELEMENTS:**
+```
+On every screen, scan for:
+- Clickable text (links, names in lists)
+- Buttons (primary, secondary, icon buttons)
+- Dropdown menus (three dots "...", chevrons)
+- Tabs and sub-tabs
+- Accordions and expandable sections
+- Form inputs (text fields, date pickers, dropdowns)
+- Action CTAs (Calculate, Save, Configure, View, Edit)
+```
+
+**THOROUGH EXPLORATION PROTOCOL:**
+```
+1. NAVIGATION PHASE
+   - Document each step to reach the feature
+   - Screenshot menu states showing the path
+   - Note when menus have sub-options (e.g., three dots "..." with dropdown)
+
+2. LIST/TABLE EXPLORATION
+   - Identify all clickable columns (names are usually clickable)
+   - Note status indicators and what they mean
+   - Use filters to find records in different states
+   - Click through to detail views
+
+3. DETAIL VIEW EXPLORATION
+   - Identify ALL tabs available
+   - Click each relevant tab and document contents
+   - Note which tabs appear/disappear based on record state
+
+4. FORM/CALCULATOR EXPLORATION
+   - Input different values and observe changes
+   - Click Calculate/Submit and document results
+   - Try different dropdown options
+   - Document how inputs affect outputs
+
+5. CONFIGURATION EXPLORATION
+   - Find Settings related to the feature
+   - Expand all relevant accordions
+   - Click Configure buttons and explore options
+   - Note cross-references (e.g., "Configured in [X] setting")
+   - Follow cross-reference links to document relationships
+```
+
+**STATE-SPECIFIC VALIDATION:**
+
+When a claim requires validating a specific state (e.g., "offboarded employees", "inactive status"):
+```
+1. Go to the record list
+2. Use filters or scan for records with that state
+3. Select a record matching the required state
+4. Navigate to the feature area
+5. Document how the feature behaves for that state
+6. Compare with records in different states if relevant
+```
+
+**INPUT VARIATION TESTING:**
+
+For features with calculators or forms:
+```
+1. Document the default/empty state
+2. Input one set of values → Screenshot result
+3. Change a key input → Screenshot how result changes
+4. Try different dropdown options → Document variations
+5. Note any validation messages or constraints
+```
+
+**CROSS-REFERENCE DOCUMENTATION:**
+
+When you see messages like "X is configured in Y setting":
+```
+1. Screenshot the message with the link/CTA
+2. Click the link to navigate to the referenced setting
+3. Document the relationship between settings
+4. Show how changes in one place affect another
+```
+
+**EXAMPLE - Complete Feature Exploration:**
+```
+Feature: Calculator with configuration
+
+Step 1: Navigation
+- Screenshot: Menu path to reach the feature
+- Screenshot: Any sub-menus or dropdowns used
+
+Step 2: Record Selection
+- Screenshot: List view with different record statuses
+- Action: Select record with complete data
+
+Step 3: Feature Tab
+- Screenshot: Feature calculator initial state
+- Screenshot: Form fields and available options
+
+Step 4: Input Testing
+- Screenshot: After entering values
+- Screenshot: After clicking Calculate
+- Screenshot: Different input combinations
+
+Step 5: Configuration
+- Screenshot: Settings navigation
+- Screenshot: Feature configuration accordion expanded
+- Screenshot: Configure modal/options
+- Screenshot: Cross-reference links and their destinations
+
+Step 6: State Variations
+- Screenshot: Feature behavior for different record states
+```
+
 ## SECTION 5: MANDATORY OUTPUT FILES
 
 YOU MUST CREATE ALL OF THESE FILES:
