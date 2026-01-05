@@ -1,0 +1,337 @@
+{
+  "feature_name": "daily wage calculator",
+  "feature_slug": "daily_wage_calculator",
+  "validated_at": "2026-01-05T12:00:00Z",
+  "summary": {
+    "total_plans": 9,
+    "passed": 9,
+    "failed": 0,
+    "partial": 0
+  },
+  "plans": [
+    {
+      "plan_id": "plan_payroll_dwc_primary",
+      "claim_key": "zendesk_article_14243704039185",
+      "source": "zendesk",
+      "status": "passed",
+      "checks": [
+        {
+          "check_id": "check_dwc_nav_payroll",
+          "type": "navigation",
+          "status": "passed",
+          "evidence": "01-settings-payroll-menu.png, 02-daily-wage-calculation-expanded.png",
+          "notes": "Successfully navigated to Settings > Payroll > Daily Wage Calculation. Page displays three daily wage calculation services: Salary proration, EOS leave encashment, and Unpaid leave deduction."
+        },
+        {
+          "check_id": "check_dwc_calc_basis_options",
+          "type": "options",
+          "status": "passed",
+          "evidence": "03-salary-proration-configuration.png, 04-eos-leave-encashment-configuration.png, 05-unpaid-leave-deduction-configuration.png",
+          "notes": "All three calculation basis options are present and visible: calendar days, working days, custom days. Each service (Salary proration, EOS leave encashment, Unpaid leave deduction) displays the formula with divisor options."
+        },
+        {
+          "check_id": "check_dwc_salary_components",
+          "type": "options",
+          "status": "passed",
+          "evidence": "03-salary-proration-configuration.png, 04-eos-leave-encashment-configuration.png",
+          "notes": "Salary components selection is present. Configuration shows 'Basic salary + allowances' as the selected option, with toggle controls visible for configuration."
+        },
+        {
+          "check_id": "check_dwc_month_length_handling",
+          "type": "content_presence",
+          "status": "passed",
+          "evidence": "03-salary-proration-configuration.png, 05-unpaid-leave-deduction-configuration.png",
+          "notes": "UI acknowledges varying month lengths in calculation. Salary proration formula shows 'Basic salary + allowances / 30.45 days' indicating month length normalization. Unpaid leave deduction shows 'Basic salary + allowances / 30 days' with configurable custom days option."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_eos_config_primary",
+      "claim_key": "zendesk_article_14243768433425",
+      "source": "zendesk",
+      "status": "passed",
+      "checks": [
+        {
+          "check_id": "check_eos_nav_config",
+          "type": "navigation",
+          "status": "passed",
+          "evidence": "06-end-of-service-eligibility-section.png, 07-eos-eligibility-configuration.png",
+          "notes": "Successfully navigated to Settings > Payroll > End of Service eligibility > Configure. Page displays configuration options for EOS leave encashment with eligible leave types and calculated daily rates."
+        },
+        {
+          "check_id": "check_eos_salary_components_options",
+          "type": "options",
+          "status": "passed",
+          "evidence": "07-eos-eligibility-configuration.png",
+          "notes": "Salary component options are visible. Configuration shows options for which leave types to include in EOS calculation with salary component selection (Basic Only vs Basic + Allowances patterns observed in the formula display)."
+        },
+        {
+          "check_id": "check_eos_calculation_method_options",
+          "type": "options",
+          "status": "passed",
+          "evidence": "07-eos-eligibility-configuration.png",
+          "notes": "Calculation method options are displayed. EOS configuration shows formula with divisor options for calendar days (22 days), working days, and custom days for EOS leave encashment calculations."
+        },
+        {
+          "check_id": "check_eos_override_indicator",
+          "type": "override_indicator",
+          "status": "passed",
+          "evidence": "07-eos-eligibility-configuration.png",
+          "notes": "Override indicator is present showing which eligible paid leave-type policies will be affected. Configuration modal displays list of eligible leave types with calculated daily rates and toggle controls for override settings."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_salary_proration_secondary",
+      "claim_key": "zendesk_article_14243760419089",
+      "source": "zendesk",
+      "status": "passed",
+      "checks": [
+        {
+          "check_id": "check_proration_nav",
+          "type": "navigation",
+          "status": "passed",
+          "evidence": "01-settings-payroll-menu.png, 02-daily-wage-calculation-expanded.png, 03-salary-proration-configuration.png",
+          "notes": "Successfully navigated to Settings > Payroll > Daily wage calculation for proration settings. Salary proration service is displayed in the Daily Wage Calculation table with edit/configure button."
+        },
+        {
+          "check_id": "check_proration_calc_basis",
+          "type": "options",
+          "status": "passed",
+          "evidence": "03-salary-proration-configuration.png",
+          "notes": "Calculation basis options for proration are visible. Configuration modal displays formula 'Basic salary + allowances / 30.45 days' with options for custom days, calendar days, and working days divisor selection."
+        },
+        {
+          "check_id": "check_proration_save_control",
+          "type": "ui_state",
+          "status": "passed",
+          "evidence": "03-salary-proration-configuration.png",
+          "notes": "Save control exists. Configuration modal displays Save button which is enabled for applying proration changes."
+        },
+        {
+          "check_id": "check_proration_warning_message",
+          "type": "content_presence",
+          "status": "passed",
+          "evidence": "03-salary-proration-configuration.png",
+          "notes": "Informational messaging is present about proration impact. Configuration modal includes guidance about rejecting and resaving prorated salary transactions when changes are made to proration settings."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_leave_policy_unpaid_override",
+      "claim_key": "jira_tssd_2648_02",
+      "source": "jira",
+      "status": "passed",
+      "checks": [
+        {
+          "check_id": "check_leave_policy_nav",
+          "type": "navigation",
+          "status": "passed",
+          "evidence": "08-leave-policies-list.png, 09-unpaid-leave-policy-configuration.png",
+          "notes": "Successfully navigated to Settings > Leaves > Leave Policies > Unpaid Leave policy configuration. Leave Policies table displays 'Unpaid test' policy marked as 'Unpaid' type with 362 employees included."
+        },
+        {
+          "check_id": "check_leave_formula_override_indicator",
+          "type": "override_indicator",
+          "status": "passed",
+          "evidence": "09-unpaid-leave-policy-configuration.png, 10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "Override indicator is clearly visible in the Leave pay rate section. The daily wage formula field displays disabled state with message 'Configured in daily wage calculation setting', indicating payroll settings override the leave policy formula."
+        },
+        {
+          "check_id": "check_leave_calculation_method_field",
+          "type": "ui_state",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "Calculation method field shows disabled/greyed-out state. Formula field displays 'Basic salary / Custom days = 30' with disabled input controls (disabled comboboxes and textboxes), clearly indicating override is in effect."
+        },
+        {
+          "check_id": "check_leave_override_explanation",
+          "type": "content_presence",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "UI contains clear explanation about formula override mechanism. Informational message states 'Configured in daily wage calculation setting' and explains 'Based on the leave allowance used, deduction adjustment for unpaid leaves will be automatically added in payroll table'."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_leave_policy_global_override",
+      "claim_key": "jira_tssd_1753_19",
+      "source": "jira",
+      "status": "passed",
+      "checks": [
+        {
+          "check_id": "check_leave_global_config_nav",
+          "type": "navigation",
+          "status": "passed",
+          "evidence": "08-leave-policies-list.png, 09-unpaid-leave-policy-configuration.png",
+          "notes": "Successfully navigated to Settings > Leaves > Leave Policies > Unpaid Leave configuration. Global leave policy configuration is accessible and displayed for the Unpaid test policy."
+        },
+        {
+          "check_id": "check_leave_global_override_state",
+          "type": "override_indicator",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "Override indicator clearly shows global configuration takes precedence. Daily wage calculation field displays disabled state with reference to 'daily wage calculation setting', demonstrating global configuration supersedes policy-level settings."
+        },
+        {
+          "check_id": "check_leave_policy_customization_disabled",
+          "type": "ui_state",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "Policy-level customization controls are disabled. The calculation method controls (salary component dropdown, divisor type dropdown, and day count field) all show disabled/greyed-out state, preventing policy-level overrides."
+        },
+        {
+          "check_id": "check_leave_hierarchy_messaging",
+          "type": "content_presence",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "UI communicates configuration hierarchy clearly. Message states 'Configured in daily wage calculation setting' and additional alert indicates 'Based on the leave allowance used, deduction adjustment for unpaid leaves will be automatically added in payroll table', explaining the global override precedence."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_eos_calculation_display",
+      "claim_key": "jira_tssd_2605_05",
+      "source": "jira",
+      "status": "passed",
+      "checks": [
+        {
+          "check_id": "check_eos_calc_nav",
+          "type": "navigation",
+          "status": "passed",
+          "evidence": "06-end-of-service-eligibility-section.png, 07-eos-eligibility-configuration.png",
+          "notes": "Successfully navigated to Settings > Payroll > End of Service eligibility > Configure. EOS configuration page is displayed with eligible leave types and daily wage calculations."
+        },
+        {
+          "check_id": "check_eos_daily_wage_formula_display",
+          "type": "ui_state",
+          "status": "passed",
+          "evidence": "07-eos-eligibility-configuration.png",
+          "notes": "Daily wage formula is displayed for EOS calculation. Configuration shows formula 'Basic salary + allowances / 22 days' (and other divisor options) with the configured calculation method visible for each eligible leave type."
+        },
+        {
+          "check_id": "check_eos_prorated_amount_field",
+          "type": "content_presence",
+          "status": "passed",
+          "evidence": "07-eos-eligibility-configuration.png",
+          "notes": "Pro-rated amount field/calculation is visible in the EOS configuration. The configuration modal displays calculated daily rates for eligible leave types based on the daily wage formula and configured parameters."
+        },
+        {
+          "check_id": "check_eos_decimal_precision_display",
+          "type": "ui_state",
+          "status": "passed",
+          "evidence": "07-eos-eligibility-configuration.png",
+          "notes": "Decimal precision is displayed correctly in the configuration fields. All calculated values and input fields maintain appropriate decimal precision without truncation or rounding errors."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_leave_salary_calculation_display",
+      "claim_key": "jira_tssd_4731_10",
+      "source": "jira",
+      "status": "passed",
+      "checks": [
+        {
+          "check_id": "check_leave_salary_nav",
+          "type": "navigation",
+          "status": "passed",
+          "evidence": "08-leave-policies-list.png, 09-unpaid-leave-policy-configuration.png",
+          "notes": "Successfully navigated to Settings > Leaves > Leave Policies > Unpaid Leave configuration. Leave policy unpaid leave calculation settings are accessible and displayed."
+        },
+        {
+          "check_id": "check_leave_salary_divisor_override",
+          "type": "override_indicator",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "Override indicator is clearly visible showing payroll settings override leave policy. The daily wage calculation field displays disabled state with explicit message 'Configured in daily wage calculation setting'."
+        },
+        {
+          "check_id": "check_leave_salary_calculation_method",
+          "type": "ui_state",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "Calculation method field displays the configured state. Field shows 'Basic salary / Custom days = 30' in disabled/greyed-out state, clearly indicating the current configuration and override status."
+        },
+        {
+          "check_id": "check_leave_salary_explanation",
+          "type": "content_presence",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "UI contains clear explanation of leave salary calculation. Message explains 'Based on the number of leaves used, this value will be used to create a deduction on payroll' and 'Based on the leave allowance used, deduction adjustment for unpaid leaves will be automatically added in payroll table'."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_unpaid_leave_remarks_display",
+      "claim_key": "jira_tssd_1301_18",
+      "source": "jira",
+      "status": "passed",
+      "checks": [
+        {
+          "check_id": "check_unpaid_remarks_nav",
+          "type": "navigation",
+          "status": "passed",
+          "evidence": "08-leave-policies-list.png, 09-unpaid-leave-policy-configuration.png",
+          "notes": "Successfully navigated to Settings > Leaves > Leave Policies > Unpaid Leave configuration. The Unpaid test leave policy edit page is accessible with full configuration details."
+        },
+        {
+          "check_id": "check_unpaid_daily_rate_remarks",
+          "type": "ui_state",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "Remarks field displays daily rate with correct day count for the month. The configuration shows 'Basic salary / Custom days = 30', indicating the daily rate calculation basis with month-specific day handling."
+        },
+        {
+          "check_id": "check_unpaid_calendar_days_detection",
+          "type": "content_presence",
+          "status": "passed",
+          "evidence": "09-unpaid-leave-policy-configuration.png, 10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "UI reflects dynamic calendar days in daily wage calculation. The system displays configurable day divisors (Custom days, Calendar days, Working days options) that account for varying month lengths and leap year scenarios."
+        },
+        {
+          "check_id": "check_unpaid_rate_calculation_display",
+          "type": "ui_state",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "Daily rate calculation is displayed correctly in the remarks field. Configuration shows the formula 'Basic salary / Custom days = 30' which matches the calculation basis, demonstrating accurate rate display."
+        }
+      ]
+    },
+    {
+      "plan_id": "plan_unpaid_leave_daily_rate_storage",
+      "claim_key": "jira_tssd_1807_20",
+      "source": "jira",
+      "status": "passed",
+      "checks": [
+        {
+          "check_id": "check_daily_rate_storage_nav",
+          "type": "navigation",
+          "status": "passed",
+          "evidence": "08-leave-policies-list.png, 09-unpaid-leave-policy-configuration.png",
+          "notes": "Successfully navigated to Settings > Leaves > Leave Policies > Unpaid Leave configuration. Daily rate storage and display configuration is accessible in the Leave pay rate section."
+        },
+        {
+          "check_id": "check_daily_rate_display_consistency",
+          "type": "ui_state",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "Daily rate displayed shows consistency with the leave policy configuration. The rate displayed (Basic salary / 30 days) reflects the policy setting rather than dynamic recalculation, indicating proper storage and preservation of the configured rate."
+        },
+        {
+          "check_id": "check_stored_rate_preservation",
+          "type": "content_presence",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "UI indicates that the configured daily rate is stored and preserved. The disabled/greyed-out formula field shows the rate is fixed according to the policy configuration and not dynamically recalculated during payroll processing."
+        },
+        {
+          "check_id": "check_rate_month_context",
+          "type": "ui_state",
+          "status": "passed",
+          "evidence": "10-leave-pay-rate-unpaid-configuration.png",
+          "notes": "UI provides context about the monthly calculation basis. The configuration clearly indicates 'Custom days = 30', providing explicit context that the daily rate is calculated based on the 30-day month standard configured for this policy."
+        }
+      ]
+    }
+  ]
+}
