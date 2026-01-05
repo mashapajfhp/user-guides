@@ -20,9 +20,12 @@ CRITICAL: You MUST complete all tasks and write all output files before finishin
 - DO NOT end validation until ALL paths are visited
 
 **NAVIGATION REQUIREMENT:**
-- Parse ALL unique `nav.canonical` paths from request.json
-- VISIT EVERY navigation path defined in the request - no exceptions
+- Parse ALL unique `nav.canonical` paths from request.json - these are HINTS
+- Navigation paths may be OUTDATED - the UI may have changed
+- DISCOVER the actual navigation path if the hinted path doesn't exist
+- VISIT EVERY navigation DESTINATION - find alternative paths if needed
 - ALL sections must be visited, not just the first one you encounter
+- Document both hinted paths and actual paths discovered
 
 **BEFORE FINISHING - SELF-CHECK:**
 1. Count unique nav sections in request.json - did you visit ALL of them?
@@ -136,14 +139,68 @@ MANDATORY RESPONSE TO LEAVE SITE DIALOG:
 }
 ```
 
+### CRITICAL: NAVIGATION PATHS ARE HINTS, NOT EXACT INSTRUCTIONS
+
+**THE UI CHANGES - NAVIGATION PATHS IN REQUEST.JSON ARE GUIDES, NOT AUTHORITATIVE**
+
+The `nav.canonical` and `nav.breadcrumb_array` fields contain **hints** based on documentation that may be outdated. The actual UI may have changed. Your job is to **DISCOVER** the correct navigation path.
+
+**COMMON UI CHANGES TO EXPECT:**
+- Menu items renamed (parent menus may have different names)
+- Menu restructuring (items moved to different parent menus)
+- Menus promoted/demoted in hierarchy (submenu becomes top-level or vice versa)
+- New menu items added, old ones removed
+
+**NAVIGATION DISCOVERY PROTOCOL:**
+```
+1. READ the hinted path from nav.canonical
+2. IDENTIFY the TARGET DESTINATION (usually the last item in the path)
+3. SCAN the ACTUAL sidebar/main menu for:
+   - Exact match of the hinted menu items
+   - Similar/renamed menu items that could be the same thing
+   - The target destination under a different parent menu
+4. If hinted path doesn't exist:
+   - EXPLORE the menu systematically
+   - Look for keywords from the feature name
+   - Try logical alternative paths
+5. DOCUMENT both the hinted path AND the actual path found
+```
+
+**EXAMPLE - Handling Menu Changes:**
+```
+Hinted path: "Menu A > Submenu B > Feature Page"
+Reality: "Menu A" no longer exists or was renamed
+
+DISCOVERY STEPS:
+1. Look at main sidebar - no "Menu A" found
+2. Scan for similar menu items or the target "Feature Page"
+3. Find the feature under a different menu: "Menu X > Feature Page"
+4. Navigate successfully using actual path
+5. In result.json, document:
+   - nav_path_hinted: "Menu A > Submenu B > Feature Page"
+   - nav_path_actual: "Menu X > Feature Page"
+   - nav_visited: true
+```
+
+**DO NOT:**
+- Fail validation just because the exact hinted path doesn't exist
+- Give up if a menu item isn't found - look for alternatives
+- Blindly follow paths without checking if they exist
+
+**DO:**
+- Treat paths as HINTS pointing toward a destination
+- Use feature keywords to find the correct location
+- Explore the menu structure systematically
+- Document the ACTUAL path you found vs the hinted path
+
 ### CRITICAL FIELDS YOU MUST USE:
 
 | Field | What It Tells You | How To Use It |
 |-------|-------------------|---------------|
-| `nav.canonical` | The EXACT click path | Follow this path: "Settings > Payroll > Daily Wage Calculation" means click Settings, then Payroll, then Daily Wage Calculation |
-| `nav.breadcrumb_array` | Step-by-step navigation | `["Settings", "Payroll", "Daily Wage Calculation"]` = Click "Settings" → Click "Payroll" → Click "Daily Wage Calculation" |
-| `selector_hint` | WHERE to look/click | "Settings menu > Payroll section" tells you exactly where to find the element |
-| `assertion` | WHAT should be visible | "Page should load with Daily Wage Calculation configuration interface" = this text/UI must be visible |
+| `nav.canonical` | HINT for click path | Use as a GUIDE - the actual path may differ. Discover the real navigation path if this one doesn't exist |
+| `nav.breadcrumb_array` | Step-by-step hint | Suggests the destination - DISCOVER the actual menu path if it differs |
+| `selector_hint` | WHERE to look/click | Hints at UI location - verify element actually exists at this location |
+| `assertion` | WHAT should be visible | The expected UI state - this is what you're validating |
 | `description` | What to verify | The specific thing you're checking |
 
 ### KEYWORD EXTRACTION FROM PAYLOAD:
@@ -499,8 +556,10 @@ CORE PRINCIPLES:
    - Screenshot the disabled state
    - Note WHY the field is disabled
 
-5. INVESTIGATE WRONG NAVIGATION PATHS:
-   - If plan path is wrong, DOCUMENT BOTH the provided and actual paths
+5. DISCOVER THE CORRECT NAVIGATION PATH:
+   - Navigation paths in request.json are HINTS - the UI may have changed
+   - If hinted path doesn't exist, EXPLORE the menu to find the destination
+   - DOCUMENT BOTH the hinted path (from request.json) and actual path (discovered)
 
 ## SECTION 4: VALIDATION EXECUTION - ZERO SKIP POLICY
 
@@ -552,15 +611,20 @@ Name screenshots to match their check:
 - Use sequential numbering (01, 02, 03...)
 
 MANDATORY NAVIGATION RULES:
-1. ANALYZE ALL UNIQUE NAVIGATION PATHS FIRST
-2. NAVIGATE TO EVERY UNIQUE PATH
-3. CLICK INTO MODALS AND CONFIGURATION SCREENS
-4. EXPLORE RELATED NAVIGATION SECTIONS
-5. **SCREENSHOT EACH CHECK - NO EXCEPTIONS**
+1. ANALYZE ALL UNIQUE NAVIGATION PATH HINTS FROM REQUEST.JSON
+2. DISCOVER THE ACTUAL NAVIGATION PATH (hints may be outdated)
+3. IF A HINTED PATH DOESN'T EXIST - EXPLORE TO FIND THE CORRECT PATH
+4. NAVIGATE TO EVERY UNIQUE DESTINATION (using discovered paths)
+5. CLICK INTO MODALS AND CONFIGURATION SCREENS
+6. EXPLORE RELATED NAVIGATION SECTIONS
+7. **SCREENSHOT EACH CHECK - NO EXCEPTIONS**
+8. **DOCUMENT BOTH HINTED AND ACTUAL PATHS IN RESULT.JSON**
 
 CHECK STATUS DECISION TREE:
-1. CAN YOU NAVIGATE TO THE LOCATION?
-   - NO -> Status: 'failed', Note: 'Navigation path not accessible: [reason]'
+1. CAN YOU NAVIGATE TO THE HINTED LOCATION?
+   - NO -> EXPLORE to find the actual path (paths are HINTS)
+   - If exploration finds the destination via different path -> Continue with validation
+   - If destination truly doesn't exist anywhere -> Status: 'failed', Note: 'Feature not found. Hinted path: [X]. Explored: [Y, Z]. Feature does not exist in current UI.'
 2. DOES THE UI ELEMENT EXIST?
    - NO -> Status: 'failed', Note: 'UI element not found: [searched locations]'
 3. DOES THE ELEMENT MATCH THE ASSERTION?
@@ -630,7 +694,8 @@ Status: [passed/failed/partial]
   "plans": [
     {
       "plan_id": "[from request]",
-      "nav_path": "[canonical path]",
+      "nav_path_hinted": "[canonical path from request.json - the HINT]",
+      "nav_path_actual": "[actual path discovered - what ACTUALLY worked]",
       "nav_visited": true,
       "status": "passed | failed | partial",
       "checks": [
@@ -762,9 +827,41 @@ The file `LEARNINGS_AND_FEEDBACK.md` in the repository root contains:
 
 ## SECTION 8: DEEP INVESTIGATION PROTOCOL
 
-### CORE PRINCIPLE: FOLLOW THE FEATURE TRAIL
+### CORE PRINCIPLE: DISCOVER AND FOLLOW THE FEATURE TRAIL
 
 You are an INVESTIGATOR. Your job is to find EVERY place in the UI where the target feature appears or is referenced - even when buried deep within nested settings, multi-step wizards, or modal dialogs.
+
+**CRITICAL: NAVIGATION PATHS ARE HINTS - DISCOVER THE ACTUAL PATH**
+
+The navigation paths in request.json come from documentation that may be outdated. Menus get renamed, restructured, or reorganized. Your first task is to DISCOVER where features actually live in the current UI.
+
+### MENU EXPLORATION STRATEGY
+
+When a hinted navigation path doesn't exist:
+
+```
+SYSTEMATIC MENU DISCOVERY:
+1. SCAN all top-level sidebar/menu items
+2. IDENTIFY items that could logically contain the target feature
+3. CLICK each potential parent menu to explore submenus
+4. LOOK for:
+   - Exact match of target feature name
+   - Similar/renamed menu items
+   - Keywords from the feature name
+5. DOCUMENT what you find vs what was hinted
+```
+
+**EXPLORATION PRIORITY ORDER:**
+1. Check for exact match of hinted menu item
+2. Check for similar/renamed names (menus often get renamed or consolidated)
+3. Check menus that logically relate to the feature
+4. Scan all main menu items if needed
+5. Use browser search (Ctrl+F) on visible menu items
+
+**NEVER GIVE UP AFTER FIRST ATTEMPT:**
+- If "Menu A" doesn't exist, don't immediately fail
+- Explore systematically before concluding a feature doesn't exist
+- The feature likely exists somewhere - just with different navigation
 
 ### FEATURE KEYWORD IDENTIFICATION
 
