@@ -470,13 +470,13 @@ jobs:
       - name: Commit Results
         if: steps.detect.outputs.skip != 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-          # Configure git to use GITHUB_TOKEN for push (since persist-credentials is false)
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
+          # Configure git to use PAT_TOKEN for push (long-lived token, not ephemeral GITHUB_TOKEN)
+          git remote set-url origin "https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}"
 
           # Remove execution status file (internal use only)
           rm -f "$GITHUB_WORKSPACE/${{ steps.detect.outputs.folder }}/validation/.execution_status"
