@@ -285,27 +285,62 @@ BUTTON GROUP PROCEDURE:
 
 ### CRITICAL: NO DUPLICATE SCREENSHOTS (READ FIRST)
 
-**DUPLICATE PREVENTION IS MANDATORY:**
+**DUPLICATE PREVENTION IS MANDATORY - ZERO TOLERANCE POLICY**
 
-1. **Maintain a mental screenshot registry** - Track EVERY screenshot you take
+1. **Maintain a screenshot registry** - Track EVERY screenshot you take by content
 2. **Before EACH capture, ask:** "Have I already captured this exact screen state?"
-3. **Duplicate = SAME visual content** even if at different navigation points
+3. **Duplicate = SAME visual content** even if at different navigation points or different check IDs
+
+**WHAT MAKES A SCREENSHOT A DUPLICATE:**
+- Same modal with same content visible
+- Same dialog box with same settings/options shown
+- Same accordion expanded with same fields visible
+- Same configuration screen - even if reached via different path
+- Same UI state captured twice in sequence
+
+**STRICT DUPLICATE DETECTION - BEFORE EVERY CAPTURE:**
+```
+ASK YOURSELF:
+1. What is the MAIN CONTENT visible in this frame?
+2. Have I ALREADY captured a screenshot showing THIS EXACT content?
+3. Is this a DIFFERENT state/dialog/accordion than my previous captures?
+
+If the answer to #2 is YES → DO NOT CAPTURE
+If the answer to #3 is NO → DO NOT CAPTURE
+```
 
 **DUPLICATE DETECTION CHECKLIST:**
 - [ ] Is this the SAME modal I already captured?
+- [ ] Is this the SAME dialog with the SAME content?
 - [ ] Is this the SAME accordion section I already expanded and captured?
 - [ ] Is this the SAME configuration screen with the SAME settings visible?
+- [ ] Does this look IDENTICAL to any previous screenshot?
 - If ANY answer is YES → DO NOT CAPTURE (it's a duplicate)
 
-**WRONG (Duplicates):**
-- Screenshot of "Edit Leave Policy" modal → Screenshot of SAME modal again
-- Screenshot of expanded accordion → Screenshot of SAME accordion from different nav path
-- Two screenshots showing identical content = WASTE
+**COMMON DUPLICATE SCENARIOS TO AVOID:**
+1. **Same dialog captured for different checks** - If check_03 and check_04 both show the same "Unpaid Leave Deduction" dialog, capture ONCE only
+2. **Same modal at different scroll positions** - Don't capture the same modal twice unless showing DIFFERENT content below the fold
+3. **Same config screen via different nav paths** - If you reach "Daily Wage Calculation" from two paths, ONE screenshot is enough
+4. **Consecutive screenshots with no UI change** - If you click something and nothing changes, don't capture again
+
+**WRONG (Duplicates) - FAILURE EXAMPLES:**
+- `claim-03-unpaid-leave-dialog.png` and `claim-04-unpaid-leave-config-fields.png` showing SAME dialog = DUPLICATE
+- Screenshot of "Edit Leave Policy" modal → Screenshot of SAME modal again for different check = DUPLICATE
+- Screenshot of expanded accordion → Screenshot of SAME accordion from different nav path = DUPLICATE
 
 **CORRECT (Unique captures):**
 - Each screenshot shows DIFFERENT content or DIFFERENT state
-- Sequential screenshots show PROGRESSION (step 1, step 2, step 3)
+- Sequential screenshots show PROGRESSION (step 1 → step 2 → step 3)
 - Each accordion capture shows a DIFFERENT accordion section
+- Each modal capture shows a DIFFERENT modal OR different content within the same modal
+
+**BEFORE SAVING A SCREENSHOT - FINAL CHECK:**
+```
+□ I have reviewed my previous captures
+□ This screenshot shows NEW/DIFFERENT content
+□ This is NOT the same dialog/modal/screen I already captured
+□ If this is for a different check_id but same visual content → I will REUSE the previous screenshot filename in the evidence field instead of capturing again
+```
 
 ### CRITICAL: FEATURE RELEVANCE VERIFICATION
 
@@ -890,22 +925,47 @@ Related: [Any cross-references discovered]
 
 ## SECTION 9: LANDING PAGE NAVIGATION SCREENSHOTS
 
-### WHEN TO SHOW THE EXPANDED SIDE MENU
+### CRITICAL: SIDE MENU MUST BE VISIBLE FOR NAVIGATION SCREENSHOTS
 
 **For LANDING PAGE screenshots demonstrating navigation path:**
 
-The side navigation menu MUST be EXPANDED to show how users reach the feature.
+The side navigation menu MUST be EXPANDED and VISIBLE to show how users reach the feature.
 
-**CORRECT:**
-- Side menu expanded showing the submenu structure
-- User can see the navigation hierarchy
+**MANDATORY STEPS FOR NAVIGATION SCREENSHOTS:**
+```
+1. Click the Settings icon (gear) in the left sidebar
+2. WAIT for the submenu to expand
+3. VERIFY the submenu is visible (shows Payroll, Leaves, Company, etc.)
+4. Click the target section (e.g., "Payroll")
+5. VERIFY the nested menu items are visible
+6. TAKE SCREENSHOT with the expanded menu visible in frame
+7. The screenshot MUST show:
+   - The left sidebar with expanded navigation
+   - The submenu hierarchy visible
+   - The active/highlighted menu item
+   - The page content on the right
+```
+
+**CORRECT NAVIGATION SCREENSHOT:**
+- Left ~20% shows expanded sidebar navigation
+- Submenu items are visible (e.g., "Daily Wage Calculation", "End of Service", etc.)
 - Active menu item is highlighted
-- Navigation path is clear
+- Main content area shows the landing page
+- User can clearly see the PATH to reach this page
 
-**WRONG:**
-- Side menu collapsed or hidden
-- Page content shown without navigation context
-- User cannot understand how to reach this page
+**WRONG NAVIGATION SCREENSHOT (FAILURE):**
+- Side menu collapsed to icons only
+- Side menu completely hidden
+- Only page content visible without navigation context
+- User cannot understand HOW to reach this page
+- Screenshot shows settings page but menu is collapsed
+
+**PRE-CAPTURE CHECK FOR NAVIGATION SCREENSHOTS:**
+- [ ] Is the sidebar menu EXPANDED (not just icons)?
+- [ ] Are submenu items TEXT visible (not just icons)?
+- [ ] Can I see the navigation hierarchy?
+- [ ] Is the current page highlighted in the menu?
+- If ANY answer is NO → EXPAND THE MENU FIRST, then capture
 
 ### WHEN SIDE MENU IS NOT REQUIRED
 
@@ -918,11 +978,14 @@ After the landing page, during deep investigation:
 ### LANDING PAGE SEQUENCE
 
 ```
-1. Expand the relevant navigation submenu
-2. Screenshot WITH menu visible (shows path)
-3. Click target menu item
-4. Screenshot the landing page
-5. Proceed with deep investigation (menu no longer needed)
+1. Click Settings icon to expand navigation menu
+2. WAIT 500ms for menu animation to complete
+3. VERIFY: Is the submenu TEXT visible (not just icons)?
+4. If menu shows only icons, CLICK to expand it further
+5. Screenshot WITH expanded menu visible (shows navigation path)
+6. Click target menu item
+7. Screenshot the landing page (menu can now be collapsed)
+8. Proceed with deep investigation
 ```
 
 ### FINAL RELEVANCE CHECK
