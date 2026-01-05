@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>daily wage calculator - User Guide</title>
+
+  <style>
+    /* CSS Reset and Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background-color: #ffffff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+      color: #ffffff;
+      padding: 60px 40px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .hero-banner h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      color: #ffffff;
+    }
+
+    /* Typography - ALL BLACK */
+    h1, h2, h3, h4, h5, h6 {
+      color: #1a1a1a;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #E2E8F0;
+    }
+
+    h3 {
+      font-size: 1.35rem;
+    }
+
+    p {
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+
+    /* Sections */
+    section, .section {
+      margin-bottom: 3rem;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+    }
+
+    /* Info Boxes - Only 2 Types Allowed */
+    .info-box, .note-box, .tip-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FAF5FF;
+      border-left: 4px solid #6B46C1;
+    }
+
+    .info-box p, .note-box p, .tip-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    .warning-box, .important-box, .caution-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FFFBEB;
+      border-left: 4px solid #D97706;
+    }
+
+    .warning-box p, .important-box p, .caution-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Lists - Black text, standard bullets */
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+      color: #1a1a1a;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: #ffffff;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid #E2E8F0;
+      color: #1a1a1a;
+    }
+
+    th {
+      background: #F7FAFC;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    tr:hover {
+      background: #F7FAFC;
+    }
+
+    /* Screenshots - Centered */
+    .screenshot-container, figure {
+      margin: 24px auto;
+      text-align: center;
+    }
+
+    .screenshot, figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #E2E8F0;
+      display: block;
+      margin: 0 auto;
+    }
+
+    figcaption {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #1a1a1a;
+      font-style: italic;
+    }
+
+    /* Feature Cards */
+    .feature-card, .card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .feature-card h4, .card h4 {
+      color: #1a1a1a;
+      margin-top: 0;
+    }
+
+    .feature-card p, .card p {
+      color: #1a1a1a;
+    }
+
+    /* Steps */
+    .step, .step-item {
+      display: flex;
+      gap: 16px;
+      margin: 20px 0;
+      padding: 16px;
+      background: #F7FAFC;
+      border-radius: 8px;
+    }
+
+    .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-content p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Navigation Path */
+    .nav-path, .breadcrumb {
+      background: #F7FAFC;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: monospace;
+      color: #1a1a1a;
+      margin: 16px 0;
+    }
+
+    /* Code blocks */
+    code {
+      background: #F7FAFC;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.9em;
+      color: #1a1a1a;
+    }
+
+    pre {
+      background: #F7FAFC;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      color: #1a1a1a;
+    }
+
+    /* Links */
+    a {
+      color: #6B46C1;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Citations */
+    .citation {
+      font-size: 0.85rem;
+      color: #1a1a1a;
+      background: #F7FAFC;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* Footer */
+    footer, .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #E2E8F0;
+      text-align: center;
+      color: #1a1a1a;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 16px;
+      }
+
+      .hero-banner {
+        padding: 40px 24px;
+      }
+
+      .hero-banner h1 {
+        font-size: 1.75rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      section, .section {
+        padding: 16px;
+      }
+
+      table {
+        font-size: 0.9rem;
+      }
+
+      th, td {
+        padding: 8px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-banner h1 {
+        font-size: 1.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+
+      .step {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        max-width: 100%;
+        padding: 0;
+      }
+
+      .hero-banner {
+        background: #6B46C1 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      section, .section {
+        break-inside: avoid;
+      }
+    }
+  </style>
+  
+</head>
+<body>
+<div class="hero-banner">
+  <h1>Daily Wage Calculator</h1>
+  <p class="hero-subtitle">Calculate daily wages for salary proration, leave encashment, and unpaid leave deductions</p>
+</div>
+
+<section class="section">
+  <h2>What is Daily Wage Calculator?</h2>
+  
+  <h3>Feature Overview</h3>
+  <p><span class="citation" data-source="zendesk" data-ref="14243704039185">The Daily Wage Calculator is a flexible and customizable method for calculating daily wages, including salary proration, leave encashment, and unpaid leave deductions</span>. This feature enables HR teams and payroll administrators to accurately determine employee compensation adjustments based on actual days worked and leave taken.</p>
+  
+  <figure class="screenshot-container">
+    <img src="validation/screenshots/02-daily-wage-calculation-expanded.png" alt="Daily Wage Calculator interface showing calculation options" class="screenshot">
+    <figcaption>Daily Wage Calculator - Main configuration interface with calculation method options</figcaption>
+  </figure>
+
+  <h3>Who Uses This Feature?</h3>
+  <p><span class="citation" data-source="zendesk" data-ref="14243704039185">The primary users are Superadmin, Payroll table managers, and transaction processors</span>. Additionally, <span class="citation" data-source="zendesk" data-ref="14154746403601">HR personnel and payroll administrators responsible for managing employee leave and salary calculations</span> rely on this feature for daily operations.</p>
+
+  <h3>Key Benefits</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Flexible Calculation Methods</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243704039185">Choose from calendar days, working days, or custom days to align with your company's labor law requirements</span>. Most UAE and KSA companies use 30 custom days to align with local regulations.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Accurate Salary Adjustments</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14154746403601">Automatically generate pay deductions and calculate daily pay based on salary and working days</span>, ensuring precise compensation calculations for all leave scenarios.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Comprehensive Leave Management</h4>
+      <p>Handle multiple leave scenarios including unpaid leave deductions, leave encashment for end-of-service, and salary proration for new joiners and departing employees with a single unified system.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Product Foundation Overview</h2>
+
+  <h3>Business Problem Solved</h3>
+  <p><span class="citation" data-source="zendesk" data-ref="14154746403601">The Daily Wage Calculator solves the challenge of calculating and deducting daily pay for employees taking unpaid leave by determining the appropriate salary reduction based on the number of working or calendar days</span>. Without this feature, manual calculations would be time-consuming and prone to errors.</p>
+
+  <h3>Core Concepts</h3>
+  <p><span class="citation" data-source="zendesk" data-ref="14154746403601">Daily pay is calculated by dividing total salary by number of actual working days, and can use either calendar days (30 days) or working days (e.g., 22 days)</span>. <span class="citation" data-source="zendesk" data-ref="14154746403601">Public holidays are deducted from working days</span> to ensure accurate calculations.</p>
+
+  <h3>Related Features</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Salary Proration</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243760419089">Adjusts and calculates an employee's salary proportionally based on the actual days worked, affecting their first salary and end-of-service settlement</span>.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Leave Encashment</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243768433425">Allows super admins to configure and customize leave encashment policies for end-of-service calculations</span>.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Unpaid Leave Deductions</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14244040988689">Calculates and manages unpaid leave deductions on a daily basis for employee payroll</span>.</p>
+    </div>
+  </div>
+
+  <h3>Prerequisites & Requirements</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Requirement</th>
+        <th>Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>User Role</td>
+        <td>Superadmin or Payroll Manager access required</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Employee Salary Data</td>
+        <td>Employee's total salary (basic + allowance) must be configured in the system</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Working Days Configuration</td>
+        <td>Number of working days in the month must be defined</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Public Holiday Calendar</td>
+        <td>Company-specific public holiday calendar must be configured</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Leave Policies</td>
+        <td>Leave types and policies must be configured in the system</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Payroll Module Access</td>
+        <td>Access to Settings > Payroll section</td>
+        <td>Required</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <h2>Complete User Journey Guide</h2>
+
+  <h3>Journey Overview</h3>
+  <p>The Daily Wage Calculator workflow follows a structured process from initial configuration through to payroll application. Below is the high-level journey that users follow when implementing and using this feature:</p>
+
+  <div class="journey-grid">
+    <div class="journey-step">
+      <div class="step-number">1</div>
+      <h4>Access Settings</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243704039185">Navigate to Settings > Payroll > Daily Wage Calculation</span> to begin configuration.</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">2</div>
+      <h4>Select Calculation Base</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243704039185">Choose calculation base from calendar days, working days, or custom days</span> based on your company's requirements.</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">3</div>
+      <h4>Configure Salary Components</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243704039185">Choose salary components to factor into calculations</span>, such as basic salary only or basic salary plus allowances.</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">4</div>
+      <h4>Set Public Holidays</h4>
+      <p>Configure your company's public holiday calendar to ensure accurate working day calculations and exclude non-working days from wage calculations.</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">5</div>
+      <h4>Configure Leave Policies</h4>
+      <p>Set up leave policies for unpaid leave deductions and leave encashment, specifying calculation methods for each leave type.</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">6</div>
+      <h4>Apply & Monitor</h4>
+      <p>Save your configuration and monitor payroll calculations as the system automatically applies daily wage calculations to employee compensation.</p>
+    </div>
+  </div>
+
+  <h3>Success Indicators</h3>
+  <p>You will know the Daily Wage Calculator is working correctly when:</p>
+  <ul>
+    <li><span class="citation" data-source="zendesk" data-ref="14154746403601">Automatic pay deduction is reflected on the payroll table</span></li>
+    <li>Calculated daily pay rates match your company's labor law requirements</li>
+    <li>Leave deductions are accurately applied to employee monthly pay</li>
+    <li>Salary proration correctly adjusts compensation for new joiners and departing employees</li>
+    <li>End-of-service leave encashment calculations are accurate and compliant</li>
+  </ul>
+
+  <div class="info-box">
+    <strong>Note:</strong> Detailed step-by-step instructions for configuration and usage are covered in Sections 2 and 3 of this guide.
+  </div>
+</section>
+
+<section class="section">
+  <h2>Glossary of Terms</h2>
+  
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Basic Salary</strong></td>
+        <td>The fixed monthly salary component excluding allowances and benefits, used as the base for wage calculations.</td>
+      </tr>
+      <tr>
+        <td><strong>Calendar Days</strong></td>
+        <td>A calculation method using all 30 or 31 days in a month, regardless of weekends or public holidays.</td>
+      </tr>
+      <tr>
+        <td><strong>Custom Days</strong></td>
+        <td>A flexible calculation method where the company defines the number of working days in a month (commonly 30 days in UAE).</td>
+      </tr>
+      <tr>
+        <td><strong>Daily Rate</strong></td>
+        <td>The calculated daily wage amount derived by dividing total salary by the number of working or calendar days.</td>
+      </tr>
+      <tr>
+        <td><strong>End-of-Service (EOS)</strong></td>
+        <td>The settlement and final compensation calculations when an employee leaves the company, including leave encashment and gratuity.</td>
+      </tr>
+      <tr>
+        <td><strong>Gratuity</strong></td>
+        <td>A lump-sum payment made to employees upon end of service, calculated based on salary and length of service.</td>
+      </tr>
+      <tr>
+        <td><strong>Leave Encashment</strong></td>
+        <td>The conversion of unused leave days into monetary compensation, typically applied during end-of-service calculations.</td>
+      </tr>
+      <tr>
+        <td><strong>Leave Policy</strong></td>
+        <td>Configured rules that define how different leave types are calculated, accrued, and deducted from employee compensation.</td>
+      </tr>
+      <tr>
+        <td><strong>Payroll Table</strong></td>
+        <td>The Bayzat interface where all employee salary components, deductions, and adjustments are displayed and managed.</td>
+      </tr>
+      <tr>
+        <td><strong>Public Holiday</strong></td>
+        <td>Non-working days recognized by the company's jurisdiction, excluded from working day calculations.</td>
+      </tr>
+      <tr>
+        <td><strong>Proration</strong></td>
+        <td>The proportional adjustment of an employee's salary based on actual days worked, commonly applied for new joiners and departing employees.</td>
+      </tr>
+      <tr>
+        <td><strong>Salary Component</strong></td>
+        <td>Individual elements of an employee's compensation package, such as basic salary, allowances, or bonuses.</td>
+      </tr>
+      <tr>
+        <td><strong>Unpaid Leave</strong></td>
+        <td>Leave taken by an employee without pay, resulting in a daily wage deduction from their monthly salary.</td>
+      </tr>
+      <tr>
+        <td><strong>Working Days</strong></td>
+        <td>A calculation method using only business days (excluding weekends and public holidays) in a month.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <h2>Pre-Implementation</h2>
+  
+  <h3>Access Requirements</h3>
+  <p><span class="citation" data-source="zendesk" data-ref="14243704039185">The Daily Wage Calculator is accessed by Super Admin, Payroll table managers, and transaction processors</span>. Ensure your user role has the appropriate permissions to access payroll settings.</p>
+  
+  <h3>Data Requirements</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Data Element</th>
+        <th>Description</th>
+        <th>Required</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Employee Salary Information</td>
+        <td>Basic salary and allowances for all active employees</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>Working Days Configuration</td>
+        <td>Number of actual working days in the month (e.g., 22 days)</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>Public Holiday Calendar</td>
+        <td>Company-specific public holidays to exclude from working days</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>Leave Policies</td>
+        <td>Configured leave types and their encashment eligibility</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>Calculation Basis Selection</td>
+        <td>Choice of calendar days, working days, or custom days</td>
+        <td>Yes</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <h3>Configuration Checklist</h3>
+  <ul>
+    <li>Verify user role has Super Admin or Payroll Manager permissions</li>
+    <li>Confirm all employee salary records are complete and up-to-date</li>
+    <li>Update public holiday calendar for the current year</li>
+    <li>Review and configure all active leave policies</li>
+    <li>Determine calculation basis (calendar days, working days, or custom days) aligned with company labor law requirements</li>
+    <li>Identify salary components to include (Basic Only or Basic + Allowances)</li>
+    <li>Test configuration with sample employee data before applying to payroll</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Feature Discovery</h2>
+  
+  <h3>How to Access</h3>
+  <p><span class="citation" data-source="zendesk" data-ref="14243704039185">Access the Daily Wage Calculator from Settings → Payroll → Daily Wage Calculation</span>. This is the central configuration hub for all daily wage calculation methods in your organization.</p>
+  
+  <h3>Navigation Path</h3>
+  <ol>
+    <li>Click on <strong>Settings</strong> in the main navigation menu</li>
+    <li>Select <strong>Payroll</strong> from the settings options</li>
+    <li>Choose <strong>Daily Wage Calculation</strong> from the payroll submenu</li>
+    <li>The Daily Wage Calculation configuration panel will open</li>
+  </ol>
+  
+  <figure class="screenshot-container">
+    <img src="validation/screenshots/01-settings-payroll-navigation.png" alt="Settings menu showing Payroll option with Daily Wage Calculation highlighted" class="screenshot">
+    <figcaption>Navigation Path - Successfully navigated to Daily Wage Calculation from Settings > Payroll menu</figcaption>
+  </figure>
+  
+  <h3>Interface Overview</h3>
+  <p>The Daily Wage Calculation interface contains the following key sections:</p>
+  
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Calculation Basis Selection</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243704039185">Select calculation base from three options: calendar days, working days, or custom days</span>. This determines how the daily wage is calculated across all payroll functions.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Salary Components</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243704039185">Choose salary components to factor into calculations</span>, including Basic Only or Basic + Allowances options.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Exclusion Options</h4>
+      <p><span class="citation" data-source="validation" data-ref="plan_payroll_dwc_primary">Option to exclude weekends and public holidays is visible and functional</span> in the configuration panel.</p>
+    </div>
+  </div>
+  
+  <figure class="screenshot-container">
+    <img src="validation/screenshots/02-daily-wage-calculation-expanded.png" alt="Daily Wage Calculation panel showing expanded configuration options with salary components and exclusion settings" class="screenshot">
+    <figcaption>Interface Overview - Daily Wage Calculation expanded view showing all configuration controls and options</figcaption>
+  </figure>
+</section>
+
+<section class="section">
+  <h2>Setup Process</h2>
+  
+  <h3>Initial Configuration</h3>
+  <p>Before setting up the Daily Wage Calculator, ensure you have determined your organization's calculation methodology. <span class="citation" data-source="zendesk" data-ref="14243704039185">Most UAE and KSA companies use 30 custom days to align with labor law</span>. However, your specific requirements may differ based on your employment contracts and labor agreements.</p>
+  
+  <h3>Step-by-Step Setup</h3>
+  
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Navigate to Daily Wage Calculation Settings</h4>
+      <p>Go to Settings > Payroll > Daily Wage Calculation. The configuration panel will display your current settings and available options.</p>
+    </div>
+  </div>
+  
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Select Calculation Basis</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243704039185">Select calculation base from three options: calendar days, working days, or custom days</span>. Click the dropdown menu to view all available options.</p>
+      <figure class="screenshot-container">
+        <img src="validation/screenshots/04-month-calculation-dropdown-options.png" alt="Dropdown menu showing three calculation basis options: Working days, Calendar days, and Custom days" class="screenshot">
+        <figcaption>Step 2 - Calculation Basis Options - All three calculation method options available for selection</figcaption>
+      </figure>
+    </div>
+  </div>
+  
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Choose Salary Components</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243704039185">Choose salary components to factor into calculations</span>. Select either Basic Only or Basic + Allowances depending on your payroll policy. This selection applies to all daily wage calculations including proration, leave encashment, and unpaid leave deductions.</p>
+    </div>
+  </div>
+  
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Configure Exclusions</h4>
+      <p>Enable options to exclude weekends and public holidays from the calculation if applicable to your organization. <span class="citation" data-source="zendesk" data-ref="14154746403601">Public holidays are deducted from working days</span> when calculating daily pay.</p>
+    </div>
+  </div>
+  
+  <div class="step">
+    <div class="step-number">5</div>
+    <div class="step-content">
+      <h4>Review Configuration Summary</h4>
+      <p>The system displays a summary of your selected configuration. Verify that the calculation basis, salary components, and exclusion settings match your requirements before proceeding.</p>
+    </div>
+  </div>
+  
+  <div class="step">
+    <div class="step-number">6</div>
+    <div class="step-content">
+      <h4>Save Configuration</h4>
+      <p>Click the Save button to apply your Daily Wage Calculation settings. <span class="citation" data-source="zendesk" data-ref="14243760419089">Changes will affect all active (unpaid) amounts in the payroll table</span>.</p>
+      <figure class="screenshot-container">
+        <img src="validation/screenshots/03-salary-proration-config-modal.png" alt="Configuration modal showing save control and summary of selected settings" class="screenshot">
+        <figcaption>Step 6 - Save Configuration - Save control visible and functional for applying settings</figcaption>
+      </figure>
+    </div>
+  </div>
+  
+  <div class="step">
+    <div class="step-number">7</div>
+    <div class="step-content">
+      <h4>Handle Existing Transactions (if applicable)</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243760419089">When payroll month is open, super admin must reject existing prorated salary transactions before saving new proration settings</span>. If prompted, review and reject any active transactions that need to be recalculated with the new settings.</p>
+    </div>
+  </div>
+  
+  <h3>Verification Steps</h3>
+  <ul>
+    <li>Confirm that the Daily Wage Calculation page displays your selected calculation basis</li>
+    <li>Verify that salary component selection matches your configuration</li>
+    <li>Check that exclusion settings (weekends, public holidays) are correctly applied</li>
+    <li>Test the configuration by viewing a sample employee's payroll calculation</li>
+    <li>Ensure that leave encashment and unpaid leave deductions reflect the new daily wage calculation</li>
+    <li>Review end-of-service calculations to confirm they use the updated daily wage formula</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Feature Usage</h2>
+  
+  <h3>Common Workflows</h3>
+  
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Processing Unpaid Leave</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14154746403601">Approve unpaid leave requests, automatically generate pay deductions, calculate daily pay based on salary and working days</span>. The system uses your configured daily wage calculation to determine the deduction amount for each unpaid leave day.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Calculating Leave Encashment</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243768433425">Configure and customize leave encashment policies for end-of-service calculations</span>. Select salary components and calculation methods specific to each leave type for accurate end-of-service settlements.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Applying Salary Proration</h4>
+      <p><span class="citation" data-source="zendesk" data-ref="14243760419089">Adjust and calculate an employee's salary proportionally based on the actual days worked, affecting their first salary and end-of-service settlement</span>. The daily wage calculation automatically applies to prorated amounts.</p>
+    </div>
+  </div>
+  
+  <h3>Usage Examples</h3>
+  
+  <div class="info-box">
+    <strong>Example 1: Unpaid Leave Deduction</strong>
+    An employee with a basic salary of AED 3,000 takes 2 days of unpaid leave in a month with 22 working days. Using the configured daily wage calculation (Basic Only / Custom Days / 30), the daily rate is AED 100 (3,000 ÷ 30). The unpaid leave deduction is AED 200 (2 days × AED 100), automatically reflected in the payroll.
+  </div>
+  
+  <div class="info-box">
+    <strong>Example 2: End-of-Service Leave Encashment</strong>
+    An employee with 15 days of accrued vacation leave is leaving the company. The system calculates leave encashment using the configured daily wage formula (Basic + Allowances / Working Days / 22). If the daily rate is AED 150, the total encashment is AED 2,250 (15 days × AED 150), included in the final settlement.
+  </div>
+  
+  <figure class="screenshot-container">
+    <img src="validation/screenshots/08-unpaid-leave-daily-wage-calculation.png" alt="Leave policy configuration showing unpaid leave option with daily wage calculation details and remarks field" class="screenshot">
+    <figcaption>Usage Example - Unpaid Leave Configuration - Shows how daily wage calculation is applied to unpaid leave deductions with formula details</figcaption>
+  </figure>
+  
+  <h3>Best Practices</h3>
+  <ul>
+    <li>Review and update your public holiday calendar annually to ensure accurate working day calculations</li>
+    <li>Align your calculation basis (calendar days, working days, or custom days) with your employment contracts and labor law requirements</li>
+    <li>Use Basic + Allowances for leave encashment calculations to provide fair compensation based on total remuneration</li>
+    <li>Test configuration changes with sample data before applying to active payroll</li>
+    <li>Document your chosen calculation methodology for audit and compliance purposes</li>
+    <li>Review end-of-service calculations before final settlement to ensure accuracy</li>
+    <li>Monitor payroll reports to verify that daily wage calculations are applied consistently across all leave types</li>
+    <li>Communicate calculation methodology changes to employees and HR team to ensure transparency</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Glossary of Terms</h2>
+  
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Basic Salary</strong></td>
+        <td>The fixed monthly compensation excluding allowances, used as the base for daily wage calculations in Basic Only configuration.</td>
+      </tr>
+      <tr>
+        <td><strong>Calendar Days</strong></td>
+        <td>A calculation basis using the actual number of days in a calendar month (28-31 days) to determine daily wage rates.</td>
+      </tr>
+      <tr>
+        <td><strong>Custom Days</strong></td>
+        <td>A flexible calculation basis allowing organizations to specify a fixed number of days (commonly 30 in UAE) for daily wage calculations regardless of actual calendar days.</td>
+      </tr>
+      <tr>
+        <td><strong>Daily Rate</strong></td>
+        <td>The calculated daily wage amount derived by dividing total salary by the selected number of days, used for leave deductions and encashment.</td>
+      </tr>
+      <tr>
+        <td><strong>Daily Wage Calculator</strong></td>
+        <td>The Bayzat payroll feature that configures and manages how daily wages are calculated for salary proration, leave encashment, and unpaid leave deductions.</td>
+      </tr>
+      <tr>
+        <td><strong>End-of-Service (EOS)</strong></td>
+        <td>The final settlement calculation when an employee leaves the organization, including accrued leave encashment and prorated salary adjustments.</td>
+      </tr>
+      <tr>
+        <td><strong>Leave Encashment</strong></td>
+        <td>The monetary value paid to an employee for accrued but unused leave, calculated using the configured daily wage formula.</td>
+      </tr>
+      <tr>
+        <td><strong>Payroll Table</strong></td>
+        <td>The Bayzat interface displaying all employee salary components, deductions, and adjustments for a given pay period.</td>
+      </tr>
+      <tr>
+        <td><strong>Public Holiday</strong></td>
+        <td>Company-recognized non-working days that are excluded from working day calculations when determining daily wage rates.</td>
+      </tr>
+      <tr>
+        <td><strong>Salary Proration</strong></td>
+        <td>The proportional adjustment of an employee's salary based on actual days worked, commonly applied to first month and end-of-service settlements.</td>
+      </tr>
+      <tr>
+        <td><strong>Unpaid Leave</strong></td>
+        <td>Employee absence without pay, resulting in a daily deduction from salary calculated using the configured daily wage rate.</td>
+      </tr>
+      <tr>
+        <td><strong>Working Days</strong></td>
+        <td>A calculation basis using the actual number of working days in a month (excluding weekends and public holidays) to determine daily wage rates.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <h2>Feature Maintenance</h2>
+  
+  <h3>Ongoing Maintenance Tasks</h3>
+  <p><span class="citation" data-source="zendesk" data-ref="14243704039185">The Daily Wage Calculator requires periodic review to ensure calculation settings remain aligned with company policies and labor law requirements</span>. Key maintenance tasks include:</p>
+  <ul>
+    <li>Reviewing calculation base settings when company policies change</li>
+    <li>Updating public holiday calendars to reflect annual changes</li>
+    <li>Verifying salary component selections remain accurate</li>
+    <li>Monitoring payroll transactions for calculation accuracy</li>
+  </ul>
+
+  <h3>Review Schedule</h3>
+  <p>Establish a regular review cadence to maintain calculation accuracy:</p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Review Type</th>
+        <th>Frequency</th>
+        <th>Responsibility</th>
+        <th>Key Focus Areas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Public Holiday Calendar</td>
+        <td>Annually (before fiscal year)</td>
+        <td>Super Admin / HR Manager</td>
+        <td>Verify all national and company holidays are included</td>
+      </tr>
+      <tr>
+        <td>Calculation Base Settings</td>
+        <td>Quarterly or when policy changes</td>
+        <td>Super Admin / Payroll Manager</td>
+        <td>Confirm calendar days, working days, or custom days selection is correct</td>
+      </tr>
+      <tr>
+        <td>Salary Component Configuration</td>
+        <td>Semi-annually</td>
+        <td>Payroll Manager</td>
+        <td>Verify Basic Only vs. Basic + Allowances selection matches policy</td>
+      </tr>
+      <tr>
+        <td>Leave Policy Settings</td>
+        <td>Annually or when policies change</td>
+        <td>Super Admin / HR Manager</td>
+        <td>Review unpaid leave deduction methods and leave encashment eligibility</td>
+      </tr>
+      <tr>
+        <td>Payroll Transaction Accuracy</td>
+        <td>Monthly (during pay run)</td>
+        <td>Payroll Processor</td>
+        <td>Spot-check calculated daily rates and deductions for accuracy</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Best Practices</h3>
+  <ul>
+    <li>Document all calculation base changes with effective dates for audit purposes</li>
+    <li><span class="citation" data-source="zendesk" data-ref="14243760419089">When payroll month is open and prorated salary transactions exist, reject existing transactions before saving new proration settings</span></li>
+    <li>Test calculation changes in a non-production environment before applying company-wide</li>
+    <li>Maintain clear communication with payroll team about any configuration updates</li>
+    <li>Keep records of historical calculation settings for compliance and audit trails</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Business Rules & Limitations</h2>
+  
+  <h3>Core Business Rules</h3>
+  <p><span class="citation" data-source="zendesk" data-ref="14154746403601">Daily pay is calculated by dividing total salary by the number of actual working days, and can use either calendar days (30 days) or working days (e.g., 22 days)</span>. The following table outlines the core calculation rules:</p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>Description</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Calculation Base Selection</td>
+        <td><span class="citation" data-source="zendesk" data-ref="14243704039185">Calculation can be based on calendar days, working days, or custom days</span></td>
+        <td>Determines the denominator in daily wage calculation; different bases produce different daily rates</td>
+      </tr>
+      <tr>
+        <td>Public Holiday Deduction</td>
+        <td><span class="citation" data-source="zendesk" data-ref="14154746403601">Public holidays are deducted from working days</span></td>
+        <td>Reduces the number of working days, increasing the daily wage rate</td>
+      </tr>
+      <tr>
+        <td>Salary Component Inclusion</td>
+        <td><span class="citation" data-source="zendesk" data-ref="14243704039185">Can choose salary components to factor into calculations: basic salary only, basic salary plus allowances, or allowances only</span></td>
+        <td>Determines which salary elements are included in the daily wage calculation</td>
+      </tr>
+      <tr>
+        <td>Month Length Variation</td>
+        <td><span class="citation" data-source="zendesk" data-ref="14243704039185">Calculation varies depending on month length (e.g., 31 days in January, 28 days in February)</span></td>
+        <td>Calendar day calculations automatically adjust; custom day calculations remain fixed</td>
+      </tr>
+      <tr>
+        <td>Unpaid Leave Deduction</td>
+        <td><span class="citation" data-source="zendesk" data-ref="14244040988689">Unpaid leave deductions must be calculated daily and set off against the employee's monthly pay</span></td>
+        <td>Reduces employee compensation based on approved unpaid leave days</td>
+      </tr>
+      <tr>
+        <td>Leave Encashment Eligibility</td>
+        <td><span class="citation" data-source="zendesk" data-ref="14243768433425">Can configure specific leave types for end-of-service calculations</span></td>
+        <td>Determines which leave balances are paid out during employee separation</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>System Constraints</h3>
+  <ul>
+    <li><span class="citation" data-source="zendesk" data-ref="14243760419089">Changes to calculation settings will affect all active (unpaid) amounts in the payroll table</span></li>
+    <li><span class="citation" data-source="zendesk" data-ref="14243768433425">Can choose between Basic Only or Basic + Allowances for salary components in leave encashment</span></li>
+    <li><span class="citation" data-source="zendesk" data-ref="14243704039185">Most UAE and KSA companies use 30 custom days to align with labor law</span></li>
+    <li>Calculation method changes require manual transaction review if payroll month is open</li>
+    <li>Public holiday calendar must be maintained separately and updated annually</li>
+  </ul>
+
+  <h3>Compliance Requirements</h3>
+  <ul>
+    <li>Daily wage calculations must comply with UAE Labor Law and KSA labor regulations</li>
+    <li>All salary components used in calculations must be documented and justified</li>
+    <li>Public holiday calendars must reflect official national holidays and company-specific holidays</li>
+    <li>Leave encashment calculations must follow end-of-service settlement requirements</li>
+    <li>Audit trails must be maintained for all calculation configuration changes</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Troubleshooting & Edge Cases</h2>
+  
+  <h3>Common Issues</h3>
+  <p>The following table outlines common issues users encounter with the Daily Wage Calculator and their resolutions:</p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Issue</th>
+        <th>Cause</th>
+        <th>Resolution</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Calculated daily rate appears incorrect</td>
+        <td>Public holidays not properly deducted from working days, or incorrect salary component selected</td>
+        <td>Verify public holiday calendar is current and salary component selection (Basic Only vs. Basic + Allowances) matches company policy</td>
+      </tr>
+      <tr>
+        <td>Unable to save new calculation settings</td>
+        <td>Payroll month is open with existing prorated salary transactions</td>
+        <td><span class="citation" data-source="zendesk" data-ref="14243760419089">Reject existing prorated salary transactions before saving new proration settings</span></td>
+      </tr>
+      <tr>
+        <td>Unpaid leave deductions not appearing in payroll</td>
+        <td>Leave policy not configured with unpaid leave deduction calculation method</td>
+        <td>Navigate to Leave Policies, verify unpaid leave option is selected, and confirm calculation method (Basic Only or Basic + Allowances) is set</td>
+      </tr>
+      <tr>
+        <td>Different daily rates for same employee across months</td>
+        <td>Month length variation or public holiday differences between months</td>
+        <td>This is expected behavior. Verify calculations are correct by manually checking: Daily Rate = Total Salary ÷ (Working Days - Public Holidays)</td>
+      </tr>
+      <tr>
+        <td>Leave encashment amount seems low</td>
+        <td>Incorrect salary component selected or leave type not configured for encashment</td>
+        <td>Check End of Service eligibility settings to confirm salary component selection and verify leave type is marked as eligible for encashment</td>
+      </tr>
+      <tr>
+        <td>Calculation base changes not reflected in payroll</td>
+        <td>Changes made but payroll transactions not regenerated</td>
+        <td>Reject and resave affected payroll transactions to recalculate with new settings</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Edge Cases</h3>
+  
+  <div class="info-box warning">
+    <strong>Important:</strong> <span class="citation" data-source="zendesk" data-ref="14243704039185">Calculation varies depending on month length (e.g., 31 days in January, 28 days in February), and different calculation methods can impact final wage calculations</span>
+  </div>
+
+  <p>Be aware of these edge cases when using the Daily Wage Calculator:</p>
+  <ul>
+    <li><strong>February Variations:</strong> When using calendar days, February calculations will differ from other months due to the 28/29-day month length. Custom day calculations (e.g., 30 days) remain consistent.</li>
+    <li><strong>Mid-Month Policy Changes:</strong> If calculation settings change mid-month, existing transactions may need manual adjustment. Plan configuration changes at month-end when possible.</li>
+    <li><strong>Public Holiday Overlaps:</strong> If a public holiday falls on a weekend, verify your public holiday calendar reflects the actual working day impact.</li>
+    <li><strong>Partial Month Employment:</strong> For employees joining or leaving mid-month, salary proration calculations must account for actual days worked versus calendar days.</li>
+    <li><strong>Multiple Leave Types:</strong> When an employee has both paid and unpaid leave in the same month, ensure each leave type uses the correct deduction calculation method.</li>
+    <li><strong>Allowance Changes:</strong> If salary allowances change during a month, the daily wage calculation may need adjustment depending on when the change takes effect.</li>
+  </ul>
+
+  <h3>Resolution Steps</h3>
+  <p>Follow these steps to resolve Daily Wage Calculator issues:</p>
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Identify the Issue</h4>
+      <p>Determine which calculation is affected: salary proration, unpaid leave deduction, or leave encashment. Check the specific employee record and payroll transaction in question.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Verify Configuration Settings</h4>
+      <p>Navigate to Settings > Payroll > Daily Wage Calculation and confirm the calculation base (calendar days, working days, or custom days) and salary component selection match your company policy.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Check Public Holiday Calendar</h4>
+      <p>Verify that all applicable public holidays for the relevant month are recorded in the system. Missing holidays will inflate the daily wage rate.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Review Leave Policy Configuration</h4>
+      <p>For unpaid leave or leave encashment issues, navigate to Settings > Leaves > Leave Policies and confirm the leave type has the correct deduction calculation method configured.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-number">5</div>
+    <div class="step-content">
+      <h4>Manually Verify Calculation</h4>
+      <p>Use the formula: Daily Rate = Total Salary ÷ (Working Days - Public Holidays) to manually verify the system's calculation is correct.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-number">6</div>
+    <div class="step-content">
+      <h4>Reject and Resave Transactions</h4>
+      <p>If configuration changes were made, reject the affected payroll transactions and resave them to recalculate with updated settings.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-number">7</div>
+    <div class="step-content">
+      <h4>Document Changes</h4>
+      <p>Record the issue, root cause, and resolution for audit purposes and future reference.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Support Resources</h2>
+  
+  <h3>Getting Help</h3>
+  <p>If you encounter issues with the Daily Wage Calculator that you cannot resolve using this guide, the following resources are available:</p>
+  <ul>
+    <li><strong>Bayzat Support Team:</strong> Contact your dedicated Bayzat support representative for configuration assistance and troubleshooting</li>
+    <li><strong>Knowledge Base:</strong> Access additional articles on payroll calculations, leave management, and end-of-service settlements</li>
+    <li><strong>System Administrator:</strong> Consult your company's Bayzat system administrator for access and permission issues</li>
+  </ul>
+
+  <h3>Documentation Links</h3>
+  <p>The following related features and documentation may be helpful:</p>
+  <ul>
+    <li><span class="citation" data-source="zendesk" data-ref="14154746403601">How is daily pay calculated - Detailed guide on daily pay calculation methodology</span></li>
+    <li><span class="citation" data-source="zendesk" data-ref="14243704039185">Introduction to daily wage calculator - Overview of calculator features and configuration options</span></li>
+    <li><span class="citation" data-source="zendesk" data-ref="14243768433425">Leave encashment for End-of-service - Guide to configuring leave encashment policies</span></li>
+    <li><span class="citation" data-source="zendesk" data-ref="14244040988689">Unpaid Leave deductions - Instructions for configuring unpaid leave deduction calculations</span></li>
+    <li><span class="citation" data-source="zendesk" data-ref="14243760419089">Salary Proration - Guide to prorating employee salaries based on days worked</span></li>
+  </ul>
+
+  <div class="info-box">
+    <strong>Note:</strong> The Daily Wage Calculator integrates with multiple Bayzat systems including Payroll, Leave Management, and End-of-Service calculations. Changes to calculator settings may impact all three areas.
+  </div>
+
+  <h3>Contact Information</h3>
+  <p>For additional support:</p>
+  <ul>
+    <li>Email your Bayzat support team with specific details about your issue, including employee records and transaction dates</li>
+    <li>Provide screenshots of configuration settings and affected payroll transactions to expedite troubleshooting</li>
+    <li>Include your company's calculation base and salary component configuration in support requests</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Glossary of Terms</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Basic Salary</strong></td>
+        <td>The fixed monthly compensation component excluding allowances and benefits. Used as the basis for daily wage calculations when "Basic Only" is selected.</td>
+      </tr>
+      <tr>
+        <td><strong>Calendar Days</strong></td>
+        <td>A calculation base using the actual number of days in a calendar month (28-31 days). Daily wage varies by month length.</td>
+      </tr>
+      <tr>
+        <td><strong>Custom Days</strong></td>
+        <td>A fixed calculation base (typically 30 days) selected by the company to standardize daily wage calculations regardless of actual month length.</td>
+      </tr>
+      <tr>
+        <td><strong>Daily Rate</strong></td>
+        <td>The calculated daily wage amount derived by dividing total salary by the number of working or calendar days. Used for proration, leave deductions, and encashment.</td>
+      </tr>
+      <tr>
+        <td><strong>Daily Wage Calculator</strong></td>
+        <td>A Bayzat payroll feature that calculates daily wage rates for salary proration, leave encashment, and unpaid leave deductions based on configurable calculation bases and salary components.</td>
+      </tr>
+      <tr>
+        <td><strong>End-of-Service (EOS)</strong></td>
+        <td>The final settlement calculation when an employee separates from the company, including gratuity, accrued leave encashment, and final salary adjustments.</td>
+      </tr>
+      <tr>
+        <td><strong>Gratuity</strong></td>
+        <td>A lump-sum payment to employees at the end of service based on tenure and final salary, calculated according to UAE or KSA labor law requirements.</td>
+      </tr>
+      <tr>
+        <td><strong>Gross Salary</strong></td>
+        <td>Total compensation including basic salary and all allowances. Used in daily wage calculations when "Basic + Allowances" is selected.</td>
+      </tr>
+      <tr>
+        <td><strong>Leave Encashment</strong></td>
+        <td>The monetary value of unused paid leave paid to an employee, typically calculated at the end of service using the daily wage rate.</td>
+      </tr>
+      <tr>
+        <td><strong>Leave Policy</strong></td>
+        <td>A company-defined set of rules governing leave types, accrual, eligibility, and deduction calculations including unpaid leave handling.</td>
+      </tr>
+      <tr>
+        <td><strong>Public Holiday</strong></td>
+        <td>A nationally recognized or company-designated day off that is excluded from working day calculations, increasing the daily wage rate.</td>
+      </tr>
+      <tr>
+        <td><strong>Salary Proration</strong></td>
+        <td>The proportional adjustment of an employee's salary based on actual days worked, affecting first salary and end-of-service calculations.</td>
+      </tr>
+      <tr>
+        <td><strong>Unpaid Leave</strong></td>
+        <td>Leave taken by an employee without pay, resulting in a daily wage deduction from monthly salary based on the number of unpaid leave days.</td>
+      </tr>
+      <tr>
+        <td><strong>Working Days</strong></td>
+        <td>A calculation base using the actual number of working days in a month (typically 22 days), excluding weekends and public holidays.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+</body>
+</html> 
