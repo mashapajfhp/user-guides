@@ -30,16 +30,159 @@ CRITICAL: You MUST complete all tasks and write all output files before finishin
 3. If you only visited Payroll but not Leaves - GO BACK and complete Leaves section
 4. DO NOT write output files until ALL sections are validated
 
-## SECTION 1: AUTHENTICATION
+## SECTION 1: AUTHENTICATION AND POPUP HANDLING
 
+### Login
 - Complete login before proceeding with validation
-- POST-LOGIN ONBOARDING DISMISSAL (CRITICAL):
-  - After successful login, an onboarding overlay may appear showing 'Step 1 of 4' or similar
-  - This modal blocks the main UI and MUST be dismissed before any navigation
-  - Look for an X button (close icon) in the top-right corner of the onboarding popup
-  - Click the X to dismiss the onboarding modal completely
-  - Wait for the overlay to close and the main dashboard to be fully visible
-  - Only proceed with feature navigation once the dashboard is clear of overlays
+
+### POST-LOGIN ONBOARDING DISMISSAL:
+- After successful login, an onboarding overlay may appear showing 'Step 1 of 4' or similar
+- This modal blocks the main UI and MUST be dismissed before any navigation
+- Look for an X button (close icon) in the top-right corner of the onboarding popup
+- Click the X to dismiss the onboarding modal completely
+- Wait for the overlay to close and the main dashboard to be fully visible
+- Only proceed with feature navigation once the dashboard is clear of overlays
+
+### CRITICAL: "ABANDON UNSAVED CHANGES" DIALOG HANDLING
+
+**This dialog WILL appear and WILL block your navigation. You MUST handle it.**
+
+When you see a dialog with:
+- "Do you wish to abandon unsaved changes?"
+- "You are about to leave the page without saving"
+- "All unsaved changes will be lost"
+- Buttons: "Cancel" and "Abandon"
+
+**ACTION: ALWAYS CLICK "Abandon" BUTTON**
+
+```
+MANDATORY RESPONSE TO ABANDON DIALOG:
+1. DETECT the dialog (look for "abandon", "unsaved changes", "leave page")
+2. CLICK the "Abandon" button (purple button on the right)
+3. WAIT for dialog to close
+4. CONTINUE with navigation
+```
+
+**WHY:** This is a demo environment. Data loss is acceptable. Do NOT click "Cancel" - that will trap you on the current page.
+
+**OTHER BLOCKING DIALOGS TO DISMISS:**
+- "Leave site?" browser dialogs → Click "Leave"
+- "Discard changes?" → Click "Discard"
+- "Are you sure?" → Click "Yes" or "Confirm"
+- Cookie consent banners → Click "Accept" or close
+- Feature announcement modals → Click X or "Got it"
+
+**RULE: NEVER let a dialog block your navigation. Always dismiss and proceed.**
+
+## SECTION 1B: EXTRACT KEYWORDS FROM REQUEST
+
+**BEFORE starting validation, extract feature keywords from request.json:**
+
+```
+KEYWORD EXTRACTION PROCEDURE:
+1. Read the "feature_name" field from request.json
+2. Read the "feature_slug" field from request.json
+3. Check for "keywords" array if present
+4. Generate variations:
+   - "daily wage calculator" → "daily wage", "daily rate", "wage calculation"
+   - "end of service" → "end of service", "EOS", "gratuity", "service eligibility"
+   - Convert slug to readable: "daily-wage-calculator" → "daily wage calculator"
+```
+
+**STORE THESE KEYWORDS and scan for them on EVERY page you visit.**
+
+If request.json has these fields, use them:
+- `feature_name`: Primary feature name
+- `feature_slug`: Slug version (convert hyphens to spaces)
+- `keywords`: Array of keywords to search for
+- `search_terms`: Alternative array of terms
+
+**If keywords are NOT in request.json:**
+- Derive them from feature_name
+- Use common variations (singular/plural, with/without spaces)
+- Ask: "What text would appear in UI for this feature?"
+
+## SECTION 1C: MANDATORY ACTIONS - YOU MUST DO THESE
+
+**THIS SECTION DESCRIBES ACTIONS YOU MUST PHYSICALLY PERFORM - NOT JUST READ**
+
+### MANDATORY ACTION 1: TAKE NAVIGATION SCREENSHOTS
+
+**YOU MUST capture screenshots showing HOW to reach the feature:**
+
+```
+NAVIGATION SCREENSHOT SEQUENCE:
+1. From dashboard, click Settings icon (gear) in left sidebar
+2. SCREENSHOT: Show expanded Settings menu (Company, Payroll, Leaves visible)
+3. Click the relevant submenu item (e.g., "Payroll" or "Leaves")
+4. SCREENSHOT: Show the submenu expanded with options visible
+5. Click the specific feature menu item
+6. SCREENSHOT: Show the landing page with navigation context
+```
+
+**MINIMUM NAVIGATION SCREENSHOTS: 2-3 per feature**
+- One showing the main menu path
+- One showing the submenu/section
+- One showing the feature landing page
+
+### MANDATORY ACTION 2: SCROLL EVERY PAGE
+
+**YOU MUST scroll EVERY page you visit:**
+
+```
+SCROLL PROCEDURE FOR EVERY PAGE:
+1. Page loads → WAIT 500ms
+2. SCROLL DOWN to bottom of page (use Page Down or scroll action)
+3. OBSERVE what content exists below the fold
+4. SCROLL BACK UP to top
+5. NOW decide what to capture
+```
+
+**DO NOT just screenshot what's visible on load. ALWAYS scroll first.**
+
+### MANDATORY ACTION 3: CLICK INTO UI ELEMENTS
+
+**YOU MUST click into configuration screens:**
+
+```
+CLICK PROCEDURE:
+1. See a row with "Edit" button? → CLICK IT
+2. See a row with "Configure" button? → CLICK IT
+3. See an accordion header? → CLICK TO EXPAND IT
+4. See a tab? → CLICK EACH TAB
+5. See a dropdown? → CLICK TO OPEN IT
+6. See a "View" link? → CLICK IT
+```
+
+**DO NOT just look at landing pages. CLICK INTO the configuration.**
+
+### MANDATORY ACTION 4: SCROLL WITHIN MODALS
+
+**When a modal/dialog opens, YOU MUST scroll within it:**
+
+```
+MODAL SCROLL PROCEDURE:
+1. Modal opens → WAIT 300ms
+2. Identify if modal has scrollable content (look for scrollbar)
+3. SCROLL TO BOTTOM of modal content
+4. COUNT all sections/accordions in the modal
+5. SCROLL BACK UP
+6. Expand EACH accordion one by one
+7. ONLY then decide what to screenshot
+```
+
+### MANDATORY ACTION 5: HANDLE BUTTON GROUPS
+
+**When you see button options (radio buttons, toggles, tabs):**
+
+```
+BUTTON GROUP PROCEDURE:
+1. Identify all options (e.g., "Option A", "Option B", "Option C")
+2. Click Option A → OBSERVE what changes
+3. Click Option B → OBSERVE what changes
+4. Click Option C → OBSERVE what changes
+5. Screenshot the variations that show feature-relevant content
+```
 
 ## SECTION 2: SCREENSHOT RULES
 
