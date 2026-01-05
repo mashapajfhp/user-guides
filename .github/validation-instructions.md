@@ -355,3 +355,181 @@ The file `LEARNINGS_AND_FEEDBACK.md` in the repository root contains:
 **After validation, if you discover new patterns or issues:**
 - Document them in your validation notes
 - These will be added to LEARNINGS_AND_FEEDBACK.md for future runs
+
+## SECTION 8: DEEP INVESTIGATION PROTOCOL
+
+### CORE PRINCIPLE: FOLLOW THE FEATURE TRAIL
+
+You are an INVESTIGATOR. Your job is to find EVERY place in the UI where the target feature appears or is referenced - even when buried deep within nested settings, multi-step wizards, or modal dialogs.
+
+### FEATURE KEYWORD IDENTIFICATION
+
+Before starting, identify keyword variations for the feature:
+- Primary name from the request
+- Alternate names or abbreviations
+- Related terms that might appear in UI labels
+
+Continuously scan for these keywords in:
+- Section headers and accordion titles
+- Form field labels and descriptions
+- Info banners, tooltips, and helper text
+- Links (e.g., "Configured in [X] setting")
+- Button and option text
+
+### THE INVESTIGATION MINDSET
+
+**WRONG approach:**
+- Navigate to a settings page
+- Take screenshot of the landing view
+- Move on to next path
+
+**CORRECT approach:**
+- Navigate to the page
+- SCAN all visible text for feature keywords
+- EXPAND every accordion/collapsible section
+- CLICK INTO every "Edit", "Configure", "Add new" button
+- SCROLL through all wizard steps and modal content
+- LOOK for feature keywords anywhere on screen
+- Only capture when feature-relevant content is VISIBLE
+
+### NAVIGATION DEPTH REQUIREMENTS
+
+**Surface-level (INSUFFICIENT):**
+```
+Settings → [Category] → Landing page
+Problem: Landing page may not show feature-specific content
+```
+
+**Deep investigation (CORRECT):**
+```
+Settings → [Category] → Landing page
+  → Expand all accordions on landing page
+    → Click "Add new" or "Edit" buttons
+      → Navigate through wizard/form steps
+        → Expand nested accordions within modals
+          → Click through button groups/toggles
+            → CAPTURE only when feature content is visible
+```
+
+### ACCORDION AND COLLAPSIBLE EXPLORATION
+
+**MANDATORY:** Expand EVERY accordion and scan for feature keywords before leaving any page.
+
+```
+Page has multiple accordions:
+  □ Accordion 1 (expand → scan for feature keywords)
+  □ Accordion 2 (expand → scan for feature keywords)
+  □ Accordion 3 (expand → scan for feature keywords)
+  □ Accordion N (expand → FOUND feature reference → CAPTURE)
+```
+
+### WIZARD AND MODAL DEEP DIVE
+
+When you open any wizard, modal, or multi-step form:
+
+1. **Navigate ALL steps** - Don't stop at step 1
+2. **Scroll within** - Content may be below the fold
+3. **Expand nested sections** - Modals often have accordions inside
+4. **Click all options** - Different selections reveal different UI
+5. **Follow cross-reference links** - "Configured in X" indicates relationships
+
+### BUTTON GROUP / TOGGLE EXPLORATION
+
+When you encounter a button group or toggle options:
+
+```
+Option A → Click → Observe UI changes → Capture IF feature-relevant
+Option B → Click → Observe UI changes → Capture IF feature-relevant
+Option C → Click → Observe UI changes → Capture IF feature-relevant
+```
+
+Different options may reveal different feature configurations. Document all relevant variations.
+
+### WHEN TO CAPTURE VS. KEEP DIGGING
+
+**DO NOT CAPTURE:**
+- Landing pages without feature keywords visible
+- Generic settings without feature-specific content
+- Pages where you haven't expanded all accordions
+- Modals where you haven't scrolled/explored fully
+
+**DO CAPTURE:**
+- Feature name/keywords visible on screen
+- Configuration options for the feature shown
+- Sections directly related to the feature
+- Info banners or links referencing the feature
+
+### CROSS-REFERENCE LINK HANDLING
+
+When you find links like "Configured in [X] setting":
+1. NOTE this relationship in validation report
+2. CLICK the link to verify destination
+3. Document the connection between settings areas
+
+### INVESTIGATION CHECKLIST (BEFORE LEAVING ANY PAGE)
+
+- [ ] Scanned all visible text for feature keywords
+- [ ] Expanded ALL accordions/collapsible sections
+- [ ] Clicked into "Edit", "Configure", "Add new" buttons
+- [ ] Scrolled to check for content below the fold
+- [ ] Clicked through button groups to reveal conditional UI
+- [ ] Followed any cross-reference links
+- [ ] Only captured screenshots with feature content visible
+
+### DOCUMENTATION FORMAT
+
+For each screenshot from deep investigation, document:
+```
+Screenshot: [filename].png
+Path: [Full navigation including accordion/modal steps]
+State: [Which options were selected to reveal this]
+Shows: [What feature-relevant content is visible]
+Related: [Any cross-references discovered]
+```
+
+## SECTION 9: LANDING PAGE NAVIGATION SCREENSHOTS
+
+### WHEN TO SHOW THE EXPANDED SIDE MENU
+
+**For LANDING PAGE screenshots demonstrating navigation path:**
+
+The side navigation menu MUST be EXPANDED to show how users reach the feature.
+
+**CORRECT:**
+- Side menu expanded showing the submenu structure
+- User can see the navigation hierarchy
+- Active menu item is highlighted
+- Navigation path is clear
+
+**WRONG:**
+- Side menu collapsed or hidden
+- Page content shown without navigation context
+- User cannot understand how to reach this page
+
+### WHEN SIDE MENU IS NOT REQUIRED
+
+After the landing page, during deep investigation:
+- Modal/wizard screenshots - focus on content
+- Accordion expansion - focus on expanded section
+- Configuration details - focus on settings
+- Button group states - focus on revealed UI
+
+### LANDING PAGE SEQUENCE
+
+```
+1. Expand the relevant navigation submenu
+2. Screenshot WITH menu visible (shows path)
+3. Click target menu item
+4. Screenshot the landing page
+5. Proceed with deep investigation (menu no longer needed)
+```
+
+### FINAL RELEVANCE CHECK
+
+Before including ANY screenshot:
+- [ ] Feature name or keywords visible?
+- [ ] Useful for someone learning this feature?
+- [ ] Shows WHERE this configuration exists?
+- [ ] For landing pages: Navigation path visible?
+
+If ANY answer is NO → Do not include
