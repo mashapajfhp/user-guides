@@ -20,14 +20,14 @@ CRITICAL: You MUST complete all tasks and write all output files before finishin
 - DO NOT end validation until ALL paths are visited
 
 **NAVIGATION REQUIREMENT:**
-- If request has paths under "Settings > Payroll" - VISIT them
-- If request has paths under "Settings > Leaves" - VISIT them
+- Parse ALL unique `nav.canonical` paths from request.json
+- VISIT EVERY navigation path defined in the request - no exceptions
 - ALL sections must be visited, not just the first one you encounter
 
 **BEFORE FINISHING - SELF-CHECK:**
-1. Count unique nav sections in request (e.g., Payroll AND Leaves) - did you visit ALL?
+1. Count unique nav sections in request.json - did you visit ALL of them?
 2. Count total plans - did you validate ALL of them?
-3. If you only visited Payroll but not Leaves - GO BACK and complete Leaves section
+3. If you only visited SOME sections but not others - GO BACK and complete ALL sections
 4. DO NOT write output files until ALL sections are validated
 
 ## SECTION 1: AUTHENTICATION AND POPUP HANDLING
@@ -107,7 +107,9 @@ MANDATORY RESPONSE TO LEAVE SITE DIALOG:
 
 **THE REQUEST PAYLOAD CONTAINS EVERYTHING YOU NEED. PARSE IT CAREFULLY.**
 
-### PAYLOAD STRUCTURE YOU WILL RECEIVE:
+**IMPORTANT: The examples below show a SAMPLE structure. Your actual request.json will contain DIFFERENT feature names, navigation paths, and checks specific to the feature being validated. Always read and use values from YOUR request.json file.**
+
+### PAYLOAD STRUCTURE YOU WILL RECEIVE (EXAMPLE):
 
 ```json
 {
@@ -210,8 +212,8 @@ Given this check:
 ```
 NAVIGATION SCREENSHOT SEQUENCE:
 1. From dashboard, click Settings icon (gear) in left sidebar
-2. SCREENSHOT: Show expanded Settings menu (Company, Payroll, Leaves visible)
-3. Click the relevant submenu item (e.g., "Payroll" or "Leaves")
+2. SCREENSHOT: Show expanded Settings menu with submenu categories visible
+3. Click the relevant submenu item as specified in nav.breadcrumb_array
 4. SCREENSHOT: Show the submenu expanded with options visible
 5. Click the specific feature menu item
 6. SCREENSHOT: Show the landing page with navigation context
@@ -318,14 +320,14 @@ If the answer to #3 is NO → DO NOT CAPTURE
 - If ANY answer is YES → DO NOT CAPTURE (it's a duplicate)
 
 **COMMON DUPLICATE SCENARIOS TO AVOID:**
-1. **Same dialog captured for different checks** - If check_03 and check_04 both show the same "Unpaid Leave Deduction" dialog, capture ONCE only
+1. **Same dialog captured for different checks** - If check_03 and check_04 both show the same dialog, capture ONCE only
 2. **Same modal at different scroll positions** - Don't capture the same modal twice unless showing DIFFERENT content below the fold
-3. **Same config screen via different nav paths** - If you reach "Daily Wage Calculation" from two paths, ONE screenshot is enough
+3. **Same config screen via different nav paths** - If you reach the same settings page from two paths, ONE screenshot is enough
 4. **Consecutive screenshots with no UI change** - If you click something and nothing changes, don't capture again
 
 **WRONG (Duplicates) - FAILURE EXAMPLES:**
-- `claim-03-unpaid-leave-dialog.png` and `claim-04-unpaid-leave-config-fields.png` showing SAME dialog = DUPLICATE
-- Screenshot of "Edit Leave Policy" modal → Screenshot of SAME modal again for different check = DUPLICATE
+- `screenshot-03.png` and `screenshot-04.png` showing SAME dialog content = DUPLICATE
+- Screenshot of a modal → Screenshot of SAME modal again for different check = DUPLICATE
 - Screenshot of expanded accordion → Screenshot of SAME accordion from different nav path = DUPLICATE
 
 **CORRECT (Unique captures):**
@@ -346,24 +348,33 @@ If the answer to #3 is NO → DO NOT CAPTURE
 
 **BEFORE taking ANY screenshot, verify the screen is RELEVANT to the feature:**
 
-1. **The screenshot MUST contain visible reference to the feature being documented**
-   - If documenting "daily wage calculation" - the words "daily wage", "daily rate", "leave pay rate", or calculation methods MUST be visible on screen
-   - If documenting "end of service" - those words or EOS-related configuration MUST be visible
-   - **CRITICAL: Different features have DIFFERENT keywords - do not mix them!**
+1. **EXTRACT FEATURE KEYWORDS FROM REQUEST.JSON:**
+   ```
+   KEYWORD EXTRACTION PROCEDURE:
+   1. Read `feature_name` from request.json (e.g., "daily wage calculator")
+   2. Split into individual words: ["daily", "wage", "calculator"]
+   3. Create keyword variations:
+      - Full name: "daily wage calculator"
+      - Partial matches: "daily wage", "wage calculation", "daily rate"
+      - Related terms from `nav.canonical` paths
+      - Terms from `selector_hint` and `assertion` fields
+   4. These extracted keywords are YOUR relevance filter for this validation run
+   ```
 
 2. **FEATURE KEYWORD STRICTNESS:**
-   - "daily wage calculator" feature → ONLY capture screens with: "daily wage", "daily rate", "leave pay rate", "salary proration", "unpaid leave deduction"
-   - "end of service" feature → ONLY capture screens with: "end of service", "EOS", "gratuity", "service eligibility"
-   - **NEVER capture EOS screens for daily wage feature or vice versa**
+   - ONLY capture screens containing keywords extracted from THIS request.json
+   - Different validation runs have DIFFERENT keywords - extract fresh each time
+   - **NEVER capture screens for features NOT in the current request.json**
+   - If a screen shows configuration for a DIFFERENT feature than what's in request.json → DO NOT CAPTURE
 
 3. **EXCLUDE irrelevant screenshots:**
    - Generic settings pages WITHOUT feature-specific content = IRRELEVANT
-   - "Leave settings" page without "daily wage" or "leave pay rate" reference = DO NOT CAPTURE
-   - "Edit Leave Policy" wizard WITHOUT scrolling to find relevant accordions = DO NOT CAPTURE
-   - Screens showing OTHER features (e.g., EOS config when documenting daily wage) = DO NOT CAPTURE
+   - Settings pages without ANY of the extracted keywords visible = DO NOT CAPTURE
+   - Wizards/modals WITHOUT scrolling to find relevant accordions = DO NOT CAPTURE
+   - Screens showing OTHER features not in request.json = DO NOT CAPTURE
 
 4. **PRE-SCREENSHOT CHECKLIST:**
-   - [ ] Is the CORRECT feature's keyword visible on this screen?
+   - [ ] Is at least ONE keyword from request.json visible on this screen?
    - [ ] Is this a UNIQUE screenshot (not duplicate)?
    - [ ] Does this screenshot add value to the user guide?
    - [ ] Would a user learning about THIS SPECIFIC feature benefit from seeing this?
@@ -574,14 +585,15 @@ YOU MUST CREATE ALL OF THESE FILES:
 You MUST write a validation log with the following content:
 ```
 === VALIDATION LOG ===
-Feature: [feature_name]
+Feature: [feature_name from request.json]
 Started: [ISO8601 timestamp]
 Plans to validate: [count]
 
 --- Navigation Progress ---
-[timestamp] Navigated to: Settings > Payroll > Daily Wage Calculation
-[timestamp] Navigated to: Settings > Payroll > End of Service eligibility
-[timestamp] Navigated to: Settings > Leaves
+[timestamp] Navigated to: [nav.canonical path from plan 1]
+[timestamp] Navigated to: [nav.canonical path from plan 2]
+[timestamp] Navigated to: [nav.canonical path from plan N]
+(List ALL navigation paths visited from request.json)
 
 --- Validation Summary ---
 Total plans: [count]
@@ -935,8 +947,8 @@ The side navigation menu MUST be EXPANDED and VISIBLE to show how users reach th
 ```
 1. Click the Settings icon (gear) in the left sidebar
 2. WAIT for the submenu to expand
-3. VERIFY the submenu is visible (shows Payroll, Leaves, Company, etc.)
-4. Click the target section (e.g., "Payroll")
+3. VERIFY the submenu is visible (shows the menu sections)
+4. Click the target section as defined in nav.breadcrumb_array from request.json
 5. VERIFY the nested menu items are visible
 6. TAKE SCREENSHOT with the expanded menu visible in frame
 7. The screenshot MUST show:
@@ -948,7 +960,7 @@ The side navigation menu MUST be EXPANDED and VISIBLE to show how users reach th
 
 **CORRECT NAVIGATION SCREENSHOT:**
 - Left ~20% shows expanded sidebar navigation
-- Submenu items are visible (e.g., "Daily Wage Calculation", "End of Service", etc.)
+- Submenu items are visible showing the navigation hierarchy
 - Active menu item is highlighted
 - Main content area shows the landing page
 - User can clearly see the PATH to reach this page
