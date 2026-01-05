@@ -633,6 +633,58 @@ CHECK STATUS DECISION TREE:
 4. IS THIS A STATE-DEPENDENT CHECK?
    - Status: 'not_applicable', Note: 'Requires [specific state]'
 
+### CRITICAL: PERSIST UNTIL YOU FIND VALID DATA
+
+**DO NOT GIVE UP ON THE FIRST RECORD THAT DOESN'T HAVE RELEVANT DATA**
+
+When validating features that depend on specific data conditions (e.g., employee records, transactions, configurations), the first record you click may not have the data needed to validate the claims. This is NOT a reason to mark checks as 'not_applicable'.
+
+**PERSISTENCE PROTOCOL:**
+```
+1. Click first record → Data doesn't satisfy validation requirements
+2. DO NOT STOP - go back and try another record
+3. Click second record → Still doesn't have relevant data
+4. KEEP TRYING - systematically work through available records
+5. Continue until you find a record that HAS the data to validate
+6. ONLY mark as 'not_applicable' if NO records in the system have the required data
+```
+
+**EXAMPLE - Finding Valid Data:**
+```
+Scenario: Validating a feature that requires specific record state
+
+WRONG (Lazy approach):
+- Click first record
+- See message "This record is not eligible for [feature]"
+- Mark check as 'not_applicable'
+- Move on
+
+CORRECT (Persistent approach):
+- Click first record → Not eligible (try another)
+- Click second record → Not eligible (try another)
+- Click third record → HAS the required data!
+- NOW validate the feature with this record
+- Screenshot showing the feature working with valid data
+```
+
+**WHY THIS MATTERS:**
+- The first record is often a test/default record without real data
+- Real production data exists - you need to find it
+- A user guide should show the feature WORKING, not just error states
+- 'not_applicable' should be RARE, not the default
+
+**WHEN TO ACTUALLY USE 'not_applicable':**
+- After trying MULTIPLE records (minimum 3-5 attempts)
+- When the feature genuinely requires data that doesn't exist in demo environment
+- Document which records you tried and why none qualified
+
+**RECORD SELECTION STRATEGY:**
+1. Skip obvious test/placeholder records (e.g., "Test User", "Demo Account")
+2. Look for records with complete data (filled fields, activity history)
+3. Try records with different statuses/states
+4. If a list has pagination, check records on different pages
+5. Use filters/search to find records likely to have relevant data
+
 ## SECTION 5: MANDATORY OUTPUT FILES
 
 YOU MUST CREATE ALL OF THESE FILES:
