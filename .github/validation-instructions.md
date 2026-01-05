@@ -43,23 +43,55 @@ CRITICAL: You MUST complete all tasks and write all output files before finishin
 
 ## SECTION 2: SCREENSHOT RULES
 
-### CRITICAL: FEATURE RELEVANCE VERIFICATION (READ FIRST)
+### CRITICAL: NO DUPLICATE SCREENSHOTS (READ FIRST)
+
+**DUPLICATE PREVENTION IS MANDATORY:**
+
+1. **Maintain a mental screenshot registry** - Track EVERY screenshot you take
+2. **Before EACH capture, ask:** "Have I already captured this exact screen state?"
+3. **Duplicate = SAME visual content** even if at different navigation points
+
+**DUPLICATE DETECTION CHECKLIST:**
+- [ ] Is this the SAME modal I already captured?
+- [ ] Is this the SAME accordion section I already expanded and captured?
+- [ ] Is this the SAME configuration screen with the SAME settings visible?
+- If ANY answer is YES → DO NOT CAPTURE (it's a duplicate)
+
+**WRONG (Duplicates):**
+- Screenshot of "Edit Leave Policy" modal → Screenshot of SAME modal again
+- Screenshot of expanded accordion → Screenshot of SAME accordion from different nav path
+- Two screenshots showing identical content = WASTE
+
+**CORRECT (Unique captures):**
+- Each screenshot shows DIFFERENT content or DIFFERENT state
+- Sequential screenshots show PROGRESSION (step 1, step 2, step 3)
+- Each accordion capture shows a DIFFERENT accordion section
+
+### CRITICAL: FEATURE RELEVANCE VERIFICATION
 
 **BEFORE taking ANY screenshot, verify the screen is RELEVANT to the feature:**
 
 1. **The screenshot MUST contain visible reference to the feature being documented**
-   - If documenting "daily wage calculation" - the words "daily wage", "daily rate", or the calculation formula MUST be visible on screen
-   - If documenting "end of service" - those words or related configuration MUST be visible
+   - If documenting "daily wage calculation" - the words "daily wage", "daily rate", "leave pay rate", or calculation methods MUST be visible on screen
+   - If documenting "end of service" - those words or EOS-related configuration MUST be visible
+   - **CRITICAL: Different features have DIFFERENT keywords - do not mix them!**
 
-2. **EXCLUDE irrelevant screenshots:**
+2. **FEATURE KEYWORD STRICTNESS:**
+   - "daily wage calculator" feature → ONLY capture screens with: "daily wage", "daily rate", "leave pay rate", "salary proration", "unpaid leave deduction"
+   - "end of service" feature → ONLY capture screens with: "end of service", "EOS", "gratuity", "service eligibility"
+   - **NEVER capture EOS screens for daily wage feature or vice versa**
+
+3. **EXCLUDE irrelevant screenshots:**
    - Generic settings pages WITHOUT feature-specific content = IRRELEVANT
-   - "Leave settings" page without "daily wage" reference = DO NOT CAPTURE
-   - "Edit Leave Policy" wizard without daily rate config = DO NOT CAPTURE
+   - "Leave settings" page without "daily wage" or "leave pay rate" reference = DO NOT CAPTURE
+   - "Edit Leave Policy" wizard WITHOUT scrolling to find relevant accordions = DO NOT CAPTURE
+   - Screens showing OTHER features (e.g., EOS config when documenting daily wage) = DO NOT CAPTURE
 
-3. **PRE-SCREENSHOT CHECKLIST:**
-   - [ ] Is the feature name/keyword visible on this screen?
+4. **PRE-SCREENSHOT CHECKLIST:**
+   - [ ] Is the CORRECT feature's keyword visible on this screen?
+   - [ ] Is this a UNIQUE screenshot (not duplicate)?
    - [ ] Does this screenshot add value to the user guide?
-   - [ ] Would a user learning about this feature benefit from seeing this?
+   - [ ] Would a user learning about THIS SPECIFIC feature benefit from seeing this?
    - If ANY answer is NO - DO NOT take the screenshot
 
 ### SCREENSHOT FRAMING & FOCUS RULES
@@ -435,6 +467,50 @@ When you open any wizard, modal, or multi-step form:
 4. **Click all options** - Different selections reveal different UI
 5. **Follow cross-reference links** - "Configured in X" indicates relationships
 
+### CRITICAL: SCROLL-TO-FIND HIDDEN ACCORDIONS
+
+**THE TARGET ACCORDION MAY BE BELOW THE FOLD - YOU MUST SCROLL TO FIND IT**
+
+Many modals and configuration pages have MULTIPLE accordion sections. The one you need might be:
+- At the BOTTOM of the modal (not visible without scrolling)
+- Below other expanded accordions
+- Hidden until you scroll down
+
+**MANDATORY SCROLL PROCEDURE:**
+```
+1. Open the modal/wizard
+2. SCROLL TO THE BOTTOM of the modal content
+3. SCROLL BACK UP slowly, scanning for ALL accordion headers
+4. Make a MENTAL LIST of all accordions found
+5. Expand EACH accordion one by one, scanning for feature keywords
+6. The target accordion (e.g., "Leave Pay Rate") might be:
+   - 3rd or 4th accordion down
+   - Only visible after scrolling
+   - Named slightly different than expected
+```
+
+**EXAMPLE - Finding "Leave Pay Rate" accordion:**
+```
+Wrong approach:
+  - Open "Edit Leave Policy" modal
+  - See first accordion ("General Settings")
+  - Screenshot and move on
+  - MISSED: "Leave Pay Rate" accordion was below the fold!
+
+Correct approach:
+  - Open "Edit Leave Policy" modal
+  - SCROLL to bottom of modal to see all content
+  - Count accordions: General, Accrual, Carryover, Leave Pay Rate, etc.
+  - Expand "Leave Pay Rate" accordion
+  - NOW capture the screenshot with feature content visible
+```
+
+**SCROLL WITHIN MODAL CHECKLIST:**
+- [ ] Did I scroll to the VERY BOTTOM of this modal?
+- [ ] Did I count ALL accordion sections?
+- [ ] Did I expand the accordion that contains feature keywords?
+- [ ] Am I capturing the CORRECT accordion (not just the first one)?
+
 ### BUTTON GROUP / TOGGLE EXPLORATION
 
 When you encounter a button group or toggle options:
@@ -535,3 +611,59 @@ Before including ANY screenshot:
 - [ ] For landing pages: Navigation path visible?
 
 If ANY answer is NO → Do not include
+
+## SECTION 10: SCREENSHOT QUANTITY AND QUALITY STANDARDS
+
+### MINIMUM SCREENSHOT REQUIREMENTS
+
+**A complete validation MUST capture enough unique screenshots to document the feature:**
+
+**EXPECTED SCREENSHOT COUNT:**
+- Minimum: 8-10 unique screenshots for most features
+- Simple features: 6-8 screenshots
+- Complex features (multiple config areas): 12-15 screenshots
+
+**IF YOU HAVE FEWER THAN 8 SCREENSHOTS - INVESTIGATE:**
+1. Did you scroll within ALL modals to find hidden accordions?
+2. Did you expand ALL accordion sections?
+3. Did you click through ALL button group options?
+4. Did you visit ALL navigation paths in the request?
+5. Did you capture wizard/modal progression (step 1, 2, 3)?
+
+**5 SCREENSHOTS = RED FLAG:**
+- 5 screenshots is almost NEVER enough
+- If you only have 5, you likely MISSED content
+- Go back and investigate deeper
+
+### QUALITY OVER QUANTITY (BUT QUANTITY MATTERS TOO)
+
+**Each screenshot must be:**
+1. **Unique** - Not a duplicate of another capture
+2. **Relevant** - Shows feature-specific content
+3. **Complete** - No cut-off content, full sections visible
+4. **Properly framed** - Headers and content both visible
+
+**Screenshot diversity should include:**
+- [ ] Navigation/landing page (with menu visible)
+- [ ] Main configuration area
+- [ ] Modal/wizard views (multiple steps if applicable)
+- [ ] Expanded accordions with feature settings
+- [ ] Button group variations (if different UI revealed)
+- [ ] Info banners, warnings, or help text
+- [ ] Related settings areas (if cross-referenced)
+
+### POST-CAPTURE SELF-AUDIT
+
+After capturing all screenshots, review:
+
+```
+SCREENSHOT AUDIT:
+□ Total screenshots: [count]
+□ Is count >= 8? If not, go back and investigate
+□ Are ALL screenshots unique (no duplicates)?
+□ Does EACH screenshot show feature-relevant content?
+□ Did I capture the deep investigation finds (hidden accordions)?
+□ Did I capture button group variations?
+```
+
+**IF AUDIT FAILS - DO NOT PROCEED - GO BACK AND CAPTURE MORE**
