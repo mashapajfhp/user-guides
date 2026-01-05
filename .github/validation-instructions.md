@@ -65,8 +65,37 @@ MANDATORY RESPONSE TO ABANDON DIALOG:
 
 **WHY:** This is a demo environment. Data loss is acceptable. Do NOT click "Cancel" - that will trap you on the current page.
 
-**OTHER BLOCKING DIALOGS TO DISMISS:**
-- "Leave site?" browser dialogs → Click "Leave"
+### CRITICAL: "LEAVE SITE?" BROWSER DIALOG HANDLING
+
+**This is a BROWSER-LEVEL confirmation dialog that blocks navigation. You MUST handle it.**
+
+When you see a dialog with:
+- Title: "Leave site?"
+- Message: "Changes that you made may not be saved."
+- Buttons: "Cancel" and "Leave"
+
+**ACTION: ALWAYS CLICK "Leave" BUTTON**
+
+```
+MANDATORY RESPONSE TO LEAVE SITE DIALOG:
+1. DETECT the dialog (dark modal with "Leave site?" title)
+2. CLICK the "Leave" button (right button, usually white/light colored)
+3. WAIT for dialog to close and navigation to complete
+4. CONTINUE with your validation
+```
+
+**WHY:** This is a demo/test environment. We are validating UI, not saving data. Always proceed with navigation.
+
+**IMPORTANT:** This dialog appears when:
+- Navigating away from forms with unsaved changes
+- Clicking back button after editing
+- Clicking sidebar navigation while in edit mode
+- Any navigation that would lose form state
+
+**DO NOT click "Cancel"** - this will trap you on the current page and block your validation progress.
+
+### OTHER BLOCKING DIALOGS TO DISMISS
+
 - "Discard changes?" → Click "Discard"
 - "Are you sure?" → Click "Yes" or "Confirm"
 - Cookie consent banners → Click "Accept" or close
