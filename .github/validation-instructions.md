@@ -157,6 +157,8 @@ PATTERN 7 - COMPLETE MODAL EXPLORATION:
 
 ## SECTION 3B: SHERLOCK HOLMES EXPLORATION MINDSET
 
+> **Cross-Reference:** This section establishes the investigation MINDSET. For detailed investigation PROCEDURES (accordion expansion, wizard navigation, button group exploration), see **Section 8: Deep Investigation Protocol**.
+
 YOU ARE AN INVESTIGATOR, NOT A SCRIPT FOLLOWER.
 The validation plan gives you HINTS, not exact instructions.
 Your job is to DISCOVER and DOCUMENT what actually exists.
