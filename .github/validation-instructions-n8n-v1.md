@@ -634,6 +634,18 @@ Page has multiple accordions:
 Large tables (100+ rows) will exceed token limits and cause validation failure.
 
 ```
+⚠️ CRITICAL PLAYWRIGHT RULE:
+When validating pages with large tables (like Payroll Table with 406 employees),
+ALWAYS filter the table first using the search box to show less than 50 rows
+BEFORE taking any snapshots or interacting with elements.
+
+Use a test employee name or ID to filter (e.g., "Bayzlander", "Ahmed", "Test").
+
+❌ NEVER call browser_snapshot on a page with a large unfiltered table.
+❌ NEVER call browser_click on table rows without filtering first.
+```
+
+```
 MANDATORY STEPS FOR ANY TABLE:
 1. FIRST - Use search box to filter by a specific name/ID
 2. OR - Apply status filter (Active/Inactive dropdown)
