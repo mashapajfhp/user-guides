@@ -14,6 +14,27 @@ FALLBACK:  Payroll → Payroll Table → Filter → Select employee → EOS
 ```
 If Journey 1 (Payroll Table) hits token limits after 2 attempts, **IMMEDIATELY** proceed to Journey 2 (Employee Profile).
 
+### 🧪 TEST EMPLOYEE FOR VALIDATION (USE THIS!)
+
+**The test environment has a known employee you can use directly:**
+```
+Employee Name: Bayzlander bayzatcom
+Employee ID: emp-1111
+Profile UUID: 67230d1e-9afd-3f61-0673-85bd0a4540c7
+
+DIRECT URL (bypasses table entirely):
+https://app.bayzat.com/enterprise/dashboard/employees/67230d1e-9afd-3f61-0673-85bd0a4540c7/profile/payroll/end-of-service
+```
+
+**HOW V13 SUCCEEDED (15 screenshots):**
+1. Navigated directly to "Bayzlander" employee profile (not via table)
+2. Accessed Payroll Tab → End of Service Tab
+3. Completed full EOS form (date, contract type, departure reason)
+4. Captured all form states and calculations
+5. Then documented Journey 1 (Payroll Table) without deep interaction
+
+**CRITICAL: When filtering tables, search for "Bayzlander" - this employee EXISTS in the test data.**
+
 ---
 
 ## CRITICAL COMPLETION REQUIREMENTS
