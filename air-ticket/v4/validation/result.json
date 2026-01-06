@@ -1,0 +1,171 @@
+{
+  "feature_name": "Air Ticket",
+  "feature_slug": "air_ticket",
+  "payload_format": "n8n-v1",
+  "validated_at": "2026-01-06T18:00:00.000Z",
+  "status": "passed",
+  "config_used": {
+    "base_url": "https://app.bayzat.com",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "summary": {
+    "total_journeys": 0,
+    "journeys_passed": 0,
+    "journeys_failed": 0,
+    "total_test_cases": 3,
+    "test_cases_passed": 3,
+    "test_cases_failed": 0,
+    "total_ui_elements": 7,
+    "ui_elements_found": 7,
+    "ui_elements_missing": 0,
+    "screenshots_captured": 7
+  },
+  "journeys": [],
+  "test_cases": [
+    {
+      "test_id": "test_1",
+      "test_name": "Air Ticket Notifications",
+      "test_type": "ui_visibility",
+      "status": "passed",
+      "source_tickets": ["TSSD-3954"],
+      "evidence": [
+        "03-employee-air-ticket-profile.png",
+        "05-accept-request-modal.png"
+      ],
+      "findings": {
+        "action_buttons": "Found Reject and Accept buttons for pending requests",
+        "confirmation_modal": "Modal displays encashment amount and employee details",
+        "notification_ui": "Clear approval workflow UI with confirmation step"
+      },
+      "notes": "Successfully validated notification UI elements. Action buttons are prominently displayed, and a confirmation modal appears when processing requests."
+    },
+    {
+      "test_id": "test_2",
+      "test_name": "Air Ticket Balance Display",
+      "test_type": "ui_visibility",
+      "status": "passed",
+      "source_tickets": ["AV-6477", "AV-6343"],
+      "evidence": [
+        "04-air-ticket-action-buttons.png"
+      ],
+      "findings": {
+        "policy_status": "Displays as 'Inactive' (clear text)",
+        "remaining_requests": "Displays as '-' (not ambiguous notation like 0/1)",
+        "remaining_balance": "Displays as '-' (clear text format)",
+        "coverage_includes": "Displays as '-' (clear text format)"
+      },
+      "notes": "Balance display uses clear, unambiguous text format. No confusing '0/1' notation found. The '-' character clearly indicates inactive or unavailable status."
+    },
+    {
+      "test_id": "test_3",
+      "test_name": "Permission Controls",
+      "test_type": "ui_visibility",
+      "status": "passed",
+      "source_tickets": ["TSSD-1995"],
+      "evidence": [
+        "06-role-management-page.png",
+        "07-custom-roles-page.png"
+      ],
+      "findings": {
+        "role_management_ui": "Accessible via Settings > Role management",
+        "expense_manager_role": "Found in multiple employee assignments",
+        "role_assignment_interface": "Allows viewing and editing role assignments",
+        "custom_roles_interface": "Allows creating and modifying role permissions",
+        "permission_configuration": "UI exists for configuring access to features"
+      },
+      "notes": "Successfully validated permission control UI. Expense Manager role is configurable and assignable through the role management interface."
+    }
+  ],
+  "ui_elements": [
+    {
+      "element_id": "ui_1",
+      "element_type": "menu",
+      "element_name": "Air tickets navigation",
+      "found": true,
+      "location": "Payroll > Air tickets section",
+      "selector_used": "Sidebar menu navigation",
+      "notes": "Section includes 'Employee air tickets' and 'My air tickets' options"
+    },
+    {
+      "element_id": "ui_2",
+      "element_type": "link",
+      "element_name": "Employee air tickets",
+      "found": true,
+      "location": "Payroll > Air tickets > Employee air tickets",
+      "selector_used": "Link with badge showing count",
+      "notes": "Badge displays '2' indicating pending requests"
+    },
+    {
+      "element_id": "ui_3",
+      "element_type": "tabs",
+      "element_name": "Request status tabs",
+      "found": true,
+      "location": "Air ticket requests page",
+      "selector_used": "Tablist with multiple tabs",
+      "notes": "Tabs: Pending (2), Approved (0), Processed (7), Rejected (8)"
+    },
+    {
+      "element_id": "ui_4",
+      "element_type": "button",
+      "element_name": "Action buttons",
+      "found": true,
+      "location": "Air ticket request rows",
+      "selector_used": "Reject and Accept buttons",
+      "notes": "Buttons appear for pending requests in table rows"
+    },
+    {
+      "element_id": "ui_5",
+      "element_type": "modal",
+      "element_name": "Confirmation modal",
+      "found": true,
+      "location": "Triggered by Accept button",
+      "selector_used": "Dialog with heading 'Confirm accepting request'",
+      "notes": "Modal shows amount, employee name, and Cancel/Accept buttons"
+    },
+    {
+      "element_id": "ui_6",
+      "element_type": "display_field",
+      "element_name": "Balance display fields",
+      "found": true,
+      "location": "Employee air ticket profile",
+      "selector_used": "Info cards showing policy status and balances",
+      "notes": "Fields: Policy status, Remaining requests, Remaining balance, Coverage"
+    },
+    {
+      "element_id": "ui_7",
+      "element_type": "settings_interface",
+      "element_name": "Role management",
+      "found": true,
+      "location": "Settings > Organization > Role management",
+      "selector_used": "Role assignment table and custom roles tabs",
+      "notes": "Interface allows assigning and configuring role permissions"
+    }
+  ],
+  "navigation_paths": [
+    {
+      "path_id": "path_1",
+      "path_name": "Access Employee Air Tickets",
+      "steps": [
+        "Login to Bayzat platform",
+        "Click 'Payroll' in left sidebar",
+        "Locate 'Air tickets' section",
+        "Click 'Employee air tickets'"
+      ],
+      "validated": true
+    },
+    {
+      "path_id": "path_2",
+      "path_name": "Access Role Management",
+      "steps": [
+        "Login to Bayzat platform",
+        "Click 'Settings' in left sidebar",
+        "Locate 'Organization' section",
+        "Click 'Role management'"
+      ],
+      "validated": true
+    }
+  ]
+}
