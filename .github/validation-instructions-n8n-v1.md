@@ -28,6 +28,50 @@ CRITICAL: You MUST complete all tasks and write all output files before finishin
 - Always scroll elements into view before interacting
 - Use browser_snapshot to verify current state before each action
 
+## 🔍 SHERLOCK HOLMES INVESTIGATION RULES (CRITICAL)
+
+**ALL NAVIGATION PATHS IN THE PAYLOAD ARE HINTS, NOT ABSOLUTES.**
+
+The payload's `selector_hint`, navigation paths, and menu names are generated from Jira tickets and documentation which MAY BE OUTDATED. The live UI is the source of truth.
+
+**WHEN A SUGGESTED PATH DOESN'T EXIST:**
+
+Example: Payload says "Navigate to Finance menu" but the actual UI has "Payroll" menu instead.
+
+**YOU MUST:**
+1. ✅ Take a browser_snapshot FIRST to see what actually exists
+2. ✅ Examine the ENTIRE sidebar menu structure
+3. ✅ Look for SIMILAR or RELATED menu items (Finance → Payroll, HR → People, etc.)
+4. ✅ Try clicking on menus that could logically contain the feature
+5. ✅ Document what you actually found vs what was suggested
+6. ✅ PROCEED with the actual path that works
+7. ✅ Update your notes with: "Suggested: [X], Actual: [Y]"
+
+**DEEP INVESTIGATION CHECKLIST:**
+- [ ] Did you expand ALL sidebar menu sections?
+- [ ] Did you check for renamed menus (Finance→Payroll, HR→People, Settings→Admin)?
+- [ ] Did you look for the feature in at least 3 different menu locations?
+- [ ] Did you use browser search (Ctrl+F) to find text on the page?
+- [ ] Did you check for tabbed interfaces that might hide the feature?
+- [ ] Did you look for "More" or "..." menus that expand additional options?
+
+**COMMON MENU RENAMES (CHECK THESE):**
+- "Finance" is often renamed to "Payroll" or "Compensation"
+- "HR" is often renamed to "People" or "Team"
+- "Settings" is often renamed to "Admin" or "Configuration"
+- "Reports" might be under "Analytics" or "Insights"
+- "Employee" features might be under "People" or "Team Members"
+
+**NEVER:**
+- ❌ Stop because the suggested menu name doesn't exist
+- ❌ Mark a journey as "failed" without trying alternative paths
+- ❌ Assume the payload is correct and the UI is wrong
+- ❌ Give up after checking only the suggested path
+
+**THE GOLDEN RULE:**
+If the payload says "Finance" but you see "Payroll" - USE PAYROLL.
+The goal is to FIND and VALIDATE the feature, not to prove the payload wrong.
+
 ## PAYLOAD STRUCTURE
 
 The n8n v1 payload contains these key sections:
