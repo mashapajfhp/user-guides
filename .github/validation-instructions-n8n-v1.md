@@ -4,6 +4,18 @@ You are a comprehensive UI validation agent. Your task is to validate UI feature
 
 CRITICAL: You MUST complete all tasks and write all output files before finishing.
 
+## 🎯 FEATURE-SPECIFIC PRIORITY PATHS
+
+**FOR END OF SERVICE (EOS) VALIDATION:**
+The Payroll Table often has 400+ employees causing token limits. **USE EMPLOYEE PROFILE PATH FIRST:**
+```
+PREFERRED: People/Employees → Select employee → Profile → Payroll Tab → End of Service
+FALLBACK:  Payroll → Payroll Table → Filter → Select employee → EOS
+```
+If Journey 1 (Payroll Table) hits token limits after 2 attempts, **IMMEDIATELY** proceed to Journey 2 (Employee Profile).
+
+---
+
 ## CRITICAL COMPLETION REQUIREMENTS
 
 **DO NOT STOP EARLY.** You MUST:
@@ -609,6 +621,73 @@ Option C: Pagination
 ✅ 1 ACTIVE record - test normal workflow
 ✅ 1 INACTIVE record - test terminated scenarios
 ❌ DO NOT work with unfiltered large tables
+
+### 🚨 PATTERN 4B - TOKEN LIMIT RECOVERY (CRITICAL)
+
+**WHEN FILTERING FAILS OR TOKEN LIMITS ARE HIT - USE ALTERNATE JOURNEYS**
+
+If you encounter:
+- "Token limit exceeded"
+- "Page snapshot too large"
+- Empty search results after filtering
+- Repeated failures interacting with a large table
+
+**IMMEDIATE ACTION: SKIP TO ALTERNATE JOURNEY**
+
+```
+TOKEN LIMIT RECOVERY PROTOCOL:
+┌───────────────────────────────────────────────────────────────────┐
+│ 1. RECOGNIZE the problem:                                          │
+│    - Payroll Table has 100+ rows                                   │
+│    - Search/filter not reducing results sufficiently               │
+│    - Snapshot size causing token errors                            │
+│                                                                    │
+│ 2. STOP attempting the problematic journey                         │
+│                                                                    │
+│ 3. IMMEDIATELY proceed to ALTERNATE NAVIGATION PATH:               │
+│    - For EOS: Use Employee Profile direct access                   │
+│    - Navigate to: People/Employees → Select ANY employee           │
+│    - Go to: Employee Profile → Payroll Tab → End of Service        │
+│    - This bypasses the large Payroll Table entirely                │
+│                                                                    │
+│ 4. DOCUMENT in notes: "Journey X skipped due to token limits,      │
+│    alternate path via Employee Profile used instead"               │
+│                                                                    │
+│ 5. CONTINUE validation with remaining journeys                     │
+└───────────────────────────────────────────────────────────────────┘
+```
+
+**PREFERRED PATHS FOR END OF SERVICE:**
+
+```
+PATH A (BLOCKED - Large Table):
+Payroll Menu → Payroll Table (406 employees) → ❌ TOKEN LIMIT
+
+PATH B (PREFERRED - Direct Access):
+Employees Menu → Employee List → Click ANY employee name
+  → Employee Profile → Payroll Tab → End of Service Tab
+  → ✅ WORKS - Small DOM, no large table
+```
+
+**WHY PATH B WORKS:**
+- Employee Profile page has minimal DOM size
+- No large table to process
+- Direct access to EOS Calculator form
+- Same functionality, different navigation
+
+**FALLBACK PRIORITY ORDER:**
+1. First: Try filtering the large table (search by specific name)
+2. If filtering fails: Navigate via Employee Profile instead
+3. If both fail: Navigate via URL if you know the direct path
+4. Document which path you used and why
+
+**CRITICAL: DO NOT SPEND MORE THAN 3 ATTEMPTS ON A BLOCKED TABLE**
+
+If filtering doesn't work after 3 attempts:
+- Mark Journey as "partial" with note about token limits
+- Proceed to next Journey immediately
+- Use Employee Profile path for remaining validation
+- The goal is FEATURE VALIDATION, not proving the table works
 
 ### PATTERN 5 - WIZARD AND MODAL DEEP DIVE
 When you open any wizard, modal, or multi-step form:
