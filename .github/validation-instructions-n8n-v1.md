@@ -20,8 +20,15 @@ CRITICAL: You MUST complete all tasks and write all output files before finishin
 - ❌ Marking journeys as "not_attempted" without actually trying them
 - ❌ Writing output files before attempting ALL journeys
 - ❌ Giving up on element interaction after one attempt
+- ❌ Taking snapshots of UNFILTERED large tables (100+ rows)
+- ❌ Claiming "page too large" without first using search/filter
+- ❌ Screenshots WITHOUT sidebar visible (unless capturing a modal)
+- ❌ Screenshots with UNRELATED popups (cookie banners, onboarding, ads)
+- ❌ Cropped or stitched screenshots (must be single viewport)
+- ❌ Creating NESTED folders inside screenshots/ (FLAT structure only!)
 
 **PERSISTENCE RULES:**
+- **LARGE TABLES**: ALWAYS use search/filter BEFORE taking snapshot or clicking rows
 - If clicking a table row fails, try clicking the employee name text directly
 - If a dropdown won't open, try clicking the arrow icon or pressing Enter
 - If navigation fails, try the sidebar menu as alternative
@@ -142,28 +149,25 @@ Sidebar → [Menu] → Landing page
    - Named slightly different than expected
 ```
 
-### PERSIST UNTIL YOU FIND VALID DATA
+### PERSIST UNTIL YOU FIND VALID DATA (WITH MINIMAL SAMPLING)
 
-**DO NOT GIVE UP ON THE FIRST RECORD THAT DOESN'T HAVE RELEVANT DATA**
+**FIND VALID RECORDS EFFICIENTLY - DON'T ITERATE THROUGH ALL**
 
-When validating features that depend on specific data conditions, the first record you click may not have the data needed.
+When the first record doesn't have required data:
 
-**PERSISTENCE PROTOCOL:**
+**SMART SELECTION PROTOCOL:**
 ```
-1. Click first record → Data doesn't satisfy validation requirements
-2. DO NOT STOP - go back and try another record
-3. Click second record → Still doesn't have relevant data
-4. KEEP TRYING - systematically work through available records
-5. Continue until you find a record that HAS the data to validate
-6. ONLY mark as 'not_applicable' if NO records have the required data
+1. First record missing data? → Try 1-2 more records
+2. Use FILTERS/SEARCH to narrow down to likely candidates
+3. Look for records with indicators of complete data
+4. Maximum 3-5 record attempts before marking 'not_applicable'
 ```
 
-**RECORD SELECTION STRATEGY:**
-1. Skip obvious test/placeholder records (e.g., "Test User", "Demo Account")
-2. Look for records with complete data (filled fields, activity history)
-3. Try records with different statuses/states
-4. If a list has pagination, check records on different pages
-5. Use filters/search to find records likely to have relevant data
+**EFFICIENT SELECTION TIPS:**
+- Use status filters (Active/Inactive) to find relevant records quickly
+- Skip obvious test/placeholder records ("Test User", "Demo Account")
+- Use search to find records with specific data (e.g., search by department)
+- Check column values before clicking - pick records that show data exists
 
 ## 🚫 BLOCKING DIALOG HANDLING
 
@@ -265,13 +269,85 @@ For each element in `ui_elements` array:
 3. Check element type matches `element_type`
 4. Document any missing elements
 
-## SECTION 3: SCREENSHOT RULES
+## SECTION 3: SCREENSHOT QUALITY STANDARDS (MANDATORY)
 
-CRITICAL: VIEWPORT-ONLY SCREENSHOTS (NO FULL-PAGE COMPOSITES):
-- NEVER take full-page or scrolling composite screenshots
-- Each screenshot MUST be a single viewport capture
-- WRONG: Long stitched images showing entire page (800x2853 pixels)
-- CORRECT: Clean viewport screenshots matching `config.default_viewport`
+### GOLD STANDARD REFERENCES
+
+**1. DATA TABLE SCREENSHOT** (landing pages, lists, tables):
+`end-of-service/v12/validation/screenshots/01-02-payroll-table.png`
+- Full viewport with sidebar + main content
+- Table headers + 3-5 data rows visible
+- Action buttons visible (Filters, Download)
+
+**2. NAVIGATION SCREENSHOT** (menu expansion, feature discovery):
+Shows expanded sidebar with:
+- Parent menu highlighted (e.g., "PAYROLL")
+- All submenu items visible (Payroll table, Adjustments, Transactions...)
+- Sub-sections labeled (LOANS, AIR TICKETS)
+- Badge indicators visible (New, notification counts)
+- Menu hierarchy clear for user to follow
+
+### MANDATORY QUALITY CHECKLIST
+Every screenshot MUST include ALL of these elements:
+
+```
+✅ REQUIRED IN EVERY SCREENSHOT:
+┌─────────────────────────────────────────────────────────────┐
+│ 1. SIDEBAR NAVIGATION VISIBLE (left ~60px)                  │
+│    - All main menu items visible                            │
+│    - Current section HIGHLIGHTED/SELECTED                   │
+│    - Submenu expanded if applicable                         │
+│                                                             │
+│ 2. PAGE HEADER VISIBLE (top section)                        │
+│    - Page title clearly shown                               │
+│    - Breadcrumbs if present                                 │
+│    - Action buttons (Filters, Download, etc.)               │
+│                                                             │
+│ 3. MAIN CONTENT AREA                                        │
+│    - Primary UI elements in focus                           │
+│    - Tables: show headers + at least 3-5 data rows          │
+│    - Forms: show all visible fields                         │
+│    - Modals: show complete modal content                    │
+│                                                             │
+│ 4. NO BLOCKING ELEMENTS                                     │
+│    - No cookie banners                                      │
+│    - No onboarding overlays                                 │
+│    - No unrelated popups                                    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### VIEWPORT SPECIFICATIONS
+```
+CORRECT:
+- Dimensions: 1920x1080 or as specified in config.default_viewport
+- Single viewport capture (NOT stitched/scrolling)
+- Clean, professional appearance
+
+WRONG (AUTOMATIC REJECTION):
+- Cropped screenshots missing sidebar
+- Stitched long images (e.g., 800x2853)
+- Screenshots with blocking modals/banners
+- Blurry or low-resolution captures
+- Screenshots showing only partial UI
+```
+
+### SCREENSHOT REJECTION CRITERIA
+A screenshot is INVALID and must be retaken if:
+1. ❌ Sidebar navigation is NOT visible (exception: modal screenshots)
+2. ❌ Current menu item is NOT highlighted (exception: modal screenshots)
+3. ❌ Page title/header is cut off (exception: modal screenshots)
+4. ❌ Data tables show fewer than 3 rows
+5. ❌ UNRELATED dialogs obscure content (cookie banners, onboarding, ads)
+6. ❌ Resolution is below 1280x720
+7. ❌ Image is stitched/composite (height > 1.5x width)
+
+### MODAL/DIALOG SCREENSHOT RULES
+When the TARGET is a modal or dialog (e.g., EOS form, confirmation):
+- ✅ Modal should be fully visible and centered
+- ✅ Background should be dimmed (shows context)
+- ✅ All modal content should be visible (scroll within modal if needed)
+- ✅ Modal title/header clearly shown
+- ❌ Do NOT dismiss modals that ARE the feature being tested
 
 Use screenshot specifications from `screenshot_specifications` array:
 - Use exact `filename` provided
@@ -291,6 +367,34 @@ FOCUS AREA MAPPING:
 ## SECTION 4: MANDATORY OUTPUT FILES
 
 YOU MUST CREATE ALL OF THESE FILES:
+
+### ⚠️ CRITICAL: SCREENSHOT PATH RULES (PREVENTS NESTING BUG)
+
+**CORRECT screenshot path structure:**
+```
+{folder_path}/validation/screenshots/01-01-finance-menu.png  ✅ CORRECT
+{folder_path}/validation/screenshots/02-01-employee-profile.png  ✅ CORRECT
+{folder_path}/validation/screenshots/manifest.json  ✅ CORRECT
+```
+
+**WRONG - DO NOT CREATE NESTED PATHS:**
+```
+{folder_path}/validation/screenshots/end-of-service/v13/validation/screenshots/  ❌ WRONG
+{folder_path}/validation/screenshots/{feature}/  ❌ WRONG
+{folder_path}/validation/screenshots/journey_1/  ❌ WRONG
+```
+
+**RULES:**
+1. ALL screenshots go DIRECTLY in `{folder_path}/validation/screenshots/`
+2. NO subdirectories inside screenshots folder
+3. Use FLAT naming: `{journey}-{step}-{description}.png`
+4. The `folder_path` comes from payload - use it EXACTLY as provided
+5. When using `browser_take_screenshot`, save to: `{folder_path}/validation/screenshots/{filename}.png`
+
+**FORBIDDEN:**
+- ❌ Creating nested directory structures inside screenshots/
+- ❌ Using relative paths that duplicate the folder structure
+- ❌ Saving screenshots to any path other than `{folder_path}/validation/screenshots/`
 
 ### 1. Screenshot manifest: [screenshots_dir]/manifest.json
 ```json
@@ -463,10 +567,45 @@ Page has multiple accordions:
   □ Accordion N (expand → FOUND feature reference → CAPTURE)
 ```
 
-### PATTERN 4 - TABLE ROW EXPLORATION
-- Click the Edit/Configure button for MULTIPLE rows, not just the first
-- Document variations between row configurations
-- If first row doesn't have relevant data, TRY MORE ROWS
+### PATTERN 4 - LARGE TABLE HANDLING (CRITICAL)
+
+**FILTER BEFORE INTERACTION - NEVER WORK WITH FULL DATASET**
+
+Large tables (100+ rows) will exceed token limits and cause validation failure.
+
+```
+MANDATORY STEPS FOR ANY TABLE:
+1. FIRST - Use search box to filter by a specific name/ID
+2. OR - Apply status filter (Active/Inactive dropdown)
+3. OR - Use pagination to show only 10-25 rows
+4. THEN - Take snapshot and interact with filtered results
+```
+
+**WHY THIS IS CRITICAL:**
+- 406 employees = massive DOM = token limit exceeded = validation fails
+- Filtered to 1-5 results = small DOM = validation succeeds
+
+**FILTER STRATEGIES:**
+```
+Option A: Search by name
+  → Type a common name in search box (e.g., "Ahmed", "John")
+  → Wait for filtered results (should show 1-10 matches)
+  → Now interact with rows
+
+Option B: Status filter
+  → Click status dropdown
+  → Select "Inactive" or "Terminated" (fewer records)
+  → Now interact with rows
+
+Option C: Pagination
+  → Set rows per page to minimum (10 or 25)
+  → Work only with visible rows
+```
+
+**SAMPLE SIZE AFTER FILTERING:**
+✅ 1 ACTIVE record - test normal workflow
+✅ 1 INACTIVE record - test terminated scenarios
+❌ DO NOT work with unfiltered large tables
 
 ### PATTERN 5 - WIZARD AND MODAL DEEP DIVE
 When you open any wizard, modal, or multi-step form:
@@ -528,10 +667,54 @@ BEFORE writing result.json, verify:
 5. Is the top-level "status" field computed correctly?
 6. Is validation.log at least 100 bytes?
 
-**SCREENSHOT COUNT CHECK:**
-- Minimum expected: 8-10 screenshots for most features
-- If you have fewer than 8 screenshots, GO BACK and investigate deeper
-- 5 screenshots = RED FLAG - you likely missed content
+**SCREENSHOT COUNT CHECK (CRITICAL - ENFORCED):**
+
+```
+MINIMUM SCREENSHOT REQUIREMENTS:
+┌─────────────────────────────────────────────────────────────┐
+│ Feature Type          │ Minimum Screenshots                 │
+├───────────────────────┼─────────────────────────────────────┤
+│ Simple feature        │ 8-10 screenshots                    │
+│ Medium feature        │ 12-15 screenshots                   │
+│ Complex feature (EOS) │ 18-25 screenshots                   │
+└─────────────────────────────────────────────────────────────┘
+
+AUTOMATIC FAILURE CONDITIONS:
+- ❌ < 8 screenshots = VALIDATION FAILED - incomplete coverage
+- ❌ 2-3 screenshots = CRITICAL FAILURE - journey not executed
+```
+
+**SCREENSHOT CHECKPOINTS (must capture ALL):**
+1. Navigation menu expanded (how to find the feature)
+2. Settings/Configuration page (if applicable)
+3. Configuration modals with options visible
+4. Main feature landing page
+5. Form fields BEFORE interaction
+6. Each dropdown/selector EXPANDED showing options
+7. Form fields AFTER filling (with values)
+8. Calculated results / output display
+9. Success/error messages
+10. Secondary flows (e.g., different employee types)
+11. Export/download dialogs
+12. Downloaded file contents (if applicable)
+
+**IF YOU HAVE < 8 SCREENSHOTS:**
+- STOP - Do not write output files
+- GO BACK and complete the missing journeys
+- Capture dropdown states, modal contents, form results
+- Test with different data scenarios (active vs inactive)
+
+**SCREENSHOT QUALITY CHECK (MANDATORY):**
+Before saving each screenshot, verify:
+```
+□ Sidebar navigation visible on left side?
+□ Current menu item highlighted/selected?
+□ Page header/title visible?
+□ Main content not obscured by modals?
+□ Tables show at least 3-5 data rows?
+□ Single viewport (not stitched)?
+```
+If ANY check fails → dismiss blocking elements → retake screenshot
 
 **INVESTIGATION CHECKLIST:**
 - [ ] Did you expand ALL sidebar menu sections?
