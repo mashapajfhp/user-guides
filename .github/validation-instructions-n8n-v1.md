@@ -94,6 +94,51 @@ Example: Payload says "Navigate to Finance menu" but the actual UI has "Payroll"
 If the payload says "Finance" but you see "Payroll" - USE PAYROLL.
 The goal is to FIND and VALIDATE the feature, not to prove the payload wrong.
 
+### 📸 NAMING RULE: USE ACTUAL UI NAMES, NOT SUGGESTED
+
+**SCREENSHOTS AND REPORTS MUST REFLECT ACTUAL OBSERVED UI**
+
+When the payload suggests a name that differs from reality:
+
+```
+WRONG (using suggested name):
+- Screenshot: 01-01-finance-menu.png  ❌
+- Report: "Navigate to Finance menu"  ❌
+- Log: "Step 1.1: Navigate to Finance menu - PASSED"  ❌
+
+CORRECT (using actual observed name):
+- Screenshot: 01-01-payroll-menu.png  ✅
+- Report: "Navigate to Payroll menu"  ✅
+- Log: "Step 1.1: Navigate to Payroll menu - PASSED"  ✅
+        NOTE: Payload suggested "Finance menu" (outdated)
+```
+
+**WHY THIS MATTERS:**
+- Users will see the ACTUAL menu names when following the guide
+- Screenshots should match what users will see
+- Documentation must be accurate to current UI
+
+**DOCUMENTATION FORMAT:**
+```
+result.json step entry:
+{
+  "step_id": "step_1_1",
+  "action": "navigate",
+  "target": "Payroll menu",           ← ACTUAL observed name
+  "payload_hint": "Finance menu",     ← Document what was suggested
+  "status": "passed",
+  "screenshot": "01-01-payroll-menu.png",  ← Use ACTUAL name
+  "notes": "Menu renamed from 'Finance' to 'Payroll' in current UI"
+}
+
+report.md entry:
+| Step | Action | Actual Path | Status |
+|------|--------|-------------|--------|
+| 1.1  | Navigate | **Payroll** menu (payload suggested: Finance) | ✅ Passed |
+```
+
+**RULE: ALL USER-FACING OUTPUT USES ACTUAL OBSERVED NAMES**
+
 ## 🕵️ DEEP INVESTIGATION PROTOCOL
 
 ### CORE PRINCIPLE: DISCOVER AND FOLLOW THE FEATURE TRAIL
