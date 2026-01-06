@@ -629,55 +629,135 @@ Page has multiple accordions:
 
 ### PATTERN 4 - LARGE TABLE HANDLING (CRITICAL)
 
-**FILTER BEFORE INTERACTION - NEVER WORK WITH FULL DATASET**
+## 🛡️ TABLE GUARD PROTOCOL (MANDATORY)
 
-Large tables (100+ rows) will exceed token limits and cause validation failure.
-
-```
-⚠️ CRITICAL PLAYWRIGHT RULE:
-When validating pages with large tables (like Payroll Table with 406 employees),
-ALWAYS filter the table first using the search box to show less than 50 rows
-BEFORE taking any snapshots or interacting with elements.
-
-Use a test employee name or ID to filter (e.g., "Bayzlander", "Ahmed", "Test").
-
-❌ NEVER call browser_snapshot on a page with a large unfiltered table.
-❌ NEVER call browser_click on table rows without filtering first.
-```
+**BEFORE ANY `browser_snapshot`, `browser_click` on rows, or DOM extraction on ANY page with a table:**
 
 ```
-MANDATORY STEPS FOR ANY TABLE:
-1. FIRST - Use search box to filter by a specific name/ID
-2. OR - Apply status filter (Active/Inactive dropdown)
-3. OR - Use pagination to show only 10-25 rows
-4. THEN - Take snapshot and interact with filtered results
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  TABLE GUARD - EXECUTE BEFORE EVERY TABLE INTERACTION                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  STEP 1: COUNT VISIBLE ROWS                                                  │
+│  ─────────────────────────────────────────────────────────────────────────── │
+│  Look at the table. Estimate row count from what you see.                    │
+│  OR look for "Showing X of Y" or "X employees" text.                         │
+│                                                                              │
+│  IF rows > 50 → ENTER TABLE SAFE MODE (do NOT snapshot yet!)                 │
+│  IF rows ≤ 50 → Proceed normally                                             │
+│                                                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  STEP 2: TABLE SAFE MODE - TRY STRATEGIES IN ORDER                           │
+│  ─────────────────────────────────────────────────────────────────────────── │
+│                                                                              │
+│  STRATEGY A: Pagination Control (Try First - Simplest)                       │
+│  ────────────────────────────────────────────────────────────────────────    │
+│  1. Look for "rows per page" or "show X entries" dropdown                    │
+│  2. Click it and select smallest option (10 or 25)                           │
+│  3. Wait for table to reload                                                 │
+│  4. If rows now ≤ 50 → EXIT SAFE MODE, proceed normally                      │
+│                                                                              │
+│  STRATEGY B: Deterministic Filter (Extract from First Row)                   │
+│  ────────────────────────────────────────────────────────────────────────    │
+│  DO NOT GUESS search terms. Extract a REAL value from the table:             │
+│                                                                              │
+│  1. Read the FIRST visible row's cells                                       │
+│  2. Extract a search token (priority order):                                 │
+│     - Employee ID (numeric, e.g., "12345" or "emp-1234")                     │
+│     - Email address (e.g., "john@company.com")                               │
+│     - First name (e.g., "Ahmed")                                             │
+│  3. Type that EXACT token into the search box                                │
+│  4. Press Enter or click search icon                                         │
+│  5. Wait 2-3 seconds for results                                             │
+│  6. Verify row count decreased to ≤ 50                                       │
+│                                                                              │
+│  STRATEGY C: Retry with Variations (If Search Returns 0 Results)             │
+│  ────────────────────────────────────────────────────────────────────────    │
+│  If search returns empty:                                                    │
+│  1. Clear search box completely                                              │
+│  2. Try SHORTER token (first 4-5 characters only)                            │
+│  3. If still empty, try DIFFERENT field from same row (ID→email→name)        │
+│  4. If status filter exists, switch to "All" then retry search               │
+│  5. Maximum 3 retry attempts before fallback                                 │
+│                                                                              │
+│  STRATEGY D: Fallback Mode (When Filtering Fails)                            │
+│  ────────────────────────────────────────────────────────────────────────    │
+│  If all filtering attempts fail:                                             │
+│                                                                              │
+│  ✅ DO: Use browser_take_screenshot (image-based, no token limit)            │
+│  ✅ DO: Mark step as "blocked_by_large_dataset"                              │
+│  ✅ DO: Continue to next journey step                                        │
+│  ✅ DO: Document: rowCount, filterAttempts, failureReason                    │
+│                                                                              │
+│  ❌ DON'T: Call browser_snapshot on unfiltered table                         │
+│  ❌ DON'T: Stall or fail the entire run                                      │
+│  ❌ DON'T: Keep retrying indefinitely                                        │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**WHY THIS IS CRITICAL:**
-- 406 employees = massive DOM = token limit exceeded = validation fails
-- Filtered to 1-5 results = small DOM = validation succeeds
-
-**FILTER STRATEGIES:**
+**LOGGING REQUIREMENTS:**
 ```
-Option A: Search by name
-  → Type a common name in search box (e.g., "Ahmed", "John")
-  → Wait for filtered results (should show 1-10 matches)
-  → Now interact with rows
-
-Option B: Status filter
-  → Click status dropdown
-  → Select "Inactive" or "Terminated" (fewer records)
-  → Now interact with rows
-
-Option C: Pagination
-  → Set rows per page to minimum (10 or 25)
-  → Work only with visible rows
+Log these at each stage:
+- "TABLE_GUARD: Detected rowCount=406 → entering safe mode"
+- "TABLE_GUARD: Strategy A (pagination) - no control found, trying Strategy B"
+- "TABLE_GUARD: Strategy B - extracted term 'emp-1234' from first row"
+- "TABLE_GUARD: Filtered successfully → rowCount=3"
+- "TABLE_GUARD: Search returned 0 results, retrying with shorter term 'emp-'"
+- "TABLE_GUARD: Unable to reduce rows, using screenshot-only fallback"
 ```
 
-**SAMPLE SIZE AFTER FILTERING:**
-✅ 1 ACTIVE record - test normal workflow
-✅ 1 INACTIVE record - test terminated scenarios
-❌ DO NOT work with unfiltered large tables
+**RESULT.JSON DOCUMENTATION:**
+```json
+{
+  "step_id": "step_1_2",
+  "tableGuard": {
+    "applied": true,
+    "rowCountBefore": 406,
+    "rowCountAfter": 3,
+    "strategyUsed": "deterministic_filter",
+    "filterTerm": "emp-1234",
+    "filterTermSource": "first_row_employee_id",
+    "attempts": 1,
+    "success": true
+  }
+}
+
+// Or for fallback:
+{
+  "tableGuard": {
+    "applied": true,
+    "rowCountBefore": 406,
+    "rowCountAfter": 406,
+    "strategyUsed": "fallback_screenshot_only",
+    "filterAttempts": 3,
+    "failureReason": "search_returned_empty_all_attempts",
+    "evidenceCaptured": true,
+    "success": false
+  }
+}
+```
+
+**CRITICAL RULES:**
+```
+❌ NEVER call browser_snapshot when rowCount > 50
+❌ NEVER guess search terms - always extract from visible data
+❌ NEVER stall run if filtering fails - use fallback and continue
+✅ ALWAYS count rows before any table interaction
+✅ ALWAYS try pagination first (simplest solution)
+✅ ALWAYS document what you tried and why it failed
+✅ ALWAYS use browser_take_screenshot as fallback (no token limit)
+```
+
+**WHY BROWSER_SCREENSHOT VS BROWSER_SNAPSHOT:**
+```
+browser_snapshot → Returns DOM text → HAS TOKEN LIMITS → Fails on large tables
+browser_take_screenshot → Returns image → NO TOKEN LIMITS → Always works
+
+Use snapshot ONLY when you need to interact with elements.
+Use screenshot for evidence/documentation when table is large.
+```
 
 ### 🚨 PATTERN 4B - TOKEN LIMIT RECOVERY (CRITICAL)
 
