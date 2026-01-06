@@ -353,9 +353,13 @@ jobs:
           # Run Claude CLI and capture exit code
           set +e  # Don't exit on error
 
+          # CRITICAL: --dangerously-skip-permissions is REQUIRED for non-interactive CI
+          # Without this flag, Claude will prompt for file write approval and hang/skip
+          # The v13 validation failed because it couldn't write result.json without approval
           claude --model sonnet \
                  --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
                  --mcp-config ".mcp.json" \
+                 --dangerously-skip-permissions \
                  --print "$(cat "$PROMPT_FILE")" 2>&1 | tee "$GITHUB_WORKSPACE/${{ steps.detect.outputs.log_file }}"
 
           CLAUDE_EXIT_CODE=$?
