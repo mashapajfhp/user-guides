@@ -4,11 +4,16 @@ on:
   push:
     paths:
       - '**/validation/request.json'
+      - '**/validation/validation-payload.json'
   workflow_dispatch:
     inputs:
       feature_folder:
         description: 'Feature folder to validate (e.g., daily-wage-calculator/v5)'
         required: true
+      payload_format:
+        description: 'Payload format (auto-detect, legacy, n8n-v1)'
+        required: false
+        default: 'auto-detect'
 
 env:
   # Pin versions for stability
@@ -38,7 +43,14 @@ jobs:
           if [ -n "${{ github.event.inputs.feature_folder }}" ]; then
             FOLDER="${{ github.event.inputs.feature_folder }}"
           else
-            FOLDER=$(git diff --name-only HEAD~1 HEAD | grep 'validation/request.json' | head -1 | sed 's|/validation/request.json||')
+            # Check for both request.json (legacy) and validation-payload.json (n8n v1)
+            CHANGED_FILE=$(git diff --name-only HEAD~1 HEAD | grep -E 'validation/(request\.json|validation-payload\.json)' | head -1)
+            if [ -n "$CHANGED_FILE" ]; then
+              # Extract folder by removing the validation/filename part
+              FOLDER=$(echo "$CHANGED_FILE" | sed 's|/validation/.*||')
+              echo "🔍 Detected changed file: $CHANGED_FILE"
+              echo "🔍 Extracted folder: $FOLDER"
+            fi
           fi
 
           if [ -z "$FOLDER" ]; then
@@ -47,15 +59,38 @@ jobs:
             exit 0
           fi
 
+          # Detect payload format
+          PAYLOAD_FORMAT="${{ github.event.inputs.payload_format }}"
+          if [ "$PAYLOAD_FORMAT" = "auto-detect" ] || [ -z "$PAYLOAD_FORMAT" ]; then
+            if [ -f "$GITHUB_WORKSPACE/$FOLDER/validation/validation-payload.json" ]; then
+              PAYLOAD_FORMAT="n8n-v1"
+              REQUEST_FILE="$FOLDER/validation/validation-payload.json"
+              echo "🔍 Detected n8n-v1 payload format (validation-payload.json)"
+            elif [ -f "$GITHUB_WORKSPACE/$FOLDER/validation/request.json" ]; then
+              PAYLOAD_FORMAT="legacy"
+              REQUEST_FILE="$FOLDER/validation/request.json"
+              echo "🔍 Detected legacy payload format (request.json)"
+            else
+              echo "❌ No validation payload found in $FOLDER/validation/"
+              echo "skip=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          elif [ "$PAYLOAD_FORMAT" = "n8n-v1" ]; then
+            REQUEST_FILE="$FOLDER/validation/validation-payload.json"
+          else
+            REQUEST_FILE="$FOLDER/validation/request.json"
+          fi
+
           echo "folder=$FOLDER" >> $GITHUB_OUTPUT
-          echo "request_file=$FOLDER/validation/request.json" >> $GITHUB_OUTPUT
+          echo "request_file=$REQUEST_FILE" >> $GITHUB_OUTPUT
+          echo "payload_format=$PAYLOAD_FORMAT" >> $GITHUB_OUTPUT
           echo "result_file=$FOLDER/validation/result.json" >> $GITHUB_OUTPUT
           echo "report_file=$FOLDER/validation/report.md" >> $GITHUB_OUTPUT
           echo "screenshots_dir=$FOLDER/validation/screenshots" >> $GITHUB_OUTPUT
           echo "log_file=$FOLDER/validation/validation.log" >> $GITHUB_OUTPUT
           echo "error_file=$FOLDER/validation/error.log" >> $GITHUB_OUTPUT
           echo "skip=false" >> $GITHUB_OUTPUT
-          echo "✅ Found validation request: $FOLDER"
+          echo "✅ Found validation request: $FOLDER (format: $PAYLOAD_FORMAT)"
 
       # ============================================================
       # PRE-FLIGHT CHECKS
@@ -228,18 +263,26 @@ jobs:
           VALIDATION_RESULT: ${{ steps.detect.outputs.result_file }}
           FEATURE_FOLDER: ${{ steps.detect.outputs.folder }}
           SCREENSHOTS_DIR: ${{ steps.detect.outputs.screenshots_dir }}
+          PAYLOAD_FORMAT: ${{ steps.detect.outputs.payload_format }}
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
           APP_USERNAME: ${{ secrets.APP_USERNAME }}
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
         run: |
-          # Read instructions from file and substitute variables
-          INSTRUCTIONS_FILE="$GITHUB_WORKSPACE/.github/validation-instructions.md"
+          # Select instructions file based on payload format
+          if [ "$PAYLOAD_FORMAT" = "n8n-v1" ]; then
+            INSTRUCTIONS_FILE="$GITHUB_WORKSPACE/.github/validation-instructions-n8n-v1.md"
+            echo "📋 Using n8n-v1 instructions"
+          else
+            INSTRUCTIONS_FILE="$GITHUB_WORKSPACE/.github/validation-instructions.md"
+            echo "📋 Using legacy instructions"
+          fi
+
           LEARNINGS_FILE="$GITHUB_WORKSPACE/LEARNINGS_AND_FEEDBACK.md"
           PROMPT_FILE="$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.prompt.txt"
 
           # Create prompt with context header
           cat > "$PROMPT_FILE" << 'PROMPT_HEADER'
-          You are a comprehensive UI validation agent. Your task is to validate UI features against a request JSON file.
+          You are a comprehensive UI validation agent. Your task is to validate UI features using the provided payload.
 
           CRITICAL: You MUST complete all tasks and write all output files before finishing.
 
@@ -253,16 +296,18 @@ jobs:
           - Password: $APP_PASSWORD
 
           ## FILE PATHS
-          - Request JSON: $GITHUB_WORKSPACE/$VALIDATION_REQUEST
+          - Validation Payload: $GITHUB_WORKSPACE/$VALIDATION_REQUEST
           - Result JSON: $GITHUB_WORKSPACE/$VALIDATION_RESULT
           - Screenshots: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/
           - Report: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/report.md
           - Manifest: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/manifest.json
           - Completion marker: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status
 
+          ## PAYLOAD FORMAT: $PAYLOAD_FORMAT
+
           EOF
 
-          # Append the main instructions (without the header which we already added)
+          # Append the format-specific instructions (without the header which we already added)
           tail -n +3 "$INSTRUCTIONS_FILE" >> "$PROMPT_FILE"
 
           # Append learnings and feedback for screenshot quality guidance
@@ -280,7 +325,7 @@ jobs:
             echo "⚠️ Learnings file not found at $LEARNINGS_FILE"
           fi
 
-          echo "✅ Validation prompt prepared ($(wc -c < "$PROMPT_FILE") bytes)"
+          echo "✅ Validation prompt prepared ($(wc -c < "$PROMPT_FILE") bytes, format: $PAYLOAD_FORMAT)"
 
       - name: Run Playwright MCP Validation
         id: validation
@@ -501,6 +546,7 @@ jobs:
           SCREENSHOT_COUNT="${{ steps.validate_outputs.outputs.screenshot_count }}"
           ERROR_MESSAGE="${{ steps.validate_outputs.outputs.error_message }}"
           CLAUDE_EXIT="${{ steps.validation.outputs.claude_exit_code }}"
+          PAYLOAD_FORMAT="${{ steps.detect.outputs.payload_format }}"
 
           # Build comprehensive payload
           curl -s -X POST "https://automation-wh.bayzat.com/webhook/validation-complete" \
@@ -508,6 +554,7 @@ jobs:
             -d "{
               \"feature_folder\": \"${{ steps.detect.outputs.folder }}\",
               \"status\": \"$STATUS\",
+              \"payload_format\": \"$PAYLOAD_FORMAT\",
               \"screenshot_count\": ${SCREENSHOT_COUNT:-0},
               \"claude_exit_code\": ${CLAUDE_EXIT:-1},
               \"error_message\": \"$ERROR_MESSAGE\",
@@ -531,6 +578,7 @@ jobs:
           FOLDER="${{ steps.detect.outputs.folder }}"
           SCREENSHOT_COUNT="${{ steps.validate_outputs.outputs.screenshot_count }}"
           ERROR_MESSAGE="${{ steps.validate_outputs.outputs.error_message }}"
+          PAYLOAD_FORMAT="${{ steps.detect.outputs.payload_format }}"
 
           FEATURE_NAME=$(echo "$FOLDER" | cut -d'/' -f1)
           VERSION=$(echo "$FOLDER" | cut -d'/' -f2)
@@ -573,7 +621,8 @@ jobs:
                       {\"type\": \"mrkdwn\", \"text\": \"*Feature:*\n$FEATURE_NAME\"},
                       {\"type\": \"mrkdwn\", \"text\": \"*Version:*\n$VERSION\"},
                       {\"type\": \"mrkdwn\", \"text\": \"*Status:*\n$STATUS\"},
-                      {\"type\": \"mrkdwn\", \"text\": \"*Screenshots:*\n${SCREENSHOT_COUNT:-0}\"}
+                      {\"type\": \"mrkdwn\", \"text\": \"*Screenshots:*\n${SCREENSHOT_COUNT:-0}\"},
+                      {\"type\": \"mrkdwn\", \"text\": \"*Format:*\n$PAYLOAD_FORMAT\"}
                     ]
                   }
                   $ERROR_BLOCK,
