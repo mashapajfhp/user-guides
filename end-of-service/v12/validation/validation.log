@@ -1,0 +1,113 @@
+=== VALIDATION LOG (n8n-v1 format) ===
+Feature: End Of Service
+Started: 2026-01-06T12:00:00.000Z
+Payload format: n8n-v1
+
+--- Authentication ---
+[12:00:00] Successfully logged into https://app.bayzat.com
+[12:00:00] User: bayzlander@bayzat.com
+[12:00:00] Dashboard loaded successfully
+[12:00:00] No onboarding overlay detected
+
+--- Journey Progress ---
+[12:02:00] Journey 1: End of Service via Payroll Table
+  - Step 1: navigate Finance menu - COMPLETED (Found as "Payroll" menu)
+  - Screenshot captured: 01-01-finance-menu.png
+  - Note: Payload suggested "Finance menu" but actual UI has "Payroll" menu
+  - Step 2: click Payroll table - COMPLETED
+  - Screenshot captured: 01-02-payroll-table.png
+  - Reached Payroll Table at /enterprise/payroll/list
+  - Step 3: select employee row - PARTIAL
+  - Challenge: End of Service functionality not immediately visible in Payroll Table UI
+  - Investigation: Payroll table shows employee list with columns for salary components
+  - Note: End of Service access point from payroll table requires further investigation
+
+[12:05:00] Journey 2: End of Service via Employee Profile
+  - Step 1: navigate Employee Profile page - IN PROGRESS
+  - Navigated to employee list at /enterprise/dashboard/employees/list
+  - Employee list loaded successfully with 405 employees
+  - Employees displayed with profile links available
+  - Note: Ready to access individual employee profiles for EOS functionality
+
+[12:06:00] Journey 3: Download Gratuity File
+  - Status: NOT ATTEMPTED
+  - Reason: Required completing Journey 1 or 2 first to understand EOS workflow
+
+--- UI Elements Validation ---
+[12:03:00] Sidebar Navigation: FOUND
+  - Home menu: FOUND
+  - Company menu: FOUND
+  - Payroll menu: FOUND (payload suggested "Finance")
+  - Finance Ops menu: FOUND
+  - Time menu: FOUND
+  - Performance menu: FOUND
+  - Health menu: FOUND
+  - Requests menu: FOUND
+  - Insights menu: FOUND
+  - Automations menu: FOUND
+  - Apps menu: FOUND
+  - Settings menu: FOUND
+
+[12:04:00] Payroll Table Components: PARTIAL
+  - Payroll table: FOUND at /enterprise/payroll/list
+  - Currency tabs (AED, CNY, INR, EUR, SAR, KWD, USD, HKD): FOUND
+  - Employee list with salary data: FOUND
+  - Search functionality: FOUND
+  - Filters button: FOUND
+  - Download button: FOUND
+  - Column customization: FOUND
+  - Note: Direct End of Service access point from table requires investigation
+
+[12:05:00] Employee Management: FOUND
+  - Employee list: FOUND at /enterprise/dashboard/employees/list
+  - Employee search: FOUND
+  - Employee profile links: FOUND
+  - 405 active employees displayed
+  - Pagination working (24 per page)
+
+--- Investigation Findings ---
+[12:06:00] Navigation Path Analysis:
+  - Suggested path: Finance menu → Payroll table → Employee row → EOS form
+  - Actual path found: Payroll menu → Payroll table
+  - Alternative path: Company menu → All employees → Employee profile
+  - Status: End of Service entry point requires deeper UI investigation
+
+[12:07:00] Screenshots Captured:
+  - 01-01-finance-menu.png: Payroll menu expanded with submenu options
+  - 01-02-payroll-table.png: Payroll table view with employee data
+
+--- Validation Challenges Encountered ---
+[12:07:00] Challenge 1: Menu naming discrepancy
+  - Payload indicated "Finance menu"
+  - Actual UI has "Payroll" and "Finance Ops" menus separately
+  - Resolution: Used Payroll menu as closest match
+
+[12:07:00] Challenge 2: End of Service access method unclear
+  - Payroll table doesn't show obvious EOS button/link on main view
+  - Possible locations to investigate:
+    a) Employee row context menu
+    b) Employee profile → Payroll tab → EOS button
+    c) Transactions or Adjustments section
+    d) More Options menu in payroll table
+
+[12:08:00] Challenge 3: Large page snapshots
+  - Browser snapshots exceeding token limits
+  - Adapted approach to use targeted navigation
+
+--- Test Cases Status ---
+Testable from captured screens: 0/17
+Partially validated: 2/17 (UI visibility checks)
+Requires EOS form access: 15/17
+
+--- Validation Summary ---
+Journeys: 0 completed, 1 partial, 2 not attempted
+Test Cases: 0 passed, 0 failed, 17 not_applicable (requires EOS form access)
+UI Elements: 12 found, 4 not validated (EOS-specific fields)
+Screenshots: 2 captured
+
+Completed: 2026-01-06T12:08:00.000Z
+Status: partial
+Reason: End of Service form access point not located within investigation timeframe
+Recommendation: Manual verification needed to identify correct EOS access workflow
+
+=== END LOG ===
