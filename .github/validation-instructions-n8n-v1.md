@@ -72,6 +72,135 @@ Example: Payload says "Navigate to Finance menu" but the actual UI has "Payroll"
 If the payload says "Finance" but you see "Payroll" - USE PAYROLL.
 The goal is to FIND and VALIDATE the feature, not to prove the payload wrong.
 
+## 🕵️ DEEP INVESTIGATION PROTOCOL
+
+### CORE PRINCIPLE: DISCOVER AND FOLLOW THE FEATURE TRAIL
+
+You are an INVESTIGATOR, not a script follower. Your job is to find EVERY place in the UI where the target feature appears - even when buried deep within nested settings, multi-step wizards, or modal dialogs.
+
+### MENU EXPLORATION STRATEGY
+
+When a hinted navigation path doesn't exist:
+
+```
+SYSTEMATIC MENU DISCOVERY:
+1. SCAN all top-level sidebar/menu items
+2. IDENTIFY items that could logically contain the target feature
+3. CLICK each potential parent menu to explore submenus
+4. LOOK for:
+   - Exact match of target feature name
+   - Similar/renamed menu items
+   - Keywords from the feature name
+5. DOCUMENT what you find vs what was hinted
+```
+
+**EXPLORATION PRIORITY ORDER:**
+1. Check for exact match of hinted menu item
+2. Check for similar/renamed names (menus often get renamed)
+3. Check menus that logically relate to the feature
+4. Scan all main menu items if needed
+5. Use browser search (Ctrl+F) on visible menu items
+
+**NEVER GIVE UP AFTER FIRST ATTEMPT:**
+- If "Menu A" doesn't exist, don't immediately fail
+- Explore systematically before concluding a feature doesn't exist
+- The feature likely exists somewhere - just with different navigation
+
+### NAVIGATION DEPTH REQUIREMENTS
+
+**Surface-level (INSUFFICIENT):**
+```
+Sidebar → [Menu] → Landing page
+Problem: Landing page may not show feature-specific content
+```
+
+**Deep investigation (CORRECT):**
+```
+Sidebar → [Menu] → Landing page
+  → Expand all accordions on landing page
+    → Click "Add new" or "Edit" buttons
+      → Navigate through wizard/form steps
+        → Expand nested accordions within modals
+          → Click through button groups/toggles
+            → CAPTURE only when feature content is visible
+```
+
+### SCROLL-TO-FIND HIDDEN CONTENT
+
+**THE TARGET ACCORDION MAY BE BELOW THE FOLD - YOU MUST SCROLL TO FIND IT**
+
+**MANDATORY SCROLL PROCEDURE:**
+```
+1. Open the modal/wizard
+2. SCROLL TO THE BOTTOM of the modal content
+3. SCROLL BACK UP slowly, scanning for ALL accordion headers
+4. Make a MENTAL LIST of all accordions/sections found
+5. Expand EACH accordion one by one, scanning for feature keywords
+6. The target section might be:
+   - 3rd or 4th accordion down
+   - Only visible after scrolling
+   - Named slightly different than expected
+```
+
+### PERSIST UNTIL YOU FIND VALID DATA
+
+**DO NOT GIVE UP ON THE FIRST RECORD THAT DOESN'T HAVE RELEVANT DATA**
+
+When validating features that depend on specific data conditions, the first record you click may not have the data needed.
+
+**PERSISTENCE PROTOCOL:**
+```
+1. Click first record → Data doesn't satisfy validation requirements
+2. DO NOT STOP - go back and try another record
+3. Click second record → Still doesn't have relevant data
+4. KEEP TRYING - systematically work through available records
+5. Continue until you find a record that HAS the data to validate
+6. ONLY mark as 'not_applicable' if NO records have the required data
+```
+
+**RECORD SELECTION STRATEGY:**
+1. Skip obvious test/placeholder records (e.g., "Test User", "Demo Account")
+2. Look for records with complete data (filled fields, activity history)
+3. Try records with different statuses/states
+4. If a list has pagination, check records on different pages
+5. Use filters/search to find records likely to have relevant data
+
+## 🚫 BLOCKING DIALOG HANDLING
+
+### "ABANDON UNSAVED CHANGES" DIALOG
+
+When you see a dialog with:
+- "Do you wish to abandon unsaved changes?"
+- "You are about to leave the page without saving"
+- "All unsaved changes will be lost"
+
+**ACTION: ALWAYS CLICK "Abandon" BUTTON**
+```
+1. DETECT the dialog (look for "abandon", "unsaved changes")
+2. CLICK the "Abandon" button (usually purple/right button)
+3. WAIT for dialog to close
+4. CONTINUE with navigation
+```
+
+### "LEAVE SITE?" BROWSER DIALOG
+
+When you see:
+- Title: "Leave site?"
+- Message: "Changes that you made may not be saved."
+
+**ACTION: ALWAYS CLICK "Leave" BUTTON**
+
+**WHY:** This is a demo/test environment. We are validating UI, not saving data.
+
+### OTHER BLOCKING DIALOGS
+
+- "Discard changes?" → Click "Discard"
+- "Are you sure?" → Click "Yes" or "Confirm"
+- Cookie consent banners → Click "Accept" or close
+- Feature announcement modals → Click X or "Got it"
+
+**RULE: NEVER let a dialog block your navigation. Always dismiss and proceed.**
+
 ## PAYLOAD STRUCTURE
 
 The n8n v1 payload contains these key sections:
@@ -312,7 +441,84 @@ ELSE:
   status = "partial"
 ```
 
-## SECTION 6: SELF-VERIFICATION BEFORE FINISHING
+## SECTION 6: UI EXPLORATION PATTERNS
+
+### PATTERN 1 - SCROLL AND VIEWPORT EXPLORATION
+- After loading any page, scroll down to check for content below the fold
+- Take SEPARATE viewport screenshots at different scroll positions if needed
+
+### PATTERN 2 - BUTTON GROUP / TOGGLE EXPLORATION
+- Identify ALL button groups, radio buttons, tabs, and toggle switches
+- Click EACH option systematically to see if NEW UI elements appear
+- Screenshot the UI state for EACH option that reveals feature-relevant content
+
+### PATTERN 3 - ACCORDION AND COLLAPSIBLE EXPLORATION
+**MANDATORY:** Expand EVERY accordion and scan for feature keywords before leaving any page.
+
+```
+Page has multiple accordions:
+  □ Accordion 1 (expand → scan for feature keywords)
+  □ Accordion 2 (expand → scan for feature keywords)
+  □ Accordion 3 (expand → scan for feature keywords)
+  □ Accordion N (expand → FOUND feature reference → CAPTURE)
+```
+
+### PATTERN 4 - TABLE ROW EXPLORATION
+- Click the Edit/Configure button for MULTIPLE rows, not just the first
+- Document variations between row configurations
+- If first row doesn't have relevant data, TRY MORE ROWS
+
+### PATTERN 5 - WIZARD AND MODAL DEEP DIVE
+When you open any wizard, modal, or multi-step form:
+1. **Navigate ALL steps** - Don't stop at step 1
+2. **Scroll within** - Content may be below the fold
+3. **Expand nested sections** - Modals often have accordions inside
+4. **Click all options** - Different selections reveal different UI
+5. **Follow cross-reference links** - "Configured in X" indicates relationships
+
+### PATTERN 6 - CROSS-REFERENCE LINK HANDLING
+When you find links like "Configured in [X] setting":
+1. NOTE this relationship in validation report
+2. CLICK the link to verify destination
+3. Document the connection between settings areas
+
+## SECTION 7: LANDING PAGE NAVIGATION SCREENSHOTS
+
+### CRITICAL: SIDE MENU MUST BE VISIBLE FOR NAVIGATION SCREENSHOTS
+
+**For LANDING PAGE screenshots demonstrating navigation path:**
+
+The side navigation menu MUST be EXPANDED and VISIBLE to show how users reach the feature.
+
+**MANDATORY STEPS FOR NAVIGATION SCREENSHOTS:**
+```
+1. Click the menu item in the left sidebar
+2. WAIT for the submenu to expand
+3. VERIFY the submenu is visible
+4. Click the target section
+5. VERIFY the nested menu items are visible
+6. TAKE SCREENSHOT with the expanded menu visible in frame
+7. The screenshot MUST show:
+   - The left sidebar with expanded navigation
+   - The submenu hierarchy visible
+   - The active/highlighted menu item
+   - The page content on the right
+```
+
+**CORRECT NAVIGATION SCREENSHOT:**
+- Left ~20% shows expanded sidebar navigation
+- Submenu items are visible showing the navigation hierarchy
+- Active menu item is highlighted
+- Main content area shows the landing page
+- User can clearly see the PATH to reach this page
+
+**WRONG NAVIGATION SCREENSHOT (FAILURE):**
+- Side menu collapsed to icons only
+- Side menu completely hidden
+- Only page content visible without navigation context
+- User cannot understand HOW to reach this page
+
+## SECTION 8: SELF-VERIFICATION BEFORE FINISHING
 
 BEFORE writing result.json, verify:
 1. Did you execute ALL journeys in the payload?
@@ -321,6 +527,18 @@ BEFORE writing result.json, verify:
 4. Did you capture screenshots for all `screenshot.capture: true` steps?
 5. Is the top-level "status" field computed correctly?
 6. Is validation.log at least 100 bytes?
+
+**SCREENSHOT COUNT CHECK:**
+- Minimum expected: 8-10 screenshots for most features
+- If you have fewer than 8 screenshots, GO BACK and investigate deeper
+- 5 screenshots = RED FLAG - you likely missed content
+
+**INVESTIGATION CHECKLIST:**
+- [ ] Did you expand ALL sidebar menu sections?
+- [ ] Did you scroll within ALL modals?
+- [ ] Did you try MULTIPLE records if first didn't have data?
+- [ ] Did you handle ALL blocking dialogs?
+- [ ] Did you document hinted vs actual navigation paths?
 
 If you missed any journey or test case:
 - GO BACK and complete it
