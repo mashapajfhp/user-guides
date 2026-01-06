@@ -26,6 +26,9 @@ CRITICAL: You MUST complete all tasks and write all output files before finishin
 - ❌ Screenshots with UNRELATED popups (cookie banners, onboarding, ads)
 - ❌ Cropped or stitched screenshots (must be single viewport)
 - ❌ Creating NESTED folders inside screenshots/ (FLAT structure only!)
+- ❌ FINISHING WITHOUT result.json (WORKFLOW WILL FAIL!)
+- ❌ FINISHING WITHOUT report.md (WORKFLOW WILL FAIL!)
+- ❌ Writing only validation.log without result.json and report.md
 
 **PERSISTENCE RULES:**
 - **LARGE TABLES**: ALWAYS use search/filter BEFORE taking snapshot or clicking rows
@@ -726,3 +729,72 @@ If ANY check fails → dismiss blocking elements → retake screenshot
 If you missed any journey or test case:
 - GO BACK and complete it
 - Then write the complete result.json
+
+## 🚨🚨🚨 SECTION 9: MANDATORY OUTPUT FILES - ABSOLUTE REQUIREMENT 🚨🚨🚨
+
+**CRITICAL: THE WORKFLOW WILL FAIL IF ANY OF THESE FILES ARE MISSING!**
+
+You MUST create ALL THREE output files before finishing validation:
+
+```
+MANDATORY OUTPUT FILES (ALL REQUIRED):
+┌──────────────────────────────────────────────────────────────────────────┐
+│ File                              │ Minimum Size │ Purpose               │
+├───────────────────────────────────┼──────────────┼───────────────────────┤
+│ [feature_folder]/validation/result.json     │ 1000 bytes   │ Structured data for n8n │
+│ [feature_folder]/validation/report.md       │ 2000 bytes   │ Human-readable report   │
+│ [feature_folder]/validation/validation.log  │ 100 bytes    │ Execution log           │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+**⛔ FORBIDDEN - VALIDATION INCOMPLETE WITHOUT:**
+- ❌ Missing result.json = WORKFLOW FAILS - n8n cannot process results
+- ❌ Missing report.md = WORKFLOW FAILS - no human-readable documentation
+- ❌ Missing validation.log = WORKFLOW FAILS - no execution audit trail
+
+**📋 PRE-COMPLETION CHECKLIST (VERIFY BEFORE FINISHING):**
+
+```
+□ 1. result.json EXISTS and contains valid JSON with:
+     - feature_name, feature_slug, payload_format
+     - validated_at timestamp
+     - status field (passed/partial/failed)
+     - summary object with counts
+     - journeys array with step details
+     - test_cases array with status per test
+     - ui_elements array with found/missing status
+
+□ 2. report.md EXISTS and contains:
+     - Executive summary section
+     - Journey validation details
+     - Test case results table
+     - UI elements found/missing
+     - Screenshots captured list
+     - Recommendations section
+
+□ 3. validation.log EXISTS and contains:
+     - Start timestamp
+     - Journey execution progress
+     - Test case progress
+     - UI element validation
+     - Completion summary
+```
+
+**🔴 ABSOLUTE RULE: DO NOT FINISH UNTIL ALL 3 FILES ARE WRITTEN**
+
+If you reach the end of validation and ANY file is missing:
+1. STOP - Do not close the browser
+2. WRITE the missing file(s) immediately
+3. VERIFY each file exists with correct content
+4. ONLY THEN mark validation as complete
+
+**FILE WRITING ORDER (MANDATORY):**
+1. First: Write validation.log (as you go)
+2. Second: Write result.json (structured data)
+3. Third: Write report.md (human-readable summary)
+4. Finally: Verify all 3 files exist before finishing
+
+**COMMON FAILURE: Writing only validation.log**
+The v13 validation failed because only validation.log was written.
+result.json is REQUIRED for n8n workflow to process results.
+ALWAYS write result.json - this is NON-NEGOTIABLE.
