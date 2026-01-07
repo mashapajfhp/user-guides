@@ -23,7 +23,7 @@ env:
 jobs:
   validate:
     runs-on: [self-hosted, validation]
-    timeout-minutes: 30
+    timeout-minutes: 45  # Increased from 30 to handle longer validations
 
     outputs:
       validation_status: ${{ steps.validate_outputs.outputs.status }}
@@ -182,16 +182,16 @@ jobs:
           # Install specific version for stability
           npm install -g @playwright/mcp@${PLAYWRIGHT_MCP_VERSION}
 
-          echo "Installing Playwright browsers..."
-          npx -y playwright install chrome
+          echo "Installing Playwright browsers (Chrome only)..."
+          npx -y playwright install chrome --force
 
-          # Verify browser installation
+          # Verify Chrome installation - do NOT fall back to Chromium
           if [ ! -d ~/.cache/ms-playwright ]; then
-            echo "⚠️ Browser cache directory not found, attempting reinstall..."
-            npx -y playwright install chromium --force
+            echo "❌ Browser cache directory not found after installation"
+            exit 1
           fi
 
-          echo "✅ Playwright MCP v${PLAYWRIGHT_MCP_VERSION} and browsers ready"
+          echo "✅ Playwright MCP v${PLAYWRIGHT_MCP_VERSION} and Chrome browser ready"
 
       - name: Setup MCP Configuration
         if: steps.detect.outputs.skip != 'true'
@@ -201,7 +201,8 @@ jobs:
 
           SCREENSHOT_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
 
-          # Use pinned version with output directory and trace for debugging
+          # Use pinned version with output directory, Chrome browser, and extended timeout
+          # CRITICAL: 300000ms (5 minutes) timeout per action to handle slow UI operations
           cat > "$GITHUB_WORKSPACE/.mcp.json" << EOF
           {
             "mcpServers": {
@@ -211,7 +212,8 @@ jobs:
                   "-y",
                   "@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}",
                   "--output-dir", "${SCREENSHOT_PATH}",
-                  "--browser", "chrome"
+                  "--browser", "chrome",
+                  "--timeout", "300000"
                 ]
               }
             }
@@ -327,6 +329,24 @@ jobs:
           fi
 
           echo "✅ Validation prompt prepared ($(wc -c < "$PROMPT_FILE") bytes, format: $PAYLOAD_FORMAT)"
+
+      - name: Pre-Validation Browser Cleanup
+        if: steps.detect.outputs.skip != 'true' && steps.cache_check.outputs.skip_validation != 'true'
+        run: |
+          echo "🧹 Cleaning up stale browser processes before validation..."
+          # Kill any existing Playwright/Chrome processes from previous runs
+          pkill -f "mcp-server-playwright" 2>/dev/null || true
+          pkill -f "chrome.*playwright" 2>/dev/null || true
+          pkill -f "Google Chrome.*--remote-debugging" 2>/dev/null || true
+          pkill -f "Chromium" 2>/dev/null || true
+
+          # Small delay to ensure processes are fully terminated
+          sleep 2
+
+          # Clear any stale browser user data that might cause session issues
+          rm -rf /tmp/playwright-* 2>/dev/null || true
+
+          echo "✅ Pre-validation cleanup complete - fresh browser session guaranteed"
 
       - name: Run Playwright MCP Validation
         id: validation
