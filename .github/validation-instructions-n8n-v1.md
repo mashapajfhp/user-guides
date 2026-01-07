@@ -37,6 +37,50 @@ https://app.bayzat.com/enterprise/dashboard/employees/67230d1e-9afd-3f61-0673-85
 
 ---
 
+## ⏱️ TIME MANAGEMENT (CRITICAL - READ THIS FIRST)
+
+**YOU HAVE 25+ MINUTES. THIS IS MORE THAN ENOUGH FOR ALL JOURNEYS.**
+
+### TIME BUDGET FACTS:
+- Workflow timeout: 30 minutes (hard limit set by GitHub Actions)
+- Average journey execution: 2-3 minutes
+- 10 journeys × 3 minutes = 30 minutes max theoretical
+- In practice: Most journeys take 1-2 minutes
+- **YOU WILL NOT RUN OUT OF TIME IF YOU WORK EFFICIENTLY**
+
+### WHAT YOU MUST NOT DO:
+- ❌ **NEVER** stop early "to save time" or "due to time constraints"
+- ❌ **NEVER** mark journeys as "not_attempted" with reason "time constraints"
+- ❌ **NEVER** self-impose time limits - let the system timeout if needed
+- ❌ **NEVER** skip journeys because you think there isn't enough time
+- ❌ **NEVER** write "time constraints" or "time budget" as a skip reason
+
+### WHAT YOU MUST DO:
+- ✅ Attempt EVERY journey in the payload
+- ✅ Work efficiently but thoroughly
+- ✅ If a journey fails, mark it as "failed" with actual technical reason
+- ✅ Continue to next journey immediately after completing/failing one
+- ✅ Trust that the system has allocated enough time
+
+### "TIME CONSTRAINTS" IS AN INVALID SKIP REASON
+
+If your result.json contains entries like:
+```json
+{"status": "not_attempted", "reason": "time constraints"}
+```
+**THIS IS A VALIDATION FAILURE.** You are violating these instructions.
+
+Valid skip reasons are ONLY:
+- "login_failed" - could not authenticate
+- "element_not_found" - UI element doesn't exist after investigation
+- "feature_not_accessible" - permission/role issue
+- "blocked_by_modal" - unhandled blocking UI (after 3 attempts)
+- "token_limit_exceeded" - DOM too large (use alternate path)
+
+**"time constraints" is NEVER a valid reason. Remove this from your vocabulary.**
+
+---
+
 ## CRITICAL COMPLETION REQUIREMENTS
 
 **DO NOT STOP EARLY.** You MUST:
@@ -53,6 +97,9 @@ https://app.bayzat.com/enterprise/dashboard/employees/67230d1e-9afd-3f61-0673-85
 - ❌ Marking journeys as "not_attempted" without actually trying them
 - ❌ Writing output files before attempting ALL journeys
 - ❌ Giving up on element interaction after one attempt
+- ❌ **SKIPPING JOURNEYS DUE TO "TIME CONSTRAINTS" (THIS IS NEVER VALID)**
+- ❌ **SELF-IMPOSING TIME LIMITS (THE SYSTEM MANAGES TIME, NOT YOU)**
+- ❌ **STOPPING EARLY TO "SAVE TIME" OR "COMPLETE WITHIN BUDGET"**
 - ❌ Taking snapshots of UNFILTERED large tables (100+ rows)
 - ❌ Claiming "page too large" without first using search/filter
 - ❌ Screenshots WITHOUT sidebar visible (unless capturing a modal)
