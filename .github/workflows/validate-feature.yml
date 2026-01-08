@@ -356,27 +356,30 @@ jobs:
           echo "Installing Playwright MCP v${PLAYWRIGHT_MCP_VERSION}..."
           npm install -g @playwright/mcp@${PLAYWRIGHT_MCP_VERSION}
 
-          echo "Verifying Chrome browser installation..."
-          # Check multiple possible locations
-          if [ -d ~/.cache/ms-playwright/chrome* ] || [ -d ~/.cache/ms-playwright/chromium* ]; then
-            echo "Browser found in user cache"
-          elif [ -d /root/.cache/ms-playwright/chrome* ] || [ -d /root/.cache/ms-playwright/chromium* ]; then
-            echo "Browser found in root cache"
-          elif command -v google-chrome &> /dev/null || command -v chromium &> /dev/null; then
-            echo "System Chrome/Chromium found"
+          GLOBAL_BIN="$(npm bin -g)"
+          echo "Global npm bin: $GLOBAL_BIN"
+          echo "$GLOBAL_BIN" >> $GITHUB_PATH
+
+          echo "Detecting Playwright MCP executable..."
+          ls -la "$GLOBAL_BIN" | grep -i -E "play|mcp" || true
+
+          if [ -x "$GLOBAL_BIN/playwright-mcp" ]; then
+            MCP_CMD="playwright-mcp"
+          elif [ -x "$GLOBAL_BIN/mcp-server-playwright" ]; then
+            MCP_CMD="mcp-server-playwright"
           else
-            echo "Installing Chrome browser (without system deps)..."
-            # Use --no-shell to avoid interactive prompts, skip system deps
-            PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=0 npx -y playwright install chromium --no-shell 2>/dev/null || \
-            npx -y playwright install chromium 2>/dev/null || \
-            echo "Warning: Browser install may have issues, will try to proceed"
+            echo "ERROR: No Playwright MCP executable found in $GLOBAL_BIN"
+            ls -la "$GLOBAL_BIN"
+            exit 1
           fi
 
-          echo "Playwright MCP v${PLAYWRIGHT_MCP_VERSION} ready"
+          echo "Resolved MCP command: $MCP_CMD"
+          echo "PLAYWRIGHT_MCP_CMD=$MCP_CMD" >> $GITHUB_ENV
+
+          echo "Installing Playwright Chromium..."
+          npx -y playwright install chromium
 
       - name: Setup MCP Configuration
-        env:
-          PLAYWRIGHT_MCP_VERSION: ${{ env.PLAYWRIGHT_MCP_VERSION }}
         run: |
           FOLDER="${{ needs.prepare.outputs.folder }}"
           CHUNK_INDEX="${{ matrix.chunk.index }}"
@@ -384,13 +387,13 @@ jobs:
 
           echo "Setting up MCP configuration..."
           echo "  Screenshot path: $SCREENSHOT_PATH"
-          echo "  Playwright MCP version: $PLAYWRIGHT_MCP_VERSION"
+          echo "  MCP command: $PLAYWRIGHT_MCP_CMD"
 
           rm -f "$GITHUB_WORKSPACE/.mcp.json"
           mkdir -p "$SCREENSHOT_PATH"
 
-          # Create MCP config without heredoc indentation issues
-          echo '{"mcpServers":{"playwright":{"command":"npx","args":["-y","@playwright/mcp@'"$PLAYWRIGHT_MCP_VERSION"'","--output-dir","'"$SCREENSHOT_PATH"'","--browser","chromium","--timeout","300000"]}}}' > "$GITHUB_WORKSPACE/.mcp.json"
+          # Create MCP config using globally installed command (no npx)
+          echo "{\"mcpServers\":{\"playwright\":{\"command\":\"${PLAYWRIGHT_MCP_CMD}\",\"args\":[\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
 
           # Validate JSON
           echo "Validating MCP config..."
@@ -403,11 +406,14 @@ jobs:
             exit 1
           fi
 
-          # Test MCP server startup
-          echo "Testing Playwright MCP server..."
-          timeout 10 npx -y "@playwright/mcp@$PLAYWRIGHT_MCP_VERSION" --help > /dev/null 2>&1 && echo "Playwright MCP responds" || echo "WARNING: Playwright MCP test failed"
-
           echo "MCP config for chunk $CHUNK_INDEX ready"
+
+      - name: MCP Health Check
+        run: |
+          echo "MCP command: ${PLAYWRIGHT_MCP_CMD}"
+          command -v "${PLAYWRIGHT_MCP_CMD}" || (echo "MCP command not on PATH" && exit 1)
+          "${PLAYWRIGHT_MCP_CMD}" --help >/dev/null 2>&1 || (echo "MCP server failed to start" && exit 1)
+          echo "MCP health check passed"
 
       - name: Generate Chunk Validation Prompt
         id: generate_prompt
