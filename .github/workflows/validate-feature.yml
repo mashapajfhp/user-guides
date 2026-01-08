@@ -356,21 +356,39 @@ jobs:
           echo "Installing Playwright MCP v${PLAYWRIGHT_MCP_VERSION}..."
           npm install -g @playwright/mcp@${PLAYWRIGHT_MCP_VERSION}
 
-          GLOBAL_BIN="$(npm bin -g)"
+          # Get global bin directory (npm bin -g is deprecated)
+          GLOBAL_BIN="$(npm config get prefix)/bin"
           echo "Global npm bin: $GLOBAL_BIN"
           echo "$GLOBAL_BIN" >> $GITHUB_PATH
 
           echo "Detecting Playwright MCP executable..."
-          ls -la "$GLOBAL_BIN" | grep -i -E "play|mcp" || true
+          ls -la "$GLOBAL_BIN" | grep -i -E "play|mcp" || echo "No matching files found in listing"
 
-          if [ -x "$GLOBAL_BIN/playwright-mcp" ]; then
-            MCP_CMD="playwright-mcp"
-          elif [ -x "$GLOBAL_BIN/mcp-server-playwright" ]; then
-            MCP_CMD="mcp-server-playwright"
-          else
-            echo "ERROR: No Playwright MCP executable found in $GLOBAL_BIN"
-            ls -la "$GLOBAL_BIN"
-            exit 1
+          # Check for various possible executable names
+          MCP_CMD=""
+          for cmd in "playwright-mcp" "mcp-server-playwright" "@playwright/mcp"; do
+            if [ -x "$GLOBAL_BIN/$cmd" ]; then
+              MCP_CMD="$cmd"
+              echo "Found executable: $cmd"
+              break
+            fi
+          done
+
+          # Fallback: search for any mcp-related executable
+          if [ -z "$MCP_CMD" ]; then
+            echo "Searching for MCP executable..."
+            MCP_FOUND=$(find "$GLOBAL_BIN" -maxdepth 1 -name "*mcp*" -o -name "*playwright*" 2>/dev/null | head -1)
+            if [ -n "$MCP_FOUND" ] && [ -x "$MCP_FOUND" ]; then
+              MCP_CMD=$(basename "$MCP_FOUND")
+              echo "Found via search: $MCP_CMD"
+            fi
+          fi
+
+          # Final fallback: use npx as last resort
+          if [ -z "$MCP_CMD" ]; then
+            echo "WARNING: No global executable found, falling back to npx"
+            MCP_CMD="npx"
+            echo "PLAYWRIGHT_MCP_ARGS=-y @playwright/mcp@${PLAYWRIGHT_MCP_VERSION}" >> $GITHUB_ENV
           fi
 
           echo "Resolved MCP command: $MCP_CMD"
@@ -380,6 +398,8 @@ jobs:
           npx -y playwright install chromium
 
       - name: Setup MCP Configuration
+        env:
+          PLAYWRIGHT_MCP_VERSION: ${{ env.PLAYWRIGHT_MCP_VERSION }}
         run: |
           FOLDER="${{ needs.prepare.outputs.folder }}"
           CHUNK_INDEX="${{ matrix.chunk.index }}"
@@ -392,8 +412,14 @@ jobs:
           rm -f "$GITHUB_WORKSPACE/.mcp.json"
           mkdir -p "$SCREENSHOT_PATH"
 
-          # Create MCP config using globally installed command (no npx)
-          echo "{\"mcpServers\":{\"playwright\":{\"command\":\"${PLAYWRIGHT_MCP_CMD}\",\"args\":[\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
+          # Create MCP config - handle npx fallback vs direct command
+          if [ "$PLAYWRIGHT_MCP_CMD" = "npx" ]; then
+            echo "Using npx fallback configuration..."
+            echo "{\"mcpServers\":{\"playwright\":{\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}\",\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
+          else
+            echo "Using direct command configuration..."
+            echo "{\"mcpServers\":{\"playwright\":{\"command\":\"${PLAYWRIGHT_MCP_CMD}\",\"args\":[\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
+          fi
 
           # Validate JSON
           echo "Validating MCP config..."
@@ -409,10 +435,17 @@ jobs:
           echo "MCP config for chunk $CHUNK_INDEX ready"
 
       - name: MCP Health Check
+        env:
+          PLAYWRIGHT_MCP_VERSION: ${{ env.PLAYWRIGHT_MCP_VERSION }}
         run: |
           echo "MCP command: ${PLAYWRIGHT_MCP_CMD}"
-          command -v "${PLAYWRIGHT_MCP_CMD}" || (echo "MCP command not on PATH" && exit 1)
-          "${PLAYWRIGHT_MCP_CMD}" --help >/dev/null 2>&1 || (echo "MCP server failed to start" && exit 1)
+          if [ "$PLAYWRIGHT_MCP_CMD" = "npx" ]; then
+            echo "Using npx fallback - testing with npx..."
+            timeout 30 npx -y "@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}" --help >/dev/null 2>&1 || (echo "MCP server failed to start via npx" && exit 1)
+          else
+            command -v "${PLAYWRIGHT_MCP_CMD}" || (echo "MCP command not on PATH" && exit 1)
+            "${PLAYWRIGHT_MCP_CMD}" --help >/dev/null 2>&1 || (echo "MCP server failed to start" && exit 1)
+          fi
           echo "MCP health check passed"
 
       - name: Generate Chunk Validation Prompt
