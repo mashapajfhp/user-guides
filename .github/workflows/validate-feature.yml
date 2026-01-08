@@ -523,88 +523,119 @@ jobs:
              - Prefer element screenshots for actual assertion proof
 
           ═══════════════════════════════════════════════════════════════
+          ## ⚠️ CRITICAL: NAVIGATION PATHS ARE OUTDATED HINTS ⚠️
+          ═══════════════════════════════════════════════════════════════
+
+          THE MENU STRUCTURE CHANGES FREQUENTLY. Navigation paths in this
+          payload are HINTS from when the documentation was written - they
+          may no longer be accurate.
+
+          KNOWN CHANGES (examples):
+          - "Settings > Workflows" is NOW "Automations > Workflows"
+          - Menu items get renamed, moved, or reorganized regularly
+          - Your job is to FIND the feature, not blindly follow paths
+
+          ═══════════════════════════════════════════════════════════════
           ## ZERO-SKIP POLICY (ABSOLUTE REQUIREMENT)
           ═══════════════════════════════════════════════════════════════
 
-          YOU MUST COMPLETE EVERY TEST. NO EXCEPTIONS.
+          YOU MUST COMPLETE EVERY TEST. NO EXCEPTIONS. SKIPPING = FAILURE.
 
           A) FORBIDDEN BEHAVIORS:
-             - NEVER mark a test as "skipped" due to navigation difficulties
-             - NEVER give up because a menu item is not where expected
-             - NEVER assume a feature doesn't exist because you can't find it immediately
-             - NEVER skip a test because setup steps seem complex
+             - NEVER mark a test as "skipped" because navigation path didn't work
+             - NEVER give up after trying just the hinted path
+             - NEVER assume a feature doesn't exist without clicking EVERY menu
+             - NEVER skip - if you can't find it, mark as FAILED with exploration notes
 
           B) REQUIRED BEHAVIOR:
-             - You MUST attempt EVERY test in the payload
-             - You MUST explore the UI to find features when paths fail
-             - You MUST document ACTUAL paths found vs expected paths
-             - You MUST capture evidence even when navigating differently than expected
+             - You MUST click through EVERY sidebar menu item when path fails
+             - You MUST screenshot each menu you explore
+             - You MUST document the CORRECT path when you find it
+             - You MUST flag "MENU HAS CHANGED" when path differs from hint
 
-          C) STATUS MEANINGS (STRICT DEFINITIONS):
-             - "passed"  = Test executed, assertions verified as true
-             - "failed"  = Test executed, assertions verified as false
-             - "skipped" = ONLY if feature genuinely does not exist after exhaustive search
+          C) STATUS MEANINGS (STRICT):
+             - "passed"  = Found feature (maybe different path), assertions verified true
+             - "failed"  = Found feature, assertions verified false OR exhausted all menus
+             - "skipped" = FORBIDDEN except for features requiring unavailable permissions
 
-          D) BEFORE MARKING ANY TEST AS SKIPPED, YOU MUST:
-             1. Try at least 3 different navigation approaches
-             2. Explore ALL main menu items and their submenus
-             3. Use search functionality if available
-             4. Check settings, configuration, and admin sections
-             5. Document each exploration attempt with screenshots
-             6. Spend minimum 2 minutes actively exploring
+          D) MANDATORY EXPLORATION BEFORE ANY NON-PASS STATUS:
+             You MUST click and screenshot EVERY SINGLE sidebar menu item.
+             No exceptions. Document what you found in each one.
 
           ═══════════════════════════════════════════════════════════════
-          ## DEEP EXPLORATION PROTOCOL (SHERLOCK HOLMES MODE)
+          ## DEEP EXPLORATION PROTOCOL (MANDATORY WHEN PATH FAILS)
           ═══════════════════════════════════════════════════════════════
 
-          Navigation paths in the payload are HINTS, not guaranteed exact paths.
-          The UI may have changed. Your job is to DISCOVER the actual path.
+          When the hinted navigation path doesn't work, you MUST execute
+          this COMPLETE exploration protocol. Do NOT skip steps.
 
-          ### WHEN HINTED PATH FAILS (Menu item not found):
+          ### STEP 1: CLICK EVERY SIDEBAR MENU ITEM (MANDATORY)
+          This is NOT optional. You MUST physically click each menu item.
 
-          STEP 1: SYSTEMATIC MENU EXPLORATION
-          - Open EVERY top-level menu item
-          - For each menu, scan ALL submenu items visible
-          - Look for similar/related terminology (e.g., "Air Tickets" vs "Flight Allowance")
-          - Check dropdown menus, hamburger menus, sidebar navigation
-          - Take screenshot of each menu explored
+          For the Bayzat app, typical sidebar menus include:
+          - Dashboard / Home
+          - People / Employees
+          - Payroll
+          - Benefits
+          - Requests
+          - Reports
+          - Automations (formerly part of Settings!)
+          - Settings
+          - Company
+          - Any other visible menu items
 
-          STEP 2: SEARCH-BASED DISCOVERY
-          - Look for global search functionality (magnifying glass icon, search bar)
-          - Search for key terms from the test (e.g., "air ticket", "encashment", "workflow")
-          - Try variations: singular/plural, abbreviations, alternative terms
-          - Document search results with screenshots
+          FOR EACH MENU ITEM:
+          1. Click the menu item
+          2. Wait for page/submenu to load
+          3. Take a screenshot named: chunk-X-explore-<menu-name>.png
+          4. Check if it contains or leads to the feature you need
+          5. If it has submenus, click EACH submenu item too
+          6. Document what you found: "Clicked [Menu] -> Found: [description]"
 
-          STEP 3: SETTINGS DEEP DIVE
-          - Navigate to Settings (gear icon, cog, "Settings" menu)
-          - Explore ALL settings categories
-          - Look for: Company Settings, Workflows, Policies, Benefits, Allowances
-          - Check tabs within settings pages
-          - Many features hide in nested settings
+          ### STEP 2: KEYWORD MATCHING
+          Look for ANY of these terms related to your test:
+          - For Workflows: "Automations", "Automation", "Workflows", "Rules", "Triggers"
+          - For Air Tickets: "Air Ticket", "Flight", "Travel", "Allowance", "Benefits"
+          - For Policies: "Policy", "Policies", "Rules", "Configuration", "Setup"
 
-          STEP 4: CONTEXTUAL EXPLORATION
-          - Navigate to employee profile/dashboard
-          - Look for feature access points in context menus
-          - Check "Request" or "Apply" buttons
-          - Explore admin vs employee views if available
+          ### STEP 3: SEARCH IF AVAILABLE
+          - Look for search bar (magnifying glass icon, Cmd+K, etc.)
+          - Search for: "workflow", "air ticket", "automation", etc.
+          - Screenshot search results
 
-          STEP 5: BREADCRUMB ANALYSIS
-          - When you find a related page, note the breadcrumb trail
-          - Use breadcrumbs to understand UI hierarchy
-          - Navigate up/down the hierarchy to find target feature
+          ### STEP 4: SETTINGS VARIATIONS
+          Settings may be split across multiple locations:
+          - Settings (gear icon)
+          - Company Settings
+          - Automations (workflows often moved here!)
+          - Admin / Administration
+          - Configuration
 
-          ### DOCUMENTATION REQUIREMENTS:
+          ### STEP 5: DOCUMENT THE CORRECT PATH
+          When you find the feature, you MUST document:
+          ```
+          PATH_CORRECTION:
+          - Hinted path: Settings > Workflows
+          - Actual path: Automations > Workflows
+          - Menu has changed: YES
+          - Screenshot: chunk-X-correct-path.png
+          ```
 
-          For each test where navigation differs from hint:
-          - Record: "Hinted path: Settings > Workflows > Air Ticket"
-          - Record: "Actual path found: Company > Policies > Travel > Air Ticket"
-          - Include screenshot of actual navigation path used
-          - Note any UI labels that differ from documentation
-
-          ### EXPLORATION TIME BUDGET:
-          - Minimum 3 minutes exploring before concluding a feature doesn't exist
-          - Try at least 5 different navigation approaches
-          - Capture at least 3 exploration screenshots
+          ### EXPLORATION CHECKLIST (Must complete ALL):
+          [ ] Clicked Dashboard/Home
+          [ ] Clicked People/Employees
+          [ ] Clicked Payroll
+          [ ] Clicked Benefits
+          [ ] Clicked Requests
+          [ ] Clicked Reports
+          [ ] Clicked Automations
+          [ ] Clicked Settings
+          [ ] Clicked Company
+          [ ] Clicked any other visible menus
+          [ ] Tried search (if available)
+          [ ] Documented findings for each menu
+          [ ] Captured screenshot for each exploration
+          [ ] Recorded correct path if found
 
           ═══════════════════════════════════════════════════════════════
           ## CRITICAL: REFERENCE-BASED PAYLOAD STRUCTURE
@@ -739,16 +770,22 @@ jobs:
               {
                 "test_id": "<test_id from payload>",
                 "test_name": "<test name>",
-                "status": "passed|failed|skipped",
+                "status": "passed|failed",
                 "assertions_checked": <number>,
                 "assertions_passed": <number>,
                 "business_rules_validated": ["<rule_ids checked>"],
                 "edge_cases_tested": ["<case_ids checked>"],
                 "screenshots": ["<filename>"],
-                "hinted_path": "<navigation path from payload>",
-                "actual_path_used": "<actual navigation path discovered>",
-                "path_discovery_notes": "<how you found the feature if path differed>",
-                "exploration_attempts": <number of navigation approaches tried>,
+                "navigation": {
+                  "hinted_path": "<path from payload - may be outdated>",
+                  "actual_path_used": "<correct path you discovered>",
+                  "menu_changed": true|false,
+                  "path_correction_note": "<e.g., Settings>Workflows is now Automations>Workflows>"
+                },
+                "exploration_log": [
+                  {"menu": "<menu clicked>", "found": "<what you found>", "screenshot": "<filename>"}
+                ],
+                "menus_explored": <number of sidebar menus clicked>,
                 "notes": "<any observations>"
               }
             ],
@@ -761,10 +798,16 @@ jobs:
           - Only process tests in YOUR chunk payload
           - If a reference cannot be resolved, log it and continue with available info
           - Take screenshot on any error for debugging
-          - ZERO-SKIP MANDATE: You MUST complete every test. Explore to find features.
-          - EXPLORATION FIRST: If navigation fails, engage Deep Exploration Protocol
-          - DOCUMENT DISCOVERIES: Record actual_path_used when different from hint
-          - NEVER give up: Try 5+ approaches before even considering "skipped" status
+
+          ## ⚠️ CRITICAL REMINDERS - READ EVERY TIME ⚠️
+          - NAVIGATION PATHS ARE OUTDATED HINTS - menu structure changes frequently!
+          - "Settings > Workflows" is NOW "Automations > Workflows" (example of change)
+          - When path fails: CLICK EVERY SINGLE SIDEBAR MENU ITEM
+          - Screenshot EACH menu you explore: chunk-X-explore-<menu>.png
+          - Document the CORRECT path when found: "Menu has changed: YES"
+          - NEVER use "skipped" status - use "failed" with exploration notes instead
+          - You MUST explore ALL menus before marking any test as failed
+          - Include exploration_log array showing every menu you clicked
 
           ## PLAYWRIGHT MCP TOOL RULES (MANDATORY)
           When using mcp__playwright__browser_take_screenshot:
