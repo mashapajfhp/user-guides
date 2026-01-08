@@ -719,18 +719,35 @@ jobs:
           echo "============================================"
 
           # Copy chunk results from artifacts
+          # Note: upload-artifact strips common prefix, so internal paths are relative
           for i in $(seq 0 $((CHUNK_COUNT - 1))); do
-            ARTIFACT_RESULT="$ARTIFACTS_DIR/chunk-$i-results/$FOLDER/validation/chunks/results/result-chunk-$i.json"
-            if [ -f "$ARTIFACT_RESULT" ]; then
-              cp "$ARTIFACT_RESULT" "$RESULTS_DIR/"
-              echo "Copied chunk-$i result"
+            # Try both possible paths (with and without $FOLDER prefix)
+            ARTIFACT_RESULT_1="$ARTIFACTS_DIR/chunk-$i-results/chunks/results/result-chunk-$i.json"
+            ARTIFACT_RESULT_2="$ARTIFACTS_DIR/chunk-$i-results/$FOLDER/validation/chunks/results/result-chunk-$i.json"
+
+            if [ -f "$ARTIFACT_RESULT_1" ]; then
+              cp "$ARTIFACT_RESULT_1" "$RESULTS_DIR/"
+              echo "Copied chunk-$i result (path type 1)"
+            elif [ -f "$ARTIFACT_RESULT_2" ]; then
+              cp "$ARTIFACT_RESULT_2" "$RESULTS_DIR/"
+              echo "Copied chunk-$i result (path type 2)"
+            else
+              echo "WARNING: Could not find chunk-$i result at either path"
+              echo "  Tried: $ARTIFACT_RESULT_1"
+              echo "  Tried: $ARTIFACT_RESULT_2"
+              ls -la "$ARTIFACTS_DIR/chunk-$i-results/" 2>/dev/null || true
             fi
 
-            # Copy screenshots
-            ARTIFACT_SCREENSHOTS="$ARTIFACTS_DIR/chunk-$i-results/$FOLDER/validation/screenshots/chunk-$i"
-            if [ -d "$ARTIFACT_SCREENSHOTS" ]; then
-              cp -r "$ARTIFACT_SCREENSHOTS"/* "$SCREENSHOTS_DIR/" 2>/dev/null || true
-              echo "Copied chunk-$i screenshots"
+            # Copy screenshots - try both paths
+            ARTIFACT_SCREENSHOTS_1="$ARTIFACTS_DIR/chunk-$i-results/screenshots/chunk-$i"
+            ARTIFACT_SCREENSHOTS_2="$ARTIFACTS_DIR/chunk-$i-results/$FOLDER/validation/screenshots/chunk-$i"
+
+            if [ -d "$ARTIFACT_SCREENSHOTS_1" ]; then
+              cp -r "$ARTIFACT_SCREENSHOTS_1"/* "$SCREENSHOTS_DIR/" 2>/dev/null || true
+              echo "Copied chunk-$i screenshots (path type 1)"
+            elif [ -d "$ARTIFACT_SCREENSHOTS_2" ]; then
+              cp -r "$ARTIFACT_SCREENSHOTS_2"/* "$SCREENSHOTS_DIR/" 2>/dev/null || true
+              echo "Copied chunk-$i screenshots (path type 2)"
             fi
           done
 
