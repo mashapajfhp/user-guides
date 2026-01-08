@@ -575,6 +575,34 @@ jobs:
           rm -rf /tmp/playwright-* 2>/dev/null || true
           echo "Pre-validation cleanup complete"
 
+      - name: Configure Claude API Key Source
+        run: |
+          # Solution 3: Pre-seed Claude config to use environment variable for API key
+          # This prevents the interactive API key prompt that blocks MCP initialization
+          CLAUDE_CONFIG_DIR="$HOME/.claude"
+          CLAUDE_CONFIG_FILE="$CLAUDE_CONFIG_DIR/settings.json"
+
+          echo "Configuring Claude to use ANTHROPIC_API_KEY from environment..."
+          mkdir -p "$CLAUDE_CONFIG_DIR"
+
+          # Create or update settings.json with apiKeySource: env
+          if [ -f "$CLAUDE_CONFIG_FILE" ]; then
+            # Merge with existing config
+            echo "Updating existing Claude config..."
+            TMP_CONFIG=$(mktemp)
+            jq '. + {"apiKeySource": "env"}' "$CLAUDE_CONFIG_FILE" > "$TMP_CONFIG" 2>/dev/null || \
+              echo '{"apiKeySource": "env"}' > "$TMP_CONFIG"
+            mv "$TMP_CONFIG" "$CLAUDE_CONFIG_FILE"
+          else
+            # Create new config
+            echo '{"apiKeySource": "env"}' > "$CLAUDE_CONFIG_FILE"
+          fi
+
+          echo "Claude config:"
+          cat "$CLAUDE_CONFIG_FILE"
+          echo ""
+          echo "Claude will now use ANTHROPIC_API_KEY environment variable without prompting"
+
       - name: Run Chunk Validation
         id: validation
         env:
@@ -608,25 +636,24 @@ jobs:
           echo "============================================"
 
           set +e
-          # Solution 1: Pipe "1" to auto-answer API key prompt, then send the prompt
-          # This is the most reliable approach for CI/CD environments
+          # Solution 3: Claude config is pre-seeded with apiKeySource: env
+          # This allows running Claude directly without stdin pipe (which broke MCP)
 
           echo "::add-mask::${ANTHROPIC_API_KEY}"
 
-          # Pipe: "1\n" selects Yes for API key, wait for init, then send prompt
-          (
-            printf "1\n"
-            sleep 5
-            cat "$PROMPT_FILE"
-          ) | claude \
+          # Run Claude directly with prompt as argument
+          # NO piping - stdin must be available for MCP server communication
+          # NO --print mode - we need interactive mode for MCP tool execution
+          claude \
             --model sonnet \
             --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
             --mcp-config ".mcp.json" \
             --dangerously-skip-permissions \
             --max-turns 30 \
+            "$(cat "$PROMPT_FILE")" \
             2>&1 | tee "$LOG_FILE"
 
-          CLAUDE_EXIT_CODE=${PIPESTATUS[1]}
+          CLAUDE_EXIT_CODE=${PIPESTATUS[0]}
           set -e
 
           rm -f "$PROMPT_FILE"
