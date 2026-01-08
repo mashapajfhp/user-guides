@@ -1,0 +1,764 @@
+{
+  "instructions": {
+    "payload_format": "reference-based-v2",
+    "description": "This payload uses ID references to avoid data duplication. You MUST resolve references before executing tests.",
+    "reference_resolution": {
+      "access_path_ref": {
+        "description": "Reference to a navigation path",
+        "lookup": "Find in definitions.access_paths.configuration OR definitions.access_paths.operational where path_id matches",
+        "returns": "Navigation steps array, canonical_path for Supabase lookup, and path details"
+      },
+      "setup_flow_ref": {
+        "description": "Reference to a setup/configuration flow",
+        "lookup": "Find in definitions.setup_flows where flow_id matches",
+        "returns": "Array of steps to execute in order"
+      },
+      "business_rule_refs": {
+        "description": "Array of business rule IDs to validate",
+        "lookup": "Find each in definitions.business_rules where rule_id matches",
+        "returns": "Rule description and expected UI manifestation"
+      },
+      "edge_case_refs": {
+        "description": "Array of edge case IDs to check",
+        "lookup": "Find each in definitions.edge_cases where case_id matches",
+        "returns": "Scenario description and expected UI behavior"
+      },
+      "ui_element_refs": {
+        "description": "Array of UI element names relevant to test",
+        "lookup": "Find each in definitions.ui_elements where element_name matches",
+        "returns": "Element type and location"
+      }
+    },
+    "navigation_taxonomy": {
+      "description": "Use canonical_path with Supabase resolve_navigation_path() for reliable navigation",
+      "usage": "curl -s \"${SUPABASE_URL}/rest/v1/rpc/resolve_navigation_path\" -H \"apikey: ${SUPABASE_ANON_KEY}\" -H \"Authorization: Bearer ${SUPABASE_ANON_KEY}\" -H \"Content-Type: application/json\" -d '{\"p_canonical_path\": \"<canonical_path>\", \"p_env\": \"prod\"}'",
+      "returns": "nav_steps array with labels and levels for menu clicks"
+    },
+    "execution_workflow": [
+      "1. Read the test from tests array",
+      "2. Resolve access_path_ref → get canonical_path",
+      "3. Query Supabase resolve_navigation_path(canonical_path) → get nav_steps",
+      "4. Resolve setup_flow_ref → get setup steps",
+      "5. Execute nav_steps using Playwright (click each menu item in order)",
+      "6. Execute setup steps using Playwright",
+      "7. Perform test validations from assertions",
+      "8. Check resolved business_rules are satisfied",
+      "9. Verify resolved edge_cases behave as expected",
+      "10. Capture screenshots as evidence",
+      "11. Record pass/fail result"
+    ],
+    "example": {
+      "test_with_refs": {
+        "test_id": "TEST-EXAMPLE-001",
+        "setup_flow_ref": "SETUP-001",
+        "business_rule_refs": [
+          "BR-001",
+          "BR-002"
+        ]
+      },
+      "resolution_steps": [
+        "1. Look up SETUP-001 in definitions.setup_flows",
+        "2. Find the flow object with matching flow_id",
+        "3. Execute each step in the steps array in order",
+        "4. Look up BR-001 and BR-002 in definitions.business_rules",
+        "5. Validate that the UI behaves according to those rules"
+      ]
+    }
+  },
+  "metadata": {
+    "feature_name": "Air Ticket",
+    "feature_slug": "air-ticket",
+    "version": "v30",
+    "folder_path": "air-ticket/v30",
+    "readme_path": "air-ticket/v30/README.md",
+    "github_root_path": "air-ticket/",
+    "generated_at": "2026-01-08T22:42:52.991Z",
+    "source": "jira+zendesk",
+    "payload_format": "reference-based-v2"
+  },
+  "summary": {
+    "total_tests": 4,
+    "by_priority": {
+      "must_test": 2,
+      "should_test": 2,
+      "nice_to_test": 0
+    },
+    "by_test_type": {
+      "workflow": 2,
+      "ui_visibility": 1,
+      "text_verification": 1,
+      "form_interaction": 0,
+      "permission_check": 0
+    },
+    "documentation_candidates": 7,
+    "excluded": 1
+  },
+  "definitions": {
+    "access_paths": {
+      "configuration": [
+        {
+          "path_id": "CFG-001",
+          "path_name": "Create Air Ticket Allowance Policy",
+          "navigation": [
+            "Settings",
+            "Company",
+            "Air ticket policies",
+            "Add New"
+          ],
+          "canonical_path": "Settings > Company > Air ticket policies > Add New",
+          "source_article": "Setting up an air ticket allowance policy"
+        },
+        {
+          "path_id": "CFG-002",
+          "path_name": "Create Air Ticket Auto Encashment Workflow",
+          "navigation": [
+            "Settings",
+            "Workflows",
+            "Create New Workflow",
+            "Select Air Tickets Auto Encashment Recipe"
+          ],
+          "canonical_path": "Settings > Workflows > Create New Workflow > Select Air Tickets Auto Encashment Recipe",
+          "source_article": "Air Tickets Auto Encashments via Workflows"
+        }
+      ],
+      "operational": []
+    },
+    "setup_flows": [
+      {
+        "flow_id": "SETUP-001",
+        "flow_name": "Create Air Ticket Allowance Policy",
+        "steps": [
+          {
+            "step": 1,
+            "action": "Navigate to Settings > Company > Air ticket policies",
+            "element_type": "navigation",
+            "expected_result": "Air ticket policies page loads"
+          },
+          {
+            "step": 2,
+            "action": "Click 'Add New' button",
+            "element_type": "button",
+            "expected_result": "Policy creation form opens"
+          },
+          {
+            "step": 3,
+            "action": "Enter policy name in text input",
+            "element_type": "input",
+            "expected_result": "Policy name is captured"
+          },
+          {
+            "step": 4,
+            "action": "Enter allowance amount in numeric input",
+            "element_type": "input",
+            "expected_result": "Allowance amount is set"
+          },
+          {
+            "step": 5,
+            "action": "Select eligible people/employees from dropdown or multi-select",
+            "element_type": "dropdown",
+            "expected_result": "Eligible employees are selected"
+          },
+          {
+            "step": 6,
+            "action": "Set request timing via date/time picker",
+            "element_type": "date_picker",
+            "expected_result": "Request timing is configured"
+          },
+          {
+            "step": 7,
+            "action": "Define renewal cycle from dropdown",
+            "element_type": "dropdown",
+            "expected_result": "Renewal cycle is set"
+          },
+          {
+            "step": 8,
+            "action": "Set request limits in numeric input",
+            "element_type": "input",
+            "expected_result": "Request limit is configured"
+          },
+          {
+            "step": 9,
+            "action": "Choose redeem options via checkboxes (Reimbursement, Encashment, Ticket Booking)",
+            "element_type": "checkbox",
+            "expected_result": "Redemption options are selected"
+          },
+          {
+            "step": 10,
+            "action": "Review policy details on summary screen",
+            "element_type": "text",
+            "expected_result": "All policy details are displayed for review"
+          },
+          {
+            "step": 11,
+            "action": "Click 'Save' or 'Finalize' button",
+            "element_type": "button",
+            "expected_result": "Policy is created and activated"
+          }
+        ],
+        "source_article": "Setting up an air ticket allowance policy"
+      },
+      {
+        "flow_id": "SETUP-002",
+        "flow_name": "Create Air Ticket Auto Encashment Workflow",
+        "steps": [
+          {
+            "step": 1,
+            "action": "Navigate to Settings > Workflows",
+            "element_type": "navigation",
+            "expected_result": "Workflows page loads"
+          },
+          {
+            "step": 2,
+            "action": "Click 'Create New Workflow' button",
+            "element_type": "button",
+            "expected_result": "Workflow creation modal or page opens"
+          },
+          {
+            "step": 3,
+            "action": "Select 'Air Tickets Auto Encashment' recipe from available templates",
+            "element_type": "button",
+            "expected_result": "Air Tickets Auto Encashment recipe is selected"
+          },
+          {
+            "step": 4,
+            "action": "Set trigger date via date picker",
+            "element_type": "date_picker",
+            "expected_result": "Trigger date is configured"
+          },
+          {
+            "step": 5,
+            "action": "Set trigger time via hour selector (minute selector non-functional)",
+            "element_type": "dropdown",
+            "expected_result": "Trigger time is set to hour-level precision"
+          },
+          {
+            "step": 6,
+            "action": "Select encashment criteria via radio buttons or dropdown (fully approved vs requiring approvals)",
+            "element_type": "radio",
+            "expected_result": "Encashment criteria is selected"
+          },
+          {
+            "step": 7,
+            "action": "Choose application 'Bayzat Payroll' from dropdown",
+            "element_type": "dropdown",
+            "expected_result": "Application is set to Bayzat Payroll"
+          },
+          {
+            "step": 8,
+            "action": "Select request type from dropdown",
+            "element_type": "dropdown",
+            "expected_result": "Request type is selected"
+          },
+          {
+            "step": 9,
+            "action": "Assign employee via dropdown or search input",
+            "element_type": "dropdown",
+            "expected_result": "Employee assignee is selected"
+          },
+          {
+            "step": 10,
+            "action": "Click 'Save Workflow' button",
+            "element_type": "button",
+            "expected_result": "Workflow is saved"
+          },
+          {
+            "step": 11,
+            "action": "Verify workflow activation status",
+            "element_type": "text",
+            "expected_result": "Workflow shows as active/enabled"
+          },
+          {
+            "step": 12,
+            "action": "View workflow activity log",
+            "element_type": "table",
+            "expected_result": "Activity log displays workflow execution history"
+          }
+        ],
+        "source_article": "Air Tickets Auto Encashments via Workflows"
+      }
+    ],
+    "business_rules": [
+      {
+        "rule_id": "BR-001",
+        "rule": "Air ticket request options must be enabled by the admin before employees can submit requests",
+        "ui_manifestation": "Request Air Ticket button and options are only visible/enabled if admin has activated the feature in policy settings",
+        "source_article": "How to request Air ticket"
+      },
+      {
+        "rule_id": "BR-002",
+        "rule": "Allowance amount can vary by employee seniority or country/region",
+        "ui_manifestation": "Policy creation form allows setting different allowance amounts for different employee groups or locations",
+        "source_article": "Setting up an air ticket allowance policy"
+      },
+      {
+        "rule_id": "BR-003",
+        "rule": "Allowance amount applies collectively to listed dependents, not individually",
+        "ui_manifestation": "When selecting dependents in policy, total allowance is shared across all selected dependents",
+        "source_article": "Setting up an air ticket allowance policy"
+      },
+      {
+        "rule_id": "BR-004",
+        "rule": "Employees cannot be assigned to multiple air ticket policies",
+        "ui_manifestation": "System prevents assigning same employee to multiple policies; dropdown/multi-select shows only unassigned employees",
+        "source_article": "Setting up an air ticket allowance policy"
+      },
+      {
+        "rule_id": "BR-005",
+        "rule": "Employees cannot request tickets exceeding allotted allowance",
+        "ui_manifestation": "Request submission form validates against policy allowance; error message shown if request amount exceeds limit",
+        "source_article": "Setting up an air ticket allowance policy"
+      },
+      {
+        "rule_id": "BR-006",
+        "rule": "Active policies cannot be edited once ticket requests are raised",
+        "ui_manifestation": "Edit button is disabled for policies with existing requests; tooltip or message explains why editing is not allowed",
+        "source_article": "Setting up an air ticket allowance policy"
+      },
+      {
+        "rule_id": "BR-008",
+        "rule": "Workflow trigger time is based on UAE or KSA account location",
+        "ui_manifestation": "Time selector in workflow configuration displays times in account's timezone (UAE or KSA)",
+        "source_article": "Air Tickets Auto Encashments via Workflows"
+      },
+      {
+        "rule_id": "BR-009",
+        "rule": "Organizations can set maximum number of requests per renewal cycle",
+        "ui_manifestation": "Policy creation form includes numeric input field for setting maximum requests per cycle",
+        "source_article": "Air ticket request"
+      },
+      {
+        "rule_id": "BR-010",
+        "rule": "Multiple policies can be created for different hierarchy levels or employee groups",
+        "ui_manifestation": "Policy creation allows creating separate policies with different names, allowances, and eligible employee groups",
+        "source_article": "Air ticket request"
+      }
+    ],
+    "edge_cases": [
+      {
+        "case_id": "EC-002",
+        "scenario": "Admin attempts to edit an active policy that already has submitted requests",
+        "expected_ui_behavior": "Edit button is disabled; tooltip or modal explains that active policies with requests cannot be modified",
+        "source_article": "Setting up an air ticket allowance policy"
+      },
+      {
+        "case_id": "EC-003",
+        "scenario": "Employee is assigned to one air ticket policy and admin tries to assign them to another",
+        "expected_ui_behavior": "System prevents assignment; employee appears as unavailable in second policy's eligible employees list",
+        "source_article": "Setting up an air ticket allowance policy"
+      },
+      {
+        "case_id": "EC-005",
+        "scenario": "Admin sets workflow trigger time with minute selector (non-functional feature)",
+        "expected_ui_behavior": "Minute selector is disabled or ignored; only hour-level precision is applied to workflow trigger",
+        "source_article": "Air Tickets Auto Encashments via Workflows"
+      },
+      {
+        "case_id": "EC-006",
+        "scenario": "Admin creates workflow without selecting an assignee employee",
+        "expected_ui_behavior": "Workflow save fails with validation error requiring assignee selection",
+        "source_article": "Air Tickets Auto Encashments via Workflows"
+      },
+      {
+        "case_id": "EC-009",
+        "scenario": "Admin selects 'fully approved requests' vs 'requests requiring approvals' in workflow with different outcomes",
+        "expected_ui_behavior": "Workflow behavior changes based on selection; fully approved requests auto-encash without additional approval steps",
+        "source_article": "Air Tickets Auto Encashments via Workflows"
+      }
+    ],
+    "ui_elements": [
+      {
+        "element_name": "Add New Policy Button",
+        "element_type": "button",
+        "location": "Settings > Company > Air ticket policies"
+      },
+      {
+        "element_name": "Policy Name Input",
+        "element_type": "input",
+        "location": "Settings > Company > Air ticket policies > Add New"
+      },
+      {
+        "element_name": "Allowance Amount Input",
+        "element_type": "input",
+        "location": "Settings > Company > Air ticket policies > Add New"
+      },
+      {
+        "element_name": "Eligible Employees Dropdown",
+        "element_type": "dropdown",
+        "location": "Settings > Company > Air ticket policies > Add New"
+      },
+      {
+        "element_name": "Request Timing Date Picker",
+        "element_type": "date_picker",
+        "location": "Settings > Company > Air ticket policies > Add New"
+      },
+      {
+        "element_name": "Renewal Cycle Dropdown",
+        "element_type": "dropdown",
+        "location": "Settings > Company > Air ticket policies > Add New"
+      },
+      {
+        "element_name": "Request Limits Input",
+        "element_type": "input",
+        "location": "Settings > Company > Air ticket policies > Add New"
+      },
+      {
+        "element_name": "Redeem Options Checkboxes",
+        "element_type": "checkbox",
+        "location": "Settings > Company > Air ticket policies > Add New"
+      },
+      {
+        "element_name": "Reimbursement Checkbox",
+        "element_type": "checkbox",
+        "location": "Settings > Company > Air ticket policies > Add New > Redeem Options"
+      },
+      {
+        "element_name": "Encashment Checkbox",
+        "element_type": "checkbox",
+        "location": "Settings > Company > Air ticket policies > Add New > Redeem Options"
+      },
+      {
+        "element_name": "Ticket Booking Checkbox",
+        "element_type": "checkbox",
+        "location": "Settings > Company > Air ticket policies > Add New > Redeem Options"
+      },
+      {
+        "element_name": "Save Policy Button",
+        "element_type": "button",
+        "location": "Settings > Company > Air ticket policies > Add New"
+      },
+      {
+        "element_name": "Create New Workflow Button",
+        "element_type": "button",
+        "location": "Settings > Workflows"
+      },
+      {
+        "element_name": "Air Tickets Auto Encashment Recipe",
+        "element_type": "button",
+        "location": "Settings > Workflows > Create New Workflow"
+      },
+      {
+        "element_name": "Trigger Date Picker",
+        "element_type": "date_picker",
+        "location": "Settings > Workflows > Air Tickets Auto Encashment"
+      },
+      {
+        "element_name": "Trigger Time Hour Selector",
+        "element_type": "dropdown",
+        "location": "Settings > Workflows > Air Tickets Auto Encashment"
+      },
+      {
+        "element_name": "Trigger Time Minute Selector",
+        "element_type": "dropdown",
+        "location": "Settings > Workflows > Air Tickets Auto Encashment"
+      },
+      {
+        "element_name": "Encashment Criteria Radio Buttons",
+        "element_type": "radio",
+        "location": "Settings > Workflows > Air Tickets Auto Encashment > Define Criteria"
+      },
+      {
+        "element_name": "Fully Approved Requests Option",
+        "element_type": "radio",
+        "location": "Settings > Workflows > Air Tickets Auto Encashment > Define Criteria"
+      },
+      {
+        "element_name": "Requests Requiring Approvals Option",
+        "element_type": "radio",
+        "location": "Settings > Workflows > Air Tickets Auto Encashment > Define Criteria"
+      },
+      {
+        "element_name": "Application Dropdown",
+        "element_type": "dropdown",
+        "location": "Settings > Workflows > Air Tickets Auto Encashment > Set Request Details"
+      },
+      {
+        "element_name": "Request Type Dropdown",
+        "element_type": "dropdown",
+        "location": "Settings > Workflows > Air Tickets Auto Encashment > Set Request Details"
+      },
+      {
+        "element_name": "Employee Assignee Dropdown",
+        "element_type": "dropdown",
+        "location": "Settings > Workflows > Air Tickets Auto Encashment > Set Request Details"
+      },
+      {
+        "element_name": "Save Workflow Button",
+        "element_type": "button",
+        "location": "Settings > Workflows > Air Tickets Auto Encashment"
+      },
+      {
+        "element_name": "Workflow Activity Log",
+        "element_type": "table",
+        "location": "Settings > Workflows > Air Tickets Auto Encashment"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "test_id": "TEST-TSSD-3193",
+      "ticket_key": "TSSD-3193",
+      "test_name": "Client is unable to remove Processed Air tickets",
+      "validation_priority": "must_test",
+      "test_type": "workflow",
+      "theme": "Processed Expense Deletion Workflow",
+      "description": "verify fix works - confirm that processed air tickets can now be deleted/rejected after reopening payroll and rejecting transaction",
+      "what_to_test": "Multi-step workflow: (1) Reopen closed payroll month, (2) Reject payroll transaction, (3) Verify air ticket request rejection/deletion options become available, (4) Confirm air ticket can be deleted",
+      "access_path_ref": "CFG-002",
+      "setup_flow_ref": "SETUP-002",
+      "business_rule_refs": [
+        "BR-001",
+        "BR-004"
+      ],
+      "edge_case_refs": [
+        "EC-003"
+      ],
+      "ui_element_refs": [
+        "Request Timing Date Picker",
+        "Request Limits Input",
+        "Redeem Options Checkboxes",
+        "Reimbursement Checkbox",
+        "Encashment Checkbox",
+        "Ticket Booking Checkbox",
+        "Add New Policy Button",
+        "Policy Name Input",
+        "Allowance Amount Input",
+        "Eligible Employees Dropdown"
+      ],
+      "assertions": [
+        "Assert payroll month can be reopened",
+        "Assert transaction rejection option is available",
+        "Assert air ticket rejection/deletion buttons are enabled after transaction rejection",
+        "Assert air ticket is removed from system after deletion"
+      ],
+      "source": {
+        "ticket_key": "TSSD-3193",
+        "status": "Resolved",
+        "issue_type": "Bug"
+      }
+    },
+    {
+      "test_id": "TEST-AV-6477",
+      "ticket_key": "AV-6477",
+      "test_name": "FE: Show remaining air tickets when balance is on hold due to booking request",
+      "validation_priority": "must_test",
+      "test_type": "ui_visibility",
+      "theme": "Air Ticket Balance Display",
+      "description": "validate implementation - confirm frontend correctly displays remaining air ticket balance when booking request is pending",
+      "what_to_test": "Air ticket balance display when a booking request is in progress/on-hold status",
+      "access_path_ref": "CFG-002",
+      "setup_flow_ref": "SETUP-001",
+      "business_rule_refs": [
+        "BR-001",
+        "BR-004"
+      ],
+      "edge_case_refs": [
+        "EC-003"
+      ],
+      "ui_element_refs": [
+        "Request Timing Date Picker",
+        "Request Limits Input",
+        "Ticket Booking Checkbox",
+        "Application Dropdown",
+        "Request Type Dropdown",
+        "Employee Assignee Dropdown",
+        "Add New Policy Button",
+        "Policy Name Input",
+        "Allowance Amount Input",
+        "Eligible Employees Dropdown"
+      ],
+      "assertions": [
+        "Assert remaining air ticket balance is visible when booking request is pending",
+        "Assert balance display updates correctly during booking workflow",
+        "Assert balance shows accurate count despite on-hold status"
+      ],
+      "source": {
+        "ticket_key": "AV-6477",
+        "status": "Already Done",
+        "issue_type": "Bug"
+      }
+    },
+    {
+      "test_id": "TEST-AV-6343",
+      "ticket_key": "AV-6343",
+      "test_name": "FE: Unclear indication of available air ticket requests",
+      "validation_priority": "should_test",
+      "test_type": "text_verification",
+      "theme": "Air Ticket Balance Display",
+      "description": "confirm behavior - validate that air ticket request display is now clear and unambiguous",
+      "what_to_test": "Air ticket request counter display and label clarity (verify it shows 'Available air ticket requests: X' or similar clear format, not ambiguous '0/1' notation)",
+      "access_path_ref": "CFG-001",
+      "setup_flow_ref": "SETUP-002",
+      "business_rule_refs": [
+        "BR-001",
+        "BR-004",
+        "BR-006"
+      ],
+      "edge_case_refs": [
+        "EC-003"
+      ],
+      "ui_element_refs": [
+        "Request Timing Date Picker",
+        "Request Limits Input",
+        "Add New Policy Button",
+        "Policy Name Input",
+        "Allowance Amount Input",
+        "Eligible Employees Dropdown",
+        "Renewal Cycle Dropdown",
+        "Redeem Options Checkboxes",
+        "Reimbursement Checkbox",
+        "Encashment Checkbox"
+      ],
+      "assertions": [
+        "Assert air ticket request display uses clear, unambiguous text",
+        "Assert remaining requests count is immediately understandable",
+        "Assert zero-state handling is clear (e.g., 'Available: 0' not '0/1')"
+      ],
+      "source": {
+        "ticket_key": "AV-6343",
+        "status": "Already Done",
+        "issue_type": "Bug"
+      }
+    },
+    {
+      "test_id": "TEST-TSSD-3366",
+      "ticket_key": "TSSD-3366",
+      "test_name": "Need to remove processed (Encashment) Air tickets with Payroll reopen",
+      "validation_priority": "should_test",
+      "test_type": "workflow",
+      "theme": "Processed Expense Deletion Workflow",
+      "description": "verify fix works - confirm the workflow for moving processed air ticket encashments between payroll periods works correctly",
+      "what_to_test": "Cross-period payroll transaction workflow: (1) Reopen previous payroll month, (2) Delete processed air ticket transaction, (3) Move request back to pending state, (4) Verify request can be moved to different payroll period",
+      "access_path_ref": "CFG-002",
+      "setup_flow_ref": "SETUP-002",
+      "business_rule_refs": [
+        "BR-001"
+      ],
+      "edge_case_refs": [],
+      "ui_element_refs": [
+        "Application Dropdown",
+        "Request Type Dropdown",
+        "Employee Assignee Dropdown",
+        "Request Timing Date Picker",
+        "Request Limits Input",
+        "Air Tickets Auto Encashment Recipe",
+        "Save Workflow Button",
+        "Workflow Activity Log",
+        "Encashment Checkbox",
+        "Trigger Date Picker"
+      ],
+      "assertions": [
+        "Assert payroll period can be reopened",
+        "Assert processed transaction can be deleted",
+        "Assert request returns to pending state after transaction deletion",
+        "Assert request can be reassigned to different payroll period"
+      ],
+      "source": {
+        "ticket_key": "TSSD-3366",
+        "status": "Resolved",
+        "issue_type": "Support"
+      }
+    }
+  ],
+  "limitations": {
+    "documentation_candidates": [
+      {
+        "ticket_key": "TSSD-2933",
+        "summary": "Air ticket carry over",
+        "documentation_type": "configuration_note",
+        "limitation_statement": "The Bayzat platform currently does not support indefinite carry-over of unused air ticket balances. Users cannot automatically transfer unused ticket allowances between policy years, which limits flexibility in time-off management.",
+        "user_impact": "Customers must manually calculate total requests for multi-year policies (e.g., 5 requests/year × 5 years = 25 total requests). No automatic carry-over of unused balances between years. Requires careful upfront planning.",
+        "workaround": "For multi-year policies, calculate total requests needed across entire cycle and set that as the total number of requests. For example, if 5 requests per year for 5 years, set total to 25 requests.",
+        "guide_section": "Air Ticket Policy Configuration — Multi-Year Cycles and Request Allocation"
+      },
+      {
+        "ticket_key": "TSSD-3954",
+        "summary": "Air tickets - Booked tickets notification (tagging LM when not in approval flow OR workflow on ticket requests)",
+        "documentation_type": "feature_gap",
+        "limitation_statement": "The Bayzat platform currently cannot notify or tag line managers about ticket processing when they are outside the standard approval flow. There is no automated notification system for proxy requesters or managers raising requests for employees.",
+        "user_impact": "Line managers who submit air ticket requests on behalf of blue collar employees cannot receive notifications when tickets are processed. They have no visibility into completion status unless they are part of the formal approval workflow.",
+        "workaround": "Currently, line managers must be added to the approval flow to receive notifications. Alternatively, HR can manually notify line managers outside the system when tickets are processed.",
+        "guide_section": "Air Ticket Request Notifications — Tracking Status for Proxy Requesters"
+      },
+      {
+        "ticket_key": "OS-695",
+        "summary": "As an employee I want to manage my air ticket requests from my air tickets",
+        "documentation_type": "business_decision",
+        "limitation_statement": "The platform currently lacks a unified interface for employees to manage air ticket requests under various policy conditions. There are specific scenarios where employees cannot fully interact with or understand their air ticket encashment status.",
+        "user_impact": "Employees cannot manage air ticket requests when: auto-encashment policy is inactive, hire date/probation end date is missing, they are not yet eligible for encashment, or they are in a policy other than auto-encashment. This creates confusion about eligibility status.",
+        "workaround": "Ensure employee records are complete (hire date, probation end date) and verify policy assignment before attempting to manage air ticket encashment requests.",
+        "guide_section": "Air Ticket Auto-Encashment — Policy Eligibility and Employee Record Requirements"
+      },
+      {
+        "ticket_key": "TSSD-2511",
+        "summary": "Letter requests - upload the document after stamping",
+        "documentation_type": "feature_gap",
+        "limitation_statement": "The current Bayzat platform does not support a flexible document approval workflow that allows post-approval modifications, attachment uploads, or status reversions for letter requests.",
+        "user_impact": "Users cannot download letter requests, have them stamped externally, and re-upload the signed document. The system requires approval before download (to remove draft watermark), but approved requests cannot be modified or have attachments added. Approved requests cannot be returned to pending status.",
+        "workaround": "Currently, users must share documents via email for external stamping and attestation, then manually manage signed copies outside the system. No in-system workflow exists for this process.",
+        "guide_section": "Letter Request Workflow — External Stamping and Document Re-upload Limitations"
+      },
+      {
+        "ticket_key": "TSSD-4272",
+        "summary": "Limited access for employees to view other users",
+        "documentation_type": "feature_gap",
+        "limitation_statement": "The Bayzat platform currently lacks comprehensive employee visibility controls across HR modules. While some modules like Payroll and Work Expenses have partial employee grouping capabilities, the HR employee directory lacks granular access restriction functionality.",
+        "user_impact": "Organizations cannot restrict non-manager employees from viewing entire company employee profiles. Employee grouping is available on-demand for Payroll, Work Expenses, Loans, and Air Tickets modules, but not yet for HR modules including employee directory access.",
+        "workaround": "For modules that support employee grouping (Payroll, Work Expenses, Loans, Air Tickets), create employee groups and map roles to specific groups to restrict visibility. For HR modules, no current workaround exists; contact support for custom development options.",
+        "guide_section": "Employee Visibility and Access Control — Using Employee Groups and Structures"
+      },
+      {
+        "ticket_key": "TSSD-1403",
+        "summary": "Need to delete the test air tickets processed",
+        "documentation_type": "feature_gap",
+        "limitation_statement": "The Bayzat platform currently lacks the capability to delete or reverse processed air ticket expense entries after they have been finalized. This prevents users from cleaning up test or erroneous data once an expense has been processed.",
+        "user_impact": "Once air tickets are processed, they cannot be deleted through the UI. Users cannot clean up test data or remove erroneous entries after processing. This creates permanent records that cannot be reversed.",
+        "workaround": "Avoid processing test or dummy air tickets. If test data is processed, contact support for backend assistance. Ensure all air ticket entries are verified before processing.",
+        "guide_section": "Work Expenses — Air Ticket Management: Processed Expense Deletion Limitations"
+      },
+      {
+        "ticket_key": "TSSD-4672",
+        "summary": "Restricted People manager role - can still see other employees (out of assigned group)",
+        "documentation_type": "feature_gap",
+        "limitation_statement": "The Bayzat platform currently lacks full role-based group restrictions, with grouping functionality limited to finance and payroll modules. People Manager and Adjustment Manager roles can view and edit employees outside their assigned groups across HR and document modules.",
+        "user_impact": "Even after activating employee groups and restricting People Manager role to specific groups, the role can still view and edit employee details (work tab, documents) and see all adjustments for employees outside the assigned group. Grouping only restricts Air Tickets module, not HR or document modules.",
+        "workaround": "Currently, employee grouping restrictions only apply to finance and payroll modules (Air Tickets, Adjustments). For HR module access control, use alternative permission management or contact support for custom solutions.",
+        "guide_section": "Employee Groups and Role Restrictions — Module-Specific Limitations"
+      }
+    ],
+    "excluded": [
+      {
+        "ticket_key": "TSSD-1995",
+        "summary": "Expense Manager access to Loans",
+        "blocker": "permission_scope_clarification",
+        "reason": "This is a permission scope clarification issue that requires product team decision on intended behavior. While it has documentation value (should document what Expense Manager role can access), the ticket itself is pending clarification and not a testable bug or resolved feature. Classified as documentation_candidate instead due to user impact of understanding permission scope."
+      }
+    ]
+  },
+  "source_articles": [
+    {
+      "article_id": 13937889131409,
+      "title": "How to request Air ticket",
+      "url": "https://bayzathelp.zendesk.com/hc/en-gb/articles/13937889131409-How-to-request-Air-ticket"
+    },
+    {
+      "article_id": 13937322643857,
+      "title": "Setting up an air ticket allowance policy",
+      "url": "https://bayzathelp.zendesk.com/hc/en-gb/articles/13937322643857-Setting-up-an-air-ticket-allowance-policy"
+    },
+    {
+      "article_id": 31099964679057,
+      "title": "Air Tickets Auto Encashments via Workflows",
+      "url": "https://bayzathelp.zendesk.com/hc/en-gb/articles/31099964679057-Air-Tickets-Auto-Encashments-via-Workflows"
+    },
+    {
+      "article_id": 30996883767569,
+      "title": "Air ticket requests management",
+      "url": "https://bayzathelp.zendesk.com/hc/en-gb/articles/30996883767569-Air-ticket-requests-management"
+    },
+    {
+      "article_id": 23328000633489,
+      "title": "Air ticket request",
+      "url": "https://bayzathelp.zendesk.com/hc/en-gb/articles/23328000633489-Air-ticket-request"
+    }
+  ]
+}
