@@ -163,17 +163,16 @@ jobs:
           rm -rf "$CHUNKS_DIR"
           mkdir -p "$CHUNKS_DIR"
 
-          # Check if payload is array or object
+          # Check if payload is array or object and get total test count
           IS_ARRAY=$(jq 'if type == "array" then true else false end' "$PAYLOAD_PATH")
 
           if [ "$IS_ARRAY" = "true" ]; then
-            PAYLOAD_OBJ=".[0]"
+            TOTAL_TESTS=$(jq -r '.[0].tests | length' "$PAYLOAD_PATH")
+            JQ_ROOT=".[0]"
           else
-            PAYLOAD_OBJ="."
+            TOTAL_TESTS=$(jq -r '.tests | length' "$PAYLOAD_PATH")
+            JQ_ROOT=""
           fi
-
-          # Get total test count
-          TOTAL_TESTS=$(jq -r "$PAYLOAD_OBJ.tests | length" "$PAYLOAD_PATH")
 
           if [ "$TOTAL_TESTS" -eq 0 ]; then
             echo "No tests found in payload"
@@ -194,12 +193,15 @@ jobs:
 
           # Extract definitions (shared across all chunks)
           # These are small with reference-based architecture
-          jq "$PAYLOAD_OBJ.definitions // {}" "$PAYLOAD_PATH" > "$CHUNKS_DIR/definitions.json"
+          if [ "$IS_ARRAY" = "true" ]; then
+            jq '.[0].definitions // {}' "$PAYLOAD_PATH" > "$CHUNKS_DIR/definitions.json"
+            jq '{metadata: .[0].metadata, instructions: .[0].instructions}' "$PAYLOAD_PATH" > "$CHUNKS_DIR/shared.json"
+          else
+            jq '.definitions // {}' "$PAYLOAD_PATH" > "$CHUNKS_DIR/definitions.json"
+            jq '{metadata: .metadata, instructions: .instructions}' "$PAYLOAD_PATH" > "$CHUNKS_DIR/shared.json"
+          fi
           DEFS_SIZE=$(wc -c < "$CHUNKS_DIR/definitions.json")
           echo "Definitions size: $DEFS_SIZE bytes (shared)"
-
-          # Extract metadata and instructions (shared)
-          jq "{metadata: $PAYLOAD_OBJ.metadata, instructions: $PAYLOAD_OBJ.instructions}" "$PAYLOAD_PATH" > "$CHUNKS_DIR/shared.json"
 
           # Create chunk matrix for GitHub Actions
           MATRIX_JSON="["
@@ -211,20 +213,37 @@ jobs:
             # - Full definitions (shared, reference-based)
             # - Full metadata and instructions
             # - Subset of tests
-            jq --argjson start $START --argjson count $MAX_PER_CHUNK "
-              {
-                metadata: $PAYLOAD_OBJ.metadata,
-                instructions: $PAYLOAD_OBJ.instructions,
-                definitions: $PAYLOAD_OBJ.definitions,
-                tests: ($PAYLOAD_OBJ.tests[$start:$start+$count]),
-                chunk_info: {
-                  chunk_index: $i,
-                  chunk_count: $CHUNK_COUNT,
-                  tests_in_chunk: ($PAYLOAD_OBJ.tests[$start:$start+$count] | length),
-                  total_tests: $TOTAL_TESTS
+            if [ "$IS_ARRAY" = "true" ]; then
+              jq --argjson start $START --argjson count $MAX_PER_CHUNK --argjson idx $i --argjson chunks $CHUNK_COUNT --argjson total $TOTAL_TESTS '
+                {
+                  metadata: .[0].metadata,
+                  instructions: .[0].instructions,
+                  definitions: .[0].definitions,
+                  tests: (.[0].tests[$start:$start+$count]),
+                  chunk_info: {
+                    chunk_index: $idx,
+                    chunk_count: $chunks,
+                    tests_in_chunk: (.[0].tests[$start:$start+$count] | length),
+                    total_tests: $total
+                  }
                 }
-              }
-            " "$PAYLOAD_PATH" > "$CHUNKS_DIR/chunk-$i.json"
+              ' "$PAYLOAD_PATH" > "$CHUNKS_DIR/chunk-$i.json"
+            else
+              jq --argjson start $START --argjson count $MAX_PER_CHUNK --argjson idx $i --argjson chunks $CHUNK_COUNT --argjson total $TOTAL_TESTS '
+                {
+                  metadata: .metadata,
+                  instructions: .instructions,
+                  definitions: .definitions,
+                  tests: (.tests[$start:$start+$count]),
+                  chunk_info: {
+                    chunk_index: $idx,
+                    chunk_count: $chunks,
+                    tests_in_chunk: (.tests[$start:$start+$count] | length),
+                    total_tests: $total
+                  }
+                }
+              ' "$PAYLOAD_PATH" > "$CHUNKS_DIR/chunk-$i.json"
+            fi
 
             CHUNK_SIZE=$(wc -c < "$CHUNKS_DIR/chunk-$i.json")
             TESTS_IN_CHUNK=$(jq '.tests | length' "$CHUNKS_DIR/chunk-$i.json")
