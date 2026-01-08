@@ -484,6 +484,90 @@ jobs:
              - Prefer element screenshots for actual assertion proof
 
           ═══════════════════════════════════════════════════════════════
+          ## ZERO-SKIP POLICY (ABSOLUTE REQUIREMENT)
+          ═══════════════════════════════════════════════════════════════
+
+          YOU MUST COMPLETE EVERY TEST. NO EXCEPTIONS.
+
+          A) FORBIDDEN BEHAVIORS:
+             - NEVER mark a test as "skipped" due to navigation difficulties
+             - NEVER give up because a menu item is not where expected
+             - NEVER assume a feature doesn't exist because you can't find it immediately
+             - NEVER skip a test because setup steps seem complex
+
+          B) REQUIRED BEHAVIOR:
+             - You MUST attempt EVERY test in the payload
+             - You MUST explore the UI to find features when paths fail
+             - You MUST document ACTUAL paths found vs expected paths
+             - You MUST capture evidence even when navigating differently than expected
+
+          C) STATUS MEANINGS (STRICT DEFINITIONS):
+             - "passed"  = Test executed, assertions verified as true
+             - "failed"  = Test executed, assertions verified as false
+             - "skipped" = ONLY if feature genuinely does not exist after exhaustive search
+
+          D) BEFORE MARKING ANY TEST AS SKIPPED, YOU MUST:
+             1. Try at least 3 different navigation approaches
+             2. Explore ALL main menu items and their submenus
+             3. Use search functionality if available
+             4. Check settings, configuration, and admin sections
+             5. Document each exploration attempt with screenshots
+             6. Spend minimum 2 minutes actively exploring
+
+          ═══════════════════════════════════════════════════════════════
+          ## DEEP EXPLORATION PROTOCOL (SHERLOCK HOLMES MODE)
+          ═══════════════════════════════════════════════════════════════
+
+          Navigation paths in the payload are HINTS, not guaranteed exact paths.
+          The UI may have changed. Your job is to DISCOVER the actual path.
+
+          ### WHEN HINTED PATH FAILS (Menu item not found):
+
+          STEP 1: SYSTEMATIC MENU EXPLORATION
+          - Open EVERY top-level menu item
+          - For each menu, scan ALL submenu items visible
+          - Look for similar/related terminology (e.g., "Air Tickets" vs "Flight Allowance")
+          - Check dropdown menus, hamburger menus, sidebar navigation
+          - Take screenshot of each menu explored
+
+          STEP 2: SEARCH-BASED DISCOVERY
+          - Look for global search functionality (magnifying glass icon, search bar)
+          - Search for key terms from the test (e.g., "air ticket", "encashment", "workflow")
+          - Try variations: singular/plural, abbreviations, alternative terms
+          - Document search results with screenshots
+
+          STEP 3: SETTINGS DEEP DIVE
+          - Navigate to Settings (gear icon, cog, "Settings" menu)
+          - Explore ALL settings categories
+          - Look for: Company Settings, Workflows, Policies, Benefits, Allowances
+          - Check tabs within settings pages
+          - Many features hide in nested settings
+
+          STEP 4: CONTEXTUAL EXPLORATION
+          - Navigate to employee profile/dashboard
+          - Look for feature access points in context menus
+          - Check "Request" or "Apply" buttons
+          - Explore admin vs employee views if available
+
+          STEP 5: BREADCRUMB ANALYSIS
+          - When you find a related page, note the breadcrumb trail
+          - Use breadcrumbs to understand UI hierarchy
+          - Navigate up/down the hierarchy to find target feature
+
+          ### DOCUMENTATION REQUIREMENTS:
+
+          For each test where navigation differs from hint:
+          - Record: "Hinted path: Settings > Workflows > Air Ticket"
+          - Record: "Actual path found: Company > Policies > Travel > Air Ticket"
+          - Include screenshot of actual navigation path used
+          - Note any UI labels that differ from documentation
+
+          ### EXPLORATION TIME BUDGET:
+          - Minimum 3 minutes exploring before concluding a feature doesn't exist
+          - Try at least 5 different navigation approaches
+          - Capture at least 3 exploration screenshots
+
+          ═══════════════════════════════════════════════════════════════
           ## CRITICAL: REFERENCE-BASED PAYLOAD STRUCTURE
           ═══════════════════════════════════════════════════════════════
 
@@ -552,16 +636,20 @@ jobs:
 
           ### Step 2: Resolve References and Execute Tests
           For each test in this chunk:
-          1. RESOLVE access_path_ref → get navigation steps
+          1. RESOLVE access_path_ref → get navigation steps (these are HINTS)
           2. RESOLVE setup_flow_ref → get setup steps (if present)
           3. RESOLVE business_rule_refs → get rules to validate
           4. RESOLVE edge_case_refs → get edge cases to check
-          5. Navigate using the resolved navigation path
+          5. ATTEMPT navigation using the resolved path
+             - If path works: proceed to step 6
+             - If path fails: ENGAGE DEEP EXPLORATION PROTOCOL (see above)
+             - You MUST find the feature through exploration before marking as skipped
           6. Execute the resolved setup_flow steps
           7. Validate each assertion in the test
           8. Check resolved business_rules are satisfied
           9. Test resolved edge_cases if applicable
           10. Take screenshots following the Navigation + Evidence Procedure below
+          11. Record actual_path_used if different from hinted path
 
           #### Navigation + Evidence Procedure (MANDATORY)
           Before ANY screenshot, follow this procedure:
@@ -618,6 +706,10 @@ jobs:
                 "business_rules_validated": ["<rule_ids checked>"],
                 "edge_cases_tested": ["<case_ids checked>"],
                 "screenshots": ["<filename>"],
+                "hinted_path": "<navigation path from payload>",
+                "actual_path_used": "<actual navigation path discovered>",
+                "path_discovery_notes": "<how you found the feature if path differed>",
+                "exploration_attempts": <number of navigation approaches tried>,
                 "notes": "<any observations>"
               }
             ],
@@ -628,8 +720,12 @@ jobs:
           - ALWAYS resolve references before executing - never skip this step
           - Prefix ALL screenshots with "chunk-${CHUNK_INDEX}-"
           - Only process tests in YOUR chunk payload
-          - If a reference cannot be resolved, log it and skip that part
+          - If a reference cannot be resolved, log it and continue with available info
           - Take screenshot on any error for debugging
+          - ZERO-SKIP MANDATE: You MUST complete every test. Explore to find features.
+          - EXPLORATION FIRST: If navigation fails, engage Deep Exploration Protocol
+          - DOCUMENT DISCOVERIES: Record actual_path_used when different from hint
+          - NEVER give up: Try 5+ approaches before even considering "skipped" status
 
           ## PLAYWRIGHT MCP TOOL RULES (MANDATORY)
           When using mcp__playwright__browser_take_screenshot:
