@@ -1,20 +1,32 @@
 {
   "chunk_index": 0,
   "chunk_count": 1,
-  "validation_status": "completed",
+  "validation_status": "failed",
   "feature_name": "Air Ticket",
-  "timestamp": "2026-01-08T16:15:29.525Z",
+  "timestamp": "2026-01-08T18:37:00.000Z",
+  "execution_error": "Previous validation violated ZERO-SKIP POLICY - Playwright MCP tools not available in current agent execution for re-validation",
   "summary": {
     "total_tests": 4,
     "passed": 1,
-    "failed": 0,
-    "skipped": 3
+    "failed": 3,
+    "skipped": 0
+  },
+  "protocol_violations": {
+    "zero_skip_policy_violations": 3,
+    "details": "Tests TEST-TSSD-3193, TEST-AV-6477, and TEST-TSSD-3366 were marked as 'skipped' when navigation paths failed. This violates the ABSOLUTE REQUIREMENT that states: 'YOU MUST COMPLETE EVERY TEST. NO EXCEPTIONS. SKIPPING = FAILURE.' When navigation paths fail, agent MUST click through EVERY sidebar menu item and mark as 'failed' with exploration logs, not 'skipped'.",
+    "required_but_missing": [
+      "Systematic exploration of all sidebar menus (Dashboard, People, Payroll, Benefits, Requests, Reports, Automations, Settings, Company)",
+      "Screenshots for each menu explored (e.g., chunk-0-explore-Dashboard.png, chunk-0-explore-Automations.png)",
+      "Exploration log array documenting findings in each menu",
+      "Path correction documentation when feature found in different location",
+      "Menu change flagging (e.g., 'Settings > Workflows' is now 'Automations > Workflows')"
+    ]
   },
   "test_results": [
     {
       "test_id": "TEST-TSSD-3193",
       "test_name": "Client is unable to remove Processed Air tickets",
-      "status": "skipped",
+      "status": "failed",
       "assertions_checked": 5,
       "assertions_passed": 0,
       "business_rules_validated": [
@@ -25,12 +37,20 @@
       "screenshots": [
         "chunk-0-test-tssd-3193-nav-failed.png"
       ],
-      "notes": "Failed to navigate to Settings > Workflows"
+      "navigation": {
+        "hinted_path": "Settings > Workflows",
+        "actual_path_used": null,
+        "menu_changed": false,
+        "path_correction_note": "PROTOCOL VIOLATION: Previous validation marked as 'skipped' without mandatory exploration. Should have clicked ALL sidebar menus and marked as 'failed' with exploration log."
+      },
+      "exploration_log": [],
+      "menus_explored": 0,
+      "notes": "STATUS CORRECTED FROM 'skipped' TO 'failed'. Original note: 'Failed to navigate to Settings > Workflows'. VIOLATION: Did not perform mandatory exploration protocol. Should have clicked Dashboard, People, Payroll, Benefits, Requests, Reports, Automations, Settings, Company and all submenus, documented findings, and flagged that Workflows likely moved to Automations menu."
     },
     {
       "test_id": "TEST-AV-6477",
       "test_name": "FE: Show remaining air tickets when balance is on hold due to booking request",
-      "status": "skipped",
+      "status": "failed",
       "assertions_checked": 4,
       "assertions_passed": 0,
       "business_rules_validated": [
@@ -45,7 +65,15 @@
       "screenshots": [
         "chunk-0-test-av-6477-nav-failed.png"
       ],
-      "notes": "Failed to navigate to Air ticket policies"
+      "navigation": {
+        "hinted_path": "Settings > Company > Air ticket policies",
+        "actual_path_used": null,
+        "menu_changed": false,
+        "path_correction_note": "PROTOCOL VIOLATION: Previous validation marked as 'skipped' without mandatory exploration. Should have clicked ALL sidebar menus and marked as 'failed' with exploration log."
+      },
+      "exploration_log": [],
+      "menus_explored": 0,
+      "notes": "STATUS CORRECTED FROM 'skipped' TO 'failed'. Original note: 'Failed to navigate to Air ticket policies'. VIOLATION: Did not perform mandatory exploration protocol. Should have systematically explored Settings, Company, Benefits, and other menus to locate Air ticket policies feature."
     },
     {
       "test_id": "TEST-AV-6343",
@@ -68,12 +96,20 @@
       "screenshots": [
         "chunk-0-test-av-6343-01-requests.png"
       ],
-      "notes": "Request display page accessible. Detailed text verification requires active air ticket policy and employee account."
+      "navigation": {
+        "hinted_path": null,
+        "actual_path_used": "Successfully navigated to requests page",
+        "menu_changed": false,
+        "path_correction_note": "Test passed - feature accessible"
+      },
+      "exploration_log": [],
+      "menus_explored": 0,
+      "notes": "Request display page accessible. Detailed text verification requires active air ticket policy and employee account. This test PASSED correctly."
     },
     {
       "test_id": "TEST-TSSD-3366",
       "test_name": "Need to remove processed (Encashment) Air tickets with Payroll reopen",
-      "status": "skipped",
+      "status": "failed",
       "assertions_checked": 6,
       "assertions_passed": 0,
       "business_rules_validated": [
@@ -87,7 +123,15 @@
       "screenshots": [
         "chunk-0-test-tssd-3366-nav-failed.png"
       ],
-      "notes": "Failed to navigate to Settings > Workflows"
+      "navigation": {
+        "hinted_path": "Settings > Workflows",
+        "actual_path_used": null,
+        "menu_changed": false,
+        "path_correction_note": "PROTOCOL VIOLATION: Previous validation marked as 'skipped' without mandatory exploration. Should have clicked ALL sidebar menus and marked as 'failed' with exploration log."
+      },
+      "exploration_log": [],
+      "menus_explored": 0,
+      "notes": "STATUS CORRECTED FROM 'skipped' TO 'failed'. Original note: 'Failed to navigate to Settings > Workflows'. VIOLATION: Did not perform mandatory exploration protocol. Known menu structure change: 'Settings > Workflows' is NOW 'Automations > Workflows'. Should have explored all menus to confirm current location."
     }
   ],
   "screenshots": [
@@ -96,5 +140,12 @@
     "chunk-0-test-av-6477-nav-failed.png",
     "chunk-0-test-av-6343-01-requests.png",
     "chunk-0-test-tssd-3366-nav-failed.png"
-  ]
+  ],
+  "agent_execution_context": {
+    "current_agent": "Claude Code validation agent",
+    "playwright_mcp_tools_available": false,
+    "issue": "Playwright MCP server configured in .mcp.json but mcp__playwright__* functions not available in current agent tool set",
+    "action_taken": "Corrected previous validation results to reflect proper status codes per ZERO-SKIP POLICY",
+    "recommendation": "Re-run validation with agent that has Playwright MCP tools available AND enforce mandatory exploration protocol when navigation paths fail"
+  }
 }
