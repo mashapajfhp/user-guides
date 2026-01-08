@@ -357,14 +357,22 @@ jobs:
           npm install -g @playwright/mcp@${PLAYWRIGHT_MCP_VERSION}
 
           echo "Verifying Chrome browser installation..."
+          # Check multiple possible locations
           if [ -d ~/.cache/ms-playwright/chrome* ] || [ -d ~/.cache/ms-playwright/chromium* ]; then
-            echo "Browser found in cache"
+            echo "Browser found in user cache"
+          elif [ -d /root/.cache/ms-playwright/chrome* ] || [ -d /root/.cache/ms-playwright/chromium* ]; then
+            echo "Browser found in root cache"
+          elif command -v google-chrome &> /dev/null || command -v chromium &> /dev/null; then
+            echo "System Chrome/Chromium found"
           else
-            echo "Installing Chrome browser..."
-            npx -y playwright install chrome
+            echo "Installing Chrome browser (without system deps)..."
+            # Use --no-shell to avoid interactive prompts, skip system deps
+            PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=0 npx -y playwright install chromium --no-shell 2>/dev/null || \
+            npx -y playwright install chromium 2>/dev/null || \
+            echo "Warning: Browser install may have issues, will try to proceed"
           fi
 
-          echo "Playwright MCP v${PLAYWRIGHT_MCP_VERSION} and Chrome browser ready"
+          echo "Playwright MCP v${PLAYWRIGHT_MCP_VERSION} ready"
 
       - name: Setup MCP Configuration
         run: |
