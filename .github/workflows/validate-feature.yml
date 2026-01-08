@@ -14,22 +14,41 @@ on:
         description: 'Enable debug logging'
         required: false
         default: 'false'
+      max_tests_per_chunk:
+        description: 'Maximum tests per chunk (default: 5)'
+        required: false
+        default: '5'
 
 env:
   PLAYWRIGHT_MCP_VERSION: "0.0.42"
   NODE_VERSION: "20"
+  MAX_TESTS_PER_CHUNK: ${{ github.event.inputs.max_tests_per_chunk || '5' }}
 
 jobs:
-  validate:
+  # ============================================
+  # JOB 1: PREPARE - Detect and split payload into chunks
+  # ============================================
+  prepare:
     runs-on: [self-hosted, validation]
-    timeout-minutes: 45
+    timeout-minutes: 5
 
     outputs:
-      validation_status: ${{ steps.validate_outputs.outputs.status }}
-      tests_passed: ${{ steps.validate_outputs.outputs.tests_passed }}
-      tests_failed: ${{ steps.validate_outputs.outputs.tests_failed }}
-      screenshot_count: ${{ steps.validate_outputs.outputs.screenshot_count }}
-      error_message: ${{ steps.validate_outputs.outputs.error_message }}
+      skip: ${{ steps.detect.outputs.skip }}
+      folder: ${{ steps.detect.outputs.folder }}
+      payload_file: ${{ steps.detect.outputs.payload_file }}
+      payload_format: ${{ steps.detect.outputs.payload_format }}
+      result_file: ${{ steps.detect.outputs.result_file }}
+      report_file: ${{ steps.detect.outputs.report_file }}
+      screenshots_dir: ${{ steps.detect.outputs.screenshots_dir }}
+      log_file: ${{ steps.detect.outputs.log_file }}
+      feature_name: ${{ steps.parse_payload.outputs.feature_name }}
+      feature_slug: ${{ steps.parse_payload.outputs.feature_slug }}
+      version: ${{ steps.parse_payload.outputs.version }}
+      total_tests: ${{ steps.parse_payload.outputs.total_tests }}
+      must_test: ${{ steps.parse_payload.outputs.must_test }}
+      should_test: ${{ steps.parse_payload.outputs.should_test }}
+      chunk_count: ${{ steps.split.outputs.chunk_count }}
+      chunk_matrix: ${{ steps.split.outputs.chunk_matrix }}
 
     steps:
       - name: Checkout
@@ -106,8 +125,6 @@ jobs:
             TOTAL_TESTS=$(jq -r '.[0].summary.total_tests // 0' "$PAYLOAD_PATH")
             MUST_TEST=$(jq -r '.[0].summary.by_priority.must_test // 0' "$PAYLOAD_PATH")
             SHOULD_TEST=$(jq -r '.[0].summary.by_priority.should_test // 0' "$PAYLOAD_PATH")
-            SETUP_FLOWS_COUNT=$(jq -r '.[0].setup_flows | length' "$PAYLOAD_PATH")
-            TESTS_COUNT=$(jq -r '.[0].tests | length' "$PAYLOAD_PATH")
           else
             FEATURE_NAME=$(jq -r '.metadata.feature_name // "unknown"' "$PAYLOAD_PATH")
             FEATURE_SLUG=$(jq -r '.metadata.feature_slug // "unknown"' "$PAYLOAD_PATH")
@@ -115,8 +132,6 @@ jobs:
             TOTAL_TESTS=$(jq -r '.summary.total_tests // 0' "$PAYLOAD_PATH")
             MUST_TEST=$(jq -r '.summary.by_priority.must_test // 0' "$PAYLOAD_PATH")
             SHOULD_TEST=$(jq -r '.summary.by_priority.should_test // 0' "$PAYLOAD_PATH")
-            SETUP_FLOWS_COUNT=$(jq -r '.setup_flows | length' "$PAYLOAD_PATH")
-            TESTS_COUNT=$(jq -r '.tests | length' "$PAYLOAD_PATH")
           fi
 
           echo "feature_name=$FEATURE_NAME" >> $GITHUB_OUTPUT
@@ -125,8 +140,6 @@ jobs:
           echo "total_tests=$TOTAL_TESTS" >> $GITHUB_OUTPUT
           echo "must_test=$MUST_TEST" >> $GITHUB_OUTPUT
           echo "should_test=$SHOULD_TEST" >> $GITHUB_OUTPUT
-          echo "setup_flows_count=$SETUP_FLOWS_COUNT" >> $GITHUB_OUTPUT
-          echo "tests_count=$TESTS_COUNT" >> $GITHUB_OUTPUT
 
           echo "============================================"
           echo "Payload Summary:"
@@ -135,8 +148,103 @@ jobs:
           echo "  Total Tests: $TOTAL_TESTS"
           echo "  Must Test: $MUST_TEST"
           echo "  Should Test: $SHOULD_TEST"
-          echo "  Setup Flows: $SETUP_FLOWS_COUNT"
-          echo "  Test Cases: $TESTS_COUNT"
+          echo "============================================"
+
+      - name: Split payload into chunks
+        id: split
+        if: steps.detect.outputs.skip != 'true'
+        run: |
+          PAYLOAD_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.payload_file }}"
+          FOLDER="${{ steps.detect.outputs.folder }}"
+          CHUNKS_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/chunks"
+          MAX_PER_CHUNK="${{ env.MAX_TESTS_PER_CHUNK }}"
+
+          # Clean up any previous chunks
+          rm -rf "$CHUNKS_DIR"
+          mkdir -p "$CHUNKS_DIR"
+
+          # Check if payload is array or object
+          IS_ARRAY=$(jq 'if type == "array" then true else false end' "$PAYLOAD_PATH")
+
+          if [ "$IS_ARRAY" = "true" ]; then
+            PAYLOAD_OBJ=".[0]"
+          else
+            PAYLOAD_OBJ="."
+          fi
+
+          # Get total test count
+          TOTAL_TESTS=$(jq -r "$PAYLOAD_OBJ.tests | length" "$PAYLOAD_PATH")
+
+          if [ "$TOTAL_TESTS" -eq 0 ]; then
+            echo "No tests found in payload"
+            echo "chunk_count=0" >> $GITHUB_OUTPUT
+            echo "chunk_matrix=[]" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Calculate number of chunks needed
+          CHUNK_COUNT=$(( (TOTAL_TESTS + MAX_PER_CHUNK - 1) / MAX_PER_CHUNK ))
+
+          echo "============================================"
+          echo "Chunking Strategy:"
+          echo "  Total Tests: $TOTAL_TESTS"
+          echo "  Max per Chunk: $MAX_PER_CHUNK"
+          echo "  Chunk Count: $CHUNK_COUNT"
+          echo "============================================"
+
+          # Extract definitions (shared across all chunks)
+          # These are small with reference-based architecture
+          jq "$PAYLOAD_OBJ.definitions // {}" "$PAYLOAD_PATH" > "$CHUNKS_DIR/definitions.json"
+          DEFS_SIZE=$(wc -c < "$CHUNKS_DIR/definitions.json")
+          echo "Definitions size: $DEFS_SIZE bytes (shared)"
+
+          # Extract metadata and instructions (shared)
+          jq "{metadata: $PAYLOAD_OBJ.metadata, instructions: $PAYLOAD_OBJ.instructions}" "$PAYLOAD_PATH" > "$CHUNKS_DIR/shared.json"
+
+          # Create chunk matrix for GitHub Actions
+          MATRIX_JSON="["
+
+          for i in $(seq 0 $((CHUNK_COUNT - 1))); do
+            START=$((i * MAX_PER_CHUNK))
+
+            # Create chunk payload with:
+            # - Full definitions (shared, reference-based)
+            # - Full metadata and instructions
+            # - Subset of tests
+            jq --argjson start $START --argjson count $MAX_PER_CHUNK "
+              {
+                metadata: $PAYLOAD_OBJ.metadata,
+                instructions: $PAYLOAD_OBJ.instructions,
+                definitions: $PAYLOAD_OBJ.definitions,
+                tests: ($PAYLOAD_OBJ.tests[$start:$start+$count]),
+                chunk_info: {
+                  chunk_index: $i,
+                  chunk_count: $CHUNK_COUNT,
+                  tests_in_chunk: ($PAYLOAD_OBJ.tests[$start:$start+$count] | length),
+                  total_tests: $TOTAL_TESTS
+                }
+              }
+            " "$PAYLOAD_PATH" > "$CHUNKS_DIR/chunk-$i.json"
+
+            CHUNK_SIZE=$(wc -c < "$CHUNKS_DIR/chunk-$i.json")
+            TESTS_IN_CHUNK=$(jq '.tests | length' "$CHUNKS_DIR/chunk-$i.json")
+            echo "  Chunk $i: $TESTS_IN_CHUNK tests, $CHUNK_SIZE bytes"
+
+            # Build matrix JSON
+            if [ $i -gt 0 ]; then
+              MATRIX_JSON="${MATRIX_JSON},"
+            fi
+            MATRIX_JSON="${MATRIX_JSON}{\"index\":$i}"
+          done
+
+          MATRIX_JSON="${MATRIX_JSON}]"
+
+          echo "chunk_count=$CHUNK_COUNT" >> $GITHUB_OUTPUT
+          echo "chunk_matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
+
+          echo "============================================"
+          echo "Chunks created: $CHUNK_COUNT"
+          echo "Matrix: $MATRIX_JSON"
           echo "============================================"
 
       - name: Pre-flight Health Checks
@@ -173,14 +281,44 @@ jobs:
 
           echo "All pre-flight checks passed"
 
-      - name: Prepare Output Directories
-        if: steps.detect.outputs.skip != 'true'
+  # ============================================
+  # JOB 2: VALIDATE - Run validation for each chunk (parallel)
+  # ============================================
+  validate:
+    needs: prepare
+    if: needs.prepare.outputs.skip != 'true' && needs.prepare.outputs.chunk_count != '0'
+    runs-on: [self-hosted, validation]
+    timeout-minutes: 20  # Reduced timeout per chunk (was 45 for full payload)
+
+    strategy:
+      fail-fast: false  # Continue other chunks if one fails
+      max-parallel: 2   # Limit parallel runs to avoid resource contention
+      matrix:
+        chunk: ${{ fromJson(needs.prepare.outputs.chunk_matrix) }}
+
+    outputs:
+      chunk_status: ${{ steps.validate_outputs.outputs.status }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        timeout-minutes: 3
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Prepare Chunk Directories
         run: |
-          mkdir -p "$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
-          echo "Screenshots directory ready"
+          FOLDER="${{ needs.prepare.outputs.folder }}"
+          CHUNK_INDEX="${{ matrix.chunk.index }}"
+
+          # Create chunk-specific output directories
+          mkdir -p "$GITHUB_WORKSPACE/$FOLDER/validation/chunks/results"
+          mkdir -p "$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
+
+          echo "Chunk $CHUNK_INDEX directories ready"
 
       - name: Install Claude CLI
-        if: steps.detect.outputs.skip != 'true'
         run: |
           echo "Installing Claude CLI..."
           npm install -g @anthropic-ai/claude-code
@@ -195,13 +333,11 @@ jobs:
           echo "Claude CLI installed"
 
       - name: Install Playwright MCP and Browsers
-        if: steps.detect.outputs.skip != 'true'
         run: |
           echo "Installing Playwright MCP v${PLAYWRIGHT_MCP_VERSION}..."
           npm install -g @playwright/mcp@${PLAYWRIGHT_MCP_VERSION}
 
           echo "Verifying Chrome browser installation..."
-          # Chrome is pre-installed on this runner - just verify it exists
           if [ -d ~/.cache/ms-playwright/chrome* ] || [ -d ~/.cache/ms-playwright/chromium* ]; then
             echo "Browser found in cache"
           else
@@ -209,21 +345,16 @@ jobs:
             npx -y playwright install chrome
           fi
 
-          # List installed browsers
-          echo "Installed browsers:"
-          ls -la ~/.cache/ms-playwright/ 2>/dev/null || echo "Cache directory empty"
-
           echo "Playwright MCP v${PLAYWRIGHT_MCP_VERSION} and Chrome browser ready"
 
       - name: Setup MCP Configuration
-        if: steps.detect.outputs.skip != 'true'
         run: |
-          echo "Setting up MCP configuration..."
+          FOLDER="${{ needs.prepare.outputs.folder }}"
+          CHUNK_INDEX="${{ matrix.chunk.index }}"
+          SCREENSHOT_PATH="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
+
           rm -f "$GITHUB_WORKSPACE/.mcp.json"
 
-          SCREENSHOT_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
-
-          # Use Chrome browser (pre-installed on runner)
           cat > "$GITHUB_WORKSPACE/.mcp.json" << EOF
           {
             "mcpServers": {
@@ -241,38 +372,42 @@ jobs:
           }
           EOF
 
-          echo "MCP config:"
-          cat "$GITHUB_WORKSPACE/.mcp.json"
-          echo "MCP configuration ready"
+          echo "MCP config for chunk $CHUNK_INDEX ready"
 
-      - name: Generate Validation Prompt
+      - name: Generate Chunk Validation Prompt
         id: generate_prompt
-        if: steps.detect.outputs.skip != 'true'
         env:
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
           APP_USERNAME: ${{ secrets.APP_USERNAME }}
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
-          FEATURE_FOLDER: ${{ steps.detect.outputs.folder }}
-          PAYLOAD_FILE: ${{ steps.detect.outputs.payload_file }}
-          SCREENSHOTS_DIR: ${{ steps.detect.outputs.screenshots_dir }}
-          RESULT_FILE: ${{ steps.detect.outputs.result_file }}
-          FEATURE_NAME: ${{ steps.parse_payload.outputs.feature_name }}
+          FOLDER: ${{ needs.prepare.outputs.folder }}
+          FEATURE_NAME: ${{ needs.prepare.outputs.feature_name }}
+          CHUNK_INDEX: ${{ matrix.chunk.index }}
+          CHUNK_COUNT: ${{ needs.prepare.outputs.chunk_count }}
         run: |
-          PROMPT_FILE="$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.prompt.txt"
-          PAYLOAD_PATH="$GITHUB_WORKSPACE/$PAYLOAD_FILE"
+          PROMPT_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/.prompt-chunk-$CHUNK_INDEX.txt"
+          CHUNK_PAYLOAD="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/chunk-$CHUNK_INDEX.json"
+          CHUNK_RESULT="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/results/result-chunk-$CHUNK_INDEX.json"
+          SCREENSHOT_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
 
           cat > "$PROMPT_FILE" << 'PROMPT_HEADER'
-          # UI Validation Agent - Journey-Based Testing
+          # UI Validation Agent - Journey-Based Testing (Chunked Execution)
 
           You are a UI validation agent that executes test cases against a live web application.
-          Your task is to validate the UI based on the provided test payload.
+          Your task is to validate the UI based on the provided CHUNK of tests.
+
+          ## CHUNK EXECUTION MODE
+          This is a CHUNKED validation run. You are processing a SUBSET of tests.
+          - Complete all tests in YOUR chunk only
+          - Other chunks are running in parallel
+          - Results will be merged after all chunks complete
 
           ## CRITICAL INSTRUCTIONS
-          1. You MUST complete all validation tasks
-          2. You MUST capture screenshots for each major step
-          3. You MUST write result.json before finishing
+          1. You MUST complete all tests in this chunk
+          2. You MUST capture screenshots for each major step (prefix with chunk index)
+          3. You MUST write chunk result JSON before finishing
           4. You MUST handle login first before any validation
-          5. Focus on MUST_TEST priority items first, then SHOULD_TEST
+          5. Focus on tests in order - they are pre-sorted by priority
 
           ═══════════════════════════════════════════════════════════════
           ## CRITICAL: REFERENCE-BASED PAYLOAD STRUCTURE
@@ -307,52 +442,42 @@ jobs:
           Action: Find definitions.setup_flows.find(f => f.flow_id === "SETUP-002")
           Result: Execute all steps from that flow object
 
-          Given test with: business_rule_refs: ["BR-001", "BR-005"]
-          Action: Find each in definitions.business_rules by rule_id
-          Result: Validate UI behaves according to those rules
-
           ═══════════════════════════════════════════════════════════════
 
           PROMPT_HEADER
 
           cat >> "$PROMPT_FILE" << EOF
 
+          ## CHUNK INFO
+          - Chunk Index: $CHUNK_INDEX of $CHUNK_COUNT
+          - This chunk's tests are in the payload below
+
           ## AUTHENTICATION
           - Base URL: $APP_BASE_URL
           - Username: $APP_USERNAME
           - Password: $APP_PASSWORD
 
-          ## OUTPUT PATHS
-          - Screenshots: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/
-          - Result JSON: $GITHUB_WORKSPACE/$RESULT_FILE
-          - Report: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/report.md
+          ## OUTPUT PATHS (CHUNK-SPECIFIC)
+          - Screenshots: $SCREENSHOT_DIR/
+          - Chunk Result JSON: $CHUNK_RESULT
 
           ## FEATURE: $FEATURE_NAME
 
-          ## VALIDATION PAYLOAD
-          Read and parse the following payload file:
-          $GITHUB_WORKSPACE/$PAYLOAD_FILE
+          ## CHUNK VALIDATION PAYLOAD
+          Read and parse the following chunk payload file:
+          $CHUNK_PAYLOAD
 
-          ## VALIDATION WORKFLOW
+          ## VALIDATION WORKFLOW FOR THIS CHUNK
 
           ### Step 1: Login
           1. Navigate to the base URL
           2. Enter credentials and login
-          3. Take screenshot: "01-login-success.png"
+          3. Take screenshot: "chunk-${CHUNK_INDEX}-01-login-success.png"
 
-          ### Step 2: Resolve References and Execute Setup Flows
-          For each test that has a setup_flow_ref:
-          1. RESOLVE: Look up the flow_id in definitions.setup_flows
-          2. RESOLVE: Look up access_path_ref in definitions.access_paths (if present)
-          3. Follow the navigation path from the resolved access_path
-          4. Execute each step from the resolved setup_flow
-          5. Take screenshot after key interactions
-          6. Record success/failure for each step
-
-          ### Step 3: Execute Test Cases
-          For each test in the payload (prioritize must_test first):
+          ### Step 2: Resolve References and Execute Tests
+          For each test in this chunk:
           1. RESOLVE access_path_ref → get navigation steps
-          2. RESOLVE setup_flow_ref → get setup steps
+          2. RESOLVE setup_flow_ref → get setup steps (if present)
           3. RESOLVE business_rule_refs → get rules to validate
           4. RESOLVE edge_case_refs → get edge cases to check
           5. Navigate using the resolved navigation path
@@ -360,16 +485,19 @@ jobs:
           7. Validate each assertion in the test
           8. Check resolved business_rules are satisfied
           9. Test resolved edge_cases if applicable
-          10. Take screenshots showing validation results
+          10. Take screenshots: "chunk-${CHUNK_INDEX}-<test_id>-<step>.png"
 
-          ### Step 4: Write Results
-          Write a result.json file with this structure:
+          ### Step 3: Write Chunk Results
+          Write a chunk result JSON file to: $CHUNK_RESULT
+          Structure:
           {
+            "chunk_index": $CHUNK_INDEX,
+            "chunk_count": $CHUNK_COUNT,
             "validation_status": "completed|failed",
             "feature_name": "$FEATURE_NAME",
             "timestamp": "<ISO timestamp>",
             "summary": {
-              "total_tests": <number>,
+              "total_tests": <tests in this chunk>,
               "passed": <number>,
               "failed": <number>,
               "skipped": <number>
@@ -387,33 +515,21 @@ jobs:
                 "notes": "<any observations>"
               }
             ],
-            "setup_flow_results": [
-              {
-                "flow_id": "<flow_id>",
-                "flow_name": "<name>",
-                "status": "completed|failed",
-                "steps_completed": <number>,
-                "total_steps": <number>
-              }
-            ],
-            "screenshots": ["<list of all screenshots>"]
+            "screenshots": ["<list of screenshots for this chunk>"]
           }
 
           ## IMPORTANT NOTES
           - ALWAYS resolve references before executing - never skip this step
-          - Use element_type hints from the resolved steps (button, input, dropdown, etc.)
-          - Verify expected_result for each resolved step
-          - Handle modal dialogs and page transitions gracefully
-          - If a test cannot be executed, mark as skipped with reason
+          - Prefix ALL screenshots with "chunk-${CHUNK_INDEX}-"
+          - Only process tests in YOUR chunk payload
+          - If a reference cannot be resolved, log it and skip that part
           - Take screenshot on any error for debugging
-          - If a reference cannot be resolved (null or not found), log it and skip that part
 
           EOF
 
-          echo "Validation prompt generated ($(wc -c < "$PROMPT_FILE") bytes)"
+          echo "Chunk $CHUNK_INDEX prompt generated ($(wc -c < "$PROMPT_FILE") bytes)"
 
       - name: Pre-Validation Browser Cleanup
-        if: steps.detect.outputs.skip != 'true'
         run: |
           echo "Cleaning up stale browser processes..."
           pkill -f "mcp-server-playwright" 2>/dev/null || true
@@ -424,31 +540,31 @@ jobs:
           rm -rf /tmp/playwright-* 2>/dev/null || true
           echo "Pre-validation cleanup complete"
 
-      - name: Run Playwright MCP Validation
+      - name: Run Chunk Validation
         id: validation
-        if: steps.detect.outputs.skip != 'true'
         env:
-          FEATURE_FOLDER: ${{ steps.detect.outputs.folder }}
+          FOLDER: ${{ needs.prepare.outputs.folder }}
+          CHUNK_INDEX: ${{ matrix.chunk.index }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           echo "============================================"
-          echo "Starting validation for: $FEATURE_FOLDER"
-          echo "Feature: ${{ steps.parse_payload.outputs.feature_name }}"
-          echo "Tests to run: ${{ steps.parse_payload.outputs.total_tests }}"
+          echo "Starting validation for Chunk $CHUNK_INDEX"
+          echo "Feature: ${{ needs.prepare.outputs.feature_name }}"
           echo "Start time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "============================================"
 
           cd "$GITHUB_WORKSPACE"
           export PATH="$(npm prefix -g)/bin:$PATH"
 
-          PROMPT_FILE="$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.prompt.txt"
+          PROMPT_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/.prompt-chunk-$CHUNK_INDEX.txt"
+          LOG_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/validation-chunk-$CHUNK_INDEX.log"
 
           set +e
           claude --model sonnet \
                  --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
                  --mcp-config ".mcp.json" \
                  --dangerously-skip-permissions \
-                 --print "$(cat "$PROMPT_FILE")" 2>&1 | tee "$GITHUB_WORKSPACE/${{ steps.detect.outputs.log_file }}"
+                 --print "$(cat "$PROMPT_FILE")" 2>&1 | tee "$LOG_FILE"
 
           CLAUDE_EXIT_CODE=$?
           set -e
@@ -457,78 +573,55 @@ jobs:
 
           echo "claude_exit_code=$CLAUDE_EXIT_CODE" >> $GITHUB_OUTPUT
           echo "============================================"
-          echo "Claude CLI exit code: $CLAUDE_EXIT_CODE"
+          echo "Chunk $CHUNK_INDEX - Claude CLI exit code: $CLAUDE_EXIT_CODE"
           echo "End time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "============================================"
 
-      - name: Validate Outputs
+      - name: Validate Chunk Outputs
         id: validate_outputs
-        if: always() && steps.detect.outputs.skip != 'true'
+        if: always()
+        env:
+          FOLDER: ${{ needs.prepare.outputs.folder }}
+          CHUNK_INDEX: ${{ matrix.chunk.index }}
         run: |
-          echo "Validating output files..."
-
-          FOLDER="${{ steps.detect.outputs.folder }}"
-          SCREENSHOTS_DIR="${{ steps.detect.outputs.screenshots_dir }}"
-          RESULT_FILE="${{ steps.detect.outputs.result_file }}"
-          LOG_FILE="${{ steps.detect.outputs.log_file }}"
+          CHUNK_RESULT="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/results/result-chunk-$CHUNK_INDEX.json"
+          SCREENSHOT_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
 
           STATUS="success"
-          ERROR_MESSAGE=""
-          SCREENSHOT_COUNT=0
           TESTS_PASSED=0
           TESTS_FAILED=0
+          SCREENSHOT_COUNT=0
 
-          # Check validation log
-          LOG_SIZE=$(wc -c < "$GITHUB_WORKSPACE/$LOG_FILE" 2>/dev/null || echo "0")
-          echo "Validation log size: $LOG_SIZE bytes"
-          if [ "$LOG_SIZE" -lt 100 ]; then
-            STATUS="failed"
-            ERROR_MESSAGE="Validation log is empty or too small"
-          fi
-
-          # Check screenshots
-          if [ -d "$GITHUB_WORKSPACE/$SCREENSHOTS_DIR" ]; then
-            SCREENSHOT_COUNT=$(find "$GITHUB_WORKSPACE/$SCREENSHOTS_DIR" -name "*.png" | wc -l | tr -d ' ')
-            echo "Screenshots found: $SCREENSHOT_COUNT"
-          fi
-
-          # Check and parse result.json
-          if [ -f "$GITHUB_WORKSPACE/$RESULT_FILE" ]; then
-            if jq empty "$GITHUB_WORKSPACE/$RESULT_FILE" 2>/dev/null; then
-              echo "result.json is valid JSON"
-              TESTS_PASSED=$(jq -r '.summary.passed // 0' "$GITHUB_WORKSPACE/$RESULT_FILE")
-              TESTS_FAILED=$(jq -r '.summary.failed // 0' "$GITHUB_WORKSPACE/$RESULT_FILE")
-              VALIDATION_STATUS=$(jq -r '.validation_status // "unknown"' "$GITHUB_WORKSPACE/$RESULT_FILE")
+          # Check chunk result
+          if [ -f "$CHUNK_RESULT" ]; then
+            if jq empty "$CHUNK_RESULT" 2>/dev/null; then
+              TESTS_PASSED=$(jq -r '.summary.passed // 0' "$CHUNK_RESULT")
+              TESTS_FAILED=$(jq -r '.summary.failed // 0' "$CHUNK_RESULT")
+              VALIDATION_STATUS=$(jq -r '.validation_status // "unknown"' "$CHUNK_RESULT")
               if [ "$VALIDATION_STATUS" = "failed" ]; then
                 STATUS="failed"
               fi
             else
               STATUS="failed"
-              ERROR_MESSAGE="${ERROR_MESSAGE}; result.json is not valid JSON"
             fi
           else
             STATUS="failed"
-            ERROR_MESSAGE="${ERROR_MESSAGE}; result.json not generated"
+          fi
+
+          # Count screenshots
+          if [ -d "$SCREENSHOT_DIR" ]; then
+            SCREENSHOT_COUNT=$(find "$SCREENSHOT_DIR" -name "*.png" | wc -l | tr -d ' ')
           fi
 
           echo "status=$STATUS" >> $GITHUB_OUTPUT
           echo "tests_passed=$TESTS_PASSED" >> $GITHUB_OUTPUT
           echo "tests_failed=$TESTS_FAILED" >> $GITHUB_OUTPUT
           echo "screenshot_count=$SCREENSHOT_COUNT" >> $GITHUB_OUTPUT
-          echo "error_message=$ERROR_MESSAGE" >> $GITHUB_OUTPUT
 
-          echo "============================================"
-          echo "Validation Summary"
-          echo "============================================"
-          echo "Status: $STATUS"
-          echo "Tests Passed: $TESTS_PASSED"
-          echo "Tests Failed: $TESTS_FAILED"
-          echo "Screenshots: $SCREENSHOT_COUNT"
-          echo "Errors: ${ERROR_MESSAGE:-none}"
-          echo "============================================"
+          echo "Chunk $CHUNK_INDEX: Status=$STATUS, Passed=$TESTS_PASSED, Failed=$TESTS_FAILED, Screenshots=$SCREENSHOT_COUNT"
 
       - name: Cleanup Browser Processes
-        if: always() && steps.detect.outputs.skip != 'true'
+        if: always()
         run: |
           pkill -f "mcp-server-playwright" 2>/dev/null || true
           pkill -f "chrome.*playwright" 2>/dev/null || true
@@ -536,48 +629,254 @@ jobs:
           pkill -f "chromium" 2>/dev/null || true
           echo "Browser cleanup complete"
 
+      - name: Upload Chunk Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chunk-${{ matrix.chunk.index }}-results
+          path: |
+            ${{ needs.prepare.outputs.folder }}/validation/chunks/results/result-chunk-${{ matrix.chunk.index }}.json
+            ${{ needs.prepare.outputs.folder }}/validation/screenshots/chunk-${{ matrix.chunk.index }}/
+            ${{ needs.prepare.outputs.folder }}/validation/chunks/validation-chunk-${{ matrix.chunk.index }}.log
+          retention-days: 7
+
+  # ============================================
+  # JOB 3: MERGE - Combine chunk results and commit
+  # ============================================
+  merge-results:
+    needs: [prepare, validate]
+    if: always() && needs.prepare.outputs.skip != 'true' && needs.prepare.outputs.chunk_count != '0'
+    runs-on: [self-hosted, validation]
+    timeout-minutes: 10
+
+    outputs:
+      validation_status: ${{ steps.merge.outputs.status }}
+      tests_passed: ${{ steps.merge.outputs.tests_passed }}
+      tests_failed: ${{ steps.merge.outputs.tests_failed }}
+      screenshot_count: ${{ steps.merge.outputs.screenshot_count }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        timeout-minutes: 3
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Download All Chunk Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: chunk-*-results
+          path: ${{ needs.prepare.outputs.folder }}/validation/artifacts/
+
+      - name: Merge Chunk Results
+        id: merge
+        env:
+          FOLDER: ${{ needs.prepare.outputs.folder }}
+          CHUNK_COUNT: ${{ needs.prepare.outputs.chunk_count }}
+          FEATURE_NAME: ${{ needs.prepare.outputs.feature_name }}
+          FEATURE_SLUG: ${{ needs.prepare.outputs.feature_slug }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+          TOTAL_TESTS: ${{ needs.prepare.outputs.total_tests }}
+        run: |
+          RESULTS_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/results"
+          ARTIFACTS_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/artifacts"
+          FINAL_RESULT="$GITHUB_WORKSPACE/$FOLDER/validation/result.json"
+          SCREENSHOTS_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots"
+
+          mkdir -p "$RESULTS_DIR"
+          mkdir -p "$SCREENSHOTS_DIR"
+
+          echo "============================================"
+          echo "Merging results from $CHUNK_COUNT chunks"
+          echo "============================================"
+
+          # Copy chunk results from artifacts
+          for i in $(seq 0 $((CHUNK_COUNT - 1))); do
+            ARTIFACT_RESULT="$ARTIFACTS_DIR/chunk-$i-results/$FOLDER/validation/chunks/results/result-chunk-$i.json"
+            if [ -f "$ARTIFACT_RESULT" ]; then
+              cp "$ARTIFACT_RESULT" "$RESULTS_DIR/"
+              echo "Copied chunk-$i result"
+            fi
+
+            # Copy screenshots
+            ARTIFACT_SCREENSHOTS="$ARTIFACTS_DIR/chunk-$i-results/$FOLDER/validation/screenshots/chunk-$i"
+            if [ -d "$ARTIFACT_SCREENSHOTS" ]; then
+              cp -r "$ARTIFACT_SCREENSHOTS"/* "$SCREENSHOTS_DIR/" 2>/dev/null || true
+              echo "Copied chunk-$i screenshots"
+            fi
+          done
+
+          # Merge all chunk results into final result.json
+          TOTAL_PASSED=0
+          TOTAL_FAILED=0
+          TOTAL_SKIPPED=0
+          ALL_TEST_RESULTS="[]"
+          ALL_SCREENSHOTS="[]"
+          OVERALL_STATUS="completed"
+
+          for i in $(seq 0 $((CHUNK_COUNT - 1))); do
+            CHUNK_RESULT="$RESULTS_DIR/result-chunk-$i.json"
+            if [ -f "$CHUNK_RESULT" ] && jq empty "$CHUNK_RESULT" 2>/dev/null; then
+              PASSED=$(jq -r '.summary.passed // 0' "$CHUNK_RESULT")
+              FAILED=$(jq -r '.summary.failed // 0' "$CHUNK_RESULT")
+              SKIPPED=$(jq -r '.summary.skipped // 0' "$CHUNK_RESULT")
+              STATUS=$(jq -r '.validation_status // "unknown"' "$CHUNK_RESULT")
+
+              TOTAL_PASSED=$((TOTAL_PASSED + PASSED))
+              TOTAL_FAILED=$((TOTAL_FAILED + FAILED))
+              TOTAL_SKIPPED=$((TOTAL_SKIPPED + SKIPPED))
+
+              if [ "$STATUS" = "failed" ]; then
+                OVERALL_STATUS="failed"
+              fi
+
+              # Merge test results
+              ALL_TEST_RESULTS=$(echo "$ALL_TEST_RESULTS" | jq --slurpfile chunk "$CHUNK_RESULT" '. + ($chunk[0].test_results // [])')
+              ALL_SCREENSHOTS=$(echo "$ALL_SCREENSHOTS" | jq --slurpfile chunk "$CHUNK_RESULT" '. + ($chunk[0].screenshots // [])')
+
+              echo "Chunk $i: $PASSED passed, $FAILED failed, $SKIPPED skipped"
+            else
+              echo "Chunk $i: Result missing or invalid"
+              OVERALL_STATUS="failed"
+            fi
+          done
+
+          # Count total screenshots
+          SCREENSHOT_COUNT=$(find "$SCREENSHOTS_DIR" -name "*.png" 2>/dev/null | wc -l | tr -d ' ')
+
+          # Write final merged result
+          jq -n \
+            --arg status "$OVERALL_STATUS" \
+            --arg feature_name "$FEATURE_NAME" \
+            --arg feature_slug "$FEATURE_SLUG" \
+            --arg version "$VERSION" \
+            --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --argjson total_tests "$TOTAL_TESTS" \
+            --argjson passed "$TOTAL_PASSED" \
+            --argjson failed "$TOTAL_FAILED" \
+            --argjson skipped "$TOTAL_SKIPPED" \
+            --argjson chunk_count "$CHUNK_COUNT" \
+            --argjson test_results "$ALL_TEST_RESULTS" \
+            --argjson screenshots "$ALL_SCREENSHOTS" \
+            '{
+              validation_status: $status,
+              feature_name: $feature_name,
+              feature_slug: $feature_slug,
+              version: $version,
+              timestamp: $timestamp,
+              execution_mode: "chunked",
+              chunk_count: $chunk_count,
+              summary: {
+                total_tests: $total_tests,
+                passed: $passed,
+                failed: $failed,
+                skipped: $skipped
+              },
+              test_results: $test_results,
+              screenshots: $screenshots
+            }' > "$FINAL_RESULT"
+
+          echo "status=$OVERALL_STATUS" >> $GITHUB_OUTPUT
+          echo "tests_passed=$TOTAL_PASSED" >> $GITHUB_OUTPUT
+          echo "tests_failed=$TOTAL_FAILED" >> $GITHUB_OUTPUT
+          echo "screenshot_count=$SCREENSHOT_COUNT" >> $GITHUB_OUTPUT
+
+          echo "============================================"
+          echo "Merged Results Summary:"
+          echo "  Status: $OVERALL_STATUS"
+          echo "  Total Passed: $TOTAL_PASSED"
+          echo "  Total Failed: $TOTAL_FAILED"
+          echo "  Total Skipped: $TOTAL_SKIPPED"
+          echo "  Screenshots: $SCREENSHOT_COUNT"
+          echo "============================================"
+
+      - name: Generate Report
+        env:
+          FOLDER: ${{ needs.prepare.outputs.folder }}
+          FEATURE_NAME: ${{ needs.prepare.outputs.feature_name }}
+        run: |
+          RESULT_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/result.json"
+          REPORT_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/report.md"
+
+          if [ -f "$RESULT_FILE" ]; then
+            PASSED=$(jq -r '.summary.passed // 0' "$RESULT_FILE")
+            FAILED=$(jq -r '.summary.failed // 0' "$RESULT_FILE")
+            SKIPPED=$(jq -r '.summary.skipped // 0' "$RESULT_FILE")
+            STATUS=$(jq -r '.validation_status // "unknown"' "$RESULT_FILE")
+            CHUNKS=$(jq -r '.chunk_count // 1' "$RESULT_FILE")
+
+            cat > "$REPORT_FILE" << EOF
+          # Validation Report: $FEATURE_NAME
+
+          **Status**: $STATUS
+          **Execution Mode**: Chunked ($CHUNKS chunks)
+          **Generated**: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+          ## Summary
+
+          | Metric | Count |
+          |--------|-------|
+          | Passed | $PASSED |
+          | Failed | $FAILED |
+          | Skipped | $SKIPPED |
+          | Total | $((PASSED + FAILED + SKIPPED)) |
+
+          ## Test Results
+
+          EOF
+
+            # Add individual test results
+            jq -r '.test_results[] | "### \(.test_name)\n- **Status**: \(.status)\n- **Assertions**: \(.assertions_passed // 0)/\(.assertions_checked // 0)\n- **Notes**: \(.notes // "None")\n"' "$RESULT_FILE" >> "$REPORT_FILE" 2>/dev/null || true
+
+            echo "Report generated: $REPORT_FILE"
+          fi
+
       - name: Commit Results
-        if: steps.detect.outputs.skip != 'true'
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          FOLDER: ${{ needs.prepare.outputs.folder }}
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
           git remote set-url origin "https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}"
 
-          git add "${{ steps.detect.outputs.folder }}/validation/" || true
+          git add "$FOLDER/validation/" || true
 
-          STATUS="${{ steps.validate_outputs.outputs.status }}"
-          PASSED="${{ steps.validate_outputs.outputs.tests_passed }}"
-          FAILED="${{ steps.validate_outputs.outputs.tests_failed }}"
+          STATUS="${{ steps.merge.outputs.status }}"
+          PASSED="${{ steps.merge.outputs.tests_passed }}"
+          FAILED="${{ steps.merge.outputs.tests_failed }}"
+          CHUNKS="${{ needs.prepare.outputs.chunk_count }}"
 
-          if [ "$STATUS" = "success" ]; then
-            COMMIT_MSG="validation: ${{ steps.parse_payload.outputs.feature_name }} - ${PASSED} passed, ${FAILED} failed"
+          if [ "$STATUS" = "completed" ]; then
+            COMMIT_MSG="validation: ${{ needs.prepare.outputs.feature_name }} - ${PASSED} passed, ${FAILED} failed (${CHUNKS} chunks)"
           else
-            COMMIT_MSG="validation: FAILED for ${{ steps.parse_payload.outputs.feature_name }}"
+            COMMIT_MSG="validation: FAILED for ${{ needs.prepare.outputs.feature_name }} (${CHUNKS} chunks)"
           fi
 
           git commit -m "$COMMIT_MSG" || echo "No changes to commit"
           git push || echo "Push failed"
 
       - name: Notify n8n Complete
-        if: always() && steps.detect.outputs.skip != 'true'
+        if: always()
         run: |
           curl -s -X POST "https://automation-wh.bayzat.com/webhook/validation-complete" \
             -H "Content-Type: application/json" \
             -d "{
-              \"feature_folder\": \"${{ steps.detect.outputs.folder }}\",
-              \"feature_name\": \"${{ steps.parse_payload.outputs.feature_name }}\",
-              \"feature_slug\": \"${{ steps.parse_payload.outputs.feature_slug }}\",
-              \"version\": \"${{ steps.parse_payload.outputs.version }}\",
-              \"status\": \"${{ steps.validate_outputs.outputs.status }}\",
-              \"tests_passed\": ${{ steps.validate_outputs.outputs.tests_passed || 0 }},
-              \"tests_failed\": ${{ steps.validate_outputs.outputs.tests_failed || 0 }},
-              \"screenshot_count\": ${{ steps.validate_outputs.outputs.screenshot_count || 0 }},
-              \"total_tests\": ${{ steps.parse_payload.outputs.total_tests || 0 }},
-              \"must_test\": ${{ steps.parse_payload.outputs.must_test || 0 }},
-              \"should_test\": ${{ steps.parse_payload.outputs.should_test || 0 }},
+              \"feature_folder\": \"${{ needs.prepare.outputs.folder }}\",
+              \"feature_name\": \"${{ needs.prepare.outputs.feature_name }}\",
+              \"feature_slug\": \"${{ needs.prepare.outputs.feature_slug }}\",
+              \"version\": \"${{ needs.prepare.outputs.version }}\",
+              \"status\": \"${{ steps.merge.outputs.status }}\",
+              \"tests_passed\": ${{ steps.merge.outputs.tests_passed || 0 }},
+              \"tests_failed\": ${{ steps.merge.outputs.tests_failed || 0 }},
+              \"screenshot_count\": ${{ steps.merge.outputs.screenshot_count || 0 }},
+              \"total_tests\": ${{ needs.prepare.outputs.total_tests || 0 }},
+              \"must_test\": ${{ needs.prepare.outputs.must_test || 0 }},
+              \"should_test\": ${{ needs.prepare.outputs.should_test || 0 }},
+              \"chunk_count\": ${{ needs.prepare.outputs.chunk_count || 1 }},
+              \"execution_mode\": \"chunked\",
               \"run_id\": \"${{ github.run_id }}\",
               \"run_url\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\",
               \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",
