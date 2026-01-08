@@ -445,6 +445,45 @@ jobs:
           5. Focus on tests in order - they are pre-sorted by priority
 
           ═══════════════════════════════════════════════════════════════
+          ## SCREENSHOT POLICY (MANDATORY)
+          ═══════════════════════════════════════════════════════════════
+
+          We only accept "within-the-fold" evidence screenshots.
+
+          A) NEVER take full-page screenshots:
+             - Do NOT use fullPage=true or any full-page option
+             - Do NOT capture entire scrolling containers (feeds/timelines/lists)
+             - Do NOT use any snapshot tool that stitches multiple viewports
+
+          B) ALWAYS ensure target is visible BEFORE shooting:
+             - If the target UI is not in the current viewport, SCROLL FIRST
+             - Scroll until the target element is visible and preferably centered
+             - Use browser_scroll or scroll element into view before screenshot
+
+          C) Evidence pattern (for each major step / assertion):
+             1. Viewport screenshot (context) => captures only what fits in browser window
+             2. Element screenshot (proof)    => tight crop to the validated UI component
+
+          D) Long pages / feeds / scrollable areas:
+             - DO NOT screenshot the entire scrollable area
+             - Scroll to the relevant section FIRST
+             - Capture ONE viewport screenshot at that position only
+
+          E) Timing:
+             - After scrolling, WAIT 500ms for layout/animations to settle
+             - Then take the screenshot
+
+          F) Screenshot naming (MUST FOLLOW):
+             - chunk-\${CHUNK_INDEX}-<test_id>-<step>-viewport.png  (for viewport shots)
+             - chunk-\${CHUNK_INDEX}-<test_id>-<step>-element.png   (for element shots)
+
+          G) Playwright MCP tool usage:
+             - Use mcp__playwright__browser_take_screenshot for viewport captures
+             - Do NOT pass fullPage option or set it to false
+             - For element screenshots, target the specific element selector
+             - Prefer element screenshots for actual assertion proof
+
+          ═══════════════════════════════════════════════════════════════
           ## CRITICAL: REFERENCE-BASED PAYLOAD STRUCTURE
           ═══════════════════════════════════════════════════════════════
 
@@ -507,7 +546,9 @@ jobs:
           ### Step 1: Login
           1. Navigate to the base URL
           2. Enter credentials and login
-          3. Take screenshot: "chunk-${CHUNK_INDEX}-01-login-success.png"
+          3. Wait for dashboard to load
+          4. Take VIEWPORT screenshot: "chunk-${CHUNK_INDEX}-login-viewport.png"
+             (Do NOT take full-page - just the visible viewport after login)
 
           ### Step 2: Resolve References and Execute Tests
           For each test in this chunk:
@@ -520,7 +561,37 @@ jobs:
           7. Validate each assertion in the test
           8. Check resolved business_rules are satisfied
           9. Test resolved edge_cases if applicable
-          10. Take screenshots: "chunk-${CHUNK_INDEX}-<test_id>-<step>.png"
+          10. Take screenshots following the Navigation + Evidence Procedure below
+
+          #### Navigation + Evidence Procedure (MANDATORY)
+          Before ANY screenshot, follow this procedure:
+
+          1. IDENTIFY a stable target element for the step:
+             - Look for: heading, label, data-testid, panel title, card header
+             - Example: "Air Ticket Policies" heading, "Submit" button, policy card
+
+          2. SCROLL the target into view:
+             - Use browser_click with scroll behavior, or
+             - Execute JavaScript: element.scrollIntoView({block: 'center'})
+             - Goal: target element should be centered in viewport if possible
+
+          3. WAIT 500ms for layout to settle:
+             - Animations, lazy-loading, dynamic content need time
+             - Use browser_wait_for or setTimeout equivalent
+
+          4. TAKE VIEWPORT SCREENSHOT (context):
+             - Use mcp__playwright__browser_take_screenshot
+             - Do NOT use fullPage option
+             - Name: chunk-\${CHUNK_INDEX}-<test_id>-<step>-viewport.png
+
+          5. TAKE ELEMENT SCREENSHOT (proof) if validating a specific component:
+             - Target the specific element selector
+             - Name: chunk-\${CHUNK_INDEX}-<test_id>-<step>-element.png
+
+          6. LOG for each screenshot:
+             - Current URL
+             - What element/label you targeted
+             - Whether it is viewport or element type
 
           ### Step 3: Write Chunk Results
           Write a chunk result JSON file to: $CHUNK_RESULT
@@ -559,6 +630,26 @@ jobs:
           - Only process tests in YOUR chunk payload
           - If a reference cannot be resolved, log it and skip that part
           - Take screenshot on any error for debugging
+
+          ## PLAYWRIGHT MCP TOOL RULES (MANDATORY)
+          When using mcp__playwright__browser_take_screenshot:
+          - NEVER request full-page screenshots
+          - NEVER set fullPage=true or any equivalent option
+          - DEFAULT behavior captures viewport only - use this
+          - For element screenshots, specify the element selector
+          - Always scroll target into view BEFORE taking screenshot
+          - Wait 500ms after scroll before capturing
+
+          FORBIDDEN patterns:
+          - Taking screenshots of entire scrollable feeds
+          - Capturing multiple viewports stitched together
+          - Using snapshot tools that capture beyond viewport
+          - Screenshots taller than ~900px (typical viewport height)
+
+          REQUIRED patterns:
+          - Scroll → Wait 500ms → Viewport screenshot
+          - For assertions: Viewport shot + Element shot of the specific component
+          - One screenshot per logical step, not entire page dumps
 
           EOF
 
