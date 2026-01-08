@@ -608,11 +608,13 @@ jobs:
           echo "============================================"
 
           set +e
-          claude --model sonnet \
+          # Use stdin for prompt to avoid command-line expansion issues
+          # The --print mode reads from stdin when no prompt argument is given
+          cat "$PROMPT_FILE" | claude --model sonnet \
                  --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
                  --mcp-config ".mcp.json" \
                  --dangerously-skip-permissions \
-                 --print "$(cat "$PROMPT_FILE")" 2>&1 | tee "$LOG_FILE"
+                 --print 2>&1 | tee "$LOG_FILE"
 
           CLAUDE_EXIT_CODE=$?
           set -e
