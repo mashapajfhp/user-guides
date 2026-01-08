@@ -274,6 +274,45 @@ jobs:
           4. You MUST handle login first before any validation
           5. Focus on MUST_TEST priority items first, then SHOULD_TEST
 
+          ═══════════════════════════════════════════════════════════════
+          ## CRITICAL: REFERENCE-BASED PAYLOAD STRUCTURE
+          ═══════════════════════════════════════════════════════════════
+
+          This payload uses ID REFERENCES to avoid duplication. You MUST resolve
+          references before executing any test. The payload contains an "instructions"
+          section that also explains this - read it carefully.
+
+          ### REFERENCE RESOLUTION TABLE
+          ┌─────────────────────┬──────────────────────────────────────────────┐
+          │ Field               │ How to Resolve                               │
+          ├─────────────────────┼──────────────────────────────────────────────┤
+          │ access_path_ref     │ Look up in definitions.access_paths          │
+          │                     │ (configuration OR operational) by path_id    │
+          ├─────────────────────┼──────────────────────────────────────────────┤
+          │ setup_flow_ref      │ Look up in definitions.setup_flows           │
+          │                     │ by flow_id → get steps array                 │
+          ├─────────────────────┼──────────────────────────────────────────────┤
+          │ business_rule_refs  │ Look up each ID in definitions.business_rules│
+          │                     │ by rule_id → get rule + ui_manifestation     │
+          ├─────────────────────┼──────────────────────────────────────────────┤
+          │ edge_case_refs      │ Look up each ID in definitions.edge_cases    │
+          │                     │ by case_id → get scenario + expected_behavior│
+          ├─────────────────────┼──────────────────────────────────────────────┤
+          │ ui_element_refs     │ Look up each in definitions.ui_elements      │
+          │                     │ by element_name → get type + location        │
+          └─────────────────────┴──────────────────────────────────────────────┘
+
+          ### RESOLUTION EXAMPLE
+          Given test with: setup_flow_ref: "SETUP-002"
+          Action: Find definitions.setup_flows.find(f => f.flow_id === "SETUP-002")
+          Result: Execute all steps from that flow object
+
+          Given test with: business_rule_refs: ["BR-001", "BR-005"]
+          Action: Find each in definitions.business_rules by rule_id
+          Result: Validate UI behaves according to those rules
+
+          ═══════════════════════════════════════════════════════════════
+
           PROMPT_HEADER
 
           cat >> "$PROMPT_FILE" << EOF
@@ -301,21 +340,27 @@ jobs:
           2. Enter credentials and login
           3. Take screenshot: "01-login-success.png"
 
-          ### Step 2: Execute Setup Flows
-          For each setup_flow in the payload:
-          1. Follow the navigation path from access_paths
-          2. Execute each step in the flow
-          3. Take screenshot after key interactions
-          4. Record success/failure for each step
+          ### Step 2: Resolve References and Execute Setup Flows
+          For each test that has a setup_flow_ref:
+          1. RESOLVE: Look up the flow_id in definitions.setup_flows
+          2. RESOLVE: Look up access_path_ref in definitions.access_paths (if present)
+          3. Follow the navigation path from the resolved access_path
+          4. Execute each step from the resolved setup_flow
+          5. Take screenshot after key interactions
+          6. Record success/failure for each step
 
           ### Step 3: Execute Test Cases
           For each test in the payload (prioritize must_test first):
-          1. Navigate using the test's navigation path
-          2. Execute the setup_flow if referenced
-          3. Validate each assertion in the test
-          4. Check business_rules_to_validate
-          5. Test edge_cases_to_cover if applicable
-          6. Take screenshots showing validation results
+          1. RESOLVE access_path_ref → get navigation steps
+          2. RESOLVE setup_flow_ref → get setup steps
+          3. RESOLVE business_rule_refs → get rules to validate
+          4. RESOLVE edge_case_refs → get edge cases to check
+          5. Navigate using the resolved navigation path
+          6. Execute the resolved setup_flow steps
+          7. Validate each assertion in the test
+          8. Check resolved business_rules are satisfied
+          9. Test resolved edge_cases if applicable
+          10. Take screenshots showing validation results
 
           ### Step 4: Write Results
           Write a result.json file with this structure:
@@ -336,6 +381,8 @@ jobs:
                 "status": "passed|failed|skipped",
                 "assertions_checked": <number>,
                 "assertions_passed": <number>,
+                "business_rules_validated": ["<rule_ids checked>"],
+                "edge_cases_tested": ["<case_ids checked>"],
                 "screenshots": ["<filename>"],
                 "notes": "<any observations>"
               }
@@ -353,11 +400,13 @@ jobs:
           }
 
           ## IMPORTANT NOTES
-          - Use element_type hints from the payload (button, input, dropdown, etc.)
-          - Verify expected_result for each step
+          - ALWAYS resolve references before executing - never skip this step
+          - Use element_type hints from the resolved steps (button, input, dropdown, etc.)
+          - Verify expected_result for each resolved step
           - Handle modal dialogs and page transitions gracefully
           - If a test cannot be executed, mark as skipped with reason
           - Take screenshot on any error for debugging
+          - If a reference cannot be resolved (null or not found), log it and skip that part
 
           EOF
 
