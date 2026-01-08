@@ -375,29 +375,37 @@ jobs:
           echo "Playwright MCP v${PLAYWRIGHT_MCP_VERSION} ready"
 
       - name: Setup MCP Configuration
+        env:
+          PLAYWRIGHT_MCP_VERSION: ${{ env.PLAYWRIGHT_MCP_VERSION }}
         run: |
           FOLDER="${{ needs.prepare.outputs.folder }}"
           CHUNK_INDEX="${{ matrix.chunk.index }}"
           SCREENSHOT_PATH="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
 
-          rm -f "$GITHUB_WORKSPACE/.mcp.json"
+          echo "Setting up MCP configuration..."
+          echo "  Screenshot path: $SCREENSHOT_PATH"
+          echo "  Playwright MCP version: $PLAYWRIGHT_MCP_VERSION"
 
-          cat > "$GITHUB_WORKSPACE/.mcp.json" << EOF
-          {
-            "mcpServers": {
-              "playwright": {
-                "command": "npx",
-                "args": [
-                  "-y",
-                  "@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}",
-                  "--output-dir", "${SCREENSHOT_PATH}",
-                  "--browser", "chrome",
-                  "--timeout", "300000"
-                ]
-              }
-            }
-          }
-          EOF
+          rm -f "$GITHUB_WORKSPACE/.mcp.json"
+          mkdir -p "$SCREENSHOT_PATH"
+
+          # Create MCP config without heredoc indentation issues
+          echo '{"mcpServers":{"playwright":{"command":"npx","args":["-y","@playwright/mcp@'"$PLAYWRIGHT_MCP_VERSION"'","--output-dir","'"$SCREENSHOT_PATH"'","--browser","chrome","--timeout","300000"]}}}' > "$GITHUB_WORKSPACE/.mcp.json"
+
+          # Validate JSON
+          echo "Validating MCP config..."
+          if jq empty "$GITHUB_WORKSPACE/.mcp.json" 2>/dev/null; then
+            echo "MCP config is valid JSON"
+            jq . "$GITHUB_WORKSPACE/.mcp.json"
+          else
+            echo "ERROR: Invalid MCP config JSON!"
+            cat "$GITHUB_WORKSPACE/.mcp.json"
+            exit 1
+          fi
+
+          # Test MCP server startup
+          echo "Testing Playwright MCP server..."
+          timeout 10 npx -y "@playwright/mcp@$PLAYWRIGHT_MCP_VERSION" --help > /dev/null 2>&1 && echo "Playwright MCP responds" || echo "WARNING: Playwright MCP test failed"
 
           echo "MCP config for chunk $CHUNK_INDEX ready"
 
@@ -583,8 +591,21 @@ jobs:
           cd "$GITHUB_WORKSPACE"
           export PATH="$(npm prefix -g)/bin:$PATH"
 
+          # Debug: Show environment
+          echo "DEBUG: Working directory: $(pwd)"
+          echo "DEBUG: MCP config exists: $(test -f .mcp.json && echo YES || echo NO)"
+          echo "DEBUG: MCP config content:"
+          cat .mcp.json 2>/dev/null || echo "ERROR: Cannot read .mcp.json"
+          echo ""
+          echo "DEBUG: Claude CLI version:"
+          claude --version 2>&1 || echo "ERROR: Cannot get Claude version"
+          echo ""
+
           PROMPT_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/.prompt-chunk-$CHUNK_INDEX.txt"
           LOG_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/validation-chunk-$CHUNK_INDEX.log"
+
+          echo "DEBUG: Prompt file size: $(wc -c < "$PROMPT_FILE" 2>/dev/null || echo 0) bytes"
+          echo "============================================"
 
           set +e
           claude --model sonnet \
