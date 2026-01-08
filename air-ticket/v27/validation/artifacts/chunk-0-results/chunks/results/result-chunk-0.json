@@ -3,9 +3,9 @@
   "chunk_count": 1,
   "validation_status": "failed",
   "feature_name": "Air Ticket",
-  "timestamp": "2026-01-08T13:40:00.000Z",
-  "error": "Playwright MCP integration not available",
-  "error_details": "This validation task requires Playwright MCP browser automation capabilities to execute UI tests against https://app.bayzat.com/. The current environment does not have Playwright MCP tools available, preventing browser automation, navigation, element interaction, and screenshot capture.",
+  "timestamp": "2026-01-08T13:57:00.000Z",
+  "error": "Playwright MCP server not available",
+  "error_details": "The Playwright MCP server is configured in .mcp.json but the MCP tools are not accessible in the current execution environment. Browser automation cannot be performed without Playwright MCP tools.",
   "summary": {
     "total_tests": 4,
     "passed": 0,
@@ -17,78 +17,71 @@
       "test_id": "TEST-TSSD-3193",
       "test_name": "Client is unable to remove Processed Air tickets",
       "status": "skipped",
+      "skip_reason": "Playwright MCP server not available",
       "assertions_checked": 0,
       "assertions_passed": 0,
-      "business_rules_validated": [],
-      "edge_cases_tested": [],
+      "business_rule_refs_to_validate": ["BR-001", "BR-004"],
+      "edge_case_refs_to_test": [],
       "screenshots": [],
-      "notes": "Skipped due to missing Playwright MCP integration. Test requires: (1) Navigate to Settings > Workflows, (2) Create Air Tickets Auto Encashment workflow, (3) Process air ticket in payroll, (4) Reopen payroll month, (5) Reject payroll transaction, (6) Verify deletion options become available"
+      "notes": "Test requires browser automation via Playwright MCP which is not available in current environment"
     },
     {
       "test_id": "TEST-AV-6477",
       "test_name": "FE: Show remaining air tickets when balance is on hold due to booking request",
       "status": "skipped",
+      "skip_reason": "Playwright MCP server not available",
       "assertions_checked": 0,
       "assertions_passed": 0,
-      "business_rules_validated": [],
-      "edge_cases_tested": [],
+      "business_rule_refs_to_validate": ["BR-005", "BR-001", "BR-004"],
+      "edge_case_refs_to_test": ["EC-004", "EC-010"],
       "screenshots": [],
-      "notes": "Skipped due to missing Playwright MCP integration. Test requires: (1) Create air ticket allowance policy, (2) Navigate to employee dashboard, (3) Initiate booking request, (4) Verify remaining balance visibility during pending booking, (5) Verify balance updates after completion"
+      "notes": "Test requires browser automation via Playwright MCP which is not available in current environment"
     },
     {
       "test_id": "TEST-AV-6343",
       "test_name": "FE: Unclear indication of available air ticket requests",
       "status": "skipped",
+      "skip_reason": "Playwright MCP server not available",
       "assertions_checked": 0,
       "assertions_passed": 0,
-      "business_rules_validated": [],
-      "edge_cases_tested": [],
+      "business_rule_refs_to_validate": ["BR-001", "BR-005", "BR-011", "BR-006", "BR-004"],
+      "edge_case_refs_to_test": ["EC-004", "EC-005", "EC-010"],
       "screenshots": [],
-      "notes": "Skipped due to missing Playwright MCP integration. Test requires: (1) Create air ticket policy with request limits, (2) Submit requests to reach limit (0/1 scenario), (3) Verify display clarity of request counter, (4) Test various request count scenarios (1/5, 3/10)"
+      "notes": "Test requires browser automation via Playwright MCP which is not available in current environment"
     },
     {
       "test_id": "TEST-TSSD-3366",
       "test_name": "Need to remove processed (Encashment) Air tickets with Payroll reopen",
       "status": "skipped",
+      "skip_reason": "Playwright MCP server not available",
       "assertions_checked": 0,
       "assertions_passed": 0,
-      "business_rules_validated": [],
-      "edge_cases_tested": [],
+      "business_rule_refs_to_validate": ["BR-001", "BR-004", "BR-010"],
+      "edge_case_refs_to_test": ["EC-004"],
       "screenshots": [],
-      "notes": "Skipped due to missing Playwright MCP integration. Test requires: (1) Create air ticket encashment workflow, (2) Process encashment in December payroll, (3) Reopen December payroll, (4) Delete encashment transaction, (5) Move request to pending, (6) Reassign to January payroll"
+      "notes": "Test requires browser automation via Playwright MCP which is not available in current environment"
     }
   ],
   "screenshots": [],
-  "required_capabilities": [
-    "Playwright MCP browser automation",
-    "Browser navigation and page interaction",
-    "Element selection and clicking",
-    "Form filling and submission",
-    "Screenshot capture",
-    "Wait for dynamic content loading"
-  ],
-  "resolved_references": {
-    "access_paths": {
-      "CFG-001": {
-        "path_name": "Create Air Ticket Allowance Policy",
-        "navigation": ["Settings", "Company", "Air ticket policies", "Add New"]
-      },
-      "CFG-002": {
-        "path_name": "Create Air Ticket Auto Encashment Workflow",
-        "navigation": ["Settings", "Workflows", "Create New", "Air Tickets Auto Encashment Recipe"]
-      }
-    },
-    "setup_flows": {
-      "SETUP-001": "Create Air Ticket Allowance Policy (11 steps)",
-      "SETUP-002": "Create Air Ticket Auto Encashment Workflow (11 steps)"
-    },
-    "business_rules_referenced": ["BR-001", "BR-004", "BR-005", "BR-006", "BR-010", "BR-011"],
-    "edge_cases_referenced": ["EC-004", "EC-005", "EC-010"]
+  "mcp_configuration": {
+    "configured_server": "playwright",
+    "command": "npx",
+    "args": ["-y", "@playwright/mcp@0.0.42", "--output-dir", "/Users/mashapa/validation-runner/_work/user-guides/user-guides/air-ticket/v27/validation/screenshots/chunk-0", "--browser", "chrome", "--timeout", "300000"],
+    "status": "configured_but_not_available"
   },
-  "next_steps": [
-    "Install and configure Playwright MCP integration",
-    "Verify MCP server connection to https://app.bayzat.com/",
-    "Configure authentication credentials in MCP",
-    "Re-run validation with Playwright automation enabled"
-  ]
+  "troubleshooting": {
+    "issue": "MCP server configured but tools not accessible",
+    "possible_causes": [
+      "MCP server not started or connected",
+      "Claude Code session doesn't have access to MCP servers",
+      "MCP configuration needs to be reloaded",
+      "Playwright MCP package not installed or initialization failed"
+    ],
+    "resolution_steps": [
+      "Restart Claude Code to reload MCP configuration",
+      "Verify Playwright MCP package is installed: npx -y @playwright/mcp@0.0.42 --help",
+      "Check MCP server logs for connection errors",
+      "Ensure .mcp.json is in the correct location and properly formatted"
+    ]
+  }
 }
