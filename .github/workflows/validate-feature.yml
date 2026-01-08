@@ -566,11 +566,11 @@ jobs:
 
       - name: Pre-Validation Browser Cleanup
         run: |
-          echo "Cleaning up stale browser processes..."
+          echo "Cleaning up stale Playwright processes only..."
           pkill -f "mcp-server-playwright" 2>/dev/null || true
-          pkill -f "chrome.*playwright" 2>/dev/null || true
-          pkill -f "Google Chrome" 2>/dev/null || true
-          pkill -f "chromium" 2>/dev/null || true
+          # Only kill Playwright-spawned browsers, NOT user's personal browsers
+          pkill -f "playwright.*chromium" 2>/dev/null || true
+          pkill -f "ms-playwright" 2>/dev/null || true
           sleep 2
           rm -rf /tmp/playwright-* 2>/dev/null || true
           echo "Pre-validation cleanup complete"
@@ -688,11 +688,11 @@ jobs:
       - name: Cleanup Browser Processes
         if: always()
         run: |
+          # Only kill Playwright processes, NOT user's personal browsers
           pkill -f "mcp-server-playwright" 2>/dev/null || true
-          pkill -f "chrome.*playwright" 2>/dev/null || true
-          pkill -f "Google Chrome" 2>/dev/null || true
-          pkill -f "chromium" 2>/dev/null || true
-          echo "Browser cleanup complete"
+          pkill -f "playwright.*chromium" 2>/dev/null || true
+          pkill -f "ms-playwright" 2>/dev/null || true
+          echo "Playwright cleanup complete"
 
       - name: Upload Chunk Artifacts
         if: always()
