@@ -608,30 +608,25 @@ jobs:
           echo "============================================"
 
           set +e
-          # IMPORTANT: --print mode does NOT support MCP servers in standard way
-          # We need to use expect to properly simulate an interactive TTY session
-          # This allows MCP servers to initialize properly
+          # Solution 1: Pipe "1" to auto-answer API key prompt, then send the prompt
+          # This is the most reliable approach for CI/CD environments
 
-          # Check if expect is available (pre-installed on macOS)
-          if ! command -v expect &> /dev/null; then
-            echo "ERROR: expect not found"
-            exit 1
-          fi
+          echo "::add-mask::${ANTHROPIC_API_KEY}"
 
-          # Create expect script (base64 encoded to avoid YAML parsing issues)
-          # Script: FIRST handles API key dialog (send "1"), THEN waits for MCP init, THEN sends prompt
-          EXPECT_B64="IyEvdXNyL2Jpbi9leHBlY3QgLWYKc2V0IHRpbWVvdXQgNjAwCnNldCBwcm9tcHRfZmlsZSBbbGluZGV4ICRhcmd2IDBdCgpzZXQgZnAgW29wZW4gJHByb21wdF9maWxlIHJdCnNldCBwcm9tcHRfY29udGVudCBbcmVhZCAkZnBdCmNsb3NlICRmcAoKc3Bhd24gY2xhdWRlIC0tbW9kZWwgc29ubmV0IC0tYWxsb3dlZFRvb2xzICJtY3BfX3BsYXl3cmlnaHRfXyosUmVhZCxXcml0ZSxHbG9iLEdyZXAiIC0tbWNwLWNvbmZpZyAiLm1jcC5qc29uIiAtLWRhbmdlcm91c2x5LXNraXAtcGVybWlzc2lvbnMgLS1tYXgtdHVybnMgMzAKCiMgRklSU1Q6IFdhaXQgZm9yIEFQSSBrZXkgY29uZmlybWF0aW9uIGRpYWxvZyB0byBhcHBlYXIKc2xlZXAgMwoKIyBTZW5kICIxIiB0byBzZWxlY3QgWWVzIGZvciB1c2luZyB0aGUgQVBJIGtleQpzZW5kIC0tICIxXHIiCgojIFdhaXQgZm9yIENsYXVkZS9NQ1Agc2VydmVycyB0byBpbml0aWFsaXplIGFmdGVyIEFQSSBrZXkgY29uZmlybWF0aW9uCnNsZWVwIDEwCgojIE5PVyBzZW5kIHRoZSBwcm9tcHQgY29udGVudApzZW5kIC0tICIkcHJvbXB0X2NvbnRlbnRcciIKCiMgV2FpdCBmb3IgQ2xhdWRlIHRvIGNvbXBsZXRlCmV4cGVjdCB7CiAgICBlb2YgeyBleGl0IDAgfQogICAgdGltZW91dCB7IHB1dHMgIlRpbWVvdXQgd2FpdGluZyBmb3IgY29tcGxldGlvbiI7IGV4aXQgMSB9Cn0K"
+          # Pipe: "1\n" selects Yes for API key, wait for init, then send prompt
+          (
+            printf "1\n"
+            sleep 5
+            cat "$PROMPT_FILE"
+          ) | claude \
+            --model sonnet \
+            --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
+            --mcp-config ".mcp.json" \
+            --dangerously-skip-permissions \
+            --max-turns 30 \
+            2>&1 | tee "$LOG_FILE"
 
-          EXPECT_SCRIPT=$(mktemp)
-          echo "$EXPECT_B64" | base64 -d > "$EXPECT_SCRIPT"
-          chmod +x "$EXPECT_SCRIPT"
-
-          # Run the expect script with prompt file as argument
-          expect "$EXPECT_SCRIPT" "$PROMPT_FILE" 2>&1 | tee "$LOG_FILE"
-
-          rm -f "$EXPECT_SCRIPT"
-
-          CLAUDE_EXIT_CODE=${PIPESTATUS[0]}
+          CLAUDE_EXIT_CODE=${PIPESTATUS[1]}
           set -e
 
           rm -f "$PROMPT_FILE"
