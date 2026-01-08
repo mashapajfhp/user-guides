@@ -400,6 +400,8 @@ jobs:
       - name: Setup MCP Configuration
         env:
           PLAYWRIGHT_MCP_VERSION: ${{ env.PLAYWRIGHT_MCP_VERSION }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           FOLDER="${{ needs.prepare.outputs.folder }}"
           CHUNK_INDEX="${{ matrix.chunk.index }}"
@@ -413,12 +415,13 @@ jobs:
           mkdir -p "$SCREENSHOT_PATH"
 
           # Create MCP config - handle npx fallback vs direct command
+          # Includes both Playwright and Supabase MCP servers
           if [ "$PLAYWRIGHT_MCP_CMD" = "npx" ]; then
             echo "Using npx fallback configuration..."
-            echo "{\"mcpServers\":{\"playwright\":{\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}\",\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
+            echo "{\"mcpServers\":{\"playwright\":{\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}\",\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]},\"supabase\":{\"command\":\"npx\",\"args\":[\"-y\",\"@supabase/mcp-server-supabase@latest\"],\"env\":{\"SUPABASE_URL\":\"${SUPABASE_URL}\",\"SUPABASE_SERVICE_ROLE_KEY\":\"${SUPABASE_SERVICE_ROLE_KEY}\"}}}}" > "$GITHUB_WORKSPACE/.mcp.json"
           else
             echo "Using direct command configuration..."
-            echo "{\"mcpServers\":{\"playwright\":{\"command\":\"${PLAYWRIGHT_MCP_CMD}\",\"args\":[\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
+            echo "{\"mcpServers\":{\"playwright\":{\"command\":\"${PLAYWRIGHT_MCP_CMD}\",\"args\":[\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]},\"supabase\":{\"command\":\"npx\",\"args\":[\"-y\",\"@supabase/mcp-server-supabase@latest\"],\"env\":{\"SUPABASE_URL\":\"${SUPABASE_URL}\",\"SUPABASE_SERVICE_ROLE_KEY\":\"${SUPABASE_SERVICE_ROLE_KEY}\"}}}}" > "$GITHUB_WORKSPACE/.mcp.json"
           fi
 
           # Validate JSON
@@ -915,7 +918,7 @@ jobs:
           # NO --print mode - we need interactive mode for MCP tool execution
           claude \
             --model sonnet \
-            --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
+            --allowedTools "mcp__playwright__*,mcp__supabase__*,Read,Write,Glob,Grep" \
             --mcp-config ".mcp.json" \
             --dangerously-skip-permissions \
             --max-turns 30 \
