@@ -200,21 +200,20 @@ jobs:
           echo "Installing Playwright MCP v${PLAYWRIGHT_MCP_VERSION}..."
           npm install -g @playwright/mcp@${PLAYWRIGHT_MCP_VERSION}
 
-          echo "Installing Chromium browser (no sudo required)..."
-          # Use chromium instead of chrome - doesn't require sudo for system deps
-          npx -y playwright install chromium --force
-
-          # Verify installation
-          if [ ! -d ~/.cache/ms-playwright ]; then
-            echo "Browser cache directory not found after installation"
-            exit 1
+          echo "Verifying Chrome browser installation..."
+          # Chrome is pre-installed on this runner - just verify it exists
+          if [ -d ~/.cache/ms-playwright/chrome* ] || [ -d ~/.cache/ms-playwright/chromium* ]; then
+            echo "Browser found in cache"
+          else
+            echo "Installing Chrome browser..."
+            npx -y playwright install chrome
           fi
 
           # List installed browsers
           echo "Installed browsers:"
           ls -la ~/.cache/ms-playwright/ 2>/dev/null || echo "Cache directory empty"
 
-          echo "Playwright MCP v${PLAYWRIGHT_MCP_VERSION} and Chromium browser ready"
+          echo "Playwright MCP v${PLAYWRIGHT_MCP_VERSION} and Chrome browser ready"
 
       - name: Setup MCP Configuration
         if: steps.detect.outputs.skip != 'true'
@@ -224,7 +223,7 @@ jobs:
 
           SCREENSHOT_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
 
-          # Use chromium browser (installed without sudo)
+          # Use Chrome browser (pre-installed on runner)
           cat > "$GITHUB_WORKSPACE/.mcp.json" << EOF
           {
             "mcpServers": {
@@ -234,7 +233,7 @@ jobs:
                   "-y",
                   "@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}",
                   "--output-dir", "${SCREENSHOT_PATH}",
-                  "--browser", "chromium",
+                  "--browser", "chrome",
                   "--timeout", "300000"
                 ]
               }
@@ -369,8 +368,9 @@ jobs:
         run: |
           echo "Cleaning up stale browser processes..."
           pkill -f "mcp-server-playwright" 2>/dev/null || true
-          pkill -f "chromium.*playwright" 2>/dev/null || true
-          pkill -f "Chromium" 2>/dev/null || true
+          pkill -f "chrome.*playwright" 2>/dev/null || true
+          pkill -f "Google Chrome" 2>/dev/null || true
+          pkill -f "chromium" 2>/dev/null || true
           sleep 2
           rm -rf /tmp/playwright-* 2>/dev/null || true
           echo "Pre-validation cleanup complete"
@@ -482,8 +482,9 @@ jobs:
         if: always() && steps.detect.outputs.skip != 'true'
         run: |
           pkill -f "mcp-server-playwright" 2>/dev/null || true
-          pkill -f "chromium.*playwright" 2>/dev/null || true
-          pkill -f "Chromium" 2>/dev/null || true
+          pkill -f "chrome.*playwright" 2>/dev/null || true
+          pkill -f "Google Chrome" 2>/dev/null || true
+          pkill -f "chromium" 2>/dev/null || true
           echo "Browser cleanup complete"
 
       - name: Commit Results
