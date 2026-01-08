@@ -3,30 +3,31 @@ name: Validate Feature Guide
 on:
   push:
     paths:
-      - '**/validation/request.json'
       - '**/validation/validation-payload.json'
+      - '**/validation/journeys-payload.json'
   workflow_dispatch:
     inputs:
       feature_folder:
-        description: 'Feature folder to validate (e.g., daily-wage-calculator/v5)'
+        description: 'Feature folder to validate (e.g., air-ticket/v19)'
         required: true
-      payload_format:
-        description: 'Payload format (auto-detect, legacy, n8n-v1)'
+      debug_mode:
+        description: 'Enable debug logging'
         required: false
-        default: 'auto-detect'
+        default: 'false'
 
 env:
-  # Pin versions for stability
-  PLAYWRIGHT_MCP_VERSION: "0.0.42"  # Avoid v0.0.47 screenshot corruption bug
+  PLAYWRIGHT_MCP_VERSION: "0.0.42"
   NODE_VERSION: "20"
 
 jobs:
   validate:
     runs-on: [self-hosted, validation]
-    timeout-minutes: 45  # Increased from 30 to handle longer validations
+    timeout-minutes: 45
 
     outputs:
       validation_status: ${{ steps.validate_outputs.outputs.status }}
+      tests_passed: ${{ steps.validate_outputs.outputs.tests_passed }}
+      tests_failed: ${{ steps.validate_outputs.outputs.tests_failed }}
       screenshot_count: ${{ steps.validate_outputs.outputs.screenshot_count }}
       error_message: ${{ steps.validate_outputs.outputs.error_message }}
 
@@ -35,7 +36,7 @@ jobs:
         uses: actions/checkout@v4
         timeout-minutes: 3
         with:
-          fetch-depth: 2  # Need 2 commits for git diff HEAD~1
+          fetch-depth: 2
           persist-credentials: false
 
       - name: Detect validation request
@@ -44,13 +45,11 @@ jobs:
           if [ -n "${{ github.event.inputs.feature_folder }}" ]; then
             FOLDER="${{ github.event.inputs.feature_folder }}"
           else
-            # Check for both request.json (legacy) and validation-payload.json (n8n v1)
-            CHANGED_FILE=$(git diff --name-only HEAD~1 HEAD | grep -E 'validation/(request\.json|validation-payload\.json)' | head -1)
+            CHANGED_FILE=$(git diff --name-only HEAD~1 HEAD | grep -E 'validation/(validation-payload|journeys-payload)\.json' | head -1)
             if [ -n "$CHANGED_FILE" ]; then
-              # Extract folder by removing the validation/filename part
               FOLDER=$(echo "$CHANGED_FILE" | sed 's|/validation/.*||')
-              echo "🔍 Detected changed file: $CHANGED_FILE"
-              echo "🔍 Extracted folder: $FOLDER"
+              echo "Detected changed file: $CHANGED_FILE"
+              echo "Extracted folder: $FOLDER"
             fi
           fi
 
@@ -60,104 +59,126 @@ jobs:
             exit 0
           fi
 
-          # Detect payload format
-          PAYLOAD_FORMAT="${{ github.event.inputs.payload_format }}"
-          if [ "$PAYLOAD_FORMAT" = "auto-detect" ] || [ -z "$PAYLOAD_FORMAT" ]; then
-            if [ -f "$GITHUB_WORKSPACE/$FOLDER/validation/validation-payload.json" ]; then
-              PAYLOAD_FORMAT="n8n-v1"
-              REQUEST_FILE="$FOLDER/validation/validation-payload.json"
-              echo "🔍 Detected n8n-v1 payload format (validation-payload.json)"
-            elif [ -f "$GITHUB_WORKSPACE/$FOLDER/validation/request.json" ]; then
-              PAYLOAD_FORMAT="legacy"
-              REQUEST_FILE="$FOLDER/validation/request.json"
-              echo "🔍 Detected legacy payload format (request.json)"
-            else
-              echo "❌ No validation payload found in $FOLDER/validation/"
-              echo "skip=true" >> $GITHUB_OUTPUT
-              exit 0
-            fi
-          elif [ "$PAYLOAD_FORMAT" = "n8n-v1" ]; then
-            REQUEST_FILE="$FOLDER/validation/validation-payload.json"
+          # Find payload file
+          if [ -f "$GITHUB_WORKSPACE/$FOLDER/validation/journeys-payload.json" ]; then
+            PAYLOAD_FILE="$FOLDER/validation/journeys-payload.json"
+            PAYLOAD_FORMAT="journeys-v1"
+          elif [ -f "$GITHUB_WORKSPACE/$FOLDER/validation/validation-payload.json" ]; then
+            PAYLOAD_FILE="$FOLDER/validation/validation-payload.json"
+            PAYLOAD_FORMAT="journeys-v1"
           else
-            REQUEST_FILE="$FOLDER/validation/request.json"
+            echo "No validation payload found in $FOLDER/validation/"
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
           fi
 
           echo "folder=$FOLDER" >> $GITHUB_OUTPUT
-          echo "request_file=$REQUEST_FILE" >> $GITHUB_OUTPUT
+          echo "payload_file=$PAYLOAD_FILE" >> $GITHUB_OUTPUT
           echo "payload_format=$PAYLOAD_FORMAT" >> $GITHUB_OUTPUT
           echo "result_file=$FOLDER/validation/result.json" >> $GITHUB_OUTPUT
           echo "report_file=$FOLDER/validation/report.md" >> $GITHUB_OUTPUT
           echo "screenshots_dir=$FOLDER/validation/screenshots" >> $GITHUB_OUTPUT
           echo "log_file=$FOLDER/validation/validation.log" >> $GITHUB_OUTPUT
-          echo "error_file=$FOLDER/validation/error.log" >> $GITHUB_OUTPUT
           echo "skip=false" >> $GITHUB_OUTPUT
-          echo "✅ Found validation request: $FOLDER (format: $PAYLOAD_FORMAT)"
+          echo "Found validation request: $FOLDER (format: $PAYLOAD_FORMAT)"
 
-      # ============================================================
-      # PRE-FLIGHT CHECKS
-      # ============================================================
+      - name: Parse and validate payload
+        id: parse_payload
+        if: steps.detect.outputs.skip != 'true'
+        run: |
+          PAYLOAD_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.payload_file }}"
+
+          echo "Parsing payload: $PAYLOAD_PATH"
+
+          # Validate JSON
+          if ! jq empty "$PAYLOAD_PATH" 2>/dev/null; then
+            echo "Invalid JSON in payload file"
+            exit 1
+          fi
+
+          # Extract metadata (handle array or object)
+          IS_ARRAY=$(jq 'if type == "array" then true else false end' "$PAYLOAD_PATH")
+
+          if [ "$IS_ARRAY" = "true" ]; then
+            FEATURE_NAME=$(jq -r '.[0].metadata.feature_name // "unknown"' "$PAYLOAD_PATH")
+            FEATURE_SLUG=$(jq -r '.[0].metadata.feature_slug // "unknown"' "$PAYLOAD_PATH")
+            VERSION=$(jq -r '.[0].metadata.version // "v1"' "$PAYLOAD_PATH")
+            TOTAL_TESTS=$(jq -r '.[0].summary.total_tests // 0' "$PAYLOAD_PATH")
+            MUST_TEST=$(jq -r '.[0].summary.by_priority.must_test // 0' "$PAYLOAD_PATH")
+            SHOULD_TEST=$(jq -r '.[0].summary.by_priority.should_test // 0' "$PAYLOAD_PATH")
+            SETUP_FLOWS_COUNT=$(jq -r '.[0].setup_flows | length' "$PAYLOAD_PATH")
+            TESTS_COUNT=$(jq -r '.[0].tests | length' "$PAYLOAD_PATH")
+          else
+            FEATURE_NAME=$(jq -r '.metadata.feature_name // "unknown"' "$PAYLOAD_PATH")
+            FEATURE_SLUG=$(jq -r '.metadata.feature_slug // "unknown"' "$PAYLOAD_PATH")
+            VERSION=$(jq -r '.metadata.version // "v1"' "$PAYLOAD_PATH")
+            TOTAL_TESTS=$(jq -r '.summary.total_tests // 0' "$PAYLOAD_PATH")
+            MUST_TEST=$(jq -r '.summary.by_priority.must_test // 0' "$PAYLOAD_PATH")
+            SHOULD_TEST=$(jq -r '.summary.by_priority.should_test // 0' "$PAYLOAD_PATH")
+            SETUP_FLOWS_COUNT=$(jq -r '.setup_flows | length' "$PAYLOAD_PATH")
+            TESTS_COUNT=$(jq -r '.tests | length' "$PAYLOAD_PATH")
+          fi
+
+          echo "feature_name=$FEATURE_NAME" >> $GITHUB_OUTPUT
+          echo "feature_slug=$FEATURE_SLUG" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "total_tests=$TOTAL_TESTS" >> $GITHUB_OUTPUT
+          echo "must_test=$MUST_TEST" >> $GITHUB_OUTPUT
+          echo "should_test=$SHOULD_TEST" >> $GITHUB_OUTPUT
+          echo "setup_flows_count=$SETUP_FLOWS_COUNT" >> $GITHUB_OUTPUT
+          echo "tests_count=$TESTS_COUNT" >> $GITHUB_OUTPUT
+
+          echo "============================================"
+          echo "Payload Summary:"
+          echo "  Feature: $FEATURE_NAME ($FEATURE_SLUG)"
+          echo "  Version: $VERSION"
+          echo "  Total Tests: $TOTAL_TESTS"
+          echo "  Must Test: $MUST_TEST"
+          echo "  Should Test: $SHOULD_TEST"
+          echo "  Setup Flows: $SETUP_FLOWS_COUNT"
+          echo "  Test Cases: $TESTS_COUNT"
+          echo "============================================"
+
       - name: Pre-flight Health Checks
         id: preflight
         if: steps.detect.outputs.skip != 'true'
         run: |
-          echo "🔍 Running pre-flight checks..."
+          echo "Running pre-flight checks..."
           ERRORS=""
 
-          # Check ANTHROPIC_API_KEY
           if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
-            ERRORS="${ERRORS}❌ ANTHROPIC_API_KEY not configured\n"
+            ERRORS="${ERRORS}ANTHROPIC_API_KEY not configured\n"
           else
-            echo "✅ ANTHROPIC_API_KEY configured"
+            echo "ANTHROPIC_API_KEY configured"
           fi
 
-          # Check APP credentials
           if [ -z "${{ secrets.APP_BASE_URL }}" ]; then
-            ERRORS="${ERRORS}❌ APP_BASE_URL not configured\n"
+            ERRORS="${ERRORS}APP_BASE_URL not configured\n"
           else
-            echo "✅ APP_BASE_URL configured"
+            echo "APP_BASE_URL configured"
           fi
 
-          # Check request.json exists
-          if [ ! -f "$GITHUB_WORKSPACE/${{ steps.detect.outputs.request_file }}" ]; then
-            ERRORS="${ERRORS}❌ Request file not found: ${{ steps.detect.outputs.request_file }}\n"
-          else
-            echo "✅ Request file exists"
-            # Validate JSON syntax
-            if ! jq empty "$GITHUB_WORKSPACE/${{ steps.detect.outputs.request_file }}" 2>/dev/null; then
-              ERRORS="${ERRORS}❌ Request file is not valid JSON\n"
-            else
-              echo "✅ Request file is valid JSON"
-            fi
-          fi
-
-          # Check disk space (need at least 2GB for browsers)
           AVAILABLE_GB=$(df -g "$GITHUB_WORKSPACE" | tail -1 | awk '{print $4}')
           if [ "$AVAILABLE_GB" -lt 2 ]; then
-            ERRORS="${ERRORS}❌ Low disk space: ${AVAILABLE_GB}GB available (need 2GB)\n"
+            ERRORS="${ERRORS}Low disk space: ${AVAILABLE_GB}GB available (need 2GB)\n"
           else
-            echo "✅ Disk space OK: ${AVAILABLE_GB}GB available"
+            echo "Disk space OK: ${AVAILABLE_GB}GB available"
           fi
 
           if [ -n "$ERRORS" ]; then
-            echo "❌ Pre-flight checks failed:"
+            echo "Pre-flight checks failed:"
             echo -e "$ERRORS"
-            echo "preflight_passed=false" >> $GITHUB_OUTPUT
-            echo "preflight_errors=$ERRORS" >> $GITHUB_OUTPUT
             exit 1
           fi
 
-          echo "preflight_passed=true" >> $GITHUB_OUTPUT
-          echo "✅ All pre-flight checks passed"
+          echo "All pre-flight checks passed"
 
       - name: Prepare Output Directories
         if: steps.detect.outputs.skip != 'true'
         run: |
           mkdir -p "$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
-          echo "✅ Screenshots directory ready"
+          echo "Screenshots directory ready"
 
-      # ============================================================
-      # INSTALLATION (with caching hints)
-      # ============================================================
       - name: Install Claude CLI
         if: steps.detect.outputs.skip != 'true'
         run: |
@@ -165,33 +186,35 @@ jobs:
           npm install -g @anthropic-ai/claude-code
           export PATH="$(npm prefix -g)/bin:$PATH"
 
-          # Verify installation
           if ! command -v claude &> /dev/null; then
-            echo "❌ Claude CLI installation failed"
+            echo "Claude CLI installation failed"
             exit 1
           fi
 
           claude --version
-          echo "✅ Claude CLI installed"
+          echo "Claude CLI installed"
 
       - name: Install Playwright MCP and Browsers
         if: steps.detect.outputs.skip != 'true'
         run: |
           echo "Installing Playwright MCP v${PLAYWRIGHT_MCP_VERSION}..."
-
-          # Install specific version for stability
           npm install -g @playwright/mcp@${PLAYWRIGHT_MCP_VERSION}
 
-          echo "Installing Playwright browsers (Chrome only)..."
-          npx -y playwright install chrome --force
+          echo "Installing Chromium browser (no sudo required)..."
+          # Use chromium instead of chrome - doesn't require sudo for system deps
+          npx -y playwright install chromium --force
 
-          # Verify Chrome installation - do NOT fall back to Chromium
+          # Verify installation
           if [ ! -d ~/.cache/ms-playwright ]; then
-            echo "❌ Browser cache directory not found after installation"
+            echo "Browser cache directory not found after installation"
             exit 1
           fi
 
-          echo "✅ Playwright MCP v${PLAYWRIGHT_MCP_VERSION} and Chrome browser ready"
+          # List installed browsers
+          echo "Installed browsers:"
+          ls -la ~/.cache/ms-playwright/ 2>/dev/null || echo "Cache directory empty"
+
+          echo "Playwright MCP v${PLAYWRIGHT_MCP_VERSION} and Chromium browser ready"
 
       - name: Setup MCP Configuration
         if: steps.detect.outputs.skip != 'true'
@@ -201,8 +224,7 @@ jobs:
 
           SCREENSHOT_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.screenshots_dir }}"
 
-          # Use pinned version with output directory, Chrome browser, and extended timeout
-          # CRITICAL: 300000ms (5 minutes) timeout per action to handle slow UI operations
+          # Use chromium browser (installed without sudo)
           cat > "$GITHUB_WORKSPACE/.mcp.json" << EOF
           {
             "mcpServers": {
@@ -212,7 +234,7 @@ jobs:
                   "-y",
                   "@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}",
                   "--output-dir", "${SCREENSHOT_PATH}",
-                  "--browser", "chrome",
+                  "--browser", "chromium",
                   "--timeout", "300000"
                 ]
               }
@@ -222,161 +244,157 @@ jobs:
 
           echo "MCP config:"
           cat "$GITHUB_WORKSPACE/.mcp.json"
-          echo "✅ MCP configuration ready"
+          echo "MCP configuration ready"
 
-      # ============================================================
-      # VALIDATION EXECUTION
-      # ============================================================
-      - name: Check for Recent Validation
-        id: cache_check
+      - name: Generate Validation Prompt
+        id: generate_prompt
         if: steps.detect.outputs.skip != 'true'
-        run: |
-          RESULT_FILE="${{ steps.detect.outputs.result_file }}"
-
-          if [ -f "$GITHUB_WORKSPACE/$RESULT_FILE" ]; then
-            # Check if result.json is valid and recent (less than 1 hour old)
-            if jq empty "$GITHUB_WORKSPACE/$RESULT_FILE" 2>/dev/null; then
-              # Get file age in minutes (macOS compatible)
-              FILE_TIME=$(stat -f %m "$GITHUB_WORKSPACE/$RESULT_FILE" 2>/dev/null || stat -c %Y "$GITHUB_WORKSPACE/$RESULT_FILE" 2>/dev/null)
-              CURRENT_TIME=$(date +%s)
-              AGE_MINUTES=$(( (CURRENT_TIME - FILE_TIME) / 60 ))
-
-              if [ "$AGE_MINUTES" -lt 60 ]; then
-                echo "⏭️ Skipping validation - valid result.json exists (${AGE_MINUTES} minutes old)"
-                echo "skip_validation=true" >> $GITHUB_OUTPUT
-                echo "cache_age_minutes=$AGE_MINUTES" >> $GITHUB_OUTPUT
-              else
-                echo "🔄 Result.json is ${AGE_MINUTES} minutes old - will re-validate"
-                echo "skip_validation=false" >> $GITHUB_OUTPUT
-              fi
-            else
-              echo "⚠️ Existing result.json is invalid - will re-validate"
-              echo "skip_validation=false" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "📝 No existing result.json - will run validation"
-            echo "skip_validation=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Prepare Validation Prompt
-        id: prepare_prompt
-        if: steps.detect.outputs.skip != 'true' && steps.cache_check.outputs.skip_validation != 'true'
         env:
-          VALIDATION_REQUEST: ${{ steps.detect.outputs.request_file }}
-          VALIDATION_RESULT: ${{ steps.detect.outputs.result_file }}
-          FEATURE_FOLDER: ${{ steps.detect.outputs.folder }}
-          SCREENSHOTS_DIR: ${{ steps.detect.outputs.screenshots_dir }}
-          PAYLOAD_FORMAT: ${{ steps.detect.outputs.payload_format }}
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
           APP_USERNAME: ${{ secrets.APP_USERNAME }}
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+          FEATURE_FOLDER: ${{ steps.detect.outputs.folder }}
+          PAYLOAD_FILE: ${{ steps.detect.outputs.payload_file }}
+          SCREENSHOTS_DIR: ${{ steps.detect.outputs.screenshots_dir }}
+          RESULT_FILE: ${{ steps.detect.outputs.result_file }}
+          FEATURE_NAME: ${{ steps.parse_payload.outputs.feature_name }}
         run: |
-          # Select instructions file based on payload format
-          if [ "$PAYLOAD_FORMAT" = "n8n-v1" ]; then
-            INSTRUCTIONS_FILE="$GITHUB_WORKSPACE/.github/validation-instructions-n8n-v1.md"
-            echo "📋 Using n8n-v1 instructions"
-          else
-            INSTRUCTIONS_FILE="$GITHUB_WORKSPACE/.github/validation-instructions.md"
-            echo "📋 Using legacy instructions"
-          fi
-
-          LEARNINGS_FILE="$GITHUB_WORKSPACE/LEARNINGS_AND_FEEDBACK.md"
           PROMPT_FILE="$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.prompt.txt"
+          PAYLOAD_PATH="$GITHUB_WORKSPACE/$PAYLOAD_FILE"
 
-          # Create prompt with context header
           cat > "$PROMPT_FILE" << 'PROMPT_HEADER'
-          You are a comprehensive UI validation agent. Your task is to validate UI features using the provided payload.
+          # UI Validation Agent - Journey-Based Testing
 
-          CRITICAL: You MUST complete all tasks and write all output files before finishing.
+          You are a UI validation agent that executes test cases against a live web application.
+          Your task is to validate the UI based on the provided test payload.
+
+          ## CRITICAL INSTRUCTIONS
+          1. You MUST complete all validation tasks
+          2. You MUST capture screenshots for each major step
+          3. You MUST write result.json before finishing
+          4. You MUST handle login first before any validation
+          5. Focus on MUST_TEST priority items first, then SHOULD_TEST
 
           PROMPT_HEADER
 
-          # Add authentication section with actual credentials
           cat >> "$PROMPT_FILE" << EOF
-          ## AUTHENTICATION CREDENTIALS
-          - Navigate to: $APP_BASE_URL
+
+          ## AUTHENTICATION
+          - Base URL: $APP_BASE_URL
           - Username: $APP_USERNAME
           - Password: $APP_PASSWORD
 
-          ## FILE PATHS
-          - Validation Payload: $GITHUB_WORKSPACE/$VALIDATION_REQUEST
-          - Result JSON: $GITHUB_WORKSPACE/$VALIDATION_RESULT
+          ## OUTPUT PATHS
           - Screenshots: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/
+          - Result JSON: $GITHUB_WORKSPACE/$RESULT_FILE
           - Report: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/report.md
-          - Manifest: $GITHUB_WORKSPACE/$SCREENSHOTS_DIR/manifest.json
-          - Completion marker: $GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status
 
-          ## PAYLOAD FORMAT: $PAYLOAD_FORMAT
+          ## FEATURE: $FEATURE_NAME
+
+          ## VALIDATION PAYLOAD
+          Read and parse the following payload file:
+          $GITHUB_WORKSPACE/$PAYLOAD_FILE
+
+          ## VALIDATION WORKFLOW
+
+          ### Step 1: Login
+          1. Navigate to the base URL
+          2. Enter credentials and login
+          3. Take screenshot: "01-login-success.png"
+
+          ### Step 2: Execute Setup Flows
+          For each setup_flow in the payload:
+          1. Follow the navigation path from access_paths
+          2. Execute each step in the flow
+          3. Take screenshot after key interactions
+          4. Record success/failure for each step
+
+          ### Step 3: Execute Test Cases
+          For each test in the payload (prioritize must_test first):
+          1. Navigate using the test's navigation path
+          2. Execute the setup_flow if referenced
+          3. Validate each assertion in the test
+          4. Check business_rules_to_validate
+          5. Test edge_cases_to_cover if applicable
+          6. Take screenshots showing validation results
+
+          ### Step 4: Write Results
+          Write a result.json file with this structure:
+          {
+            "validation_status": "completed|failed",
+            "feature_name": "$FEATURE_NAME",
+            "timestamp": "<ISO timestamp>",
+            "summary": {
+              "total_tests": <number>,
+              "passed": <number>,
+              "failed": <number>,
+              "skipped": <number>
+            },
+            "test_results": [
+              {
+                "test_id": "<test_id from payload>",
+                "test_name": "<test name>",
+                "status": "passed|failed|skipped",
+                "assertions_checked": <number>,
+                "assertions_passed": <number>,
+                "screenshots": ["<filename>"],
+                "notes": "<any observations>"
+              }
+            ],
+            "setup_flow_results": [
+              {
+                "flow_id": "<flow_id>",
+                "flow_name": "<name>",
+                "status": "completed|failed",
+                "steps_completed": <number>,
+                "total_steps": <number>
+              }
+            ],
+            "screenshots": ["<list of all screenshots>"]
+          }
+
+          ## IMPORTANT NOTES
+          - Use element_type hints from the payload (button, input, dropdown, etc.)
+          - Verify expected_result for each step
+          - Handle modal dialogs and page transitions gracefully
+          - If a test cannot be executed, mark as skipped with reason
+          - Take screenshot on any error for debugging
 
           EOF
 
-          # Append the format-specific instructions (without the header which we already added)
-          tail -n +3 "$INSTRUCTIONS_FILE" >> "$PROMPT_FILE"
-
-          # Append learnings and feedback for screenshot quality guidance
-          if [ -f "$LEARNINGS_FILE" ]; then
-            echo "" >> "$PROMPT_FILE"
-            echo "---" >> "$PROMPT_FILE"
-            echo "" >> "$PROMPT_FILE"
-            echo "# SCREENSHOT QUALITY LEARNINGS (READ CAREFULLY)" >> "$PROMPT_FILE"
-            echo "" >> "$PROMPT_FILE"
-            echo "The following learnings are from previous validation runs. Apply these rules strictly:" >> "$PROMPT_FILE"
-            echo "" >> "$PROMPT_FILE"
-            cat "$LEARNINGS_FILE" >> "$PROMPT_FILE"
-            echo "✅ Learnings file appended to prompt"
-          else
-            echo "⚠️ Learnings file not found at $LEARNINGS_FILE"
-          fi
-
-          echo "✅ Validation prompt prepared ($(wc -c < "$PROMPT_FILE") bytes, format: $PAYLOAD_FORMAT)"
+          echo "Validation prompt generated ($(wc -c < "$PROMPT_FILE") bytes)"
 
       - name: Pre-Validation Browser Cleanup
-        if: steps.detect.outputs.skip != 'true' && steps.cache_check.outputs.skip_validation != 'true'
+        if: steps.detect.outputs.skip != 'true'
         run: |
-          echo "🧹 Cleaning up stale browser processes before validation..."
-          # Kill any existing Playwright/Chrome processes from previous runs
+          echo "Cleaning up stale browser processes..."
           pkill -f "mcp-server-playwright" 2>/dev/null || true
-          pkill -f "chrome.*playwright" 2>/dev/null || true
-          pkill -f "Google Chrome.*--remote-debugging" 2>/dev/null || true
+          pkill -f "chromium.*playwright" 2>/dev/null || true
           pkill -f "Chromium" 2>/dev/null || true
-
-          # Small delay to ensure processes are fully terminated
           sleep 2
-
-          # Clear any stale browser user data that might cause session issues
           rm -rf /tmp/playwright-* 2>/dev/null || true
-
-          echo "✅ Pre-validation cleanup complete - fresh browser session guaranteed"
+          echo "Pre-validation cleanup complete"
 
       - name: Run Playwright MCP Validation
         id: validation
-        if: steps.detect.outputs.skip != 'true' && steps.cache_check.outputs.skip_validation != 'true'
+        if: steps.detect.outputs.skip != 'true'
         env:
           FEATURE_FOLDER: ${{ steps.detect.outputs.folder }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          echo "============================================================"
-          echo "🚀 Starting validation for: $FEATURE_FOLDER"
-          echo "============================================================"
-          echo "Playwright MCP version: ${PLAYWRIGHT_MCP_VERSION}"
+          echo "============================================"
+          echo "Starting validation for: $FEATURE_FOLDER"
+          echo "Feature: ${{ steps.parse_payload.outputs.feature_name }}"
+          echo "Tests to run: ${{ steps.parse_payload.outputs.total_tests }}"
           echo "Start time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "============================================================"
+          echo "============================================"
 
           cd "$GITHUB_WORKSPACE"
           export PATH="$(npm prefix -g)/bin:$PATH"
 
-          # Create marker file to track execution
-          echo "started" > "$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.execution_status"
-
-          # Read the prepared prompt
           PROMPT_FILE="$GITHUB_WORKSPACE/$FEATURE_FOLDER/validation/.prompt.txt"
 
-          # Run Claude CLI and capture exit code
-          set +e  # Don't exit on error
-
-          # CRITICAL: --dangerously-skip-permissions is REQUIRED for non-interactive CI
-          # Without this flag, Claude will prompt for file write approval and hang/skip
-          # The v13 validation failed because it couldn't write result.json without approval
+          set +e
           claude --model sonnet \
                  --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
                  --mcp-config ".mcp.json" \
@@ -386,156 +404,87 @@ jobs:
           CLAUDE_EXIT_CODE=$?
           set -e
 
-          # Cleanup prompt file
           rm -f "$PROMPT_FILE"
 
           echo "claude_exit_code=$CLAUDE_EXIT_CODE" >> $GITHUB_OUTPUT
-          echo "============================================================"
+          echo "============================================"
           echo "Claude CLI exit code: $CLAUDE_EXIT_CODE"
           echo "End time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "============================================================"
+          echo "============================================"
 
-      # ============================================================
-      # OUTPUT VALIDATION
-      # ============================================================
       - name: Validate Outputs
         id: validate_outputs
         if: always() && steps.detect.outputs.skip != 'true'
         run: |
-          echo "🔍 Validating output files..."
+          echo "Validating output files..."
 
           FOLDER="${{ steps.detect.outputs.folder }}"
           SCREENSHOTS_DIR="${{ steps.detect.outputs.screenshots_dir }}"
           RESULT_FILE="${{ steps.detect.outputs.result_file }}"
-          REPORT_FILE="${{ steps.detect.outputs.report_file }}"
           LOG_FILE="${{ steps.detect.outputs.log_file }}"
 
           STATUS="success"
           ERROR_MESSAGE=""
           SCREENSHOT_COUNT=0
-
-          # Check execution status
-          EXEC_STATUS=$(cat "$GITHUB_WORKSPACE/$FOLDER/validation/.execution_status" 2>/dev/null || echo "unknown")
-          echo "Execution status: $EXEC_STATUS"
+          TESTS_PASSED=0
+          TESTS_FAILED=0
 
           # Check validation log
           LOG_SIZE=$(wc -c < "$GITHUB_WORKSPACE/$LOG_FILE" 2>/dev/null || echo "0")
           echo "Validation log size: $LOG_SIZE bytes"
           if [ "$LOG_SIZE" -lt 100 ]; then
             STATUS="failed"
-            ERROR_MESSAGE="Validation log is empty or too small (${LOG_SIZE} bytes)"
-            echo "❌ $ERROR_MESSAGE"
-          else
-            echo "✅ Validation log has content"
+            ERROR_MESSAGE="Validation log is empty or too small"
           fi
 
           # Check screenshots
           if [ -d "$GITHUB_WORKSPACE/$SCREENSHOTS_DIR" ]; then
             SCREENSHOT_COUNT=$(find "$GITHUB_WORKSPACE/$SCREENSHOTS_DIR" -name "*.png" | wc -l | tr -d ' ')
             echo "Screenshots found: $SCREENSHOT_COUNT"
-            if [ "$SCREENSHOT_COUNT" -eq 0 ]; then
-              STATUS="failed"
-              ERROR_MESSAGE="${ERROR_MESSAGE}; No screenshots captured"
-              echo "❌ No screenshots found"
-            else
-              echo "✅ $SCREENSHOT_COUNT screenshots captured"
-            fi
-          else
-            STATUS="failed"
-            ERROR_MESSAGE="${ERROR_MESSAGE}; Screenshots directory missing"
-            echo "❌ Screenshots directory not found"
           fi
 
-          # Check manifest
-          MANIFEST="$GITHUB_WORKSPACE/$SCREENSHOTS_DIR/manifest.json"
-          if [ -f "$MANIFEST" ]; then
-            if jq empty "$MANIFEST" 2>/dev/null; then
-              echo "✅ Screenshot manifest is valid JSON"
-            else
-              echo "⚠️ Screenshot manifest is not valid JSON"
-            fi
-          else
-            echo "⚠️ Screenshot manifest not found (will be created)"
-          fi
-
-          # Check result.json
+          # Check and parse result.json
           if [ -f "$GITHUB_WORKSPACE/$RESULT_FILE" ]; then
             if jq empty "$GITHUB_WORKSPACE/$RESULT_FILE" 2>/dev/null; then
-              echo "✅ result.json exists and is valid"
+              echo "result.json is valid JSON"
+              TESTS_PASSED=$(jq -r '.summary.passed // 0' "$GITHUB_WORKSPACE/$RESULT_FILE")
+              TESTS_FAILED=$(jq -r '.summary.failed // 0' "$GITHUB_WORKSPACE/$RESULT_FILE")
+              VALIDATION_STATUS=$(jq -r '.validation_status // "unknown"' "$GITHUB_WORKSPACE/$RESULT_FILE")
+              if [ "$VALIDATION_STATUS" = "failed" ]; then
+                STATUS="failed"
+              fi
             else
               STATUS="failed"
               ERROR_MESSAGE="${ERROR_MESSAGE}; result.json is not valid JSON"
-              echo "❌ result.json is not valid JSON"
             fi
           else
             STATUS="failed"
             ERROR_MESSAGE="${ERROR_MESSAGE}; result.json not generated"
-            echo "❌ result.json not found"
           fi
 
-          # Check report.md
-          if [ -f "$GITHUB_WORKSPACE/$REPORT_FILE" ]; then
-            REPORT_SIZE=$(wc -c < "$GITHUB_WORKSPACE/$REPORT_FILE")
-            if [ "$REPORT_SIZE" -gt 500 ]; then
-              echo "✅ report.md exists ($REPORT_SIZE bytes)"
-            else
-              echo "⚠️ report.md is suspiciously small ($REPORT_SIZE bytes)"
-            fi
-          else
-            STATUS="failed"
-            ERROR_MESSAGE="${ERROR_MESSAGE}; report.md not generated"
-            echo "❌ report.md not found"
-          fi
-
-          # Generate manifest if missing but screenshots exist
-          if [ ! -f "$MANIFEST" ] && [ "$SCREENSHOT_COUNT" -gt 0 ]; then
-            echo "📝 Generating screenshot manifest..."
-            echo "{" > "$MANIFEST"
-            echo "  \"generated_at\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"," >> "$MANIFEST"
-            echo "  \"total_screenshots\": $SCREENSHOT_COUNT," >> "$MANIFEST"
-            echo "  \"screenshots\": [" >> "$MANIFEST"
-            FIRST=true
-            for f in "$GITHUB_WORKSPACE/$SCREENSHOTS_DIR"/*.png; do
-              if [ -f "$f" ]; then
-                FILENAME=$(basename "$f")
-                if [ "$FIRST" = true ]; then
-                  FIRST=false
-                else
-                  echo "," >> "$MANIFEST"
-                fi
-                echo -n "    {\"filename\": \"$FILENAME\", \"category\": \"auto-detected\"}" >> "$MANIFEST"
-              fi
-            done
-            echo "" >> "$MANIFEST"
-            echo "  ]" >> "$MANIFEST"
-            echo "}" >> "$MANIFEST"
-            echo "✅ Generated manifest with $SCREENSHOT_COUNT screenshots"
-          fi
-
-          # Output results
           echo "status=$STATUS" >> $GITHUB_OUTPUT
+          echo "tests_passed=$TESTS_PASSED" >> $GITHUB_OUTPUT
+          echo "tests_failed=$TESTS_FAILED" >> $GITHUB_OUTPUT
           echo "screenshot_count=$SCREENSHOT_COUNT" >> $GITHUB_OUTPUT
           echo "error_message=$ERROR_MESSAGE" >> $GITHUB_OUTPUT
 
-          echo "============================================================"
-          echo "📊 Validation Summary"
-          echo "============================================================"
+          echo "============================================"
+          echo "Validation Summary"
+          echo "============================================"
           echo "Status: $STATUS"
+          echo "Tests Passed: $TESTS_PASSED"
+          echo "Tests Failed: $TESTS_FAILED"
           echo "Screenshots: $SCREENSHOT_COUNT"
           echo "Errors: ${ERROR_MESSAGE:-none}"
-          echo "============================================================"
+          echo "============================================"
 
-      # ============================================================
-      # CLEANUP & COMMIT
-      # ============================================================
       - name: Cleanup Browser Processes
         if: always() && steps.detect.outputs.skip != 'true'
         run: |
           pkill -f "mcp-server-playwright" 2>/dev/null || true
-          pkill -f "chrome.*playwright" 2>/dev/null || true
-          pkill -f "Google Chrome.*--remote-debugging" 2>/dev/null || true
+          pkill -f "chromium.*playwright" 2>/dev/null || true
           pkill -f "Chromium" 2>/dev/null || true
-          echo "✅ Browser cleanup complete"
+          echo "Browser cleanup complete"
 
       - name: Commit Results
         if: steps.detect.outputs.skip != 'true'
@@ -545,127 +494,42 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-          # Configure git to use PAT_TOKEN for push (long-lived token, not ephemeral GITHUB_TOKEN)
           git remote set-url origin "https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}"
-
-          # Remove execution status file (internal use only)
-          rm -f "$GITHUB_WORKSPACE/${{ steps.detect.outputs.folder }}/validation/.execution_status"
 
           git add "${{ steps.detect.outputs.folder }}/validation/" || true
 
-          COMMIT_MSG="validation: ${{ steps.validate_outputs.outputs.status }} for ${{ steps.detect.outputs.folder }}"
-          if [ "${{ steps.validate_outputs.outputs.status }}" = "failed" ]; then
-            COMMIT_MSG="validation: ❌ FAILED for ${{ steps.detect.outputs.folder }}"
+          STATUS="${{ steps.validate_outputs.outputs.status }}"
+          PASSED="${{ steps.validate_outputs.outputs.tests_passed }}"
+          FAILED="${{ steps.validate_outputs.outputs.tests_failed }}"
+
+          if [ "$STATUS" = "success" ]; then
+            COMMIT_MSG="validation: ${{ steps.parse_payload.outputs.feature_name }} - ${PASSED} passed, ${FAILED} failed"
+          else
+            COMMIT_MSG="validation: FAILED for ${{ steps.parse_payload.outputs.feature_name }}"
           fi
 
           git commit -m "$COMMIT_MSG" || echo "No changes to commit"
           git push || echo "Push failed"
 
-      # ============================================================
-      # NOTIFICATIONS
-      # ============================================================
       - name: Notify n8n Complete
         if: always() && steps.detect.outputs.skip != 'true'
         run: |
-          STATUS="${{ steps.validate_outputs.outputs.status }}"
-          SCREENSHOT_COUNT="${{ steps.validate_outputs.outputs.screenshot_count }}"
-          ERROR_MESSAGE="${{ steps.validate_outputs.outputs.error_message }}"
-          CLAUDE_EXIT="${{ steps.validation.outputs.claude_exit_code }}"
-          PAYLOAD_FORMAT="${{ steps.detect.outputs.payload_format }}"
-
-          # Build comprehensive payload
           curl -s -X POST "https://automation-wh.bayzat.com/webhook/validation-complete" \
             -H "Content-Type: application/json" \
             -d "{
               \"feature_folder\": \"${{ steps.detect.outputs.folder }}\",
-              \"status\": \"$STATUS\",
-              \"payload_format\": \"$PAYLOAD_FORMAT\",
-              \"screenshot_count\": ${SCREENSHOT_COUNT:-0},
-              \"claude_exit_code\": ${CLAUDE_EXIT:-1},
-              \"error_message\": \"$ERROR_MESSAGE\",
+              \"feature_name\": \"${{ steps.parse_payload.outputs.feature_name }}\",
+              \"feature_slug\": \"${{ steps.parse_payload.outputs.feature_slug }}\",
+              \"version\": \"${{ steps.parse_payload.outputs.version }}\",
+              \"status\": \"${{ steps.validate_outputs.outputs.status }}\",
+              \"tests_passed\": ${{ steps.validate_outputs.outputs.tests_passed || 0 }},
+              \"tests_failed\": ${{ steps.validate_outputs.outputs.tests_failed || 0 }},
+              \"screenshot_count\": ${{ steps.validate_outputs.outputs.screenshot_count || 0 }},
+              \"total_tests\": ${{ steps.parse_payload.outputs.total_tests || 0 }},
+              \"must_test\": ${{ steps.parse_payload.outputs.must_test || 0 }},
+              \"should_test\": ${{ steps.parse_payload.outputs.should_test || 0 }},
               \"run_id\": \"${{ github.run_id }}\",
               \"run_url\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\",
               \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",
               \"playwright_mcp_version\": \"${PLAYWRIGHT_MCP_VERSION}\"
             }" || echo "Webhook failed (non-blocking)"
-
-      - name: Notify Slack
-        if: always() && steps.detect.outputs.skip != 'true'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: |
-          if [ -z "$SLACK_WEBHOOK_URL" ]; then
-            echo "SLACK_WEBHOOK_URL not configured, skipping"
-            exit 0
-          fi
-
-          STATUS="${{ steps.validate_outputs.outputs.status }}"
-          FOLDER="${{ steps.detect.outputs.folder }}"
-          SCREENSHOT_COUNT="${{ steps.validate_outputs.outputs.screenshot_count }}"
-          ERROR_MESSAGE="${{ steps.validate_outputs.outputs.error_message }}"
-          PAYLOAD_FORMAT="${{ steps.detect.outputs.payload_format }}"
-
-          FEATURE_NAME=$(echo "$FOLDER" | cut -d'/' -f1)
-          VERSION=$(echo "$FOLDER" | cut -d'/' -f2)
-
-          if [ "$STATUS" = "success" ]; then
-            EMOJI=":white_check_mark:"
-            COLOR="good"
-          else
-            EMOJI=":x:"
-            COLOR="danger"
-          fi
-
-          REPO_URL="https://github.com/${{ github.repository }}"
-          VALIDATION_URL="$REPO_URL/tree/main/$FOLDER/validation"
-          RUN_URL="$REPO_URL/actions/runs/${{ github.run_id }}"
-
-          # Build error block if needed
-          ERROR_BLOCK=""
-          if [ -n "$ERROR_MESSAGE" ] && [ "$ERROR_MESSAGE" != "null" ]; then
-            ERROR_BLOCK=",{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"*Error:* $ERROR_MESSAGE\"}}"
-          fi
-
-          curl -s -X POST "$SLACK_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"attachments\": [{
-                \"color\": \"$COLOR\",
-                \"blocks\": [
-                  {
-                    \"type\": \"header\",
-                    \"text\": {
-                      \"type\": \"plain_text\",
-                      \"text\": \"$EMOJI Feature Validation: $STATUS\",
-                      \"emoji\": true
-                    }
-                  },
-                  {
-                    \"type\": \"section\",
-                    \"fields\": [
-                      {\"type\": \"mrkdwn\", \"text\": \"*Feature:*\n$FEATURE_NAME\"},
-                      {\"type\": \"mrkdwn\", \"text\": \"*Version:*\n$VERSION\"},
-                      {\"type\": \"mrkdwn\", \"text\": \"*Status:*\n$STATUS\"},
-                      {\"type\": \"mrkdwn\", \"text\": \"*Screenshots:*\n${SCREENSHOT_COUNT:-0}\"},
-                      {\"type\": \"mrkdwn\", \"text\": \"*Format:*\n$PAYLOAD_FORMAT\"}
-                    ]
-                  }
-                  $ERROR_BLOCK,
-                  {
-                    \"type\": \"actions\",
-                    \"elements\": [
-                      {
-                        \"type\": \"button\",
-                        \"text\": {\"type\": \"plain_text\", \"text\": \"View Results\"},
-                        \"url\": \"$VALIDATION_URL\"
-                      },
-                      {
-                        \"type\": \"button\",
-                        \"text\": {\"type\": \"plain_text\", \"text\": \"View Run\"},
-                        \"url\": \"$RUN_URL\"
-                      }
-                    ]
-                  }
-                ]
-              }]
-            }" || echo "Slack notification failed (non-blocking)"
