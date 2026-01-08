@@ -616,8 +616,8 @@ jobs:
           export PROMPT_CONTENT=$(cat "$PROMPT_FILE")
 
           # Run Claude with script command to provide pseudo-TTY for MCP support
-          # Using -q flag and -p for prompt input with --max-turns 1 to auto-exit
-          script -q /dev/null bash -c 'claude --model sonnet --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" --mcp-config ".mcp.json" --dangerously-skip-permissions --max-turns 1 -p "$PROMPT_CONTENT"' 2>&1 | tee "$LOG_FILE"
+          # Using -q flag and -p for prompt input with --max-turns 30 to allow enough turns for validation
+          script -q /dev/null bash -c 'claude --model sonnet --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" --mcp-config ".mcp.json" --dangerously-skip-permissions --max-turns 30 -p "$PROMPT_CONTENT"' 2>&1 | tee "$LOG_FILE"
 
           CLAUDE_EXIT_CODE=${PIPESTATUS[0]}
           set -e
