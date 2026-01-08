@@ -610,9 +610,13 @@ jobs:
           set +e
           # Use stdin for prompt to avoid command-line expansion issues
           # The --print mode reads from stdin when no prompt argument is given
+          # --strict-mcp-config ensures only our config is used
+          # --debug mcp enables MCP debugging output
           cat "$PROMPT_FILE" | claude --model sonnet \
                  --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
                  --mcp-config ".mcp.json" \
+                 --strict-mcp-config \
+                 --debug mcp \
                  --dangerously-skip-permissions \
                  --print 2>&1 | tee "$LOG_FILE"
 
