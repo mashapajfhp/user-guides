@@ -1,0 +1,1798 @@
+{
+  "metadata": {
+    "created_at": "2026-01-08",
+    "updated_at": "2026-01-08",
+    "platform": "Bayzat HR Platform",
+    "base_url": "https://app.bayzat.com",
+    "purpose": "Complete system of truth for validation runner reference",
+    "version": "1.2",
+    "changelog": [
+      {
+        "version": "1.2",
+        "date": "2026-01-08",
+        "changes": ["Added comprehensive UI elements taxonomy captured via Playwright browser automation"]
+      },
+      {
+        "version": "1.1",
+        "date": "2026-01-08",
+        "changes": ["Added Employee Profile page structure under Company > All Employees with all 12 tabs: About Me, Work, Documents, Dependents, Leaves, Health Insurance, Payroll, Attendance, Timesheet, Assets, Air tickets, Performance"]
+      }
+    ]
+  },
+  "ui_elements": {
+    "tables": {
+      "description": "Data tables with rows and columns",
+      "patterns": {
+        "standard_table": {
+          "selectors": ["table", "[role='grid']", "[role='table']"],
+          "features": {
+            "header_row": {
+              "selector": "thead tr, [role='columnheader']",
+              "sortable_columns": {
+                "indicator": "chevron icon up/down"
+              }
+            },
+            "data_rows": {
+              "selector": "tbody tr, [role='row']"
+            }
+          }
+        },
+        "row_selection": {
+          "checkbox": {
+            "selector": "input[type='checkbox'], [role='checkbox']",
+            "location": "first column",
+            "select_all": "header row checkbox"
+          }
+        },
+        "clickable_links": {
+          "description": "Underlined text that navigates to detail pages",
+          "examples": ["Employee names", "Policy names", "Request IDs"],
+          "styling": {
+            "color": "blue/teal",
+            "text_decoration": "underline",
+            "cursor": "pointer"
+          }
+        },
+        "expandable_rows": {
+          "trigger": "chevron icon or row click",
+          "expanded_content": "nested details or sub-table"
+        }
+      }
+    },
+    "buttons": {
+      "description": "Interactive clickable elements",
+      "patterns": {
+        "primary_button": {
+          "styling": "solid background, white text",
+          "examples": ["Add employee", "Save", "Submit", "Create"]
+        },
+        "secondary_button": {
+          "styling": "outlined or ghost style",
+          "examples": ["Cancel", "Back", "Filters"]
+        },
+        "icon_button": {
+          "styling": "icon only, no text",
+          "examples": {
+            "edit": "pencil icon",
+            "delete": "trash icon",
+            "more_actions": "three dots (kebab menu)",
+            "copy": "clipboard icon",
+            "download": "download arrow icon",
+            "refresh": "circular arrow icon"
+          }
+        },
+        "split_button": {
+          "description": "Button with attached dropdown menu",
+          "structure": {
+            "main_action": "primary click action",
+            "dropdown_trigger": "chevron/arrow to reveal menu",
+            "dropdown_menu": {
+              "selector": "[role='menu']",
+              "items": "[role='menuitem']"
+            }
+          },
+          "examples": ["New adjustment (New addition, New deduction, New recurring)"]
+        },
+        "disabled_button": {
+          "styling": "grayed out, cursor not-allowed",
+          "has_tooltip": true,
+          "tooltip_explains": "why action is unavailable"
+        },
+        "send_invite_button": {
+          "location": "table row action column",
+          "label": "Send Invite"
+        }
+      }
+    },
+    "menus": {
+      "description": "Dropdown menus and action menus",
+      "patterns": {
+        "kebab_menu": {
+          "trigger": "three vertical dots icon",
+          "selector": "[aria-haspopup='menu']",
+          "location": "table row actions, card headers",
+          "dropdown": {
+            "selector": "[role='menu']",
+            "items": "[role='menuitem']"
+          },
+          "examples": ["Download Gratuity File", "Close Payroll Cycle", "Edit", "Delete"]
+        },
+        "dropdown_select": {
+          "trigger": "field click or chevron",
+          "selector": "[role='combobox'], [role='listbox']",
+          "options": "[role='option']"
+        },
+        "context_menu": {
+          "trigger": "right-click or kebab menu",
+          "items": ["View", "Edit", "Delete", "Copy", "Download"]
+        }
+      }
+    },
+    "accordions": {
+      "description": "Expandable/collapsible content sections",
+      "patterns": {
+        "standard_accordion": {
+          "header": {
+            "selector": "[role='button'], .accordion-header",
+            "elements": ["title", "chevron icon", "optional count badge"]
+          },
+          "content": {
+            "selector": "[role='region'], .accordion-content",
+            "visibility": "hidden when collapsed, shown when expanded"
+          },
+          "chevron_states": {
+            "collapsed": "pointing right or down",
+            "expanded": "pointing down or up"
+          }
+        },
+        "nested_accordion": {
+          "description": "Accordions containing other accordions or tables",
+          "examples": ["Settings > Payroll > Leave encashment policy (has table inside)"]
+        }
+      },
+      "locations": ["Settings pages", "Employee profile Documents tab", "Policy configurations"]
+    },
+    "badges_and_tags": {
+      "description": "Small labels indicating status or category",
+      "patterns": {
+        "status_badge": {
+          "examples": ["New", "Beta", "Active", "Inactive", "Pending", "Approved", "Rejected"],
+          "styling": "colored pill or rounded rectangle"
+        },
+        "count_badge": {
+          "description": "Number indicating quantity",
+          "examples": ["5 (notifications)", "3 (pending items)"],
+          "location": "next to menu item or tab"
+        },
+        "feature_badge": {
+          "examples": ["New", "Beta", "Coming Soon"],
+          "location": "next to feature name in navigation"
+        },
+        "recurring_badge": {
+          "label": "Recurring",
+          "context": "payroll adjustments that repeat"
+        },
+        "leave_type_badges": {
+          "examples": ["Vacation", "UAE Leave", "Sick Leave"],
+          "styling": "colored tag with text"
+        }
+      }
+    },
+    "cards": {
+      "description": "Contained content blocks with optional actions",
+      "patterns": {
+        "info_card": {
+          "structure": {
+            "header": "title or icon",
+            "content": "main information",
+            "footer": "optional actions or links"
+          },
+          "examples": ["Dashboard widgets", "Policy info cards", "Employee summary cards"]
+        },
+        "action_card": {
+          "structure": {
+            "content": "description or prompt",
+            "cta_button": "Call to action button"
+          },
+          "examples": ["Explore features card", "Invite employees card"]
+        },
+        "feed_card": {
+          "structure": {
+            "header": "author avatar, name, timestamp",
+            "content": "post content or image",
+            "footer": "Like, Views, Comments actions"
+          },
+          "location": "Home > Newsfeed"
+        },
+        "stat_card": {
+          "structure": {
+            "label": "metric name",
+            "value": "number or percentage",
+            "optional_trend": "up/down indicator"
+          },
+          "examples": ["Employees registered (24%)", "Due today (0 tasks)"]
+        }
+      }
+    },
+    "tabs": {
+      "description": "Tab-based navigation within a page",
+      "patterns": {
+        "horizontal_tabs": {
+          "selector": "[role='tablist']",
+          "tab_item": "[role='tab']",
+          "tab_panel": "[role='tabpanel']",
+          "active_indicator": "underline or background color"
+        },
+        "tabs_with_count": {
+          "structure": "Tab Label (count)",
+          "examples": ["Announcements 5", "Pending (3)"]
+        }
+      },
+      "examples": ["Active/Inactive/Resigned tabs", "Birthdays/Work Anniversaries tabs", "Assigned to me/Created by me tabs"]
+    },
+    "forms": {
+      "description": "Input fields and form controls",
+      "patterns": {
+        "text_input": {
+          "selector": "input[type='text'], input[type='email'], input[type='number']",
+          "states": ["default", "focus", "error", "disabled"]
+        },
+        "textarea": {
+          "selector": "textarea",
+          "examples": ["Post content", "Comments", "Notes"]
+        },
+        "date_picker": {
+          "trigger": "calendar icon or input click",
+          "component": "calendar dropdown"
+        },
+        "date_range_picker": {
+          "structure": "From date - To date",
+          "examples": ["Report date range", "Leave period"]
+        },
+        "toggle_switch": {
+          "selector": "[role='switch']",
+          "states": {
+            "on": "colored/filled",
+            "off": "gray/empty"
+          },
+          "examples": ["Enable/disable settings", "Active/Inactive status"]
+        },
+        "checkbox": {
+          "selector": "input[type='checkbox'], [role='checkbox']",
+          "states": ["unchecked", "checked", "indeterminate"]
+        },
+        "radio_button": {
+          "selector": "input[type='radio'], [role='radio']",
+          "states": ["unselected", "selected"]
+        }
+      }
+    },
+    "navigation": {
+      "description": "Navigation and wayfinding elements",
+      "patterns": {
+        "sidebar_menu": {
+          "structure": {
+            "menu_items": "icon + label",
+            "active_state": "highlighted background",
+            "expandable_sections": "chevron to reveal submenus"
+          }
+        },
+        "breadcrumb": {
+          "separator": ">",
+          "clickable_items": "all except last item",
+          "examples": ["Employees > John Smith > Documents"]
+        },
+        "page_header": {
+          "elements": ["heading", "description", "action buttons"]
+        },
+        "view_all_link": {
+          "text_patterns": ["View all", "See all X", "Explore all"],
+          "styling": "text link with optional arrow icon",
+          "location": "card footers, section headers"
+        }
+      }
+    },
+    "pagination": {
+      "description": "Controls for navigating paginated data",
+      "patterns": {
+        "standard_pagination": {
+          "elements": {
+            "page_info": "Showing X-Y of Z",
+            "page_numbers": "1, 2, 3, ..., n",
+            "prev_next_buttons": "Previous, Next or arrows",
+            "items_per_page": "dropdown (10, 25, 50, 100)"
+          }
+        },
+        "infinite_scroll": {
+          "trigger": "scroll to bottom",
+          "indicator": "loading spinner"
+        }
+      }
+    },
+    "alerts_and_notifications": {
+      "description": "System messages and user notifications",
+      "patterns": {
+        "alert_banner": {
+          "types": ["info", "warning", "error", "success"],
+          "structure": {
+            "icon": "type-specific icon",
+            "message": "alert text",
+            "action": "optional button or link"
+          },
+          "examples": ["Integrate with Muqeem now", "Pending approval notice"]
+        },
+        "toast_notification": {
+          "position": "top-right or bottom-right",
+          "auto_dismiss": true,
+          "types": ["success", "error", "info", "warning"]
+        },
+        "empty_state": {
+          "structure": {
+            "illustration": "optional image",
+            "message": "descriptive text",
+            "action": "optional CTA button"
+          },
+          "examples": ["No pending surveys", "No assets assigned"]
+        }
+      }
+    },
+    "avatars_and_images": {
+      "description": "User photos and profile images",
+      "patterns": {
+        "user_avatar": {
+          "shapes": ["circle", "rounded square"],
+          "sizes": ["small (24px)", "medium (40px)", "large (64px)"],
+          "fallback": "initials or default icon"
+        },
+        "company_logo": {
+          "location": "header, cards, posts"
+        },
+        "feature_illustration": {
+          "location": "empty states, onboarding, promotional cards"
+        }
+      }
+    },
+    "progress_indicators": {
+      "description": "Visual indicators of progress or completion",
+      "patterns": {
+        "progress_bar": {
+          "types": ["linear", "circular"],
+          "shows_percentage": true,
+          "examples": ["Profile completion", "Onboarding progress"]
+        },
+        "loading_spinner": {
+          "location": "page load, async operations",
+          "types": ["spinner", "skeleton loader"]
+        },
+        "step_indicator": {
+          "structure": "numbered steps with active/completed states",
+          "examples": ["Onboarding steps", "Wizard steps"]
+        }
+      }
+    },
+    "modals_and_dialogs": {
+      "description": "Overlay windows for focused interactions",
+      "patterns": {
+        "modal": {
+          "selector": "[role='dialog']",
+          "structure": {
+            "header": "title + close button",
+            "content": "form or information",
+            "footer": "action buttons (Cancel, Save)"
+          }
+        },
+        "confirmation_dialog": {
+          "purpose": "confirm destructive actions",
+          "buttons": ["Cancel", "Confirm/Delete"]
+        },
+        "side_panel": {
+          "direction": "slides in from right",
+          "examples": ["Employee quick view", "Filter panel"]
+        }
+      }
+    },
+    "interactive_elements": {
+      "description": "Other interactive UI components",
+      "patterns": {
+        "copy_to_clipboard": {
+          "trigger": "clipboard icon button",
+          "feedback": "tooltip 'Copied!' or checkmark"
+        },
+        "search_input": {
+          "selector": "[type='search'], .search-input",
+          "features": ["placeholder text", "clear button", "search icon"]
+        },
+        "filter_chips": {
+          "description": "Applied filters shown as removable chips",
+          "structure": "label + X button to remove"
+        },
+        "drag_and_drop": {
+          "examples": ["File upload area", "Reorder items"]
+        }
+      }
+    }
+  },
+  "global_elements": {
+    "header": {
+      "logo": { "url": "/enterprise/dashboard/" },
+      "search": { "type": "global_search" },
+      "bayzat_ai": { "url": "/enterprise/dashboard/knowledge-hub/bayzat-ai" },
+      "help_support": { "type": "button" },
+      "language_toggle": { "options": ["English", "العربية"] },
+      "profile_menu": {
+        "type": "dropdown",
+        "items": ["View Profile", "Email notification settings", "Security settings", "Logout", "Add another account"]
+      }
+    },
+    "sidebar_menus": [
+      "Home", "Company", "Payroll", "Finance Ops", "Time", "Performance",
+      "Health", "Requests", "Insights", "Automations", "Settings"
+    ]
+  },
+  "menus": {
+    "Home": {
+      "url_prefix": "/enterprise/dashboard",
+      "submenus": {
+        "Newsfeed": {
+          "url": "/enterprise/dashboard/",
+          "elements": {
+            "heading": "Newsfeed",
+            "action_buttons": ["Create post"],
+            "components": {
+              "post_input": "text_area",
+              "post_list": "feed_items",
+              "post_actions": ["Like", "Comment", "Share"]
+            }
+          }
+        },
+        "Announcements": {
+          "url": "/enterprise/dashboard/announcements",
+          "badge": "count",
+          "elements": {
+            "heading": "Announcements",
+            "action_buttons": ["Create Announcement"],
+            "table": {
+              "columns": ["Title", "Status", "Created By", "Created At", "Actions"]
+            }
+          }
+        }
+      }
+    },
+    "Company": {
+      "url_prefix": "/enterprise/dashboard",
+      "sections": {
+        "Employees": {
+          "submenus": {
+            "All employees": {
+              "url": "/enterprise/dashboard/employees",
+              "elements": {
+                "heading": "All Employees",
+                "action_buttons": ["Add employee", "Filters", "Columns"],
+                "tabs": ["Active", "Inactive", "Resigned", "Pending"],
+                "table": {
+                  "columns": ["Avatar", "Name", "Email", "Department", "Job Title", "Status", "Actions"]
+                },
+                "pagination": true
+              },
+              "employee_profile_page": {
+                "url_pattern": "/enterprise/dashboard/employees/{employee_id}/profile/{tab}",
+                "access": "Click on employee name from All Employees list",
+                "header": {
+                  "breadcrumb": ["Employees", "{Employee Name}"],
+                  "employee_photo": true,
+                  "employee_name": true,
+                  "job_title": true,
+                  "email_link": true,
+                  "social_links": ["Facebook", "Twitter", "Instagram", "LinkedIn"]
+                },
+                "tabs": {
+                  "About Me": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/about-me",
+                    "sub_tabs": {
+                      "Personal": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/about-me/personal",
+                        "sections": {
+                          "app_download_card": {
+                            "qr_code": true,
+                            "app_store_link": true,
+                            "google_play_link": true
+                          },
+                          "Personal": {
+                            "fields": ["Preferred Name", "First Name", "Last Name", "Date of Birth", "Nationality", "Gender", "Marital Status"],
+                            "edit_button": true
+                          },
+                          "Contact": {
+                            "fields": ["Mobile No.", "Personal Email", "Work No.", "Work Email", "Personal Address"],
+                            "edit_button": true
+                          },
+                          "Additional Data": {
+                            "custom_fields": true,
+                            "edit_button": true
+                          },
+                          "Emergency Contact": {
+                            "add_new_button": true,
+                            "contact_card": {
+                              "fields": ["Name", "Relationship", "Phone", "Email", "Address"],
+                              "actions": ["Edit", "Delete"]
+                            }
+                          }
+                        }
+                      },
+                      "Social": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/about-me/social",
+                        "fields": ["Social", "Wish me on", "What I do", "Interests", "Hobbies", "Skills", "My favorite movies", "My favorite sports", "My superhero", "Social Links"],
+                        "edit_button": true
+                      }
+                    }
+                  },
+                  "Work": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/work",
+                    "sections": {
+                      "Work": {
+                        "fields": ["Title", "Department", "Employee ID", "Biometric Device User ID", "Job Type", "Hiring Date", "Probation End Date", "Work Week", "Legal Country of Residence", "Residency Visa Issue Location", "Trade License", "Work Location", "Work Timing", "Office", "Additional check-in/out offices", "Reports to"],
+                        "checkboxes": ["Manages leaves for his team", "Leave decisions require additional approval"],
+                        "edit_button": true
+                      },
+                      "Status": {
+                        "status_display": true,
+                        "offboard_button": true
+                      }
+                    }
+                  },
+                  "Documents": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/documents",
+                    "elements": {
+                      "search": true,
+                      "filters_button": true,
+                      "complete_drafts_button": true,
+                      "accordion_sections": {
+                        "Missing documents": {
+                          "badge": "count",
+                          "mandatory_indicator": true
+                        },
+                        "document_types": ["Back of Emirates ID", "Driving License", "Passport", "Residency Visa", "Front of Emirates ID", "Other"]
+                      },
+                      "Insurance_section": {
+                        "heading": "Insurance",
+                        "health_insurance_cards": true
+                      },
+                      "Dependents_section": {
+                        "heading": "Dependents",
+                        "dependent_document_cards": true,
+                        "view_button": true
+                      },
+                      "upload_area": {
+                        "drag_and_drop": true,
+                        "browse_button": true,
+                        "accepted_formats_info": true
+                      }
+                    }
+                  },
+                  "Dependents": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/dependants",
+                    "elements": {
+                      "heading": "Dependents",
+                      "add_new_dependent_button": true,
+                      "dependent_card": {
+                        "header": ["Name", "Relationship"],
+                        "actions": ["Edit", "Delete"],
+                        "details": ["Date of Birth", "Gender", "Nationality", "Email", "Phone"],
+                        "documents_section": {
+                          "heading": "Documents",
+                          "upload_new_button": true,
+                          "document_types": ["Back of Emirates ID", "Front of Emirates ID", "Passport", "Passport Photo", "Residency Visa"]
+                        },
+                        "insurance_section": {
+                          "heading": "Insurance",
+                          "policy_info": true,
+                          "remove_from_policy_button": true
+                        }
+                      }
+                    }
+                  },
+                  "Leaves": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/time-off",
+                    "elements": {
+                      "heading": "Manage leaves",
+                      "description": "Different types of leave employee can take",
+                      "year_navigation": true,
+                      "leave_policy_cards": {
+                        "fields": ["Available days", "Working/Calendar days", "Used vs Total", "Progress bar", "Policy name"],
+                        "badges": ["Conditional pay rate", "Unpaid", "Paid percentage"],
+                        "actions": ["Edit", "Setup"]
+                      },
+                      "requests_section": {
+                        "heading": "Requests",
+                        "new_leave_request_button": true,
+                        "request_cards": {
+                          "fields": ["Employee", "Leave type", "Duration", "Dates", "Approver", "Requested on"],
+                          "status_badge": ["Accepted", "Pending", "Rejected", "Cancelled"],
+                          "actions": ["View", "Edit", "Cancel"]
+                        },
+                        "pagination": true
+                      }
+                    }
+                  },
+                  "Health Insurance": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/health-insurance",
+                    "elements": {
+                      "policy_card": {
+                        "policy_name": true,
+                        "key_policy_benefits_table": {
+                          "rows": ["Annual limit", "Out-patient coinsurance", "Prescriptions"]
+                        },
+                        "insured_by_alert": true,
+                        "actions": ["Mark as incorrect", "Remove from policy"]
+                      },
+                      "dependent_insurance_cards": {
+                        "heading": true,
+                        "policy_info": true,
+                        "remove_from_policy_button": true
+                      }
+                    }
+                  },
+                  "Payroll": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/payroll",
+                    "sub_tabs": {
+                      "Active Payroll Cycle": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/payroll/active-payroll-cycle",
+                        "elements": {
+                          "payroll_period": true,
+                          "currency_display": true,
+                          "pay_items_table": {
+                            "columns": ["Pay Items", "Remarks", "Amount", "Processed", "Unpaid pending approval", "Unpaid"]
+                          },
+                          "sections": {
+                            "Basic Salary and Allowances": {
+                              "view_edit_button": true,
+                              "items": ["Basic Salary", "Housing", "Other allowances"]
+                            },
+                            "Variable Pay": {
+                              "view_edit_button": true,
+                              "add_edit_variable_pay_button": true
+                            },
+                            "Gross Pay": {
+                              "summary_row": true
+                            },
+                            "Adjustments": {
+                              "view_details_button": true,
+                              "additions": ["Attendance Overtime", "Bonus", "Leave Encashment", "Other"],
+                              "deductions": ["Loan", "Other"]
+                            },
+                            "Work Expenses": {
+                              "view_details_button": true,
+                              "expense_items": true,
+                              "add_work_expense_button": true
+                            }
+                          },
+                          "summary": {
+                            "paid_via": true,
+                            "edit_payment_method": true,
+                            "total_net_pay": true,
+                            "processed": true,
+                            "unpaid_pending_approval": true,
+                            "unpaid": true
+                          }
+                        }
+                      },
+                      "Adjustments": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/payroll/adjustments"
+                      },
+                      "Leave Salary": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/payroll/leave-salary"
+                      },
+                      "Work Expenses": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/payroll/work-expenses"
+                      },
+                      "Pay History": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/payroll/pay-history"
+                      },
+                      "Salary Configuration": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/payroll/salary-configuration"
+                      },
+                      "End of Service": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/payroll/end-of-service"
+                      }
+                    }
+                  },
+                  "Attendance": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/attendance",
+                    "sub_tabs": {
+                      "Report": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/attendance/report",
+                        "elements": {
+                          "date_range_picker": true,
+                          "table": {
+                            "columns": ["Date", "Schedule", "Status", "Check In", "Breaks", "Check Out", "Hours Worked", "Extra Hours", "Number of Visits", "Total Visits Time", "Actions"]
+                          },
+                          "status_types": ["On Leave", "Absent", "Weekend", "Public Holiday", "Present", "Late"],
+                          "row_actions": ["Edit", "Add attendance"],
+                          "pagination": true
+                        }
+                      },
+                      "Time and Pay Adjustments": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/attendance/time-and-pay-adjustments"
+                      },
+                      "Configurations": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/attendance/configurations"
+                      }
+                    }
+                  },
+                  "Timesheet": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/timesheet",
+                    "elements": {
+                      "date_range_picker": true,
+                      "filters_button": true,
+                      "summary_cards": {
+                        "items": ["Number of tasks", "Number of projects", "Timesheet hours"]
+                      },
+                      "daily_entries": {
+                        "grouped_by_date": true,
+                        "table": {
+                          "columns": ["Timesheet task", "Project", "Task start", "Task end", "Duration", "Billable", "Actions"]
+                        }
+                      }
+                    }
+                  },
+                  "Assets": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/assets",
+                    "sub_tabs": {
+                      "Employee assets": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/assets/my-assets",
+                        "elements": {
+                          "action_buttons": ["Request asset", "Assign asset"],
+                          "current_assets_section": {
+                            "heading": "Current Assets",
+                            "asset_cards": {
+                              "fields": ["Asset name", "Asset type", "Serial number", "Assigned on"],
+                              "actions": ["Unassign", "View details"],
+                              "comment_activity_button": true
+                            },
+                            "pagination": true
+                          },
+                          "assignment_history_section": {
+                            "heading": "Assignment History",
+                            "table": {
+                              "columns": ["Process time", "Process type", "Assign/Unassign date", "Serial number", "Type", "Make", "Model", "Notes/Remarks", "Comments"]
+                            },
+                            "pagination": true
+                          }
+                        }
+                      },
+                      "Request history": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/assets/request-history"
+                      }
+                    }
+                  },
+                  "Air tickets": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/air-tickets",
+                    "elements": {
+                      "heading": "Air ticket requests",
+                      "policy_name": true,
+                      "request_air_ticket_button": {
+                        "disabled_when": "allowance_used_up"
+                      },
+                      "info_cards": {
+                        "items": [
+                          {"label": "Policy status", "renewal_date": true},
+                          {"label": "Remaining air ticket requests"},
+                          {"label": "Remaining allowance balance", "total_allowance": true},
+                          {"label": "Coverage includes", "values": ["Only me", "Including dependents"]}
+                        ]
+                      },
+                      "requests_table": {
+                        "columns": ["Status", "Request type", "Amount", "Submitted on", "Actions"]
+                      },
+                      "request_types": ["Encashment", "Reimbursement"],
+                      "status_types": ["Pending", "Approved", "Rejected"],
+                      "actions": ["View", "Add to payroll", "Cancel"]
+                    }
+                  },
+                  "Performance": {
+                    "url": "/enterprise/dashboard/employees/{employee_id}/profile/performance",
+                    "sub_tabs": {
+                      "Goal and reviews": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/performance",
+                        "elements": {
+                          "performance_cycle_selector": true,
+                          "cycle_phase_indicator": {
+                            "phases": ["Goal setting", "Review period", "Completed"]
+                          },
+                          "goals_section": {
+                            "heading": "Goals",
+                            "not_in_cycle_message": true,
+                            "add_to_current_cycle_button": true,
+                            "goal_cards": true
+                          },
+                          "review_section": {
+                            "heading": "Review",
+                            "view_all_reviews_link": true,
+                            "not_in_cycle_message": true,
+                            "review_cards": true
+                          }
+                        }
+                      },
+                      "Catch-ups": {
+                        "url": "/enterprise/dashboard/employees/{employee_id}/profile/performance/catch-ups"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "Invitations": {
+              "url": "/enterprise/dashboard/invitations",
+              "elements": {
+                "heading": "Invitations",
+                "action_buttons": ["Invite employees", "Re-invite all"],
+                "tabs": ["Pending", "Expired"],
+                "table": {
+                  "columns": ["Name", "Email", "Invited By", "Invited At", "Status", "Actions"]
+                }
+              }
+            },
+            "Company assets": {
+              "url": "/enterprise/dashboard/company-assets",
+              "elements": {
+                "heading": "Company Assets",
+                "action_buttons": ["Add asset", "Import assets"],
+                "tabs": ["All assets", "Asset types"],
+                "table": {
+                  "columns": ["Asset ID", "Type", "Make", "Model", "Serial Number", "Assigned To", "Status"]
+                }
+              }
+            }
+          }
+        },
+        "Task management": {
+          "submenus": {
+            "Task manager": {
+              "url": "/enterprise/dashboard/task-management",
+              "badge": "New",
+              "elements": {
+                "heading": "Task manager",
+                "action_buttons": ["Create task"],
+                "tabs": ["Pending tasks", "Completed tasks"]
+              }
+            }
+          }
+        },
+        "Documents": {
+          "submenus": {
+            "Knowledge hub": {
+              "url": "/enterprise/dashboard/knowledge-hub/",
+              "elements": {
+                "heading": "Knowledge Hub",
+                "action_buttons": ["Add document", "Add folder"],
+                "components": ["folder_tree", "document_list"]
+              }
+            },
+            "Company documents": {
+              "url": "/enterprise/dashboard/company/documents",
+              "elements": {
+                "heading": "Company Documents",
+                "action_buttons": ["Upload document"],
+                "table": {
+                  "columns": ["Document", "Type", "Uploaded By", "Date", "Actions"]
+                }
+              }
+            },
+            "Employee documents": {
+              "url": "/enterprise/dashboard/documents",
+              "elements": {
+                "heading": "Employee Documents",
+                "search": true,
+                "filters": true
+              }
+            },
+            "My documents": {
+              "url": "/enterprise/dashboard/profile/documents",
+              "elements": {
+                "search": true,
+                "filters": true,
+                "upload_area": "drag_and_drop",
+                "sections": ["Missing documents", "Insurance", "Dependents"]
+              }
+            }
+          }
+        },
+        "Hiring": {
+          "submenus": {
+            "Hiring Management": {
+              "url": "/enterprise/dashboard/hiring",
+              "elements": {
+                "heading": "Hiring",
+                "action_buttons": ["Create job"],
+                "tabs": ["Jobs", "Candidates", "Talent pool"]
+              }
+            },
+            "Job referrals": {
+              "url": "/enterprise/dashboard/job-referrals",
+              "badge": "New",
+              "elements": {
+                "heading": "Job Referrals"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Payroll": {
+      "url_prefix": "/enterprise/payroll",
+      "sections": {
+        "Payroll": {
+          "submenus": {
+            "Run payroll": {
+              "url": "/enterprise/payroll",
+              "elements": {
+                "heading": "Payroll",
+                "action_buttons": ["Create payroll", "Download"],
+                "tabs": ["Current cycle", "Previous cycles"],
+                "table": {
+                  "columns": ["Employee", "Basic Salary", "Allowances", "Deductions", "Net Pay", "Status"]
+                }
+              }
+            },
+            "Payslips": {
+              "url": "/enterprise/payroll/payslips",
+              "elements": {
+                "heading": "Payslips",
+                "search": true,
+                "filters": true,
+                "table": {
+                  "columns": ["Employee", "Period", "Net Pay", "Status", "Actions"]
+                }
+              }
+            },
+            "Leave salary": {
+              "url": "/enterprise/payroll/leave-salary-requests",
+              "elements": {
+                "heading": "Leave Salary Requests",
+                "tabs": ["Pending", "Approved", "Rejected"],
+                "table": {
+                  "columns": ["Employee", "Leave Period", "Amount", "Status", "Actions"]
+                }
+              }
+            },
+            "Leave encashment": {
+              "url": "/enterprise/payroll/leave-encashment-requests",
+              "badge": "New",
+              "elements": {
+                "heading": "Leave Encashment Requests"
+              }
+            },
+            "End of service": {
+              "url": "/enterprise/payroll/eos",
+              "elements": {
+                "heading": "End of Service",
+                "tabs": ["Pending", "Processed"]
+              }
+            }
+          }
+        },
+        "Employee compensation": {
+          "submenus": {
+            "Salaries and Bank details": {
+              "url": "/sheets/payroll/manage/salary-configuration",
+              "elements": {
+                "heading": "Salary Configuration",
+                "table": {
+                  "columns": ["Employee", "Basic Salary", "Bank Name", "Account Number", "IBAN"]
+                }
+              }
+            }
+          }
+        },
+        "My Payroll": {
+          "submenus": {
+            "My payslips": {
+              "url": "/enterprise/dashboard/profile/payslips",
+              "elements": {
+                "heading": "My Payslips",
+                "table": {
+                  "columns": ["Period", "Net Pay", "Actions"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Finance Ops": {
+      "url_prefix": "/enterprise/finance",
+      "sections": {
+        "Accounts payable": {
+          "submenus": {
+            "Invoices": {
+              "url": "/enterprise/finance/invoices",
+              "elements": {
+                "heading": "Invoices",
+                "action_buttons": ["Upload invoice", "Filters"],
+                "tabs": ["Draft", "Pending approval", "Approved", "Scheduled", "Paid"],
+                "table": {
+                  "columns": ["Invoice ID", "Vendor", "Amount", "Due Date", "Status", "Actions"]
+                }
+              }
+            },
+            "Vendors": {
+              "url": "/enterprise/finance/vendors",
+              "elements": {
+                "heading": "Vendors",
+                "action_buttons": ["Add vendor"],
+                "table": {
+                  "columns": ["Vendor Name", "Contact", "Email", "Status"]
+                }
+              }
+            }
+          }
+        },
+        "Work expenses": {
+          "submenus": {
+            "Expenses": {
+              "url": "/enterprise/dashboard/expenses",
+              "elements": {
+                "heading": "Expenses",
+                "tabs": ["Pending", "Approved", "Rejected"],
+                "table": {
+                  "columns": ["Employee", "Category", "Amount", "Date", "Status", "Actions"]
+                }
+              }
+            },
+            "Reports": {
+              "url": "/enterprise/dashboard/expense-reports",
+              "elements": {
+                "heading": "Expense Reports"
+              }
+            },
+            "My expenses": {
+              "url": "/enterprise/dashboard/profile/expenses",
+              "elements": {
+                "heading": "My Expenses",
+                "action_buttons": ["Submit expense"],
+                "tabs": ["Pending", "Approved", "Rejected"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Time": {
+      "url_prefix": "/enterprise/dashboard",
+      "sections": {
+        "Time off": {
+          "submenus": {
+            "Balances": {
+              "url": "/enterprise/dashboard/time-off/balances",
+              "elements": {
+                "heading": "Leave Balances",
+                "filters": true,
+                "table": {
+                  "columns": ["Employee", "Leave Type", "Entitled", "Used", "Balance"]
+                }
+              }
+            },
+            "Requests": {
+              "url": "/enterprise/dashboard/time-off/requests",
+              "elements": {
+                "heading": "Leave Requests",
+                "tabs": ["Pending", "Approved", "Rejected", "Cancelled"],
+                "table": {
+                  "columns": ["Employee", "Leave Type", "From", "To", "Days", "Status", "Actions"]
+                }
+              }
+            },
+            "Calendar": {
+              "url": "/enterprise/dashboard/time-off/calendar",
+              "elements": {
+                "heading": "Leave Calendar",
+                "view_options": ["Month", "Week"],
+                "calendar_component": true
+              }
+            },
+            "My time off": {
+              "url": "/enterprise/dashboard/profile/time-off",
+              "elements": {
+                "heading": "My Time Off",
+                "action_buttons": ["Request leave"],
+                "balance_cards": true,
+                "request_history_table": true
+              }
+            }
+          }
+        },
+        "Attendance": {
+          "submenus": {
+            "Daily log": {
+              "url": "/enterprise/dashboard/attendance/daily-log",
+              "elements": {
+                "heading": "Daily Attendance Log",
+                "date_picker": true,
+                "table": {
+                  "columns": ["Employee", "Check In", "Check Out", "Working Hours", "Status"]
+                }
+              }
+            },
+            "Timesheets": {
+              "url": "/enterprise/dashboard/attendance/timesheets",
+              "elements": {
+                "heading": "Timesheets",
+                "period_selector": true,
+                "table": {
+                  "columns": ["Employee", "Period", "Total Hours", "Overtime", "Status"]
+                }
+              }
+            },
+            "Overtime": {
+              "url": "/enterprise/dashboard/attendance/overtime",
+              "elements": {
+                "heading": "Overtime",
+                "tabs": ["Pending", "Approved", "Rejected"]
+              }
+            },
+            "Scheduling": {
+              "url": "/enterprise/dashboard/attendance/scheduling/schedule",
+              "elements": {
+                "heading": "Schedule",
+                "tabs": ["Schedule", "Shift Templates", "Swap Requests"],
+                "calendar_view": true
+              }
+            },
+            "My attendance": {
+              "url": "/enterprise/dashboard/profile/attendance",
+              "elements": {
+                "heading": "My Attendance",
+                "check_in_button": true,
+                "today_status": true,
+                "history_table": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "Performance": {
+      "url_prefix": "/enterprise/dashboard/performance",
+      "sections": {
+        "Goal setting": {
+          "submenus": {
+            "Goals": {
+              "url": "/enterprise/dashboard/performance/goals",
+              "elements": {
+                "heading": "Goals",
+                "action_buttons": ["Create goal"],
+                "tabs": ["Active", "Completed", "Archived"],
+                "table": {
+                  "columns": ["Goal", "Owner", "Progress", "Due Date", "Status"]
+                }
+              }
+            },
+            "My goals": {
+              "url": "/enterprise/dashboard/performance/my-goals",
+              "elements": {
+                "heading": "My Goals",
+                "action_buttons": ["Create goal"],
+                "goal_cards": true
+              }
+            }
+          }
+        },
+        "360 Feedback": {
+          "submenus": {
+            "360 reviews": {
+              "url": "/enterprise/dashboard/performance/holistic-feedback",
+              "elements": {
+                "heading": "360° Reviews",
+                "action_buttons": ["Create cycle"],
+                "tabs": ["Active", "Completed"]
+              }
+            },
+            "My 360 reviews": {
+              "url": "/enterprise/dashboard/performance/holistic-feedback/profile",
+              "elements": {
+                "heading": "My 360° reviews",
+                "tabs": ["Overview", "Peer nominations", "Surveys", "Reports"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "Health": {
+      "url_prefix": "/health-insurance",
+      "sections": {
+        "Group insurance": {
+          "submenus": {
+            "Getting started": {
+              "url": "/health-insurance/insurance-onboarding/",
+              "badge": "progress_percentage",
+              "elements": {
+                "heading": "Getting Started",
+                "progress_bar": true,
+                "onboarding_modules": [
+                  "Add your employee details",
+                  "Add your dependent details",
+                  "Submit your employees' visa documents",
+                  "Check your policy details"
+                ]
+              }
+            },
+            "Group policies": {
+              "url": "/health-insurance/group-policies/",
+              "elements": {
+                "heading": "Group Policies",
+                "policy_cards": true,
+                "notes": "Requires valid policy link"
+              }
+            },
+            "Employee claims": {
+              "url": "/employee-insurance/employee-claims",
+              "elements": {
+                "heading": "Employee Claims",
+                "tabs": ["All Claims", "In Review", "Pending Docs", "In Progress", "Partially Approved", "Approved", "Rejected"],
+                "search": true,
+                "table": {
+                  "columns": ["Claim ID", "Patient Name", "Status", "Claimed Amount", "Approved Amount", "Submission Date"]
+                }
+              }
+            },
+            "Endorsements": {
+              "url": "/health-insurance/endorsements/additions",
+              "elements": {
+                "heading": "Endorsements",
+                "tabs": ["Additions", "Removals"],
+                "action_buttons": ["New addition"],
+                "filters": true,
+                "table": {
+                  "columns": ["Member", "Type", "Status", "Effective Date"]
+                }
+              }
+            },
+            "Billing": {
+              "url": "/health-insurance/billing/insurers",
+              "elements": {
+                "heading": "Billing",
+                "insurer_cards": true,
+                "statement_links": true
+              }
+            }
+          }
+        },
+        "My insurance": {
+          "submenus": {
+            "My policy info": {
+              "url": "/health-insurance/group-policies/health-insurance/dashboard",
+              "external_link": true,
+              "elements": {
+                "heading": "My Policy Info"
+              }
+            },
+            "My claims": {
+              "url": "/employee-insurance/my-claims",
+              "elements": {
+                "heading": "My Claims",
+                "action_buttons": ["Submit new claim"],
+                "info_buttons": ["How claims process works"],
+                "claims_list": true
+              }
+            },
+            "My dependents": {
+              "url": "/enterprise/dashboard/profile/dependants",
+              "elements": {
+                "heading": "Dependents",
+                "dependents_list": true,
+                "empty_state": "No dependents"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Requests": {
+      "url_prefix": "/enterprise/dashboard",
+      "sections": {
+        "Requests": {
+          "submenus": {
+            "Employee tickets": {
+              "url": "/enterprise/dashboard/employee-tickets",
+              "badge": "Beta",
+              "elements": {
+                "heading": "Employee Tickets",
+                "action_buttons": ["Create", "Columns"],
+                "tabs": ["Open", "In Progress", "Closed"],
+                "table": {
+                  "columns": ["Ticket ID", "Subject", "Category", "Requester", "Assignee", "Status", "Created"]
+                }
+              }
+            },
+            "Letters": {
+              "url": "/enterprise/dashboard/letter-requests/pending",
+              "elements": {
+                "heading": "Letter Requests",
+                "action_buttons": ["Request New Letter"],
+                "tabs": ["Pending", "Approved", "Rejected"],
+                "filters": true,
+                "table": {
+                  "columns": ["Request ID", "Employee", "Letter Type", "Status", "Requested On", "Actions"]
+                }
+              }
+            },
+            "Air tickets": {
+              "url": "/enterprise/dashboard/air-ticket-requests",
+              "elements": {
+                "heading": "Air Ticket Requests",
+                "action_buttons": ["Request", "Filters", "Download"],
+                "tabs": ["All", "Pending", "Approved", "Rejected"],
+                "table": {
+                  "columns": ["Employee", "Request Type", "Status", "Requested On"]
+                },
+                "request_types": ["Reimbursement", "Encashment"]
+              }
+            },
+            "Loans": {
+              "url": "/enterprise/payroll/loan-requests",
+              "note": "Shows Payroll submenu context",
+              "elements": {
+                "heading": "Loan Requests",
+                "action_buttons": ["Download", "Submit new loan"],
+                "tabs": ["All Requests", "Pending Approval", "Approved", "Rejected", "Active", "Closed"],
+                "loan_policy_info": true,
+                "table": {
+                  "columns": ["Employee", "Loan Type", "Amount", "Monthly Deduction", "Tenure", "Status", "Requested On", "Actions"]
+                }
+              }
+            }
+          }
+        },
+        "My requests": {
+          "submenus": {
+            "My tickets": {
+              "url": "/enterprise/dashboard/profile/my-employee-tickets",
+              "elements": {
+                "heading": "My Tickets",
+                "action_buttons": ["Create ticket"],
+                "tabs": ["Open", "In Progress", "Closed"],
+                "empty_state": "No tickets"
+              }
+            },
+            "My letters": {
+              "url": "/enterprise/dashboard/profile/letter-requests",
+              "elements": {
+                "heading": "My Letter Requests",
+                "action_buttons": ["Request New Letter"],
+                "tabs": ["Pending", "Approved", "Rejected"],
+                "filters": true,
+                "table": {
+                  "columns": ["Request ID", "Letter Type", "Status", "Requested On"]
+                }
+              }
+            },
+            "My air tickets": {
+              "url": "/enterprise/dashboard/profile/air-ticket-requests",
+              "elements": {
+                "heading": "My Air Ticket Requests",
+                "info_cards": ["Policy Status", "Remaining Requests", "Balance", "Coverage Period"],
+                "tabs": ["All", "Pending", "Approved", "Rejected"],
+                "table": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "Insights": {
+      "url_prefix": "/enterprise/dashboard",
+      "sections": {
+        "Reports": {
+          "submenus": {
+            "AI Reports": {
+              "url": "/enterprise/dashboard/ai-reports/dashboards",
+              "badge": "Beta",
+              "elements": {
+                "heading": "AI Reports",
+                "action_buttons": ["Learn how it works", "New dashboard"],
+                "tabs": ["Dashboards", "Reports"],
+                "dashboard_cards": true
+              }
+            }
+          }
+        },
+        "Engagement": {
+          "submenus": {
+            "Engagement insights": {
+              "url": "/employee-engagement/surveys/insights",
+              "elements": {
+                "heading": "Engagement Insights",
+                "action_buttons": ["New survey"],
+                "widgets": {
+                  "nps": "Net Promoter Score",
+                  "engagement_categories": [
+                    "Innovation at work", "Growth opportunities", "Recognition",
+                    "Work-life balance", "Compensation and benefits", "Team dynamics",
+                    "Trust in leadership", "Psychological safety", "Manager effectiveness"
+                  ]
+                },
+                "survey_table": true,
+                "response_rate": true
+              }
+            },
+            "Surveys": {
+              "url": "/employee-engagement/surveys/company",
+              "elements": {
+                "heading": "Surveys",
+                "action_buttons": ["New survey"],
+                "search": true,
+                "table": {
+                  "columns": ["Survey Name", "Status", "Response Rate", "Created By", "Created At", "Actions"]
+                },
+                "pagination": true
+              }
+            },
+            "My surveys": {
+              "url": "/employee-engagement/surveys/employee",
+              "elements": {
+                "heading": "My surveys",
+                "tabs": ["Pending", "Completed"],
+                "empty_state": "No pending surveys"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Automations": {
+      "url_prefix": "/enterprise/dashboard",
+      "sections": {
+        "Automations": {
+          "submenus": {
+            "Workflows": {
+              "url": "/enterprise/dashboard/automations/workflows",
+              "elements": {
+                "heading": "Workflows",
+                "action_buttons": ["Create workflow"],
+                "tabs": ["Active", "Inactive", "Draft"],
+                "table": {
+                  "columns": ["Workflow Name", "Trigger", "Status", "Last Modified", "Actions"]
+                }
+              },
+              "note": "Previously at Settings > Workflows"
+            },
+            "Approvals": {
+              "url": "/enterprise/dashboard/automations/approvals",
+              "elements": {
+                "heading": "Approvals",
+                "tabs": ["Pending my approval", "My requests"],
+                "table": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "Settings": {
+      "url_prefix": "/enterprise/dashboard/settings",
+      "submenus": {
+        "Company": {
+          "url": "/enterprise/dashboard/settings/company",
+          "elements": {
+            "heading": "Company settings",
+            "accordion_sections": [
+              "Company Logo",
+              "Employee Structures",
+              "Air Ticket Policies",
+              "Offices",
+              "Departments",
+              "Employee Permissions",
+              "Employee Document Types",
+              "Company Document Types",
+              "Clients",
+              "Projects",
+              "Workweek",
+              "Holiday Calendars"
+            ]
+          }
+        },
+        "Payroll": {
+          "url": "/enterprise/dashboard/settings/payroll",
+          "elements": {
+            "heading": "Payroll settings",
+            "general_section": {
+              "switches": [
+                "Automatically generate payslips at the end of the month",
+                "Allow employees to download their payslips",
+                "Allow employees to edit payment details of their Bank/Exchange House"
+              ],
+              "configure_salaries_link": "/sheets/payroll/manage/salary-configuration"
+            },
+            "accordion_sections": [
+              "Daily Wage Calculation",
+              "Payroll Templates",
+              "Employee Loan Policies",
+              "Leave salary policy",
+              "Leave encashment policy",
+              "Bank Accounts",
+              "End of service eligibility",
+              "Allowances",
+              "Variable Pays",
+              "Additions",
+              "Deductions",
+              "Social Security Contributions"
+            ],
+            "mass_uploads_section": {
+              "current_cycle_indicator": true,
+              "upload_links": [
+                "Mass Upload Variable Pay",
+                "Mass Upload Additions",
+                "Mass Upload Deductions"
+              ]
+            },
+            "integrations": {
+              "quickbooks": {
+                "status": "connected",
+                "actions": ["Remove connection", "Map data"]
+              }
+            }
+          }
+        },
+        "Leaves": {
+          "url": "/enterprise/dashboard/settings/time-off",
+          "elements": {
+            "heading": "Leave settings",
+            "accordion_sections": [
+              "Leave policies",
+              "Leave calendar"
+            ],
+            "leave_cycle_info": "Calendar Year (01 Jan - 31 Dec)"
+          }
+        },
+        "Attendance": {
+          "url": "/enterprise/dashboard/settings/attendance",
+          "elements": {
+            "heading": "Attendance settings",
+            "accordion_sections": [
+              "General",
+              "Multiple Visits",
+              "Work Timings",
+              "Overtime Policies",
+              "Days In Lieu Policies",
+              "Deductions Policies for Payroll",
+              "Work Centers for Shift Scheduling",
+              "Attendance API Settings",
+              "Biometric Devices"
+            ],
+            "biometric_data_upload": "/sheets/attendance/mass-upload/biometric-data"
+          }
+        },
+        "Work Expenses": {
+          "url": "/enterprise/dashboard/settings/work-expenses",
+          "elements": {
+            "heading": "Work Expenses settings",
+            "accordion_sections": [
+              "Expense Categories",
+              "Mileage Expenses"
+            ]
+          }
+        },
+        "Letter Templates": {
+          "url": "/enterprise/dashboard/settings/letter-templates",
+          "elements": {
+            "heading": "Letter Templates settings",
+            "templates_section": {
+              "table": {
+                "columns": ["Template name", "Created By", "Authorized Signatory", "Actions"]
+              },
+              "actions": ["Active toggle", "Copy", "Edit", "Delete"],
+              "pagination": true,
+              "add_new_button": true
+            },
+            "accordion_sections": ["Authorized Signatures"]
+          }
+        },
+        "Performance": {
+          "url": "/enterprise/dashboard/settings/performance-management",
+          "elements": {
+            "heading": "Performance Management settings",
+            "accordion_sections": [
+              "360° feedback configurations",
+              "Performance management cycles",
+              "Goal types",
+              "Rating scales"
+            ]
+          }
+        },
+        "Tickets": {
+          "url": "/enterprise/dashboard/settings/employee-tickets",
+          "badge": "New",
+          "elements": {
+            "heading": "Tickets",
+            "learn_more_link": "https://bayzathelp.zendesk.com/hc/en-gb/articles/37875379557393-Set-up-Custom-Employee-Tickets",
+            "tabs": ["Ticket types", "List library"],
+            "ticket_types_tab": {
+              "create_button": "Create new ticket type",
+              "search": true,
+              "categories_sidebar": [
+                "Attendance", "Payroll", "Leaves", "Employee Services",
+                "IT & Systems", "Facilities & Operations", "Employee Relations",
+                "Business Travel", "Freemium Bundle", "Hiring Requisition",
+                "Test Category", "Business Documents", "Vat Filing Test 1",
+                "Bayzat HR", "Corporate Tax Filing", "Violations"
+              ],
+              "category_detail_table": {
+                "columns": ["Ticket type", "Description", "Actions"],
+                "actions": ["Active toggle", "Edit"]
+              }
+            }
+          }
+        }
+      },
+      "organization_section": {
+        "Role management": {
+          "url": "/enterprise/dashboard/roles",
+          "elements": {
+            "heading": "Role management",
+            "description": "Assign roles to employees",
+            "tabs": ["Role assignment", "Custom roles"],
+            "role_assignment_tab": {
+              "action_buttons": ["Assign roles"],
+              "table": {
+                "columns": ["Avatar", "Employee", "Roles", "Edit"]
+              },
+              "available_roles": [
+                "Super Admin", "ATS Manager", "Attendance Manager", "Attendance Kiosk Manager",
+                "Company Survey Admin", "Company Survey Creator", "Employee Claim Manager",
+                "Expense Manager", "General Manager", "Insurance Billing Manager",
+                "Insurance Manager", "Knowledge Hub Manager", "Leaves Manager",
+                "Line Manager", "Newsfeed Post Creator", "Payroll table admin",
+                "People Manager", "Performance Manager", "Role Manager",
+                "Shift Scheduler", "Task Management Manager", "Transaction processing admin",
+                "Work Expense Manager", "Workflow Manager"
+              ]
+            }
+          }
+        },
+        "Custom Data": {
+          "url": "/enterprise/dashboard/settings/custom-data",
+          "elements": {
+            "heading": "Custom Data settings",
+            "cards": [
+              {
+                "title": "Employee Custom Data",
+                "description": "Create and manage all employee related custom data.",
+                "manage_link": "/enterprise/dashboard/settings/custom-data/manage/employees"
+              },
+              {
+                "title": "Company Custom Data",
+                "description": "Create and manage all company related custom data.",
+                "manage_link": "/enterprise/dashboard/settings/custom-data/manage/company"
+              },
+              {
+                "title": "Asset Custom Data",
+                "description": "Create and manage all asset related custom data.",
+                "manage_link": "/enterprise/dashboard/settings/custom-data/manage/assets"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Profile": {
+      "url_prefix": "/enterprise/dashboard/profile",
+      "submenus": {
+        "My profile": {
+          "url": "/enterprise/dashboard/profile/personal",
+          "tabs": {
+            "Personal": {
+              "url": "/enterprise/dashboard/profile/personal",
+              "sections": {
+                "Personal": {
+                  "fields": ["Preferred Name", "First Name", "Last Name", "Date of Birth", "Nationality", "Gender", "Marital Status"],
+                  "edit_button": true
+                },
+                "Contact": {
+                  "fields": ["Mobile No.", "Personal Email", "Work No.", "Work Email", "Personal Address"],
+                  "edit_button": true
+                },
+                "Additional Data": {
+                  "custom_fields": true,
+                  "edit_button": true
+                },
+                "Emergency Contact": {
+                  "add_new_button": true,
+                  "contacts_list": true
+                }
+              },
+              "app_download_card": {
+                "qr_code": true,
+                "app_store_link": "https://apps.apple.com/us/app/bayzat-benefits/id1057593226",
+                "google_play_link": "https://play.google.com/store/apps/details?id=com.bayzat.benefits"
+              }
+            },
+            "Social": {
+              "url": "/enterprise/dashboard/profile/social",
+              "fields": ["Social", "What I do", "Interests", "Hobbies", "Skills", "My favorite movies", "My favorite sports", "My superhero", "Social Links"],
+              "edit_button": true
+            },
+            "Work": {
+              "url": "/enterprise/dashboard/profile/work",
+              "fields": [
+                "Title", "Department", "Employee ID", "Biometric Device User ID",
+                "Job Type", "Hiring Date", "Probation End Date", "Work Week",
+                "Legal Country of Residence", "Work Location", "Work Timing",
+                "Office", "Additional check-in/out offices", "Reports to"
+              ],
+              "checkboxes": ["Manages leaves for the team", "Leave decisions require additional approval"],
+              "edit_button": true
+            },
+            "Assets": {
+              "url": "/enterprise/dashboard/profile/assets/my-assets",
+              "tabs": ["My assets", "Request history"],
+              "action_buttons": ["Request asset", "Assign asset"],
+              "sections": {
+                "Current Assets": {
+                  "empty_state": "No assets are currently assigned."
+                },
+                "Assignment History": {
+                  "table": {
+                    "columns": ["Process time", "Process type", "Assign/Unassign date", "Serial number", "Type", "Make", "Model", "Notes/Remarks", "Comments"]
+                  },
+                  "pagination": "16/page"
+                }
+              }
+            },
+            "Documents": {
+              "url": "/enterprise/dashboard/profile/documents",
+              "search": true,
+              "filters": true,
+              "sections": ["Missing documents", "Insurance", "Dependents"],
+              "upload_area": "drag_and_drop"
+            },
+            "Dependents": {
+              "url": "/enterprise/dashboard/profile/dependants",
+              "empty_state": "No dependents"
+            }
+          }
+        }
+      },
+      "preferences_section": {
+        "Email notification settings": {
+          "url": "/enterprise/dashboard/email-notifications",
+          "elements": {
+            "heading": "Email notifications",
+            "notifications_toggle": true,
+            "note": "Please note that you will still continue to receive emails regarding critical actions on Bayzat.",
+            "update_button": true
+          }
+        },
+        "Security settings": {
+          "url": "/auth/security",
+          "elements": {
+            "heading": "Security",
+            "password_settings": {
+              "description": "Change the password for your Bayzat account.",
+              "change_password_link": "/auth/security/change-password"
+            },
+            "mfa_settings": {
+              "status": "Disabled",
+              "enable_button": true,
+              "description": "Add an additional layer of security for your Bayzat app by enabling multi-factor authentication for your account."
+            }
+          }
+        }
+      }
+    }
+  },
+  "navigation_changes": {
+    "documented_moves": [
+      {
+        "feature": "Workflows",
+        "old_path": "Settings > Workflows",
+        "new_path": "Automations > Workflows",
+        "date_identified": "2026-01-08"
+      }
+    ]
+  },
+  "validation_notes": {
+    "air_ticket_policies_location": "Settings > Company > Air Ticket Policies (accordion)",
+    "loan_requests_context": "Requests > Loans shows Payroll submenu context in sidebar",
+    "group_policies_requirement": "Requires valid insurance policy link"
+  }
+}
