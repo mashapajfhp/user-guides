@@ -608,23 +608,38 @@ jobs:
           echo "============================================"
 
           set +e
-          # Pass prompt as argument - Claude CLI --print requires the prompt as a positional argument
-          # Use a here-document to avoid issues with special characters in the prompt
-          # --strict-mcp-config ensures only our config is used
-          # --debug mcp enables MCP debugging output
+          # IMPORTANT: --print mode does NOT support MCP servers
+          # We need to use interactive mode with a pseudo-TTY for MCP to work
+          # The 'script' command provides a pseudo-TTY environment
+
           PROMPT_CONTENT=$(cat "$PROMPT_FILE")
 
-          # Run Claude with prompt as the last argument
-          claude --model sonnet \
-                 --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
-                 --mcp-config ".mcp.json" \
-                 --strict-mcp-config \
-                 --debug mcp \
-                 --dangerously-skip-permissions \
-                 --print \
-                 "$PROMPT_CONTENT" 2>&1 | tee "$LOG_FILE"
+          # Create a wrapper script that sends the prompt and exits after completion
+          WRAPPER_SCRIPT=$(mktemp)
+          cat > "$WRAPPER_SCRIPT" << 'WRAPPER_EOF'
+#!/bin/bash
+# This wrapper handles the interactive session
+export ANTHROPIC_API_KEY="$1"
+shift
+PROMPT="$1"
+shift
 
-          CLAUDE_EXIT_CODE=$?
+# Run Claude with --max-turns to limit conversation and auto-exit
+claude --model sonnet \
+       --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
+       --mcp-config ".mcp.json" \
+       --dangerously-skip-permissions \
+       --max-turns 1 \
+       -p "$PROMPT"
+WRAPPER_EOF
+          chmod +x "$WRAPPER_SCRIPT"
+
+          # Run with script command to provide pseudo-TTY for MCP support
+          # The -q flag runs quietly, redirecting output to /dev/null for the typescript
+          script -q /dev/null bash -c "$WRAPPER_SCRIPT \"$ANTHROPIC_API_KEY\" \"$PROMPT_CONTENT\"" 2>&1 | tee "$LOG_FILE"
+
+          CLAUDE_EXIT_CODE=${PIPESTATUS[0]}
+          rm -f "$WRAPPER_SCRIPT"
           set -e
 
           rm -f "$PROMPT_FILE"
