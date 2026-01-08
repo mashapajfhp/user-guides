@@ -608,17 +608,21 @@ jobs:
           echo "============================================"
 
           set +e
-          # Use stdin for prompt to avoid command-line expansion issues
-          # The --print mode reads from stdin when no prompt argument is given
+          # Pass prompt as argument - Claude CLI --print requires the prompt as a positional argument
+          # Use a here-document to avoid issues with special characters in the prompt
           # --strict-mcp-config ensures only our config is used
           # --debug mcp enables MCP debugging output
-          cat "$PROMPT_FILE" | claude --model sonnet \
+          PROMPT_CONTENT=$(cat "$PROMPT_FILE")
+
+          # Run Claude with prompt as the last argument
+          claude --model sonnet \
                  --allowedTools "mcp__playwright__*,Read,Write,Glob,Grep" \
                  --mcp-config ".mcp.json" \
                  --strict-mcp-config \
                  --debug mcp \
                  --dangerously-skip-permissions \
-                 --print 2>&1 | tee "$LOG_FILE"
+                 --print \
+                 "$PROMPT_CONTENT" 2>&1 | tee "$LOG_FILE"
 
           CLAUDE_EXIT_CODE=$?
           set -e
