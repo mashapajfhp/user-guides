@@ -1,0 +1,295 @@
+{
+  "instructions": {
+    "payload_format": "reference-based-v2",
+    "description": "This payload uses ID references to avoid data duplication. You MUST resolve references before executing tests.",
+    "reference_resolution": {
+      "access_path_ref": {
+        "description": "Reference to a navigation path",
+        "lookup": "Find in definitions.access_paths.configuration OR definitions.access_paths.operational where path_id matches",
+        "returns": "Navigation steps array, canonical_path for Supabase lookup, and path details"
+      },
+      "setup_flow_ref": {
+        "description": "Reference to a setup/configuration flow",
+        "lookup": "Find in definitions.setup_flows where flow_id matches",
+        "returns": "Array of steps to execute in order"
+      },
+      "business_rule_refs": {
+        "description": "Array of business rule IDs to validate",
+        "lookup": "Find each in definitions.business_rules where rule_id matches",
+        "returns": "Rule description and expected UI manifestation"
+      },
+      "edge_case_refs": {
+        "description": "Array of edge case IDs to check",
+        "lookup": "Find each in definitions.edge_cases where case_id matches",
+        "returns": "Scenario description and expected UI behavior"
+      },
+      "ui_element_refs": {
+        "description": "Array of UI element names relevant to test",
+        "lookup": "Find each in definitions.ui_elements where element_name matches",
+        "returns": "Element type and location"
+      }
+    },
+    "navigation_taxonomy": {
+      "description": "Use canonical_path with Supabase resolve_navigation_path() for reliable navigation",
+      "usage": "curl -s \"${SUPABASE_URL}/rest/v1/rpc/resolve_navigation_path\" -H \"apikey: ${SUPABASE_ANON_KEY}\" -H \"Authorization: Bearer ${SUPABASE_ANON_KEY}\" -H \"Content-Type: application/json\" -d '{\"p_canonical_path\": \"<canonical_path>\", \"p_env\": \"prod\"}'",
+      "returns": "nav_steps array with labels and levels for menu clicks"
+    },
+    "execution_workflow": [
+      "1. Read the test from tests array",
+      "2. Resolve access_path_ref → get canonical_path",
+      "3. Query Supabase resolve_navigation_path(canonical_path) → get nav_steps",
+      "4. Resolve setup_flow_ref → get setup steps",
+      "5. Execute nav_steps using Playwright (click each menu item in order)",
+      "6. Execute setup steps using Playwright",
+      "7. Perform test validations from assertions",
+      "8. Check resolved business_rules are satisfied",
+      "9. Verify resolved edge_cases behave as expected",
+      "10. Capture screenshots as evidence",
+      "11. Record pass/fail result"
+    ],
+    "example": {
+      "test_with_refs": {
+        "test_id": "TEST-EXAMPLE-001",
+        "setup_flow_ref": "SETUP-001",
+        "business_rule_refs": [
+          "BR-001",
+          "BR-002"
+        ]
+      },
+      "resolution_steps": [
+        "1. Look up SETUP-001 in definitions.setup_flows",
+        "2. Find the flow object with matching flow_id",
+        "3. Execute each step in the steps array in order",
+        "4. Look up BR-001 and BR-002 in definitions.business_rules",
+        "5. Validate that the UI behaves according to those rules"
+      ]
+    }
+  },
+  "metadata": {
+    "feature_name": "Air Ticket",
+    "feature_slug": "air-ticket",
+    "version": "v32",
+    "folder_path": "air-ticket/v32",
+    "readme_path": "air-ticket/v32/README.md",
+    "github_root_path": "air-ticket/",
+    "generated_at": "2026-01-09T06:41:24.422Z",
+    "source": "jira-only",
+    "payload_format": "reference-based-v2",
+    "zendesk_status": {
+      "available": false,
+      "error": "Unterminated string in JSON at position 28730 (line 806 column 114)"
+    }
+  },
+  "summary": {
+    "total_tests": 4,
+    "by_priority": {
+      "must_test": 3,
+      "should_test": 1,
+      "nice_to_test": 0
+    },
+    "by_test_type": {
+      "workflow": 2,
+      "ui_visibility": 1,
+      "text_verification": 1,
+      "form_interaction": 0,
+      "permission_check": 0
+    },
+    "documentation_candidates": 7,
+    "excluded": 1,
+    "zendesk_data_available": false
+  },
+  "definitions": {
+    "access_paths": {
+      "configuration": [],
+      "operational": []
+    },
+    "setup_flows": [],
+    "business_rules": [],
+    "edge_cases": [],
+    "ui_elements": []
+  },
+  "tests": [
+    {
+      "test_id": "TEST-TSSD-3193",
+      "ticket_key": "TSSD-3193",
+      "test_name": "Client is unable to remove Processed Air tickets",
+      "validation_priority": "must_test",
+      "test_type": "workflow",
+      "theme": "Air Ticket Deletion and Payroll Dependencies",
+      "description": "verify fix works - confirm that air ticket deletion workflow now functions correctly after payroll transaction rejection",
+      "what_to_test": "Air ticket deletion workflow: (1) Create processed air ticket in payroll, (2) Reopen payroll month, (3) Reject payroll transaction, (4) Verify air ticket rejection/deletion options become available, (5) Successfully delete air ticket request",
+      "access_path_ref": null,
+      "setup_flow_ref": null,
+      "business_rule_refs": [],
+      "edge_case_refs": [],
+      "ui_element_refs": [],
+      "assertions": [
+        "Assert delete/reject buttons are disabled for processed air tickets before transaction rejection",
+        "Assert payroll month can be reopened",
+        "Assert payroll transaction can be rejected",
+        "Assert delete/reject buttons become enabled after transaction rejection",
+        "Assert air ticket request is successfully deleted"
+      ],
+      "source": {
+        "ticket_key": "TSSD-3193",
+        "status": "Resolved",
+        "issue_type": "Bug"
+      }
+    },
+    {
+      "test_id": "TEST-AV-6477",
+      "ticket_key": "AV-6477",
+      "test_name": "FE: Show remaining air tickets when balance is on hold due to booking request",
+      "validation_priority": "must_test",
+      "test_type": "ui_visibility",
+      "theme": "Air Ticket Balance Visibility",
+      "description": "validate implementation - confirm frontend correctly displays remaining air ticket balance during pending booking requests",
+      "what_to_test": "Air ticket balance display during booking: (1) User with air ticket balance initiates booking request, (2) Verify remaining balance is visible and accurate while booking is pending, (3) Verify balance updates correctly after booking completes",
+      "access_path_ref": null,
+      "setup_flow_ref": null,
+      "business_rule_refs": [],
+      "edge_case_refs": [],
+      "ui_element_refs": [],
+      "assertions": [
+        "Assert remaining air ticket balance is visible when booking request is pending",
+        "Assert balance calculation is correct (total - reserved for pending booking)",
+        "Assert balance updates after booking completion",
+        "Assert no 'balance on hold' message obscures remaining ticket count"
+      ],
+      "source": {
+        "ticket_key": "AV-6477",
+        "status": "Already Done",
+        "issue_type": "Bug"
+      }
+    },
+    {
+      "test_id": "TEST-AV-6343",
+      "ticket_key": "AV-6343",
+      "test_name": "FE: Unclear indication of available air ticket requests",
+      "validation_priority": "should_test",
+      "test_type": "text_verification",
+      "theme": "Air Ticket Balance Visibility",
+      "description": "confirm behavior - validate that air ticket request display is now clear and unambiguous",
+      "what_to_test": "Air ticket request display clarity: (1) User with 0 remaining requests views air ticket info card, (2) Verify text clearly indicates 'Available air ticket requests: 0' or similar unambiguous phrasing, (3) Verify no confusing notation like '0/1' is displayed",
+      "access_path_ref": null,
+      "setup_flow_ref": null,
+      "business_rule_refs": [],
+      "edge_case_refs": [],
+      "ui_element_refs": [],
+      "assertions": [
+        "Assert info card displays clear text indicating available requests",
+        "Assert notation is not ambiguous (e.g., not '0/1' which could mean 0 used or 0 available)",
+        "Assert text uses 'Available' or 'Remaining' language for clarity",
+        "Assert zero state is clearly communicated"
+      ],
+      "source": {
+        "ticket_key": "AV-6343",
+        "status": "Already Done",
+        "issue_type": "Bug"
+      }
+    },
+    {
+      "test_id": "TEST-TSSD-3366",
+      "ticket_key": "TSSD-3366",
+      "test_name": "Need to remove processed (Encashment) Air tickets with Payroll reopen",
+      "validation_priority": "must_test",
+      "test_type": "workflow",
+      "theme": "Air Ticket Deletion and Payroll Dependencies",
+      "description": "verify fix works - confirm payroll reopen and air ticket transaction movement workflow functions correctly",
+      "what_to_test": "Cross-period air ticket encashment movement: (1) Process air ticket encashment in December payroll, (2) Reopen December payroll, (3) Delete processed transaction, (4) Move air ticket request back to pending, (5) Verify request can be moved to January payroll, (6) Verify final state is correct",
+      "access_path_ref": null,
+      "setup_flow_ref": null,
+      "business_rule_refs": [],
+      "edge_case_refs": [],
+      "ui_element_refs": [],
+      "assertions": [
+        "Assert December payroll can be reopened",
+        "Assert processed air ticket transaction can be deleted",
+        "Assert air ticket request returns to pending state",
+        "Assert request can be reassigned to January payroll",
+        "Assert request no longer appears in December payroll"
+      ],
+      "source": {
+        "ticket_key": "TSSD-3366",
+        "status": "Resolved",
+        "issue_type": "Support"
+      }
+    }
+  ],
+  "limitations": {
+    "documentation_candidates": [
+      {
+        "ticket_key": "TSSD-2933",
+        "summary": "Air ticket carry over",
+        "documentation_type": "configuration_note",
+        "limitation_statement": "The Bayzat platform currently does not support indefinite carry-over of unused air ticket balances. Users cannot automatically transfer unused ticket allowances between policy years, which limits flexibility in time-off management.",
+        "user_impact": "Admins configuring air ticket policies must manually calculate total requests across multi-year cycles (e.g., 5 requests/year × 5 years = 25 total requests). No automatic carry-over of unused balances between years.",
+        "workaround": "For multi-year policies, calculate total requests needed upfront: multiply annual request needs by number of years in renewal cycle. Set this total in the policy configuration.",
+        "guide_section": "Air Ticket Policy Configuration — Multi-Year Cycles and Request Allocation"
+      },
+      {
+        "ticket_key": "TSSD-3954",
+        "summary": "Air tickets - Booked tickets notification (tagging LM when not in approval flow OR workflow on ticket requests)",
+        "documentation_type": "feature_gap",
+        "limitation_statement": "The Bayzat platform currently cannot notify or tag line managers about ticket processing when they are outside the standard approval flow. There is no automated notification system for proxy requesters or managers raising requests for employees.",
+        "user_impact": "Line managers who submit air ticket requests on behalf of blue collar employees cannot receive notifications when tickets are processed. They have no visibility into completion status unless they are part of the formal approval workflow.",
+        "workaround": "Currently, line managers must be added to the approval flow to receive notifications. Alternatively, HR can manually notify line managers via email when air tickets are processed.",
+        "guide_section": "Air Ticket Request Notifications — Tracking Status for Proxy Requesters"
+      },
+      {
+        "ticket_key": "OS-695",
+        "summary": "As an employee I want to manage my air ticket requests from my air tickets",
+        "documentation_type": "business_decision",
+        "limitation_statement": "The platform currently lacks a unified interface for employees to manage air ticket requests under various policy conditions. There are specific scenarios where employees cannot fully interact with or understand their air ticket encashment status.",
+        "user_impact": "Employees cannot manage air ticket requests when: auto-encashment policy is inactive, hire date/probation end date is missing, they are not yet eligible for encashment, or they are in a policy other than auto-encashment. This creates confusion about eligibility status.",
+        "workaround": "Ensure employee records are complete (hire date, probation end date) before assigning to auto-encashment policy. Verify policy is active and employee meets eligibility criteria before attempting to manage air ticket requests.",
+        "guide_section": "Air Ticket Auto-Encashment — Policy Eligibility and Employee Record Requirements"
+      },
+      {
+        "ticket_key": "TSSD-1995",
+        "summary": "Expense Manager access to Loans",
+        "documentation_type": "feature_gap",
+        "limitation_statement": "The current Expense Manager role lacks granular permission controls to limit data visibility. The platform does not provide configurable options to restrict cross-module access or segment viewable financial information by category.",
+        "user_impact": "Users with Expense Manager role can view all employee loans and air tickets, not just work expenses. Organizations cannot restrict Expense Manager visibility to only work-related financial data, creating potential data privacy concerns.",
+        "workaround": "Currently, no granular permission controls exist. Organizations must accept that Expense Managers have broad visibility across financial modules or use alternative role assignments.",
+        "guide_section": "Role-Based Access Control — Expense Manager Permissions and Data Visibility"
+      },
+      {
+        "ticket_key": "TSSD-2511",
+        "summary": "Letter requests - upload the document after stamping",
+        "documentation_type": "feature_gap",
+        "limitation_statement": "The current Bayzat platform does not support a flexible document approval workflow that allows post-approval modifications, attachment uploads, or status reversions for letter requests.",
+        "user_impact": "Users cannot download letter requests, have them stamped externally, and re-upload the signed document. Approved requests cannot be modified, attachments cannot be added to approved requests, and approved requests cannot be returned to pending status.",
+        "workaround": "Current workaround: (1) Keep request in pending status, (2) Download and stamp externally, (3) Upload attachment while in pending, (4) Then approve. However, this requires careful workflow planning and does not support post-approval modifications.",
+        "guide_section": "Letter Request Workflow — External Stamping and Document Re-Upload Limitations"
+      },
+      {
+        "ticket_key": "TSSD-1403",
+        "summary": "Need to delete the test air tickets processed",
+        "documentation_type": "feature_gap",
+        "limitation_statement": "The Bayzat platform currently lacks the capability to delete or reverse processed air ticket expense entries after they have been finalized. This prevents users from cleaning up test or erroneous data once an expense has been processed.",
+        "user_impact": "Once air tickets are processed, they cannot be deleted through the UI. Users cannot clean up test data or remove erroneous entries after processing, requiring careful initial data entry.",
+        "workaround": "Avoid processing test or dummy air tickets. Verify all air ticket entries before processing. If errors occur after processing, contact support for backend assistance.",
+        "guide_section": "Air Ticket Expense Management — Processed Expense Deletion Limitations"
+      },
+      {
+        "ticket_key": "TSSD-4672",
+        "summary": "Restricted People manager role - can still see other employees (out of assigned group)",
+        "documentation_type": "feature_gap",
+        "limitation_statement": "The Bayzat platform currently lacks full role-based group restrictions, with grouping functionality limited to finance and payroll modules. People Manager and Adjustment Manager roles can view and edit employees outside their assigned groups across HR and document modules.",
+        "user_impact": "Employee grouping restrictions only apply to finance and payroll modules. People Manager role grouping only restricts Air Tickets module. HR modules (Documents, Departments, employee details) are visible to all roles regardless of group assignment. Adjustment Manager role can see all adjustments across groups.",
+        "workaround": "Currently, no workaround exists for HR module restrictions. Organizations must accept that People Manager and Adjustment Manager roles have cross-group visibility for HR and document modules.",
+        "guide_section": "Employee Groups and Role Restrictions — Module-Specific Limitations"
+      }
+    ],
+    "excluded": [
+      {
+        "ticket_key": "TSSD-4272",
+        "summary": "Limited access for employees to view other users",
+        "blocker": "feature_roadmap_pending",
+        "reason": "This is a feature request on the product roadmap (Employee Grouping and Structures) with no current timeline. While it has documentation value, it is primarily a strategic product decision with no testable UI currently available. The feature is partially implemented for some modules but not HR modules, making it unsuitable for immediate test automation. Should be monitored for future inclusion when feature becomes available."
+      }
+    ]
+  },
+  "source_articles": []
+}
