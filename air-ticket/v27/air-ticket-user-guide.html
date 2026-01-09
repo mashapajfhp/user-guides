@@ -1,1909 +1,1120 @@
 <!DOCTYPE html>
-  <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>air ticket - User Guide</title>
-      <style>
-          :root {
-              --primary-color: #1a73e8;
-              --secondary-color: #34a853;
-              --warning-color: #fbbc04;
-              --danger-color: #ea4335;
-              --text-color: #202124;
-              --text-secondary: #5f6368;
-              --bg-color: #ffffff;
-              --bg-secondary: #f8f9fa;
-              --border-color: #dadce0;
-              --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-          }
-          
-          * {
-              margin: 0;
-              padding: 0;
-              box-sizing: border-box;
-          }
-          
-          body {
-              font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif;
-              line-height: 1.6;
-              color: var(--text-color);
-              background: var(--bg-secondary);
-          }
-          
-          .container {
-              max-width: 1200px;
-              margin: 0 auto;
-              padding: 24px;
-          }
-          
-          header {
-              background: var(--bg-color);
-              border-bottom: 1px solid var(--border-color);
-              padding: 24px 0;
-              margin-bottom: 24px;
-              box-shadow: var(--shadow);
-          }
-          
-          header h1 {
-              font-size: 2rem;
-              font-weight: 500;
-              color: var(--text-color);
-          }
-          
-          header .subtitle {
-              color: var(--text-secondary);
-              margin-top: 8px;
-          }
-          
-          .section {
-              background: var(--bg-color);
-              border-radius: 8px;
-              padding: 24px;
-              margin-bottom: 24px;
-              box-shadow: var(--shadow);
-          }
-          
-          .section h2 {
-              font-size: 1.5rem;
-              font-weight: 500;
-              margin-bottom: 16px;
-              padding-bottom: 12px;
-              border-bottom: 2px solid var(--primary-color);
-          }
-          
-          .section h3 {
-              font-size: 1.25rem;
-              font-weight: 500;
-              margin: 20px 0 12px 0;
-              color: var(--text-color);
-          }
-          
-          .section h4 {
-              font-size: 1.1rem;
-              font-weight: 500;
-              margin: 16px 0 8px 0;
-              color: var(--text-secondary);
-          }
-          
-          .section p {
-              margin-bottom: 12px;
-              color: var(--text-color);
-          }
-          
-          .section ul, .section ol {
-              margin: 12px 0;
-              padding-left: 24px;
-          }
-          
-          .section li {
-              margin-bottom: 8px;
-          }
-          
-          .step-box {
-              background: var(--bg-secondary);
-              border-left: 4px solid var(--primary-color);
-              padding: 16px;
-              margin: 16px 0;
-              border-radius: 0 8px 8px 0;
-          }
-          
-          .step-box.success {
-              border-left-color: var(--secondary-color);
-          }
-          
-          .step-box.warning {
-              border-left-color: var(--warning-color);
-          }
-          
-          .step-box.danger {
-              border-left-color: var(--danger-color);
-          }
-          
-          .screenshot {
-              max-width: 100%;
-              border: 1px solid var(--border-color);
-              border-radius: 8px;
-              margin: 16px 0;
-              box-shadow: var(--shadow);
-          }
-          
-          .screenshot img {
-              max-width: 100%;
-              display: block;
-              border-radius: 8px;
-          }
-          
-          .screenshot figcaption {
-              padding: 12px;
-              background: var(--bg-secondary);
-              font-size: 0.9rem;
-              color: var(--text-secondary);
-              border-top: 1px solid var(--border-color);
-              border-radius: 0 0 8px 8px;
-          }
-          
-          table {
-              width: 100%;
-              border-collapse: collapse;
-              margin: 16px 0;
-          }
-          
-          th, td {
-              padding: 12px;
-              text-align: left;
-              border-bottom: 1px solid var(--border-color);
-          }
-          
-          th {
-              background: var(--bg-secondary);
-              font-weight: 500;
-          }
-          
-          .badge {
-              display: inline-block;
-              padding: 4px 12px;
-              border-radius: 16px;
-              font-size: 0.85rem;
-              font-weight: 500;
-          }
-          
-          .badge-success {
-              background: #e6f4ea;
-              color: #1e8e3e;
-          }
-          
-          .badge-warning {
-              background: #fef7e0;
-              color: #b06000;
-          }
-          
-          .badge-danger {
-              background: #fce8e6;
-              color: #c5221f;
-          }
-          
-          .badge-info {
-              background: #e8f0fe;
-              color: #1967d2;
-          }
-          
-          .validation-summary {
-              display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-              gap: 16px;
-              margin: 24px 0;
-          }
-          
-          .validation-card {
-              background: var(--bg-secondary);
-              padding: 16px;
-              border-radius: 8px;
-              text-align: center;
-          }
-          
-          .validation-card .number {
-              font-size: 2rem;
-              font-weight: 500;
-              color: var(--primary-color);
-          }
-          
-          .validation-card .label {
-              color: var(--text-secondary);
-              font-size: 0.9rem;
-          }
-          
-          footer {
-              text-align: center;
-              padding: 24px;
-              color: var(--text-secondary);
-              font-size: 0.9rem;
-          }
-          
-          @media (max-width: 768px) {
-              .container {
-                  padding: 16px;
-              }
-              
-              .section {
-                  padding: 16px;
-              }
-              
-              header h1 {
-                  font-size: 1.5rem;
-              }
-          }
-      </style>
-  </head>
-  <body>
-      <header>
-          <div class="container">
-              <h1>air ticket</h1>
-              <p class="subtitle">User Guide Documentation</p>
-          </div>
-      </header>
-      
-      <main class="container">
-          <!-- Section 1: Overview and Getting Started -->
-          <div class="section" id="overview">
-              ```json
-{
-  "sections": [
-    {
-      "order": 1,
-      "id": "feature-overview",
-      "title": "Feature Overview",
-      "icon": "✈️",
-      "introduction": "Air Ticket is a comprehensive feature within Bayzat that enables organizations to manage employee air ticket allowances efficiently. It provides a flexible system for creating customizable policies, tracking requests, and offering multiple redemption options—whether through reimbursement, company-booked tickets, or encashment of allowances [1].",
-      "subsections": [
-        {
-          "title": "What is Air Ticket?",
-          "content": "Air Ticket simplifies the management of employee travel allowances by enabling organizations to create and manage air ticket policies with customizable eligibility criteria, allowance amounts, and redemption options [1]. Employees can request air tickets through the Bayzat mobile app using three different methods: reimbursement for tickets they've already purchased, ticket booking where HR/Admin handles the purchase, or encashment of their air ticket allowance [2]."
-        },
-        {
-          "title": "Key Benefits",
-          "content": "Organizations gain transparent control over travel allowance spending with customizable policies tailored to different employee levels and regions. Employees enjoy flexibility in how they use their allowances, with streamlined request processes through the mobile app. The feature reduces administrative overhead through automated workflows and clear approval processes [1][3]."
-        },
-        {
-          "title": "How It Works",
-          "content": "HR administrators create air ticket policies specifying allowance amounts, eligible employees, and redemption options. Employees then submit requests through the mobile app, selecting their preferred redemption method. Requests flow through approval workflows and can be automatically processed using configurable automation rules [1][2][3]."
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Ticket - User Guide</title>
+    <style>
+        :root {
+            --primary-color: #6B46C1;
+            --primary-light: #805AD5;
+            --secondary-color: #38A169;
+            --warning-color: #D97706;
+            --danger-color: #E53E3E;
+            --text-color: #1a1a1a;
+            --text-secondary: #4a5568;
+            --bg-color: #ffffff;
+            --bg-secondary: #F7FAFC;
+            --bg-accent: #FAF5FF;
+            --border-color: #E2E8F0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-      ],
-      "feature_highlights": [
-        {
-          "icon": "🎯",
-          "title": "Flexible Redemption Options",
-          "description": "Employees can choose between reimbursement, company-booked tickets, or encashment of their air ticket allowance [1]"
-        },
-        {
-          "icon": "⚙️",
-          "title": "Customizable Policies",
-          "description": "Create multiple policies with varying allowance amounts based on employee seniority, location, or organizational hierarchy [1]"
-        },
-        {
-          "icon": "📱",
-          "title": "Mobile-First Requests",
-          "description": "Employees submit and track air ticket requests directly through the Bayzat mobile app's Work section [2]"
-        },
-        {
-          "icon": "🔄",
-          "title": "Automated Workflows",
-          "description": "Set up automatic encashment requests based on specific triggers and conditions using configurable workflow recipes [3]"
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-secondary);
         }
-      ],
-      "context_items": [
-        {
-          "label": "Primary Users",
-          "value": "HR administrators, payroll managers, and employees across organizations"
-        },
-        {
-          "label": "Use Case",
-          "value": "Managing employee travel allowances and air ticket benefits"
-        },
-        {
-          "label": "Key Capability",
-          "value": "Multi-method redemption with policy-based control"
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 48px 24px;
+            text-align: center;
         }
-      ],
-      "screenshots": [
-        {
-          "placeholder_id": "feature-overview-01",
-          "alt_text": "Air Ticket feature overview showing mobile app interface",
-          "caption": "Employees access Air Ticket requests through the Work section of the Bayzat mobile app",
-          "placement": "inline"
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 12px;
         }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "23328000633489",
-          "source_title": "Air ticket request"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "13937889131409",
-          "source_title": "How to request Air ticket"
-        },
-        {
-          "number": 3,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows"
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
         }
-      ]
-    },
-    {
-      "order": 2,
-      "id": "product-foundation",
-      "title": "Product Foundation",
-      "icon": "🏗️",
-      "introduction": "Understanding the foundational concepts and business context of Air Ticket helps you leverage the feature effectively. This section covers core concepts, system architecture, and how Air Ticket integrates with other Bayzat features.",
-      "subsections": [
-        {
-          "title": "Core Concepts",
-          "content": "Air Ticket operates on three fundamental concepts: policies (organizational rules defining allowances and eligibility), requests (employee submissions using available allowances), and redemption methods (how employees receive their benefits). Policies can be customized by employee seniority, location, or organizational hierarchy, and each employee can be assigned to only one air ticket policy [1]."
-        },
-        {
-          "title": "Business Context",
-          "content": "Air ticket allowances are a key employee benefit, particularly in the UAE and KSA regions where international travel is common. Organizations need to manage these allowances transparently while controlling costs and ensuring compliance with company policies. Air Ticket provides the framework for this balance [1][2]."
-        },
-        {
-          "title": "Related Features",
-          "content": "Air Ticket integrates with the Bayzat mobile app's Work section for employee requests, Bayzat Payroll for encashment processing, Finance menu for admin management, and Workflows for automation. Approval processes are managed through existing air ticket approval workflows [2][3]."
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 20px;
         }
-      ],
-      "feature_highlights": [
-        {
-          "icon": "📋",
-          "title": "Policy Management",
-          "description": "Create and manage customizable air ticket allowance policies with specific eligibility criteria, allowance amounts, and renewal cycles [1]"
-        },
-        {
-          "icon": "👥",
-          "title": "Employee Assignment",
-          "description": "Assign employees to policies based on seniority, location, or role. Each employee can belong to only one air ticket policy [1]"
-        },
-        {
-          "icon": "💰",
-          "title": "Allowance Control",
-          "description": "Set allowance amounts that apply collectively to employees and their dependents. Employees cannot request tickets exceeding their allocated allowance [1]"
-        },
-        {
-          "icon": "🔐",
-          "title": "Request Limits",
-          "description": "Define the maximum number of air ticket requests allowed per policy cycle to control usage [1]"
+
+        .section {
+            background: var(--bg-color);
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
         }
-      ],
-      "tables": [
-        {
-          "title": "Policy Configuration Requirements",
-          "headers": ["Configuration Item", "Description", "Required"],
-          "rows": [
-            ["Policy Name", "Unique identifier for the air ticket policy", "Yes"],
-            ["Allowance Amount", "Per-cycle allowance in currency units", "Yes"],
-            ["Eligible People", "Employee only or including family/dependents", "Yes"],
-            ["Request Timing", "When employees can submit requests", "Yes"],
-            ["Renewal Cycle", "Frequency of allowance renewal (annual, bi-annual, etc.)", "Yes"],
-            ["Request Limit", "Maximum number of requests per cycle", "Yes"],
-            ["Redemption Options", "Reimbursement, encashment, and/or ticket booking", "Yes"],
-            ["Employee Selection", "Which employees are eligible for this policy", "Yes"]
-          ]
-        },
-        {
-          "title": "Key Constraints & Rules",
-          "headers": ["Constraint", "Impact", "Workaround"],
-          "rows": [
-            ["One policy per employee", "Employees cannot be assigned to multiple policies", "Create policies for different hierarchy levels"],
-            ["Cannot edit active policies", "Policies with existing requests cannot be modified", "Create new policy for future changes"],
-            ["Allowance is collective", "Dependents share the allowance, not individual amounts", "Plan allowance amounts accordingly"],
-            ["Request limit enforcement", "Employees limited to set number of requests per cycle", "Configure limits based on organizational needs"],
-            ["Encashment restrictions", "Employees cannot encash if taking leaves", "Plan encashment timing around leave schedules"]
-          ]
+
+        .section h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--text-color);
         }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937322643857",
-          "source_title": "Setting up an air ticket allowance policy"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "23328000633489",
-          "source_title": "Air ticket request"
-        },
-        {
-          "number": 3,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows"
+
+        .section h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 24px 0 12px 0;
+            color: var(--text-color);
         }
-      ]
-    },
-    {
-      "order": 3,
-      "id": "user-journey",
-      "title": "User Journey Guide",
-      "icon": "🗺️",
-      "introduction": "The Air Ticket user journey encompasses both administrative setup and employee usage. This guide walks through the complete end-to-end flow from policy creation to request fulfillment, showing how different user roles interact with the system.",
-      "subsections": [
-        {
-          "title": "Journey Overview",
-          "content": "The Air Ticket journey follows two parallel paths: the administrative path where HR/managers create and manage policies, and the employee path where workers submit and track requests. Both paths are interconnected through approval workflows and policy enforcement rules [1][2]."
-        },
-        {
-          "title": "Success Indicators",
-          "content": "A successful Air Ticket journey is indicated by: (1) Policies created with clear eligibility and allowance parameters, (2) Employees able to view and submit requests through the mobile app, (3) Requests processed through appropriate approval workflows, (4) Employees receiving their benefits through their chosen redemption method, and (5) HR maintaining visibility into all requests and spending [1][2][3]."
+
+        .section h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 16px 0 8px 0;
+            color: var(--text-secondary);
         }
-      ],
-      "journey_steps": [
-        {
-          "step_number": 1,
-          "title": "Policy Creation & Configuration",
-          "description": "HR administrator navigates to Settings > Company > Air ticket policies and creates a new policy by entering the policy name, allowance amount, eligible people count, request timing, renewal cycle, request limits, and redemption options [1]",
-          "actor": "HR Administrator / Manager"
-        },
-        {
-          "step_number": 2,
-          "title": "Employee Assignment",
-          "description": "Administrator selects which employees are eligible for the newly created policy. Employees are assigned based on criteria such as seniority level, location, or organizational hierarchy. Each employee can only be assigned to one air ticket policy [1]",
-          "actor": "HR Administrator"
-        },
-        {
-          "step_number": 3,
-          "title": "Policy Activation & Communication",
-          "description": "The policy is reviewed and finalized, making it active in the system. Employees are notified that air ticket request options are now available to them through the mobile app [1][2]",
-          "actor": "HR Administrator / System"
-        },
-        {
-          "step_number": 4,
-          "title": "Employee Request Submission",
-          "description": "Employees access the Work section in the Bayzat mobile app, click 'Request Air Ticket', and choose from three options: Reimbursement (for tickets already purchased), Ticket Booking (HR/Admin handles purchase), or Encashment (convert allowance to cash). They provide required details and submit the request [2]",
-          "actor": "Employee"
-        },
-        {
-          "step_number": 5,
-          "title": "Request Review & Approval",
-          "description": "The submitted request flows through the approval workflow. For ticket booking requests, HR/Admin reviews and coordinates with the employee on ticket details. For reimbursement and encashment requests, approvers review and approve based on policy rules and available allowance [2][3]",
-          "actor": "HR Administrator / Approver"
-        },
-        {
-          "step_number": 6,
-          "title": "Request Fulfillment & Tracking",
-          "description": "Once approved, the request is fulfilled according to its type: reimbursement is processed as payment, ticket booking is completed by HR, or encashment is processed through Bayzat Payroll. Employees can view the status of all their requests in the mobile app [2][3]",
-          "actor": "HR Administrator / System / Finance"
+
+        .section p {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
         }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937322643857",
-          "source_title": "Setting up an air ticket allowance policy"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "13937889131409",
-          "source_title": "How to request Air ticket"
-        },
-        {
-          "number": 3,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows"
+
+        .section ul, .section ol {
+            margin: 16px 0;
+            padding-left: 24px;
         }
-      ]
-    },
-    {
-      "order": 4,
-      "id": "prerequisites",
-      "title": "Prerequisites",
-      "icon": "✅",
-      "introduction": "Before implementing Air Ticket in your organization, ensure you have the necessary access, data, and system configurations in place. This section outlines all prerequisites for both administrators setting up policies and employees submitting requests.",
-      "subsections": [
-        {
-          "title": "Access Requirements",
-          "content": "To set up air ticket policies, you must have HR administrator or manager access to the Bayzat platform with permissions to navigate Settings > Company > Air ticket policies. Employees need access to the Bayzat mobile app with the Work section enabled. The air ticket request options must be enabled by the admin before employees can submit requests [1][2]."
-        },
-        {
-          "title": "Data Requirements",
-          "content": "Organizations must have employee records in the system with defined seniority levels or organizational hierarchy if policies will vary by these criteria. For ticket booking requests, employees must be able to share relevant travel details with the HR team. For encashment requests, the system must have access to employee leave records to verify eligibility [1][2]."
-        },
-        {
-          "title": "System Configuration",
-          "content": "Bayzat Payroll must be configured if you plan to use encashment as a redemption option. Approval workflows must be set up for air ticket requests. The mobile app must be deployed to employees with the Work section accessible. For automated encashment workflows, the Workflows feature must be enabled and configured [1][3]."
+
+        .section li {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
         }
-      ],
-      "context_items": [
-        {
-          "label": "Admin Access Required",
-          "value": "HR administrator or manager role with Settings access"
-        },
-        {
-          "label": "Employee Access Required",
-          "value": "Bayzat mobile app with Work section enabled"
-        },
-        {
-          "label": "Feature Enablement",
-          "value": "Air ticket request options must be enabled by admin"
-        },
-        {
-          "label": "Integration Required",
-          "value": "Bayzat Payroll (for encashment), Approval Workflows, Mobile App"
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
         }
-      ],
-      "tables": [
-        {
-          "title": "Pre-Implementation Checklist",
-          "headers": ["Item", "Status", "Notes"],
-          "rows": [
-            ["HR administrator access to Settings", "☐", "Required to create and manage policies"],
-            ["Employee records in system", "☐", "With seniority/hierarchy data if using variable allowances"],
-            ["Bayzat mobile app deployed", "☐", "With Work section enabled for employees"],
-            ["Approval workflows configured", "☐", "For air ticket request approvals"],
-            ["Bayzat Payroll configured", "☐", "Required if using encashment option"],
-            ["Leave management system active", "☐", "Needed to verify encashment eligibility"],
-            ["Workflows feature enabled", "☐", "For automated encashment (optional)"],
-            ["Policy parameters defined", "☐", "Allowance amounts, cycles, limits, redemption options"]
-          ]
-        },
-        {
-          "title": "Data Requirements by Request Type",
-          "headers": ["Request Type", "Required Data", "Provided By"],
-          "rows": [
-            ["Reimbursement", "Employee ticket details, invoice/receipt", "Employee"],
-            ["Ticket Booking", "Travel dates, destination, passenger details", "Employee to HR"],
-            ["Encashment", "Leave status verification, bank details", "System / Employee"]
-          ]
+
+        .feature-card {
+            background: var(--bg-accent);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
         }
-      ],
-      "warning_boxes": [
-        {
-          "type": "warning",
-          "title": "Policy Enablement Required",
-          "content": "Air ticket request options must be explicitly enabled by the admin before employees can submit any requests. Without this enablement, the 'Request Air Ticket' option will not appear in the mobile app [1]."
-        },
-        {
-          "type": "warning",
-          "title": "Encashment Leave Restriction",
-          "content": "Employees cannot request encashment of their air ticket allowance if they are currently taking leaves. Plan encashment timing accordingly and communicate this restriction to employees [2]."
-        },
-        {
-          "type": "warning",
-          "title": "One Policy Per Employee",
-          "content": "Each employee can be assigned to only one air ticket policy. Ensure your policy structure accounts for different employee groups before assigning employees [1]."
-        },
-        {
-          "type": "tip",
-          "title": "Plan Policy Structure Early",
-          "content": "Define your policy structure (by seniority, location, role, etc.) before creating policies. This prevents the need to reassign employees later, which requires creating new policies [1]."
+
+        .feature-card .icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
         }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937322643857",
-          "source_title": "Setting up an air ticket allowance policy"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "13937889131409",
-          "source_title": "How to request Air ticket"
-        },
-        {
-          "number": 3,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows"
+
+        .feature-card h4 {
+            margin: 8px 0;
+            color: var(--text-color);
         }
-      ]
-    }
-  ],
-  "hero": {
-    "title": "Air Ticket",
-    "tagline": "Manage employee air ticket allowances with flexible policies and multiple redemption options",
-    "key_stats": [
-      {
-        "label": "Redemption Methods",
-        "value": "3 options"
-      },
-      {
-        "label": "Policy Customization",
-        "value": "By seniority, location, role"
-      },
-      {
-        "label": "Request Channels",
-        "value": "Mobile app + Admin"
-      }
-    ]
-  },
-  "section_batch": 1
-}
-```
-          </div>
-          
-          <!-- Section 2: Features and Functionality -->
-          <div class="section" id="features">
-              ```json
-{
-  "sections": [
-    {
-      "order": 5,
-      "id": "initial-setup",
-      "title": "Initial Setup",
-      "icon": "⚙️",
-      "introduction": "Set up air ticket policies and configure the system to enable employees to request air tickets. This section covers the one-time configuration process for HR administrators.",
-      "subsections": [
-        {
-          "subsection_id": "initial-configuration",
-          "title": "Initial Configuration",
-          "content": "Before employees can request air tickets, HR administrators must create and configure air ticket allowance policies. This involves defining policy parameters, eligibility criteria, and redemption options."
-        },
-        {
-          "subsection_id": "verification-steps",
-          "title": "Verification Steps",
-          "content": "After completing the initial setup, verify that policies are active and employees can access the air ticket request feature through the mobile app."
+
+        .feature-card p {
+            font-size: 0.9rem;
+            margin: 0;
         }
-      ],
-      "step_cards": [
-        {
-          "step_number": 1,
-          "title": "Navigate to Air Ticket Policy Settings",
-          "description": "Access the air ticket policy creation section from the admin dashboard.",
-          "sub_steps": [
-            "Log in to Bayzat admin dashboard",
-            "Navigate to Settings menu",
-            "Select Company section",
-            "Click on Air ticket policies",
-            "Click 'Add New' button"
-          ],
-          "success_indicator": "Policy creation form is displayed with fields for policy name and allowance amount"
-        },
-        {
-          "step_number": 2,
-          "title": "Enter Basic Policy Details",
-          "description": "Configure the fundamental parameters of the air ticket policy.",
-          "sub_steps": [
-            "Enter a descriptive policy name",
-            "Define the allowance amount per cycle [1]",
-            "Specify the number of eligible people (employee only or including family members) [1]",
-            "Review entered information for accuracy"
-          ],
-          "success_indicator": "All required fields are populated with valid values"
-        },
-        {
-          "step_number": 3,
-          "title": "Configure Policy Behavior",
-          "description": "Set the timing, renewal cycle, and request limits for the policy.",
-          "sub_steps": [
-            "Define request timing (when employees can request tickets) [1]",
-            "Set policy renewal cycle (annual, bi-annual, etc.) [1]",
-            "Specify the number of allowed requests per cycle [1]",
-            "Configure any seniority or location-based variations if applicable [1]"
-          ],
-          "success_indicator": "Policy behavior parameters are configured and saved"
-        },
-        {
-          "step_number": 4,
-          "title": "Choose Redemption Options",
-          "description": "Select which redemption methods employees can use for their air ticket allowance.",
-          "sub_steps": [
-            "Enable Reimbursement option (employees submit receipts for reimbursement) [1]",
-            "Enable Ticket Booking option (HR/Admin books tickets on behalf of employees) [1]",
-            "Enable Encashment option (employees receive cash equivalent) [1]",
-            "Note: Encashment is only available if the employee is not taking any leaves [2]"
-          ],
-          "success_indicator": "At least one redemption option is selected"
-        },
-        {
-          "step_number": 5,
-          "title": "Select Eligible Employees",
-          "description": "Assign the policy to specific employees or employee groups.",
-          "sub_steps": [
-            "Click on 'Select Eligible Employees' section",
-            "Choose individual employees or use filters (department, location, seniority level)",
-            "Note: Each employee can only be assigned to one air ticket policy [1]",
-            "Review the list of selected employees",
-            "Confirm selection"
-          ],
-          "success_indicator": "Eligible employees are selected and displayed in the policy configuration"
-        },
-        {
-          "step_number": 6,
-          "title": "Review and Finalize Policy",
-          "description": "Review all policy settings and activate the policy.",
-          "sub_steps": [
-            "Review policy name and allowance amount",
-            "Confirm policy behavior settings",
-            "Verify redemption options are correctly configured",
-            "Check eligible employees list",
-            "Click 'Save' or 'Activate' button to finalize the policy"
-          ],
-          "success_indicator": "Policy is created and activated; employees can now request air tickets"
+
+        .step-container {
+            margin: 24px 0;
         }
-      ],
-      "screenshots": [
-        {
-          "placeholder_id": "setup-screen-01",
-          "alt_text": "Air ticket policy creation form showing policy name and allowance amount fields",
-          "caption": "Step 1-2: Access the policy creation form and enter basic policy details",
-          "placement": "inline",
-          "filename": "chunk-0-TEST-AV-6343-02-setup.png"
-        },
-        {
-          "placeholder_id": "setup-screen-02",
-          "alt_text": "Policy behavior configuration screen with request timing and renewal cycle options",
-          "caption": "Step 3: Configure policy behavior including request timing and renewal cycles",
-          "placement": "inline",
-          "filename": "chunk-0-TEST-AV-6477-02-setup.png"
-        },
-        {
-          "placeholder_id": "setup-screen-03",
-          "alt_text": "Redemption options selection screen showing reimbursement, booking, and encashment checkboxes",
-          "caption": "Step 4: Select which redemption options are available to employees",
-          "placement": "inline",
-          "filename": "chunk-0-TEST-TSSD-3193-02-setup.png"
+
+        .step-item {
+            display: flex;
+            margin-bottom: 20px;
         }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937322643857",
-          "source_title": "Setting up an air ticket allowance policy"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "13937889131409",
-          "source_title": "How to request Air ticket"
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-right: 16px;
         }
-      ]
-    },
-    {
-      "order": 6,
-      "id": "navigation-access",
-      "title": "Navigation & Access",
-      "icon": "🗺️",
-      "introduction": "Learn how to access the air ticket feature through different methods depending on your role. Employees use the mobile app to request tickets, while HR administrators manage policies through the web dashboard.",
-      "subsections": [
-        {
-          "subsection_id": "how-to-access",
-          "title": "How to Access",
-          "content": "Air ticket features are accessed through different interfaces based on user role. Employees access the feature via the Bayzat mobile app, while administrators use the web dashboard."
-        },
-        {
-          "subsection_id": "interface-overview",
-          "title": "Interface Overview",
-          "content": "The air ticket interface provides clear navigation for both requesting tickets (employee view) and managing policies (administrator view)."
+
+        .step-content {
+            flex: 1;
         }
-      ],
-      "navigation_paths": [
-        {
-          "path_name": "Employee Air Ticket Request (Mobile App)",
-          "user_role": "Employee",
-          "steps": [
-            "Open Bayzat mobile app",
-            "Navigate to Work section [1]",
-            "View existing air ticket request status on the second screen [1]",
-            "Click 'Request Air Ticket' button [1]",
-            "Choose from three options: Reimbursement, Ticket Booking, or Encashment [1]"
-          ],
-          "access_level": "All employees with active air ticket policy"
-        },
-        {
-          "path_name": "Air Ticket Policy Management (Web Dashboard)",
-          "user_role": "HR Administrator",
-          "steps": [
-            "Log in to Bayzat admin dashboard",
-            "Navigate to Settings menu",
-            "Select Company section",
-            "Click on Air ticket policies [1]",
-            "View, create, or edit policies"
-          ],
-          "access_level": "HR administrators with policy management permissions"
-        },
-        {
-          "path_name": "Air Ticket Encashment Workflow Setup",
-          "user_role": "HR/Payroll Administrator",
-          "steps": [
-            "Log in to Bayzat admin dashboard",
-            "Navigate to Workflows in Settings [2]",
-            "Create a new workflow",
-            "Select Air Tickets Auto Encashment recipe [2]",
-            "Configure trigger time and criteria [2]",
-            "Save and activate workflow [2]"
-          ],
-          "access_level": "HR/Payroll administrators with workflow management permissions"
-        },
-        {
-          "path_name": "Air Ticket Request Management (Finance Menu)",
-          "user_role": "HR/Finance Administrator",
-          "steps": [
-            "Log in to Bayzat admin dashboard",
-            "Navigate to Finance menu",
-            "Access Air Ticket admin view [2]",
-            "View and manage employee air ticket requests",
-            "Track request status (Pending, Approved, etc.)"
-          ],
-          "access_level": "Finance and HR administrators"
+
+        .step-content h4 {
+            margin: 0 0 8px 0;
+            color: var(--text-color);
         }
-      ],
-      "screenshots": [
-        {
-          "placeholder_id": "nav-screen-01",
-          "alt_text": "Mobile app Work section showing air ticket request option",
-          "caption": "Employee access: Navigate to Work section in mobile app to request air tickets",
-          "placement": "inline",
-          "filename": "chunk-0-TEST-AV-6477-01-navigation.png"
-        },
-        {
-          "placeholder_id": "nav-screen-02",
-          "alt_text": "Admin dashboard Settings menu with Air ticket policies option highlighted",
-          "caption": "Administrator access: Navigate to Settings > Company > Air ticket policies",
-          "placement": "inline",
-          "filename": "chunk-0-TEST-TSSD-3193-01-navigation.png"
-        },
-        {
-          "placeholder_id": "nav-screen-03",
-          "alt_text": "Workflows section showing Air Tickets Auto Encashment recipe selection",
-          "caption": "Workflow setup: Access Workflows to configure automatic encashment",
-          "placement": "inline",
-          "filename": "chunk-0-TEST-TSSD-3366-01-navigation.png"
+
+        .step-content p {
+            margin: 0;
         }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937889131409",
-          "source_title": "How to request Air ticket"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows"
+
+        .info-box {
+            background: #EBF8FF;
+            border-left: 4px solid #3182CE;
+            padding: 16px 20px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
         }
-      ]
-    },
-    {
-      "order": 7,
-      "id": "core-tasks",
-      "title": "Core Tasks",
-      "icon": "✓",
-      "introduction": "Master the primary workflows for managing air tickets. This section covers the main tasks that employees and administrators perform regularly.",
-      "subsections": [
-        {
-          "subsection_id": "common-workflows",
-          "title": "Common Workflows",
-          "content": "Air ticket management involves three primary workflows: employees requesting tickets through the mobile app, administrators managing policies and approvals, and automated encashment processing through workflows."
-        },
-        {
-          "subsection_id": "usage-examples",
-          "title": "Usage Examples",
-          "content": "Real-world scenarios demonstrate how different user roles interact with the air ticket system to accomplish their objectives."
+
+        .info-box.warning {
+            background: #FFFBEB;
+            border-left-color: var(--warning-color);
         }
-      ],
-      "task_cards": [
-        {
-          "task_id": "task-001",
-          "task_name": "Request Air Ticket as Employee",
-          "description": "Submit an air ticket request through the mobile app using one of three available methods.",
-          "prerequisites": [
-            "Active Bayzat mobile app account",
-            "Air ticket policy assigned by HR administrator [1]",
-            "Sufficient allowance balance for the request type"
-          ],
-          "steps": [
-            "Open Bayzat mobile app",
-            "Navigate to Work section [1]",
-            "Click 'Request Air Ticket' button [1]",
-            "Choose request type: Reimbursement, Ticket Booking, or Encashment [1]",
-            "For Reimbursement: Provide ticket details and upload receipt",
-            "For Ticket Booking: Share relevant travel details with HR team [1]",
-            "For Encashment: Confirm you are not taking any leaves [1]",
-            "Submit request for approval",
-            "Track request status on the second screen [1]"
-          ],
-          "success_criteria": [
-            "Request is submitted successfully",
-            "Request status is visible in the Work section",
-            "Employee receives confirmation notification",
-            "Request appears in HR admin view for processing"
-          ]
-        },
-        {
-          "task_id": "task-002",
-          "task_name": "Create and Activate Air Ticket Policy",
-          "description": "Set up a new air ticket allowance policy for a group of employees.",
-          "prerequisites": [
-            "HR administrator access to Bayzat dashboard",
-            "Clear understanding of policy requirements (allowance amount, eligible employees)",
-            "Decision on redemption options to enable [1]"
-          ],
-          "steps": [
-            "Log in to Bayzat admin dashboard",
-            "Navigate to Settings > Company > Air ticket policies",
-            "Click 'Add New' button [1]",
-            "Enter policy name and allowance amount [1]",
-            "Specify number of eligible people (employee only or with family) [1]",
-            "Define request timing and renewal cycle [1]",
-            "Set number of allowed requests per cycle [1]",
-            "Select redemption options (Reimbursement, Booking, Encashment) [1]",
-            "Select eligible employees [1]",
-            "Review all settings",
-            "Click 'Save' to activate policy [1]",
-            "Verify employees can now request tickets"
-          ],
-          "success_criteria": [
-            "Policy is created and shows as active",
-            "Selected employees can access air ticket request feature",
-            "Policy parameters are correctly configured",
-            "Employees cannot be assigned to multiple policies [1]"
-          ]
-        },
-        {
-          "task_id": "task-003",
-          "task_name": "Set Up Automatic Air Ticket Encashment Workflow",
-          "description": "Configure an automated workflow to generate air ticket encashment requests at specified times.",
-          "prerequisites": [
-            "HR/Payroll administrator access",
-            "Bayzat Payroll application enabled [2]",
-            "Understanding of encashment criteria and timing requirements"
-          ],
-          "steps": [
-            "Log in to Bayzat admin dashboard",
-            "Navigate to Workflows in Settings [2]",
-            "Click 'Create New Workflow'",
-            "Select 'Air Tickets Auto Encashment' recipe [2]",
-            "Define workflow trigger date and time [2]",
-            "Note: Time is based on UAE or KSA account location [2]",
-            "Set encashment criteria [2]",
-            "Choose application: Bayzat Payroll [2]",
-            "Select encashment request type (fully approved or requiring approvals) [2]",
-            "Assign employee for the request [2]",
-            "Save workflow [2]",
-            "Verify workflow activation in activity log [2]"
-          ],
-          "success_criteria": [
-            "Workflow is created and activated",
-            "Air ticket encashment request is generated at specified time",
-            "Request appears in Finance menu under Air Ticket admin view [2]",
-            "Request status is either Pending or Approved [2]",
-            "Optional email notifications are sent if configured [2]"
-          ]
-        },
-        {
-          "task_id": "task-004",
-          "task_name": "Review and Approve Air Ticket Requests",
-          "description": "Process and approve employee air ticket requests submitted through the system.",
-          "prerequisites": [
-            "HR/Finance administrator access",
-            "Air ticket requests pending approval",
-            "Authority to approve requests based on company policy"
-          ],
-          "steps": [
-            "Log in to Bayzat admin dashboard",
-            "Navigate to Finance menu",
-            "Access Air Ticket admin view [2]",
-            "View list of pending air ticket requests",
-            "Click on individual request to review details",
-            "For Reimbursement requests: Verify receipt and amount",
-            "For Ticket Booking requests: Confirm travel details with employee if needed",
-            "For Encashment requests: Verify employee eligibility and leave status",
-            "Approve or reject request based on policy and allowance balance",
-            "Add comments if necessary",
-            "Submit approval decision"
-          ],
-          "success_criteria": [
-            "Request status changes from Pending to Approved or Rejected",
-            "Employee receives notification of approval decision",
-            "Approved requests are processed according to type (reimbursement, booking, or encashment)",
-            "Request history is maintained for audit purposes"
-          ]
-        },
-        {
-          "task_id": "task-005",
-          "task_name": "Monitor Air Ticket Allowance Usage",
-          "description": "Track employee air ticket allowance consumption and policy effectiveness.",
-          "prerequisites": [
-            "HR administrator access",
-            "Active air ticket policies in the system",
-            "Employee requests submitted and processed"
-          ],
-          "steps": [
-            "Log in to Bayzat admin dashboard",
-            "Navigate to Settings > Company > Air ticket policies",
-            "Select a policy to view details",
-            "Review list of eligible employees and their usage",
-            "Check remaining allowance balance for each employee",
-            "Monitor number of requests submitted vs. allowed per cycle",
-            "Identify any policy violations or unusual patterns",
-            "Generate reports if available for management review",
-            "Plan for policy renewal or adjustments based on usage data"
-          ],
-          "success_criteria": [
-            "Clear visibility of allowance usage across employees",
-            "Ability to identify employees approaching allowance limits",
-            "Data to support policy effectiveness evaluation",
-            "Insights for future policy adjustments"
-          ]
+
+        .info-box.success {
+            background: #F0FFF4;
+            border-left-color: var(--secondary-color);
         }
-      ],
-      "screenshots": [
-        {
-          "placeholder_id": "task-screen-01",
-          "alt_text": "Mobile app showing air ticket request options: Reimbursement, Ticket Booking, and Encashment",
-          "caption": "Task 1: Employee selects request type from three available options",
-          "placement": "inline",
-          "filename": "chunk-0-TEST-AV-6343-03-final.png"
-        },
-        {
-          "placeholder_id": "task-screen-02",
-          "alt_text": "Admin dashboard showing completed air ticket policy with all settings configured",
-          "caption": "Task 2: Finalized air ticket policy ready for employee use",
-          "placement": "inline",
-          "filename": "chunk-0-TEST-AV-6477-03-final.png"
-        },
-        {
-          "placeholder_id": "task-screen-03",
-          "alt_text": "Workflow configuration screen showing Air Tickets Auto Encashment settings",
-          "caption": "Task 3: Automatic encashment workflow configured and activated",
-          "placement": "inline",
-          "filename": "chunk-0-TEST-TSSD-3193-03-final.png"
+
+        .info-box.danger {
+            background: #FFF5F5;
+            border-left-color: var(--danger-color);
         }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937889131409",
-          "source_title": "How to request Air ticket"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows"
+
+        .info-box h4 {
+            margin: 0 0 8px 0;
+            color: var(--text-color);
         }
-      ]
-    },
-    {
-      "order": 8,
-      "id": "ongoing-management",
-      "title": "Ongoing Management",
-      "icon": "📊",
-      "introduction": "Manage air ticket policies and requests on an ongoing basis. This section covers recurring activities and maintenance tasks required to keep the air ticket system running smoothly.",
-      "subsections": [
-        {
-          "subsection_id": "ongoing-tasks",
-          "title": "Ongoing Tasks",
-          "content": "Regular management activities ensure that air ticket policies remain effective, employees can access their benefits, and requests are processed timely. These tasks occur at different frequencies throughout the year."
-        },
-        {
-          "subsection_id": "update-procedures",
-          "title": "Update Procedures",
-          "content": "Procedures for updating policies, employee assignments, and system configurations to reflect organizational changes and policy adjustments."
+
+        .info-box p {
+            margin: 0;
         }
-      ],
-      "management_items": [
-        {
-          "activity_id": "mgmt-001",
-          "activity_name": "Review Pending Air Ticket Requests",
-          "frequency": "daily",
-          "description": "Check for new air ticket requests submitted by employees and process them according to company policy.",
-          "steps": [
-            "Log in to Bayzat admin dashboard daily",
-            "Navigate to Finance menu > Air Ticket admin view",
-            "Review list of pending requests",
-            "Prioritize requests by submission date",
-            "Process each request (approve, reject, or request more information)",
-            "Send notifications to employees about request status",
-            "Maintain request processing timeline (typically 2-5 business days)"
-          ],
-          "responsible_role": "HR/Finance Administrator",
-          "success_indicator": "All pending requests are reviewed and processed within acceptable timeframe"
-        },
-        {
-          "activity_id": "mgmt-002",
-          "activity_name": "Monitor Allowance Usage and Balances",
-          "frequency": "weekly",
-          "description": "Track employee allowance consumption to ensure compliance with policy limits and identify any issues.",
-          "steps": [
-            "Access Settings > Company > Air ticket policies",
-            "Review each active policy",
-            "Check allowance balance for each eligible employee",
-            "Identify employees approaching or exceeding allowance limits",
-            "Flag any policy violations for investigation",
-            "Prepare summary report of usage trends",
-            "Share insights with management if needed"
-          ],
-          "responsible_role": "HR Administrator",
-          "success_indicator": "Clear visibility of allowance usage; early identification of potential issues"
-        },
-        {
-          "activity_id": "mgmt-003",
-          "activity_name": "Update Employee Assignments to Policies",
-          "frequency": "as-needed",
-          "description": "Add or remove employees from air ticket policies based on organizational changes (new hires, transfers, departures).",
-          "steps": [
-            "Identify employees requiring policy assignment changes",
-            "Log in to Bayzat admin dashboard",
-            "Navigate to Settings > Company > Air ticket policies",
-            "Select the relevant policy",
-            "Add new employees to the policy [1]",
-            "Remove employees who no longer qualify [1]",
-            "Note: Employees cannot be assigned to multiple policies [1]",
-            "Save changes",
-            "Notify affected employees of policy changes"
-          ],
-          "responsible_role": "HR Administrator",
-          "success_indicator": "Employee policy assignments are current and accurate"
-        },
-        {
-          "activity_id": "mgmt-004",
-          "activity_name": "Process Policy Renewals",
-          "frequency": "monthly",
-          "description": "Reset allowance balances and manage policy renewals according to configured renewal cycles.",
-          "steps": [
-            "Track policy renewal dates",
-            "Before renewal date, review policy performance and usage data",
-            "Verify renewal cycle settings are correct [1]",
-            "Ensure allowance amounts are appropriate for next cycle [1]",
-            "Confirm eligible employees list is current",
-            "Process renewal (system may auto-renew based on configuration)",
-            "Verify allowance balances are reset for all employees",
-            "Communicate renewal to employees if needed"
-          ],
-          "responsible_role": "HR Administrator",
-          "success_indicator": "Policies renew on schedule; allowance balances are correctly reset"
-        },
-        {
-          "activity_id": "mgmt-005",
-          "activity_name": "Audit Air Ticket Requests and Approvals",
-          "frequency": "monthly",
-          "description": "Conduct periodic audits to ensure requests are processed correctly and policies are being followed.",
-          "steps": [
-            "Generate air ticket request report for the month",
-            "Review all approved requests for compliance with policy",
-            "Verify that request amounts do not exceed allowance [1]",
-            "Check that redemption options used are enabled in policy [1]",
-            "Identify any rejected requests and review rejection reasons",
-            "Verify that encashment requests meet eligibility criteria [1]",
-            "Document any discrepancies or policy violations",
-            "Prepare audit summary for management"
-          ],
-          "responsible_role": "HR/Finance Administrator",
-          "success_indicator": "Audit completed; compliance verified; issues documented"
-        },
-        {
-          "activity_id": "mgmt-006",
-          "activity_name": "Manage Workflow Execution and Monitoring",
-          "frequency": "weekly",
-          "description": "Monitor automated air ticket encashment workflows to ensure they execute correctly and generate requests as expected.",
-          "steps": [
-            "Log in to Bayzat admin dashboard",
-            "Navigate to Workflows in Settings [2]",
-            "Review Air Tickets Auto Encashment workflow status",
-            "Check workflow activity log for execution records [2]",
-            "Verify that encashment requests are generated at scheduled times [2]",
-            "Confirm requests appear in Finance menu with correct status [2]",
-            "Investigate any failed workflow executions",
-            "Adjust workflow settings if needed (trigger time, criteria, etc.) [2]",
-            "Document workflow performance metrics"
-          ],
-          "responsible_role": "HR/Payroll Administrator",
-          "success_indicator": "Workflows execute reliably; encashment requests are generated correctly"
-        },
-        {
-          "activity_id": "mgmt-007",
-          "activity_name": "Handle Policy Modifications and Updates",
-          "frequency": "as-needed",
-          "description": "Update air ticket policies to reflect organizational changes or policy adjustments.",
-          "steps": [
-            "Identify need for policy change (allowance adjustment, eligibility change, etc.)",
-            "Review current policy settings",
-            "Note: Active policies cannot be edited once ticket requests are raised [1]",
-            "If policy has active requests, consider creating a new policy instead",
-            "If no active requests, proceed with editing",
-            "Update policy parameters (allowance amount, renewal cycle, request limits, etc.) [1]",
-            "Review and confirm changes",
-            "Save updated policy",
-            "Communicate changes to affected employees"
-          ],
-          "responsible_role": "HR Administrator",
-          "success_indicator": "Policy updates are applied correctly; employees are informed of changes"
-        },
-        {
-          "activity_id": "mgmt-008",
-          "activity_name": "Resolve Employee Inquiries and Issues",
-          "frequency": "as-needed",
-          "description": "Address employee questions and resolve issues related to air ticket requests and allowances.",
-          "steps": [
-            "Receive employee inquiry through support channels",
-            "Verify employee's air ticket policy assignment",
-            "Check employee's current allowance balance",
-            "Review employee's request history and status",
-            "Provide information about available redemption options [1]",
-            "Explain policy rules and limitations [1]",
-            "Assist with request submission if needed",
-            "Escalate complex issues to management if necessary",
-            "Document resolution for future reference"
-          ],
-          "responsible_role": "HR Administrator/Support Team",
-          "success_indicator": "Employee inquiries are resolved promptly; satisfaction maintained"
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.95rem;
         }
-      ],
-      "tables": [
-        {
-          "table_id": "review-schedule",
-          "table_title": "Air Ticket Management Review Schedule",
-          "table_description": "Recommended frequency and timing for air ticket management activities",
-          "headers": [
-            "Activity",
-            "Frequency",
-            "Responsible Role",
-            "Time Required",
-            "Key Metrics"
-          ],
-          "rows": [
-            {
-              "cells": [
-                "Review Pending Requests",
-                "Daily",
-                "HR/Finance Admin",
-                "15-30 min",
-                "Request processing time, approval rate"
-              ]
-            },
-            {
-              "cells": [
-                "Monitor Allowance Usage",
-                "Weekly",
-                "HR Admin",
-                "30-45 min",
-                "Usage rate, balance distribution"
-              ]
-            },
-            {
-              "cells": [
-                "Update Employee Assignments",
-                "As-needed",
-                "HR Admin",
-                "15-20 min per change",
-                "Assignment accuracy, policy compliance"
-              ]
-            },
-            {
-              "cells": [
-                "Process Policy Renewals",
-                "Monthly/Quarterly",
-                "HR Admin",
-                "30-60 min",
-                "Renewal timeliness, balance reset accuracy"
-              ]
-            },
-            {
-              "cells": [
-                "Audit Requests & Approvals",
-                "Monthly",
-                "HR/Finance Admin",
-                "1-2 hours",
-                "Compliance rate, policy adherence"
-              ]
-            },
-            {
-              "cells": [
-                "Monitor Workflow Execution",
-                "Weekly",
-                "HR/Payroll Admin",
-                "20-30 min",
-                "Workflow success rate, request generation"
-              ]
-            },
-            {
-              "cells": [
-                "Handle Policy Modifications",
-                "As-needed",
-                "HR Admin",
-                "30-45 min per change",
-                "Update accuracy, employee communication"
-              ]
-            },
-            {
-              "cells": [
-                "Resolve Employee Issues",
-                "As-needed",
-                "HR Admin/Support",
-                "10-20 min per inquiry",
-                "Resolution time, employee satisfaction"
-              ]
-            }
-          ]
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
         }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937322643857",
-          "source_title": "Setting up an air ticket allowance policy"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows"
+
+        th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-color);
         }
-      ]
-    }
-  ],
-  "section_batch": 2
-}
-```
-          </div>
-          
-          <!-- Section 3: Validation and Testing -->
-          <div class="section" id="validation">
-              ```json
-{
-  "sections": [
-    {
-      "order": 9,
-      "id": "troubleshooting",
-      "title": "Troubleshooting",
-      "icon": "🔧",
-      "introduction": "This section addresses common issues you may encounter when using the Air Ticket feature, along with practical solutions and prevention strategies.",
-      "subsections": [
-        {
-          "title": "Common Issues",
-          "content": "Air Ticket requests may encounter various issues during the request, approval, or encashment process. Understanding these common problems and their solutions will help you resolve issues quickly."
-        },
-        {
-          "title": "Resolution Steps",
-          "content": "Follow the troubleshooting steps below to diagnose and resolve Air Ticket-related issues. If problems persist, contact your HR administrator or Bayzat support."
+
+        td {
+            color: var(--text-secondary);
         }
-      ],
-      "troubleshooting_items": [
-        {
-          "issue_title": "Unable to Request Air Ticket",
-          "symptoms": [
-            "Request Air Ticket button is not visible or clickable",
-            "Error message appears when attempting to submit request",
-            "Mobile app crashes when accessing Air Ticket section"
-          ],
-          "cause": "Air ticket request options may not be enabled by your administrator, or you may not have the required permissions [1].",
-          "solution": "Contact your HR administrator to verify that air ticket request options are enabled in your organization's settings. Ensure your user account has the necessary permissions to submit air ticket requests.",
-          "prevention": "Administrators should enable air ticket request options during initial setup and verify permissions are correctly assigned to all eligible employees."
-        },
-        {
-          "issue_title": "Encashment Request Rejected",
-          "symptoms": [
-            "Encashment option is greyed out or unavailable",
-            "Error message: 'Cannot process encashment at this time'",
-            "Encashment request is automatically declined"
-          ],
-          "cause": "Encashment is only possible if the employee is not taking any leaves [1]. If an employee has active or pending leave requests, encashment cannot be processed.",
-          "solution": "Ensure all leave requests are completed or cancelled before attempting to request encashment. Check your leave calendar to confirm no overlapping leave periods exist.",
-          "prevention": "Plan encashment requests during periods when no leaves are scheduled. Coordinate with your HR team to ensure leave and encashment requests do not overlap."
-        },
-        {
-          "issue_title": "Cannot Edit Active Policy",
-          "symptoms": [
-            "Edit button is disabled for policy",
-            "Error message: 'Cannot modify active policy with existing requests'",
-            "Policy changes do not save"
-          ],
-          "cause": "Active policies cannot be edited once ticket requests are raised [2]. This prevents inconsistencies in policy terms after employees have already submitted requests.",
-          "solution": "Create a new policy with the desired changes and assign it to employees going forward. Archive or deactivate the old policy if no longer needed.",
-          "prevention": "Finalize all policy details before activating and communicating to employees. Plan policy changes during renewal cycles to minimize disruption."
-        },
-        {
-          "issue_title": "Employee Assigned to Multiple Policies",
-          "symptoms": [
-            "Conflicting air ticket allowances displayed",
-            "Unclear which policy applies to employee",
-            "Request submission shows multiple policy options"
-          ],
-          "cause": "Employees cannot be assigned to multiple air ticket policies [2]. If this occurs, it indicates a configuration error in policy assignment.",
-          "solution": "Review policy assignments in Settings > Company > Air Ticket Policies. Remove the employee from duplicate policies, keeping only the intended policy assignment.",
-          "prevention": "When creating policies, carefully review eligible employee lists to avoid duplicate assignments. Use employee filters to identify and prevent overlapping assignments."
-        },
-        {
-          "issue_title": "Request Exceeds Allowance Amount",
-          "symptoms": [
-            "Error: 'Request amount exceeds allocated allowance'",
-            "Cannot submit request for desired ticket amount",
-            "System prevents booking or reimbursement"
-          ],
-          "cause": "Employees cannot request tickets exceeding their allotted allowance [2]. The system enforces allowance limits to control costs.",
-          "solution": "Reduce the ticket amount to match available allowance, or request partial reimbursement/encashment. Contact HR to discuss allowance adjustments if needed.",
-          "prevention": "Review your available allowance before submitting requests. Plan ticket bookings within allocated limits. Administrators should set realistic allowance amounts based on organizational needs."
-        },
-        {
-          "issue_title": "Workflow Encashment Not Triggering",
-          "symptoms": [
-            "Scheduled encashment workflow did not execute",
-            "No encashment request created at scheduled time",
-            "Workflow shows as active but no activity log entries"
-          ],
-          "cause": "Workflow trigger time may be incorrectly configured, or the workflow may not have been properly saved [3]. Time selection is based on UAE or KSA account location.",
-          "solution": "Verify workflow configuration: check trigger date/time, ensure correct time zone is selected, and confirm the workflow is in active status. Re-save the workflow if needed.",
-          "prevention": "Test workflows in a non-production environment first. Verify trigger times account for your organization's time zone. Monitor workflow activity logs regularly."
-        },
-        {
-          "issue_title": "Minute Selector Not Working in Workflow",
-          "symptoms": [
-            "Minute field is disabled or non-functional",
-            "Can only select hour, not specific minutes",
-            "Workflow triggers at top of hour regardless of minute selection"
-          ],
-          "cause": "The minute selector in Air Tickets Auto Encashment workflows is non-functional [3]. Only hour-level precision is currently supported.",
-          "solution": "Use hour-level scheduling for workflows. If minute-level precision is critical, contact Bayzat support to explore alternative scheduling options.",
-          "prevention": "Plan workflow schedules using hour-level intervals. Document this limitation when communicating workflow timing to stakeholders."
-        },
-        {
-          "issue_title": "Ticket Booking Details Not Received by HR",
-          "symptoms": [
-            "HR team reports missing ticket booking details",
-            "Booking request submitted but no details provided",
-            "HR cannot process booking without additional information"
-          ],
-          "cause": "For ticket booking requests, users must share relevant details with the HR team [1]. If details are not provided during submission, HR cannot process the request.",
-          "solution": "Resubmit the ticket booking request with complete details (dates, destinations, passenger names, preferences). Contact HR directly to provide missing information.",
-          "prevention": "When selecting ticket booking option, ensure all required details are provided in the request. Communicate with HR about what information is needed before submitting."
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
         }
-      ],
-      "tables": [
-        {
-          "title": "Common Issues Summary",
-          "headers": ["Issue", "Severity", "Resolution Time", "Requires Admin Action"],
-          "rows": [
-            ["Unable to Request Air Ticket", "High", "5-15 minutes", "Yes"],
-            ["Encashment Request Rejected", "Medium", "1-2 days", "No"],
-            ["Cannot Edit Active Policy", "Medium", "Varies", "Yes"],
-            ["Employee Assigned to Multiple Policies", "High", "15-30 minutes", "Yes"],
-            ["Request Exceeds Allowance", "Low", "Immediate", "No"],
-            ["Workflow Encashment Not Triggering", "High", "30-60 minutes", "Yes"],
-            ["Minute Selector Not Working", "Low", "N/A", "No"],
-            ["Ticket Booking Details Not Received", "Medium", "1-2 days", "No"]
-          ]
+
+        .badge-info {
+            background: #E8F0FE;
+            color: #1967D2;
         }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937889131409",
-          "source_title": "How to request Air ticket"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "13937322643857",
-          "source_title": "Setting up an air ticket allowance policy"
-        },
-        {
-          "number": 3,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows"
+
+        .badge-success {
+            background: #E6F4EA;
+            color: #1E8E3E;
         }
-      ]
-    },
-    {
-      "order": 10,
-      "id": "best-practices",
-      "title": "Best Practices",
-      "icon": "⭐",
-      "introduction": "Follow these recommendations to maximize the effectiveness of your Air Ticket program and ensure smooth operations for both administrators and employees.",
-      "subsections": [
-        {
-          "title": "Recommendations",
-          "content": "Implement these best practices to optimize your air ticket management process and improve employee satisfaction."
-        },
-        {
-          "title": "Things to Avoid",
-          "content": "Be aware of common pitfalls that can complicate air ticket administration and create employee confusion."
+
+        .nav-path {
+            background: var(--bg-secondary);
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 16px 0;
         }
-      ],
-      "feature_highlights": [
-        {
-          "title": "Plan Policy Changes During Renewal Cycles",
-          "description": "Since active policies cannot be edited once requests are raised [1], plan all policy modifications to align with your renewal cycles. This minimizes disruption and ensures consistent policy application.",
-          "icon": "📅"
-        },
-        {
-          "title": "Communicate Allowance Amounts Clearly",
-          "description": "Ensure employees understand their air ticket allowance amount and that it applies collectively to listed dependents [1], not individually. Clear communication prevents confusion and reduces support requests.",
-          "icon": "💬"
-        },
-        {
-          "title": "Set Realistic Request Limits",
-          "description": "Define the maximum number of requests per cycle based on your organization's needs and budget [2]. This helps manage costs while providing flexibility for employees.",
-          "icon": "🎯"
-        },
-        {
-          "title": "Enable All Redemption Options",
-          "description": "Offer multiple redemption options (reimbursement, encashment, ticket booking) to accommodate different employee preferences and situations [2]. This increases program utilization and employee satisfaction.",
-          "icon": "🔄"
-        },
-        {
-          "title": "Monitor Workflow Activity Regularly",
-          "description": "For automated encashment workflows, regularly review activity logs to ensure workflows are triggering as expected [3]. This prevents missed encashments and maintains accurate records.",
-          "icon": "📊"
-        },
-        {
-          "title": "Coordinate Leave and Encashment Timing",
-          "description": "Since encashment is only possible when employees are not taking leaves [1], help employees plan encashment requests during periods without scheduled leave.",
-          "icon": "✈️"
+
+        .nav-path h4 {
+            margin: 0 0 8px 0;
         }
-      ],
-      "warning_boxes": [
-        {
-          "type": "tip",
-          "title": "Tip: Test Workflows Before Full Deployment",
-          "content": "Before deploying Air Tickets Auto Encashment workflows organization-wide, test them in a non-production environment or with a small employee group. This helps identify configuration issues before they affect all employees."
-        },
-        {
-          "type": "tip",
-          "title": "Tip: Document Your Policy Structure",
-          "content": "Create clear documentation of your air ticket policies, including allowance amounts, eligibility criteria, renewal cycles, and redemption options. Share this with employees and HR staff to ensure consistent understanding."
-        },
-        {
-          "type": "tip",
-          "title": "Tip: Use Seniority-Based Policies",
-          "content": "Consider creating multiple policies based on employee seniority or country of residence [2]. This allows you to provide differentiated benefits while maintaining fairness and compliance with local regulations."
-        },
-        {
-          "type": "tip",
-          "title": "Tip: Establish Clear Booking Procedures",
-          "content": "For ticket booking requests, establish clear procedures for what details employees must provide and how HR should communicate with them [1]. This streamlines the booking process and reduces back-and-forth communication."
-        },
-        {
-          "type": "tip",
-          "title": "Tip: Schedule Workflows During Off-Peak Hours",
-          "content": "When setting up automated encashment workflows, schedule them during off-peak hours to minimize system load and ensure reliable execution [3]."
+
+        .task-card {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
         }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937889131409",
-          "source_title": "How to request Air ticket"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "13937322643857",
-          "source_title": "Setting up an air ticket allowance policy"
-        },
-        {
-          "number": 3,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows"
+
+        .task-card h4 {
+            margin: 0 0 12px 0;
+            color: var(--text-color);
         }
-      ]
-    },
-    {
-      "order": 11,
-      "id": "support-resources",
-      "title": "Support Resources",
-      "icon": "❓",
-      "introduction": "Find answers to frequently asked questions, access key terminology, and discover additional resources to support your use of the Air Ticket feature.",
-      "subsections": [
-        {
-          "title": "Getting Help",
-          "content": "If you need assistance with Air Ticket features, consult the resources below or contact your HR administrator or Bayzat support team."
-        },
-        {
-          "title": "Documentation Links",
-          "content": "Access comprehensive guides and articles related to air ticket management and related HR features."
+
+        .troubleshooting-item {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--warning-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
         }
-      ],
-      "faqs": [
-        {
-          "question": "What are the three ways employees can request air tickets?",
-          "answer": "Employees can request air tickets through three methods: (1) Reimbursement - submit receipts for reimbursement of ticket costs, (2) Ticket Booking - request HR/Admin to book tickets on their behalf, or (3) Encashment - receive cash equivalent of their air ticket allowance [1]."
-        },
-        {
-          "question": "Can an employee be assigned to multiple air ticket policies?",
-          "answer": "No, employees cannot be assigned to multiple air ticket policies [2]. Each employee can only have one active air ticket policy. If you need to change an employee's policy, remove them from the current policy before assigning them to a new one."
-        },
-        {
-          "question": "What happens if an employee's ticket request exceeds their allowance?",
-          "answer": "The system will not allow employees to request tickets exceeding their allotted allowance [2]. Employees must either reduce the ticket amount to match their available allowance or contact HR to discuss allowance adjustments."
-        },
-        {
-          "question": "When can employees request encashment of their air ticket allowance?",
-          "answer": "Encashment is only possible if the employee is not taking any leaves [1]. Employees should ensure they have no active or pending leave requests before submitting an encashment request."
-        },
-        {
-          "question": "Can I edit an air ticket policy after employees have submitted requests?",
-          "answer": "No, active policies cannot be edited once ticket requests are raised [2]. To make changes to policy terms, you must create a new policy with the desired modifications and assign it to employees going forward."
-        },
-        {
-          "question": "How do I set up automated encashment requests?",
-          "answer": "Use the Air Tickets Auto Encashment workflow feature in Settings > Workflows [3]. Create a new workflow, select the Air Tickets Auto Encashment recipe, define your trigger time and criteria, and activate the workflow. Encashment requests will be automatically generated based on your specified schedule."
-        },
-        {
-          "question": "What information do employees need to provide for ticket booking requests?",
-          "answer": "For ticket booking requests, employees must share relevant details with the HR team [1]. This typically includes travel dates, destinations, passenger names, and any special preferences or requirements. Coordinate with your HR team to establish a standard list of required information."
-        },
-        {
-          "question": "Is the air ticket allowance individual or collective for dependents?",
-          "answer": "The allowance amount applies collectively to listed dependents [2], not individually. This means the total allowance covers the employee and all eligible family members combined, not separate amounts for each person."
+
+        .troubleshooting-item h4 {
+            margin: 0 0 12px 0;
+            color: var(--text-color);
         }
-      ],
-      "glossary_terms": [
-        {
-          "term": "Air Ticket Allowance",
-          "definition": "A monetary benefit provided by the organization to employees for purchasing air tickets for travel. The allowance amount can vary by employee seniority or country of residence and is set through air ticket policies [2]."
-        },
-        {
-          "term": "Air Ticket Policy",
-          "definition": "An organizational policy that defines air ticket allowance amounts, eligibility criteria, renewal cycles, request limits, and redemption options [2]. Employees are assigned to policies to determine their air ticket benefits."
-        },
-        {
-          "term": "Allowance Cycle",
-          "definition": "The time period during which an employee's air ticket allowance is valid and can be used. After the cycle ends, the allowance renews based on the policy's renewal settings [2]."
-        },
-        {
-          "term": "Encashment",
-          "definition": "A redemption option that allows employees to receive the cash equivalent of their air ticket allowance instead of using it for actual ticket purchases [1]. Encashment is only available when the employee is not taking any leaves."
-        },
-        {
-          "term": "Eligible Employees",
-          "definition": "The group of employees who are assigned to a specific air ticket policy and therefore entitled to its benefits [2]. Eligibility can be based on role, department, seniority level, or other organizational criteria."
-        },
-        {
-          "term": "Encashment Workflow",
-          "definition": "An automated workflow that generates air ticket encashment requests on a scheduled basis [3]. Administrators can configure trigger times, criteria, and request types to automate the encashment process."
-        },
-        {
-          "term": "Reimbursement",
-          "definition": "A redemption option that allows employees to purchase air tickets themselves and then submit receipts to the organization for reimbursement of the cost [1]."
-        },
-        {
-          "term": "Request Limit",
-          "definition": "The maximum number of air ticket requests an employee can submit during a single allowance cycle [2]. Organizations can set different limits based on their policies and budget."
-        },
-        {
-          "term": "Ticket Booking",
-          "definition": "A redemption option where employees request the HR or Admin team to book air tickets on their behalf [1]. Employees provide travel details, and HR arranges the booking."
-        },
-        {
-          "term": "Workflow Trigger",
-          "definition": "The scheduled date and time that initiates an automated encashment workflow [3]. Triggers are based on the organization's account location (UAE or KSA) and are set at hour-level precision."
-        },
-        {
-          "term": "Dependent",
-          "definition": "A family member of an employee who is eligible to be included in the employee's air ticket allowance [2]. The allowance amount applies collectively to the employee and all listed dependents."
-        },
-        {
-          "term": "Policy Renewal",
-          "definition": "The process by which an air ticket allowance resets at the end of a cycle, allowing employees to use a new allowance amount [2]. Renewal cycles can be annual, semi-annual, or based on other organizational schedules."
-        },
-        {
-          "term": "Request Status",
-          "definition": "The current state of an air ticket request, which employees can view in the mobile app [1]. Status may include submitted, approved, rejected, or completed."
-        },
-        {
-          "term": "Redemption Option",
-          "definition": "The method by which an employee can use their air ticket allowance, including reimbursement, ticket booking, or encashment [2]."
-        },
-        {
-          "term": "Work Section",
-          "definition": "The area in the Bayzat mobile app where employees can access and manage their air ticket requests [1]. This is where employees view existing requests and submit new ones."
+
+        footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937889131409",
-          "source_title": "How to request Air ticket"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "13937322643857",
-          "source_title": "Setting up an air ticket allowance policy"
-        },
-        {
-          "number": 3,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows"
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.75rem; }
+            .section { padding: 20px; }
+            .feature-grid { grid-template-columns: 1fr; }
         }
-      ]
-    },
-    {
-      "order": 12,
-      "id": "reference",
-      "title": "Reference",
-      "icon": "📚",
-      "introduction": "This section provides technical details, reference tables, and a comprehensive summary of all documentation sources used in this guide.",
-      "subsections": [
-        {
-          "title": "Technical Details",
-          "content": "Reference information about Air Ticket feature configuration, data requirements, and system specifications."
-        },
-        {
-          "title": "Related Documentation",
-          "content": "Links to comprehensive guides and articles that provide additional information about air ticket management and related HR features."
-        }
-      ],
-      "tables": [
-        {
-          "title": "Air Ticket Policy Configuration Reference",
-          "headers": ["Configuration Item", "Description", "Required", "Notes"],
-          "rows": [
-            ["Policy Name", "Unique identifier for the policy", "Yes", "Used to distinguish policies in system"],
-            ["Allowance Amount", "Monetary value per cycle", "Yes", "Can vary by seniority or country"],
-            ["Eligible People", "Number of individuals covered", "Yes", "Employee only or including family"],
-            ["Request Timing", "When requests can be submitted", "Yes", "Configurable per policy"],
-            ["Renewal Cycle", "Frequency of allowance reset", "Yes", "Annual, semi-annual, or custom"],
-            ["Request Limit", "Max requests per cycle", "Yes", "Prevents excessive requests"],
-            ["Redeem Options", "Available redemption methods", "Yes", "Reimbursement, booking, encashment"],
-            ["Eligible Employees", "Who can use this policy", "Yes", "Selected during policy creation"]
-          ]
-        },
-        {
-          "title": "Air Ticket Request Types and Requirements",
-          "headers": ["Request Type", "Employee Provides", "HR Provides", "Processing Time", "Approval Required"],
-          "rows": [
-            ["Reimbursement", "Ticket receipts and proof of purchase", "Reimbursement payment", "3-5 business days", "Yes"],
-            ["Ticket Booking", "Travel dates, destinations, passenger names", "Booked tickets", "5-10 business days", "Yes"],
-            ["Encashment", "Confirmation of no active leaves", "Cash payment", "1-3 business days", "Varies by workflow"]
-          ]
-        },
-        {
-          "title": "Workflow Configuration Reference",
-          "headers": ["Workflow Element", "Options/Values", "Required", "Notes"],
-          "rows": [
-            ["Trigger Date", "Any future date", "Yes", "Based on account location (UAE/KSA)"],
-            ["Trigger Time", "Hour selection (0-23)", "Yes", "Minute selector is non-functional"],
-            ["Encashment Criteria", "Policy-based conditions", "Yes", "Defines which employees are included"],
-            ["Request Type", "Fully approved or requiring approvals", "Yes", "Determines approval workflow"],
-            ["Assignee", "Specific employee", "Yes", "Must select individual employee"],
-            ["Application", "Bayzat Payroll", "Yes", "Primary application for requests"]
-          ]
-        },
-        {
-          "title": "Air Ticket Feature Interactions",
-          "headers": ["Related Feature", "Interaction Type", "Purpose", "Source Article"],
-          "rows": [
-            ["Bayzat Mobile App - Work Section", "Primary interface", "Employees submit and track requests", "13937889131409"],
-            ["HR/Admin System", "Backend processing", "Manage approvals and bookings", "13937889131409"],
-            ["Bayzat Payroll", "Integration", "Process encashment payments", "31099964679057"],
-            ["Finance Menu", "Reporting", "View and manage encashment requests", "31099964679057"],
-            ["Email Notifications", "Communication", "Notify stakeholders of request status", "31099964679057"],
-            ["Leave Management", "Dependency", "Encashment blocked during active leaves", "13937889131409"]
-          ]
-        },
-        {
-          "title": "Data Input Requirements by User Type",
-          "headers": ["User Type", "Required Inputs", "When Provided", "System Impact"],
-          "rows": [
-            ["Administrator", "Policy name, allowance amount, eligible employees, renewal cycle, request limits, redeem options", "During policy setup", "Determines employee benefits and options"],
-            ["Employee", "Request type selection, travel details (for booking), receipt/proof (for reimbursement)", "During request submission", "Triggers approval workflow"],
-            ["HR/Admin (Booking)", "Ticket booking confirmation, booking details", "After employee request", "Completes ticket booking process"],
-            ["Payroll", "Encashment approval, payment amount", "During encashment processing", "Generates payment to employee"]
-          ]
-        }
-      ],
-      "citations_summary": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937889131409",
-          "source_title": "How to request Air ticket",
-          "key_topics": ["Employee request process", "Three redemption options", "Encashment restrictions", "Mobile app access"]
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "13937322643857",
-          "source_title": "Setting up an air ticket allowance policy",
-          "key_topics": ["Policy creation", "Allowance configuration", "Employee assignment", "Policy constraints"]
-        },
-        {
-          "number": 3,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows",
-          "key_topics": ["Workflow automation", "Trigger configuration", "Encashment automation", "System limitations"]
-        },
-        {
-          "number": 4,
-          "source_type": "zendesk",
-          "source_id": "23328000633489",
-          "source_title": "Air ticket request",
-          "key_topics": ["Feature overview", "Policy management", "Request submission", "Redemption options"]
-        }
-      ],
-      "additional_resources": [
-        {
-          "title": "Related Features",
-          "items": [
-            "Leave Management - Coordinate with air ticket encashment timing",
-            "Payroll Integration - Processes encashment payments",
-            "Mobile App Work Section - Primary interface for employee requests",
-            "HR Admin Dashboard - Manage approvals and policy administration"
-          ]
-        },
-        {
-          "title": "Support Channels",
-          "items": [
-            "Contact your HR Administrator for policy questions and request support",
-            "Bayzat Support Team - Available for technical issues and feature questions",
-            "Knowledge Base - Access additional articles and guides",
-            "In-app Help - Contextual help available within the Bayzat platform"
-          ]
-        }
-      ],
-      "citations": [
-        {
-          "number": 1,
-          "source_type": "zendesk",
-          "source_id": "13937889131409",
-          "source_title": "How to request Air ticket"
-        },
-        {
-          "number": 2,
-          "source_type": "zendesk",
-          "source_id": "13937322643857",
-          "source_title": "Setting up an air ticket allowance policy"
-        },
-        {
-          "number": 3,
-          "source_type": "zendesk",
-          "source_id": "31099964679057",
-          "source_title": "Air Tickets Auto Encashments via Workflows"
-        },
-        {
-          "number": 4,
-          "source_type": "zendesk",
-          "source_id": "23328000633489",
-          "source_title": "Air ticket request"
-        }
-      ]
-    }
-  ],
-  "metadata": {
-    "feature_name": "Air Ticket",
-    "version": "1.0",
-    "last_updated": "2026-01-08",
-    "total_citations": 12,
-    "primary_audience": "HR Administrators and Employees",
-    "estimated_read_time": "20 minutes",
-    "section_batch": 3,
-    "sections_included": [
-      "troubleshooting",
-      "best-practices",
-      "support-resources",
-      "reference"
-    ]
-  }
-}
-```
-          </div>
-      </main>
-      
-      <footer>
-          <p>Generated by Bayzat Documentation System</p>
-          <p>Last updated: 2026-01-08</p>
-      </footer>
-  </body>
-  </html>
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Air Ticket</h1>
+        <p>Manage employee air ticket allowances with flexible policies and multiple redemption options</p>
+    </div>
+
+    <main class="container">
+        <!-- Section 1: Feature Overview -->
+        <div class="section">
+            <h2>Feature Overview</h2>
+
+            <h3>What is Air Ticket?</h3>
+            <p>Air Ticket is a comprehensive feature within Bayzat that enables organizations to manage employee air ticket allowances efficiently. It provides a flexible system for creating customizable policies, tracking requests, and offering multiple redemption options—whether through reimbursement, company-booked tickets, or encashment of allowances.</p>
+
+            <p>Air Ticket simplifies the management of employee travel allowances by enabling organizations to create and manage air ticket policies with customizable eligibility criteria, allowance amounts, and redemption options. Employees can request air tickets through the Bayzat mobile app using three different methods: reimbursement for tickets they've already purchased, ticket booking where HR/Admin handles the purchase, or encashment of their air ticket allowance.</p>
+
+            <h3>Key Benefits</h3>
+            <p>Organizations gain transparent control over travel allowance spending with customizable policies tailored to different employee levels and regions. Employees enjoy flexibility in how they use their allowances, with streamlined request processes through the mobile app. The feature reduces administrative overhead through automated workflows and clear approval processes.</p>
+
+            <h3>How It Works</h3>
+            <p>HR administrators create air ticket policies specifying allowance amounts, eligible employees, and redemption options. Employees then submit requests through the mobile app, selecting their preferred redemption method. Requests flow through approval workflows and can be automatically processed using configurable automation rules.</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon">🎯</div>
+                    <h4>Flexible Redemption Options</h4>
+                    <p>Employees can choose between reimbursement, company-booked tickets, or encashment of their air ticket allowance</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">⚙️</div>
+                    <h4>Customizable Policies</h4>
+                    <p>Create multiple policies with varying allowance amounts based on employee seniority, location, or organizational hierarchy</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">📱</div>
+                    <h4>Mobile-First Requests</h4>
+                    <p>Employees submit and track air ticket requests directly through the Bayzat mobile app's Work section</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🔄</div>
+                    <h4>Automated Workflows</h4>
+                    <p>Set up automatic encashment requests based on specific triggers and conditions using configurable workflow recipes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Product Foundation -->
+        <div class="section">
+            <h2>Product Foundation</h2>
+
+            <h3>Core Concepts</h3>
+            <p>Air Ticket operates on three fundamental concepts: policies (organizational rules defining allowances and eligibility), requests (employee submissions using available allowances), and redemption methods (how employees receive their benefits). Policies can be customized by employee seniority, location, or organizational hierarchy, and each employee can be assigned to only one air ticket policy.</p>
+
+            <h3>Business Context</h3>
+            <p>Air ticket allowances are a key employee benefit, particularly in the UAE and KSA regions where international travel is common. Organizations need to manage these allowances transparently while controlling costs and ensuring compliance with company policies. Air Ticket provides the framework for this balance.</p>
+
+            <h3>Related Features</h3>
+            <p>Air Ticket integrates with the Bayzat mobile app's Work section for employee requests, Bayzat Payroll for encashment processing, Finance menu for admin management, and Workflows for automation. Approval processes are managed through existing air ticket approval workflows.</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon">📋</div>
+                    <h4>Policy Management</h4>
+                    <p>Create and manage customizable air ticket allowance policies with specific eligibility criteria, allowance amounts, and renewal cycles</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">👥</div>
+                    <h4>Employee Assignment</h4>
+                    <p>Assign employees to policies based on seniority, location, or role. Each employee can belong to only one air ticket policy</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">💰</div>
+                    <h4>Allowance Control</h4>
+                    <p>Set allowance amounts that apply collectively to employees and their dependents</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🔐</div>
+                    <h4>Request Limits</h4>
+                    <p>Define the maximum number of air ticket requests allowed per policy cycle to control usage</p>
+                </div>
+            </div>
+
+            <h3>Policy Configuration Requirements</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Configuration Item</th>
+                        <th>Description</th>
+                        <th>Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Policy Name</td><td>Unique identifier for the air ticket policy</td><td>Yes</td></tr>
+                    <tr><td>Allowance Amount</td><td>Per-cycle allowance in currency units</td><td>Yes</td></tr>
+                    <tr><td>Eligible People</td><td>Employee only or including family/dependents</td><td>Yes</td></tr>
+                    <tr><td>Request Timing</td><td>When employees can submit requests</td><td>Yes</td></tr>
+                    <tr><td>Renewal Cycle</td><td>Frequency of allowance renewal (annual, bi-annual, etc.)</td><td>Yes</td></tr>
+                    <tr><td>Request Limit</td><td>Maximum number of requests per cycle</td><td>Yes</td></tr>
+                    <tr><td>Redemption Options</td><td>Reimbursement, encashment, and/or ticket booking</td><td>Yes</td></tr>
+                    <tr><td>Employee Selection</td><td>Which employees are eligible for this policy</td><td>Yes</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Key Constraints & Rules</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Constraint</th>
+                        <th>Impact</th>
+                        <th>Workaround</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>One policy per employee</td><td>Employees cannot be assigned to multiple policies</td><td>Create policies for different hierarchy levels</td></tr>
+                    <tr><td>Cannot edit active policies</td><td>Policies with existing requests cannot be modified</td><td>Create new policy for future changes</td></tr>
+                    <tr><td>Allowance is collective</td><td>Dependents share the allowance, not individual amounts</td><td>Plan allowance amounts accordingly</td></tr>
+                    <tr><td>Request limit enforcement</td><td>Employees limited to set number of requests per cycle</td><td>Configure limits based on organizational needs</td></tr>
+                    <tr><td>Encashment restrictions</td><td>Employees cannot encash if taking leaves</td><td>Plan encashment timing around leave schedules</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 3: User Journey Guide -->
+        <div class="section">
+            <h2>User Journey Guide</h2>
+
+            <h3>Journey Overview</h3>
+            <p>The Air Ticket user journey encompasses both administrative setup and employee usage. This guide walks through the complete end-to-end flow from policy creation to request fulfillment, showing how different user roles interact with the system.</p>
+
+            <p>The Air Ticket journey follows two parallel paths: the administrative path where HR/managers create and manage policies, and the employee path where workers submit and track requests. Both paths are interconnected through approval workflows and policy enforcement rules.</p>
+
+            <div class="step-container">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Policy Creation & Configuration</h4>
+                        <p>HR administrator navigates to Settings > Company > Air ticket policies and creates a new policy by entering the policy name, allowance amount, eligible people count, request timing, renewal cycle, request limits, and redemption options</p>
+                        <p><span class="badge badge-info">HR Administrator / Manager</span></p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Employee Assignment</h4>
+                        <p>Administrator selects which employees are eligible for the newly created policy. Employees are assigned based on criteria such as seniority level, location, or organizational hierarchy. Each employee can only be assigned to one air ticket policy</p>
+                        <p><span class="badge badge-info">HR Administrator</span></p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Policy Activation & Communication</h4>
+                        <p>The policy is reviewed and finalized, making it active in the system. Employees are notified that air ticket request options are now available to them through the mobile app</p>
+                        <p><span class="badge badge-info">HR Administrator / System</span></p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Employee Request Submission</h4>
+                        <p>Employees access the Work section in the Bayzat mobile app, click 'Request Air Ticket', and choose from three options: Reimbursement (for tickets already purchased), Ticket Booking (HR/Admin handles purchase), or Encashment (convert allowance to cash). They provide required details and submit the request</p>
+                        <p><span class="badge badge-info">Employee</span></p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Request Review & Approval</h4>
+                        <p>The submitted request flows through the approval workflow. For ticket booking requests, HR/Admin reviews and coordinates with the employee on ticket details. For reimbursement and encashment requests, approvers review and approve based on policy rules and available allowance</p>
+                        <p><span class="badge badge-info">HR Administrator / Approver</span></p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Request Fulfillment & Tracking</h4>
+                        <p>Once approved, the request is fulfilled according to its type: reimbursement is processed as payment, ticket booking is completed by HR, or encashment is processed through Bayzat Payroll. Employees can view the status of all their requests in the mobile app</p>
+                        <p><span class="badge badge-info">HR Administrator / System / Finance</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Success Indicators</h3>
+            <ul>
+                <li>Policies created with clear eligibility and allowance parameters</li>
+                <li>Employees able to view and submit requests through the mobile app</li>
+                <li>Requests processed through appropriate approval workflows</li>
+                <li>Employees receiving their benefits through their chosen redemption method</li>
+                <li>HR maintaining visibility into all requests and spending</li>
+            </ul>
+        </div>
+
+        <!-- Section 4: Prerequisites -->
+        <div class="section">
+            <h2>Prerequisites</h2>
+
+            <p>Before implementing Air Ticket in your organization, ensure you have the necessary access, data, and system configurations in place.</p>
+
+            <h3>Access Requirements</h3>
+            <p>To set up air ticket policies, you must have HR administrator or manager access to the Bayzat platform with permissions to navigate Settings > Company > Air ticket policies. Employees need access to the Bayzat mobile app with the Work section enabled. The air ticket request options must be enabled by the admin before employees can submit requests.</p>
+
+            <h3>Data Requirements</h3>
+            <p>Organizations must have employee records in the system with defined seniority levels or organizational hierarchy if policies will vary by these criteria. For ticket booking requests, employees must be able to share relevant travel details with the HR team. For encashment requests, the system must have access to employee leave records to verify eligibility.</p>
+
+            <h3>System Configuration</h3>
+            <p>Bayzat Payroll must be configured if you plan to use encashment as a redemption option. Approval workflows must be set up for air ticket requests. The mobile app must be deployed to employees with the Work section accessible. For automated encashment workflows, the Workflows feature must be enabled and configured.</p>
+
+            <h3>Pre-Implementation Checklist</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>HR administrator access to Settings</td><td>☐</td><td>Required to create and manage policies</td></tr>
+                    <tr><td>Employee records in system</td><td>☐</td><td>With seniority/hierarchy data if using variable allowances</td></tr>
+                    <tr><td>Bayzat mobile app deployed</td><td>☐</td><td>With Work section enabled for employees</td></tr>
+                    <tr><td>Approval workflows configured</td><td>☐</td><td>For air ticket request approvals</td></tr>
+                    <tr><td>Bayzat Payroll configured</td><td>☐</td><td>Required if using encashment option</td></tr>
+                    <tr><td>Leave management system active</td><td>☐</td><td>Needed to verify encashment eligibility</td></tr>
+                    <tr><td>Workflows feature enabled</td><td>☐</td><td>For automated encashment (optional)</td></tr>
+                    <tr><td>Policy parameters defined</td><td>☐</td><td>Allowance amounts, cycles, limits, redemption options</td></tr>
+                </tbody>
+            </table>
+
+            <div class="info-box warning">
+                <h4>Policy Enablement Required</h4>
+                <p>Air ticket request options must be explicitly enabled by the admin before employees can submit any requests. Without this enablement, the 'Request Air Ticket' option will not appear in the mobile app.</p>
+            </div>
+
+            <div class="info-box warning">
+                <h4>Encashment Leave Restriction</h4>
+                <p>Employees cannot request encashment of their air ticket allowance if they are currently taking leaves. Plan encashment timing accordingly and communicate this restriction to employees.</p>
+            </div>
+
+            <div class="info-box warning">
+                <h4>One Policy Per Employee</h4>
+                <p>Each employee can be assigned to only one air ticket policy. Ensure your policy structure accounts for different employee groups before assigning employees.</p>
+            </div>
+
+            <div class="info-box success">
+                <h4>Tip: Plan Policy Structure Early</h4>
+                <p>Define your policy structure (by seniority, location, role, etc.) before creating policies. This prevents the need to reassign employees later, which requires creating new policies.</p>
+            </div>
+        </div>
+
+        <!-- Section 5: Initial Setup -->
+        <div class="section">
+            <h2>Initial Setup</h2>
+
+            <p>Set up air ticket policies and configure the system to enable employees to request air tickets. This section covers the one-time configuration process for HR administrators.</p>
+
+            <h3>Initial Configuration</h3>
+            <p>Before employees can request air tickets, HR administrators must create and configure air ticket allowance policies. This involves defining policy parameters, eligibility criteria, and redemption options.</p>
+
+            <h3>Step-by-Step Setup</h3>
+
+            <div class="step-container">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Navigate to Air Ticket Policy Settings</h4>
+                        <p>Access the air ticket policy creation section from the admin dashboard.</p>
+                        <ul>
+                            <li>Log in to Bayzat admin dashboard</li>
+                            <li>Navigate to Settings menu</li>
+                            <li>Select Company section</li>
+                            <li>Click on Air ticket policies</li>
+                            <li>Click 'Add New' button</li>
+                        </ul>
+                        <p><strong>Success:</strong> Policy creation form is displayed with fields for policy name and allowance amount</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Enter Basic Policy Details</h4>
+                        <p>Configure the fundamental parameters of the air ticket policy.</p>
+                        <ul>
+                            <li>Enter a descriptive policy name</li>
+                            <li>Define the allowance amount per cycle</li>
+                            <li>Specify the number of eligible people (employee only or including family members)</li>
+                            <li>Review entered information for accuracy</li>
+                        </ul>
+                        <p><strong>Success:</strong> All required fields are populated with valid values</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Configure Policy Behavior</h4>
+                        <p>Set the timing, renewal cycle, and request limits for the policy.</p>
+                        <ul>
+                            <li>Define request timing (when employees can request tickets)</li>
+                            <li>Set policy renewal cycle (annual, bi-annual, etc.)</li>
+                            <li>Specify the number of allowed requests per cycle</li>
+                            <li>Configure any seniority or location-based variations if applicable</li>
+                        </ul>
+                        <p><strong>Success:</strong> Policy behavior parameters are configured and saved</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Choose Redemption Options</h4>
+                        <p>Select which redemption methods employees can use for their air ticket allowance.</p>
+                        <ul>
+                            <li>Enable Reimbursement option (employees submit receipts for reimbursement)</li>
+                            <li>Enable Ticket Booking option (HR/Admin books tickets on behalf of employees)</li>
+                            <li>Enable Encashment option (employees receive cash equivalent)</li>
+                            <li>Note: Encashment is only available if the employee is not taking any leaves</li>
+                        </ul>
+                        <p><strong>Success:</strong> At least one redemption option is selected</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Select Eligible Employees</h4>
+                        <p>Assign the policy to specific employees or employee groups.</p>
+                        <ul>
+                            <li>Click on 'Select Eligible Employees' section</li>
+                            <li>Choose individual employees or use filters (department, location, seniority level)</li>
+                            <li>Note: Each employee can only be assigned to one air ticket policy</li>
+                            <li>Review the list of selected employees</li>
+                            <li>Confirm selection</li>
+                        </ul>
+                        <p><strong>Success:</strong> Eligible employees are selected and displayed in the policy configuration</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>Review and Finalize Policy</h4>
+                        <p>Review all policy settings and activate the policy.</p>
+                        <ul>
+                            <li>Review policy name and allowance amount</li>
+                            <li>Confirm policy behavior settings</li>
+                            <li>Verify redemption options are correctly configured</li>
+                            <li>Check eligible employees list</li>
+                            <li>Click 'Save' or 'Activate' button to finalize the policy</li>
+                        </ul>
+                        <p><strong>Success:</strong> Policy is created and activated; employees can now request air tickets</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Navigation & Access -->
+        <div class="section">
+            <h2>Navigation & Access</h2>
+
+            <p>Learn how to access the air ticket feature through different methods depending on your role. Employees use the mobile app to request tickets, while HR administrators manage policies through the web dashboard.</p>
+
+            <h3>How to Access</h3>
+            <p>Air ticket features are accessed through different interfaces based on user role. Employees access the feature via the Bayzat mobile app, while administrators use the web dashboard.</p>
+
+            <div class="nav-path">
+                <h4>Employee Air Ticket Request (Mobile App)</h4>
+                <p><span class="badge badge-info">Employee</span></p>
+                <ol>
+                    <li>Open Bayzat mobile app</li>
+                    <li>Navigate to Work section</li>
+                    <li>View existing air ticket request status on the second screen</li>
+                    <li>Click 'Request Air Ticket' button</li>
+                    <li>Choose from three options: Reimbursement, Ticket Booking, or Encashment</li>
+                </ol>
+            </div>
+
+            <div class="nav-path">
+                <h4>Air Ticket Policy Management (Web Dashboard)</h4>
+                <p><span class="badge badge-info">HR Administrator</span></p>
+                <ol>
+                    <li>Log in to Bayzat admin dashboard</li>
+                    <li>Navigate to Settings menu</li>
+                    <li>Select Company section</li>
+                    <li>Click on Air ticket policies</li>
+                    <li>View, create, or edit policies</li>
+                </ol>
+            </div>
+
+            <div class="nav-path">
+                <h4>Air Ticket Encashment Workflow Setup</h4>
+                <p><span class="badge badge-info">HR/Payroll Administrator</span></p>
+                <ol>
+                    <li>Log in to Bayzat admin dashboard</li>
+                    <li>Navigate to Workflows in Settings</li>
+                    <li>Create a new workflow</li>
+                    <li>Select Air Tickets Auto Encashment recipe</li>
+                    <li>Configure trigger time and criteria</li>
+                    <li>Save and activate workflow</li>
+                </ol>
+            </div>
+
+            <div class="nav-path">
+                <h4>Air Ticket Request Management (Finance Menu)</h4>
+                <p><span class="badge badge-info">HR/Finance Administrator</span></p>
+                <ol>
+                    <li>Log in to Bayzat admin dashboard</li>
+                    <li>Navigate to Finance menu</li>
+                    <li>Access Air Ticket admin view</li>
+                    <li>View and manage employee air ticket requests</li>
+                    <li>Track request status (Pending, Approved, etc.)</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Section 7: Core Tasks -->
+        <div class="section">
+            <h2>Core Tasks</h2>
+
+            <p>Master the primary workflows for managing air tickets. This section covers the main tasks that employees and administrators perform regularly.</p>
+
+            <h3>Common Workflows</h3>
+            <p>Air ticket management involves three primary workflows: employees requesting tickets through the mobile app, administrators managing policies and approvals, and automated encashment processing through workflows.</p>
+
+            <div class="task-card">
+                <h4>Task 1: Request Air Ticket as Employee</h4>
+                <p>Submit an air ticket request through the mobile app using one of three available methods.</p>
+                <p><strong>Prerequisites:</strong></p>
+                <ul>
+                    <li>Active Bayzat mobile app account</li>
+                    <li>Air ticket policy assigned by HR administrator</li>
+                    <li>Sufficient allowance balance for the request type</li>
+                </ul>
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Open Bayzat mobile app</li>
+                    <li>Navigate to Work section</li>
+                    <li>Click 'Request Air Ticket' button</li>
+                    <li>Choose request type: Reimbursement, Ticket Booking, or Encashment</li>
+                    <li>For Reimbursement: Provide ticket details and upload receipt</li>
+                    <li>For Ticket Booking: Share relevant travel details with HR team</li>
+                    <li>For Encashment: Confirm you are not taking any leaves</li>
+                    <li>Submit request for approval</li>
+                    <li>Track request status on the second screen</li>
+                </ol>
+            </div>
+
+            <div class="task-card">
+                <h4>Task 2: Create and Activate Air Ticket Policy</h4>
+                <p>Set up a new air ticket allowance policy for a group of employees.</p>
+                <p><strong>Prerequisites:</strong></p>
+                <ul>
+                    <li>HR administrator access to Bayzat dashboard</li>
+                    <li>Clear understanding of policy requirements (allowance amount, eligible employees)</li>
+                    <li>Decision on redemption options to enable</li>
+                </ul>
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Log in to Bayzat admin dashboard</li>
+                    <li>Navigate to Settings > Company > Air ticket policies</li>
+                    <li>Click 'Add New' button</li>
+                    <li>Enter policy name and allowance amount</li>
+                    <li>Specify number of eligible people (employee only or with family)</li>
+                    <li>Define request timing and renewal cycle</li>
+                    <li>Set number of allowed requests per cycle</li>
+                    <li>Select redemption options (Reimbursement, Booking, Encashment)</li>
+                    <li>Select eligible employees</li>
+                    <li>Review all settings</li>
+                    <li>Click 'Save' to activate policy</li>
+                    <li>Verify employees can now request tickets</li>
+                </ol>
+            </div>
+
+            <div class="task-card">
+                <h4>Task 3: Set Up Automatic Air Ticket Encashment Workflow</h4>
+                <p>Configure an automated workflow to generate air ticket encashment requests at specified times.</p>
+                <p><strong>Prerequisites:</strong></p>
+                <ul>
+                    <li>HR/Payroll administrator access</li>
+                    <li>Bayzat Payroll application enabled</li>
+                    <li>Understanding of encashment criteria and timing requirements</li>
+                </ul>
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Log in to Bayzat admin dashboard</li>
+                    <li>Navigate to Workflows in Settings</li>
+                    <li>Click 'Create New Workflow'</li>
+                    <li>Select 'Air Tickets Auto Encashment' recipe</li>
+                    <li>Define workflow trigger date and time</li>
+                    <li>Note: Time is based on UAE or KSA account location</li>
+                    <li>Set encashment criteria</li>
+                    <li>Choose application: Bayzat Payroll</li>
+                    <li>Select encashment request type (fully approved or requiring approvals)</li>
+                    <li>Assign employee for the request</li>
+                    <li>Save workflow</li>
+                    <li>Verify workflow activation in activity log</li>
+                </ol>
+            </div>
+
+            <div class="task-card">
+                <h4>Task 4: Review and Approve Air Ticket Requests</h4>
+                <p>Process and approve employee air ticket requests submitted through the system.</p>
+                <p><strong>Prerequisites:</strong></p>
+                <ul>
+                    <li>HR/Finance administrator access</li>
+                    <li>Air ticket requests pending approval</li>
+                    <li>Authority to approve requests based on company policy</li>
+                </ul>
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li>Log in to Bayzat admin dashboard</li>
+                    <li>Navigate to Finance menu</li>
+                    <li>Access Air Ticket admin view</li>
+                    <li>View list of pending air ticket requests</li>
+                    <li>Click on individual request to review details</li>
+                    <li>For Reimbursement requests: Verify receipt and amount</li>
+                    <li>For Ticket Booking requests: Confirm travel details with employee if needed</li>
+                    <li>For Encashment requests: Verify employee eligibility and leave status</li>
+                    <li>Approve or reject request based on policy and allowance balance</li>
+                    <li>Add comments if necessary</li>
+                    <li>Submit approval decision</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Section 8: Ongoing Management -->
+        <div class="section">
+            <h2>Ongoing Management</h2>
+
+            <p>Manage air ticket policies and requests on an ongoing basis. This section covers recurring activities and maintenance tasks required to keep the air ticket system running smoothly.</p>
+
+            <h3>Ongoing Tasks</h3>
+            <p>Regular management activities ensure that air ticket policies remain effective, employees can access their benefits, and requests are processed timely.</p>
+
+            <div class="task-card">
+                <h4>Review Pending Air Ticket Requests</h4>
+                <p><span class="badge badge-info">Daily</span> | HR/Finance Administrator</p>
+                <p>Check for new air ticket requests submitted by employees and process them according to company policy.</p>
+                <ol>
+                    <li>Log in to Bayzat admin dashboard daily</li>
+                    <li>Navigate to Finance menu > Air Ticket admin view</li>
+                    <li>Review list of pending requests</li>
+                    <li>Prioritize requests by submission date</li>
+                    <li>Process each request (approve, reject, or request more information)</li>
+                    <li>Send notifications to employees about request status</li>
+                    <li>Maintain request processing timeline (typically 2-5 business days)</li>
+                </ol>
+            </div>
+
+            <div class="task-card">
+                <h4>Monitor Allowance Usage and Balances</h4>
+                <p><span class="badge badge-info">Weekly</span> | HR Administrator</p>
+                <p>Track employee allowance consumption to ensure compliance with policy limits and identify any issues.</p>
+                <ol>
+                    <li>Access Settings > Company > Air ticket policies</li>
+                    <li>Review each active policy</li>
+                    <li>Check allowance balance for each eligible employee</li>
+                    <li>Identify employees approaching or exceeding allowance limits</li>
+                    <li>Flag any policy violations for investigation</li>
+                    <li>Prepare summary report of usage trends</li>
+                    <li>Share insights with management if needed</li>
+                </ol>
+            </div>
+
+            <div class="task-card">
+                <h4>Process Policy Renewals</h4>
+                <p><span class="badge badge-info">Monthly</span> | HR Administrator</p>
+                <p>Reset allowance balances and manage policy renewals according to configured renewal cycles.</p>
+                <ol>
+                    <li>Track policy renewal dates</li>
+                    <li>Before renewal date, review policy performance and usage data</li>
+                    <li>Verify renewal cycle settings are correct</li>
+                    <li>Ensure allowance amounts are appropriate for next cycle</li>
+                    <li>Confirm eligible employees list is current</li>
+                    <li>Process renewal (system may auto-renew based on configuration)</li>
+                    <li>Verify allowance balances are reset for all employees</li>
+                    <li>Communicate renewal to employees if needed</li>
+                </ol>
+            </div>
+
+            <h3>Air Ticket Management Review Schedule</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Frequency</th>
+                        <th>Responsible Role</th>
+                        <th>Time Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Review Pending Requests</td><td>Daily</td><td>HR/Finance Admin</td><td>15-30 min</td></tr>
+                    <tr><td>Monitor Allowance Usage</td><td>Weekly</td><td>HR Admin</td><td>30-45 min</td></tr>
+                    <tr><td>Update Employee Assignments</td><td>As-needed</td><td>HR Admin</td><td>15-20 min per change</td></tr>
+                    <tr><td>Process Policy Renewals</td><td>Monthly/Quarterly</td><td>HR Admin</td><td>30-60 min</td></tr>
+                    <tr><td>Audit Requests & Approvals</td><td>Monthly</td><td>HR/Finance Admin</td><td>1-2 hours</td></tr>
+                    <tr><td>Monitor Workflow Execution</td><td>Weekly</td><td>HR/Payroll Admin</td><td>20-30 min</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 9: Troubleshooting -->
+        <div class="section">
+            <h2>Troubleshooting</h2>
+
+            <p>This section addresses common issues you may encounter when using the Air Ticket feature, along with practical solutions and prevention strategies.</p>
+
+            <div class="troubleshooting-item">
+                <h4>Unable to Request Air Ticket</h4>
+                <p><strong>Symptoms:</strong></p>
+                <ul>
+                    <li>Request Air Ticket button is not visible or clickable</li>
+                    <li>Error message appears when attempting to submit request</li>
+                    <li>Mobile app crashes when accessing Air Ticket section</li>
+                </ul>
+                <p><strong>Cause:</strong> Air ticket request options may not be enabled by your administrator, or you may not have the required permissions.</p>
+                <p><strong>Solution:</strong> Contact your HR administrator to verify that air ticket request options are enabled in your organization's settings. Ensure your user account has the necessary permissions to submit air ticket requests.</p>
+                <p><strong>Prevention:</strong> Administrators should enable air ticket request options during initial setup and verify permissions are correctly assigned to all eligible employees.</p>
+            </div>
+
+            <div class="troubleshooting-item">
+                <h4>Encashment Request Rejected</h4>
+                <p><strong>Symptoms:</strong></p>
+                <ul>
+                    <li>Encashment option is greyed out or unavailable</li>
+                    <li>Error message: 'Cannot process encashment at this time'</li>
+                    <li>Encashment request is automatically declined</li>
+                </ul>
+                <p><strong>Cause:</strong> Encashment is only possible if the employee is not taking any leaves. If an employee has active or pending leave requests, encashment cannot be processed.</p>
+                <p><strong>Solution:</strong> Ensure all leave requests are completed or cancelled before attempting to request encashment. Check your leave calendar to confirm no overlapping leave periods exist.</p>
+                <p><strong>Prevention:</strong> Plan encashment requests during periods when no leaves are scheduled. Coordinate with your HR team to ensure leave and encashment requests do not overlap.</p>
+            </div>
+
+            <div class="troubleshooting-item">
+                <h4>Cannot Edit Active Policy</h4>
+                <p><strong>Symptoms:</strong></p>
+                <ul>
+                    <li>Edit button is disabled for policy</li>
+                    <li>Error message: 'Cannot modify active policy with existing requests'</li>
+                    <li>Policy changes do not save</li>
+                </ul>
+                <p><strong>Cause:</strong> Active policies cannot be edited once ticket requests are raised. This prevents inconsistencies in policy terms after employees have already submitted requests.</p>
+                <p><strong>Solution:</strong> Create a new policy with the desired changes and assign it to employees going forward. Archive or deactivate the old policy if no longer needed.</p>
+                <p><strong>Prevention:</strong> Finalize all policy details before activating and communicating to employees. Plan policy changes during renewal cycles to minimize disruption.</p>
+            </div>
+
+            <div class="troubleshooting-item">
+                <h4>Request Exceeds Allowance Amount</h4>
+                <p><strong>Symptoms:</strong></p>
+                <ul>
+                    <li>Error: 'Request amount exceeds allocated allowance'</li>
+                    <li>Cannot submit request for desired ticket amount</li>
+                    <li>System prevents booking or reimbursement</li>
+                </ul>
+                <p><strong>Cause:</strong> Employees cannot request tickets exceeding their allotted allowance. The system enforces allowance limits to control costs.</p>
+                <p><strong>Solution:</strong> Reduce the ticket amount to match available allowance, or request partial reimbursement/encashment. Contact HR to discuss allowance adjustments if needed.</p>
+                <p><strong>Prevention:</strong> Review your available allowance before submitting requests. Plan ticket bookings within allocated limits.</p>
+            </div>
+
+            <div class="troubleshooting-item">
+                <h4>Workflow Encashment Not Triggering</h4>
+                <p><strong>Symptoms:</strong></p>
+                <ul>
+                    <li>Scheduled encashment workflow did not execute</li>
+                    <li>No encashment request created at scheduled time</li>
+                    <li>Workflow shows as active but no activity log entries</li>
+                </ul>
+                <p><strong>Cause:</strong> Workflow trigger time may be incorrectly configured, or the workflow may not have been properly saved. Time selection is based on UAE or KSA account location.</p>
+                <p><strong>Solution:</strong> Verify workflow configuration: check trigger date/time, ensure correct time zone is selected, and confirm the workflow is in active status. Re-save the workflow if needed.</p>
+                <p><strong>Prevention:</strong> Test workflows in a non-production environment first. Verify trigger times account for your organization's time zone. Monitor workflow activity logs regularly.</p>
+            </div>
+
+            <h3>Common Issues Summary</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Issue</th>
+                        <th>Severity</th>
+                        <th>Resolution Time</th>
+                        <th>Requires Admin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Unable to Request Air Ticket</td><td>High</td><td>5-15 minutes</td><td>Yes</td></tr>
+                    <tr><td>Encashment Request Rejected</td><td>Medium</td><td>1-2 days</td><td>No</td></tr>
+                    <tr><td>Cannot Edit Active Policy</td><td>Medium</td><td>Varies</td><td>Yes</td></tr>
+                    <tr><td>Employee Assigned to Multiple Policies</td><td>High</td><td>15-30 minutes</td><td>Yes</td></tr>
+                    <tr><td>Request Exceeds Allowance</td><td>Low</td><td>Immediate</td><td>No</td></tr>
+                    <tr><td>Workflow Encashment Not Triggering</td><td>High</td><td>30-60 minutes</td><td>Yes</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 10: Best Practices -->
+        <div class="section">
+            <h2>Best Practices</h2>
+
+            <p>Follow these recommendations to maximize the effectiveness of your Air Ticket program and ensure smooth operations for both administrators and employees.</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon">📅</div>
+                    <h4>Plan Policy Changes During Renewal Cycles</h4>
+                    <p>Since active policies cannot be edited once requests are raised, plan all policy modifications to align with your renewal cycles.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">💬</div>
+                    <h4>Communicate Allowance Amounts Clearly</h4>
+                    <p>Ensure employees understand their air ticket allowance amount and that it applies collectively to listed dependents, not individually.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🎯</div>
+                    <h4>Set Realistic Request Limits</h4>
+                    <p>Define the maximum number of requests per cycle based on your organization's needs and budget.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🔄</div>
+                    <h4>Enable All Redemption Options</h4>
+                    <p>Offer multiple redemption options (reimbursement, encashment, ticket booking) to accommodate different employee preferences.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">📊</div>
+                    <h4>Monitor Workflow Activity Regularly</h4>
+                    <p>For automated encashment workflows, regularly review activity logs to ensure workflows are triggering as expected.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">✈️</div>
+                    <h4>Coordinate Leave and Encashment Timing</h4>
+                    <p>Since encashment is only possible when employees are not taking leaves, help employees plan encashment requests during periods without scheduled leave.</p>
+                </div>
+            </div>
+
+            <div class="info-box success">
+                <h4>Tip: Test Workflows Before Full Deployment</h4>
+                <p>Before deploying Air Tickets Auto Encashment workflows organization-wide, test them in a non-production environment or with a small employee group. This helps identify configuration issues before they affect all employees.</p>
+            </div>
+
+            <div class="info-box success">
+                <h4>Tip: Document Your Policy Structure</h4>
+                <p>Create clear documentation of your air ticket policies, including allowance amounts, eligibility criteria, renewal cycles, and redemption options. Share this with employees and HR staff to ensure consistent understanding.</p>
+            </div>
+
+            <div class="info-box success">
+                <h4>Tip: Use Seniority-Based Policies</h4>
+                <p>Consider creating multiple policies based on employee seniority or country of residence. This allows you to provide differentiated benefits while maintaining fairness and compliance with local regulations.</p>
+            </div>
+        </div>
+
+        <!-- Section 11: Support Resources -->
+        <div class="section">
+            <h2>Support Resources</h2>
+
+            <p>Find answers to frequently asked questions, access key terminology, and discover additional resources to support your use of the Air Ticket feature.</p>
+
+            <h3>Frequently Asked Questions</h3>
+
+            <div class="task-card">
+                <h4>What are the three ways employees can request air tickets?</h4>
+                <p>Employees can request air tickets through three methods: (1) Reimbursement - submit receipts for reimbursement of ticket costs, (2) Ticket Booking - request HR/Admin to book tickets on their behalf, or (3) Encashment - receive cash equivalent of their air ticket allowance.</p>
+            </div>
+
+            <div class="task-card">
+                <h4>Can an employee be assigned to multiple air ticket policies?</h4>
+                <p>No, employees cannot be assigned to multiple air ticket policies. Each employee can only have one active air ticket policy. If you need to change an employee's policy, remove them from the current policy before assigning them to a new one.</p>
+            </div>
+
+            <div class="task-card">
+                <h4>What happens if an employee's ticket request exceeds their allowance?</h4>
+                <p>The system will not allow employees to request tickets exceeding their allotted allowance. Employees must either reduce the ticket amount to match their available allowance or contact HR to discuss allowance adjustments.</p>
+            </div>
+
+            <div class="task-card">
+                <h4>When can employees request encashment of their air ticket allowance?</h4>
+                <p>Encashment is only possible if the employee is not taking any leaves. Employees should ensure they have no active or pending leave requests before submitting an encashment request.</p>
+            </div>
+
+            <div class="task-card">
+                <h4>Can I edit an air ticket policy after employees have submitted requests?</h4>
+                <p>No, active policies cannot be edited once ticket requests are raised. To make changes to policy terms, you must create a new policy with the desired modifications and assign it to employees going forward.</p>
+            </div>
+
+            <div class="task-card">
+                <h4>How do I set up automated encashment requests?</h4>
+                <p>Use the Air Tickets Auto Encashment workflow feature in Settings > Workflows. Create a new workflow, select the Air Tickets Auto Encashment recipe, define your trigger time and criteria, and activate the workflow. Encashment requests will be automatically generated based on your specified schedule.</p>
+            </div>
+
+            <h3>Getting Help</h3>
+            <ul>
+                <li>Contact your HR Administrator for policy questions and request support</li>
+                <li>Bayzat Support Team - Available for technical issues and feature questions</li>
+                <li>Knowledge Base - Access additional articles and guides</li>
+                <li>In-app Help - Contextual help available within the Bayzat platform</li>
+            </ul>
+        </div>
+
+        <!-- Section 12: Glossary -->
+        <div class="section">
+            <h2>Glossary of Terms</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Definition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Air Ticket Allowance</strong></td><td>A monetary benefit provided by the organization to employees for purchasing air tickets for travel. The allowance amount can vary by employee seniority or country of residence and is set through air ticket policies.</td></tr>
+                    <tr><td><strong>Air Ticket Policy</strong></td><td>An organizational policy that defines air ticket allowance amounts, eligibility criteria, renewal cycles, request limits, and redemption options. Employees are assigned to policies to determine their air ticket benefits.</td></tr>
+                    <tr><td><strong>Allowance Cycle</strong></td><td>The time period during which an employee's air ticket allowance is valid and can be used. After the cycle ends, the allowance renews based on the policy's renewal settings.</td></tr>
+                    <tr><td><strong>Encashment</strong></td><td>A redemption option that allows employees to receive the cash equivalent of their air ticket allowance instead of using it for actual ticket purchases. Encashment is only available when the employee is not taking any leaves.</td></tr>
+                    <tr><td><strong>Eligible Employees</strong></td><td>The group of employees who are assigned to a specific air ticket policy and therefore entitled to its benefits. Eligibility can be based on role, department, seniority level, or other organizational criteria.</td></tr>
+                    <tr><td><strong>Encashment Workflow</strong></td><td>An automated workflow that generates air ticket encashment requests on a scheduled basis. Administrators can configure trigger times, criteria, and request types to automate the encashment process.</td></tr>
+                    <tr><td><strong>Reimbursement</strong></td><td>A redemption option that allows employees to purchase air tickets themselves and then submit receipts to the organization for reimbursement of the cost.</td></tr>
+                    <tr><td><strong>Request Limit</strong></td><td>The maximum number of air ticket requests an employee can submit during a single allowance cycle. Organizations can set different limits based on their policies and budget.</td></tr>
+                    <tr><td><strong>Ticket Booking</strong></td><td>A redemption option where employees request the HR or Admin team to book air tickets on their behalf. Employees provide travel details, and HR arranges the booking.</td></tr>
+                    <tr><td><strong>Workflow Trigger</strong></td><td>The scheduled date and time that initiates an automated encashment workflow. Triggers are based on the organization's account location (UAE or KSA) and are set at hour-level precision.</td></tr>
+                    <tr><td><strong>Dependent</strong></td><td>A family member of an employee who is eligible to be included in the employee's air ticket allowance. The allowance amount applies collectively to the employee and all listed dependents.</td></tr>
+                    <tr><td><strong>Policy Renewal</strong></td><td>The process by which an air ticket allowance resets at the end of a cycle, allowing employees to use a new allowance amount. Renewal cycles can be annual, semi-annual, or based on other organizational schedules.</td></tr>
+                    <tr><td><strong>Request Status</strong></td><td>The current state of an air ticket request, which employees can view in the mobile app. Status may include submitted, approved, rejected, or completed.</td></tr>
+                    <tr><td><strong>Redemption Option</strong></td><td>The method by which an employee can use their air ticket allowance, including reimbursement, ticket booking, or encashment.</td></tr>
+                    <tr><td><strong>Work Section</strong></td><td>The area in the Bayzat mobile app where employees can access and manage their air ticket requests. This is where employees view existing requests and submit new ones.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>Generated by Bayzat Documentation System</p>
+        <p>Last updated: 2026-01-09</p>
+    </footer>
+</body>
+</html>
