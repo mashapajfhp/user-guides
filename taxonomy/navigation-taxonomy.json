@@ -1,12 +1,17 @@
 {
   "metadata": {
     "created_at": "2026-01-08",
-    "updated_at": "2026-01-08",
+    "updated_at": "2026-01-09",
     "platform": "Bayzat HR Platform",
     "base_url": "https://app.bayzat.com",
     "purpose": "Complete system of truth for validation runner reference",
-    "version": "1.2",
+    "version": "1.3",
     "changelog": [
+      {
+        "version": "1.3",
+        "date": "2026-01-09",
+        "changes": ["Enhanced Home section with detailed Newsfeed features (widgets, post interactions, celebrations, events) and Announcements features (tabs, rich text editor, draft management)"]
+      },
       {
         "version": "1.2",
         "date": "2026-01-08",
@@ -436,12 +441,91 @@
         "Newsfeed": {
           "url": "/enterprise/dashboard/",
           "elements": {
-            "heading": "Newsfeed",
-            "action_buttons": ["Create post"],
-            "components": {
-              "post_input": "text_area",
-              "post_list": "feed_items",
-              "post_actions": ["Like", "Comment", "Share"]
+            "page_header": {
+              "type": "data_section",
+              "description": "Welcome greeting with user name"
+            },
+            "onboarding_banner": {
+              "type": "data_section",
+              "description": "Welcome to Bayzat banner with Continue onboarding link for health insurance setup"
+            },
+            "start_a_post": {
+              "type": "action_card",
+              "description": "Input area to create new posts with 'Write what's on your mind' prompt"
+            },
+            "post_feed": {
+              "type": "data_section",
+              "description": "Scrollable feed of posts with author logo, name, timestamp, content, hashtags, and employee image"
+            },
+            "post_actions": {
+              "like_button": {
+                "type": "action_card",
+                "description": "Button to like a post"
+              },
+              "views_count": {
+                "type": "action_card",
+                "description": "Button showing number of views on a post"
+              },
+              "comments_count": {
+                "type": "action_card",
+                "description": "Button showing number of comments on a post"
+              },
+              "write_comment": {
+                "type": "action_card",
+                "description": "Input to add a comment on a post"
+              },
+              "post_menu": {
+                "type": "action_card",
+                "description": "Kebab menu button on each post for more actions"
+              }
+            },
+            "widgets": {
+              "explore_bayzat": {
+                "type": "summary_card",
+                "description": "Feature discovery card with Explore all features link and feature spotlight carousel"
+              },
+              "your_tasks": {
+                "type": "summary_card",
+                "description": "Task summary widget",
+                "tabs": ["Assigned to me", "Created by me"],
+                "counts": ["Due today", "Due in 7 days", "Overdue"],
+                "action_button": "View all tasks"
+              },
+              "employees_directory": {
+                "type": "summary_card",
+                "description": "Shows employee avatars with 'See all X employees' link"
+              },
+              "expiring_documents": {
+                "type": "summary_card",
+                "description": "Document expiry tracker with monthly counts",
+                "tabs": ["Residency Visa", "Passport"],
+                "action_link": "View all document expiries"
+              },
+              "invite_employees": {
+                "type": "summary_card",
+                "description": "Shows registration progress bar, benefits list, and Invite employees button",
+                "action_button": "Invite employees"
+              },
+              "missing_information": {
+                "type": "summary_card",
+                "description": "Shows count of employees with missing info and 'Find out who' link"
+              },
+              "active_invitations": {
+                "type": "summary_card",
+                "description": "Shows count of pending invitations and 'Invite employees' link"
+              },
+              "upcoming_celebrations": {
+                "type": "summary_card",
+                "description": "Shows birthdays and work anniversaries",
+                "tabs": ["Birthdays", "Work Anniversaries"],
+                "features": ["Create a post option"],
+                "action_button": "View all Birthdays"
+              },
+              "upcoming_events": {
+                "type": "summary_card",
+                "description": "Shows new hires and leaving employees",
+                "tabs": ["New Hires", "Leaving"]
+              }
             }
           }
         },
@@ -449,10 +533,99 @@
           "url": "/enterprise/dashboard/announcements",
           "badge": "count",
           "elements": {
-            "heading": "Announcements",
-            "action_buttons": ["Create Announcement"],
-            "table": {
-              "columns": ["Title", "Status", "Created By", "Created At", "Actions"]
+            "page_header": {
+              "type": "data_section",
+              "description": "Announcements heading"
+            },
+            "tabs": {
+              "published": {
+                "type": "tab",
+                "description": "Tab showing published announcements"
+              },
+              "my_drafts": {
+                "type": "tab",
+                "description": "Tab showing draft announcements"
+              }
+            },
+            "create_announcement_button": {
+              "type": "action_card",
+              "description": "Link to create new announcement"
+            },
+            "announcement_cards": {
+              "type": "data_section",
+              "description": "Cards showing author avatar, name, timestamp, title, and body preview",
+              "features": {
+                "recipient_avatars": "Shows avatars of employees who received the announcement",
+                "actions": {
+                  "delete": "Button to delete an announcement",
+                  "view": "Button to view full announcement details"
+                }
+              }
+            },
+            "draft_features": {
+              "draft_badge": {
+                "type": "data_section",
+                "description": "Badge indicating announcement is a draft"
+              },
+              "preview_draft": {
+                "type": "action_card",
+                "description": "Button to preview a draft announcement"
+              },
+              "edit_draft": {
+                "type": "action_card",
+                "description": "Button to edit a draft announcement"
+              },
+              "delete_draft": {
+                "type": "action_card",
+                "description": "Button to delete a draft announcement"
+              },
+              "publish_draft": {
+                "type": "action_card",
+                "description": "Button to publish a draft announcement"
+              }
+            },
+            "pagination": {
+              "type": "action_card",
+              "description": "Page navigation with page numbers and items per page selector"
+            }
+          },
+          "create_announcement_page": {
+            "url": "/enterprise/dashboard/announcements/create",
+            "elements": {
+              "back_button": {
+                "type": "action_card",
+                "description": "Navigation button to return to announcements list"
+              },
+              "title_field": {
+                "type": "action_card",
+                "description": "Text input for announcement title"
+              },
+              "rich_text_editor": {
+                "type": "data_section",
+                "description": "WYSIWYG editor with formatting toolbar for composing announcements",
+                "toolbar_buttons": {
+                  "formatting": ["Bold", "Italic", "Underline", "Strikethrough"],
+                  "formats_dropdown": "Dropdown to select text format (Paragraph, headings)",
+                  "alignments_dropdown": "Dropdown to select text alignment",
+                  "lists": ["Numbered list", "Bulleted list"],
+                  "insert": ["Insert link", "Insert code", "Insert image"],
+                  "history": ["Undo", "Redo"]
+                }
+              },
+              "action_buttons": {
+                "cancel": {
+                  "type": "action_card",
+                  "description": "Button to cancel announcement creation"
+                },
+                "save_as_draft": {
+                  "type": "action_card",
+                  "description": "Button to save announcement as draft"
+                },
+                "publish": {
+                  "type": "action_card",
+                  "description": "Button to publish announcement immediately"
+                }
+              }
             }
           }
         }
@@ -1441,27 +1614,400 @@
     },
     "Automations": {
       "url_prefix": "/enterprise/dashboard",
-      "sections": {
-        "Automations": {
-          "submenus": {
-            "Workflows": {
-              "url": "/enterprise/dashboard/automations/workflows",
-              "elements": {
-                "heading": "Workflows",
-                "action_buttons": ["Create workflow"],
-                "tabs": ["Active", "Inactive", "Draft"],
-                "table": {
-                  "columns": ["Workflow Name", "Trigger", "Status", "Last Modified", "Actions"]
+      "submenus": {
+        "Workflows": {
+          "url": "/enterprise/dashboard/automations/workflows",
+          "note": "Previously at Settings > Workflows",
+          "elements": {
+            "page_header": {
+              "type": "data_section",
+              "description": "Header 'Workflows' with description about automating tasks"
+            },
+            "help_center_link": {
+              "type": "action_card",
+              "description": "Link to workflows help documentation"
+            },
+            "create_new_workflow": {
+              "type": "action_card",
+              "description": "Button with dropdown to create new workflow"
+            },
+            "tabs": ["Workflows", "Executions", "Applications", "Manage tags"],
+            "stats": {
+              "active_workflows": {
+                "type": "summary_card",
+                "description": "Shows active workflows count out of total with info tooltip"
+              },
+              "total_executions": {
+                "type": "summary_card",
+                "description": "Shows total executions in last 7 days with View link"
+              },
+              "failed_executions": {
+                "type": "summary_card",
+                "description": "Shows failed executions in last 7 days with View link"
+              }
+            },
+            "filters_panel": {
+              "type": "data_section",
+              "description": "Filters panel with search and Clear all button",
+              "filters": {
+                "status": {
+                  "type": "accordion",
+                  "options": ["Active", "Inactive", "Deprecated"],
+                  "expandable": true
+                },
+                "event": {
+                  "type": "accordion",
+                  "description": "Filter by event trigger type with +more button",
+                  "expandable": true
+                },
+                "application": {
+                  "type": "accordion",
+                  "description": "Filter by application with +more button",
+                  "expandable": true
+                },
+                "tags": {
+                  "type": "accordion",
+                  "description": "Filter by tags with +more button",
+                  "expandable": true
+                }
+              }
+            },
+            "workflow_cards": {
+              "type": "data_section",
+              "description": "Cards showing workflow name, status toggle, and flow visualization (Application > Event > Action)",
+              "features": {
+                "active_toggle": "Switch to enable or disable workflow",
+                "view_activity_button": "Button to view workflow activity",
+                "kebab_menu": "More actions menu on workflow card",
+                "run_stats": "Shows successful/total runs and last executed timestamp",
+                "created_by": "Shows user avatar who created the workflow",
+                "tags_badges": "Shows assigned tags on workflow card"
+              }
+            },
+            "pagination": {
+              "type": "action_card",
+              "description": "Navigate between pages with page size selector"
+            }
+          },
+          "executions_tab": {
+            "search": {
+              "type": "action_card",
+              "description": "Search executions by workflow name"
+            },
+            "filters_button": {
+              "type": "action_card",
+              "description": "Button to open execution filters"
+            },
+            "table": {
+              "type": "table",
+              "columns": ["Workflow Name", "Workflow Status", "Triggered At", "Status", "Action Performed On"],
+              "row_expansion": "Arrow button to expand execution details"
+            }
+          },
+          "applications_tab": {
+            "add_connection": {
+              "type": "action_card",
+              "description": "Button to add new application connection"
+            },
+            "search": {
+              "type": "action_card",
+              "description": "Search for an application"
+            },
+            "filters": {
+              "event_type": "Checkbox filter for event type applications",
+              "action_type": "Checkbox filter for action type applications",
+              "disabled": "Checkbox filter for disabled applications",
+              "requires_connection": "Checkbox filter for apps requiring connection"
+            },
+            "application_cards": {
+              "type": "data_section",
+              "description": "Cards showing app icon, name, description, connections count, workflows count",
+              "settings_button": "Settings gear for connected applications"
+            }
+          },
+          "manage_tags_tab": {
+            "create_tag": {
+              "type": "action_card",
+              "description": "Button to create new workflow tag"
+            },
+            "table": {
+              "type": "table",
+              "columns": ["Tag", "Usage in workflows", "Actions"],
+              "actions": ["Edit", "Delete"]
+            }
+          }
+        },
+        "Approval flows": {
+          "url": "/enterprise/dashboard/automations/approvals",
+          "elements": {
+            "page_header": {
+              "type": "data_section",
+              "description": "Header 'Approval flows' with description about customizing approval flow for requests"
+            },
+            "tabs": [
+              "Leave", "Air Ticket", "Loan", "Expense", "Payroll Transaction",
+              "Leave Salary Request", "Attendance Regularization", "Leave Encashment",
+              "Accounts Payable", "Employee Violation", "Transportation request",
+              "Benefits and perks", "Employee Form Onboarding"
+            ],
+            "tab_scroll_arrows": {
+              "type": "action_card",
+              "description": "Left and right arrows to scroll between tabs"
+            },
+            "advanced_approval_section": {
+              "type": "data_section",
+              "description": "Section for conditional approval flows with 'If conditions' badge",
+              "add_advance_flow": {
+                "type": "action_card",
+                "description": "Button to add new advanced approval flow"
+              }
+            },
+            "default_approval_section": {
+              "type": "data_section",
+              "description": "Section for default approval with 'Else' badge"
+            },
+            "approval_step": {
+              "type": "data_section",
+              "description": "Step with number, approver dropdown, and action buttons",
+              "controls": {
+                "approver_dropdown": "Dropdown to select approver role",
+                "delete_approver": "Button to remove approver from step",
+                "add_approver": "Button to add another approver to step",
+                "edit_step": "Button to edit approval step",
+                "add_block": "Button to add approval block"
+              }
+            },
+            "add_step": {
+              "type": "action_card",
+              "description": "Button to add new approval step"
+            },
+            "update_approval_flows": {
+              "type": "action_card",
+              "description": "Button to save approval flow changes (disabled until changes)"
+            }
+          }
+        },
+        "Integrations": {
+          "url": "/enterprise/dashboard/automations/integrations",
+          "elements": {
+            "page_header": {
+              "type": "data_section",
+              "description": "Header 'Integrations'"
+            },
+            "suggest_integration": {
+              "type": "action_card",
+              "description": "Button to suggest new integration"
+            },
+            "search": {
+              "type": "action_card",
+              "description": "Search integrations by name"
+            },
+            "filters_panel": {
+              "type": "data_section",
+              "description": "Filters panel with search filters and Clear all button",
+              "filters": {
+                "status": {
+                  "type": "accordion",
+                  "options": ["Connected", "Not Connected", "Attention required"],
+                  "expandable": true
+                },
+                "category": {
+                  "type": "accordion",
+                  "options": ["All integrations", "Government", "Payroll & Compliance", "Productivity"],
+                  "expandable": true
+                }
+              }
+            },
+            "integration_cards": {
+              "type": "data_section",
+              "description": "Cards showing icon, status badge, name, description",
+              "actions": {
+                "learn_more": "Link to integration help article",
+                "view_details": "Button to view integration details"
+              }
+            }
+          }
+        },
+        "API Token": {
+          "url": "/enterprise/dashboard/automations/api-token",
+          "elements": {
+            "page_header": {
+              "type": "data_section",
+              "description": "Header 'API Token' with description about integrating third-party applications"
+            },
+            "token_display": {
+              "type": "data_section",
+              "description": "Masked token display field"
+            },
+            "token_actions": {
+              "show_hide": {
+                "type": "action_card",
+                "description": "Toggle button to show or hide API token"
+              },
+              "copy": {
+                "type": "action_card",
+                "description": "Button to copy token to clipboard"
+              },
+              "regenerate": {
+                "type": "action_card",
+                "description": "Button to regenerate API token"
+              }
+            },
+            "integration_tabs": {
+              "tabs": ["Bayzat Hiring Management", "Attendance"],
+              "step_instructions": {
+                "type": "accordion",
+                "description": "Expandable step-by-step integration instructions",
+                "expandable": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "Apps": {
+      "url_prefix": "/enterprise/dashboard/apps",
+      "elements": {
+        "sidebar_menu": {
+          "type": "data_section",
+          "description": "Apps sidebar with Taxation management [BETA] and Employee violation [BETA] links"
+        },
+        "iframe_container": {
+          "type": "data_section",
+          "description": "Embedded micro-app displayed in iframe"
+        },
+        "reload_button": {
+          "type": "action_card",
+          "description": "Button to reload the embedded app iframe"
+        }
+      },
+      "submenus": {
+        "Taxation management": {
+          "url": "/enterprise/dashboard/apps/taxation",
+          "badge": "BETA",
+          "elements": {
+            "embedded_app": {
+              "type": "data_section",
+              "description": "Taxation management micro-app embedded via iframe"
+            }
+          }
+        },
+        "Employee violation": {
+          "url": "/enterprise/dashboard/apps/violations",
+          "badge": "BETA",
+          "elements": {
+            "app_header": {
+              "type": "data_section",
+              "description": "Violation System header with navigation"
+            },
+            "language_toggle": {
+              "type": "action_card",
+              "description": "Button to switch between English and Arabic"
+            },
+            "navigation": {
+              "tabs": ["Violations", "Employee Directory", "Reports", "Settings"]
+            }
+          },
+          "pages": {
+            "violations": {
+              "header": {
+                "type": "data_section",
+                "description": "Page header with title and description about managing employee violations"
+              },
+              "log_violation": {
+                "type": "action_card",
+                "description": "Button to log a new employee violation"
+              },
+              "search": {
+                "type": "action_card",
+                "description": "Search input for employees or violations"
+              },
+              "status_filter": {
+                "type": "action_card",
+                "description": "Dropdown to filter violations by status"
+              },
+              "table": {
+                "type": "table",
+                "columns": ["Date", "Employee", "Violation Type", "Status", "Ticket ID"],
+                "ticket_id_button": "Clickable button to view ticket details"
+              },
+              "pagination": {
+                "rows_per_page": "Dropdown to change number of rows displayed",
+                "controls": "Previous/Next buttons with results count"
+              }
+            },
+            "employee_directory": {
+              "header": {
+                "type": "data_section",
+                "description": "Page header about managing employees and tracking violation history"
+              },
+              "search": {
+                "type": "action_card",
+                "description": "Search by Employee Name or ID"
+              },
+              "table": {
+                "type": "table",
+                "columns": ["Name", "Department", "Total Violations", "Actions"]
+              },
+              "empty_state": {
+                "type": "data_section",
+                "description": "Message shown when no employees found"
+              }
+            },
+            "reports": {
+              "header": {
+                "type": "data_section",
+                "description": "Page header 'Reports & Analytics'"
+              },
+              "stats": {
+                "total_violations": {
+                  "type": "summary_card",
+                  "description": "Card showing total violations count all time"
+                },
+                "total_employees": {
+                  "type": "summary_card",
+                  "description": "Card showing total employees in the system"
+                },
+                "most_violations": {
+                  "type": "summary_card",
+                  "description": "Card showing employee with most violations"
+                },
+                "most_frequent": {
+                  "type": "summary_card",
+                  "description": "Card showing most common violation type"
                 }
               },
-              "note": "Previously at Settings > Workflows"
+              "charts": {
+                "violations_by_type": {
+                  "type": "data_section",
+                  "description": "Pie/donut chart showing violation distribution by type"
+                },
+                "daily_trend": {
+                  "type": "data_section",
+                  "description": "Line chart showing violations trend over last 30 days"
+                }
+              }
             },
-            "Approvals": {
-              "url": "/enterprise/dashboard/automations/approvals",
-              "elements": {
-                "heading": "Approvals",
-                "tabs": ["Pending my approval", "My requests"],
-                "table": true
+            "settings": {
+              "header": {
+                "type": "data_section",
+                "description": "Page header 'Policy Configuration'"
+              },
+              "tabs": ["Violation Types", "Escalation Rules"],
+              "violation_types_tab": {
+                "add_button": {
+                  "type": "action_card",
+                  "description": "Button to add new violation type"
+                },
+                "search": {
+                  "type": "action_card",
+                  "description": "Search input for violation types"
+                },
+                "table": {
+                  "type": "table",
+                  "columns": ["Violation Name", "Description", "Validity Period", "Escalation Rule", "Actions"],
+                  "actions": ["Edit", "Delete"]
+                }
               }
             }
           }
