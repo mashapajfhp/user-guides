@@ -1,12 +1,17 @@
 {
   "metadata": {
     "created_at": "2026-01-08",
-    "updated_at": "2026-01-09",
+    "updated_at": "2026-01-11",
     "platform": "Bayzat HR Platform",
     "base_url": "https://app.bayzat.com",
     "purpose": "Complete system of truth for validation runner reference",
-    "version": "1.3",
+    "version": "1.4",
     "changelog": [
+      {
+        "version": "1.4",
+        "date": "2026-01-11",
+        "changes": ["Enhanced Insights section with detailed AI Reports features (dashboards, reports tab, AI prompt, category filters) and Engagement features (surveys, my surveys with tabs and tables)"]
+      },
       {
         "version": "1.3",
         "date": "2026-01-09",
@@ -1561,10 +1566,108 @@
               "url": "/enterprise/dashboard/ai-reports/dashboards",
               "badge": "Beta",
               "elements": {
-                "heading": "AI Reports",
-                "action_buttons": ["Learn how it works", "New dashboard"],
-                "tabs": ["Dashboards", "Reports"],
-                "dashboard_cards": true
+                "beta_badge": {
+                  "type": "data_section",
+                  "description": "Badge indicating AI Reports is a beta feature"
+                },
+                "learn_how_it_works": {
+                  "type": "action_card",
+                  "description": "Button to view AI Reports tutorial"
+                },
+                "new_dashboard": {
+                  "type": "action_card",
+                  "description": "Button to create a new dashboard"
+                },
+                "tabs": {
+                  "dashboards": {
+                    "type": "tab",
+                    "description": "View saved dashboards with New badge indicator"
+                  },
+                  "reports": {
+                    "type": "tab",
+                    "description": "View and generate AI reports"
+                  }
+                },
+                "search_dashboard": {
+                  "type": "action_card",
+                  "description": "Search for a dashboard"
+                },
+                "view_toggle": {
+                  "type": "toggle",
+                  "description": "Toggle between grid and list view for dashboards"
+                },
+                "intro_banner": {
+                  "type": "summary_card",
+                  "description": "Welcome banner with Explore the HR dashboard button"
+                },
+                "dashboard_cards": {
+                  "type": "data_section",
+                  "description": "Cards showing dashboard icon, name, created date",
+                  "actions": {
+                    "explore": {
+                      "type": "action_card",
+                      "description": "Button on dashboard card to open dashboard"
+                    },
+                    "delete": {
+                      "type": "action_card",
+                      "description": "Button on dashboard card to delete dashboard"
+                    }
+                  }
+                },
+                "save_reports_banner": {
+                  "type": "summary_card",
+                  "description": "Banner about saving reports to dashboard with action buttons"
+                },
+                "create_dashboard": {
+                  "type": "action_card",
+                  "description": "Button to create custom dashboard"
+                }
+              },
+              "reports_tab": {
+                "search_report": {
+                  "type": "action_card",
+                  "description": "Search for a report"
+                },
+                "all_reports_checkbox": {
+                  "type": "toggle",
+                  "description": "Checkbox filter for all reports"
+                },
+                "browse_by_category": {
+                  "type": "accordion",
+                  "description": "Expandable accordion with report categories",
+                  "categories": ["Employee Records", "Company Documents", "Employee Leaves", "Payroll", "Attendance"],
+                  "expandable": true
+                },
+                "pre_built_report_cards": {
+                  "type": "data_section",
+                  "description": "Question cards with category badge and Start button for common reports",
+                  "start_button": {
+                    "type": "action_card",
+                    "description": "Button on report card to start generating report"
+                  }
+                },
+                "ai_prompt_section": {
+                  "header": {
+                    "type": "data_section",
+                    "description": "Section header 'Ask AI to build your report'"
+                  },
+                  "help_button": {
+                    "type": "action_card",
+                    "description": "Button to view AI report help"
+                  },
+                  "prompt_input": {
+                    "type": "data_section",
+                    "description": "Text input for custom AI report instructions"
+                  },
+                  "generate_button": {
+                    "type": "action_card",
+                    "description": "Button to generate AI report from prompt"
+                  }
+                },
+                "experimental_disclaimer": {
+                  "type": "summary_card",
+                  "description": "Alert warning that AI reports are experimental and should be verified"
+                }
               }
             }
           }
@@ -1574,38 +1677,136 @@
             "Engagement insights": {
               "url": "/employee-engagement/surveys/insights",
               "elements": {
-                "heading": "Engagement Insights",
-                "action_buttons": ["New survey"],
-                "widgets": {
-                  "nps": "Net Promoter Score",
-                  "engagement_categories": [
+                "page_header": {
+                  "type": "data_section",
+                  "description": "Header 'Engagement'"
+                },
+                "new_engagement_survey": {
+                  "type": "action_card",
+                  "description": "Button to create new engagement survey"
+                },
+                "intro_section": {
+                  "type": "data_section",
+                  "description": "The insights you always needed - description of 9 key employee engagement categories",
+                  "categories": [
                     "Innovation at work", "Growth opportunities", "Recognition",
                     "Work-life balance", "Compensation and benefits", "Team dynamics",
                     "Trust in leadership", "Psychological safety", "Manager effectiveness"
                   ]
                 },
-                "survey_table": true,
-                "response_rate": true
+                "see_how_it_works": {
+                  "type": "action_card",
+                  "description": "Button to view engagement survey tutorial"
+                },
+                "help_articles": {
+                  "type": "action_card",
+                  "description": "Link to help documentation"
+                },
+                "date_filter": {
+                  "type": "action_card",
+                  "description": "Dropdown to filter by time period (e.g., Last 12 months)"
+                },
+                "empty_state": {
+                  "type": "data_section",
+                  "description": "Message shown when no engagement surveys sent during period"
+                }
               }
             },
             "Surveys": {
               "url": "/employee-engagement/surveys/company",
               "elements": {
-                "heading": "Surveys",
-                "action_buttons": ["New survey"],
-                "search": true,
-                "table": {
-                  "columns": ["Survey Name", "Status", "Response Rate", "Created By", "Created At", "Actions"]
+                "page_header": {
+                  "type": "data_section",
+                  "description": "Header 'Surveys'"
                 },
-                "pagination": true
+                "new_survey": {
+                  "type": "action_card",
+                  "description": "Button to create new survey (links to choose-template)"
+                },
+                "intro_section": {
+                  "type": "data_section",
+                  "description": "Know your employees better section with emoji"
+                },
+                "see_how_it_works": {
+                  "type": "action_card",
+                  "description": "Button to view survey tutorial"
+                },
+                "download_ebook": {
+                  "type": "action_card",
+                  "description": "Link to download customer survey e-book PDF"
+                },
+                "help_articles": {
+                  "type": "action_card",
+                  "description": "Link to help documentation"
+                },
+                "search": {
+                  "type": "action_card",
+                  "description": "Search by survey name"
+                },
+                "table": {
+                  "type": "table",
+                  "columns": ["Survey name", "Created at", "Start date", "End date", "Participants", "Status", "Action"],
+                  "features": {
+                    "survey_name_link": "Clickable link to survey details",
+                    "participants_count": "Shows participant count with not registered indicator"
+                  }
+                },
+                "row_actions": {
+                  "view_details": {
+                    "type": "action_card",
+                    "description": "View completed survey details"
+                  },
+                  "continue_editing": {
+                    "type": "action_card",
+                    "description": "Continue editing draft survey"
+                  },
+                  "kebab_menu": {
+                    "type": "action_card",
+                    "description": "More actions menu on survey row"
+                  }
+                },
+                "pagination": {
+                  "type": "action_card",
+                  "description": "Navigate between pages"
+                }
               }
             },
             "My surveys": {
               "url": "/employee-engagement/surveys/employee",
               "elements": {
-                "heading": "My surveys",
-                "tabs": ["Pending", "Completed"],
-                "empty_state": "No pending surveys"
+                "page_header": {
+                  "type": "data_section",
+                  "description": "Header 'My surveys'"
+                },
+                "tabs": {
+                  "pending": {
+                    "type": "tab",
+                    "description": "View surveys pending response"
+                  },
+                  "completed": {
+                    "type": "tab",
+                    "description": "View completed surveys"
+                  }
+                },
+                "empty_state": {
+                  "type": "data_section",
+                  "description": "Message shown when no pending surveys"
+                },
+                "completed_table": {
+                  "type": "table",
+                  "columns": ["Survey name", "Published by", "Questions", "Submitted on"],
+                  "features": {
+                    "publisher_info": "Shows avatar and role of publisher"
+                  }
+                },
+                "view_results": {
+                  "type": "action_card",
+                  "description": "View survey results (conditional)"
+                },
+                "pagination": {
+                  "type": "action_card",
+                  "description": "Navigate between pages"
+                }
               }
             }
           }
