@@ -1,37 +1,37 @@
 # Validation Report: Air Ticket
 
-**Status**: failed
+**Status**: completed
 **Execution Mode**: Chunked (1 chunks)
-**Generated**: 2026-01-10T22:04:20Z
+**Generated**: 2026-01-10T23:46:28Z
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
 | Passed | 0 |
-| Failed | 0 |
-| Skipped | 4 |
+| Failed | 4 |
+| Skipped | 0 |
 | Total | 4 |
 
 ## Test Results
 
 ### FE: Show remaining air tickets when balance is on hold due to booking request
-- **Status**: skipped
-- **Assertions**: 0/0
-- **Notes**: BLOCKER: Playwright MCP tools not available. Cannot perform browser automation required for this test. Test requires navigating to Employee Benefits > Air Tickets and verifying balance display during pending booking state.
+- **Status**: failed
+- **Assertions**: 2/5
+- **Notes**: 
 
 ### FE: Unclear indication of available air ticket requests
-- **Status**: skipped
-- **Assertions**: 0/0
-- **Notes**: BLOCKER: Playwright MCP tools not available. Cannot perform browser automation required for this test. Test requires navigating to Employee Benefits > Air Tickets and verifying request counter clarity.
+- **Status**: failed
+- **Assertions**: 1/5
+- **Notes**: 
 
 ### Client is unable to remove Processed Air tickets
-- **Status**: skipped
-- **Assertions**: 0/0
-- **Notes**: BLOCKER: Playwright MCP tools not available. Cannot perform browser automation required for this test. Test requires complex workflow: navigate to Work Expenses > Air Tickets, reopen payroll month, reject transaction, verify delete button becomes enabled.
+- **Status**: failed
+- **Assertions**: 4/6
+- **Notes**: 
 
 ### Need to remove processed (Encashment) Air tickets with Payroll reopen
-- **Status**: skipped
-- **Assertions**: 0/0
-- **Notes**: BLOCKER: Playwright MCP tools not available. Cannot perform browser automation required for this test. Test requires complex workflow: navigate to Payroll Management > Air Ticket Encashment, reopen payroll month, delete transaction, verify request returns to pending state.
+- **Status**: failed
+- **Assertions**: 3/6
+- **Notes**: 
 
