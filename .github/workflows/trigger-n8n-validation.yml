@@ -1,0 +1,79 @@
+name: Trigger N8N on Validation Results
+
+on:
+  push:
+    paths:
+      - '**/validation/result.json'
+
+jobs:
+  trigger-n8n:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Get changed validation files
+        id: changed
+        run: |
+          # Get the changed result.json file path
+          CHANGED_FILE=$(git diff --name-only HEAD~1 HEAD | grep "validation/result.json" | head -1)
+          echo "file=$CHANGED_FILE" >> $GITHUB_OUTPUT
+
+          if [ -n "$CHANGED_FILE" ]; then
+            # Extract feature name and version from path (e.g., overtime/v1/validation/result.json)
+            FEATURE=$(echo "$CHANGED_FILE" | cut -d'/' -f1)
+            VERSION=$(echo "$CHANGED_FILE" | cut -d'/' -f2)
+            echo "feature=$FEATURE" >> $GITHUB_OUTPUT
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "Found: feature=$FEATURE, version=$VERSION"
+          else
+            echo "No validation result.json found in changes"
+            exit 0
+          fi
+
+      - name: Read validation result
+        id: result
+        if: steps.changed.outputs.file != ''
+        run: |
+          FILE="${{ steps.changed.outputs.file }}"
+          if [ -f "$FILE" ]; then
+            # Extract status and task counts from result.json
+            STATUS=$(jq -r '.validation_summary.status' "$FILE")
+            TOTAL=$(jq -r '.validation_summary.total_tasks' "$FILE")
+            PASSED=$(jq -r '.validation_summary.passed' "$FILE")
+            VALIDATED_AT=$(jq -r '.feature.validated_at' "$FILE")
+
+            echo "status=$STATUS" >> $GITHUB_OUTPUT
+            echo "total_tasks=$TOTAL" >> $GITHUB_OUTPUT
+            echo "passed_tasks=$PASSED" >> $GITHUB_OUTPUT
+            echo "validated_at=$VALIDATED_AT" >> $GITHUB_OUTPUT
+
+            echo "Validation: $STATUS ($PASSED/$TOTAL tasks passed)"
+          fi
+
+      - name: Trigger N8N Webhook
+        if: steps.changed.outputs.feature != ''
+        env:
+          N8N_WEBHOOK_URL: ${{ secrets.N8N_WEBHOOK_URL }}
+        run: |
+          # Use secret URL or fallback to production URL
+          WEBHOOK_URL="${N8N_WEBHOOK_URL:-https://automation.bayzat.com/webhook/validation-complete}"
+
+          curl -X POST "$WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "feature_name": "${{ steps.changed.outputs.feature }}",
+              "version": "${{ steps.changed.outputs.version }}",
+              "repo_owner": "${{ github.repository_owner }}",
+              "repo_name": "${{ github.event.repository.name }}",
+              "validated_at": "${{ steps.result.outputs.validated_at }}",
+              "status": "${{ steps.result.outputs.status }}",
+              "total_tasks": ${{ steps.result.outputs.total_tasks }},
+              "passed_tasks": ${{ steps.result.outputs.passed_tasks }},
+              "commit_sha": "${{ github.sha }}",
+              "commit_url": "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+            }'
+
+          echo "Webhook triggered for ${{ steps.changed.outputs.feature }}/${{ steps.changed.outputs.version }}"
