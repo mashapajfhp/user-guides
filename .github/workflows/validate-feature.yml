@@ -1020,15 +1020,54 @@ jobs:
           2. Enter credentials and login
           3. Wait for dashboard to load (wait 3 seconds for page stabilization)
 
-          #### 1c. DISMISS ONBOARDING TOOLTIPS (CRITICAL)
-          1. Wait 2 seconds after login for any tooltips to appear
-          2. Look for purple/violet tooltip modals ("Step X of Y")
-          3. If tooltip found:
-             - Click X (close) button in top-right of tooltip
-             - OR click "Skip" button if available
-             - Repeat until NO more tooltips appear
-          4. Common tooltip text: "Announcements in Home", feature tours
-          5. VERIFICATION: Ensure sidebar is fully clickable, no overlays
+          #### 1c. DISMISS ONBOARDING TOOLTIPS (CRITICAL - USE JAVASCRIPT)
+
+          IMMEDIATELY after login, run this JavaScript to force-remove ALL tooltips:
+
+          Use browser_evaluate with this function:
+          ```javascript
+          () => {
+            // Remove all tooltip/tour elements by common selectors
+            const selectors = [
+              '[class*="tour"]',
+              '[class*="tooltip"]',
+              '[class*="onboarding"]',
+              '[class*="shepherd"]',
+              '[class*="joyride"]',
+              '[class*="popover"]',
+              '[role="dialog"]',
+              '[aria-modal="true"]',
+              '.fixed[class*="bg-"]'
+            ];
+            let removed = 0;
+            selectors.forEach(sel => {
+              document.querySelectorAll(sel).forEach(el => {
+                if (el.textContent.includes('Step') ||
+                    el.textContent.includes('Next') ||
+                    el.textContent.includes('Skip') ||
+                    el.textContent.includes('Reports') ||
+                    el.textContent.includes('Insights')) {
+                  el.remove();
+                  removed++;
+                }
+              });
+            });
+            // Also remove any overlay backdrops
+            document.querySelectorAll('[class*="backdrop"], [class*="overlay"]').forEach(el => el.remove());
+            return 'Removed ' + removed + ' tooltip elements';
+          }
+          ```
+
+          Run this JavaScript MULTIPLE TIMES (3x) with 1 second waits between:
+          1. Run browser_evaluate with the function above
+          2. Wait 1 second
+          3. Run browser_evaluate again
+          4. Wait 1 second
+          5. Run browser_evaluate one more time
+
+          This ensures all tooltips are removed even if new ones appear.
+
+          VERIFICATION: After running JavaScript, the sidebar should be fully clickable with no overlays.
 
           #### 1d. VERIFY FULL SIDEBAR (HARD RULE - MANDATORY CHECK)
           🚨 DO NOT PROCEED UNTIL THIS CHECK PASSES 🚨
