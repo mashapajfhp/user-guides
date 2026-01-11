@@ -504,6 +504,56 @@ jobs:
           5. Focus on tests in order - they are pre-sorted by priority
 
           ═══════════════════════════════════════════════════════════════
+          ## BROWSER SETUP (MANDATORY - DO FIRST)
+          ═══════════════════════════════════════════════════════════════
+
+          Before ANY navigation, you MUST configure the browser viewport:
+
+          1. RESIZE BROWSER to 1920x1080 minimum:
+             - Use playwright_resize with width=1920, height=1080
+             - This ensures the FULL sidebar is visible (including Settings at bottom)
+             - CRITICAL: The default viewport often cuts off bottom menu items
+
+          2. WHY THIS MATTERS:
+             - Bayzat sidebar has many items: Home, Company, Payroll, Finance Ops,
+               Time, Performance, Health, Requests, Insights, AND Settings
+             - With small viewport, "Settings" and other bottom items get cut off
+             - You CANNOT navigate to hidden menu items
+
+          ═══════════════════════════════════════════════════════════════
+          ## ONBOARDING TOOLTIPS DISMISSAL (MANDATORY AFTER LOGIN)
+          ═══════════════════════════════════════════════════════════════
+
+          Bayzat shows onboarding tooltips/modals that BLOCK navigation.
+          You MUST dismiss ALL of them before starting any tests.
+
+          ### TOOLTIP PATTERNS TO LOOK FOR:
+          - "Step X of Y" indicators (e.g., "Step 1 of 4")
+          - Purple/violet modal overlays with "Next" buttons
+          - "Announcements in Home" or similar feature tours
+          - Any modal with X (close) button in top-right corner
+          - "Got it", "Skip", "Next", "Done" buttons
+
+          ### DISMISSAL PROCEDURE (MANDATORY):
+          1. After login, WAIT 2 seconds for tooltips to appear
+          2. Look for ANY tooltip/modal overlay on the page
+          3. If found, click the X (close) button OR "Skip" button
+          4. Keep clicking through ALL steps until tooltips are gone
+          5. Take screenshot AFTER all tooltips are dismissed
+          6. If "Step X of Y" appears, click through ALL steps or find Skip/Close
+
+          ### TOOLTIP SELECTORS TO TRY:
+          - Button with X icon in modal header
+          - ".close-button", "[aria-label='Close']", "[data-testid='close']"
+          - "Skip" or "Skip tour" buttons
+          - Click outside modal (if clickable backdrop)
+
+          ### VERIFICATION:
+          - After dismissal, the main UI should be fully interactive
+          - No overlays blocking the sidebar or main content
+          - Take a "clean" screenshot to confirm tooltips are gone
+
+          ═══════════════════════════════════════════════════════════════
           ## SCREENSHOT POLICY (MANDATORY)
           ═══════════════════════════════════════════════════════════════
 
@@ -592,17 +642,20 @@ jobs:
           ### STEP 1: CLICK EVERY SIDEBAR MENU ITEM (MANDATORY)
           This is NOT optional. You MUST physically click each menu item.
 
-          For the Bayzat app, typical sidebar menus include:
-          - Dashboard / Home
-          - People / Employees
-          - Payroll
-          - Benefits
-          - Requests
-          - Reports
-          - Automations (formerly part of Settings!)
-          - Settings
+          For the Bayzat app, sidebar menus include (TOP TO BOTTOM):
+          - Home (dashboard)
           - Company
-          - Any other visible menu items
+          - Payroll
+          - Finance Ops
+          - Time
+          - Performance
+          - Health
+          - Requests
+          - Insights
+          - Settings (SCROLL DOWN if not visible - at very bottom!)
+          - Any other visible menu items or submenus
+
+          NOTE: You MUST have viewport 1920x1080 to see Settings at bottom!
 
           FOR EACH MENU ITEM:
           1. Click the menu item
@@ -642,16 +695,18 @@ jobs:
           ```
 
           ### EXPLORATION CHECKLIST (Must complete ALL):
-          [ ] Clicked Dashboard/Home
-          [ ] Clicked People/Employees
-          [ ] Clicked Payroll
-          [ ] Clicked Benefits
-          [ ] Clicked Requests
-          [ ] Clicked Reports
-          [ ] Clicked Automations
-          [ ] Clicked Settings
+          [ ] Verified viewport is 1920x1080 (Settings visible at bottom)
+          [ ] Clicked Home
           [ ] Clicked Company
-          [ ] Clicked any other visible menus
+          [ ] Clicked Payroll
+          [ ] Clicked Finance Ops
+          [ ] Clicked Time
+          [ ] Clicked Performance
+          [ ] Clicked Health
+          [ ] Clicked Requests
+          [ ] Clicked Insights
+          [ ] Clicked Settings (scroll sidebar if needed)
+          [ ] Clicked any other visible menus/submenus
           [ ] Tried search (if available)
           [ ] Documented findings for each menu
           [ ] Captured screenshot for each exploration
@@ -717,11 +772,32 @@ jobs:
 
           ## VALIDATION WORKFLOW FOR THIS CHUNK
 
-          ### Step 1: Login
+          ### Step 1: Browser Setup, Login, and Tooltip Dismissal
+
+          #### 1a. BROWSER SETUP (DO FIRST - BEFORE NAVIGATION)
+          1. Use playwright_resize to set viewport to 1920x1080
+             - This ensures full sidebar visibility
+             - Settings menu at bottom will be visible
+
+          #### 1b. LOGIN
           1. Navigate to the base URL
           2. Enter credentials and login
-          3. Wait for dashboard to load
-          4. Take VIEWPORT screenshot: "chunk-${CHUNK_INDEX}-login-viewport.png"
+          3. Wait for dashboard to load (wait 3 seconds for page stabilization)
+
+          #### 1c. DISMISS ONBOARDING TOOLTIPS (CRITICAL)
+          1. Wait 2 seconds after login for any tooltips to appear
+          2. Look for purple/violet tooltip modals ("Step X of Y")
+          3. If tooltip found:
+             - Click X (close) button in top-right of tooltip
+             - OR click "Skip" button if available
+             - Repeat until NO more tooltips appear
+          4. Common tooltip text: "Announcements in Home", feature tours
+          5. VERIFICATION: Ensure sidebar is fully clickable, no overlays
+
+          #### 1d. TAKE CLEAN SCREENSHOT
+          1. Take VIEWPORT screenshot: "chunk-${CHUNK_INDEX}-login-clean-viewport.png"
+             - This screenshot should show the clean UI with NO tooltips
+             - Full sidebar should be visible (including Settings at bottom)
              (Do NOT take full-page - just the visible viewport after login)
 
           ### Step 2: Resolve References and Execute Tests
