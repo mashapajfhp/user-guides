@@ -20,7 +20,10 @@ on:
         default: '5'
 
 env:
-  PLAYWRIGHT_MCP_VERSION: "0.0.55"
+  # SOLUTION: Use @executeautomation/playwright-mcp-server instead of @playwright/mcp
+  # Reason: Official @playwright/mcp has bugs that prevent tools from loading in Claude Code
+  # Source: https://github.com/anthropics/claude-code/issues/1383
+  PLAYWRIGHT_MCP_SERVER: "@executeautomation/playwright-mcp-server"
   NODE_VERSION: "20"
   MAX_TESTS_PER_CHUNK: ${{ github.event.inputs.max_tests_per_chunk || '5' }}
 
@@ -353,8 +356,9 @@ jobs:
 
       - name: Install Playwright MCP and Browsers
         run: |
-          echo "Installing Playwright MCP v${PLAYWRIGHT_MCP_VERSION}..."
-          npm install -g @playwright/mcp@${PLAYWRIGHT_MCP_VERSION}
+          echo "Installing Playwright MCP: ${PLAYWRIGHT_MCP_SERVER}..."
+          echo "Note: Using @executeautomation/playwright-mcp-server (stable alternative)"
+          npm install -g ${PLAYWRIGHT_MCP_SERVER}
 
           # Get global bin directory (npm bin -g is deprecated)
           GLOBAL_BIN="$(npm config get prefix)/bin"
@@ -365,8 +369,9 @@ jobs:
           ls -la "$GLOBAL_BIN" | grep -i -E "play|mcp" || echo "No matching files found in listing"
 
           # Check for various possible executable names
+          # @executeautomation/playwright-mcp-server may have different binary name
           MCP_CMD=""
-          for cmd in "playwright-mcp" "mcp-server-playwright" "@playwright/mcp"; do
+          for cmd in "playwright-mcp-server" "mcp-playwright" "playwright-mcp" "mcp-server-playwright"; do
             if [ -x "$GLOBAL_BIN/$cmd" ]; then
               MCP_CMD="$cmd"
               echo "Found executable: $cmd"
@@ -384,11 +389,11 @@ jobs:
             fi
           fi
 
-          # Final fallback: use npx as last resort
+          # Final fallback: use npx (always works with package name)
           if [ -z "$MCP_CMD" ]; then
-            echo "WARNING: No global executable found, falling back to npx"
+            echo "INFO: Using npx for MCP execution (recommended for package compatibility)"
             MCP_CMD="npx"
-            echo "PLAYWRIGHT_MCP_ARGS=-y @playwright/mcp@${PLAYWRIGHT_MCP_VERSION}" >> $GITHUB_ENV
+            echo "PLAYWRIGHT_MCP_ARGS=-y ${PLAYWRIGHT_MCP_SERVER}" >> $GITHUB_ENV
           fi
 
           echo "Resolved MCP command: $MCP_CMD"
@@ -399,7 +404,7 @@ jobs:
 
       - name: Setup MCP Configuration
         env:
-          PLAYWRIGHT_MCP_VERSION: ${{ env.PLAYWRIGHT_MCP_VERSION }}
+          PLAYWRIGHT_MCP_SERVER: ${{ env.PLAYWRIGHT_MCP_SERVER }}
         run: |
           FOLDER="${{ needs.prepare.outputs.folder }}"
           CHUNK_INDEX="${{ matrix.chunk.index }}"
@@ -421,10 +426,11 @@ jobs:
           fi
           echo "  MCP full path: $MCP_FULL_PATH"
 
-          # Create MCP config - ALWAYS use npx (consistent with working MCP servers like slack, supabase)
+          # Create MCP config using @executeautomation/playwright-mcp-server
           # Key: Use npx with -y flag and --headless for CI
-          echo "Creating MCP config with npx + headless (CI-compatible)..."
-          echo "{\"mcpServers\":{\"playwright\":{\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}\",\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--headless\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
+          # Note: Different args format for executeautomation package
+          echo "Creating MCP config with ${PLAYWRIGHT_MCP_SERVER}..."
+          echo "{\"mcpServers\":{\"playwright\":{\"command\":\"npx\",\"args\":[\"-y\",\"${PLAYWRIGHT_MCP_SERVER}\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
 
           # Validate JSON
           echo "Validating MCP config..."
@@ -441,22 +447,24 @@ jobs:
 
       - name: MCP Health Check
         env:
-          PLAYWRIGHT_MCP_VERSION: ${{ env.PLAYWRIGHT_MCP_VERSION }}
+          PLAYWRIGHT_MCP_SERVER: ${{ env.PLAYWRIGHT_MCP_SERVER }}
         run: |
-          echo "Testing Playwright MCP via npx (consistent with MCP config)..."
-          echo "  Version: ${PLAYWRIGHT_MCP_VERSION}"
+          echo "Testing Playwright MCP: ${PLAYWRIGHT_MCP_SERVER}..."
 
-          # Test that npx can successfully run the MCP server (with verbose output for debugging)
-          if timeout 30 npx -y "@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}" --help 2>&1; then
+          # Test that npx can successfully run the MCP server
+          if timeout 30 npx -y "${PLAYWRIGHT_MCP_SERVER}" --help 2>&1; then
             echo "MCP health check passed - npx can launch Playwright MCP"
           else
             echo "WARNING: MCP health check returned non-zero (may be OK if help text was shown)"
-            # Check if the installed command works directly
-            if command -v mcp-server-playwright >/dev/null 2>&1; then
-              echo "mcp-server-playwright is on PATH"
-              mcp-server-playwright --version 2>&1 || true
-            fi
-            # Don't fail the build - MCP may still work despite help returning non-zero
+            # Check if installed command works directly
+            for cmd in playwright-mcp-server mcp-playwright mcp-server-playwright; do
+              if command -v "$cmd" >/dev/null 2>&1; then
+                echo "$cmd is on PATH"
+                "$cmd" --version 2>&1 || true
+                break
+              fi
+            done
+            # Don't fail the build - MCP may still work
             echo "Proceeding with validation (MCP will be tested during Claude execution)"
           fi
 
@@ -860,7 +868,7 @@ jobs:
         env:
           FOLDER: ${{ needs.prepare.outputs.folder }}
           CHUNK_INDEX: ${{ matrix.chunk.index }}
-          PLAYWRIGHT_MCP_VERSION: ${{ env.PLAYWRIGHT_MCP_VERSION }}
+          PLAYWRIGHT_MCP_SERVER: ${{ env.PLAYWRIGHT_MCP_SERVER }}
         run: |
           # Pre-seed Claude global config with:
           # 1. apiKeySource: env (prevent interactive API key prompt)
@@ -870,15 +878,14 @@ jobs:
           SCREENSHOT_PATH="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
 
           echo "Configuring Claude global settings with Playwright MCP..."
-          echo "  Playwright MCP version: ${PLAYWRIGHT_MCP_VERSION}"
+          echo "  Playwright MCP server: ${PLAYWRIGHT_MCP_SERVER}"
           echo "  Screenshot path: $SCREENSHOT_PATH"
           mkdir -p "$CLAUDE_CONFIG_DIR"
 
-          # Create the Playwright MCP config JSON using npx (like other working MCP servers)
-          # Key fixes:
-          # 1. Use "npx" command with "-y" flag (consistent with slack, supabase, etc.)
-          # 2. Add "--headless" flag (CRITICAL for CI without display)
-          PLAYWRIGHT_MCP_CONFIG="{\"type\":\"stdio\",\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}\",\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--headless\",\"--timeout\",\"300000\"],\"env\":{}}"
+          # Create the Playwright MCP config JSON using @executeautomation/playwright-mcp-server
+          # This package is more stable than the official @playwright/mcp
+          # Reference: https://github.com/anthropics/claude-code/issues/1383
+          PLAYWRIGHT_MCP_CONFIG="{\"type\":\"stdio\",\"command\":\"npx\",\"args\":[\"-y\",\"${PLAYWRIGHT_MCP_SERVER}\"],\"env\":{}}"
 
           # Create or update settings.json with apiKeySource AND Playwright MCP
           if [ -f "$CLAUDE_CONFIG_FILE" ]; then
@@ -1316,5 +1323,5 @@ jobs:
               \"run_id\": \"${{ github.run_id }}\",
               \"run_url\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\",
               \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",
-              \"playwright_mcp_version\": \"${PLAYWRIGHT_MCP_VERSION}\"
+              \"playwright_mcp_server\": \"${PLAYWRIGHT_MCP_SERVER}\"
             }" || echo "Webhook failed (non-blocking)"
