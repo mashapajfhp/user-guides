@@ -4,74 +4,41 @@ on:
   push:
     paths:
       - '**/validation/validation-payload.json'
-      - '**/validation/journeys-payload.json'
   workflow_dispatch:
     inputs:
       feature_folder:
-        description: 'Feature folder to validate (e.g., air-ticket/v19)'
+        description: 'Feature folder to validate (e.g., overtime/v1)'
         required: true
       debug_mode:
         description: 'Enable debug logging'
         required: false
         default: 'false'
-      max_tests_per_chunk:
-        description: 'Maximum tests per chunk (default: 5)'
-        required: false
-        default: '5'
 
 env:
-  # SOLUTION: Use @executeautomation/playwright-mcp-server instead of @playwright/mcp
-  # Reason: Official @playwright/mcp has bugs that prevent tools from loading in Claude Code
-  # Source: https://github.com/anthropics/claude-code/issues/1383
-  PLAYWRIGHT_MCP_SERVER: "@executeautomation/playwright-mcp-server"
+  PLAYWRIGHT_MCP_SERVER: "@anthropic-ai/playwright-mcp@0.0.23"
   NODE_VERSION: "20"
-  MAX_TESTS_PER_CHUNK: ${{ github.event.inputs.max_tests_per_chunk || '5' }}
 
 jobs:
-  # ============================================
-  # JOB 1: PREPARE - Detect and split payload into chunks
-  # ============================================
-  prepare:
+  validate:
     runs-on: [self-hosted, validation]
-    timeout-minutes: 5
-
-    outputs:
-      skip: ${{ steps.detect.outputs.skip }}
-      folder: ${{ steps.detect.outputs.folder }}
-      payload_file: ${{ steps.detect.outputs.payload_file }}
-      payload_format: ${{ steps.detect.outputs.payload_format }}
-      result_file: ${{ steps.detect.outputs.result_file }}
-      report_file: ${{ steps.detect.outputs.report_file }}
-      screenshots_dir: ${{ steps.detect.outputs.screenshots_dir }}
-      log_file: ${{ steps.detect.outputs.log_file }}
-      feature_name: ${{ steps.parse_payload.outputs.feature_name }}
-      feature_slug: ${{ steps.parse_payload.outputs.feature_slug }}
-      version: ${{ steps.parse_payload.outputs.version }}
-      total_tests: ${{ steps.parse_payload.outputs.total_tests }}
-      must_test: ${{ steps.parse_payload.outputs.must_test }}
-      should_test: ${{ steps.parse_payload.outputs.should_test }}
-      chunk_count: ${{ steps.split.outputs.chunk_count }}
-      chunk_matrix: ${{ steps.split.outputs.chunk_matrix }}
+    timeout-minutes: 60
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        timeout-minutes: 3
         with:
           fetch-depth: 2
           persist-credentials: false
 
-      - name: Detect validation request
+      - name: Detect validation payload
         id: detect
         run: |
           if [ -n "${{ github.event.inputs.feature_folder }}" ]; then
             FOLDER="${{ github.event.inputs.feature_folder }}"
           else
-            CHANGED_FILE=$(git diff --name-only HEAD~1 HEAD | grep -E 'validation/(validation-payload|journeys-payload)\.json' | head -1)
+            CHANGED_FILE=$(git diff --name-only HEAD~1 HEAD | grep 'validation/validation-payload.json' | head -1)
             if [ -n "$CHANGED_FILE" ]; then
               FOLDER=$(echo "$CHANGED_FILE" | sed 's|/validation/.*||')
-              echo "Detected changed file: $CHANGED_FILE"
-              echo "Extracted folder: $FOLDER"
             fi
           fi
 
@@ -81,1616 +48,241 @@ jobs:
             exit 0
           fi
 
-          # Find payload file
-          if [ -f "$GITHUB_WORKSPACE/$FOLDER/validation/journeys-payload.json" ]; then
-            PAYLOAD_FILE="$FOLDER/validation/journeys-payload.json"
-            PAYLOAD_FORMAT="journeys-v1"
-          elif [ -f "$GITHUB_WORKSPACE/$FOLDER/validation/validation-payload.json" ]; then
-            PAYLOAD_FILE="$FOLDER/validation/validation-payload.json"
-            PAYLOAD_FORMAT="journeys-v1"
-          else
-            echo "No validation payload found in $FOLDER/validation/"
+          PAYLOAD_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/validation-payload.json"
+          if [ ! -f "$PAYLOAD_FILE" ]; then
+            echo "Payload file not found: $PAYLOAD_FILE"
             echo "skip=true" >> $GITHUB_OUTPUT
             exit 0
           fi
 
           echo "folder=$FOLDER" >> $GITHUB_OUTPUT
           echo "payload_file=$PAYLOAD_FILE" >> $GITHUB_OUTPUT
-          echo "payload_format=$PAYLOAD_FORMAT" >> $GITHUB_OUTPUT
-          echo "result_file=$FOLDER/validation/result.json" >> $GITHUB_OUTPUT
-          echo "report_file=$FOLDER/validation/report.md" >> $GITHUB_OUTPUT
-          echo "screenshots_dir=$FOLDER/validation/screenshots" >> $GITHUB_OUTPUT
-          echo "log_file=$FOLDER/validation/validation.log" >> $GITHUB_OUTPUT
           echo "skip=false" >> $GITHUB_OUTPUT
-          echo "Found validation request: $FOLDER (format: $PAYLOAD_FORMAT)"
 
-      # ============================================
-      # TRANSFORMATION STEP: Convert AI format to validation format
-      # This is a safety net - n8n should transform before saving,
-      # but this ensures compatibility if raw AI output is pushed
-      # ============================================
-      - name: Transform AI payload format (if needed)
-        id: transform
-        if: steps.detect.outputs.skip != 'true'
-        run: |
-          PAYLOAD_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.payload_file }}"
-
-          echo "============================================"
-          echo "Checking payload format..."
-          echo "============================================"
-
-          # Check if this is the new AI format (has feature_info) or old format (has metadata)
-          HAS_FEATURE_INFO=$(jq 'has("feature_info")' "$PAYLOAD_PATH" 2>/dev/null || echo "false")
-          HAS_PLAYWRIGHT_CONTEXT=$(jq 'has("playwright_context")' "$PAYLOAD_PATH" 2>/dev/null || echo "false")
-          HAS_METADATA=$(jq 'has("metadata")' "$PAYLOAD_PATH" 2>/dev/null || echo "false")
-          HAS_TESTS=$(jq 'has("tests")' "$PAYLOAD_PATH" 2>/dev/null || echo "false")
-
-          echo "Format detection:"
-          echo "  Has feature_info: $HAS_FEATURE_INFO"
-          echo "  Has playwright_context: $HAS_PLAYWRIGHT_CONTEXT"
-          echo "  Has metadata: $HAS_METADATA"
-          echo "  Has tests: $HAS_TESTS"
-
-          # Transform only if: has new format markers AND missing old format markers
-          if [ "$HAS_FEATURE_INFO" = "true" ] && [ "$HAS_PLAYWRIGHT_CONTEXT" = "true" ] && [ "$HAS_TESTS" = "false" ]; then
-            echo "============================================"
-            echo "NEW AI FORMAT DETECTED - Transforming..."
-            echo "============================================"
-
-            # Create backup of original
-            cp "$PAYLOAD_PATH" "${PAYLOAD_PATH}.ai-original"
-
-            # Transform using jq
-            jq '
-              # Extract source data
-              .feature_info as $fi |
-              .playwright_context as $pc |
-
-              # Build tests from what_to_do tasks
-              [
-                ($pc.what_to_do // []) | to_entries[] |
-                {
-                  test_id: "test_\(.key + 1)",
-                  test_name: .value.task,
-                  priority: (if .key == 0 then "must_test" else "should_test" end),
-                  description: .value.task,
-                  access_path_ref: "NAV-001",
-                  setup_flow_ref: null,
-                  business_rule_refs: [],
-                  edge_case_refs: [],
-                  assertions: [
-                    (.value.steps // []) | to_entries[] |
-                    {
-                      assertion_id: "assert_\(.key + 1)",
-                      type: "ui_element_present",
-                      description: .value,
-                      expected: true
-                    }
-                  ]
-                }
-              ] as $tests |
-
-              # Build edge cases from what_to_watch_out_for
-              [
-                ($pc.what_to_watch_out_for // []) | to_entries[] |
-                {
-                  case_id: ("EDGE-" + ((.key + 1) | tostring | if length < 3 then ("00" + .)[-3:] else . end)),
-                  scenario: .value.known_issue,
-                  expected_behavior: (.value.workaround // "Handle appropriately"),
-                  priority: "should_test"
-                }
-              ] as $edge_cases |
-
-              # Build navigation steps from where_to_go
-              (($pc.where_to_go.path // "") | split(" > ") | map(select(length > 0))) as $nav_parts |
-              [
-                $nav_parts[] |
-                {
-                  action: "click",
-                  target: .,
-                  selector_hint: ("Menu item labeled \"" + . + "\"")
-                }
-              ] as $nav_steps |
-
-              # Construct transformed payload
-              {
-                metadata: {
-                  feature_name: ($fi.feature_name // $fi.requested_feature // "Unknown Feature"),
-                  feature_slug: ($fi.feature_slug // "unknown"),
-                  version: ($fi.next_version // "v1"),
-                  generated_at: (now | todate),
-                  source: "ai_agent_transformed",
-                  original_format: "ai_playwright_context"
-                },
-                instructions: {
-                  execution_mode: "validate_ui",
-                  screenshot_policy: "viewport_only",
-                  note: "Auto-transformed from AI agent output by GitHub Actions"
-                },
-                definitions: {
-                  access_paths: {
-                    configuration: [
-                      {
-                        path_id: "NAV-001",
-                        context: "main_navigation",
-                        url: ($pc.where_to_go.url // ""),
-                        steps: $nav_steps
-                      }
-                    ],
-                    operational: []
-                  },
-                  setup_flows: [],
-                  business_rules: [],
-                  edge_cases: $edge_cases,
-                  ui_elements: []
-                },
-                tests: $tests,
-                summary: {
-                  total_tests: ($tests | length),
-                  by_priority: {
-                    must_test: ([$tests[] | select(.priority == "must_test")] | length),
-                    should_test: ([$tests[] | select(.priority == "should_test")] | length)
-                  }
-                },
-                _ai_original: {
-                  feature_info: $fi,
-                  playwright_context: $pc
-                }
-              }
-            ' "$PAYLOAD_PATH" > "${PAYLOAD_PATH}.transformed"
-
-            # Validate transformed JSON
-            if jq empty "${PAYLOAD_PATH}.transformed" 2>/dev/null; then
-              mv "${PAYLOAD_PATH}.transformed" "$PAYLOAD_PATH"
-              echo "Transformation successful!"
-              echo "  Tests generated: $(jq '.tests | length' "$PAYLOAD_PATH")"
-              echo "  Edge cases: $(jq '.definitions.edge_cases | length' "$PAYLOAD_PATH")"
-              echo "  Nav steps: $(jq '.definitions.access_paths.configuration[0].steps | length' "$PAYLOAD_PATH")"
-              echo "transformed=true" >> $GITHUB_OUTPUT
-              echo "transform_source=ai_format" >> $GITHUB_OUTPUT
-            else
-              echo "ERROR: Transformation produced invalid JSON!"
-              cat "${PAYLOAD_PATH}.transformed" || true
-              echo "Restoring original payload..."
-              mv "${PAYLOAD_PATH}.ai-original" "$PAYLOAD_PATH"
-              rm -f "${PAYLOAD_PATH}.transformed"
-              echo "transformed=false" >> $GITHUB_OUTPUT
-              echo "transform_error=invalid_json" >> $GITHUB_OUTPUT
-              exit 1
-            fi
-
-          elif [ "$HAS_METADATA" = "true" ] && [ "$HAS_TESTS" = "true" ]; then
-            echo "Payload already in expected validation format - no transformation needed"
-            echo "transformed=false" >> $GITHUB_OUTPUT
-            echo "transform_source=already_valid" >> $GITHUB_OUTPUT
-
-          else
-            echo "WARNING: Unrecognized payload format"
-            echo "  Expected either: (feature_info + playwright_context) OR (metadata + tests)"
-            echo "  Proceeding with payload as-is..."
-            echo "transformed=false" >> $GITHUB_OUTPUT
-            echo "transform_source=unknown_format" >> $GITHUB_OUTPUT
-          fi
-
-          echo "============================================"
-
-      - name: Parse and validate payload
-        id: parse_payload
-        if: steps.detect.outputs.skip != 'true'
-        run: |
-          PAYLOAD_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.payload_file }}"
-
-          echo "Parsing payload: $PAYLOAD_PATH"
-
-          # Validate JSON
-          if ! jq empty "$PAYLOAD_PATH" 2>/dev/null; then
-            echo "Invalid JSON in payload file"
-            exit 1
-          fi
-
-          # Extract metadata (handle array or object)
-          IS_ARRAY=$(jq 'if type == "array" then true else false end' "$PAYLOAD_PATH")
-
-          if [ "$IS_ARRAY" = "true" ]; then
-            FEATURE_NAME=$(jq -r '.[0].metadata.feature_name // "unknown"' "$PAYLOAD_PATH")
-            FEATURE_SLUG=$(jq -r '.[0].metadata.feature_slug // "unknown"' "$PAYLOAD_PATH")
-            VERSION=$(jq -r '.[0].metadata.version // "v1"' "$PAYLOAD_PATH")
-            TOTAL_TESTS=$(jq -r '.[0].summary.total_tests // 0' "$PAYLOAD_PATH")
-            MUST_TEST=$(jq -r '.[0].summary.by_priority.must_test // 0' "$PAYLOAD_PATH")
-            SHOULD_TEST=$(jq -r '.[0].summary.by_priority.should_test // 0' "$PAYLOAD_PATH")
-          else
-            FEATURE_NAME=$(jq -r '.metadata.feature_name // "unknown"' "$PAYLOAD_PATH")
-            FEATURE_SLUG=$(jq -r '.metadata.feature_slug // "unknown"' "$PAYLOAD_PATH")
-            VERSION=$(jq -r '.metadata.version // "v1"' "$PAYLOAD_PATH")
-            TOTAL_TESTS=$(jq -r '.summary.total_tests // 0' "$PAYLOAD_PATH")
-            MUST_TEST=$(jq -r '.summary.by_priority.must_test // 0' "$PAYLOAD_PATH")
-            SHOULD_TEST=$(jq -r '.summary.by_priority.should_test // 0' "$PAYLOAD_PATH")
-          fi
+          # Extract feature info
+          FEATURE_NAME=$(jq -r '.[0].feature_info.feature_name // "unknown"' "$PAYLOAD_FILE")
+          FEATURE_SLUG=$(jq -r '.[0].feature_info.feature_slug // "unknown"' "$PAYLOAD_FILE")
+          VERSION=$(jq -r '.[0].feature_info.next_version // "v1"' "$PAYLOAD_FILE")
 
           echo "feature_name=$FEATURE_NAME" >> $GITHUB_OUTPUT
           echo "feature_slug=$FEATURE_SLUG" >> $GITHUB_OUTPUT
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "total_tests=$TOTAL_TESTS" >> $GITHUB_OUTPUT
-          echo "must_test=$MUST_TEST" >> $GITHUB_OUTPUT
-          echo "should_test=$SHOULD_TEST" >> $GITHUB_OUTPUT
 
-          echo "============================================"
-          echo "Payload Summary:"
-          echo "  Feature: $FEATURE_NAME ($FEATURE_SLUG)"
-          echo "  Version: $VERSION"
-          echo "  Total Tests: $TOTAL_TESTS"
-          echo "  Must Test: $MUST_TEST"
-          echo "  Should Test: $SHOULD_TEST"
-          echo "============================================"
-
-      - name: Split payload into chunks
-        id: split
+      - name: Setup directories
+        id: dirs
         if: steps.detect.outputs.skip != 'true'
         run: |
-          PAYLOAD_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.payload_file }}"
           FOLDER="${{ steps.detect.outputs.folder }}"
-          CHUNKS_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/chunks"
-          MAX_PER_CHUNK="${{ env.MAX_TESTS_PER_CHUNK }}"
+          BASE_DIR="$GITHUB_WORKSPACE/$FOLDER/validation"
 
-          # Clean up any previous chunks
-          rm -rf "$CHUNKS_DIR"
-          mkdir -p "$CHUNKS_DIR"
+          # Create all output directories
+          mkdir -p "$BASE_DIR/screenshots"
+          mkdir -p "$BASE_DIR/results"
+          mkdir -p "$BASE_DIR/logs"
+          mkdir -p "$BASE_DIR/artifacts"
 
-          # Check if payload is array or object and get total test count
-          IS_ARRAY=$(jq 'if type == "array" then true else false end' "$PAYLOAD_PATH")
+          # Output paths for later steps
+          echo "base_dir=$BASE_DIR" >> $GITHUB_OUTPUT
+          echo "screenshots_dir=$BASE_DIR/screenshots" >> $GITHUB_OUTPUT
+          echo "results_dir=$BASE_DIR/results" >> $GITHUB_OUTPUT
+          echo "logs_dir=$BASE_DIR/logs" >> $GITHUB_OUTPUT
+          echo "result_file=$BASE_DIR/result.json" >> $GITHUB_OUTPUT
+          echo "report_file=$BASE_DIR/report.md" >> $GITHUB_OUTPUT
+          echo "log_file=$BASE_DIR/logs/validation.log" >> $GITHUB_OUTPUT
 
-          if [ "$IS_ARRAY" = "true" ]; then
-            TOTAL_TESTS=$(jq -r '.[0].tests | length' "$PAYLOAD_PATH")
-            JQ_ROOT=".[0]"
-          else
-            TOTAL_TESTS=$(jq -r '.tests | length' "$PAYLOAD_PATH")
-            JQ_ROOT=""
-          fi
+          echo "Output directories created:"
+          echo "  Screenshots: $BASE_DIR/screenshots"
+          echo "  Results: $BASE_DIR/results"
+          echo "  Logs: $BASE_DIR/logs"
+          echo "  Artifacts: $BASE_DIR/artifacts"
 
-          if [ "$TOTAL_TESTS" -eq 0 ]; then
-            echo "No tests found in payload"
-            echo "chunk_count=0" >> $GITHUB_OUTPUT
-            echo "chunk_matrix=[]" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          # Calculate number of chunks needed
-          CHUNK_COUNT=$(( (TOTAL_TESTS + MAX_PER_CHUNK - 1) / MAX_PER_CHUNK ))
-
-          echo "============================================"
-          echo "Chunking Strategy:"
-          echo "  Total Tests: $TOTAL_TESTS"
-          echo "  Max per Chunk: $MAX_PER_CHUNK"
-          echo "  Chunk Count: $CHUNK_COUNT"
-          echo "============================================"
-
-          # Extract definitions (shared across all chunks)
-          # These are small with reference-based architecture
-          if [ "$IS_ARRAY" = "true" ]; then
-            jq '.[0].definitions // {}' "$PAYLOAD_PATH" > "$CHUNKS_DIR/definitions.json"
-            jq '{metadata: .[0].metadata, instructions: .[0].instructions}' "$PAYLOAD_PATH" > "$CHUNKS_DIR/shared.json"
-          else
-            jq '.definitions // {}' "$PAYLOAD_PATH" > "$CHUNKS_DIR/definitions.json"
-            jq '{metadata: .metadata, instructions: .instructions}' "$PAYLOAD_PATH" > "$CHUNKS_DIR/shared.json"
-          fi
-          DEFS_SIZE=$(wc -c < "$CHUNKS_DIR/definitions.json")
-          echo "Definitions size: $DEFS_SIZE bytes (shared)"
-
-          # Create chunk matrix for GitHub Actions
-          MATRIX_JSON="["
-
-          for i in $(seq 0 $((CHUNK_COUNT - 1))); do
-            START=$((i * MAX_PER_CHUNK))
-
-            # Create chunk payload with:
-            # - Full definitions (shared, reference-based)
-            # - Full metadata and instructions
-            # - Subset of tests
-            if [ "$IS_ARRAY" = "true" ]; then
-              jq --argjson start $START --argjson count $MAX_PER_CHUNK --argjson idx $i --argjson chunks $CHUNK_COUNT --argjson total $TOTAL_TESTS '
-                {
-                  metadata: .[0].metadata,
-                  instructions: .[0].instructions,
-                  definitions: .[0].definitions,
-                  tests: (.[0].tests[$start:$start+$count]),
-                  chunk_info: {
-                    chunk_index: $idx,
-                    chunk_count: $chunks,
-                    tests_in_chunk: (.[0].tests[$start:$start+$count] | length),
-                    total_tests: $total
-                  }
-                }
-              ' "$PAYLOAD_PATH" > "$CHUNKS_DIR/chunk-$i.json"
-            else
-              jq --argjson start $START --argjson count $MAX_PER_CHUNK --argjson idx $i --argjson chunks $CHUNK_COUNT --argjson total $TOTAL_TESTS '
-                {
-                  metadata: .metadata,
-                  instructions: .instructions,
-                  definitions: .definitions,
-                  tests: (.tests[$start:$start+$count]),
-                  chunk_info: {
-                    chunk_index: $idx,
-                    chunk_count: $chunks,
-                    tests_in_chunk: (.tests[$start:$start+$count] | length),
-                    total_tests: $total
-                  }
-                }
-              ' "$PAYLOAD_PATH" > "$CHUNKS_DIR/chunk-$i.json"
-            fi
-
-            CHUNK_SIZE=$(wc -c < "$CHUNKS_DIR/chunk-$i.json")
-            TESTS_IN_CHUNK=$(jq '.tests | length' "$CHUNKS_DIR/chunk-$i.json")
-            echo "  Chunk $i: $TESTS_IN_CHUNK tests, $CHUNK_SIZE bytes"
-
-            # Build matrix JSON
-            if [ $i -gt 0 ]; then
-              MATRIX_JSON="${MATRIX_JSON},"
-            fi
-            MATRIX_JSON="${MATRIX_JSON}{\"index\":$i}"
-          done
-
-          MATRIX_JSON="${MATRIX_JSON}]"
-
-          echo "chunk_count=$CHUNK_COUNT" >> $GITHUB_OUTPUT
-          echo "chunk_matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
-
-          echo "============================================"
-          echo "Chunks created: $CHUNK_COUNT"
-          echo "Matrix: $MATRIX_JSON"
-          echo "============================================"
-
-      - name: Pre-flight Health Checks
-        id: preflight
+      - name: Setup Node.js
         if: steps.detect.outputs.skip != 'true'
-        run: |
-          echo "Running pre-flight checks..."
-          ERRORS=""
-
-          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
-            ERRORS="${ERRORS}ANTHROPIC_API_KEY not configured\n"
-          else
-            echo "ANTHROPIC_API_KEY configured"
-          fi
-
-          if [ -z "${{ secrets.APP_BASE_URL }}" ]; then
-            ERRORS="${ERRORS}APP_BASE_URL not configured\n"
-          else
-            echo "APP_BASE_URL configured"
-          fi
-
-          AVAILABLE_GB=$(df -g "$GITHUB_WORKSPACE" | tail -1 | awk '{print $4}')
-          if [ "$AVAILABLE_GB" -lt 2 ]; then
-            ERRORS="${ERRORS}Low disk space: ${AVAILABLE_GB}GB available (need 2GB)\n"
-          else
-            echo "Disk space OK: ${AVAILABLE_GB}GB available"
-          fi
-
-          if [ -n "$ERRORS" ]; then
-            echo "Pre-flight checks failed:"
-            echo -e "$ERRORS"
-            exit 1
-          fi
-
-          echo "All pre-flight checks passed"
-
-  # ============================================
-  # JOB 2: VALIDATE - Run validation for each chunk (parallel)
-  # ============================================
-  validate:
-    needs: prepare
-    if: needs.prepare.outputs.skip != 'true' && needs.prepare.outputs.chunk_count != '0'
-    runs-on: [self-hosted, validation]
-    timeout-minutes: 20  # Reduced timeout per chunk (was 45 for full payload)
-
-    strategy:
-      fail-fast: false  # Continue other chunks if one fails
-      max-parallel: 2   # Limit parallel runs to avoid resource contention
-      matrix:
-        chunk: ${{ fromJson(needs.prepare.outputs.chunk_matrix) }}
-
-    outputs:
-      chunk_status: ${{ steps.validate_outputs.outputs.status }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        timeout-minutes: 3
+        uses: actions/setup-node@v4
         with:
-          fetch-depth: 1
-          persist-credentials: false
+          node-version: ${{ env.NODE_VERSION }}
 
-      - name: Prepare Chunk Directories
-        run: |
-          FOLDER="${{ needs.prepare.outputs.folder }}"
-          CHUNK_INDEX="${{ matrix.chunk.index }}"
+      - name: Install Playwright MCP
+        if: steps.detect.outputs.skip != 'true'
+        run: npm install -g ${{ env.PLAYWRIGHT_MCP_SERVER }}
 
-          # Create chunk-specific output directories
-          mkdir -p "$GITHUB_WORKSPACE/$FOLDER/validation/chunks/results"
-          mkdir -p "$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
-
-          echo "Chunk $CHUNK_INDEX directories ready"
-
-      - name: Install Claude CLI
-        run: |
-          echo "Installing Claude CLI..."
-          npm install -g @anthropic-ai/claude-code
-          export PATH="$(npm prefix -g)/bin:$PATH"
-
-          if ! command -v claude &> /dev/null; then
-            echo "Claude CLI installation failed"
-            exit 1
-          fi
-
-          claude --version
-          echo "Claude CLI installed"
-
-      - name: Install Playwright MCP and Browsers
-        run: |
-          echo "Installing Playwright MCP: ${PLAYWRIGHT_MCP_SERVER}..."
-          echo "Note: Using @executeautomation/playwright-mcp-server (stable alternative)"
-          npm install -g ${PLAYWRIGHT_MCP_SERVER}
-
-          # Get global bin directory (npm bin -g is deprecated)
-          GLOBAL_BIN="$(npm config get prefix)/bin"
-          echo "Global npm bin: $GLOBAL_BIN"
-          echo "$GLOBAL_BIN" >> $GITHUB_PATH
-
-          echo "Detecting Playwright MCP executable..."
-          ls -la "$GLOBAL_BIN" | grep -i -E "play|mcp" || echo "No matching files found in listing"
-
-          # Check for various possible executable names
-          # @executeautomation/playwright-mcp-server may have different binary name
-          MCP_CMD=""
-          for cmd in "playwright-mcp-server" "mcp-playwright" "playwright-mcp" "mcp-server-playwright"; do
-            if [ -x "$GLOBAL_BIN/$cmd" ]; then
-              MCP_CMD="$cmd"
-              echo "Found executable: $cmd"
-              break
-            fi
-          done
-
-          # Fallback: search for any mcp-related executable
-          if [ -z "$MCP_CMD" ]; then
-            echo "Searching for MCP executable..."
-            MCP_FOUND=$(find "$GLOBAL_BIN" -maxdepth 1 -name "*mcp*" -o -name "*playwright*" 2>/dev/null | head -1)
-            if [ -n "$MCP_FOUND" ] && [ -x "$MCP_FOUND" ]; then
-              MCP_CMD=$(basename "$MCP_FOUND")
-              echo "Found via search: $MCP_CMD"
-            fi
-          fi
-
-          # Final fallback: use npx (always works with package name)
-          if [ -z "$MCP_CMD" ]; then
-            echo "INFO: Using npx for MCP execution (recommended for package compatibility)"
-            MCP_CMD="npx"
-            echo "PLAYWRIGHT_MCP_ARGS=-y ${PLAYWRIGHT_MCP_SERVER}" >> $GITHUB_ENV
-          fi
-
-          echo "Resolved MCP command: $MCP_CMD"
-          echo "PLAYWRIGHT_MCP_CMD=$MCP_CMD" >> $GITHUB_ENV
-
-          echo "Installing Playwright Chromium..."
-          npx -y playwright install chromium
-
-      - name: Setup MCP Configuration
+      - name: Run Playwright Validation
+        if: steps.detect.outputs.skip != 'true'
         env:
-          PLAYWRIGHT_MCP_SERVER: ${{ env.PLAYWRIGHT_MCP_SERVER }}
-        run: |
-          FOLDER="${{ needs.prepare.outputs.folder }}"
-          CHUNK_INDEX="${{ matrix.chunk.index }}"
-          SCREENSHOT_PATH="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
-
-          echo "Setting up MCP configuration..."
-          echo "  Screenshot path: $SCREENSHOT_PATH"
-          echo "  MCP command: $PLAYWRIGHT_MCP_CMD"
-
-          rm -f "$GITHUB_WORKSPACE/.mcp.json"
-          mkdir -p "$SCREENSHOT_PATH"
-
-          # Get the FULL PATH to the MCP command (Claude Code requires absolute paths)
-          GLOBAL_BIN="$(npm config get prefix)/bin"
-          if [ "$PLAYWRIGHT_MCP_CMD" = "npx" ]; then
-            MCP_FULL_PATH="npx"
-          else
-            MCP_FULL_PATH="${GLOBAL_BIN}/${PLAYWRIGHT_MCP_CMD}"
-          fi
-          echo "  MCP full path: $MCP_FULL_PATH"
-
-          # Create MCP config using @executeautomation/playwright-mcp-server
-          # Key: Use npx with -y flag and --headless for CI
-          # Note: Different args format for executeautomation package
-          echo "Creating MCP config with ${PLAYWRIGHT_MCP_SERVER}..."
-          echo "{\"mcpServers\":{\"playwright\":{\"command\":\"npx\",\"args\":[\"-y\",\"${PLAYWRIGHT_MCP_SERVER}\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
-
-          # Validate JSON
-          echo "Validating MCP config..."
-          if jq empty "$GITHUB_WORKSPACE/.mcp.json" 2>/dev/null; then
-            echo "MCP config is valid JSON"
-            jq . "$GITHUB_WORKSPACE/.mcp.json"
-          else
-            echo "ERROR: Invalid MCP config JSON!"
-            cat "$GITHUB_WORKSPACE/.mcp.json"
-            exit 1
-          fi
-
-          echo "MCP config for chunk $CHUNK_INDEX ready"
-
-      - name: MCP Health Check
-        env:
-          PLAYWRIGHT_MCP_SERVER: ${{ env.PLAYWRIGHT_MCP_SERVER }}
-        run: |
-          echo "Testing Playwright MCP: ${PLAYWRIGHT_MCP_SERVER}..."
-
-          # Test that npx can successfully run the MCP server
-          if timeout 30 npx -y "${PLAYWRIGHT_MCP_SERVER}" --help 2>&1; then
-            echo "MCP health check passed - npx can launch Playwright MCP"
-          else
-            echo "WARNING: MCP health check returned non-zero (may be OK if help text was shown)"
-            # Check if installed command works directly
-            for cmd in playwright-mcp-server mcp-playwright mcp-server-playwright; do
-              if command -v "$cmd" >/dev/null 2>&1; then
-                echo "$cmd is on PATH"
-                "$cmd" --version 2>&1 || true
-                break
-              fi
-            done
-            # Don't fail the build - MCP may still work
-            echo "Proceeding with validation (MCP will be tested during Claude execution)"
-          fi
-
-      - name: Generate Chunk Validation Prompt
-        id: generate_prompt
-        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
           APP_USERNAME: ${{ secrets.APP_USERNAME }}
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
-          FOLDER: ${{ needs.prepare.outputs.folder }}
-          FEATURE_NAME: ${{ needs.prepare.outputs.feature_name }}
-          CHUNK_INDEX: ${{ matrix.chunk.index }}
-          CHUNK_COUNT: ${{ needs.prepare.outputs.chunk_count }}
         run: |
-          PROMPT_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/.prompt-chunk-$CHUNK_INDEX.txt"
-          CHUNK_PAYLOAD="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/chunk-$CHUNK_INDEX.json"
-          CHUNK_RESULT="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/results/result-chunk-$CHUNK_INDEX.json"
-          SCREENSHOT_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
+          FOLDER="${{ steps.detect.outputs.folder }}"
+          PAYLOAD_FILE="${{ steps.detect.outputs.payload_file }}"
+          FEATURE_NAME="${{ steps.detect.outputs.feature_name }}"
+          SCREENSHOTS_DIR="${{ steps.dirs.outputs.screenshots_dir }}"
+          RESULT_FILE="${{ steps.dirs.outputs.result_file }}"
+          LOG_FILE="${{ steps.dirs.outputs.log_file }}"
 
+          # Create the prompt file
+          PROMPT_FILE=$(mktemp)
           cat > "$PROMPT_FILE" << 'PROMPT_HEADER'
-          # UI Validation Agent - Journey-Based Testing (Chunked Execution)
+          You are a QA validation agent using Playwright MCP to explore and validate a feature in the Bayzat HR application.
 
-          You are a UI validation agent that executes test cases against a live web application.
-          Your task is to validate the UI based on the provided CHUNK of tests.
+          ## YOUR MISSION
+          Freely explore the feature described in the payload below. Your goal is to:
+          1. Successfully log in to the application
+          2. Navigate to the feature location
+          3. Explore each task/workflow described
+          4. Take screenshots as evidence
+          5. Document what works and what doesn't
 
-          ## CHUNK EXECUTION MODE
-          This is a CHUNKED validation run. You are processing a SUBSET of tests.
-          - Complete all tests in YOUR chunk only
-          - Other chunks are running in parallel
-          - Results will be merged after all chunks complete
+          ## CRITICAL FIRST STEPS
 
-          ## CRITICAL INSTRUCTIONS
-          1. You MUST complete all tests in this chunk
-          2. You MUST capture screenshots for each major step (prefix with chunk index)
-          3. You MUST write chunk result JSON before finishing
-          4. You MUST handle login first before any validation
-          5. Focus on tests in order - they are pre-sorted by priority
+          ### Step 1: Browser Setup
+          FIRST, call browser_resize with width=1920, height=1200
 
-          ═══════════════════════════════════════════════════════════════
-          ## 🚨🚨🚨 STEP ZERO - DO THIS FIRST - MANDATORY 🚨🚨🚨
-          ═══════════════════════════════════════════════════════════════
+          ### Step 2: Login
+          1. Navigate to the base URL (login page)
+          2. Take a snapshot to see the login form
+          3. Fill in the email field with the username
+          4. Fill in the password field with the password
+          5. Click the login/submit button
+          6. Wait 3 seconds for the page to load
+          7. Take a screenshot to confirm login success
 
-          ██████████████████████████████████████████████████████████████
-          ██  BEFORE YOU DO ANYTHING ELSE - RESIZE THE BROWSER!!!     ██
-          ██  THIS IS YOUR VERY FIRST ACTION - NO EXCEPTIONS!         ██
-          ██████████████████████████████████████████████████████████████
-
-          YOUR FIRST TOOL CALL MUST BE:
-          ┌─────────────────────────────────────────────────────────────┐
-          │  browser_resize with width=1920 and height=1200            │
-          └─────────────────────────────────────────────────────────────┘
-
-          DO NOT:
-          ❌ Navigate to any URL first
-          ❌ Take any screenshots first
-          ❌ Click anything first
-          ❌ Do login first
-          ❌ Do ANYTHING before browser_resize
-
-          THE SEQUENCE IS:
-          1️⃣ browser_resize (width=1920, height=1200) ← FIRST!
-          2️⃣ Then navigate to login page
-          3️⃣ Then everything else
-
-          ═══════════════════════════════════════════════════════════════
-          ## 🚨 HARD RULE: FULL SIDEBAR MUST ALWAYS BE VISIBLE 🚨
-          ═══════════════════════════════════════════════════════════════
-
-          THIS IS A NON-NEGOTIABLE REQUIREMENT. EVERY SCREENSHOT MUST SHOW
-          THE COMPLETE SIDEBAR WITH SETTINGS VISIBLE AT THE BOTTOM.
-
-          ### AFTER RESIZE - VERIFY SIDEBAR IS COMPLETE:
-          The sidebar MUST show ALL these items (top to bottom):
-          ✓ Home
-          ✓ Company
-          ✓ Payroll
-          ✓ Finance Ops
-          ✓ Time
-          ✓ Performance
-          ✓ Health
-          ✓ Requests
-          ✓ Insights
-          ✓ Automations
-          ✓ Apps
-          ✓ Settings (gear icon - MUST BE VISIBLE AT BOTTOM!)
-
-          ### IF SETTINGS IS NOT VISIBLE AFTER LOGIN:
-          - STOP! Do not proceed with any tests
-          - Call browser_resize again with height=1300
-          - Take a verification screenshot
-          - Only proceed when Settings gear icon is visible
-
-          ### SCREENSHOT VALIDATION RULE:
-          ❌ REJECT any screenshot where Settings is cut off
-          ❌ REJECT any screenshot where sidebar is incomplete
-          ✅ ACCEPT only screenshots showing FULL sidebar with Settings visible
-
-          ═══════════════════════════════════════════════════════════════
-          ## ONBOARDING TOOLTIPS DISMISSAL (MANDATORY - CALL REPEATEDLY)
-          ═══════════════════════════════════════════════════════════════
-
-          Bayzat shows onboarding tooltips/modals (purple tour cards) that BLOCK
-          navigation. You MUST dismiss them:
-          - Right after login / landing
-          - After every major navigation step (before screenshot)
-          - Before any critical click that might be obstructed
-
-          ### TOOLTIP CONTAINER DETECTION:
-          Look for visible elements matching ANY of these selectors:
-          - [role="dialog"]
-          - [aria-modal="true"]
-          - .tour, .onboarding, .tooltip, .popover
-          - .shepherd-element, .react-joyride__tooltip
-          - Any purple/violet overlay card
-
-          ### CLOSE BUTTON SELECTORS (TRY IN ORDER):
-          Inside the tooltip container, find and click the close button:
-          1. button[aria-label*="close" i]  (case-insensitive)
-          2. button:has-text("×")           (multiplication sign)
-          3. button:has-text("✕")           (X mark)
-          4. button:has-text("X")           (letter X)
-          5. button:has(svg[aria-label*="close" i])
-          6. [data-testid*="close" i] button
-          7. button[title*="close" i]
-
-          ### DISMISSAL PROCEDURE:
-          1. After login, WAIT 2 seconds for tooltips to appear
-          2. Check for tooltip containers (selectors above)
-          3. If found: click the close button (X in top-right)
-          4. Wait 150ms, then verify tooltip is gone
-          5. REPEAT until no more tooltips are visible
-          6. Do NOT fail if tooltip is not present (safe to call always)
-
-          ### WHEN TO CALL DISMISSAL:
-          ✓ Immediately after page load (post-login)
-          ✓ Before each screenshot call
-          ✓ Before clicking sidebar navigation items
-          ✓ After any navigation that might trigger new tooltips
-
-          ### VERIFICATION:
-          - After dismissal, the main UI should be fully interactive
-          - No overlays blocking the sidebar or main content
-          - Sidebar items must be clickable
-
-          ═══════════════════════════════════════════════════════════════
-          ## SCREENSHOT POLICY (MANDATORY)
-          ═══════════════════════════════════════════════════════════════
-
-          We only accept "within-the-fold" evidence screenshots.
-
-          A) NEVER take full-page screenshots:
-             - Do NOT use fullPage=true or any full-page option
-             - Do NOT capture entire scrolling containers (feeds/timelines/lists)
-             - Do NOT use any snapshot tool that stitches multiple viewports
-
-          B) ALWAYS ensure target is visible BEFORE shooting:
-             - If the target UI is not in the current viewport, SCROLL FIRST
-             - Scroll until the target element is visible and preferably centered
-             - Use browser_scroll or scroll element into view before screenshot
-
-          C) Evidence pattern (for each major step / assertion):
-             1. Viewport screenshot (context) => captures only what fits in browser window
-             2. Element screenshot (proof)    => tight crop to the validated UI component
-
-          D) Long pages / feeds / scrollable areas:
-             - DO NOT screenshot the entire scrollable area
-             - Scroll to the relevant section FIRST
-             - Capture ONE viewport screenshot at that position only
-
-          E) Timing:
-             - After scrolling, WAIT 500ms for layout/animations to settle
-             - Then take the screenshot
-
-          F) Screenshot naming (MUST FOLLOW):
-             - chunk-\${CHUNK_INDEX}-<test_id>-<step>-viewport.png  (for viewport shots)
-             - chunk-\${CHUNK_INDEX}-<test_id>-<step>-element.png   (for element shots)
-
-          G) Playwright MCP tool usage:
-             - Use mcp__playwright__browser_take_screenshot for viewport captures
-             - Do NOT pass fullPage option or set it to false
-             - For element screenshots, target the specific element selector
-             - Prefer element screenshots for actual assertion proof
-
-          ═══════════════════════════════════════════════════════════════
-          ## ⚠️ CRITICAL: NAVIGATION PATHS ARE OUTDATED HINTS ⚠️
-          ═══════════════════════════════════════════════════════════════
-
-          THE MENU STRUCTURE CHANGES FREQUENTLY. Navigation paths in this
-          payload are HINTS from when the documentation was written - they
-          may no longer be accurate.
-
-          KNOWN CHANGES (examples):
-          - "Settings > Workflows" is NOW "Automations > Workflows"
-          - Menu items get renamed, moved, or reorganized regularly
-          - Your job is to FIND the feature, not blindly follow paths
-
-          ═══════════════════════════════════════════════════════════════
-          ## ZERO-SKIP POLICY (ABSOLUTE REQUIREMENT)
-          ═══════════════════════════════════════════════════════════════
-
-          YOU MUST COMPLETE EVERY TEST. NO EXCEPTIONS. SKIPPING = FAILURE.
-
-          A) FORBIDDEN BEHAVIORS:
-             - NEVER mark a test as "skipped" because navigation path didn't work
-             - NEVER give up after trying just the hinted path
-             - NEVER assume a feature doesn't exist without clicking EVERY menu
-             - NEVER skip - if you can't find it, mark as FAILED with exploration notes
-
-          B) REQUIRED BEHAVIOR:
-             - You MUST click through EVERY sidebar menu item when path fails
-             - You MUST screenshot each menu you explore
-             - You MUST document the CORRECT path when you find it
-             - You MUST flag "MENU HAS CHANGED" when path differs from hint
-
-          C) STATUS MEANINGS (STRICT):
-             - "passed"  = Found feature (maybe different path), assertions verified true
-             - "failed"  = Found feature, assertions verified false OR exhausted all menus
-             - "skipped" = FORBIDDEN except for features requiring unavailable permissions
-
-          D) MANDATORY EXPLORATION BEFORE ANY NON-PASS STATUS:
-             You MUST click and screenshot EVERY SINGLE sidebar menu item.
-             No exceptions. Document what you found in each one.
-
-          ═══════════════════════════════════════════════════════════════
-          ## DEEP EXPLORATION PROTOCOL (MANDATORY WHEN PATH FAILS)
-          ═══════════════════════════════════════════════════════════════
-
-          When the hinted navigation path doesn't work, you MUST execute
-          this COMPLETE exploration protocol. Do NOT skip steps.
-
-          ### STEP 1: CLICK EVERY SIDEBAR MENU ITEM (MANDATORY)
-          This is NOT optional. You MUST physically click each menu item.
-
-          For the Bayzat app, sidebar menus include (TOP TO BOTTOM):
-          - Home (dashboard)
-          - Company
-          - Payroll
-          - Finance Ops
-          - Time
-          - Performance
-          - Health
-          - Requests
-          - Insights
-          - Automations
-          - Apps
-          - Settings (SCROLL SIDEBAR if not visible - at very bottom!)
-
-          NOTE: You MUST have viewport 1920x1200 AND may need to scroll
-          the sidebar to see Settings at the bottom!
-
-          FOR EACH MENU ITEM:
-          1. Click the menu item
-          2. Wait for page/submenu to load
-          3. Take a screenshot named: chunk-X-explore-<menu-name>.png
-          4. Check if it contains or leads to the feature you need
-          5. If it has submenus, click EACH submenu item too
-          6. Document what you found: "Clicked [Menu] -> Found: [description]"
-
-          ### STEP 2: KEYWORD MATCHING
-          Look for ANY of these terms related to your test:
-          - For Workflows: "Automations", "Automation", "Workflows", "Rules", "Triggers"
-          - For Air Tickets: "Air Ticket", "Flight", "Travel", "Allowance", "Benefits"
-          - For Policies: "Policy", "Policies", "Rules", "Configuration", "Setup"
-
-          ### STEP 3: SEARCH IF AVAILABLE
-          - Look for search bar (magnifying glass icon, Cmd+K, etc.)
-          - Search for: "workflow", "air ticket", "automation", etc.
-          - Screenshot search results
-
-          ### STEP 4: SETTINGS VARIATIONS
-          Settings may be split across multiple locations:
-          - Settings (gear icon)
-          - Company Settings
-          - Automations (workflows often moved here!)
-          - Admin / Administration
-          - Configuration
-
-          ### STEP 5: DOCUMENT THE CORRECT PATH
-          When you find the feature, you MUST document:
-          ```
-          PATH_CORRECTION:
-          - Hinted path: Settings > Workflows
-          - Actual path: Automations > Workflows
-          - Menu has changed: YES
-          - Screenshot: chunk-X-correct-path.png
+          ### Step 3: Dismiss any tooltips/onboarding
+          After login, run this JavaScript to remove tooltips:
+          ```javascript
+          () => {
+            const selectors = ['[class*="tour"]', '[class*="tooltip"]', '[class*="onboarding"]',
+                              '[class*="shepherd"]', '[role="dialog"]', '[aria-modal="true"]'];
+            selectors.forEach(sel => {
+              document.querySelectorAll(sel).forEach(el => {
+                if (el.textContent.includes('Step') || el.textContent.includes('Next') ||
+                    el.textContent.includes('Skip')) {
+                  el.remove();
+                }
+              });
+            });
+            document.querySelectorAll('[class*="backdrop"], [class*="overlay"]').forEach(el => el.remove());
+            return 'Tooltips removed';
+          }
           ```
 
-          ### EXPLORATION CHECKLIST (Must complete ALL):
-          [ ] Verified viewport is 1920x1200 (tall viewport)
-          [ ] Clicked Home
-          [ ] Clicked Company
-          [ ] Clicked Payroll
-          [ ] Clicked Finance Ops
-          [ ] Clicked Time
-          [ ] Clicked Performance
-          [ ] Clicked Health
-          [ ] Clicked Requests
-          [ ] Clicked Insights
-          [ ] Clicked Automations
-          [ ] Clicked Apps
-          [ ] Scrolled sidebar to reveal Settings (if hidden)
-          [ ] Clicked Settings
-          [ ] Clicked any other visible menus/submenus
-          [ ] Tried search (if available)
-          [ ] Documented findings for each menu
-          [ ] Captured screenshot for each exploration
-          [ ] Recorded correct path if found
+          ### Step 4: Explore the Feature
+          Based on the payload's "where_to_go" and "what_to_do" sections:
+          1. Navigate to the feature location
+          2. For each task in "what_to_do", try to follow the steps
+          3. Take screenshots at key points
+          4. Note any issues or blockers you encounter
 
-          ═══════════════════════════════════════════════════════════════
-          ## CRITICAL: REFERENCE-BASED PAYLOAD STRUCTURE
-          ═══════════════════════════════════════════════════════════════
-
-          This payload uses ID REFERENCES to avoid duplication. You MUST resolve
-          references before executing any test. The payload contains an "instructions"
-          section that also explains this - read it carefully.
-
-          ### REFERENCE RESOLUTION TABLE
-          ┌─────────────────────┬──────────────────────────────────────────────┐
-          │ Field               │ How to Resolve                               │
-          ├─────────────────────┼──────────────────────────────────────────────┤
-          │ access_path_ref     │ Look up in definitions.access_paths          │
-          │                     │ (configuration OR operational) by path_id    │
-          ├─────────────────────┼──────────────────────────────────────────────┤
-          │ setup_flow_ref      │ Look up in definitions.setup_flows           │
-          │                     │ by flow_id → get steps array                 │
-          ├─────────────────────┼──────────────────────────────────────────────┤
-          │ business_rule_refs  │ Look up each ID in definitions.business_rules│
-          │                     │ by rule_id → get rule + ui_manifestation     │
-          ├─────────────────────┼──────────────────────────────────────────────┤
-          │ edge_case_refs      │ Look up each ID in definitions.edge_cases    │
-          │                     │ by case_id → get scenario + expected_behavior│
-          ├─────────────────────┼──────────────────────────────────────────────┤
-          │ ui_element_refs     │ Look up each in definitions.ui_elements      │
-          │                     │ by element_name → get type + location        │
-          └─────────────────────┴──────────────────────────────────────────────┘
-
-          ### RESOLUTION EXAMPLE
-          Given test with: setup_flow_ref: "SETUP-002"
-          Action: Find definitions.setup_flows.find(f => f.flow_id === "SETUP-002")
-          Result: Execute all steps from that flow object
-
-          ═══════════════════════════════════════════════════════════════
+          ## OUTPUT FORMAT
+          At the end, create a JSON result with this structure:
+          {
+            "validation_status": "completed" or "partial" or "blocked",
+            "login_success": true/false,
+            "feature_accessible": true/false,
+            "tasks_explored": [
+              {
+                "task": "task name",
+                "status": "completed" or "partial" or "blocked",
+                "notes": "what you observed",
+                "screenshots": ["screenshot1.png"]
+              }
+            ],
+            "issues_found": ["list of any issues"],
+            "summary": "brief summary of exploration"
+          }
 
           PROMPT_HEADER
 
           cat >> "$PROMPT_FILE" << EOF
 
-          ## CHUNK INFO
-          - Chunk Index: $CHUNK_INDEX of $CHUNK_COUNT
-          - This chunk's tests are in the payload below
-
-          ## AUTHENTICATION
+          ## CREDENTIALS
           - Base URL: $APP_BASE_URL
           - Username: $APP_USERNAME
           - Password: $APP_PASSWORD
 
-          ## OUTPUT PATHS (CHUNK-SPECIFIC)
-          - Screenshots: $SCREENSHOT_DIR/
-          - Chunk Result JSON: $CHUNK_RESULT
+          ## SCREENSHOTS DIRECTORY
+          Save all screenshots to: $SCREENSHOTS_DIR
 
-          ## FEATURE: $FEATURE_NAME
+          ## FEATURE PAYLOAD
+          $(cat "$PAYLOAD_FILE")
 
-          ## CHUNK VALIDATION PAYLOAD
-          Read and parse the following chunk payload file:
-          $CHUNK_PAYLOAD
-
-          ## VALIDATION WORKFLOW FOR THIS CHUNK
-
-          ### Step 1: Browser Setup, Login, and Tooltip Dismissal
-
-          #### 1a. BROWSER SETUP (MANDATORY FIRST STEP - NO EXCEPTIONS)
-          ┌──────────────────────────────────────────────────────────────┐
-          │ YOUR VERY FIRST TOOL CALL MUST BE:                          │
-          │ browser_resize with width=1920, height=1200                 │
-          │ DO THIS BEFORE NAVIGATING TO ANY URL!                       │
-          └──────────────────────────────────────────────────────────────┘
-          1. Call browser_resize(width=1920, height=1200) FIRST
-          2. THEN navigate to login page
-          3. This ensures full sidebar visibility from the start
-
-          #### 1b. LOGIN
-          1. Navigate to the base URL
-          2. Enter credentials and login
-          3. Wait for dashboard to load (wait 3 seconds for page stabilization)
-
-          #### 1c. DISMISS ONBOARDING TOOLTIPS (CRITICAL - USE JAVASCRIPT)
-
-          IMMEDIATELY after login, run this JavaScript to force-remove ALL tooltips:
-
-          Use browser_evaluate with this function:
-          ```javascript
-          () => {
-            // Remove all tooltip/tour elements by common selectors
-            const selectors = [
-              '[class*="tour"]',
-              '[class*="tooltip"]',
-              '[class*="onboarding"]',
-              '[class*="shepherd"]',
-              '[class*="joyride"]',
-              '[class*="popover"]',
-              '[role="dialog"]',
-              '[aria-modal="true"]',
-              '.fixed[class*="bg-"]'
-            ];
-            let removed = 0;
-            selectors.forEach(sel => {
-              document.querySelectorAll(sel).forEach(el => {
-                if (el.textContent.includes('Step') ||
-                    el.textContent.includes('Next') ||
-                    el.textContent.includes('Skip') ||
-                    el.textContent.includes('Reports') ||
-                    el.textContent.includes('Insights')) {
-                  el.remove();
-                  removed++;
-                }
-              });
-            });
-            // Also remove any overlay backdrops
-            document.querySelectorAll('[class*="backdrop"], [class*="overlay"]').forEach(el => el.remove());
-            return 'Removed ' + removed + ' tooltip elements';
-          }
-          ```
-
-          Run this JavaScript MULTIPLE TIMES (3x) with 1 second waits between:
-          1. Run browser_evaluate with the function above
-          2. Wait 1 second
-          3. Run browser_evaluate again
-          4. Wait 1 second
-          5. Run browser_evaluate one more time
-
-          This ensures all tooltips are removed even if new ones appear.
-
-          VERIFICATION: After running JavaScript, the sidebar should be fully clickable with no overlays.
-
-          #### 1d. VERIFY FULL SIDEBAR (HARD RULE - MANDATORY CHECK)
-          🚨 DO NOT PROCEED UNTIL THIS CHECK PASSES 🚨
-
-          1. Confirm you can see ALL 12 sidebar items:
-             Home → Company → Payroll → Finance Ops → Time → Performance →
-             Health → Requests → Insights → Automations → Apps → Settings
-
-          2. CRITICAL: Settings (gear icon) MUST be visible at bottom
-
-          3. If Settings is NOT visible:
-             a) First try: browser_resize with width=1920, height=1300
-             b) If still hidden: scroll sidebar container down
-             c) Take screenshot to verify Settings is now visible
-             d) ONLY proceed when Settings icon is confirmed visible
-
-          4. VALIDATION FAILED if Settings is cut off - fix before continuing
-
-          #### 1e. TAKE CLEAN SCREENSHOT (only after sidebar verified)
-          1. Take VIEWPORT screenshot: "chunk-${CHUNK_INDEX}-login-clean-viewport.png"
-             - This screenshot should show the clean UI with NO tooltips
-             - Full sidebar should be visible (including Settings at bottom)
-             - VERIFY: Settings icon is visible in sidebar before taking screenshot
-             (Do NOT take full-page - just the visible viewport after login)
-
-          ### Step 2: Resolve References and Execute Tests
-          For each test in this chunk:
-          1. RESOLVE access_path_ref → get navigation steps (these are HINTS)
-          2. RESOLVE setup_flow_ref → get setup steps (if present)
-          3. RESOLVE business_rule_refs → get rules to validate
-          4. RESOLVE edge_case_refs → get edge cases to check
-          5. ATTEMPT navigation using the resolved path
-             - If path works: proceed to step 6
-             - If path fails: ENGAGE DEEP EXPLORATION PROTOCOL (see above)
-             - You MUST find the feature through exploration before marking as skipped
-          6. Execute the resolved setup_flow steps
-          7. Validate each assertion in the test
-          8. Check resolved business_rules are satisfied
-          9. Test resolved edge_cases if applicable
-          10. Take screenshots following the Navigation + Evidence Procedure below
-          11. Record actual_path_used if different from hinted path
-
-          #### Navigation + Evidence Procedure (MANDATORY)
-          Before ANY screenshot, follow this procedure:
-
-          1. IDENTIFY a stable target element for the step:
-             - Look for: heading, label, data-testid, panel title, card header
-             - Example: "Air Ticket Policies" heading, "Submit" button, policy card
-
-          2. SCROLL the target into view:
-             - Use browser_click with scroll behavior, or
-             - Execute JavaScript: element.scrollIntoView({block: 'center'})
-             - Goal: target element should be centered in viewport if possible
-
-          3. WAIT 500ms for layout to settle:
-             - Animations, lazy-loading, dynamic content need time
-             - Use browser_wait_for or setTimeout equivalent
-
-          4. TAKE VIEWPORT SCREENSHOT (context):
-             - Use mcp__playwright__browser_take_screenshot
-             - Do NOT use fullPage option
-             - Name: chunk-\${CHUNK_INDEX}-<test_id>-<step>-viewport.png
-
-          5. TAKE ELEMENT SCREENSHOT (proof) if validating a specific component:
-             - Target the specific element selector
-             - Name: chunk-\${CHUNK_INDEX}-<test_id>-<step>-element.png
-
-          6. LOG for each screenshot:
-             - Current URL
-             - What element/label you targeted
-             - Whether it is viewport or element type
-
-          ### Step 3: Write Chunk Results
-          Write a chunk result JSON file to: $CHUNK_RESULT
-          Structure:
-          {
-            "chunk_index": $CHUNK_INDEX,
-            "chunk_count": $CHUNK_COUNT,
-            "validation_status": "completed|failed",
-            "feature_name": "$FEATURE_NAME",
-            "timestamp": "<ISO timestamp>",
-            "summary": {
-              "total_tests": <tests in this chunk>,
-              "passed": <number>,
-              "failed": <number>,
-              "skipped": <number>
-            },
-            "test_results": [
-              {
-                "test_id": "<test_id from payload>",
-                "test_name": "<test name>",
-                "status": "passed|failed",
-                "assertions_checked": <number>,
-                "assertions_passed": <number>,
-                "business_rules_validated": ["<rule_ids checked>"],
-                "edge_cases_tested": ["<case_ids checked>"],
-                "screenshots": ["<filename>"],
-                "navigation": {
-                  "hinted_path": "<path from payload - may be outdated>",
-                  "actual_path_used": "<correct path you discovered>",
-                  "menu_changed": true|false,
-                  "path_correction_note": "<e.g., Settings>Workflows is now Automations>Workflows>"
-                },
-                "exploration_log": [
-                  {"menu": "<menu clicked>", "found": "<what you found>", "screenshot": "<filename>"}
-                ],
-                "menus_explored": <number of sidebar menus clicked>,
-                "notes": "<any observations>"
-              }
-            ],
-            "screenshots": ["<list of screenshots for this chunk>"]
-          }
-
-          ## IMPORTANT NOTES
-          - ALWAYS resolve references before executing - never skip this step
-          - Prefix ALL screenshots with "chunk-${CHUNK_INDEX}-"
-          - Only process tests in YOUR chunk payload
-          - If a reference cannot be resolved, log it and continue with available info
-          - Take screenshot on any error for debugging
-
-          ## ⚠️ CRITICAL REMINDERS - READ EVERY TIME ⚠️
-          - NAVIGATION PATHS ARE OUTDATED HINTS - menu structure changes frequently!
-          - "Settings > Workflows" is NOW "Automations > Workflows" (example of change)
-          - When path fails: CLICK EVERY SINGLE SIDEBAR MENU ITEM
-          - Screenshot EACH menu you explore: chunk-X-explore-<menu>.png
-          - Document the CORRECT path when found: "Menu has changed: YES"
-          - NEVER use "skipped" status - use "failed" with exploration notes instead
-          - You MUST explore ALL menus before marking any test as failed
-          - Include exploration_log array showing every menu you clicked
-
-          ## PLAYWRIGHT MCP TOOL RULES (MANDATORY)
-          When using mcp__playwright__browser_take_screenshot:
-          - NEVER request full-page screenshots
-          - NEVER set fullPage=true or any equivalent option
-          - DEFAULT behavior captures viewport only - use this
-          - For element screenshots, specify the element selector
-          - Always scroll target into view BEFORE taking screenshot
-          - Wait 500ms after scroll before capturing
-
-          FORBIDDEN patterns:
-          - Taking screenshots of entire scrollable feeds
-          - Capturing multiple viewports stitched together
-          - Using snapshot tools that capture beyond viewport
-          - Screenshots taller than ~900px (typical viewport height)
-
-          REQUIRED patterns:
-          - Scroll → Wait 500ms → Viewport screenshot
-          - For assertions: Viewport shot + Element shot of the specific component
-          - One screenshot per logical step, not entire page dumps
-
+          ## BEGIN EXPLORATION
+          Start by setting up the browser, then login, then explore the feature freely.
+          Take your time and document everything you find.
           EOF
 
-          echo "Chunk $CHUNK_INDEX prompt generated ($(wc -c < "$PROMPT_FILE") bytes)"
+          echo "Starting Playwright validation for: $FEATURE_NAME"
+          echo "============================================"
 
-      - name: Pre-Validation Browser Cleanup
-        run: |
-          echo "Cleaning up stale Playwright processes only..."
-          pkill -f "mcp-server-playwright" 2>/dev/null || true
-          # Only kill Playwright-spawned browsers, NOT user's personal browsers
-          pkill -f "playwright.*chromium" 2>/dev/null || true
-          pkill -f "ms-playwright" 2>/dev/null || true
-          sleep 2
-          rm -rf /tmp/playwright-* 2>/dev/null || true
-          echo "Pre-validation cleanup complete"
+          # Run Claude Code with Playwright MCP
+          npx @anthropic-ai/claude-code@latest \
+            --print \
+            --max-turns 100 \
+            --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["@anthropic-ai/playwright-mcp@0.0.23"]}}}' \
+            --prompt-file "$PROMPT_FILE" \
+            --output-format json > "$RESULT_FILE.raw" 2>&1 || true
 
-      - name: Configure Claude API Key Source and MCP
-        env:
-          FOLDER: ${{ needs.prepare.outputs.folder }}
-          CHUNK_INDEX: ${{ matrix.chunk.index }}
-          PLAYWRIGHT_MCP_SERVER: ${{ env.PLAYWRIGHT_MCP_SERVER }}
-        run: |
-          # Pre-seed Claude global config with:
-          # 1. apiKeySource: env (prevent interactive API key prompt)
-          # 2. Playwright MCP server (inject into global settings)
-          CLAUDE_CONFIG_DIR="$HOME/.claude"
-          CLAUDE_CONFIG_FILE="$CLAUDE_CONFIG_DIR/settings.json"
-          SCREENSHOT_PATH="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
-
-          echo "Configuring Claude global settings with Playwright MCP..."
-          echo "  Playwright MCP server: ${PLAYWRIGHT_MCP_SERVER}"
-          echo "  Screenshot path: $SCREENSHOT_PATH"
-          mkdir -p "$CLAUDE_CONFIG_DIR"
-
-          # Create the Playwright MCP config JSON using @executeautomation/playwright-mcp-server
-          # This package is more stable than the official @playwright/mcp
-          # Reference: https://github.com/anthropics/claude-code/issues/1383
-          PLAYWRIGHT_MCP_CONFIG="{\"type\":\"stdio\",\"command\":\"npx\",\"args\":[\"-y\",\"${PLAYWRIGHT_MCP_SERVER}\"],\"env\":{}}"
-
-          # Create or update settings.json with apiKeySource AND Playwright MCP
-          if [ -f "$CLAUDE_CONFIG_FILE" ]; then
-            echo "Updating existing Claude config with Playwright MCP..."
-            TMP_CONFIG=$(mktemp)
-            jq --argjson playwright "$PLAYWRIGHT_MCP_CONFIG" '.apiKeySource = "env" | .mcpServers.playwright = $playwright' "$CLAUDE_CONFIG_FILE" > "$TMP_CONFIG" 2>/dev/null || echo "{\"apiKeySource\":\"env\",\"mcpServers\":{\"playwright\":$PLAYWRIGHT_MCP_CONFIG}}" > "$TMP_CONFIG"
-            mv "$TMP_CONFIG" "$CLAUDE_CONFIG_FILE"
-          else
-            echo "{\"apiKeySource\":\"env\",\"mcpServers\":{\"playwright\":$PLAYWRIGHT_MCP_CONFIG}}" > "$CLAUDE_CONFIG_FILE"
+          # Extract just the JSON result if possible
+          if [ -f "$RESULT_FILE.raw" ]; then
+            # Try to extract JSON from the output
+            grep -o '{.*}' "$RESULT_FILE.raw" | tail -1 > "$RESULT_FILE" 2>/dev/null || cp "$RESULT_FILE.raw" "$RESULT_FILE"
           fi
 
-          echo "Claude global config:"
-          cat "$CLAUDE_CONFIG_FILE" | jq .
-          echo ""
-          echo "Playwright MCP injected into global Claude settings"
-
-      - name: Debug MCP Tool Availability
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
           echo "============================================"
-          echo "Debugging MCP Tool Availability"
-          echo "============================================"
-
-          cd "$GITHUB_WORKSPACE"
-          export PATH="$(npm prefix -g)/bin:$PATH"
-
-          # Run a quick Claude query to enumerate tools
-          # This helps diagnose if MCP tools are loading correctly
-          echo "Running quick tool enumeration test..."
-
-          DEBUG_RESULT=$(claude \
-            --model haiku \
-            --allowedTools "mcp__playwright__*,Bash" \
-            --mcp-config ".mcp.json" \
-            --dangerously-skip-permissions \
-            --max-turns 3 \
-            "Please list ALL tools available to you that start with 'mcp__playwright__'. Just list the tool names, one per line, nothing else. If no playwright tools are available, say 'NO PLAYWRIGHT TOOLS FOUND'." \
-            2>&1) || true
-
-          echo "Tool enumeration result:"
-          echo "$DEBUG_RESULT"
-          echo ""
-
-          # Count playwright tools found
-          TOOL_COUNT=$(echo "$DEBUG_RESULT" | grep -c "mcp__playwright__" || echo "0")
-          echo "Detected $TOOL_COUNT Playwright MCP tools"
-
-          if [ "$TOOL_COUNT" -lt 10 ]; then
-            echo "WARNING: Expected ~20 Playwright tools, found only $TOOL_COUNT"
-            echo "This may indicate MCP server connection issues"
-          fi
-          echo "============================================"
-
-      - name: Run Chunk Validation
-        id: validation
-        env:
-          FOLDER: ${{ needs.prepare.outputs.folder }}
-          CHUNK_INDEX: ${{ matrix.chunk.index }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-        run: |
-          echo "============================================"
-          echo "Starting validation for Chunk $CHUNK_INDEX"
-          echo "Feature: ${{ needs.prepare.outputs.feature_name }}"
-          echo "Start time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "============================================"
-
-          cd "$GITHUB_WORKSPACE"
-          export PATH="$(npm prefix -g)/bin:$PATH"
-
-          # Debug: Show environment
-          echo "DEBUG: Working directory: $(pwd)"
-          echo "DEBUG: MCP config exists: $(test -f .mcp.json && echo YES || echo NO)"
-          echo "DEBUG: MCP config content:"
-          cat .mcp.json 2>/dev/null || echo "ERROR: Cannot read .mcp.json"
-          echo ""
-          echo "DEBUG: Claude CLI version:"
-          claude --version 2>&1 || echo "ERROR: Cannot get Claude version"
-          echo ""
-
-          PROMPT_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/.prompt-chunk-$CHUNK_INDEX.txt"
-          LOG_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/validation-chunk-$CHUNK_INDEX.log"
-
-          echo "DEBUG: Prompt file size: $(wc -c < "$PROMPT_FILE" 2>/dev/null || echo 0) bytes"
-          echo "============================================"
-
-          set +e
-          # Solution 3: Claude config is pre-seeded with apiKeySource: env
-          # This allows running Claude directly without stdin pipe (which broke MCP)
-
-          echo "::add-mask::${ANTHROPIC_API_KEY}"
-
-          # Run Claude directly with prompt as argument
-          # NO piping - stdin must be available for MCP server communication
-          # NO --print mode - we need interactive mode for MCP tool execution
-          claude \
-            --model sonnet \
-            --allowedTools "mcp__playwright__*,Bash,Read,Write,Glob,Grep" \
-            --mcp-config ".mcp.json" \
-            --dangerously-skip-permissions \
-            --max-turns 200 \
-            "$(cat "$PROMPT_FILE")" \
-            2>&1 | tee "$LOG_FILE"
-
-          CLAUDE_EXIT_CODE=${PIPESTATUS[0]}
-          set -e
-
-          rm -f "$PROMPT_FILE"
-
-          echo "claude_exit_code=$CLAUDE_EXIT_CODE" >> $GITHUB_OUTPUT
-          echo "============================================"
-          echo "Chunk $CHUNK_INDEX - Claude CLI exit code: $CLAUDE_EXIT_CODE"
-          echo "End time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "============================================"
-
-      - name: Validate Chunk Outputs
-        id: validate_outputs
-        if: always()
-        env:
-          FOLDER: ${{ needs.prepare.outputs.folder }}
-          CHUNK_INDEX: ${{ matrix.chunk.index }}
-        run: |
-          CHUNK_RESULT="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/results/result-chunk-$CHUNK_INDEX.json"
-          SCREENSHOT_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
-
-          STATUS="success"
-          TESTS_PASSED=0
-          TESTS_FAILED=0
-          SCREENSHOT_COUNT=0
-
-          # Check chunk result
-          if [ -f "$CHUNK_RESULT" ]; then
-            if jq empty "$CHUNK_RESULT" 2>/dev/null; then
-              TESTS_PASSED=$(jq -r '.summary.passed // 0' "$CHUNK_RESULT")
-              TESTS_FAILED=$(jq -r '.summary.failed // 0' "$CHUNK_RESULT")
-              VALIDATION_STATUS=$(jq -r '.validation_status // "unknown"' "$CHUNK_RESULT")
-              if [ "$VALIDATION_STATUS" = "failed" ]; then
-                STATUS="failed"
-              fi
-            else
-              STATUS="failed"
-            fi
-          else
-            STATUS="failed"
-          fi
-
-          # Count screenshots
-          if [ -d "$SCREENSHOT_DIR" ]; then
-            SCREENSHOT_COUNT=$(find "$SCREENSHOT_DIR" -name "*.png" | wc -l | tr -d ' ')
-          fi
-
-          echo "status=$STATUS" >> $GITHUB_OUTPUT
-          echo "tests_passed=$TESTS_PASSED" >> $GITHUB_OUTPUT
-          echo "tests_failed=$TESTS_FAILED" >> $GITHUB_OUTPUT
-          echo "screenshot_count=$SCREENSHOT_COUNT" >> $GITHUB_OUTPUT
-
-          echo "Chunk $CHUNK_INDEX: Status=$STATUS, Passed=$TESTS_PASSED, Failed=$TESTS_FAILED, Screenshots=$SCREENSHOT_COUNT"
-
-      - name: Cleanup Browser Processes
-        if: always()
-        run: |
-          # Only kill Playwright processes, NOT user's personal browsers
-          pkill -f "mcp-server-playwright" 2>/dev/null || true
-          pkill -f "playwright.*chromium" 2>/dev/null || true
-          pkill -f "ms-playwright" 2>/dev/null || true
-          echo "Playwright cleanup complete"
-
-      - name: Upload Chunk Artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: chunk-${{ matrix.chunk.index }}-results
-          path: |
-            ${{ needs.prepare.outputs.folder }}/validation/chunks/results/result-chunk-${{ matrix.chunk.index }}.json
-            ${{ needs.prepare.outputs.folder }}/validation/screenshots/chunk-${{ matrix.chunk.index }}/
-            ${{ needs.prepare.outputs.folder }}/validation/chunks/validation-chunk-${{ matrix.chunk.index }}.log
-          retention-days: 7
-
-  # ============================================
-  # JOB 3: MERGE - Combine chunk results and commit
-  # ============================================
-  merge-results:
-    needs: [prepare, validate]
-    if: always() && needs.prepare.outputs.skip != 'true' && needs.prepare.outputs.chunk_count != '0'
-    runs-on: [self-hosted, validation]
-    timeout-minutes: 10
-
-    outputs:
-      validation_status: ${{ steps.merge.outputs.status }}
-      tests_passed: ${{ steps.merge.outputs.tests_passed }}
-      tests_failed: ${{ steps.merge.outputs.tests_failed }}
-      screenshot_count: ${{ steps.merge.outputs.screenshot_count }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        timeout-minutes: 3
-        with:
-          fetch-depth: 1
-          persist-credentials: false
-
-      - name: Download All Chunk Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          pattern: chunk-*-results
-          path: ${{ needs.prepare.outputs.folder }}/validation/artifacts/
-
-      - name: Merge Chunk Results
-        id: merge
-        env:
-          FOLDER: ${{ needs.prepare.outputs.folder }}
-          CHUNK_COUNT: ${{ needs.prepare.outputs.chunk_count }}
-          FEATURE_NAME: ${{ needs.prepare.outputs.feature_name }}
-          FEATURE_SLUG: ${{ needs.prepare.outputs.feature_slug }}
-          VERSION: ${{ needs.prepare.outputs.version }}
-          TOTAL_TESTS: ${{ needs.prepare.outputs.total_tests }}
-        run: |
-          RESULTS_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/chunks/results"
-          ARTIFACTS_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/artifacts"
-          FINAL_RESULT="$GITHUB_WORKSPACE/$FOLDER/validation/result.json"
-          SCREENSHOTS_DIR="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots"
-
-          mkdir -p "$RESULTS_DIR"
-          mkdir -p "$SCREENSHOTS_DIR"
-
-          echo "============================================"
-          echo "Merging results from $CHUNK_COUNT chunks"
-          echo "============================================"
-
-          # Copy chunk results from artifacts
-          # Note: upload-artifact strips common prefix, so internal paths are relative
-          for i in $(seq 0 $((CHUNK_COUNT - 1))); do
-            # Try both possible paths (with and without $FOLDER prefix)
-            ARTIFACT_RESULT_1="$ARTIFACTS_DIR/chunk-$i-results/chunks/results/result-chunk-$i.json"
-            ARTIFACT_RESULT_2="$ARTIFACTS_DIR/chunk-$i-results/$FOLDER/validation/chunks/results/result-chunk-$i.json"
-
-            if [ -f "$ARTIFACT_RESULT_1" ]; then
-              cp "$ARTIFACT_RESULT_1" "$RESULTS_DIR/"
-              echo "Copied chunk-$i result (path type 1)"
-            elif [ -f "$ARTIFACT_RESULT_2" ]; then
-              cp "$ARTIFACT_RESULT_2" "$RESULTS_DIR/"
-              echo "Copied chunk-$i result (path type 2)"
-            else
-              echo "WARNING: Could not find chunk-$i result at either path"
-              echo "  Tried: $ARTIFACT_RESULT_1"
-              echo "  Tried: $ARTIFACT_RESULT_2"
-              ls -la "$ARTIFACTS_DIR/chunk-$i-results/" 2>/dev/null || true
-            fi
-
-            # Copy screenshots - try both paths
-            ARTIFACT_SCREENSHOTS_1="$ARTIFACTS_DIR/chunk-$i-results/screenshots/chunk-$i"
-            ARTIFACT_SCREENSHOTS_2="$ARTIFACTS_DIR/chunk-$i-results/$FOLDER/validation/screenshots/chunk-$i"
-
-            if [ -d "$ARTIFACT_SCREENSHOTS_1" ]; then
-              cp -r "$ARTIFACT_SCREENSHOTS_1"/* "$SCREENSHOTS_DIR/" 2>/dev/null || true
-              echo "Copied chunk-$i screenshots (path type 1)"
-            elif [ -d "$ARTIFACT_SCREENSHOTS_2" ]; then
-              cp -r "$ARTIFACT_SCREENSHOTS_2"/* "$SCREENSHOTS_DIR/" 2>/dev/null || true
-              echo "Copied chunk-$i screenshots (path type 2)"
-            fi
-          done
-
-          # Merge all chunk results into final result.json
-          TOTAL_PASSED=0
-          TOTAL_FAILED=0
-          TOTAL_SKIPPED=0
-          ALL_TEST_RESULTS="[]"
-          ALL_SCREENSHOTS="[]"
-          OVERALL_STATUS="completed"
-
-          for i in $(seq 0 $((CHUNK_COUNT - 1))); do
-            CHUNK_RESULT="$RESULTS_DIR/result-chunk-$i.json"
-            if [ -f "$CHUNK_RESULT" ] && jq empty "$CHUNK_RESULT" 2>/dev/null; then
-              PASSED=$(jq -r '.summary.passed // 0' "$CHUNK_RESULT")
-              FAILED=$(jq -r '.summary.failed // 0' "$CHUNK_RESULT")
-              SKIPPED=$(jq -r '.summary.skipped // 0' "$CHUNK_RESULT")
-              STATUS=$(jq -r '.validation_status // "unknown"' "$CHUNK_RESULT")
-
-              TOTAL_PASSED=$((TOTAL_PASSED + PASSED))
-              TOTAL_FAILED=$((TOTAL_FAILED + FAILED))
-              TOTAL_SKIPPED=$((TOTAL_SKIPPED + SKIPPED))
-
-              if [ "$STATUS" = "failed" ]; then
-                OVERALL_STATUS="failed"
-              fi
-
-              # Merge test results
-              ALL_TEST_RESULTS=$(echo "$ALL_TEST_RESULTS" | jq --slurpfile chunk "$CHUNK_RESULT" '. + ($chunk[0].test_results // [])')
-              ALL_SCREENSHOTS=$(echo "$ALL_SCREENSHOTS" | jq --slurpfile chunk "$CHUNK_RESULT" '. + ($chunk[0].screenshots // [])')
-
-              echo "Chunk $i: $PASSED passed, $FAILED failed, $SKIPPED skipped"
-            else
-              echo "Chunk $i: Result missing or invalid"
-              OVERALL_STATUS="failed"
-            fi
-          done
-
-          # Count total screenshots
-          SCREENSHOT_COUNT=$(find "$SCREENSHOTS_DIR" -name "*.png" 2>/dev/null | wc -l | tr -d ' ')
-
-          # Write final merged result
-          jq -n \
-            --arg status "$OVERALL_STATUS" \
-            --arg feature_name "$FEATURE_NAME" \
-            --arg feature_slug "$FEATURE_SLUG" \
-            --arg version "$VERSION" \
-            --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-            --argjson total_tests "$TOTAL_TESTS" \
-            --argjson passed "$TOTAL_PASSED" \
-            --argjson failed "$TOTAL_FAILED" \
-            --argjson skipped "$TOTAL_SKIPPED" \
-            --argjson chunk_count "$CHUNK_COUNT" \
-            --argjson test_results "$ALL_TEST_RESULTS" \
-            --argjson screenshots "$ALL_SCREENSHOTS" \
-            '{
-              validation_status: $status,
-              feature_name: $feature_name,
-              feature_slug: $feature_slug,
-              version: $version,
-              timestamp: $timestamp,
-              execution_mode: "chunked",
-              chunk_count: $chunk_count,
-              summary: {
-                total_tests: $total_tests,
-                passed: $passed,
-                failed: $failed,
-                skipped: $skipped
-              },
-              test_results: $test_results,
-              screenshots: $screenshots
-            }' > "$FINAL_RESULT"
-
-          echo "status=$OVERALL_STATUS" >> $GITHUB_OUTPUT
-          echo "tests_passed=$TOTAL_PASSED" >> $GITHUB_OUTPUT
-          echo "tests_failed=$TOTAL_FAILED" >> $GITHUB_OUTPUT
-          echo "screenshot_count=$SCREENSHOT_COUNT" >> $GITHUB_OUTPUT
-
-          echo "============================================"
-          echo "Merged Results Summary:"
-          echo "  Status: $OVERALL_STATUS"
-          echo "  Total Passed: $TOTAL_PASSED"
-          echo "  Total Failed: $TOTAL_FAILED"
-          echo "  Total Skipped: $TOTAL_SKIPPED"
-          echo "  Screenshots: $SCREENSHOT_COUNT"
-          echo "============================================"
+          echo "Validation complete"
 
       - name: Generate Report
-        env:
-          FOLDER: ${{ needs.prepare.outputs.folder }}
-          FEATURE_NAME: ${{ needs.prepare.outputs.feature_name }}
+        if: steps.detect.outputs.skip != 'true'
         run: |
-          RESULT_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/result.json"
-          REPORT_FILE="$GITHUB_WORKSPACE/$FOLDER/validation/report.md"
+          FOLDER="${{ steps.detect.outputs.folder }}"
+          FEATURE_NAME="${{ steps.detect.outputs.feature_name }}"
+          RESULT_FILE="${{ steps.dirs.outputs.result_file }}"
+          REPORT_FILE="${{ steps.dirs.outputs.report_file }}"
+          SCREENSHOTS_DIR="${{ steps.dirs.outputs.screenshots_dir }}"
 
-          if [ -f "$RESULT_FILE" ]; then
-            PASSED=$(jq -r '.summary.passed // 0' "$RESULT_FILE")
-            FAILED=$(jq -r '.summary.failed // 0' "$RESULT_FILE")
-            SKIPPED=$(jq -r '.summary.skipped // 0' "$RESULT_FILE")
-            STATUS=$(jq -r '.validation_status // "unknown"' "$RESULT_FILE")
-            CHUNKS=$(jq -r '.chunk_count // 1' "$RESULT_FILE")
-
-            cat > "$REPORT_FILE" << EOF
+          cat > "$REPORT_FILE" << EOF
           # Validation Report: $FEATURE_NAME
 
-          **Status**: $STATUS
-          **Execution Mode**: Chunked ($CHUNKS chunks)
           **Generated**: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+          **Run ID**: ${{ github.run_id }}
 
-          ## Summary
+          ## Result
+          \`\`\`json
+          $(cat "$RESULT_FILE" 2>/dev/null || echo '{"error": "No result file generated"}')
+          \`\`\`
 
-          | Metric | Count |
-          |--------|-------|
-          | Passed | $PASSED |
-          | Failed | $FAILED |
-          | Skipped | $SKIPPED |
-          | Total | $((PASSED + FAILED + SKIPPED)) |
-
-          ## Test Results
-
+          ## Screenshots
+          $(ls -la "$SCREENSHOTS_DIR/" 2>/dev/null || echo "No screenshots found")
           EOF
 
-            # Add individual test results
-            jq -r '.test_results[] | "### \(.test_name)\n- **Status**: \(.status)\n- **Assertions**: \(.assertions_passed // 0)/\(.assertions_checked // 0)\n- **Notes**: \(.notes // "None")\n"' "$RESULT_FILE" >> "$REPORT_FILE" 2>/dev/null || true
-
-            echo "Report generated: $REPORT_FILE"
-          fi
+          echo "Report generated: $REPORT_FILE"
 
       - name: Commit Results
+        if: steps.detect.outputs.skip != 'true'
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-          FOLDER: ${{ needs.prepare.outputs.folder }}
         run: |
+          FOLDER="${{ steps.detect.outputs.folder }}"
+          FEATURE_NAME="${{ steps.detect.outputs.feature_name }}"
+
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-
           git remote set-url origin "https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}"
 
           git add "$FOLDER/validation/" || true
-
-          STATUS="${{ steps.merge.outputs.status }}"
-          PASSED="${{ steps.merge.outputs.tests_passed }}"
-          FAILED="${{ steps.merge.outputs.tests_failed }}"
-          CHUNKS="${{ needs.prepare.outputs.chunk_count }}"
-
-          if [ "$STATUS" = "completed" ]; then
-            COMMIT_MSG="validation: ${{ needs.prepare.outputs.feature_name }} - ${PASSED} passed, ${FAILED} failed (${CHUNKS} chunks)"
-          else
-            COMMIT_MSG="validation: FAILED for ${{ needs.prepare.outputs.feature_name }} (${CHUNKS} chunks)"
-          fi
-
-          git commit -m "$COMMIT_MSG" || echo "No changes to commit"
+          git commit -m "validation: $FEATURE_NAME exploration results" || echo "No changes to commit"
           git push || echo "Push failed"
 
-      - name: Notify n8n Complete
-        if: always()
+      - name: Notify n8n
+        if: always() && steps.detect.outputs.skip != 'true'
         run: |
           curl -s -X POST "https://automation-wh.bayzat.com/webhook/validation-complete" \
             -H "Content-Type: application/json" \
-            -d "{
-              \"feature_folder\": \"${{ needs.prepare.outputs.folder }}\",
-              \"feature_name\": \"${{ needs.prepare.outputs.feature_name }}\",
-              \"feature_slug\": \"${{ needs.prepare.outputs.feature_slug }}\",
-              \"version\": \"${{ needs.prepare.outputs.version }}\",
-              \"status\": \"${{ steps.merge.outputs.status }}\",
-              \"tests_passed\": ${{ steps.merge.outputs.tests_passed || 0 }},
-              \"tests_failed\": ${{ steps.merge.outputs.tests_failed || 0 }},
-              \"screenshot_count\": ${{ steps.merge.outputs.screenshot_count || 0 }},
-              \"total_tests\": ${{ needs.prepare.outputs.total_tests || 0 }},
-              \"must_test\": ${{ needs.prepare.outputs.must_test || 0 }},
-              \"should_test\": ${{ needs.prepare.outputs.should_test || 0 }},
-              \"chunk_count\": ${{ needs.prepare.outputs.chunk_count || 1 }},
-              \"execution_mode\": \"chunked\",
-              \"run_id\": \"${{ github.run_id }}\",
-              \"run_url\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\",
-              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",
-              \"playwright_mcp_server\": \"${PLAYWRIGHT_MCP_SERVER}\"
-            }" || echo "Webhook failed (non-blocking)"
+            -d '{
+              "feature_folder": "${{ steps.detect.outputs.folder }}",
+              "feature_name": "${{ steps.detect.outputs.feature_name }}",
+              "status": "${{ job.status }}",
+              "run_id": "${{ github.run_id }}",
+              "run_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }' || echo "Webhook notification failed (non-blocking)"
