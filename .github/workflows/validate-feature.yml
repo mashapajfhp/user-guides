@@ -853,33 +853,56 @@ jobs:
           rm -rf /tmp/playwright-* 2>/dev/null || true
           echo "Pre-validation cleanup complete"
 
-      - name: Configure Claude API Key Source
+      - name: Configure Claude API Key Source and MCP
+        env:
+          FOLDER: ${{ needs.prepare.outputs.folder }}
+          CHUNK_INDEX: ${{ matrix.chunk.index }}
         run: |
-          # Solution 3: Pre-seed Claude config to use environment variable for API key
-          # This prevents the interactive API key prompt that blocks MCP initialization
+          # Pre-seed Claude config with:
+          # 1. apiKeySource: env (prevent interactive API key prompt)
+          # 2. Playwright MCP server (inject into global settings since project .mcp.json isn't loaded)
           CLAUDE_CONFIG_DIR="$HOME/.claude"
           CLAUDE_CONFIG_FILE="$CLAUDE_CONFIG_DIR/settings.json"
+          GLOBAL_BIN="$(npm config get prefix)/bin"
+          MCP_FULL_PATH="${GLOBAL_BIN}/mcp-server-playwright"
+          SCREENSHOT_PATH="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
 
-          echo "Configuring Claude to use ANTHROPIC_API_KEY from environment..."
+          echo "Configuring Claude with API key source and Playwright MCP..."
+          echo "  MCP binary: $MCP_FULL_PATH"
+          echo "  Screenshot path: $SCREENSHOT_PATH"
           mkdir -p "$CLAUDE_CONFIG_DIR"
 
-          # Create or update settings.json with apiKeySource: env
+          # Create the Playwright MCP config object
+          PLAYWRIGHT_MCP_CONFIG=$(cat <<EOF
+{
+  "type": "stdio",
+  "command": "${MCP_FULL_PATH}",
+  "args": ["--output-dir", "${SCREENSHOT_PATH}", "--browser", "chromium", "--timeout", "300000"],
+  "env": {}
+}
+EOF
+)
+
+          # Create or update settings.json with apiKeySource AND Playwright MCP
           if [ -f "$CLAUDE_CONFIG_FILE" ]; then
-            # Merge with existing config
-            echo "Updating existing Claude config..."
+            echo "Updating existing Claude config with Playwright MCP..."
             TMP_CONFIG=$(mktemp)
-            jq '. + {"apiKeySource": "env"}' "$CLAUDE_CONFIG_FILE" > "$TMP_CONFIG" 2>/dev/null || \
-              echo '{"apiKeySource": "env"}' > "$TMP_CONFIG"
+            # Merge: add apiKeySource and inject Playwright into mcpServers
+            jq --argjson playwright "$PLAYWRIGHT_MCP_CONFIG" '
+              .apiKeySource = "env" |
+              .mcpServers.playwright = $playwright
+            ' "$CLAUDE_CONFIG_FILE" > "$TMP_CONFIG" 2>/dev/null || \
+              echo "{\"apiKeySource\": \"env\", \"mcpServers\": {\"playwright\": $PLAYWRIGHT_MCP_CONFIG}}" > "$TMP_CONFIG"
             mv "$TMP_CONFIG" "$CLAUDE_CONFIG_FILE"
           else
-            # Create new config
-            echo '{"apiKeySource": "env"}' > "$CLAUDE_CONFIG_FILE"
+            # Create new config with both settings
+            echo "{\"apiKeySource\": \"env\", \"mcpServers\": {\"playwright\": $PLAYWRIGHT_MCP_CONFIG}}" > "$CLAUDE_CONFIG_FILE"
           fi
 
-          echo "Claude config:"
-          cat "$CLAUDE_CONFIG_FILE"
+          echo "Claude global config:"
+          cat "$CLAUDE_CONFIG_FILE" | jq .
           echo ""
-          echo "Claude will now use ANTHROPIC_API_KEY environment variable without prompting"
+          echo "Playwright MCP injected into global Claude settings"
 
       - name: Run Chunk Validation
         id: validation
