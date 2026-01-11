@@ -895,6 +895,44 @@ jobs:
           echo ""
           echo "Playwright MCP injected into global Claude settings"
 
+      - name: Debug MCP Tool Availability
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "============================================"
+          echo "Debugging MCP Tool Availability"
+          echo "============================================"
+
+          cd "$GITHUB_WORKSPACE"
+          export PATH="$(npm prefix -g)/bin:$PATH"
+
+          # Run a quick Claude query to enumerate tools
+          # This helps diagnose if MCP tools are loading correctly
+          echo "Running quick tool enumeration test..."
+
+          DEBUG_RESULT=$(claude \
+            --model haiku \
+            --allowedTools "mcp__playwright__*,Bash" \
+            --mcp-config ".mcp.json" \
+            --dangerously-skip-permissions \
+            --max-turns 3 \
+            "Please list ALL tools available to you that start with 'mcp__playwright__'. Just list the tool names, one per line, nothing else. If no playwright tools are available, say 'NO PLAYWRIGHT TOOLS FOUND'." \
+            2>&1) || true
+
+          echo "Tool enumeration result:"
+          echo "$DEBUG_RESULT"
+          echo ""
+
+          # Count playwright tools found
+          TOOL_COUNT=$(echo "$DEBUG_RESULT" | grep -c "mcp__playwright__" || echo "0")
+          echo "Detected $TOOL_COUNT Playwright MCP tools"
+
+          if [ "$TOOL_COUNT" -lt 10 ]; then
+            echo "WARNING: Expected ~20 Playwright tools, found only $TOOL_COUNT"
+            echo "This may indicate MCP server connection issues"
+          fi
+          echo "============================================"
+
       - name: Run Chunk Validation
         id: validation
         env:
