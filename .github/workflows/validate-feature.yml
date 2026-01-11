@@ -421,14 +421,10 @@ jobs:
           fi
           echo "  MCP full path: $MCP_FULL_PATH"
 
-          # Create MCP config - Playwright only (Supabase accessed via PostgREST curl for stability)
-          if [ "$PLAYWRIGHT_MCP_CMD" = "npx" ]; then
-            echo "Using npx fallback configuration..."
-            echo "{\"mcpServers\":{\"playwright\":{\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}\",\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
-          else
-            echo "Using direct command configuration with FULL PATH..."
-            echo "{\"mcpServers\":{\"playwright\":{\"command\":\"${MCP_FULL_PATH}\",\"args\":[\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
-          fi
+          # Create MCP config - ALWAYS use npx (consistent with working MCP servers like slack, supabase)
+          # Key: Use npx with -y flag and --headless for CI
+          echo "Creating MCP config with npx + headless (CI-compatible)..."
+          echo "{\"mcpServers\":{\"playwright\":{\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}\",\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--headless\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
 
           # Validate JSON
           echo "Validating MCP config..."
@@ -447,15 +443,10 @@ jobs:
         env:
           PLAYWRIGHT_MCP_VERSION: ${{ env.PLAYWRIGHT_MCP_VERSION }}
         run: |
-          echo "MCP command: ${PLAYWRIGHT_MCP_CMD}"
-          if [ "$PLAYWRIGHT_MCP_CMD" = "npx" ]; then
-            echo "Using npx fallback - testing with npx..."
-            timeout 30 npx -y "@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}" --help >/dev/null 2>&1 || (echo "MCP server failed to start via npx" && exit 1)
-          else
-            command -v "${PLAYWRIGHT_MCP_CMD}" || (echo "MCP command not on PATH" && exit 1)
-            "${PLAYWRIGHT_MCP_CMD}" --help >/dev/null 2>&1 || (echo "MCP server failed to start" && exit 1)
-          fi
-          echo "MCP health check passed"
+          echo "Testing Playwright MCP via npx (consistent with MCP config)..."
+          # Test that npx can successfully run the MCP server
+          timeout 30 npx -y "@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}" --help >/dev/null 2>&1 || (echo "MCP server failed to start via npx" && exit 1)
+          echo "MCP health check passed - npx can launch Playwright MCP"
 
       - name: Generate Chunk Validation Prompt
         id: generate_prompt
@@ -857,23 +848,25 @@ jobs:
         env:
           FOLDER: ${{ needs.prepare.outputs.folder }}
           CHUNK_INDEX: ${{ matrix.chunk.index }}
+          PLAYWRIGHT_MCP_VERSION: ${{ env.PLAYWRIGHT_MCP_VERSION }}
         run: |
-          # Pre-seed Claude config with:
+          # Pre-seed Claude global config with:
           # 1. apiKeySource: env (prevent interactive API key prompt)
-          # 2. Playwright MCP server (inject into global settings since project .mcp.json isn't loaded)
+          # 2. Playwright MCP server (inject into global settings)
           CLAUDE_CONFIG_DIR="$HOME/.claude"
           CLAUDE_CONFIG_FILE="$CLAUDE_CONFIG_DIR/settings.json"
-          GLOBAL_BIN="$(npm config get prefix)/bin"
-          MCP_FULL_PATH="${GLOBAL_BIN}/mcp-server-playwright"
           SCREENSHOT_PATH="$GITHUB_WORKSPACE/$FOLDER/validation/screenshots/chunk-$CHUNK_INDEX"
 
-          echo "Configuring Claude with API key source and Playwright MCP..."
-          echo "  MCP binary: $MCP_FULL_PATH"
+          echo "Configuring Claude global settings with Playwright MCP..."
+          echo "  Playwright MCP version: ${PLAYWRIGHT_MCP_VERSION}"
           echo "  Screenshot path: $SCREENSHOT_PATH"
           mkdir -p "$CLAUDE_CONFIG_DIR"
 
-          # Create the Playwright MCP config JSON (single line to avoid heredoc issues)
-          PLAYWRIGHT_MCP_CONFIG="{\"type\":\"stdio\",\"command\":\"${MCP_FULL_PATH}\",\"args\":[\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"],\"env\":{}}"
+          # Create the Playwright MCP config JSON using npx (like other working MCP servers)
+          # Key fixes:
+          # 1. Use "npx" command with "-y" flag (consistent with slack, supabase, etc.)
+          # 2. Add "--headless" flag (CRITICAL for CI without display)
+          PLAYWRIGHT_MCP_CONFIG="{\"type\":\"stdio\",\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}\",\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--headless\",\"--timeout\",\"300000\"],\"env\":{}}"
 
           # Create or update settings.json with apiKeySource AND Playwright MCP
           if [ -f "$CLAUDE_CONFIG_FILE" ]; then
