@@ -59,10 +59,10 @@ jobs:
           echo "payload_file=$PAYLOAD_FILE" >> $GITHUB_OUTPUT
           echo "skip=false" >> $GITHUB_OUTPUT
 
-          # Extract feature info
-          FEATURE_NAME=$(jq -r '.[0].feature_info.feature_name // "unknown"' "$PAYLOAD_FILE")
-          FEATURE_SLUG=$(jq -r '.[0].feature_info.feature_slug // "unknown"' "$PAYLOAD_FILE")
-          VERSION=$(jq -r '.[0].feature_info.next_version // "v1"' "$PAYLOAD_FILE")
+          # Extract feature info (supports object format with .feature_info)
+          FEATURE_NAME=$(jq -r '.feature_info.feature_name // .metadata.feature_name // "unknown"' "$PAYLOAD_FILE")
+          FEATURE_SLUG=$(jq -r '.feature_info.feature_slug // .metadata.feature_slug // "unknown"' "$PAYLOAD_FILE")
+          VERSION=$(jq -r '.feature_info.next_version // .metadata.version // "v1"' "$PAYLOAD_FILE")
 
           echo "feature_name=$FEATURE_NAME" >> $GITHUB_OUTPUT
           echo "feature_slug=$FEATURE_SLUG" >> $GITHUB_OUTPUT
