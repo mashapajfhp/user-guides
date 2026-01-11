@@ -872,31 +872,17 @@ jobs:
           echo "  Screenshot path: $SCREENSHOT_PATH"
           mkdir -p "$CLAUDE_CONFIG_DIR"
 
-          # Create the Playwright MCP config object
-          PLAYWRIGHT_MCP_CONFIG=$(cat <<EOF
-{
-  "type": "stdio",
-  "command": "${MCP_FULL_PATH}",
-  "args": ["--output-dir", "${SCREENSHOT_PATH}", "--browser", "chromium", "--timeout", "300000"],
-  "env": {}
-}
-EOF
-)
+          # Create the Playwright MCP config JSON (single line to avoid heredoc issues)
+          PLAYWRIGHT_MCP_CONFIG="{\"type\":\"stdio\",\"command\":\"${MCP_FULL_PATH}\",\"args\":[\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"],\"env\":{}}"
 
           # Create or update settings.json with apiKeySource AND Playwright MCP
           if [ -f "$CLAUDE_CONFIG_FILE" ]; then
             echo "Updating existing Claude config with Playwright MCP..."
             TMP_CONFIG=$(mktemp)
-            # Merge: add apiKeySource and inject Playwright into mcpServers
-            jq --argjson playwright "$PLAYWRIGHT_MCP_CONFIG" '
-              .apiKeySource = "env" |
-              .mcpServers.playwright = $playwright
-            ' "$CLAUDE_CONFIG_FILE" > "$TMP_CONFIG" 2>/dev/null || \
-              echo "{\"apiKeySource\": \"env\", \"mcpServers\": {\"playwright\": $PLAYWRIGHT_MCP_CONFIG}}" > "$TMP_CONFIG"
+            jq --argjson playwright "$PLAYWRIGHT_MCP_CONFIG" '.apiKeySource = "env" | .mcpServers.playwright = $playwright' "$CLAUDE_CONFIG_FILE" > "$TMP_CONFIG" 2>/dev/null || echo "{\"apiKeySource\":\"env\",\"mcpServers\":{\"playwright\":$PLAYWRIGHT_MCP_CONFIG}}" > "$TMP_CONFIG"
             mv "$TMP_CONFIG" "$CLAUDE_CONFIG_FILE"
           else
-            # Create new config with both settings
-            echo "{\"apiKeySource\": \"env\", \"mcpServers\": {\"playwright\": $PLAYWRIGHT_MCP_CONFIG}}" > "$CLAUDE_CONFIG_FILE"
+            echo "{\"apiKeySource\":\"env\",\"mcpServers\":{\"playwright\":$PLAYWRIGHT_MCP_CONFIG}}" > "$CLAUDE_CONFIG_FILE"
           fi
 
           echo "Claude global config:"
