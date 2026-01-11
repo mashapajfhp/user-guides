@@ -104,6 +104,176 @@ jobs:
           echo "skip=false" >> $GITHUB_OUTPUT
           echo "Found validation request: $FOLDER (format: $PAYLOAD_FORMAT)"
 
+      # ============================================
+      # TRANSFORMATION STEP: Convert AI format to validation format
+      # This is a safety net - n8n should transform before saving,
+      # but this ensures compatibility if raw AI output is pushed
+      # ============================================
+      - name: Transform AI payload format (if needed)
+        id: transform
+        if: steps.detect.outputs.skip != 'true'
+        run: |
+          PAYLOAD_PATH="$GITHUB_WORKSPACE/${{ steps.detect.outputs.payload_file }}"
+
+          echo "============================================"
+          echo "Checking payload format..."
+          echo "============================================"
+
+          # Check if this is the new AI format (has feature_info) or old format (has metadata)
+          HAS_FEATURE_INFO=$(jq 'has("feature_info")' "$PAYLOAD_PATH" 2>/dev/null || echo "false")
+          HAS_PLAYWRIGHT_CONTEXT=$(jq 'has("playwright_context")' "$PAYLOAD_PATH" 2>/dev/null || echo "false")
+          HAS_METADATA=$(jq 'has("metadata")' "$PAYLOAD_PATH" 2>/dev/null || echo "false")
+          HAS_TESTS=$(jq 'has("tests")' "$PAYLOAD_PATH" 2>/dev/null || echo "false")
+
+          echo "Format detection:"
+          echo "  Has feature_info: $HAS_FEATURE_INFO"
+          echo "  Has playwright_context: $HAS_PLAYWRIGHT_CONTEXT"
+          echo "  Has metadata: $HAS_METADATA"
+          echo "  Has tests: $HAS_TESTS"
+
+          # Transform only if: has new format markers AND missing old format markers
+          if [ "$HAS_FEATURE_INFO" = "true" ] && [ "$HAS_PLAYWRIGHT_CONTEXT" = "true" ] && [ "$HAS_TESTS" = "false" ]; then
+            echo "============================================"
+            echo "NEW AI FORMAT DETECTED - Transforming..."
+            echo "============================================"
+
+            # Create backup of original
+            cp "$PAYLOAD_PATH" "${PAYLOAD_PATH}.ai-original"
+
+            # Transform using jq
+            jq '
+              # Extract source data
+              .feature_info as $fi |
+              .playwright_context as $pc |
+
+              # Build tests from what_to_do tasks
+              [
+                ($pc.what_to_do // []) | to_entries[] |
+                {
+                  test_id: "test_\(.key + 1)",
+                  test_name: .value.task,
+                  priority: (if .key == 0 then "must_test" else "should_test" end),
+                  description: .value.task,
+                  access_path_ref: "NAV-001",
+                  setup_flow_ref: null,
+                  business_rule_refs: [],
+                  edge_case_refs: [],
+                  assertions: [
+                    (.value.steps // []) | to_entries[] |
+                    {
+                      assertion_id: "assert_\(.key + 1)",
+                      type: "ui_element_present",
+                      description: .value,
+                      expected: true
+                    }
+                  ]
+                }
+              ] as $tests |
+
+              # Build edge cases from what_to_watch_out_for
+              [
+                ($pc.what_to_watch_out_for // []) | to_entries[] |
+                {
+                  case_id: ("EDGE-" + ((.key + 1) | tostring | if length < 3 then ("00" + .)[-3:] else . end)),
+                  scenario: .value.known_issue,
+                  expected_behavior: (.value.workaround // "Handle appropriately"),
+                  priority: "should_test"
+                }
+              ] as $edge_cases |
+
+              # Build navigation steps from where_to_go
+              (($pc.where_to_go.path // "") | split(" > ") | map(select(length > 0))) as $nav_parts |
+              [
+                $nav_parts[] |
+                {
+                  action: "click",
+                  target: .,
+                  selector_hint: ("Menu item labeled \"" + . + "\"")
+                }
+              ] as $nav_steps |
+
+              # Construct transformed payload
+              {
+                metadata: {
+                  feature_name: ($fi.feature_name // $fi.requested_feature // "Unknown Feature"),
+                  feature_slug: ($fi.feature_slug // "unknown"),
+                  version: ($fi.next_version // "v1"),
+                  generated_at: (now | todate),
+                  source: "ai_agent_transformed",
+                  original_format: "ai_playwright_context"
+                },
+                instructions: {
+                  execution_mode: "validate_ui",
+                  screenshot_policy: "viewport_only",
+                  note: "Auto-transformed from AI agent output by GitHub Actions"
+                },
+                definitions: {
+                  access_paths: {
+                    configuration: [
+                      {
+                        path_id: "NAV-001",
+                        context: "main_navigation",
+                        url: ($pc.where_to_go.url // ""),
+                        steps: $nav_steps
+                      }
+                    ],
+                    operational: []
+                  },
+                  setup_flows: [],
+                  business_rules: [],
+                  edge_cases: $edge_cases,
+                  ui_elements: []
+                },
+                tests: $tests,
+                summary: {
+                  total_tests: ($tests | length),
+                  by_priority: {
+                    must_test: ([$tests[] | select(.priority == "must_test")] | length),
+                    should_test: ([$tests[] | select(.priority == "should_test")] | length)
+                  }
+                },
+                _ai_original: {
+                  feature_info: $fi,
+                  playwright_context: $pc
+                }
+              }
+            ' "$PAYLOAD_PATH" > "${PAYLOAD_PATH}.transformed"
+
+            # Validate transformed JSON
+            if jq empty "${PAYLOAD_PATH}.transformed" 2>/dev/null; then
+              mv "${PAYLOAD_PATH}.transformed" "$PAYLOAD_PATH"
+              echo "Transformation successful!"
+              echo "  Tests generated: $(jq '.tests | length' "$PAYLOAD_PATH")"
+              echo "  Edge cases: $(jq '.definitions.edge_cases | length' "$PAYLOAD_PATH")"
+              echo "  Nav steps: $(jq '.definitions.access_paths.configuration[0].steps | length' "$PAYLOAD_PATH")"
+              echo "transformed=true" >> $GITHUB_OUTPUT
+              echo "transform_source=ai_format" >> $GITHUB_OUTPUT
+            else
+              echo "ERROR: Transformation produced invalid JSON!"
+              cat "${PAYLOAD_PATH}.transformed" || true
+              echo "Restoring original payload..."
+              mv "${PAYLOAD_PATH}.ai-original" "$PAYLOAD_PATH"
+              rm -f "${PAYLOAD_PATH}.transformed"
+              echo "transformed=false" >> $GITHUB_OUTPUT
+              echo "transform_error=invalid_json" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+
+          elif [ "$HAS_METADATA" = "true" ] && [ "$HAS_TESTS" = "true" ]; then
+            echo "Payload already in expected validation format - no transformation needed"
+            echo "transformed=false" >> $GITHUB_OUTPUT
+            echo "transform_source=already_valid" >> $GITHUB_OUTPUT
+
+          else
+            echo "WARNING: Unrecognized payload format"
+            echo "  Expected either: (feature_info + playwright_context) OR (metadata + tests)"
+            echo "  Proceeding with payload as-is..."
+            echo "transformed=false" >> $GITHUB_OUTPUT
+            echo "transform_source=unknown_format" >> $GITHUB_OUTPUT
+          fi
+
+          echo "============================================"
+
       - name: Parse and validate payload
         id: parse_payload
         if: steps.detect.outputs.skip != 'true'
