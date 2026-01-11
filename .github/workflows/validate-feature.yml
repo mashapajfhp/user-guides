@@ -504,49 +504,63 @@ jobs:
           5. Focus on tests in order - they are pre-sorted by priority
 
           ═══════════════════════════════════════════════════════════════
+          ## 🚨🚨🚨 STEP ZERO - DO THIS FIRST - MANDATORY 🚨🚨🚨
+          ═══════════════════════════════════════════════════════════════
+
+          ██████████████████████████████████████████████████████████████
+          ██  BEFORE YOU DO ANYTHING ELSE - RESIZE THE BROWSER!!!     ██
+          ██  THIS IS YOUR VERY FIRST ACTION - NO EXCEPTIONS!         ██
+          ██████████████████████████████████████████████████████████████
+
+          YOUR FIRST TOOL CALL MUST BE:
+          ┌─────────────────────────────────────────────────────────────┐
+          │  browser_resize with width=1920 and height=1200            │
+          └─────────────────────────────────────────────────────────────┘
+
+          DO NOT:
+          ❌ Navigate to any URL first
+          ❌ Take any screenshots first
+          ❌ Click anything first
+          ❌ Do login first
+          ❌ Do ANYTHING before browser_resize
+
+          THE SEQUENCE IS:
+          1️⃣ browser_resize (width=1920, height=1200) ← FIRST!
+          2️⃣ Then navigate to login page
+          3️⃣ Then everything else
+
+          ═══════════════════════════════════════════════════════════════
           ## 🚨 HARD RULE: FULL SIDEBAR MUST ALWAYS BE VISIBLE 🚨
           ═══════════════════════════════════════════════════════════════
 
           THIS IS A NON-NEGOTIABLE REQUIREMENT. EVERY SCREENSHOT MUST SHOW
           THE COMPLETE SIDEBAR WITH SETTINGS VISIBLE AT THE BOTTOM.
 
-          ### MANDATORY BROWSER SETUP (DO FIRST - BEFORE ANY NAVIGATION):
+          ### AFTER RESIZE - VERIFY SIDEBAR IS COMPLETE:
+          The sidebar MUST show ALL these items (top to bottom):
+          ✓ Home
+          ✓ Company
+          ✓ Payroll
+          ✓ Finance Ops
+          ✓ Time
+          ✓ Performance
+          ✓ Health
+          ✓ Requests
+          ✓ Insights
+          ✓ Automations
+          ✓ Apps
+          ✓ Settings (gear icon - MUST BE VISIBLE AT BOTTOM!)
 
-          1. RESIZE BROWSER IMMEDIATELY after launch:
-             - Use playwright_resize with width=1920, height=1080
-             - This viewport size shows the COMPLETE sidebar
-
-          2. VERIFY SIDEBAR IS COMPLETE:
-             The sidebar MUST show ALL these items (top to bottom):
-             ✓ Home
-             ✓ Company
-             ✓ Payroll
-             ✓ Finance Ops
-             ✓ Time
-             ✓ Performance
-             ✓ Health
-             ✓ Requests
-             ✓ Insights
-             ✓ Automations
-             ✓ Apps
-             ✓ Settings (gear icon - MUST BE VISIBLE AT BOTTOM!)
-
-          3. IF SETTINGS IS NOT VISIBLE - FIX IT BEFORE PROCEEDING:
-             - DO NOT proceed with any tests until Settings is visible
-             - Try increasing height: playwright_resize width=1920, height=1200
-             - If still not visible, scroll the sidebar container down
-             - Take a verification screenshot showing Settings is visible
+          ### IF SETTINGS IS NOT VISIBLE AFTER LOGIN:
+          - STOP! Do not proceed with any tests
+          - Call browser_resize again with height=1300
+          - Take a verification screenshot
+          - Only proceed when Settings gear icon is visible
 
           ### SCREENSHOT VALIDATION RULE:
           ❌ REJECT any screenshot where Settings is cut off
           ❌ REJECT any screenshot where sidebar is incomplete
           ✅ ACCEPT only screenshots showing FULL sidebar with Settings visible
-
-          ### WHY THIS IS CRITICAL:
-          - Settings contains important configuration options
-          - Tests may need to navigate to Settings
-          - Incomplete sidebar = incomplete documentation
-          - ALL sidebar items must be accessible and visible
 
           ═══════════════════════════════════════════════════════════════
           ## ONBOARDING TOOLTIPS DISMISSAL (MANDATORY AFTER LOGIN)
@@ -807,12 +821,15 @@ jobs:
 
           ### Step 1: Browser Setup, Login, and Tooltip Dismissal
 
-          #### 1a. BROWSER SETUP (DO FIRST - BEFORE NAVIGATION)
-          1. IMMEDIATELY use playwright_resize: width=1920, height=1080
-          2. VERIFY the full sidebar is visible (Settings at bottom)
-          3. If Settings NOT visible, increase to height=1200
-          4. DO NOT proceed until Settings gear icon is visible at sidebar bottom
-          5. This is a HARD RULE - no exceptions
+          #### 1a. BROWSER SETUP (MANDATORY FIRST STEP - NO EXCEPTIONS)
+          ┌──────────────────────────────────────────────────────────────┐
+          │ YOUR VERY FIRST TOOL CALL MUST BE:                          │
+          │ browser_resize with width=1920, height=1200                 │
+          │ DO THIS BEFORE NAVIGATING TO ANY URL!                       │
+          └──────────────────────────────────────────────────────────────┘
+          1. Call browser_resize(width=1920, height=1200) FIRST
+          2. THEN navigate to login page
+          3. This ensures full sidebar visibility from the start
 
           #### 1b. LOGIN
           1. Navigate to the base URL
@@ -839,7 +856,7 @@ jobs:
           2. CRITICAL: Settings (gear icon) MUST be visible at bottom
 
           3. If Settings is NOT visible:
-             a) First try: playwright_resize width=1920, height=1200
+             a) First try: browser_resize with width=1920, height=1300
              b) If still hidden: scroll sidebar container down
              c) Take screenshot to verify Settings is now visible
              d) ONLY proceed when Settings icon is confirmed visible
