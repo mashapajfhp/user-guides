@@ -412,13 +412,22 @@ jobs:
           rm -f "$GITHUB_WORKSPACE/.mcp.json"
           mkdir -p "$SCREENSHOT_PATH"
 
+          # Get the FULL PATH to the MCP command (Claude Code requires absolute paths)
+          GLOBAL_BIN="$(npm config get prefix)/bin"
+          if [ "$PLAYWRIGHT_MCP_CMD" = "npx" ]; then
+            MCP_FULL_PATH="npx"
+          else
+            MCP_FULL_PATH="${GLOBAL_BIN}/${PLAYWRIGHT_MCP_CMD}"
+          fi
+          echo "  MCP full path: $MCP_FULL_PATH"
+
           # Create MCP config - Playwright only (Supabase accessed via PostgREST curl for stability)
           if [ "$PLAYWRIGHT_MCP_CMD" = "npx" ]; then
             echo "Using npx fallback configuration..."
             echo "{\"mcpServers\":{\"playwright\":{\"command\":\"npx\",\"args\":[\"-y\",\"@playwright/mcp@${PLAYWRIGHT_MCP_VERSION}\",\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
           else
-            echo "Using direct command configuration..."
-            echo "{\"mcpServers\":{\"playwright\":{\"command\":\"${PLAYWRIGHT_MCP_CMD}\",\"args\":[\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
+            echo "Using direct command configuration with FULL PATH..."
+            echo "{\"mcpServers\":{\"playwright\":{\"command\":\"${MCP_FULL_PATH}\",\"args\":[\"--output-dir\",\"${SCREENSHOT_PATH}\",\"--browser\",\"chromium\",\"--timeout\",\"300000\"]}}}" > "$GITHUB_WORKSPACE/.mcp.json"
           fi
 
           # Validate JSON
