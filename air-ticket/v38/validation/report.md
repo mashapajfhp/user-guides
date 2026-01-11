@@ -1,17 +1,17 @@
 # Validation Report: Air Ticket
 
 **Status**: completed
-**Execution Mode**: Chunked (2 chunks)
-**Generated**: 2026-01-11T02:27:59Z
+**Execution Mode**: Chunked (1 chunks)
+**Generated**: 2026-01-11T02:52:47Z
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Passed | 4 |
+| Passed | 2 |
 | Failed | 0 |
 | Skipped | 0 |
-| Total | 4 |
+| Total | 2 |
 
 ## Test Results
 
@@ -51,14 +51,4 @@ The redesigned UI successfully addresses the original bug report about unclear i
 - 'Policy status' - clearly indicates current state
 
 All 5 assertions validated successfully.
-
-### FE: Show remaining air tickets when balance is on hold due to booking request
-- **Status**: passed
-- **Assertions**: 5/5
-- **Notes**: Successfully validated that remaining air ticket balance is visible on both the main air tickets dashboard and individual employee pages. The balance display shows '-' (dash) for inactive policies, which is clear and unambiguous. No loading spinners block visibility. The interface clearly shows 2 pending requests with employee names (Jane Doe, Abdul Hamid Muhammad), request types, amounts, and submission dates. Both employees have inactive policies, so full balance-on-hold testing with active policies was limited. However, the UI properly displays policy status, remaining requests, allowance balance, and coverage information in a clear, accessible format.
-
-### FE: Unclear indication of available air ticket requests
-- **Status**: passed
-- **Assertions**: 5/5
-- **Notes**: Successfully validated that air ticket request counter displays clear, unambiguous text. The interface shows 'Remaining air ticket requests: -' and 'Remaining allowance balance: -' with clear labels. Policy status shows 'Inactive' with explicit message 'You have not been added to a policy'. No ambiguous '0/1' format used - instead uses clear dash '-' for inactive/unavailable states. Labels are descriptive: 'Remaining air ticket requests', 'Remaining allowance balance', 'Coverage includes'. Text is not truncated and remains readable on mobile viewport (tested on iPhone 13 portrait). The redesigned info card format includes all necessary information in a clear, accessible layout. Zero-state messaging is explicit and informative.
 
