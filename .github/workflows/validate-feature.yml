@@ -504,28 +504,49 @@ jobs:
           5. Focus on tests in order - they are pre-sorted by priority
 
           ═══════════════════════════════════════════════════════════════
-          ## BROWSER SETUP (MANDATORY - DO FIRST)
+          ## 🚨 HARD RULE: FULL SIDEBAR MUST ALWAYS BE VISIBLE 🚨
           ═══════════════════════════════════════════════════════════════
 
-          Before ANY navigation, you MUST configure the browser viewport:
+          THIS IS A NON-NEGOTIABLE REQUIREMENT. EVERY SCREENSHOT MUST SHOW
+          THE COMPLETE SIDEBAR WITH SETTINGS VISIBLE AT THE BOTTOM.
 
-          1. RESIZE BROWSER to 1920x1200 (TALL viewport):
-             - Use playwright_resize with width=1920, height=1200
-             - This ensures the FULL sidebar is visible (including Settings at bottom)
-             - CRITICAL: The default viewport often cuts off bottom menu items
-             - 1200px height is needed because Bayzat sidebar has 12+ menu items
+          ### MANDATORY BROWSER SETUP (DO FIRST - BEFORE ANY NAVIGATION):
 
-          2. SIDEBAR SCROLL (if Settings not visible):
-             - If Settings is NOT visible after resize, the sidebar may need scrolling
-             - Hover over the sidebar area and scroll down
-             - OR use JavaScript: document.querySelector('[data-testid="sidebar"]')?.scrollTo(0, 999)
-             - Keep scrolling until Settings icon (gear) is visible at bottom
+          1. RESIZE BROWSER IMMEDIATELY after launch:
+             - Use playwright_resize with width=1920, height=1080
+             - This viewport size shows the COMPLETE sidebar
 
-          3. WHY THIS MATTERS:
-             - Bayzat sidebar has 12+ items: Home, Company, Payroll, Finance Ops,
-               Time, Performance, Health, Requests, Insights, Automations, Apps, Settings
-             - With small viewport, "Settings" gets cut off (it's the LAST item)
-             - You CANNOT navigate to hidden menu items
+          2. VERIFY SIDEBAR IS COMPLETE:
+             The sidebar MUST show ALL these items (top to bottom):
+             ✓ Home
+             ✓ Company
+             ✓ Payroll
+             ✓ Finance Ops
+             ✓ Time
+             ✓ Performance
+             ✓ Health
+             ✓ Requests
+             ✓ Insights
+             ✓ Automations
+             ✓ Apps
+             ✓ Settings (gear icon - MUST BE VISIBLE AT BOTTOM!)
+
+          3. IF SETTINGS IS NOT VISIBLE - FIX IT BEFORE PROCEEDING:
+             - DO NOT proceed with any tests until Settings is visible
+             - Try increasing height: playwright_resize width=1920, height=1200
+             - If still not visible, scroll the sidebar container down
+             - Take a verification screenshot showing Settings is visible
+
+          ### SCREENSHOT VALIDATION RULE:
+          ❌ REJECT any screenshot where Settings is cut off
+          ❌ REJECT any screenshot where sidebar is incomplete
+          ✅ ACCEPT only screenshots showing FULL sidebar with Settings visible
+
+          ### WHY THIS IS CRITICAL:
+          - Settings contains important configuration options
+          - Tests may need to navigate to Settings
+          - Incomplete sidebar = incomplete documentation
+          - ALL sidebar items must be accessible and visible
 
           ═══════════════════════════════════════════════════════════════
           ## ONBOARDING TOOLTIPS DISMISSAL (MANDATORY AFTER LOGIN)
@@ -787,10 +808,11 @@ jobs:
           ### Step 1: Browser Setup, Login, and Tooltip Dismissal
 
           #### 1a. BROWSER SETUP (DO FIRST - BEFORE NAVIGATION)
-          1. Use playwright_resize to set viewport to 1920x1200
-             - Width: 1920, Height: 1200 (extra tall for full sidebar)
-             - This ensures full sidebar visibility including Settings
-             - Bayzat has 12+ sidebar items - need tall viewport
+          1. IMMEDIATELY use playwright_resize: width=1920, height=1080
+          2. VERIFY the full sidebar is visible (Settings at bottom)
+          3. If Settings NOT visible, increase to height=1200
+          4. DO NOT proceed until Settings gear icon is visible at sidebar bottom
+          5. This is a HARD RULE - no exceptions
 
           #### 1b. LOGIN
           1. Navigate to the base URL
@@ -807,15 +829,24 @@ jobs:
           4. Common tooltip text: "Announcements in Home", feature tours
           5. VERIFICATION: Ensure sidebar is fully clickable, no overlays
 
-          #### 1d. VERIFY SIDEBAR (Settings must be visible)
-          1. Look at the sidebar - can you see "Settings" at the very bottom?
-          2. If Settings is NOT visible:
-             - Hover over the sidebar
-             - Scroll down within the sidebar container
-             - OR use: playwright_evaluate with JavaScript to scroll sidebar
-          3. The sidebar should show ALL items including Settings (gear icon)
+          #### 1d. VERIFY FULL SIDEBAR (HARD RULE - MANDATORY CHECK)
+          🚨 DO NOT PROCEED UNTIL THIS CHECK PASSES 🚨
 
-          #### 1e. TAKE CLEAN SCREENSHOT
+          1. Confirm you can see ALL 12 sidebar items:
+             Home → Company → Payroll → Finance Ops → Time → Performance →
+             Health → Requests → Insights → Automations → Apps → Settings
+
+          2. CRITICAL: Settings (gear icon) MUST be visible at bottom
+
+          3. If Settings is NOT visible:
+             a) First try: playwright_resize width=1920, height=1200
+             b) If still hidden: scroll sidebar container down
+             c) Take screenshot to verify Settings is now visible
+             d) ONLY proceed when Settings icon is confirmed visible
+
+          4. VALIDATION FAILED if Settings is cut off - fix before continuing
+
+          #### 1e. TAKE CLEAN SCREENSHOT (only after sidebar verified)
           1. Take VIEWPORT screenshot: "chunk-${CHUNK_INDEX}-login-clean-viewport.png"
              - This screenshot should show the clean UI with NO tooltips
              - Full sidebar should be visible (including Settings at bottom)
