@@ -1,8 +1,8 @@
 # Validation Report: Air Ticket
 
-**Status**: completed
+**Status**: failed
 **Execution Mode**: Chunked (1 chunks)
-**Generated**: 2026-01-10T23:56:20Z
+**Generated**: 2026-01-11T00:06:13Z
 
 ## Summary
 
