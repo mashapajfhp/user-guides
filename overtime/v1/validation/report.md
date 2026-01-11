@@ -1,42 +1,14 @@
 # Validation Report: overtime
 
-**Status**: failed
-**Execution Mode**: Chunked (1 chunks)
-**Generated**: 2026-01-11T21:31:17Z
+**Generated**: 2026-01-11T22:16:56Z
+**Run ID**: 20902771830
 
-## Summary
+## Result
+```json
 
-| Metric | Count |
-|--------|-------|
-| Passed | 0 |
-| Failed | 0 |
-| Skipped | 5 |
-| Total | 5 |
+```
 
-## Test Results
-
-### Set up an Overtime Policy
-- **Status**: skipped
-- **Assertions**: 0/0
-- **Notes**: Requires Settings > Attendance > Overtime Policy navigation - blocked by authentication failure
-
-### Configure Fixed Hourly Rate compensation
-- **Status**: skipped
-- **Assertions**: 0/0
-- **Notes**: Requires Settings navigation - blocked by authentication failure
-
-### Assign overtime to employees in advance
-- **Status**: skipped
-- **Assertions**: 0/0
-- **Notes**: Requires Attendance module access - blocked by authentication failure
-
-### View scheduled overtime hours as an employee
-- **Status**: skipped
-- **Assertions**: 0/0
-- **Notes**: Requires employee view access - blocked by authentication failure
-
-### Bulk approve overtime requests as a manager
-- **Status**: skipped
-- **Assertions**: 0/0
-- **Notes**: Requires Line Manager access - blocked by authentication failure
-
+## Screenshots
+total 0
+drwxr-xr-x@  2 mashapa  staff   64 Jan 12 02:16 .
+drwxr-xr-x@ 11 mashapa  staff  352 Jan 12 02:16 ..
