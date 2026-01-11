@@ -509,15 +509,22 @@ jobs:
 
           Before ANY navigation, you MUST configure the browser viewport:
 
-          1. RESIZE BROWSER to 1920x1080 minimum:
-             - Use playwright_resize with width=1920, height=1080
+          1. RESIZE BROWSER to 1920x1200 (TALL viewport):
+             - Use playwright_resize with width=1920, height=1200
              - This ensures the FULL sidebar is visible (including Settings at bottom)
              - CRITICAL: The default viewport often cuts off bottom menu items
+             - 1200px height is needed because Bayzat sidebar has 12+ menu items
 
-          2. WHY THIS MATTERS:
-             - Bayzat sidebar has many items: Home, Company, Payroll, Finance Ops,
-               Time, Performance, Health, Requests, Insights, AND Settings
-             - With small viewport, "Settings" and other bottom items get cut off
+          2. SIDEBAR SCROLL (if Settings not visible):
+             - If Settings is NOT visible after resize, the sidebar may need scrolling
+             - Hover over the sidebar area and scroll down
+             - OR use JavaScript: document.querySelector('[data-testid="sidebar"]')?.scrollTo(0, 999)
+             - Keep scrolling until Settings icon (gear) is visible at bottom
+
+          3. WHY THIS MATTERS:
+             - Bayzat sidebar has 12+ items: Home, Company, Payroll, Finance Ops,
+               Time, Performance, Health, Requests, Insights, Automations, Apps, Settings
+             - With small viewport, "Settings" gets cut off (it's the LAST item)
              - You CANNOT navigate to hidden menu items
 
           ═══════════════════════════════════════════════════════════════
@@ -652,10 +659,12 @@ jobs:
           - Health
           - Requests
           - Insights
-          - Settings (SCROLL DOWN if not visible - at very bottom!)
-          - Any other visible menu items or submenus
+          - Automations
+          - Apps
+          - Settings (SCROLL SIDEBAR if not visible - at very bottom!)
 
-          NOTE: You MUST have viewport 1920x1080 to see Settings at bottom!
+          NOTE: You MUST have viewport 1920x1200 AND may need to scroll
+          the sidebar to see Settings at the bottom!
 
           FOR EACH MENU ITEM:
           1. Click the menu item
@@ -695,7 +704,7 @@ jobs:
           ```
 
           ### EXPLORATION CHECKLIST (Must complete ALL):
-          [ ] Verified viewport is 1920x1080 (Settings visible at bottom)
+          [ ] Verified viewport is 1920x1200 (tall viewport)
           [ ] Clicked Home
           [ ] Clicked Company
           [ ] Clicked Payroll
@@ -705,7 +714,10 @@ jobs:
           [ ] Clicked Health
           [ ] Clicked Requests
           [ ] Clicked Insights
-          [ ] Clicked Settings (scroll sidebar if needed)
+          [ ] Clicked Automations
+          [ ] Clicked Apps
+          [ ] Scrolled sidebar to reveal Settings (if hidden)
+          [ ] Clicked Settings
           [ ] Clicked any other visible menus/submenus
           [ ] Tried search (if available)
           [ ] Documented findings for each menu
@@ -775,9 +787,10 @@ jobs:
           ### Step 1: Browser Setup, Login, and Tooltip Dismissal
 
           #### 1a. BROWSER SETUP (DO FIRST - BEFORE NAVIGATION)
-          1. Use playwright_resize to set viewport to 1920x1080
-             - This ensures full sidebar visibility
-             - Settings menu at bottom will be visible
+          1. Use playwright_resize to set viewport to 1920x1200
+             - Width: 1920, Height: 1200 (extra tall for full sidebar)
+             - This ensures full sidebar visibility including Settings
+             - Bayzat has 12+ sidebar items - need tall viewport
 
           #### 1b. LOGIN
           1. Navigate to the base URL
@@ -794,10 +807,19 @@ jobs:
           4. Common tooltip text: "Announcements in Home", feature tours
           5. VERIFICATION: Ensure sidebar is fully clickable, no overlays
 
-          #### 1d. TAKE CLEAN SCREENSHOT
+          #### 1d. VERIFY SIDEBAR (Settings must be visible)
+          1. Look at the sidebar - can you see "Settings" at the very bottom?
+          2. If Settings is NOT visible:
+             - Hover over the sidebar
+             - Scroll down within the sidebar container
+             - OR use: playwright_evaluate with JavaScript to scroll sidebar
+          3. The sidebar should show ALL items including Settings (gear icon)
+
+          #### 1e. TAKE CLEAN SCREENSHOT
           1. Take VIEWPORT screenshot: "chunk-${CHUNK_INDEX}-login-clean-viewport.png"
              - This screenshot should show the clean UI with NO tooltips
              - Full sidebar should be visible (including Settings at bottom)
+             - VERIFY: Settings icon is visible in sidebar before taking screenshot
              (Do NOT take full-page - just the visible viewport after login)
 
           ### Step 2: Resolve References and Execute Tests
