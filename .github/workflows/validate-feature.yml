@@ -563,37 +563,51 @@ jobs:
           ✅ ACCEPT only screenshots showing FULL sidebar with Settings visible
 
           ═══════════════════════════════════════════════════════════════
-          ## ONBOARDING TOOLTIPS DISMISSAL (MANDATORY AFTER LOGIN)
+          ## ONBOARDING TOOLTIPS DISMISSAL (MANDATORY - CALL REPEATEDLY)
           ═══════════════════════════════════════════════════════════════
 
-          Bayzat shows onboarding tooltips/modals that BLOCK navigation.
-          You MUST dismiss ALL of them before starting any tests.
+          Bayzat shows onboarding tooltips/modals (purple tour cards) that BLOCK
+          navigation. You MUST dismiss them:
+          - Right after login / landing
+          - After every major navigation step (before screenshot)
+          - Before any critical click that might be obstructed
 
-          ### TOOLTIP PATTERNS TO LOOK FOR:
-          - "Step X of Y" indicators (e.g., "Step 1 of 4")
-          - Purple/violet modal overlays with "Next" buttons
-          - "Announcements in Home" or similar feature tours
-          - Any modal with X (close) button in top-right corner
-          - "Got it", "Skip", "Next", "Done" buttons
+          ### TOOLTIP CONTAINER DETECTION:
+          Look for visible elements matching ANY of these selectors:
+          - [role="dialog"]
+          - [aria-modal="true"]
+          - .tour, .onboarding, .tooltip, .popover
+          - .shepherd-element, .react-joyride__tooltip
+          - Any purple/violet overlay card
 
-          ### DISMISSAL PROCEDURE (MANDATORY):
+          ### CLOSE BUTTON SELECTORS (TRY IN ORDER):
+          Inside the tooltip container, find and click the close button:
+          1. button[aria-label*="close" i]  (case-insensitive)
+          2. button:has-text("×")           (multiplication sign)
+          3. button:has-text("✕")           (X mark)
+          4. button:has-text("X")           (letter X)
+          5. button:has(svg[aria-label*="close" i])
+          6. [data-testid*="close" i] button
+          7. button[title*="close" i]
+
+          ### DISMISSAL PROCEDURE:
           1. After login, WAIT 2 seconds for tooltips to appear
-          2. Look for ANY tooltip/modal overlay on the page
-          3. If found, click the X (close) button OR "Skip" button
-          4. Keep clicking through ALL steps until tooltips are gone
-          5. Take screenshot AFTER all tooltips are dismissed
-          6. If "Step X of Y" appears, click through ALL steps or find Skip/Close
+          2. Check for tooltip containers (selectors above)
+          3. If found: click the close button (X in top-right)
+          4. Wait 150ms, then verify tooltip is gone
+          5. REPEAT until no more tooltips are visible
+          6. Do NOT fail if tooltip is not present (safe to call always)
 
-          ### TOOLTIP SELECTORS TO TRY:
-          - Button with X icon in modal header
-          - ".close-button", "[aria-label='Close']", "[data-testid='close']"
-          - "Skip" or "Skip tour" buttons
-          - Click outside modal (if clickable backdrop)
+          ### WHEN TO CALL DISMISSAL:
+          ✓ Immediately after page load (post-login)
+          ✓ Before each screenshot call
+          ✓ Before clicking sidebar navigation items
+          ✓ After any navigation that might trigger new tooltips
 
           ### VERIFICATION:
           - After dismissal, the main UI should be fully interactive
           - No overlays blocking the sidebar or main content
-          - Take a "clean" screenshot to confirm tooltips are gone
+          - Sidebar items must be clickable
 
           ═══════════════════════════════════════════════════════════════
           ## SCREENSHOT POLICY (MANDATORY)
