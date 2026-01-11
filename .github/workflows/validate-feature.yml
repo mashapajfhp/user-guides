@@ -260,11 +260,14 @@ jobs:
           echo "Starting Playwright validation for: $FEATURE_NAME"
           echo "============================================"
 
-          # Run Claude Code with Playwright MCP (using Chromium for reliability)
+          # Run Claude Code with Playwright MCP (headed mode, chromium)
+          export HEADLESS=false
+          export BROWSER=chromium
+
           npx @anthropic-ai/claude-code@latest \
             --print \
             --max-turns 100 \
-            --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["@executeautomation/playwright-mcp-server","--browser","chromium"]}}}' \
+            --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["@executeautomation/playwright-mcp-server"],"env":{"HEADLESS":"false","BROWSER":"chromium"}}}}' \
             --prompt-file "$PROMPT_FILE" \
             --output-format json > "$RESULT_FILE.raw" 2>&1 || true
 
