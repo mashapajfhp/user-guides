@@ -1,0 +1,182 @@
+{
+  "nextVersion": "v4",
+  "feature_info": {
+    "feature_name": "leave_salary",
+    "feature_slug": "leave-salary",
+    "next_version": "v4"
+  },
+  "playwright_context": {
+    "feature_metadata": {
+      "name": "leave_salary",
+      "slug": "leave-salary",
+      "category": "payroll",
+      "version": "",
+      "is_new": null
+    },
+    "what_to_do": [
+      {
+        "task": "Configure Leave Salary Policy",
+        "steps": [
+          "Navigate to Settings > Leave > Leave Policies",
+          "Enable Leave Salary Settings by toggling the option in the leave policy",
+          "Create a new leave salary policy in Payroll Settings under 'Leave Salary Policy'",
+          "Define the policy name and description",
+          "Select applicable leave types for the policy",
+          "Configure the leave salary calculation formula and select allowance components",
+          "Add eligible employees to the policy, applying probation restrictions if necessary",
+          "Review and save the leave salary policy"
+        ],
+        "expected_outcome": "A leave salary policy is configured and active, with eligible employees assigned and salary calculation rules defined.",
+        "source_articles": [
+          "21886275643921",
+          "25042444366609"
+        ]
+      },
+      {
+        "task": "Manage Leave Salary Requests",
+        "steps": [
+          "Navigate to Finance > Leave Salary",
+          "Review pending leave salary requests and check eligibility",
+          "Approve or reject requests as appropriate",
+          "Optionally overwrite approved amounts before final approval",
+          "Add approved leave salary amounts to the payroll table",
+          "Process leave salary transactions"
+        ],
+        "expected_outcome": "Leave salary requests are reviewed, approved or rejected, and approved amounts are correctly added to payroll for processing.",
+        "source_articles": [
+          "21886938971281",
+          "25042444366609"
+        ]
+      },
+      {
+        "task": "Process Leave Salary Transactions",
+        "steps": [
+          "Submit leave salary transactions for processing",
+          "Filter employees by 'leave salary' request type",
+          "Calculate prorated salaries based on leave periods and working day settings",
+          "Create Variable Pay File (VPF) for payroll integration",
+          "Adjust payroll for leave periods, considering different working day settings and allowance exclusions",
+          "Update payroll table and add transaction remarks"
+        ],
+        "expected_outcome": "Leave salary transactions are accurately calculated, processed, and integrated into payroll with appropriate adjustments and documentation.",
+        "source_articles": [
+          "21888855153937",
+          "25042444366609"
+        ]
+      }
+    ],
+    "what_to_watch_out_for": [
+      {
+        "issue": "Leave Salary Accrual Report limitations",
+        "limitation": "The report lacks flexible sorting, precise number formatting, and comprehensive employee data fields. It is generated on-the-go, restricting real-time customization and immediate client-requested modifications.",
+        "workaround": "No direct workaround; users must work within existing report constraints.",
+        "jira_reference": "TSSD-3124,TSSD-3648,OS-2691,OS-193",
+        "severity": "medium"
+      },
+      {
+        "issue": "Currency display mismatch on Leave Salary landing page",
+        "limitation": "The landing page currency label is static and does not dynamically reflect the company's configured currency, causing potential user confusion.",
+        "workaround": "Users should verify currency correctness in leave salary requests rather than relying on the landing page label.",
+        "jira_reference": "TSSD-4112",
+        "severity": "low"
+      },
+      {
+        "issue": "Leave Salary policy assignment timing affects eligibility",
+        "limitation": "The system does not support retroactive leave salary policy assignments; eligibility is fixed at request creation time.",
+        "workaround": "Ensure policies are assigned before leave requests are created to guarantee eligibility.",
+        "jira_reference": "TSSD-4449",
+        "severity": "medium"
+      },
+      {
+        "issue": "Multiple leave requests for leaves spanning multiple cycles",
+        "limitation": "The system generates separate leave salary requests for each leave cycle, requiring manual tracking and approval.",
+        "workaround": "Administrators must manually track and approve related requests separately.",
+        "jira_reference": "TSSD-2683,TSSD-4887",
+        "severity": "high"
+      },
+      {
+        "issue": "Lack of month-specific leave salary breakdown",
+        "limitation": "The platform does not display leave salary allocation by month for multi-month leave requests, only aggregate totals.",
+        "workaround": "Users must manually calculate or infer month-by-month allocations outside the system.",
+        "jira_reference": "TSSD-2682",
+        "severity": "medium"
+      },
+      {
+        "issue": "Inconsistent leave salary report downloads for individual staff",
+        "limitation": "Users cannot directly download leave salary reports for specific staff members via standard interface.",
+        "workaround": "Use manual report downloads via Payroll table reports as an alternative.",
+        "jira_reference": "TSSD-4291",
+        "severity": "medium"
+      },
+      {
+        "issue": "Leave Salary Encashment configuration complexity",
+        "limitation": "Lack of clear guidance on leave salary encashment functions leads to misconfigurations and misunderstandings.",
+        "workaround": "Users should consult support or documentation for encashment setup clarity.",
+        "jira_reference": "TSSD-3386,OS-482",
+        "severity": "high"
+      },
+      {
+        "issue": "Incomplete payroll templates missing leave salary details",
+        "limitation": "Payroll templates lack detailed leave salary policy breakdowns and unpaid leave counts, limiting comprehensive payroll validation.",
+        "workaround": "Manual reconciliation and additional reporting may be required.",
+        "jira_reference": "TSSD-2681,OS-1450",
+        "severity": "high"
+      },
+      {
+        "issue": "Leave salary request generation constrained by payroll cycle rules",
+        "limitation": "Requests starting before the current payroll cycle cannot be processed automatically, requiring manual splitting.",
+        "workaround": "Manually split leave requests to align with payroll cycles.",
+        "jira_reference": "TSSD-4887",
+        "severity": "high"
+      },
+      {
+        "issue": "Inconsistent synchronization between leave approval and payroll queue",
+        "limitation": "Not all approved leave requests propagate automatically to leave salary queue, causing processing gaps.",
+        "workaround": "Manual verification and intervention may be needed to ensure payroll queue accuracy.",
+        "jira_reference": "TSSD-3050",
+        "severity": "high"
+      },
+      {
+        "issue": "Lack of automated notifications for payroll managers on leave salary policy setup",
+        "limitation": "No automatic alerts are sent when new leave salary-enabled policies are configured, requiring manual communication.",
+        "workaround": "HR teams must manually notify payroll managers of policy changes.",
+        "jira_reference": "OS-239",
+        "severity": "medium"
+      },
+      {
+        "issue": "No comprehensive end-to-end testing for leave salary request generation",
+        "limitation": "Testing infrastructure lacks full coverage for leave salary request workflows.",
+        "workaround": "Testing must be supplemented with manual or partial automated tests.",
+        "jira_reference": "OS-313",
+        "severity": "medium"
+      },
+      {
+        "issue": "Lack of comprehensive technical documentation for leave salary",
+        "limitation": "Insufficient documentation on leave salary calculations and rules limits user understanding.",
+        "workaround": "Users must rely on support or internal knowledge until documentation is improved.",
+        "jira_reference": "OS-335",
+        "severity": "medium"
+      },
+      {
+        "issue": "Missing 'Leave Salary' filter in payroll table",
+        "limitation": "Users cannot filter payroll data by leave salary, limiting reporting customization.",
+        "workaround": "Use alternative filtering or manual data extraction methods.",
+        "jira_reference": "OS-205",
+        "severity": "low"
+      },
+      {
+        "issue": "User confusion on posting leave salary transactions",
+        "limitation": "The workflow for posting leave salary transactions is not intuitive or clearly guided.",
+        "workaround": "Users should refer to support or training materials for transaction posting procedures.",
+        "jira_reference": "OS-192",
+        "severity": "low"
+      }
+    ],
+    "consolidation_summary": {
+      "jira_tickets_received": 20,
+      "jira_tickets_consolidated": 16,
+      "zendesk_articles_received": 5,
+      "tasks_consolidated": 3
+    }
+  }
+}
