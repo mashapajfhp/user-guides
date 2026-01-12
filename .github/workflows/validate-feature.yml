@@ -173,24 +173,54 @@ jobs:
           5. Wait 3 seconds for the page to load
           6. Take a screenshot to confirm login success
 
-          ### Step 3: Dismiss any tooltips/onboarding
-          After login, run this JavaScript to remove tooltips:
+          ### Step 3: Dismiss any modals/tooltips/onboarding
+          After login, dismiss any blocking modals or onboarding tours:
+
+          **3a. First, take a snapshot to check for modals**
+          Look for any modal dialogs, onboarding tours, or popups blocking the UI.
+
+          **3b. Try clicking close buttons (preferred method)**
+          If you see a modal with an X button or close icon, click it using browser_click:
+          - Look for elements with "×" or "X" text
+          - Look for buttons with aria-label="Close" or aria-label="close"
+          - Look for SVG icons in the top-right corner of modals
+          - Common refs: close buttons, dismiss buttons, X icons
+
+          **3c. Try pressing Escape key**
+          Call browser_press_key with key "Escape" to close modals.
+
+          **3d. If modals persist, use JavaScript removal**
+          Run this as a last resort:
           ```javascript
           () => {
+            // Click any visible close buttons first
+            const closeButtons = document.querySelectorAll(
+              '[aria-label*="close" i], [aria-label*="dismiss" i], ' +
+              'button:has(svg[class*="close"]), [class*="modal"] button:first-child, ' +
+              '[class*="tour"] button, [class*="dialog"] [class*="close"]'
+            );
+            closeButtons.forEach(btn => btn.click && btn.click());
+
+            // Remove tour/onboarding elements
             const selectors = ['[class*="tour"]', '[class*="tooltip"]', '[class*="onboarding"]',
-                              '[class*="shepherd"]', '[role="dialog"]', '[aria-modal="true"]'];
+                              '[class*="shepherd"]', '[class*="walkthrough"]', '[class*="intro-js"]'];
             selectors.forEach(sel => {
-              document.querySelectorAll(sel).forEach(el => {
-                if (el.textContent.includes('Step') || el.textContent.includes('Next') ||
-                    el.textContent.includes('Skip')) {
-                  el.remove();
-                }
-              });
+              document.querySelectorAll(sel).forEach(el => el.remove());
             });
-            document.querySelectorAll('[class*="backdrop"], [class*="overlay"]').forEach(el => el.remove());
-            return 'Tooltips removed';
+
+            // Remove backdrops and overlays
+            document.querySelectorAll('[class*="backdrop"], [class*="overlay"]:not(video)').forEach(el => {
+              if (el.style.position === 'fixed' || el.style.position === 'absolute') {
+                el.remove();
+              }
+            });
+
+            return 'Modal dismissal attempted';
           }
           ```
+
+          **3e. Take another snapshot to confirm modals are dismissed**
+          Verify the UI is now accessible before proceeding.
 
           ### Step 4: Explore the Feature
           Based on the payload's "where_to_go" and "what_to_do" sections:
