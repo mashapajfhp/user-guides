@@ -433,12 +433,11 @@ jobs:
           }
           MCPCONFIG
 
-          # Run Claude Code with Playwright MCP (headed mode, chromium)
-          npx @anthropic-ai/claude-code@latest \
+          # Run Claude Code with Playwright MCP (pipe prompt via stdin)
+          cat "$PROMPT_FILE" | npx @anthropic-ai/claude-code@latest \
             --print \
             --max-turns 100 \
             --mcp-config "$MCP_CONFIG_FILE" \
-            --prompt-file "$PROMPT_FILE" \
             2>&1 | tee "$RESULT_FILE.raw"
 
           # Extract JSON result from output
