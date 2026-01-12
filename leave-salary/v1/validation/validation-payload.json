@@ -1,0 +1,158 @@
+{
+  "feature_info": {
+    "requested_feature": "Leave Salary",
+    "feature_name": "leave_salary",
+    "feature_slug": "leave-salary",
+    "category": "payroll",
+    "matched_alias": "leave salary",
+    "match_type": "exact",
+    "confidence": "1.0"
+  },
+  "playwright_context": {
+    "feature_metadata": {
+      "name": "Leave Salary",
+      "slug": "leave-salary",
+      "category": "payroll",
+      "version": "",
+      "is_new": false
+    },
+    "where_to_go": {
+      "url": "/enterprise/payroll/leave-salary-requests",
+      "path": "Payroll > Payroll > Leave salary",
+      "ui_element": "page",
+      "alternative_paths": []
+    },
+    "what_to_do": [
+      {
+        "task": "Configure leave salary policy",
+        "steps": [
+          "Navigate to Settings > Leave > Leave Policies",
+          "Edit Leave Policy",
+          "Toggle 'Leave Salary Settings' to enable",
+          "Go to Payroll Settings",
+          "Select 'Leave Salary Policy'",
+          "Define Policy Name and Description",
+          "Select applicable leave types",
+          "Configure salary calculation method (Basic salary, Basic + Allowance)",
+          "Select allowance components if applicable",
+          "Add eligible employees to the policy",
+          "Apply probation restrictions if needed",
+          "Review and save the policy"
+        ],
+        "expected_outcome": "Leave salary policy is created and employees are assigned to it",
+        "source_articles": [
+          "21886275643921",
+          "25042444366609"
+        ]
+      },
+      {
+        "task": "Manage leave salary requests",
+        "steps": [
+          "Navigate to Finance > Leave Salary",
+          "Review pending requests in the Pending tab",
+          "View request details for each employee",
+          "Check eligibility based on leave salary policy",
+          "Choose action: Approve, Reject, or Add to Payroll Table",
+          "If approving, review the calculation",
+          "Optionally overwrite the amount if needed",
+          "Add remarks to explain any adjustments",
+          "Process the leave salary transaction"
+        ],
+        "expected_outcome": "Leave salary requests are processed and moved to appropriate status (Approved, Rejected, or Added to Payroll)",
+        "source_articles": [
+          "21886938971281",
+          "25042444366609"
+        ]
+      },
+      {
+        "task": "Process leave salary in payroll",
+        "steps": [
+          "Determine leave period for the employee",
+          "Choose salary payment month",
+          "Calculate prorated salary based on working day settings",
+          "Update payroll table with leave salary amount",
+          "Add transaction remarks if needed",
+          "Filter employees by 'leave salary' in payroll table",
+          "Generate Variable Pay File (VPF) if required",
+          "Submit leave salary transactions"
+        ],
+        "expected_outcome": "Leave salary is correctly processed in payroll with proper calculations and adjustments",
+        "source_articles": [
+          "21888855153937",
+          "25042444366609"
+        ]
+      }
+    ],
+    "what_to_watch_out_for": [
+      {
+        "known_issue": "Leave salary requests spanning multiple leave cycles require separate approvals",
+        "workaround": "When an employee's leave spans two different leave cycles, the system generates two separate leave salary requests that must each be approved independently. Verify all pending leave salary requests to avoid overlooking related approvals.",
+        "affected_browsers": [
+          "all"
+        ],
+        "jira_reference": "TSSD-2683",
+        "severity": "medium"
+      },
+      {
+        "known_issue": "Leave salary requests cannot start before the current payroll cycle",
+        "workaround": "Split the leave request into two separate requests aligned with each payroll cycle when leave spans across closed and active payroll cycles.",
+        "affected_browsers": [
+          "all"
+        ],
+        "jira_reference": "TSSD-4887",
+        "severity": "high"
+      },
+      {
+        "known_issue": "Leave salary policy assignment timing affects eligibility",
+        "workaround": "Employees must be assigned to a leave salary policy before creating a leave request for the leave salary to be calculated. If policy is assigned after request creation, the leave request must be deleted and recreated.",
+        "affected_browsers": [
+          "all"
+        ],
+        "jira_reference": "TSSD-4449",
+        "severity": "medium"
+      },
+      {
+        "known_issue": "Leave Salary Accrual Report lacks customization options",
+        "workaround": "The report currently cannot be customized for sorting, formatting, or additional columns. Use Excel for post-download modifications.",
+        "affected_browsers": [
+          "all"
+        ],
+        "jira_reference": "TSSD-3124, TSSD-3648",
+        "severity": "medium"
+      },
+      {
+        "known_issue": "Currency label on leave salary landing page may not match company's configured currency",
+        "workaround": "Ignore the default currency label on the landing page. Actual leave salary requests will use the correct company currency.",
+        "affected_browsers": [
+          "all"
+        ],
+        "jira_reference": "TSSD-4112",
+        "severity": "low"
+      },
+      {
+        "known_issue": "Leave salary report download issues for specific staff members",
+        "workaround": "Access the report via Payroll table > Reports instead of the direct leave salary report download.",
+        "affected_browsers": [
+          "all"
+        ],
+        "jira_reference": "TSSD-4291",
+        "severity": "medium"
+      },
+      {
+        "known_issue": "Leave salary breakdown lacks month-by-month allocation for multi-month leave requests",
+        "workaround": "The system currently shows only total days calculated against the salary formula, without breaking down days by month.",
+        "affected_browsers": [
+          "all"
+        ],
+        "jira_reference": "TSSD-2682",
+        "severity": "medium"
+      }
+    ],
+    "consolidation_summary": {
+      "jira_tickets_received": 23,
+      "jira_tickets_consolidated": 7,
+      "zendesk_articles_received": 4,
+      "tasks_consolidated": 3
+    }
+  }
+}
