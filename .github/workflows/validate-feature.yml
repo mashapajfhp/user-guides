@@ -138,24 +138,15 @@ jobs:
 
           ## CRITICAL FIRST STEPS
 
-          ### Step 1: Browser Setup - Auto-Detect and Normalize Viewport
-          BEFORE doing anything else, normalize the viewport for consistent screenshots:
+          ### Step 1: Browser Setup - Set Large Viewport
+          BEFORE doing anything else, set a large viewport to see all UI elements:
 
-          1. First, call browser_evaluate with this function to detect screen size:
-             ```javascript
-             () => ({ availWidth: window.screen.availWidth, availHeight: window.screen.availHeight, dpr: window.devicePixelRatio || 1 })
-             ```
+          Call browser_resize with width=1280 and height=900
 
-          2. Then normalize the dimensions:
-             - WIDTH: Use the smaller of (detected availWidth) or 1280. Cap at 1280 max.
-             - HEIGHT: Use the larger of (detected availHeight) or 1200. Minimum 1200.
-
-          3. Call browser_resize with the normalized width and height.
-
-          4. Log the result: "Viewport normalized: [width]x[height]"
-
-          Example: If detected is 2560x1440 → normalize to 1280x1440
-          Example: If detected is 1024x768 → normalize to 1024x1200
+          This ensures:
+          - Full sidebar is visible (including Settings at bottom)
+          - No UI elements are cut off
+          - Consistent screenshots across runs
 
           **IMPORTANT: Stay within the application!**
           - Only navigate within app.bayzat.com
@@ -173,62 +164,44 @@ jobs:
 
           ### Step 2: Login
           1. Navigate to the base URL (login page)
-          2. Take a snapshot to see the login form
-          3. Use browser_fill_form to fill BOTH email and password fields at once (faster than typing):
-             - Email field: use the username
-             - Password field: use the password
-          4. Click the login/submit button
-          5. Wait 3 seconds for the page to load
-          6. Take a screenshot to confirm login success
+          2. Call browser_resize with width=1280 and height=900 (ensure viewport is set)
+          3. Take a snapshot to see the login form
+          4. Fill the login form IN THIS ORDER:
+             a. First, click on the Email/Username field
+             b. Use browser_type to enter the username
+             c. Then click on the Password field
+             d. Use browser_type to enter the password
+          5. Click the "Log in" button
+          6. Wait 5 seconds for the page to fully load (browser_wait_for with time=5)
+          7. Take a screenshot to confirm login success
 
-          ### Step 3: Dismiss any modals/tooltips/onboarding
-          After login, dismiss any blocking modals or onboarding tours:
+          ### Step 3: Dismiss ALL onboarding modals
+          After login, you MUST dismiss all onboarding tour modals before proceeding.
 
-          **3a. First, take a snapshot to check for modals**
-          Look for any modal dialogs, onboarding tours, or popups blocking the UI.
+          **3a. Press Escape key 5 times**
+          Call browser_press_key with key="Escape" five times in a row.
+          This closes most modal dialogs.
 
-          **3b. Try clicking close buttons (preferred method)**
-          If you see a modal with an X button or close icon, click it using browser_click:
-          - Look for elements with "×" or "X" text
-          - Look for buttons with aria-label="Close" or aria-label="close"
-          - Look for SVG icons in the top-right corner of modals
-          - Common refs: close buttons, dismiss buttons, X icons
-
-          **3c. Try pressing Escape key**
-          Call browser_press_key with key "Escape" to close modals.
-
-          **3d. If modals persist, use JavaScript removal**
-          Run this as a last resort:
+          **3b. Run JavaScript to force-remove any remaining modals**
+          Call browser_evaluate with this function:
           ```javascript
           () => {
-            // Click any visible close buttons first
-            const closeButtons = document.querySelectorAll(
-              '[aria-label*="close" i], [aria-label*="dismiss" i], ' +
-              'button:has(svg[class*="close"]), [class*="modal"] button:first-child, ' +
-              '[class*="tour"] button, [class*="dialog"] [class*="close"]'
-            );
-            closeButtons.forEach(btn => btn.click && btn.click());
-
-            // Remove tour/onboarding elements
-            const selectors = ['[class*="tour"]', '[class*="tooltip"]', '[class*="onboarding"]',
-                              '[class*="shepherd"]', '[class*="walkthrough"]', '[class*="intro-js"]'];
-            selectors.forEach(sel => {
+            // Remove all modal/tour/popover elements
+            const removeSelectors = [
+              '[class*="popover"]', '[class*="tour"]', '[class*="modal"]',
+              '[class*="dialog"]', '[class*="tooltip"]', '[class*="onboarding"]',
+              '[role="dialog"]', '[aria-modal="true"]',
+              '[class*="backdrop"]', '[class*="overlay"]'
+            ];
+            removeSelectors.forEach(sel => {
               document.querySelectorAll(sel).forEach(el => el.remove());
             });
-
-            // Remove backdrops and overlays
-            document.querySelectorAll('[class*="backdrop"], [class*="overlay"]:not(video)').forEach(el => {
-              if (el.style.position === 'fixed' || el.style.position === 'absolute') {
-                el.remove();
-              }
-            });
-
-            return 'Modal dismissal attempted';
+            return 'All modals removed';
           }
           ```
 
-          **3e. Take another snapshot to confirm modals are dismissed**
-          Verify the UI is now accessible before proceeding.
+          **3c. Take a snapshot to verify**
+          Confirm the dashboard is clean with NO modals blocking the sidebar.
 
           ### Step 4: Explore the Feature
           Based on the payload's "where_to_go" and "what_to_do" sections:
@@ -490,7 +463,9 @@ jobs:
                 "args": ["@executeautomation/playwright-mcp-server"],
                 "env": {
                   "HEADLESS": "false",
-                  "BROWSER": "chromium"
+                  "BROWSER": "chrome",
+                  "VIEWPORT_WIDTH": "1280",
+                  "VIEWPORT_HEIGHT": "900"
                 }
               }
             }
