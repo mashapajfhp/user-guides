@@ -138,8 +138,24 @@ jobs:
 
           ## CRITICAL FIRST STEPS
 
-          ### Step 1: Browser Setup
-          FIRST, call browser_resize with width=1920, height=1080 to set a proper viewport size.
+          ### Step 1: Browser Setup - Auto-Detect and Normalize Viewport
+          BEFORE doing anything else, normalize the viewport for consistent screenshots:
+
+          1. First, call browser_evaluate with this function to detect screen size:
+             ```javascript
+             () => ({ availWidth: window.screen.availWidth, availHeight: window.screen.availHeight, dpr: window.devicePixelRatio || 1 })
+             ```
+
+          2. Then normalize the dimensions:
+             - WIDTH: Use the smaller of (detected availWidth) or 1280. Cap at 1280 max.
+             - HEIGHT: Use the larger of (detected availHeight) or 1200. Minimum 1200.
+
+          3. Call browser_resize with the normalized width and height.
+
+          4. Log the result: "Viewport normalized: [width]x[height]"
+
+          Example: If detected is 2560x1440 → normalize to 1280x1440
+          Example: If detected is 1024x768 → normalize to 1024x1200
 
           **IMPORTANT: Stay within the application!**
           - Only navigate within app.bayzat.com
