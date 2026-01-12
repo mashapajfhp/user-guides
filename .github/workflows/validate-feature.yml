@@ -446,8 +446,14 @@ jobs:
           $(cat "$PAYLOAD_FILE")
 
           ## BEGIN EXPLORATION
-          Start by setting up the browser, then login, then explore the feature freely.
-          Take your time and document everything you find.
+          Start by setting up the browser, then login, then explore the feature.
+
+          **CRITICAL: You have LIMITED turns (150 max). Be efficient!**
+          - Focus on the main feature workflows, don't explore unrelated areas
+          - After exploring 3-5 key screens, OUTPUT YOUR JSON RESULT
+          - If you're at turn 100+, STOP exploring and output the JSON immediately
+          - ALWAYS end with the complete JSON result - this is REQUIRED
+          - An incomplete exploration WITH JSON output is better than complete exploration WITHOUT JSON
           EOF
 
           echo "Starting Playwright validation for: $FEATURE_NAME"
@@ -476,7 +482,7 @@ jobs:
           cat "$PROMPT_FILE" | npx @anthropic-ai/claude-code@latest \
             --print \
             --dangerously-skip-permissions \
-            --max-turns 100 \
+            --max-turns 300 \
             --mcp-config "$MCP_CONFIG_FILE" \
             2>&1 | tee "$RESULT_FILE.raw"
 
