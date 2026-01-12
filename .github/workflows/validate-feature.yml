@@ -125,6 +125,7 @@ jobs:
           PROMPT_FILE=$(mktemp)
           cat > "$PROMPT_FILE" << 'PROMPT_HEADER'
           You are a QA validation agent using Playwright MCP to explore and validate a feature in the Bayzat HR application.
+          Your output will be used to generate user guides, so document EVERYTHING you see and experience.
 
           ## YOUR MISSION
           Freely explore the feature described in the payload below. Your goal is to:
@@ -132,14 +133,12 @@ jobs:
           2. Navigate to the feature location
           3. Explore each task/workflow described
           4. Take screenshots as evidence
-          5. Document what works and what doesn't
+          5. Document EVERYTHING - what works, what made it work, what doesn't work
+          6. Capture the full user journey narrative for each screen
 
           ## CRITICAL FIRST STEPS
 
-          ### Step 1: Browser Setup
-          FIRST, call browser_resize with width=1920, height=1200
-
-          ### Step 2: Login
+          ### Step 1: Login
           1. Navigate to the base URL (login page)
           2. Take a snapshot to see the login form
           3. Fill in the email field with the username
@@ -148,7 +147,7 @@ jobs:
           6. Wait 3 seconds for the page to load
           7. Take a screenshot to confirm login success
 
-          ### Step 3: Dismiss any tooltips/onboarding
+          ### Step 2: Dismiss any tooltips/onboarding
           After login, run this JavaScript to remove tooltips:
           ```javascript
           () => {
@@ -167,14 +166,14 @@ jobs:
           }
           ```
 
-          ### Step 4: Explore the Feature
+          ### Step 3: Explore the Feature
           Based on the payload's "where_to_go" and "what_to_do" sections:
           1. Navigate to the feature location
           2. For each task in "what_to_do", try to follow the steps
           3. Take screenshots at key points
           4. Note any issues or blockers you encounter
 
-          ### Step 5: DEEP UI EXPLORATION (CRITICAL)
+          ### Step 4: DEEP UI EXPLORATION (CRITICAL)
           Thoroughly explore ALL areas of the UI related to this feature:
 
           1. **Navigate every tab, section, and sub-menu** related to the feature
@@ -182,19 +181,44 @@ jobs:
           3. **Open all dropdowns, modals, and expandable sections**
           4. **Test form fields** - what options are available, what validations exist
 
-          **Document these UI behaviors:**
-          - **Disabled states**: Which buttons/fields are disabled and under what conditions?
-          - **Conditional logic**: What appears/disappears based on selections?
-          - **Progressive disclosure**: What new options appear after certain actions?
-          - **Required vs optional fields**: Which fields must be filled?
-          - **Validation messages**: What errors appear for invalid input?
-          - **Default values**: What pre-filled values exist?
-          - **Tooltips and help text**: What guidance does the UI provide?
-          - **Loading states**: How does the UI indicate processing?
-          - **Success/error feedback**: What confirmations appear after actions?
-          - **Permission-based visibility**: Are any elements hidden/shown based on role?
+          ### Step 5: SCREEN DOCUMENTATION PROTOCOL
+          For EVERY screen/page you visit, document:
 
-          Take screenshots of each distinct UI state you discover.
+          **A. All Visible Elements:**
+          - Page title and breadcrumbs
+          - Navigation elements (tabs, sidebar items, menu items)
+          - Headers and section titles
+          - Buttons (with their labels and states - enabled/disabled)
+          - Links and their destinations
+          - Form fields (text inputs, dropdowns, checkboxes, radio buttons, date pickers)
+          - Tables (column headers, row data patterns, pagination)
+          - Cards and info panels
+          - Status indicators and badges
+          - Icons and their meanings
+          - Empty states and placeholder text
+
+          **B. Interactive Element Exploration:**
+          For each button/link, document:
+          - What it's labeled
+          - Whether it's clickable or disabled
+          - What happens when clicked (modal opens, page navigates, action executes)
+          - Any confirmation dialogs that appear
+
+          **C. Form Field Documentation:**
+          For each form field:
+          - Field label and placeholder text
+          - Whether it's required or optional
+          - Input type (text, number, date, dropdown, etc.)
+          - Available options (for dropdowns/selects)
+          - Validation rules (when do errors appear?)
+          - Default/pre-filled values
+          - Help text or tooltips
+
+          **D. State Documentation:**
+          - What changes when data exists vs. empty state
+          - Loading states and spinners
+          - Success/error messages
+          - Permission-based visibility (what might be hidden for other roles)
 
           ## OUTPUT FORMAT
           At the end, create a JSON result with this structure:
@@ -202,6 +226,40 @@ jobs:
             "validation_status": "completed" or "partial" or "blocked",
             "login_success": true/false,
             "feature_accessible": true/false,
+            "feature_info": {
+              "name": "Feature Name",
+              "slug": "feature-slug",
+              "category": "category",
+              "url": "/path/to/feature"
+            },
+            "exploration_journey": [
+              {
+                "screen_name": "Screen/Page Name",
+                "url": "/path/to/screen",
+                "screenshot": "screenshot-name.png",
+                "what_i_went_through": "Narrative of navigation path to reach this screen",
+                "what_i_came_across": "What elements and sections were present on the screen",
+                "what_i_saw": {
+                  "page_structure": "Description of layout and main sections",
+                  "visible_elements": ["List of all visible UI elements"],
+                  "data_displayed": "What data/information was shown",
+                  "empty_states": "Any empty states or placeholder messages"
+                },
+                "actions_i_performed": [
+                  {
+                    "action": "What I did (clicked, typed, selected, etc.)",
+                    "target": "Which element I interacted with",
+                    "result": "What happened after the action",
+                    "screenshot_after": "screenshot-after-action.png"
+                  }
+                ],
+                "results_i_got": {
+                  "success_outcomes": ["What worked successfully"],
+                  "error_outcomes": ["Any errors or issues encountered"],
+                  "unexpected_behaviors": ["Anything surprising or unexpected"]
+                }
+              }
+            ],
             "tasks_explored": [
               {
                 "task": "task name",
@@ -210,6 +268,70 @@ jobs:
                 "screenshots": ["screenshot1.png"]
               }
             ],
+            "full_behavior_catalog": {
+              "buttons": [
+                {
+                  "label": "Button text",
+                  "location": "Where on the screen",
+                  "state": "enabled/disabled",
+                  "action_result": "What happens when clicked"
+                }
+              ],
+              "dropdowns": [
+                {
+                  "label": "Dropdown label",
+                  "options": ["List of available options"],
+                  "default_value": "Pre-selected value if any"
+                }
+              ],
+              "form_fields": [
+                {
+                  "label": "Field label",
+                  "type": "text/number/date/dropdown/checkbox/etc",
+                  "required": true/false,
+                  "placeholder": "Placeholder text",
+                  "validation": "Validation rule if any",
+                  "error_message": "Error shown when invalid"
+                }
+              ],
+              "tabs": [
+                {
+                  "label": "Tab name",
+                  "content_summary": "What the tab contains",
+                  "item_count": "Number of items if applicable"
+                }
+              ],
+              "modals_dialogs": [
+                {
+                  "trigger": "What opens this modal",
+                  "title": "Modal title",
+                  "content": "What's inside the modal",
+                  "actions": ["Available action buttons"]
+                }
+              ],
+              "tables": [
+                {
+                  "location": "Where the table is",
+                  "columns": ["Column headers"],
+                  "row_actions": ["Actions available per row"],
+                  "pagination": "Pagination details if any"
+                }
+              ],
+              "filters": [
+                {
+                  "filter_name": "Name of filter",
+                  "filter_type": "dropdown/date/text/range",
+                  "options": ["Available filter options"]
+                }
+              ],
+              "notifications_alerts": [
+                {
+                  "type": "success/error/warning/info",
+                  "trigger": "When it appears",
+                  "message": "The message content"
+                }
+              ]
+            },
             "ui_behaviors_documented": {
               "disabled_states": [
                 {"element": "element name", "condition": "when/why it's disabled"}
@@ -232,9 +354,43 @@ jobs:
                 {"element": "element name", "text": "tooltip/help content"}
               ]
             },
+            "what_works": [
+              {
+                "feature_aspect": "What functionality works",
+                "description": "How it works",
+                "user_benefit": "Why this is good for users"
+              }
+            ],
+            "what_made_it_work": [
+              {
+                "success_factor": "What enabled the success",
+                "prerequisites": "What needed to be in place",
+                "steps_taken": ["Steps that led to success"]
+              }
+            ],
+            "whats_not_working": [
+              {
+                "issue": "What doesn't work or has problems",
+                "symptoms": "How the issue manifests",
+                "impact": "Effect on user experience",
+                "possible_cause": "Suspected reason if identifiable"
+              }
+            ],
             "ui_sections_explored": ["list of all sections/tabs/pages visited"],
             "issues_found": ["list of any issues"],
-            "summary": "brief summary of exploration"
+            "known_issues_validated": [
+              {
+                "issue": "Issue from payload",
+                "status": "confirmed/not_validated/not_reproducible",
+                "evidence": "What confirmed or disproved it"
+              }
+            ],
+            "screenshots_taken": 0,
+            "validation_timestamp": "ISO timestamp",
+            "recommendations_for_user_guide": [
+              "Specific recommendations for what to include in the user guide based on exploration"
+            ],
+            "summary": "Comprehensive summary of the entire exploration"
           }
 
           PROMPT_HEADER
