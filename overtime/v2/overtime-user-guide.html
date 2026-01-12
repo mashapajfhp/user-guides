@@ -1,142 +1,889 @@
 <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>overtime - User Guide</title>
-    <style>
-      :root {
-        --primary: #1a73e8;
-        --primary-dark: #1557b0;
-        --secondary: #34a853;
-        --warning: #fbbc04;
-        --danger: #ea4335;
-        --text: #202124;
-        --text-muted: #5f6368;
-        --bg: #fff;
-        --bg-alt: #f8f9fa;
-        --border: #dadce0;
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overtime - User Guide</title>
+
+  <style>
+    /* CSS Reset and Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background-color: #ffffff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+      color: #ffffff;
+      padding: 60px 40px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .hero-banner h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      color: #ffffff;
+    }
+
+    /* Typography - ALL BLACK */
+    h1, h2, h3, h4, h5, h6 {
+      color: #1a1a1a;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #E2E8F0;
+    }
+
+    h3 {
+      font-size: 1.35rem;
+    }
+
+    p {
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+
+    /* Sections */
+    section, .section {
+      margin-bottom: 3rem;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+    }
+
+    /* Info Boxes - Only 2 Types Allowed */
+    .info-box, .note-box, .tip-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FAF5FF;
+      border-left: 4px solid #6B46C1;
+    }
+
+    .info-box p, .note-box p, .tip-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    .warning-box, .important-box, .caution-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FFFBEB;
+      border-left: 4px solid #D97706;
+    }
+
+    .warning-box p, .important-box p, .caution-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Lists - Black text, standard bullets */
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+      color: #1a1a1a;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: #ffffff;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid #E2E8F0;
+      color: #1a1a1a;
+    }
+
+    th {
+      background: #F7FAFC;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    tr:hover {
+      background: #F7FAFC;
+    }
+
+    /* Screenshots - Centered */
+    .screenshot-container, figure {
+      margin: 24px auto;
+      text-align: center;
+    }
+
+    .screenshot, figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #E2E8F0;
+      display: block;
+      margin: 0 auto;
+    }
+
+    figcaption {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #1a1a1a;
+      font-style: italic;
+    }
+
+    /* Feature Grid and Cards */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .feature-card, .card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .feature-card h4, .card h4 {
+      color: #1a1a1a;
+      margin-top: 0;
+    }
+
+    .feature-card p, .card p {
+      color: #1a1a1a;
+    }
+
+    /* Journey Grid */
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .journey-step {
+      background: #F7FAFC;
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .journey-step .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .journey-step h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .journey-step p {
+      margin: 0;
+      color: #1a1a1a;
+    }
+
+    /* Steps */
+    .step, .step-item {
+      display: flex;
+      gap: 16px;
+      margin: 20px 0;
+      padding: 16px;
+      background: #F7FAFC;
+      border-radius: 8px;
+    }
+
+    .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-content h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .step-content p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Navigation Path */
+    .nav-path, .breadcrumb {
+      background: #F7FAFC;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: monospace;
+      color: #1a1a1a;
+      margin: 16px 0;
+    }
+
+    /* Code blocks */
+    code {
+      background: #F7FAFC;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.9em;
+      color: #1a1a1a;
+    }
+
+    pre {
+      background: #F7FAFC;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      color: #1a1a1a;
+    }
+
+    /* Links */
+    a {
+      color: #6B46C1;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Citations */
+    .citation {
+      font-size: 0.85rem;
+      color: #1a1a1a;
+      background: #F7FAFC;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* Footer */
+    footer, .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #E2E8F0;
+      text-align: center;
+      color: #1a1a1a;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 16px;
       }
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: var(--text); background: var(--bg-alt); }
-      .container { max-width: 1000px; margin: 0 auto; padding: 24px; }
-      
-      /* Hero */
-      .hero { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; padding: 48px 24px; margin-bottom: 24px; }
-      .hero h1 { font-size: 2.5rem; margin-bottom: 8px; }
-      .hero .tagline { font-size: 1.2rem; opacity: 0.9; margin-bottom: 16px; }
-      .hero .benefits { display: flex; flex-wrap: wrap; gap: 8px; }
-      .benefit { background: rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; }
-      
-      /* TOC */
-      .toc { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 24px; }
-      .toc h3 { color: var(--primary); margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; }
-      .toc ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 8px; }
-      .toc a { color: var(--text); text-decoration: none; padding: 8px 12px; display: block; border-radius: 4px; }
-      .toc a:hover { background: var(--bg-alt); color: var(--primary); }
-      
-      /* Sections */
-      .section { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 28px; margin-bottom: 20px; }
-      .section h2 { color: var(--primary); font-size: 1.4rem; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin-bottom: 20px; }
-      .section h3 { font-size: 1.15rem; margin: 24px 0 8px; }
-      .section h4 { font-size: 1.05rem; margin: 16px 0 6px; }
-      .section p { margin-bottom: 12px; }
-      .section ul, .section ol { margin: 12px 0 12px 24px; }
-      .section li { margin-bottom: 6px; }
-      .section a { color: var(--primary); }
-      .section code { background: var(--bg-alt); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
-      .section pre { background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 6px; overflow-x: auto; margin: 12px 0; }
-      .section blockquote { border-left: 3px solid var(--primary); padding-left: 12px; color: var(--text-muted); margin: 12px 0; }
-      
-      /* Cards */
-      .step-card, .task-card, .setup-step { display: flex; gap: 16px; background: var(--bg-alt); padding: 16px; border-radius: 6px; margin: 12px 0; border-left: 3px solid var(--primary); }
-      .step-num, .journey-num, .setup-num { background: var(--primary); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; flex-shrink: 0; }
-      .step-body, .journey-body { flex: 1; }
-      .step-body h4, .journey-body h4 { margin: 0 0 6px; }
-      .success { color: var(--secondary); margin-top: 8px; }
-      
-      /* Entry points */
-      .entry-points { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
-      .entry-card { background: var(--bg-alt); padding: 16px; border-radius: 6px; border: 1px solid var(--border); }
-      .entry-card code { display: block; margin-top: 8px; background: #e8eaed; padding: 6px 10px; }
-      
-      /* Journey */
-      .journey { position: relative; padding-left: 36px; }
-      .journey::before { content: ''; position: absolute; left: 13px; top: 0; bottom: 0; width: 2px; background: var(--border); }
-      .journey-step { position: relative; margin-bottom: 20px; }
-      .journey-step .journey-num { position: absolute; left: -36px; }
-      .journey-body { background: var(--bg-alt); padding: 14px; border-radius: 6px; }
-      .badge { display: inline-block; background: var(--primary); color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 0.8rem; margin-top: 6px; }
-      
-      /* Checklist */
-      .checklist { list-style: none; padding: 0; }
-      .checklist li { background: var(--bg-alt); padding: 10px 14px; border-radius: 4px; margin-bottom: 6px; }
-      
-      /* Rules & Limits */
-      .rule-card, .limit-card, .trouble-card, .edge-card { background: var(--bg-alt); padding: 16px; border-radius: 6px; margin: 12px 0; border-left: 3px solid var(--primary); }
-      .limit-card { border-left-color: var(--danger); background: #fce8e6; }
-      .trouble-card { border-left-color: var(--warning); background: #fef7e0; }
-      .edge-card { border-left-color: var(--secondary); background: #e6f4ea; }
-      
-      /* Glossary */
-      .glossary { width: 100%; border-collapse: collapse; margin: 12px 0; }
-      .glossary th, .glossary td { padding: 10px 14px; border-bottom: 1px solid var(--border); text-align: left; }
-      .glossary th { background: var(--bg-alt); }
-      
-      /* FAQ */
-      .faq { border: 1px solid var(--border); border-radius: 6px; margin: 8px 0; }
-      .faq summary { padding: 12px 16px; cursor: pointer; font-weight: 500; background: var(--bg-alt); }
-      .faq div { padding: 12px 16px; }
-      
-      /* Screenshots */
-      .screenshots { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; }
-      .screenshots figure { margin: 0; }
-      .screenshots img { width: 100%; border-radius: 6px; border: 1px solid var(--border); }
-      .screenshots figcaption { text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; }
-      
-      /* Footer */
-      .footer { text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 32px; }
-      
-      /* Responsive */
-      @media (max-width: 768px) {
-        .hero h1 { font-size: 1.8rem; }
-        .hero { padding: 32px 16px; }
-        .container { padding: 16px; }
-        .section { padding: 20px; }
+
+      .hero-banner {
+        padding: 40px 24px;
       }
-    </style>
-  </head>
-  <body>
-    <header class="hero">
-      <div class="container">
-        <h1>overtime</h1>
-        <p class="tagline"></p>
-        <div class="benefits"></div>
-      </div>
-    </header>
-    
-    <div class="container">
-      <nav class="toc">
-        <h3>📑 Table of Contents</h3>
-        <ul><li><a href="#hero">🏠 Overtime Management</a></li><li><a href="#feature-overview">📋 Feature Overview</a></li><li><a href="#product-foundation">🏗️ Product Foundation</a></li><li><a href="#feature-entry-points">🚪 Accessing Overtime Features</a></li><li><a href="#core-tasks">📝 Core Overtime Tasks</a></li></ul>
-      </nav>
-      
-      <main><section class="section" id="hero">
-      <h2>🏠 Overtime Management</h2><div class="content"><strong>Tagline:</strong> Automate overtime tracking, calculation, and compensation for accurate payroll processing.</p><p><strong>Key Benefits:</strong><br><ul><li>Configure flexible overtime policies with custom rate multipliers for different day types</li><br><li>Schedule overtime in advance with employee acceptance workflow</li><br><li>Track extra hours automatically with real-time approval and payroll integration</li><br><li>Support both monetary compensation and time-off-in-lieu options</li></ul></div></section>
-<section class="section" id="feature-overview">
-      <h2>📋 Feature Overview</h2><div class="content"><h3>What is Overtime Management?</h3></p><p>The Overtime feature enables organizations to systematically track, approve, and compensate employees for hours worked beyond their regular schedule. It provides configurable policies that define how overtime is calculated, requested, and processed through payroll or converted to time off.</p><p><h3>Who Uses This Feature?</h3></p><p><strong>Primary Users:</strong><br><ul><li>HR Administrators: Configure overtime policies and calculation rules</li><br><li>Line Managers: Schedule overtime, approve employee requests, and review time adjustments</li><br><li>Employees: View scheduled overtime, request extra hours compensation, and track approval status</li><br><li>Payroll Administrators: Process approved overtime for payment</li></p><p><h3>Key Capabilities</h3><br><li><strong>Policy Configuration</strong>: Create overtime policies with Single Rate or Custom Rate calculations for weekdays, weekends, public holidays, and days off</li><br><li><strong>Advance Scheduling</strong>: Managers can schedule overtime hours in advance with employee acceptance workflow</li><br><li><strong>Employee Requests</strong>: Employees can request compensation for extra hours worked after checkout</li><br><li><strong>Flexible Compensation</strong>: Support for both payroll-based overtime pay and time-off-in-lieu</li><br><li><strong>Approval Workflow</strong>: Multi-level approval process with pending, approved, and processed statuses</li><br><li><strong>Time & Pay Adjustments</strong>: Centralized view of all overtime entries with filtering and bulk actions</li></p><p><h3>Business Value</h3><br><li><strong>Compliance</strong>: Ensure accurate tracking and compensation according to labor law requirements</li><br><li><strong>Transparency</strong>: Employees can see scheduled overtime and request status in real-time</li><br><li><strong>Efficiency</strong>: Automated calculations eliminate manual overtime tracking and reduce payroll errors</li><br><li><strong>Flexibility</strong>: Support multiple compensation methods and custom calculation formulas per policy</li><br><li><strong>Control</strong>: Managers maintain visibility and approval authority over overtime costs</li></ul></div></section>
-<section class="section" id="product-foundation">
-      <h2>🏗️ Product Foundation</h2><div class="content"><h3>Technical Prerequisites</h3></p><p><h4>Required Modules</h4><br><ul><li><strong>Attendance Module</strong>: Must be enabled and configured</li><br><li><strong>Payroll Module</strong>: Required for monetary overtime compensation</li><br><li><strong>Time Off Module</strong>: Required for time-off-in-lieu compensation option</li></p><p><h4>System Configuration Requirements</h4><br><li><strong>Work Timings</strong>: At least one work timing schedule must be configured in Settings > Attendance > Work Timings</li><br><li><strong>Salary Components</strong>: Basic Salary component must be defined in payroll settings</li><br><li><strong>Work Week Configuration</strong>: Company work week must be configured to determine weekends and working days</li><br><li><strong>Employee Data</strong>: Employees must have active employment records with assigned work schedules</li></p><p><h3>Dependencies on Other Modules</h3></p><p><h4>Attendance Module Integration</h4><br><li>Overtime policies reference work timing configurations</li><br><li>Check-in/check-out times determine actual hours worked</li><br><li>Work week settings define which days are weekends or public holidays</li><br><li>Shift schedules (for shift employees) determine baseline hours</li></p><p><h4>Payroll Module Integration</h4><br><li>Approved overtime entries automatically flow to payroll transactions</li><br><li>Salary components (Basic Salary, Allowances) are used in overtime calculations</li><br><li>Custom Days settings affect monthly overtime rate calculations</li><br><li>Overtime amounts appear in payroll reports and employee payslips</li></p><p><h4>Time Off Module Integration</h4><br><li>Days in Lieu policies convert overtime hours to time off credits</li><br><li>Time-off-in-lieu option requires active leave policies</li><br><li>Approved overtime for leave appears in employee time off balances</li></p><p><h4>Employee Management Integration</h4><br><li>Employee assignments to overtime policies are managed per employee profile</li><br><li>Only one overtime policy can be active per employee at a time</li><br><li>Manager hierarchy determines approval workflow for overtime requests</li></p><p><h3>Licensing and Plan Requirements</h3></p><p><strong>Feature Availability:</strong><br><li>Overtime Management is available on Bayzat Attendance plans</li><br><li>Advanced overtime features (Custom Rate, Fixed Hourly Rate) may require specific plan tiers</li><br><li>Contact Bayzat support to verify feature availability for your plan</li></p><p><h3>Integration Points</h3></p><p><h4>Data Flow</h4><br><li><strong>Input</strong>: Employee check-in/check-out times, scheduled shifts, work timing rules</li><br><li><strong>Processing</strong>: Overtime calculation engine applies policy formulas</li><br><li><strong>Output</strong>: Time & Pay Adjustments entries, payroll transactions, or time off credits</li></p><p><h4>API Availability</h4><br><li>Attendance API Settings can be configured in Settings > Attendance > Attendance API Settings</li><br><li>External systems can integrate with overtime data through Bayzat APIs (contact support for API documentation)</li></p><p><h4>Mobile App Support</h4><br><li>Employees can view scheduled overtime on mobile app</li><br><li>Employees can accept/reject overtime requests via mobile</li><br><li>Employees can request extra hours compensation after checkout on mobile</li><br><li>Managers can approve overtime requests through mobile app</li></p><p><h3>Configuration Dependencies</h3></p><p><strong>Before creating overtime policies, ensure:</strong><br><li>Work timings are configured with appropriate start/end times</li><br><li>Work week is defined (which days are weekends)</li><br><li>Public holidays are marked in the system calendar</li><br><li>Salary components are properly configured in payroll</li><br><li>Employee work schedules are assigned and active</li></ul></div></section>
-<section class="section" id="feature-entry-points">
-      <h2>🚪 Accessing Overtime Features</h2><div class="content"><h3>Navigation Paths</h3></p><p><h4>Policy Configuration</h4></p><p>To configure overtime policies:<br><ul><li><strong>Main Navigation</strong>: Click <strong>Settings</strong> in the left sidebar</li><br><li><strong>Settings Menu</strong>: Select <strong>Attendance</strong> from the settings categories</li><br><li><strong>Policy Section</strong>: Scroll to <strong>Overtime Policies</strong> section</li><br><li><strong>Action Button</strong>: Click <strong>Add New</strong> to create a policy or click on an existing policy name to edit</li></p><p><strong>Screenshot Reference</strong>: <code>02-attendance-settings-page.png</code>, <code>03-overtime-policies-list.png</code></p><p><strong>URL Pattern</strong>: <code>Settings > Attendance > Overtime Policy</code></p><p><h4>Time and Pay Adjustments</h4></p><p>To schedule overtime or review overtime requests:<br><li><strong>Main Navigation</strong>: Click <strong>Time</strong> in the left sidebar</li><br><li><strong>Submenu</strong>: Select <strong>Employee attendance</strong></li><br><li><strong>Tab Navigation</strong>: Click <strong>Time and Pay Adjustments</strong> tab</li><br><li><strong>View Options</strong>: Use tabs to filter by status:</li><br><li><strong>Scheduled</strong>: View pre-scheduled overtime</li><br><li><strong>Pending</strong>: Review employee overtime requests awaiting approval</li><br><li><strong>Approved</strong>: See approved overtime entries</li><br><li><strong>Processed</strong>: View overtime added to payroll</li><br><li><strong>Rejected</strong>: Check rejected overtime requests</li></p><p><strong>Screenshot Reference</strong>: <code>09-time-pay-adjustments-pending.png</code>, <code>10-schedule-extra-hours-button.png</code></p><p><strong>URL Pattern</strong>: <code>Time > Employee attendance > Time and Pay Adjustments</code></p><p><h4>Quick Actions</h4></p><p><strong>Schedule Extra Hours Button</strong>: Located at the top-right of the Time and Pay Adjustments page. Click to open the scheduling modal.</p><p><strong>Screenshot Reference</strong>: <code>11-schedule-extra-hours-modal.png</code></p><p><h4>Employee Self-Service (Mobile App)</h4></p><p>Employees can access overtime features through the Bayzat mobile app:<br><li>Check out of attendance</li><br><li>System prompts to send compensation request if extra hours detected</li><br><li>View overtime status in <strong>Attendance</strong> section</li></p><p><h3>Access Permissions</h3></p><p><h4>Policy Configuration</h4><br><li><strong>Super Admins</strong>: Full access to create, edit, and delete policies</li><br><li><strong>HR Managers</strong>: Can configure policies based on company permissions</li></p><p><h4>Overtime Scheduling</h4><br><li><strong>Super Admins</strong>: Can schedule overtime for all employees</li><br><li><strong>Line Managers</strong>: Can schedule overtime for direct reports</li><br><li><strong>Time Off Managers</strong>: Can schedule overtime based on assigned permissions</li><br><li><strong>HR Managers</strong>: Can schedule overtime for managed employee groups</li></p><p><h4>Approval Workflow</h4><br><li><strong>Line Managers</strong>: Can approve/reject overtime requests for direct reports</li><br><li><strong>Super Admins</strong>: Can approve/reject all overtime requests</li><br><li><strong>Managers without payroll access</strong>: Can view overtime hours but not payment amounts (unless explicitly enabled in policy settings)</li></ul></p><p><h3>Feature Discoverability Notes</h3></p><p><strong>Known Issue</strong>: Bulk approval functionality for overtime requests exists but may not be immediately visible. After selecting multiple entries using checkboxes in the Pending tab, bulk action buttons appear. This feature has been reported as difficult to discover by line managers.</p><p><strong>Screenshot Reference</strong>: <code>15-pending-tab-bulk-approve.png</code>, <code>16-bulk-selection-action-bar.png</code></div></section>
-<section class="section" id="core-tasks">
-      <h2>📝 Core Overtime Tasks</h2><div class="content"><h3>Policy Configuration Tasks</h3></p><p><h4>Task 1: Create a New Overtime Policy</h4></p><p><strong>Purpose</strong>: Set up a policy to track and calculate overtime hours for employees</p><p><strong>Prerequisites</strong>:<br><ul><li>Super Admin or HR Manager access</li><br><li>Understanding of your organization's overtime compensation rules</li><br><li>Knowledge of which employees should be included</li></p><p><strong>Steps</strong>:<br><li><strong>Navigate to Policy Creation</strong></li><br><li>Go to <strong>Settings > Attendance > Overtime Policy</strong></li><br><li>Click <strong>Add New</strong> button</li><br><li><strong>Screenshot</strong>: <code>03-overtime-policies-list.png</code></li><br><li><strong>Configure Policy Name and Behavior</strong> (Step 1 of 3)</li><br><li>Enter a descriptive <strong>Policy Name</strong> (e.g., "OT Schedule", "Standard Overtime")</li><br><li><strong>Allow employees to request extra hours</strong>: Toggle ON to let employees submit overtime requests after working beyond scheduled hours</li><br><li><strong>Allow managers to see net amount</strong>: Toggle ON to let managers without payroll access view overtime payment amounts</li><br><li><strong>Screenshot</strong>: <code>04-overtime-policy-configuration-step1.png</code></li><br><li><strong>Select Rate Calculation Type</strong></li><br><li>Choose between:</li><br><li><strong>Single Rate</strong>: One multiplier applies to all overtime hours</li><br><li><strong>Custom Rate</strong>: Different multipliers for weekdays, weekends, public holidays, and days off</li><br><li><strong>Screenshot</strong>: <code>05-overtime-rate-calculation-options.png</code></li><br><li><strong>Configure Rate Calculation Formula</strong></li></p><p>   <strong>For Single Rate</strong>:<br><li><strong>Choose Type</strong>: Select "Unit" or "Split"</li><br><li><strong>Multiplier</strong>: Enter rate multiplier (default: 1.5, minimum: 0.1, no maximum)</li><br><li><strong>Salary Component</strong>: Choose "Basic Salary" or "Basic Salary + Allowances"</li><br><li><strong>Working Days</strong>: Select calculation basis:</li><br><li>Custom Days (default: 30)</li><br><li>Actual Days</li><br><li>Working Days</li><br><li><strong>Hours</strong>: Set standard working hours per day (default: 8)</li></p><p>   <strong>Formula Display</strong>: <code>((Unit x [Multiplier]) x [Salary Component]) / ([Working Days] x [Days]) x Hours ([Hours]) x Extra hours duration in hours</code></p><p>   <strong>For Custom Rate</strong>:<br><li>Configure separate formulas for:</li><br><li><strong>Weekdays</strong>: Regular working day overtime</li><br><li><strong>Weekends</strong>: Weekend overtime (based on work week settings)</li><br><li><strong>Public Holidays</strong>: Holiday overtime</li><br><li><strong>Day Offs</strong>: Scheduled day off overtime (shift employees only)</li><br><li>Each category has the same configuration options as Single Rate</li><br><li><strong>Screenshot</strong>: <code>06-overtime-formula-configuration.png</code></li></p><p>   <strong>Important Notes</strong>:<br><li>The formula display may appear complex. The system calculates: (Hourly Rate × Multiplier) × Extra Hours</li><br><li>Decimals are rounded to 2 decimal places</li><br><li><strong>Known Issue</strong>: Formula display lacks clear visual grouping (TSSD-2256). The calculation logic is correct, but the UI presentation may be confusing.</li><br><li><strong>Assign Employees</strong> (Step 2 of 3)</li><br><li>Search for employees by name or use filters</li><br><li>Move employees from <strong>Excluded</strong> list to <strong>Included</strong> list</li><br><li><strong>Note</strong>: Employees already assigned to another overtime policy will show as "Already on another policy" and cannot be selected</li><br><li><strong>Screenshot</strong>: <code>07-overtime-employee-assignment.png</code></li><br><li><strong>Review and Save</strong> (Step 3 of 3)</li><br><li>Review all policy settings in read-only summary view</li><br><li>Verify:</li><br><li>Policy name and behavior settings</li><br><li>Rate calculation formulas</li><br><li>List of assigned employees (with pagination)</li><br><li>Click <strong>Save</strong> to create the policy</li><br><li><strong>Screenshot</strong>: <code>08-overtime-policy-review-save.png</code></li></p><p><strong>Expected Outcome</strong>: Policy is created and assigned employees can now have overtime tracked according to the configured rules.</p><p><strong>Limitations</strong>:<br><li>Only ONE overtime policy can be assigned to an employee at a time</li><br><li>Cannot select specific allowance components (TSSD-294) - must choose either Basic Salary only or Basic Salary + All Allowances</li><br><li>Complex formula configuration may require testing to ensure correct calculations (TSSD-3821)</li></p><p>---</p><p><h4>Task 2: Edit an Existing Overtime Policy</h4></p><p><strong>Purpose</strong>: Modify policy settings or employee assignments</p><p><strong>Steps</strong>:<br><li>Navigate to <strong>Settings > Attendance > Overtime Policy</strong></li><br><li>Click on the policy name you want to edit</li><br><li>Make necessary changes to:</li><br><li>Policy name</li><br><li>Behavior settings (employee requests, manager visibility)</li><br><li>Rate calculation formulas</li><br><li>Employee assignments</li><br><li>Review changes in Step 3</li><br><li>Click <strong>Save</strong></li></p><p><strong>Limitations</strong>:<br><li>Changes apply to future overtime calculations only</li><br><li><strong>Known Issue</strong>: Uncertainty exists about whether policy changes affect already-published shifts (TSSD-1544). The system evaluates overtime eligibility at check-in time, not shift publication time.</li></p><p>---</p><p><h4>Task 3: View Existing Overtime Policies</h4></p><p><strong>Purpose</strong>: Review configured policies and their details</p><p><strong>Steps</strong>:<br><li>Navigate to <strong>Settings > Attendance > Overtime Policy</strong></li><br><li>View policy list showing:</li><br><li><strong>Policy Name</strong></li><br><li><strong>Rate Calculation Basis</strong>: "Single Rate" or "Custom Rate"</li><br><li><strong>Employee Requests</strong>: "Enabled" or "Disabled"</li><br><li><strong>Number of Employees</strong>: Count of assigned employees</li><br><li><strong>Last Updated</strong>: Date of last modification</li><br><li>Use pagination to view multiple pages of policies</li></p><p><strong>Screenshot</strong>: <code>03-overtime-policies-list.png</code></p><p>---</p><p><h3>Overtime Scheduling Tasks</h3></p><p><h4>Task 4: Schedule Overtime in Advance</h4></p><p><strong>Purpose</strong>: Assign extra hours to employees before they work them</p><p><strong>Prerequisites</strong>:<br><li>Employee must be assigned to an Overtime or Days in Lieu policy</li><br><li>For shift workers: Employee must have a shift scheduled on the target day</li><br><li>Line Manager, Time Off Manager, HR Manager, or Super Admin access</li></p><p><strong>Steps</strong>:<br><li><strong>Navigate to Scheduling Interface</strong></li><br><li>Go to <strong>Time > Employee attendance > Time and Pay Adjustments</strong></li><br><li>Click <strong>Scheduled</strong> tab</li><br><li>Click <strong>Schedule Extra Hours</strong> button (top-right)</li><br><li><strong>Screenshot</strong>: <code>10-schedule-extra-hours-button.png</code></li><br><li><strong>Open Scheduling Modal</strong></li><br><li>Modal opens with title "Schedule Extra Hours"</li><br><li><strong>Screenshot</strong>: <code>11-schedule-extra-hours-modal.png</code></li><br><li><strong>Select Employee</strong></li><br><li>Click <strong>Find employee</strong> dropdown</li><br><li>Search for or select employee from list</li><br><li>System validates employee has an active overtime/days in lieu policy</li><br><li><strong>Configure Overtime Details</strong></li><br><li><strong>Date</strong>: Select the date for overtime work</li><br><li><strong>Location</strong>: Specify work location (if applicable)</li><br><li><strong>Start Time</strong>: Set overtime start time</li><br><li><strong>End Time</strong>: Set overtime end time</li><br><li><strong>Duration</strong>: System calculates automatically (e.g., "3 hr 00 mins")</li><br><li><strong>Compensation Type</strong>: Choose:</li><br><li><strong>Approve for Payroll</strong>: Monetary compensation</li><br><li><strong>Approve for Leave</strong>: Time off in lieu</li><br><li><strong>Comments</strong>: Add optional notes for the employee</li><br><li><strong>Submit Schedule</strong></li><br><li>Click <strong>Schedule</strong> or <strong>Submit</strong> button</li><br><li>System sends notification to employee</li></p><p><strong>Expected Outcome</strong>: <br><li>Overtime entry appears in <strong>Scheduled</strong> tab with status "Scheduled"</li><br><li>Employee receives notification and can accept or reject</li><br><li>Entry shows manager name who created the schedule</li></p><p><strong>Screenshot</strong>: <code>10-schedule-extra-hours-button.png</code> (showing scheduled entries)</p><p><strong>Status Indicators</strong>:<br><li><strong>Scheduled</strong>: Employee has not yet responded</li><br><li><strong>Declined</strong>: Employee rejected the overtime</li><br><li><strong>Not Fulfilled</strong>: Scheduled overtime was not completed</li><br><li><strong>Expired</strong>: Scheduled date has passed without completion</li></p><p><strong>Special Cases</strong>:<br><li><strong>Weekends and Public Holidays</strong>: All hours count as overtime (no comparison to scheduled hours)</li><br><li><strong>Shift Employees</strong>: Must have a shift scheduled on that day</li><br><li><strong>Line Manager Permissions</strong>: May have restrictions on compensation type selection</li></p><p>---</p><p><h4>Task 5: Approve/Reject Employee Overtime Requests</h4></p><p><strong>Purpose</strong>: Review and approve overtime hours submitted by employees</p><p><strong>Prerequisites</strong>:<br><li>Line Manager, HR Manager, or Super Admin access</li><br><li>Employees must have submitted overtime requests</li></p><p><strong>Steps</strong>:<br><li><strong>Navigate to Pending Requests</strong></li><br><li>Go to <strong>Time > Employee attendance > Time and Pay Adjustments</strong></li><br><li>Click <strong>Pending</strong> tab</li><br><li>View list of pending overtime requests (e.g., "425 total adjustments")</li><br><li><strong>Screenshot</strong>: <code>09-time-pay-adjustments-pending.png</code></li><br><li><strong>Review Request Details</strong></li><br><li>Each entry shows:</li><br><li><strong>Employee Name</strong>: Clickable link to profile</li><br><li><strong>Type</strong>: "Extra Hours"</li><br><li><strong>Date</strong>: When overtime was worked</li><br><li><strong>Duration</strong>: Hours and minutes (e.g., "04 hr 50 mins")</li><br><li><strong>Impact</strong>: "Compensation" or "Deduction"</li><br><li><strong>Status</strong>: "Pending - Waiting for approval"</li><br><li><strong>Comments</strong>: Number of comments (e.g., "5")</li><br><li>Click on entry to view full details and comments</li><br><li><strong>Single Approval/Rejection</strong></li><br><li>Click <strong>Approve for Payroll</strong> or <strong>Approve for Leaves</strong> button</li><br><li>Or click <strong>Reject</strong> button</li><br><li>Add optional comment explaining decision</li><br><li>Confirm action</li><br><li><strong>Bulk Approval/Rejection</strong></li><br><li>Select multiple entries using checkboxes</li><br><li>Bulk action bar appears at bottom of screen</li><br><li>Click bulk <strong>Approve</strong> or <strong>Reject</strong> button</li><br><li><strong>Screenshot</strong>: <code>15-pending-tab-bulk-approve.png</code>, <code>16-bulk-selection-action-bar.png</code></li><br><li><strong>Note</strong>: Bulk approval feature may not be immediately visible until items are selected (TSSD-3944)</li></p><p><strong>Expected Outcome</strong>:<br><li>Approved requests move to <strong>Approved</strong> tab</li><br><li>Rejected requests move to <strong>Rejected</strong> tab</li><br><li>Employee receives notification of decision</li><br><li>Approved overtime is queued for payroll processing</li></p><p><strong>Filtering Options</strong>:<br><li><strong>Employee</strong>: Filter by specific employee</li><br><li><strong>Impact Type</strong>: Filter by Compensation or Deduction</li><br><li><strong>Date Range</strong>: Filter by date period</li></p><p>---</p><p><h4>Task 6: Process Approved Overtime for Payroll</h4></p><p><strong>Purpose</strong>: Move approved overtime entries to payroll system</p><p><strong>Prerequisites</strong>:<br><li>Super Admin or Payroll Manager access</li><br><li>Overtime requests must be in <strong>Approved</strong> status</li></p><p><strong>Steps</strong>:<br><li><strong>Navigate to Approved Tab</strong></li><br><li>Go to <strong>Time > Employee attendance > Time and Pay Adjustments</strong></li><br><li>Click <strong>Approved</strong> tab</li><br><li>View all approved overtime entries</li><br><li><strong>Select Entries for Processing</strong></li><br><li>Review approved entries</li><br><li>Select entries to process (individual or bulk)</li><br><li><strong>Process to Payroll</strong></li><br><li>Click <strong>Process</strong> or <strong>Add to Payroll</strong> button</li><br><li>Confirm action</li><br><li>System moves entries to <strong>Processed</strong> tab</li><br><li><strong>Verify in Processed Tab</strong></li><br><li>Click <strong>Processed</strong> tab</li><br><li>Confirm entries appear with "Processed" status</li><br><li>These entries will be included in the next payroll run</li></p><p><strong>Expected Outcome</strong>: Overtime hours and compensation are added to employee payroll calculations.</p><p>---</p><p><h3>Reporting and Review Tasks</h3></p><p><h4>Task 7: View Scheduled Overtime</h4></p><p><strong>Purpose</strong>: Monitor pre-scheduled overtime assignments</p><p><strong>Steps</strong>:<br><li>Navigate to <strong>Time > Employee attendance > Time and Pay Adjustments</strong></li><br><li>Click <strong>Scheduled</strong> tab</li><br><li>View scheduled overtime entries showing:</li><br><li>Employee name</li><br><li>Creation date ("By [Manager Name]")</li><br><li>Type: "Scheduled Extra Hours"</li><br><li>Scheduled date and time</li><br><li>Location</li><br><li>Duration (e.g., "3 hr 00 mins")</li><br><li>Compensation type: "Payroll" or "Leave"</li><br><li>Status: "Scheduled", "Declined", "Not Fulfilled", "Expired"</li><br><li>Use quick filters:</li><br><li><strong>Scheduled</strong>: Count of pending scheduled overtime</li><br><li><strong>Declined</strong>: Count of employee-rejected overtime</li><br><li><strong>Not Fulfilled</strong>: Count of incomplete scheduled overtime</li></p><p><strong>Screenshot</strong>: <code>10-schedule-extra-hours-button.png</code></p><p>---</p><p><h4>Task 8: View Overtime Reports</h4></p><p><strong>Purpose</strong>: Analyze overtime patterns and costs</p><p><strong>Steps</strong>:<br><li>Navigate to <strong>Time > Employee attendance > Time and Pay Adjustments</strong></li><br><li>Use tab navigation to view different statuses:</li><br><li><strong>Scheduled</strong>: Future overtime</li><br><li><strong>Pending</strong>: Awaiting approval</li><br><li><strong>Approved</strong>: Approved but not yet processed</li><br><li><strong>Processed</strong>: Added to payroll</li><br><li><strong>Rejected</strong>: Denied requests</li><br><li>Apply filters:</li><br><li>Date range</li><br><li>Employee</li><br><li>Impact type (Compensation/Deduction)</li><br><li>Export data:</li><br><li>Click <strong>Download</strong> dropdown (if available)</li><br><li>Select export format</li></p><p><strong>Known Limitation</strong>: Overtime reports may lack Employee IDs (TSSD-1897). This was a reported gap that has been addressed, but verify your version includes this field.</p><p>---</p><p><h3>Employee Self-Service Tasks</h3></p><p><h4>Task 9: Request Overtime Compensation (Employee)</h4></p><p><strong>Purpose</strong>: Allow employees to submit overtime hours for approval</p><p><strong>Prerequisites</strong>:<br><li>Employee must be assigned to an Overtime or Days in Lieu policy</li><br><li>Policy must have "Allow employees to request extra hours" enabled</li><br><li>Employee must have worked beyond scheduled hours</li></p><p><strong>Steps</strong> (via Bayzat Mobile App):<br><li><strong>Check Out of Attendance</strong></li><br><li>Open Bayzat app</li><br><li>Complete attendance check-out</li><br><li>If extra hours detected, system prompts: "Send a compensation request?"</li><br><li><strong>Specify Extra Hours</strong></li><br><li>Review system-detected extra hours</li><br><li>Adjust hours if needed (can only decrease, not increase)</li><br><li>Add optional comments</li><br><li><strong>Submit Request</strong></li><br><li>Click <strong>Send Request</strong> or <strong>Submit</strong></li><br><li>Request goes to manager for approval</li><br><li><strong>Track Request Status</strong></li><br><li>Navigate to <strong>Attendance</strong> section in app</li><br><li>View request status with color-coded flags:</li><br><li><strong>Yellow</strong>: Pending review</li><br><li><strong>Green</strong>: Approved</li><br><li><strong>Red</strong>: Rejected</li><br><li>Status details:</li><br><li>"Pending - Waiting for approval"</li><br><li>"Reviewed"</li><br><li>"Assigned to Payroll"</li><br><li>"Added to Time Off"</li></p><p><strong>Expected Outcome</strong>: Request appears in manager's Pending queue for approval.</p><p><strong>Screenshot</strong>: <code>09-time-pay-adjustments-pending.png</code> (showing employee request example)</p><p>---</p><p><h4>Task 10: Accept/Reject Scheduled Overtime (Employee)</h4></p><p><strong>Purpose</strong>: Respond to overtime assignments from managers</p><p><strong>Steps</strong> (via Bayzat Mobile App or Web):<br><li><strong>View Scheduled Overtime</strong></li><br><li>Navigate to <strong>Attendance > Time & Pay Adjustments</strong></li><br><li>Or check <strong>My Schedule</strong> (for shift employees)</li><br><li>View scheduled overtime details:</li><br><li>Manager's name</li><br><li>Date and time</li><br><li>Duration</li><br><li>Location</li><br><li>Manager comments</li><br><li><strong>Review Details</strong></li><br><li>Read manager's comments</li><br><li>Verify date, time, and duration</li><br><li>Check compensation type (Payroll or Leave)</li><br><li><strong>Accept or Reject</strong></li><br><li>Click <strong>Accept</strong> to confirm availability</li><br><li>Or click <strong>Reject</strong> if unable to work</li><br><li>Add optional comment explaining rejection</li></p><p><strong>Expected Outcome</strong>: <br><li>Accepted overtime remains in Scheduled status</li><br><li>Rejected overtime moves to Declined status</li><br><li>Manager receives notification of employee response</li></p><p><strong>Display Differences</strong>:<br><li><strong>Non-shift employees</strong>: See extra hours with new check-in/check-out times automatically</li><br><li><strong>Shift employees</strong>: See extra hours under <strong>My Schedule</strong> section</li></p><p>---</p><p><h3>Configuration Troubleshooting Tasks</h3></p><p><h4>Task 11: Troubleshoot Overtime Calculation Issues</h4></p><p><strong>Common Issue</strong>: Overtime starting at unexpected hours</p><p><strong>Example</strong>: Overtime calculated at 8 hours instead of configured 8.30 hours (TSSD-3821)</p><p><strong>Root Cause</strong>: Break time inclusion flag affecting actual work hours</p><p><strong>Diagnosis Steps</strong>:<br><li><strong>Check Work Timing Configuration</strong></li><br><li>Navigate to <strong>Settings > Attendance > Work Timings</strong></li><br><li>Open the work timing assigned to the employee</li><br><li>Note the configured hours (e.g., 8:30 hours)</li><br><li>Check break duration (e.g., 30 minutes)</li><br><li><strong>Verify Break Inclusion Flag</strong></li><br><li>Look for "Include break time in work hours" setting</li><br><li>If <strong>FALSE</strong>: System subtracts break time from work hours</li><br><li>Example: 8:30 hours - 0:30 break = 8 hours actual work</li><br><li>Overtime starts after 8 hours of actual work</li><br><li>If <strong>TRUE</strong>: Break time is included in work hours</li><br><li>Example: 8:30 hours includes break</li><br><li>Overtime starts after 8:30 hours</li><br><li><strong>Solution Options</strong>:</li><br><li><strong>Option A</strong>: Set work timing to 9 hours with break inclusion TRUE</li><br><li><strong>Option B</strong>: Enable break inclusion flag for existing 8:30 hour schedule</li><br><li><strong>Option C</strong>: Adjust overtime policy formula to account for break deduction</li></p><p><strong>Testing Recommendation</strong>: Create test scenarios with different break inclusion settings to understand impact on overtime calculations.</p><p>---</p><p><h4>Task 12: Understand Work Week and Weekend Overtime</h4></p><p><strong>Common Issue</strong>: Confusion about weekend overtime calculations (TSSD-2984)</p><p><strong>Steps</strong>:<br><li><strong>Check Work Week Configuration</strong></li><br><li>Navigate to <strong>Settings > Attendance > Work Week</strong></li><br><li>Verify which days are designated as weekends</li><br><li>Note any Days in Lieu policy assignments</li><br><li><strong>Understand Weekend Overtime Logic</strong></li><br><li><strong>For employees with Days in Lieu policy</strong>: ALL hours worked on weekends count as overtime</li><br><li><strong>No comparison to scheduled hours</strong> on weekend days</li><br><li>Weekend designation is based on work week settings</li><br><li><strong>Impact of Configuration Changes</strong></li><br><li>Changes to work week settings can affect historical overtime calculations</li><br><li>Example: Changing weekend designation may retroactively impact past shifts</li><br><li><strong>Recommendation</strong>: Document work week changes and communicate to managers</li></p><p><strong>Note</strong>: This is expected system behavior, not a bug. The complexity arises from interdependent settings (work week, Days in Lieu policy, weekend designation).</p><p>---</p><p><h3>Advanced Configuration Tasks</h3></p><p><h4>Task 13: Configure Fixed Hourly Rate Overtime</h4></p><p><strong>Purpose</strong>: Set up overtime for hourly workers where all hours are compensated at a fixed rate</p><p><strong>Use Case</strong>: Day-rate workers, contract workers, hourly employees</p><p><strong>Prerequisites</strong>:<br><li>Understanding of "All Hours Worked" rule</li><br><li>Fixed hourly rate defined</li></p><p><strong>Steps</strong>:<br><li><strong>Configure Work Timing</strong></li><br><li>Navigate to <strong>Settings > Time > Work Timings</strong></li><br><li>Add or edit timing</li><br><li>Select <strong>"All Hours Worked"</strong> rule</li><br><li>This classifies all hours between check-in and check-out as compensable</li><br><li><strong>Set Fixed Hourly Rate in Overtime Policy</strong></li><br><li>Navigate to <strong>Settings > Payroll > Overtime Policy</strong></li><br><li>Create new policy or edit existing</li><br><li>Select <strong>"Fixed Hourly Rate"</strong> option</li><br><li>Enter the fixed rate amount</li><br><li><strong>Formula</strong>:</li><br><li>Total Pay = Total Hours Worked × Fixed Hourly Rate</li><br><li>No comparison to scheduled hours</li><br><li>No distinction between regular and overtime hours</li><br><li><strong>Review and Approve</strong></li><br><li>Time & Pay Adjustments automatically generated</li><br><li>Line managers or super admins review and approve</li><br><li>Approved entries process to payroll</li></p><p><strong>Expected Outcome</strong>: Simplified overtime calculation for hourly workers without complex formula configuration.</p><p><strong>Screenshot Reference</strong>: Article 40241982073361 describes this feature.</p><p>---</p><p><h4>Task 14: Configure Split vs. Unified Overtime Types</h4></p><p><strong>Purpose</strong>: Choose between unified overtime calculation or split calculation for different hour types</p><p><strong>Options</strong>:</p><p><strong>Unified Type</strong>:<br><li>Single formula applies to all extra hours</li><br><li>Simpler configuration</li><br><li>All overtime hours calculated the same way</li></p><p><strong>Split Type</strong>:<br><li>Different formulas for different hour categories</li><br><li>More granular control</li><br><li>Can apply different multipliers based on:</li><br><li>Time of day</li><br><li>Day of week</li><br><li>Holiday status</li></p><p><strong>Configuration</strong>:<br><li>In overtime policy configuration (Step 1)</li><br><li>Under rate calculation formula</li><br><li>Select <strong>"Choose Type"</strong> dropdown</li><br><li>Choose <strong>"Unified"</strong> or <em></em>"Split"</li></p><p><strong>Screenshot</strong>: <code>06-overtime-formula-configuration.png</code> shows "Choose Type" dropdown</p><p><strong>Recommendation</strong>: Use Unified for simple overtime policies. Use Split for complex labor law compliance requirements (e.g., UAE labor law - AV-7934).</p><p>---</p><p><h3>Known Limitations and Workarounds</h3></p><p><h4>Limitation 1: Cannot Select Specific Allowance Components</h4></p><p><strong>Issue</strong>: System only allows "Basic Salary" or "Basic Salary + All Allowances" (TSSD-294)</p><p><strong>Impact</strong>: Cannot selectively include only certain allowances (e.g., Basic Salary + Accommodation Allowance only)</p><p><strong>Workaround</strong>: <br><li>Use "Basic Salary" option if allowances should not be included</li><br><li>Or accept all allowances and adjust multiplier to compensate</li><br><li>Or calculate overtime manually outside the system for complex scenarios</li></p><p><strong>Status</strong>: Feature improvement under consideration</p><p>---</p><p><h4>Limitation 2: Complex Formula Display</h4></p><p><strong>Issue</strong>: Formula presentation lacks clear visual grouping (TSSD-2256)</p><p><strong>Impact</strong>: Users may misunderstand calculation order of operations</p><p><strong>Workaround</strong>:<br><li>Test policy with known scenarios to verify calculations</li><br><li>Document expected results for different hour amounts</li><br><li>Use calculator to manually verify formula logic</li><br><li>Contact support if calculations appear incorrect</li></p><p><strong>Example Formula</strong>: <code>((Unit x 1.5) x Basic Salary) / (Custom Days x 30) x Hours (8) x Extra hours duration</code></p><p><strong>Actual Calculation</strong>: (Basic Salary / 30 / 8) × 1.5 × Extra Hours</p><p>---</p><p><h4>Limitation 3: Bulk Approval Discoverability</h4></p><p><strong>Issue</strong>: Bulk approval functionality not immediately visible (TSSD-3944)</p><p><strong>Impact</strong>: Line managers may not realize they can bulk approve overtime</p><p><strong>Workaround</strong>:<br><li>Select multiple entries using checkboxes in Pending tab</li><br><li>Bulk action bar appears at bottom of screen</li><br><li>Use bulk Approve or Reject buttons</li></ul></p><p><strong>Screenshot</strong>: <code>15-pending-tab-bulk-approve.png</code>, <code>16-bulk-selection-action-bar.png</code></p><p>---</p><p><h4>Limitation 4: Policy Assignment Timing Uncertainty</h4></p><p><strong>Issue</strong>: Unclear whether overtime policy applies if assigned after shift publication (TSSD-1544)</p><p><strong>Clarification</strong>: System evaluates overtime policy at check-in time, NOT at shift publication time</p><p><strong>Impact</strong>: Order of operations (policy assignment vs. shift publication) does not matter</p><p><strong>Best Practice</strong>: Assign overtime policies before publishing shifts to avoid confusion, even though timing does not affect functionality.</div></section></main>
+
+      .hero-banner h1 {
+        font-size: 1.75rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      section, .section {
+        padding: 16px;
+      }
+
+      table {
+        font-size: 0.9rem;
+      }
+
+      th, td {
+        padding: 8px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-banner h1 {
+        font-size: 1.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+
+      .step {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        max-width: 100%;
+        padding: 0;
+      }
+
+      .hero-banner {
+        background: #6B46C1 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      section, .section {
+        break-inside: avoid;
+      }
+    }
+  </style>
+
+</head>
+<body>
+<div class="hero-banner">
+  <h1>Overtime Management</h1>
+  <p class="hero-subtitle">Automate overtime tracking, calculation, and compensation for accurate payroll processing</p>
+</div>
+
+<section class="section">
+  <h2>What is Overtime Management?</h2>
+
+  <h3>Overview</h3>
+  <p>The Overtime feature enables organizations to systematically track, approve, and compensate employees for hours worked beyond their regular schedule. It provides configurable policies that define how overtime is calculated, requested, and processed through payroll or converted to time off.</p>
+
+  <h3>Key Benefits</h3>
+  <ul>
+    <li>Configure flexible overtime policies with custom rate multipliers for different day types</li>
+    <li>Schedule overtime in advance with employee acceptance workflow</li>
+    <li>Track extra hours automatically with real-time approval and payroll integration</li>
+    <li>Support both monetary compensation and time-off-in-lieu options</li>
+  </ul>
+
+  <h3>Who Uses This Feature?</h3>
+  <ul>
+    <li><strong>HR Administrators:</strong> Configure overtime policies and calculation rules</li>
+    <li><strong>Line Managers:</strong> Schedule overtime, approve employee requests, and review time adjustments</li>
+    <li><strong>Employees:</strong> View scheduled overtime, request extra hours compensation, and track approval status</li>
+    <li><strong>Payroll Administrators:</strong> Process approved overtime for payment</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Product Foundation Overview</h2>
+
+  <h3>Core Concepts</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Overtime Policies</h4>
+      <p>Organizational rules defining how overtime is calculated and compensated. Policies specify rate multipliers, salary components, and calculation formulas.</p>
     </div>
-    
-    <footer class="footer">
-      <p><strong>overtime</strong> User Guide</p>
-      <p>Version v2 | Last Updated: 2026-01-12T21:55:36.172Z</p>
-      <p>Generated by Bayzat Documentation System</p>
-    </footer>
-  </body>
-  </html>
+    <div class="feature-card">
+      <h4>Time & Pay Adjustments</h4>
+      <p>Central hub for managing overtime entries. View scheduled, pending, approved, processed, and rejected overtime requests.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Rate Calculation Types</h4>
+      <p>Single Rate applies one multiplier to all hours. Custom Rate allows different multipliers for weekdays, weekends, holidays, and days off.</p>
+    </div>
+  </div>
+
+  <h3>Related Features</h3>
+  <ul>
+    <li><strong>Attendance Module:</strong> Work timings and check-in/check-out times determine overtime eligibility</li>
+    <li><strong>Payroll Module:</strong> Processes approved overtime for monetary compensation</li>
+    <li><strong>Time Off Module:</strong> Enables time-off-in-lieu as an alternative to monetary compensation</li>
+    <li><strong>Mobile App:</strong> Employees can view, accept, and request overtime through the app</li>
+  </ul>
+
+  <h3>Technical Prerequisites</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Attendance Module</td>
+        <td>Must be enabled and configured with work timings</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Work Timings</td>
+        <td>At least one work timing schedule configured</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Payroll Module</td>
+        <td>Required for monetary overtime compensation</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Salary Components</td>
+        <td>Basic Salary component must be defined</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Work Week Configuration</td>
+        <td>Defines weekends and working days</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Time Off Module</td>
+        <td>Required for time-off-in-lieu option</td>
+        <td>Optional</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <h2>Complete User Journey Guide</h2>
+
+  <h3>Journey Overview</h3>
+  <p>The Overtime journey involves administrators configuring policies, managers scheduling and approving overtime, and employees submitting requests and tracking their status.</p>
+
+  <div class="journey-grid">
+    <div class="journey-step">
+      <div class="step-number">1</div>
+      <h4>Policy Creation</h4>
+      <p>HR administrator creates overtime policy with rate calculations and assigns employees</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">2</div>
+      <h4>Schedule Overtime</h4>
+      <p>Manager schedules overtime hours in advance for specific employees</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">3</div>
+      <h4>Employee Response</h4>
+      <p>Employee receives notification and accepts or rejects scheduled overtime</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">4</div>
+      <h4>Work Extra Hours</h4>
+      <p>Employee works the scheduled overtime or requests compensation for hours worked</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">5</div>
+      <h4>Approval Process</h4>
+      <p>Manager reviews and approves overtime requests in Time & Pay Adjustments</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">6</div>
+      <h4>Payroll Processing</h4>
+      <p>Approved overtime is processed through payroll or converted to time off</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Feature Discovery</h2>
+
+  <h3>How to Access</h3>
+  <p>Overtime features are accessed through different interfaces based on user role. Administrators configure policies in Settings, while managers and employees use the Time module.</p>
+
+  <h3>Navigation Paths</h3>
+
+  <div class="step">
+    <div class="step-number">A</div>
+    <div class="step-content">
+      <h4>Overtime Policy Configuration (Admin)</h4>
+      <p>Settings → Attendance → Overtime Policy → Add New or click existing policy to edit</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">M</div>
+    <div class="step-content">
+      <h4>Time & Pay Adjustments (Manager)</h4>
+      <p>Time → Employee Attendance → Time and Pay Adjustments → Use tabs to filter by status (Scheduled, Pending, Approved, Processed, Rejected)</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">E</div>
+    <div class="step-content">
+      <h4>Employee Self-Service (Mobile App)</h4>
+      <p>Check out of attendance → System prompts for compensation request if extra hours detected → View status in Attendance section</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Setup Process</h2>
+
+  <h3>Creating an Overtime Policy</h3>
+  <p>Before employees can have overtime tracked, HR administrators must create and configure overtime policies.</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Navigate to Policy Settings</h4>
+      <p>Go to Settings → Attendance → Overtime Policy. Click 'Add New' to create a new policy.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Configure Policy Name and Behavior</h4>
+      <p>Enter a descriptive policy name. Toggle 'Allow employees to request extra hours' to let employees submit overtime requests. Toggle 'Allow managers to see net amount' for manager visibility.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Select Rate Calculation Type</h4>
+      <p>Choose between:</p>
+      <ul>
+        <li><strong>Single Rate:</strong> One multiplier applies to all overtime hours</li>
+        <li><strong>Custom Rate:</strong> Different multipliers for weekdays, weekends, public holidays, and days off</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Configure Rate Calculation Formula</h4>
+      <p>Set the following parameters:</p>
+      <ul>
+        <li><strong>Multiplier:</strong> Rate multiplier (default 1.5, minimum 0.1)</li>
+        <li><strong>Salary Component:</strong> Basic Salary or Basic Salary + Allowances</li>
+        <li><strong>Working Days:</strong> Custom Days (default 30), Actual Days, or Working Days</li>
+        <li><strong>Hours:</strong> Standard working hours per day (default 8)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">5</div>
+    <div class="step-content">
+      <h4>Assign Employees</h4>
+      <p>Search for employees and move them from 'Excluded' to 'Included' list. Note: Each employee can only be assigned to one overtime policy.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">6</div>
+    <div class="step-content">
+      <h4>Review and Save</h4>
+      <p>Review all policy settings including rate calculations and assigned employees. Click 'Save' to create the policy.</p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <p><strong>Tip:</strong> Test your policy configuration with known scenarios to verify overtime calculations match your expectations before rolling out to all employees.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Feature Usage</h2>
+
+  <h3>Common Workflows</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Schedule Overtime</h4>
+      <p>Managers assign overtime hours in advance. Employees receive notifications and can accept or reject.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Employee Requests</h4>
+      <p>Employees request compensation for extra hours worked after checking out of attendance.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Approve/Reject</h4>
+      <p>Managers review pending requests and approve for payroll or leave compensation.</p>
+    </div>
+  </div>
+
+  <h3>Scheduling Overtime in Advance</h3>
+  <ol>
+    <li>Navigate to Time → Employee Attendance → Time and Pay Adjustments</li>
+    <li>Click 'Scheduled' tab, then 'Schedule Extra Hours' button</li>
+    <li>Select employee from dropdown</li>
+    <li>Set date, location, start time, and end time</li>
+    <li>Choose compensation type: Approve for Payroll or Approve for Leave</li>
+    <li>Add optional comments</li>
+    <li>Click 'Schedule' to submit</li>
+  </ol>
+
+  <h3>Approving Overtime Requests</h3>
+  <ol>
+    <li>Navigate to Time → Employee Attendance → Time and Pay Adjustments</li>
+    <li>Click 'Pending' tab to view requests awaiting approval</li>
+    <li>Review request details (employee, date, duration, impact)</li>
+    <li>Click 'Approve for Payroll' or 'Approve for Leaves'</li>
+    <li>Or click 'Reject' with optional comment</li>
+  </ol>
+
+  <div class="info-box">
+    <p><strong>Bulk Actions:</strong> Select multiple entries using checkboxes. A bulk action bar appears at the bottom for approving or rejecting multiple requests at once.</p>
+  </div>
+
+  <h3>Best Practices</h3>
+  <ul>
+    <li>Configure work timings and work week settings before creating overtime policies</li>
+    <li>Assign overtime policies before publishing employee shifts</li>
+    <li>Review pending requests regularly to avoid backlogs</li>
+    <li>Use bulk approval for efficiency with large volumes</li>
+    <li>Document expected calculations for different scenarios</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Business Rules & Limitations</h2>
+
+  <h3>Core Business Rules</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>Description</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>One policy per employee</td>
+        <td>Employees can only be assigned to one overtime policy at a time</td>
+        <td>Remove from current policy before assigning to new one</td>
+      </tr>
+      <tr>
+        <td>Policy evaluated at check-in</td>
+        <td>System evaluates overtime eligibility when employee checks in</td>
+        <td>Policy assignment order vs shift publication doesn't matter</td>
+      </tr>
+      <tr>
+        <td>Weekend overtime</td>
+        <td>All hours on weekends count as overtime for Days in Lieu employees</td>
+        <td>No comparison to scheduled hours on weekends</td>
+      </tr>
+      <tr>
+        <td>Salary component options</td>
+        <td>Only Basic Salary or Basic Salary + All Allowances available</td>
+        <td>Cannot selectively choose specific allowances</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>System Constraints</h3>
+  <ul>
+    <li>Employees must be assigned to an overtime policy to have extra hours tracked</li>
+    <li>Shift employees must have a shift scheduled on the target day for overtime scheduling</li>
+    <li>Break time inclusion affects when overtime begins (8.5 hours vs 8 hours)</li>
+    <li>Managers without payroll access cannot see overtime amounts unless explicitly enabled</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Troubleshooting & Edge Cases</h2>
+
+  <h3>Common Issues</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Issue</th>
+        <th>Cause</th>
+        <th>Resolution</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Overtime starting at wrong hour</td>
+        <td>Break time inclusion flag affecting calculations</td>
+        <td>Check work timing configuration for break inclusion settings</td>
+      </tr>
+      <tr>
+        <td>Cannot assign employee to policy</td>
+        <td>Employee already assigned to another policy</td>
+        <td>Remove from current policy first</td>
+      </tr>
+      <tr>
+        <td>Missing Employee IDs in reports</td>
+        <td>Report configuration limitation</td>
+        <td>Use Looker or external tools to supplement data</td>
+      </tr>
+      <tr>
+        <td>Formula appears confusing</td>
+        <td>Visual representation lacks clear grouping</td>
+        <td>Test calculations to verify accuracy; formula logic is correct</td>
+      </tr>
+      <tr>
+        <td>Cannot find bulk approve</td>
+        <td>Feature only visible after selecting items</td>
+        <td>Select multiple entries using checkboxes first</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Known Limitations</h3>
+
+  <div class="warning-box">
+    <p><strong>Allowance Selection:</strong> Users cannot selectively include specific allowance components in overtime calculations. The system only allows Basic Salary or Basic Salary + All Allowances.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>UAE Labor Law Compliance:</strong> The platform may lack comprehensive flexibility for specific UAE labor law requirements. Manual adjustments outside the system may be required for compliance.</p>
+  </div>
+
+  <h3>Edge Cases</h3>
+  <ul>
+    <li><strong>Policy assigned after shift publication:</strong> System evaluates at check-in time, so order doesn't affect functionality</li>
+    <li><strong>Work week changes:</strong> May retroactively impact historical overtime calculations</li>
+    <li><strong>Days in Lieu conversion:</strong> Time-off-in-lieu requires active leave policies to be configured</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Support Resources</h2>
+
+  <h3>Frequently Asked Questions</h3>
+
+  <div class="feature-card">
+    <h4>How is overtime calculated?</h4>
+    <p>Overtime is calculated using the formula: (Salary Component / Working Days / Hours) × Multiplier × Extra Hours. The specific values depend on your policy configuration.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Can employees request overtime compensation?</h4>
+    <p>Yes, if the policy has 'Allow employees to request extra hours' enabled. After checking out with extra hours, employees can submit a compensation request through the mobile app.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>What's the difference between Single Rate and Custom Rate?</h4>
+    <p>Single Rate applies one multiplier to all overtime hours. Custom Rate allows different multipliers for weekdays, weekends, public holidays, and days off.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Can I choose specific allowances for overtime calculation?</h4>
+    <p>Currently, you can only choose Basic Salary or Basic Salary + All Allowances. Selective allowance inclusion is not supported.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>How do I bulk approve overtime requests?</h4>
+    <p>In the Pending tab, select multiple entries using checkboxes. A bulk action bar will appear at the bottom of the screen with Approve and Reject buttons.</p>
+  </div>
+
+  <h3>Getting Help</h3>
+  <ul>
+    <li>Contact your HR Administrator for policy questions and configuration support</li>
+    <li>Bayzat Support Team - Available for technical issues and feature questions</li>
+    <li>Knowledge Base - Access additional articles and guides</li>
+    <li>In-app Help - Contextual help available within the Bayzat platform</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Glossary of Terms</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Overtime Policy</strong></td>
+        <td>Configuration defining how overtime is calculated and compensated for assigned employees.</td>
+      </tr>
+      <tr>
+        <td><strong>Single Rate</strong></td>
+        <td>Rate calculation type where one multiplier applies to all overtime hours regardless of day type.</td>
+      </tr>
+      <tr>
+        <td><strong>Custom Rate</strong></td>
+        <td>Rate calculation type with different multipliers for weekdays, weekends, public holidays, and days off.</td>
+      </tr>
+      <tr>
+        <td><strong>Time & Pay Adjustments</strong></td>
+        <td>Central interface for viewing and managing overtime entries across different statuses.</td>
+      </tr>
+      <tr>
+        <td><strong>Extra Hours</strong></td>
+        <td>Hours worked beyond the scheduled work timing, eligible for overtime compensation.</td>
+      </tr>
+      <tr>
+        <td><strong>Days in Lieu</strong></td>
+        <td>Policy that converts overtime hours to time off credits instead of monetary compensation.</td>
+      </tr>
+      <tr>
+        <td><strong>Rate Multiplier</strong></td>
+        <td>Factor applied to hourly rate for overtime calculation (e.g., 1.5x for time-and-a-half).</td>
+      </tr>
+      <tr>
+        <td><strong>Scheduled Overtime</strong></td>
+        <td>Overtime hours assigned by a manager in advance, before the employee works them.</td>
+      </tr>
+      <tr>
+        <td><strong>Work Timing</strong></td>
+        <td>Configuration defining standard working hours, start/end times, and break duration.</td>
+      </tr>
+      <tr>
+        <td><strong>Compensation Type</strong></td>
+        <td>How overtime is paid: either through Payroll (monetary) or Leave (time off in lieu).</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <p>Generated by Bayzat Documentation System</p>
+  <p>Last updated: 2026-01-13</p>
+</footer>
+
+</body>
+</html>
