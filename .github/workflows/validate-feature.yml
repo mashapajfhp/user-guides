@@ -416,22 +416,49 @@ jobs:
           echo "Starting Playwright validation for: $FEATURE_NAME"
           echo "============================================"
 
-          # Run Claude Code with Playwright MCP (headed mode, chromium)
-          export HEADLESS=false
-          export BROWSER=chromium
+          # Create MCP config file (avoid shell escaping issues)
+          MCP_CONFIG_FILE=$(mktemp)
+          cat > "$MCP_CONFIG_FILE" << 'MCPCONFIG'
+          {
+            "mcpServers": {
+              "playwright": {
+                "command": "npx",
+                "args": ["@executeautomation/playwright-mcp-server"],
+                "env": {
+                  "HEADLESS": "false",
+                  "BROWSER": "chromium"
+                }
+              }
+            }
+          }
+          MCPCONFIG
 
+          # Run Claude Code with Playwright MCP (headed mode, chromium)
           npx @anthropic-ai/claude-code@latest \
             --print \
             --max-turns 100 \
-            --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["@executeautomation/playwright-mcp-server"],"env":{"HEADLESS":"false","BROWSER":"chromium"}}}}' \
+            --mcp-config "$MCP_CONFIG_FILE" \
             --prompt-file "$PROMPT_FILE" \
-            --output-format json > "$RESULT_FILE.raw" 2>&1 || true
+            2>&1 | tee "$RESULT_FILE.raw"
 
-          # Extract just the JSON result if possible
+          # Extract JSON result from output
           if [ -f "$RESULT_FILE.raw" ]; then
-            # Try to extract JSON from the output
-            grep -o '{.*}' "$RESULT_FILE.raw" | tail -1 > "$RESULT_FILE" 2>/dev/null || cp "$RESULT_FILE.raw" "$RESULT_FILE"
+            # Look for JSON block in the output (between { and })
+            python3 -c "
+          import re
+          import sys
+          content = open('$RESULT_FILE.raw').read()
+          # Find the last complete JSON object
+          matches = re.findall(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', content, re.DOTALL)
+          if matches:
+              # Get the largest/last JSON-like block
+              largest = max(matches, key=len)
+              print(largest)
+          " > "$RESULT_FILE" 2>/dev/null || cp "$RESULT_FILE.raw" "$RESULT_FILE"
           fi
+
+          # Cleanup temp files
+          rm -f "$MCP_CONFIG_FILE"
 
           echo "============================================"
           echo "Validation complete"
