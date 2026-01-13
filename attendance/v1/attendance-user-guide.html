@@ -1,468 +1,922 @@
 <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>attendance - User Guide</title>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance - User Guide</title>
 
-    <style>
-      /* CSS Reset and Base */
-      *, *::before, *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+  <style>
+    /* CSS Reset and Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background-color: #ffffff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+      color: #ffffff;
+      padding: 60px 40px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .hero-banner h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      color: #ffffff;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      color: #1a1a1a;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #E2E8F0;
+    }
+
+    h3 {
+      font-size: 1.35rem;
+    }
+
+    p {
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+
+    /* Sections */
+    section, .section {
+      margin-bottom: 3rem;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+    }
+
+    /* Info Boxes */
+    .info-box, .note-box, .tip-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FAF5FF;
+      border-left: 4px solid #6B46C1;
+    }
+
+    .info-box p, .note-box p, .tip-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    .warning-box, .important-box, .caution-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FFFBEB;
+      border-left: 4px solid #D97706;
+    }
+
+    .warning-box p, .important-box p, .caution-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Lists */
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+      color: #1a1a1a;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: #ffffff;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid #E2E8F0;
+      color: #1a1a1a;
+    }
+
+    th {
+      background: #F7FAFC;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    tr:hover {
+      background: #F7FAFC;
+    }
+
+    /* Screenshots */
+    .screenshot-container, figure {
+      margin: 24px auto;
+      text-align: center;
+    }
+
+    .screenshot, figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #E2E8F0;
+      display: block;
+      margin: 0 auto;
+    }
+
+    figcaption {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #1a1a1a;
+      font-style: italic;
+    }
+
+    /* Feature Grid and Cards */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .feature-card, .card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .feature-card h4, .card h4 {
+      color: #1a1a1a;
+      margin-top: 0;
+    }
+
+    .feature-card p, .card p {
+      color: #1a1a1a;
+    }
+
+    /* Journey Grid */
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .journey-step {
+      background: #F7FAFC;
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .journey-step .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .journey-step h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .journey-step p {
+      margin: 0;
+      color: #1a1a1a;
+    }
+
+    /* Steps */
+    .step, .step-item {
+      display: flex;
+      gap: 16px;
+      margin: 20px 0;
+      padding: 16px;
+      background: #F7FAFC;
+      border-radius: 8px;
+    }
+
+    .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-content h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .step-content p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Navigation Path */
+    .nav-path, .breadcrumb {
+      background: #F7FAFC;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: monospace;
+      color: #1a1a1a;
+      margin: 16px 0;
+    }
+
+    /* Code blocks */
+    code {
+      background: #F7FAFC;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.9em;
+      color: #1a1a1a;
+    }
+
+    /* Links */
+    a {
+      color: #6B46C1;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    footer, .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #E2E8F0;
+      text-align: center;
+      color: #1a1a1a;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        line-height: 1.6;
-        color: #1a1a1a;
-        background-color: #ffffff;
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 20px;
+        padding: 16px;
       }
 
-      /* Hero Banner */
       .hero-banner {
-        background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
-        color: #ffffff;
-        padding: 60px 40px;
-        border-radius: 12px;
-        margin-bottom: 40px;
-        text-align: center;
+        padding: 40px 24px;
       }
 
       .hero-banner h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 16px;
-        color: #ffffff;
-      }
-
-      .hero-subtitle {
-        font-size: 1.2rem;
-        opacity: 0.95;
-        color: #ffffff;
-      }
-
-      /* Typography - ALL BLACK */
-      h1, h2, h3, h4, h5, h6 {
-        color: #1a1a1a;
-        font-weight: 600;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
+        font-size: 1.75rem;
       }
 
       h2 {
-        font-size: 1.75rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #E2E8F0;
+        font-size: 1.5rem;
       }
 
-      h3 {
-        font-size: 1.35rem;
-      }
-
-      p {
-        color: #1a1a1a;
-        margin-bottom: 1rem;
-      }
-
-      /* Sections */
       section, .section {
-        margin-bottom: 3rem;
-        padding: 24px;
-        background: #ffffff;
-        border-radius: 8px;
-        border: 1px solid #E2E8F0;
+        padding: 16px;
       }
 
-      /* Info Boxes */
-      .info-box, .note-box, .tip-box {
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 20px 0;
-        background: #FAF5FF;
-        border-left: 4px solid #6B46C1;
-      }
-
-      .info-box p, .note-box p, .tip-box p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      .warning-box, .important-box, .caution-box {
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 20px 0;
-        background: #FFFBEB;
-        border-left: 4px solid #D97706;
-      }
-
-      .warning-box p, .important-box p, .caution-box p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      /* Lists */
-      ul, ol {
-        margin: 1rem 0;
-        padding-left: 2rem;
-        color: #1a1a1a;
-      }
-
-      li {
-        margin-bottom: 0.5rem;
-        color: #1a1a1a;
-      }
-
-      /* Tables */
       table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        background: #ffffff;
+        font-size: 0.9rem;
       }
 
       th, td {
-        padding: 12px 16px;
-        text-align: left;
-        border: 1px solid #E2E8F0;
-        color: #1a1a1a;
+        padding: 8px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-banner h1 {
+        font-size: 1.5rem;
       }
 
-      th {
-        background: #F7FAFC;
-        font-weight: 600;
-        color: #1a1a1a;
+      .hero-subtitle {
+        font-size: 1rem;
       }
 
-      tr:hover {
-        background: #F7FAFC;
+      .step {
+        flex-direction: column;
+        gap: 12px;
       }
+    }
 
-      /* Screenshots */
-      .screenshot-container, figure {
-        margin: 24px auto;
-        text-align: center;
-      }
-
-      .screenshot, figure img {
+    /* Print Styles */
+    @media print {
+      body {
         max-width: 100%;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border: 1px solid #E2E8F0;
-        display: block;
-        margin: 0 auto;
+        padding: 0;
       }
 
-      figcaption {
-        margin-top: 12px;
-        font-size: 0.9rem;
-        color: #1a1a1a;
-        font-style: italic;
+      .hero-banner {
+        background: #6B46C1 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
 
-      /* Feature Grid and Cards */
-      .feature-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-        margin: 20px 0;
+      section, .section {
+        break-inside: avoid;
       }
+    }
+  </style>
 
-      .feature-card, .card {
-        background: #ffffff;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: 20px;
-        margin: 16px 0;
-      }
+</head>
+<body>
+<div class="hero-banner">
+  <h1>Attendance Management</h1>
+  <p class="hero-subtitle">Track employee work hours, shifts, and location with automated attendance management</p>
+</div>
 
-      .feature-card h4, .card h4 {
-        color: #1a1a1a;
-        margin-top: 0;
-      }
+<figure>
+  <img src="validation/screenshots/01-dashboard-loaded.png" alt="Bayzat HR Dashboard showing attendance overview" />
+  <figcaption>Bayzat HR Dashboard - Your central hub for attendance management</figcaption>
+</figure>
 
-      .feature-card p, .card p {
-        color: #1a1a1a;
-      }
+<section class="section">
+  <h2>What is Attendance Management?</h2>
 
-      /* Journey Grid */
-      .journey-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 16px;
-        margin: 20px 0;
-      }
+  <h3>Overview</h3>
+  <p>The Attendance module is a comprehensive time and attendance tracking system that enables organizations to monitor employee work hours, manage shift schedules, and maintain accurate attendance records. The system supports mobile app-based check-ins, biometric device integrations, and geo-fencing for location verification.</p>
 
-      .journey-step {
-        background: #F7FAFC;
-        border-radius: 8px;
-        padding: 20px;
-        position: relative;
-      }
+  <h3>Key Benefits</h3>
+  <ul>
+    <li>Real-time check-in/check-out tracking via mobile app with geo-fencing</li>
+    <li>Flexible shift scheduling with static and dynamic shift support</li>
+    <li>Automated notifications 10 minutes before check-in/out times</li>
+    <li>Comprehensive attendance reports with daily, custom, and location views</li>
+    <li>Attendance regularization workflow for correcting missed entries</li>
+  </ul>
 
-      .journey-step .step-number {
-        background: #6B46C1;
-        color: #ffffff;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        margin-bottom: 12px;
-      }
+  <h3>Who Uses This Feature?</h3>
+  <ul>
+    <li><strong>Employees:</strong> Check in/out via mobile app, view attendance history, request attendance regularization</li>
+    <li><strong>Line Managers:</strong> Monitor team attendance, approve regularization requests, edit attendance records</li>
+    <li><strong>Shift Schedulers:</strong> Create and manage weekly shift schedules, assign employees to work centers</li>
+    <li><strong>HR Administrators:</strong> Configure work timings, set up geo-fencing, manage attendance policies</li>
+    <li><strong>Time Off Managers:</strong> Review attendance data, manage overlapping requests</li>
+  </ul>
+</section>
 
-      .journey-step h4 {
-        margin: 0 0 8px 0;
-        color: #1a1a1a;
-      }
+<section class="section">
+  <h2>Product Foundation Overview</h2>
 
-      .journey-step p {
-        margin: 0;
-        color: #1a1a1a;
-      }
-
-      /* Steps */
-      .step, .step-item {
-        display: flex;
-        gap: 16px;
-        margin: 20px 0;
-        padding: 16px;
-        background: #F7FAFC;
-        border-radius: 8px;
-      }
-
-      .step-number {
-        background: #6B46C1;
-        color: #ffffff;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        flex-shrink: 0;
-      }
-
-      .step-content {
-        flex: 1;
-      }
-
-      .step-content h4 {
-        margin: 0 0 8px 0;
-        color: #1a1a1a;
-      }
-
-      .step-content p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      /* Navigation Path */
-      .nav-path, .breadcrumb {
-        background: #F7FAFC;
-        padding: 12px 16px;
-        border-radius: 6px;
-        font-family: monospace;
-        color: #1a1a1a;
-        margin: 16px 0;
-      }
-
-      /* Code blocks */
-      code {
-        background: #F7FAFC;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-family: 'SF Mono', Monaco, monospace;
-        font-size: 0.9em;
-        color: #1a1a1a;
-      }
-
-      pre {
-        background: #F7FAFC;
-        padding: 16px;
-        border-radius: 8px;
-        overflow-x: auto;
-        color: #1a1a1a;
-      }
-
-      /* Links */
-      a {
-        color: #6B46C1;
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      /* Footer */
-      footer, .footer {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #E2E8F0;
-        text-align: center;
-        color: #1a1a1a;
-        font-size: 0.9rem;
-      }
-
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        body {
-          padding: 16px;
-        }
-
-        .hero-banner {
-          padding: 40px 24px;
-        }
-
-        .hero-banner h1 {
-          font-size: 1.75rem;
-        }
-
-        h2 {
-          font-size: 1.5rem;
-        }
-
-        section, .section {
-          padding: 16px;
-        }
-
-        table {
-          font-size: 0.9rem;
-        }
-
-        th, td {
-          padding: 8px 12px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .hero-banner h1 {
-          font-size: 1.5rem;
-        }
-
-        .hero-subtitle {
-          font-size: 1rem;
-        }
-
-        .step {
-          flex-direction: column;
-          gap: 12px;
-        }
-      }
-
-      /* Print Styles */
-      @media print {
-        body {
-          max-width: 100%;
-          padding: 0;
-        }
-
-        .hero-banner {
-          background: #6B46C1 !important;
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-
-        section, .section {
-          break-inside: avoid;
-        }
-      }
-    </style>
-
-  </head>
-  <body>
-  <div class="hero-banner">
-    <h1>attendance</h1>
-    <p class="hero-subtitle"></p>
+  <h3>Core Concepts</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Work Timings</h4>
+      <p>Define working hours, late arrival thresholds, early departure rules, break times, and overtime calculation methods.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Work Centers</h4>
+      <p>Physical locations where employees work. Each work center can have its own shift scheduler and assigned employees.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Shift Scheduler</h4>
+      <p>Weekly view for assigning employees to shifts. Supports both static (fixed) and dynamic (variable) shift patterns.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Geo-fencing</h4>
+      <p>Location-based verification ensuring employees check in from authorized locations with configurable radius.</p>
+    </div>
   </div>
 
-  
+  <figure>
+    <img src="validation/screenshots/14-work-centers-shift-scheduling.png" alt="Work Centers configuration showing shift scheduling" />
+    <figcaption>Work Centers configuration with shift scheduling and employee assignments</figcaption>
+  </figure>
 
-  <section class="section" id="hero">
-      <h2>Attendance</h2><div class="content"><p><div class="hero-section"><h1>Attendance</h1><p class="tagline">Track employee work hours, shifts, and location with automated attendance management</p><ul class="key-benefits"><ul><li>Real-time check-in/check-out tracking via mobile app or biometric devices</li><li>Flexible shift scheduling with static and dynamic shift support</li><li>Geo-fencing and location verification for accurate attendance records</li><li>Automated overtime calculation and attendance regularization workflows</li></ul></ul></div></p></div></section>
-<section class="section" id="feature-overview">
-      <h2>Feature Overview</h2><div class="content"><p><h2>What is Attendance?</h2><p>The Attendance module is a comprehensive time and attendance tracking system that enables organizations to monitor employee work hours, manage shift schedules, and maintain accurate attendance records. The system supports both mobile app-based check-ins and biometric device integrations, providing flexibility for different workforce types and operational requirements.</p><h3>Who Uses This Feature?</h3><ul><ul><li><strong>Employees:</strong> Check in and out of work, record breaks, request attendance regularization, and view their attendance history</li><li><strong>Line Managers:</strong> Monitor team attendance, approve regularization requests, edit attendance records for direct reports, and manage shift assignments</li><li><strong>Shift Schedulers:</strong> Create and manage weekly shift schedules, assign employees to work centers, and adjust shift timings</li><li><strong>HR Administrators/Super Admins:</strong> Configure work timings, set up offices and work centers, manage attendance policies, generate reports, and oversee system-wide attendance settings</li><li><strong>Time Off Managers:</strong> Review attendance data in relation to leave requests, manage kiosk mode for bulk attendance marking</li><li><strong>People Managers:</strong> Access attendance reports and manage company-wide attendance configurations</li></ul><h3>Key Capabilities</h3><ul><li><strong>Mobile App Check-In/Out:</strong> Employees can mark attendance using the Bayzat mobile app with geo-fencing, location verification, and optional image capture</li><li><strong>Biometric Integration:</strong> Support for biometric devices via API, CAMS, or external vendor integrations for physical attendance tracking</li><li><strong>Shift Scheduling:</strong> Static shifts for routine operations and dynamic shift scheduler for fluctuating business demands with weekly schedule views</li><li><strong>Work Timings Configuration:</strong> Define working hours, late arrival thresholds, early departure rules, break times, and overtime calculation methods</li><li><strong>Attendance Regularization:</strong> Employee-initiated ticket system for correcting check-in/check-out times with configurable approval workflows</li><li><strong>Multiple Visits/Geo-Fencing:</strong> Track employee visits to multiple locations with configurable radius settings and client assignments</li><li><strong>Comprehensive Reporting:</strong> Daily reports, custom reports, location reports with downloadable data and edit functionality</li><li><strong>Time & Pay Adjustments:</strong> Automatic tracking of late arrivals, early departures, absences, and extra hours for payroll integration</li><li><strong>Kiosk Mode:</strong> Bulk attendance marking for employees without smartphones or email access</li></ul><h3>Business Value</h3><p>The Attendance module delivers significant operational efficiency by automating time tracking, reducing manual attendance management overhead, and providing accurate data for payroll processing. Organizations benefit from:</p><ul><li>Elimination of buddy punching through geo-fencing and biometric verification</li><li>Real-time visibility into workforce presence and scheduling</li><li>Reduced administrative burden through automated notifications and reminders</li><li>Accurate overtime and extra hours calculation for fair compensation</li><li>Flexible scheduling capabilities to match business operational patterns</li><li>Comprehensive audit trails for attendance modifications and policy changes</li><li>Integration with payroll systems for seamless compensation processing</li></ul></ul></p></div></section>
-<section class="section" id="product-foundation">
-      <h2>Product Foundation</h2><div class="content"><p><h2>Technical Prerequisites</h2><h3>System Requirements</h3><ul><ul><li><strong>Mobile App:</strong> Bayzat mobile app installed on iOS or Android devices for app-based attendance tracking</li><li><strong>Location Services:</strong> Device location services must be enabled for geo-fencing and location verification</li><li><strong>Biometric Devices (Optional):</strong> Compatible biometric hardware for physical attendance tracking, configured with serial numbers and office assignments</li><li><strong>Network Connectivity:</strong> Stable internet connection for real-time attendance synchronization</li></ul><h3>Dependencies on Other Modules</h3><ul><li><strong>Employee Records:</strong> Employee profiles must exist in the HR system before attendance tracking can be configured. The Attendance module pulls employee names, IDs, and reporting structures from the Employee Records page</li><li><strong>Leave Management:</strong> Integrates with the Leave/Time Off module to automatically handle attendance records when leave requests are approved. When leave is approved, existing attendance records for the leave period are deleted</li><li><strong>Payroll:</strong> Time & Pay Adjustments feed into payroll processing. Attendance records marked as "Approved for Payroll" are used for compensation calculations</li><li><strong>Requests/Ticketing System:</strong> Attendance Regularization uses the Custom Tickets framework for employee-initiated attendance corrections</li><li><strong>Approval Flows:</strong> Attendance Regularization and Time & Pay Adjustments require configured approval workflows with assigned roles</li></ul><h3>Licensing and Plan Requirements</h3><p>The Attendance module is available as part of the Bayzat HR platform. Specific features may have different availability:</p><ul><li><strong>Basic Attendance Tracking:</strong> Available on standard HR plans</li><li><strong>Shift Scheduler:</strong> Requires attendance module activation</li><li><strong>Biometric Integration:</strong> May require additional configuration and third-party vendor setup (CAMS, API integration, or external vendors)</li><li><strong>Advanced Features:</strong> Facial recognition, multiple visits tracking, and attendance API settings may have specific plan requirements</li></ul><p>Contact your Bayzat account representative to confirm feature availability for your organization's plan.</p><h3>Integration Points</h3><ul><li><strong>Bayzat Mobile App:</strong> Primary interface for employee check-in/check-out with real-time synchronization</li><li><strong>Biometric Devices:</strong> Integration via API, CAMS portal, or external vendor systems for physical attendance tracking</li><li><strong>Admin Panel Audit Logs:</strong> Tracks all attendance record modifications, work timing changes, and policy assignments (90-day retention)</li><li><strong>Looker Reports:</strong> Advanced reporting and analytics for attendance data, including fraud detection dashboards</li><li><strong>Time & Pay Adjustments:</strong> Automatic creation of deduction/addition records based on attendance policy violations</li></ul><h3>User Roles and Permissions</h3><p>The following roles have access to Attendance features:</p><ul><li><strong>Super Admin:</strong> Full access to all attendance settings, reports, and configurations</li><li><strong>Time Off Manager:</strong> Manage attendance settings, view reports, enable image capture, use kiosk mode</li><li><strong>People Manager:</strong> View attendance reports, manage some company configurations (restricted from office location editing)</li><li><strong>Line Manager:</strong> View and edit attendance for direct reports, approve regularization requests, manage team attendance</li><li><strong>Shift Scheduler:</strong> Create and manage shift schedules for assigned work centers</li><li><strong>Attendance Manager:</strong> Edit office locations, manage attendance configurations</li><li><strong>Employee:</strong> Check in/out, view personal attendance records, submit regularization requests</li></ul></ul></p></div></section>
+  <h3>Technical Prerequisites</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Bayzat Mobile App</td>
+        <td>Required for employee check-in/check-out</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Location Services</td>
+        <td>Must be enabled on mobile devices for geo-fencing</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Work Timings</td>
+        <td>At least one work timing configuration</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Offices</td>
+        <td>Office locations must be configured with coordinates</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Biometric Devices</td>
+        <td>Optional integration for physical attendance tracking</td>
+        <td>Optional</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
 
-  <section class="section" id="interface-screenshots">
-      <h2>Interface Screenshots</h2>
-      <div class="content">
-        <h3>Dashboard & Navigation</h3>
-        <figure>
-          <img src="validation/screenshots/01-dashboard-loaded.png" alt="Bayzat Dashboard" class="screenshot" />
-          <figcaption>Main dashboard view</figcaption>
-        </figure>
+<section class="section">
+  <h2>Complete User Journey Guide</h2>
 
-        <h3>Attendance Regularization Request</h3>
-        <figure>
-          <img src="validation/screenshots/02-requests-menu-opened.png" alt="Requests menu navigation" class="screenshot" />
-          <figcaption>Navigating to Requests menu</figcaption>
-        </figure>
-        <figure>
-          <img src="validation/screenshots/03-my-tickets-page.png" alt="My Tickets page" class="screenshot" />
-          <figcaption>My Tickets page for creating requests</figcaption>
-        </figure>
-        <figure>
-          <img src="validation/screenshots/04-create-ticket-form.png" alt="Create ticket form" class="screenshot" />
-          <figcaption>Create ticket form</figcaption>
-        </figure>
-        <figure>
-          <img src="validation/screenshots/05-attendance-regularization-found.png" alt="Attendance Regularization ticket type" class="screenshot" />
-          <figcaption>Attendance Regularization ticket type selection</figcaption>
-        </figure>
+  <h3>Journey Overview</h3>
+  <p>The Attendance journey involves administrators configuring the system, schedulers managing shifts, employees marking attendance, and managers reviewing and approving records.</p>
 
-        <h3>Attendance Reports</h3>
-        <figure>
-          <img src="validation/screenshots/06-time-menu-opened.png" alt="Time menu navigation" class="screenshot" />
-          <figcaption>Navigating to Time menu</figcaption>
-        </figure>
-        <figure>
-          <img src="validation/screenshots/07-employee-attendance-report.png" alt="Employee Attendance Report" class="screenshot" />
-          <figcaption>Employee Attendance Report with daily, custom, and location report tabs</figcaption>
-        </figure>
-        <figure>
-          <img src="validation/screenshots/08-shift-scheduler.png" alt="Shift Scheduler" class="screenshot" />
-          <figcaption>Shift Scheduler for managing employee shifts</figcaption>
-        </figure>
+  <div class="journey-grid">
+    <div class="journey-step">
+      <div class="step-number">1</div>
+      <h4>System Setup</h4>
+      <p>HR configures work timings, offices, work centers, and geo-fencing settings</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">2</div>
+      <h4>Shift Assignment</h4>
+      <p>Scheduler creates weekly shifts and assigns employees to work centers</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">3</div>
+      <h4>Employee Check-In</h4>
+      <p>Employee receives notification and checks in via mobile app</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">4</div>
+      <h4>Work Day</h4>
+      <p>System tracks breaks, location visits, and working hours</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">5</div>
+      <h4>Check-Out</h4>
+      <p>Employee checks out; system calculates hours worked</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">6</div>
+      <h4>Review & Reports</h4>
+      <p>Manager reviews attendance, approves regularization requests</p>
+    </div>
+  </div>
+</section>
 
-        <h3>Attendance Settings & Configuration</h3>
-        <figure>
-          <img src="validation/screenshots/09-settings-menu-opened.png" alt="Settings menu" class="screenshot" />
-          <figcaption>Settings menu navigation</figcaption>
-        </figure>
-        <figure>
-          <img src="validation/screenshots/10-attendance-settings.png" alt="Attendance Settings" class="screenshot" />
-          <figcaption>General Attendance Settings with check-in/out configuration</figcaption>
-        </figure>
-        <figure>
-          <img src="validation/screenshots/12-multiple-visits-geofencing.png" alt="Geo-fencing settings" class="screenshot" />
-          <figcaption>Multiple Visits and Geo-fencing configuration</figcaption>
-        </figure>
-        <figure>
-          <img src="validation/screenshots/13-work-timings.png" alt="Work Timings" class="screenshot" />
-          <figcaption>Work Timings configuration</figcaption>
-        </figure>
-        <figure>
-          <img src="validation/screenshots/14-work-centers-shift-scheduling.png" alt="Work Centers" class="screenshot" />
-          <figcaption>Work Centers and Shift Scheduling configuration</figcaption>
-        </figure>
-      </div>
-  </section>
+<section class="section">
+  <h2>Feature Discovery</h2>
 
-  <footer>
-    <p>Generated by Bayzat Documentation System</p>
-    <p>Last updated: 2026-01-12T23:06:54.802Z</p>
-  </footer>
+  <h3>How to Access</h3>
+  <p>Attendance features are accessed through different menus based on the task. The Time menu provides reports and scheduling, while Settings contains configuration options.</p>
 
-  </body>
-  </html>
+  <h3>Navigation Paths</h3>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Employee Attendance Reports</h4>
+      <p>Time → Employee Attendance → View Daily Report, Custom Report, or Location Report tabs</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/06-time-menu-opened.png" alt="Time menu navigation" />
+    <figcaption>Accessing the Time menu for attendance reports</figcaption>
+  </figure>
+
+  <figure>
+    <img src="validation/screenshots/07-employee-attendance-report.png" alt="Employee Attendance Report showing daily view" />
+    <figcaption>Employee Attendance Report with columns for ID, Name, Schedule, Date, Status, Check In/Out times, and Hours Worked</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Shift Scheduler</h4>
+      <p>Time → Shift Scheduler → Select work center → View/edit weekly schedule</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/08-shift-scheduler.png" alt="Shift Scheduler weekly view" />
+    <figcaption>Shift Scheduler showing weekly view with employee assignments and shift timings</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Attendance Settings</h4>
+      <p>Settings → Attendance → Configure general settings, work timings, work centers, and geo-fencing</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/09-settings-menu-opened.png" alt="Settings menu navigation" />
+    <figcaption>Accessing Attendance settings through the Settings menu</figcaption>
+  </figure>
+</section>
+
+<section class="section">
+  <h2>Setup Process</h2>
+
+  <h3>Configuring Attendance Settings</h3>
+  <p>Before employees can use attendance tracking, administrators must configure the core settings.</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Configure General Attendance Settings</h4>
+      <p>Navigate to Settings → Attendance → General Settings. Configure check-in/out methods including mobile app, facial recognition, and biometric options.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/10-attendance-settings.png" alt="General Attendance Settings" />
+    <figcaption>General Attendance Settings showing 6 configuration options including facial recognition and biometric integration</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Set Up Work Timings</h4>
+      <p>Go to Settings → Attendance → Work Timings. Create timing schedules defining start/end times, break duration, and overtime thresholds.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/13-work-timings.png" alt="Work Timings configuration" />
+    <figcaption>Work Timings list showing 77 configured timing schedules with detailed settings</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Configure Geo-fencing (Multiple Visits)</h4>
+      <p>Navigate to Settings → Attendance → Multiple Visits. Enable location tracking and set the check-in radius (default 100m).</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/12-multiple-visits-geofencing.png" alt="Geo-fencing configuration" />
+    <figcaption>Multiple Visits settings with geo-fencing radius configuration and location tracking options</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Create Work Centers</h4>
+      <p>Go to Settings → Attendance → Work Centers. Add locations with schedulers, work timings, offices, and employee assignments.</p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <p><strong>Tip:</strong> Ensure office locations have accurate GPS coordinates for geo-fencing to work correctly. Test check-in from the actual location before rolling out to employees.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Feature Usage</h2>
+
+  <h3>Common Workflows</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Daily Check-In/Out</h4>
+      <p>Employees use mobile app to mark attendance. System validates location and records timestamp.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Attendance Regularization</h4>
+      <p>Employees request corrections for missed or incorrect entries through the ticketing system.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Report Generation</h4>
+      <p>Managers view and export attendance data with daily, custom date range, or location-based reports.</p>
+    </div>
+  </div>
+
+  <h3>Requesting Attendance Regularization</h3>
+  <p>When employees miss a check-in or check-out, they can request attendance regularization if the company has enabled this policy.</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Navigate to Requests</h4>
+      <p>Go to Work tab → Requests → My Tickets</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/02-requests-menu-opened.png" alt="Requests menu navigation" />
+    <figcaption>Accessing the Requests menu to create attendance regularization tickets</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Create New Ticket</h4>
+      <p>Click "Create Ticket" button to open the ticket creation form</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/03-my-tickets-page.png" alt="My Tickets page" />
+    <figcaption>My Tickets page with Create Ticket button</figcaption>
+  </figure>
+
+  <figure>
+    <img src="validation/screenshots/04-create-ticket-form.png" alt="Create ticket form" />
+    <figcaption>Ticket creation form with employee and ticket type selection</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Select Attendance Regularization</h4>
+      <p>Choose "Attendance Regularization" from the ticket type dropdown under the Attendance category</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/05-attendance-regularization-found.png" alt="Attendance Regularization ticket type" />
+    <figcaption>Attendance Regularization ticket type - allows employees to request check-in/check-out time updates</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Submit Request</h4>
+      <p>Fill in the check-in/check-out date and time details, add any attachments if needed, and submit the ticket</p>
+    </div>
+  </div>
+
+  <h3>Editing Attendance Records (Managers)</h3>
+  <ol>
+    <li>Navigate to Time → Employee Attendance</li>
+    <li>Locate the employee's attendance record in the report</li>
+    <li>Click the Edit button in the row</li>
+    <li>Modify check-in/check-out times as needed</li>
+    <li>Save changes</li>
+  </ol>
+
+  <div class="info-box">
+    <p><strong>Note:</strong> Attendance records are locked to the work timing configuration at check-in. Changes to work timings will not retroactively affect historical records.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Business Rules & Limitations</h2>
+
+  <h3>Core Business Rules</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>Description</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Shift publication required</td>
+        <td>Shifts must be published as working days before check-ins are accepted</td>
+        <td>Early or late check-ins on unpublished days are rejected</td>
+      </tr>
+      <tr>
+        <td>Location validation</td>
+        <td>Geo-fencing validates employee location against office coordinates</td>
+        <td>Check-ins outside radius may be flagged or rejected</td>
+      </tr>
+      <tr>
+        <td>Leave approval impact</td>
+        <td>Approved leave requests delete existing attendance records</td>
+        <td>Historical attendance data is not preserved when leave is approved</td>
+      </tr>
+      <tr>
+        <td>Configuration lock</td>
+        <td>Attendance records locked to work timing at check-in</td>
+        <td>Cannot retroactively update records after configuration changes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>System Constraints</h3>
+  <ul>
+    <li>Employees cannot record attendance for half-day leave periods</li>
+    <li>No bulk status change functionality for attendance adjustments</li>
+    <li>Approved extra hours automatically add to leave balance without reversal option</li>
+    <li>Custom roles require explicit policy assignment to appear in approval flows</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Troubleshooting & Edge Cases</h2>
+
+  <h3>Common Issues</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Issue</th>
+        <th>Cause</th>
+        <th>Resolution</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Check-in rejected</td>
+        <td>Shift not published or outside threshold time</td>
+        <td>Verify shift is published; use regularization for corrections</td>
+      </tr>
+      <tr>
+        <td>Location validation failed</td>
+        <td>Employee outside geo-fence radius</td>
+        <td>Check office coordinates; adjust radius if needed</td>
+      </tr>
+      <tr>
+        <td>Hours not calculated</td>
+        <td>Missing check-out entry</td>
+        <td>Employee must check out; manager can edit record</td>
+      </tr>
+      <tr>
+        <td>Cannot edit historical record</td>
+        <td>Work timing configuration changed after check-in</td>
+        <td>Records locked to original config; use regularization</td>
+      </tr>
+      <tr>
+        <td>Overtime not showing</td>
+        <td>Employee not assigned to overtime policy</td>
+        <td>Assign employee to overtime policy before shift</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Known Limitations</h3>
+
+  <div class="warning-box">
+    <p><strong>Half-Day Leave:</strong> Employees cannot record attendance and HR cannot view or edit attendance for half-day leave periods. This is a current system limitation.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Attendance Variance Reporting:</strong> Cannot export or display pre-edit attendance values in reports, limiting tracking of attendance modifications.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Overtime Validation:</strong> Hours worked are calculated automatically without validating checkout legitimacy or indicating missing/manipulated records.</p>
+  </div>
+
+  <h3>Edge Cases</h3>
+  <ul>
+    <li><strong>Multiple location visits:</strong> Enable Multiple Visits feature for employees who work at multiple client sites daily</li>
+    <li><strong>Biometric vs App conflicts:</strong> When both methods are used, ensure device serial numbers are correctly mapped to offices</li>
+    <li><strong>Timezone considerations:</strong> Attendance times are recorded in the configured office timezone</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Support Resources</h2>
+
+  <h3>Frequently Asked Questions</h3>
+
+  <div class="feature-card">
+    <h4>Why is my check-in being rejected?</h4>
+    <p>Check-ins are rejected if the shift is not published, you're outside the geo-fence radius, or you're checking in outside the allowed time threshold. Contact your manager or HR for assistance.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>How do I correct a missed check-in or check-out?</h4>
+    <p>Submit an Attendance Regularization request through Requests → My Tickets → Create Ticket → Select "Attendance Regularization". Your manager will review and approve the correction.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Can I check in from home or a remote location?</h4>
+    <p>This depends on your company's geo-fencing policy. If remote work is allowed, your HR administrator may configure specific locations or disable geo-fencing for your profile.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Why don't I see my overtime hours?</h4>
+    <p>Overtime tracking requires you to be assigned to an overtime policy. Contact your HR administrator to verify your policy assignment.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>How do notifications work?</h4>
+    <p>The system sends push notifications 10 minutes before your scheduled check-in and check-out times. Ensure notifications are enabled for the Bayzat app on your device.</p>
+  </div>
+
+  <h3>Getting Help</h3>
+  <ul>
+    <li>Contact your HR Administrator for policy questions and configuration support</li>
+    <li>Submit support tickets through the Requests system for technical issues</li>
+    <li>Bayzat Support Team - Available for platform-wide technical issues</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Glossary of Terms</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Work Timing</strong></td>
+        <td>Configuration defining standard working hours, start/end times, break duration, and overtime thresholds.</td>
+      </tr>
+      <tr>
+        <td><strong>Work Center</strong></td>
+        <td>Physical location where employees work, with assigned schedulers, timings, and employee groups.</td>
+      </tr>
+      <tr>
+        <td><strong>Shift Scheduler</strong></td>
+        <td>Weekly view interface for creating and assigning employee shifts to work centers.</td>
+      </tr>
+      <tr>
+        <td><strong>Geo-fencing</strong></td>
+        <td>Location-based boundary that validates employee check-ins occur within a specified radius of the office.</td>
+      </tr>
+      <tr>
+        <td><strong>Attendance Regularization</strong></td>
+        <td>Process for employees to request corrections to missed or incorrect check-in/check-out entries.</td>
+      </tr>
+      <tr>
+        <td><strong>Multiple Visits</strong></td>
+        <td>Feature allowing tracking of employee attendance at multiple client or office locations in a single day.</td>
+      </tr>
+      <tr>
+        <td><strong>Time & Pay Adjustments</strong></td>
+        <td>Records tracking late arrivals, early departures, absences, and extra hours for payroll integration.</td>
+      </tr>
+      <tr>
+        <td><strong>Kiosk Mode</strong></td>
+        <td>Bulk attendance marking feature for employees without smartphones or email access.</td>
+      </tr>
+      <tr>
+        <td><strong>Biometric Integration</strong></td>
+        <td>Physical attendance tracking using fingerprint or facial recognition devices connected to the system.</td>
+      </tr>
+      <tr>
+        <td><strong>Check-in Threshold</strong></td>
+        <td>Time window before/after scheduled shift start when check-ins are accepted.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <p>Generated by Bayzat Documentation System</p>
+  <p>Last updated: 2026-01-13</p>
+</footer>
+
+</body>
+</html>
