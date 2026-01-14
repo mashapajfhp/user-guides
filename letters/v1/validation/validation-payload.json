@@ -1,0 +1,259 @@
+{
+  "nextVersion": "v1",
+  "feature_info": {
+    "feature_name": "letters",
+    "feature_slug": "letters",
+    "next_version": "v1"
+  },
+  "primary_entity": {
+    "discovery_instructions": [
+      "Identify what the main item/entity is for this feature (e.g., ticket, workflow, employee, record)",
+      "Look for list/table views - the rows represent the primary entity",
+      "Check page headers and breadcrumbs for entity naming",
+      "Note the singular and plural forms used in the UI"
+    ],
+    "crud_operations": {
+      "create": {
+        "action": "Create new item",
+        "find_trigger": [
+          "Look for buttons with: + Add, + Create, + New, plus icon",
+          "Check top-right corner of the page",
+          "Check for floating action buttons (FAB)",
+          "Look in empty state messages for create prompts"
+        ],
+        "validation": "New item appears in list with unique identifier"
+      },
+      "read": {
+        "action": "View item details",
+        "find_trigger": [
+          "Click on any row in a list/table",
+          "Look for 'View' or eye icon buttons",
+          "Check if rows are clickable (cursor changes)"
+        ],
+        "validation": "Detail panel, modal, or page opens showing full information"
+      },
+      "update": {
+        "action": "Edit/modify item",
+        "find_trigger": [
+          "Look for Edit button, pencil icon",
+          "Check for inline editing (click on field to edit)",
+          "Look for status change dropdowns or buttons",
+          "Check action menus (three-dot menu) for edit option"
+        ],
+        "validation": "Changes persist after save, reflected in list view"
+      },
+      "delete": {
+        "action": "Delete/remove item",
+        "find_trigger": [
+          "Look for Delete button, trash icon",
+          "Check action menus (three-dot menu) for delete option",
+          "Look for bulk delete with checkboxes",
+          "Some features use 'Archive' or 'Cancel' instead of delete"
+        ],
+        "validation": "Item removed from list or status changed to deleted/archived"
+      }
+    }
+  },
+  "exploration_phase": {
+    "enabled": true,
+    "run_before_what_to_do": true,
+    "instructions": [
+      "Navigate to the feature's main section",
+      "Take a full page snapshot to understand the layout",
+      "Identify the primary entity - what 'item' does this feature manage?",
+      "Find ALL clickable elements: buttons, links, tabs, dropdowns, icons",
+      "Map the navigation structure: tabs, sidebar items, breadcrumbs",
+      "Click each tab/sub-section and document what appears",
+      "Locate CRUD controls for the primary entity",
+      "Check for action menus (three-dot menus, right-click menus)",
+      "Document any modals, dialogs, slide-out panels",
+      "Identify form fields and input types when forms appear",
+      "Look for filters, search, sort, and export options",
+      "Check for bulk action controls (checkboxes, select all)",
+      "Note any settings or configuration options"
+    ],
+    "discovery_targets": [
+      "Primary action buttons (create/add new item)",
+      "List/table of items with row actions",
+      "Detail view or edit forms",
+      "Status indicators and state changes",
+      "Filter and search controls",
+      "Navigation tabs within the feature",
+      "Settings or configuration sections",
+      "Related features or cross-links"
+    ]
+  },
+  "workflow_integration": {
+    "enabled": true,
+    "check_instructions": [
+      "Navigate to Automations in the left sidebar",
+      "Click on Workflows",
+      "Click + Create workflow (or similar create button)",
+      "In trigger selection, search for this feature's name",
+      "Check if this feature appears as a trigger source",
+      "Document any trigger events found (e.g., 'item created', 'status changed')",
+      "Check Actions section for actions related to this feature",
+      "Screenshot available triggers and actions"
+    ],
+    "nav_path": "Automations → Workflows → + Create workflow"
+  },
+  "execution_order": [
+    "1. EXPLORATION: Navigate to feature and discover all UI elements",
+    "2. IDENTIFY ENTITY: Determine what the primary item/entity is",
+    "3. CRUD TEST: Test create, read, update, delete for the primary entity",
+    "4. WORKFLOW CHECK: Verify if feature has workflow triggers/actions",
+    "5. WHAT_TO_DO: Execute specific validation tasks from payload",
+    "6. DOCUMENTATION: Capture screenshots of key screens"
+  ],
+  "playwright_context": {
+    "feature_metadata": {
+      "name": "letters",
+      "slug": "letters",
+      "category": "requests",
+      "version": "",
+      "is_new": null
+    },
+    "what_to_do": [
+      {
+        "task": "Manage company documentation including assigning roles, uploading documents, generating official letters, and setting up bank accounts.",
+        "steps": [
+          "Assign roles to team members by selecting appropriate roles and defining access levels.",
+          "Upload company documents by collecting required documents, verifying details, and uploading to centralized storage.",
+          "Generate official letters by selecting letter templates and obtaining signatory approval.",
+          "Set up company bank accounts by gathering bank details and inputting account information."
+        ],
+        "expected_outcome": "Successful management of company documentation with proper role assignments, document uploads, letter generation, and bank account setup.",
+        "source_articles": [
+          "22938361301137"
+        ]
+      }
+    ],
+    "what_to_watch_out_for": [
+      {
+        "issue": "Deleted letter requests cannot be recovered by users, causing compliance and record-keeping challenges.",
+        "limitation": "The Bayzat admin panel lacks deletion tracking and self-service recovery for deleted documents; manual backend intervention is required.",
+        "workaround": "Contact support for backend recovery of deleted letter requests.",
+        "jira_reference": "TSSD-2572,TSSD-4253",
+        "severity": "medium"
+      },
+      {
+        "issue": "Custom fields marked as hidden from employees cannot be used in letter templates, limiting template flexibility.",
+        "limitation": "Platform restricts use of certain custom fields in letter templates based on visibility settings.",
+        "workaround": "No workaround available; requires platform-level fix.",
+        "jira_reference": "TSSD-4089",
+        "severity": "medium"
+      },
+      {
+        "issue": "Letter requests require external stamping and re-uploading, but the platform does not support post-approval document uploads or status changes.",
+        "limitation": "No flexible document approval workflow for post-approval modifications or uploads.",
+        "workaround": "Manual handling outside the platform is needed for stamped documents.",
+        "jira_reference": "TSSD-2511",
+        "severity": "medium"
+      },
+      {
+        "issue": "Automatic approval configuration can bypass manual signatory review without clear warnings, risking unintended approvals.",
+        "limitation": "Auto-sign feature can be enabled without explicit user guidance or confirmation prompts.",
+        "workaround": "Users should verify auto-sign settings carefully to avoid unintended approvals.",
+        "jira_reference": "TSSD-1808,TSSD-4082",
+        "severity": "medium"
+      },
+      {
+        "issue": "Letter template preview masks sensitive variables with 'XXX', causing user confusion about data representation.",
+        "limitation": "Privacy design masks salary variables in previews without clear communication.",
+        "workaround": "Users should understand 'XXX' placeholders indicate masked data, not errors.",
+        "jira_reference": "TSSD-2303",
+        "severity": "medium"
+      },
+      {
+        "issue": "Letter request approvals are not supported in the mobile app, limiting workflow to the web platform.",
+        "limitation": "Mobile app lacks full approval workflow capabilities for letter requests.",
+        "workaround": "Use web platform for approval processes.",
+        "jira_reference": "TSSD-2604,TSSD-4725",
+        "severity": "medium"
+      },
+      {
+        "issue": "No dedicated reporting mechanism exists for letter request workflows, limiting tracking and audit capabilities.",
+        "limitation": "Lack of out-of-the-box reports for letter request lifecycle and metadata.",
+        "workaround": "Custom report development required.",
+        "jira_reference": "TSSD-4254",
+        "severity": "medium"
+      },
+      {
+        "issue": "Letter Requests module lacks multi-company template management and employee self-service features.",
+        "limitation": "Administrators must manually update letter details and references; no automation or multi-company support.",
+        "workaround": "Manual management required.",
+        "jira_reference": "TSSD-4923",
+        "severity": "medium"
+      },
+      {
+        "issue": "Text formatting such as bold is not preserved in variable fields within letter templates.",
+        "limitation": "Rich text formatting for variables is not supported in previews or final documents.",
+        "workaround": "Avoid relying on formatting for variable fields.",
+        "jira_reference": "TSSD-4478",
+        "severity": "medium"
+      },
+      {
+        "issue": "Allowance variables cannot be displayed in tabular or multi-column formats in letter templates.",
+        "limitation": "No advanced formatting options for compensation variables.",
+        "workaround": "Use simple variable display formats.",
+        "jira_reference": "TSSD-4443",
+        "severity": "medium"
+      },
+      {
+        "issue": "Incomplete backend implementation for letter request actions prevents full frontend interaction.",
+        "limitation": "Frontend cannot render or manage all letter request actions due to backend gaps.",
+        "workaround": "Limited frontend functionality until backend is completed.",
+        "jira_reference": "GS-3379",
+        "severity": "low"
+      },
+      {
+        "issue": "Date range filtering for letter requests lacks a standardized reusable component, causing UI inconsistencies.",
+        "limitation": "No uniform DateRangePicker component for letter request filters.",
+        "workaround": "Inconsistent date filtering UI across platform.",
+        "jira_reference": "AV-6930",
+        "severity": "low"
+      },
+      {
+        "issue": "No comprehensive letterhead configuration module for HR administrators to customize document branding.",
+        "limitation": "Limited customization of letterhead and header designs.",
+        "workaround": "Manual branding outside platform or limited customization.",
+        "jira_reference": "GS-3311",
+        "severity": "medium"
+      },
+      {
+        "issue": "Arabic letter request variables translation scope is unclear to users without support confirmation.",
+        "limitation": "Unclear user experience regarding language variable translation completeness.",
+        "workaround": "Contact support for clarification.",
+        "jira_reference": "TSSD-4213",
+        "severity": "medium"
+      },
+      {
+        "issue": "PDF generation for letter request templates can produce excessively long documents with pagination issues.",
+        "limitation": "Backend PDF generator has rendering and pagination inconsistencies.",
+        "workaround": "Manual review and adjustment of generated PDFs.",
+        "jira_reference": "AV-4548",
+        "severity": "medium"
+      },
+      {
+        "issue": "Minor UI issue where tooltips show an extra '/' character causing visual confusion.",
+        "limitation": "Frontend tooltip rendering inconsistency.",
+        "workaround": "No impact on core functionality; cosmetic only.",
+        "jira_reference": "AV-4424",
+        "severity": "low"
+      },
+      {
+        "issue": "Letter request fonts default to Times New Roman ignoring user font selections.",
+        "limitation": "No robust font preservation in generated documents.",
+        "workaround": "Accept default font or avoid custom fonts.",
+        "jira_reference": "TSSD-4827",
+        "severity": "medium"
+      }
+    ],
+    "consolidation_summary": {
+      "jira_tickets_received": 22,
+      "jira_tickets_consolidated": 17,
+      "zendesk_articles_received": 1,
+      "tasks_consolidated": 1
+    }
+  }
+}
