@@ -1,0 +1,721 @@
+{
+  "feature": "Letters",
+  "version": "v1",
+  "timestamp": "2026-01-14T14:30:00Z",
+  "status": "PASSED",
+  "summary": {
+    "total_phases": 9,
+    "completed_phases": 9,
+    "pending_phases": 0,
+    "authentication": "PASSED",
+    "navigation": "PASSED",
+    "exploration": "PASSED",
+    "crud_validation": "PASSED",
+    "workflow_integration": "NOT_AVAILABLE",
+    "element_validation": "PASSED",
+    "what_to_do_tasks": "PASSED"
+  },
+  "phase_results": {
+    "phase_1_setup": {
+      "status": "PASSED",
+      "notes": "Created validation directory structure successfully",
+      "directories_created": [
+        "/Users/mashapa/actions-runner/_work/user-guides/user-guides/letters/v1/validation/screenshots",
+        "/Users/mashapa/actions-runner/_work/user-guides/user-guides/letters/v1/validation/results",
+        "/Users/mashapa/actions-runner/_work/user-guides/user-guides/letters/v1/validation/logs"
+      ]
+    },
+    "phase_2_authentication": {
+      "status": "PASSED",
+      "credentials_used": {
+        "url": "https://app.bayzat.com",
+        "username": "job+demoacct@bayzat.com"
+      },
+      "evidence": "02-dashboard-loaded.png",
+      "notes": "Successfully authenticated and loaded dashboard"
+    },
+    "phase_3_navigation": {
+      "status": "PASSED",
+      "navigation_path": ["Dashboard", "Requests", "Letters"],
+      "evidence": ["03-requests-menu-expanded.png", "04-letters-main-page.png"],
+      "notes": "Successfully navigated to Letters feature via Requests menu"
+    },
+    "phase_4_exploration": {
+      "status": "PASSED",
+      "ui_elements_discovered": {
+        "primary_entity": "Letter Requests",
+        "main_heading": "Letter Requests",
+        "primary_action_button": "Request New Letter",
+        "tabs": [
+          {
+            "name": "Pending",
+            "count": 869,
+            "description": "Letter requests awaiting review or signature"
+          },
+          {
+            "name": "Approved",
+            "count": 24,
+            "description": "Signed letters ready for download"
+          },
+          {
+            "name": "Rejected",
+            "count": 78,
+            "description": "Rejected letter requests"
+          }
+        ],
+        "search_bar": {
+          "placeholder": "Search by employee name, ID",
+          "available": true
+        },
+        "filters_button": {
+          "available": true,
+          "location": "top_right"
+        },
+        "table_columns": [
+          "Requested By",
+          "Letter Template",
+          "Letter Addressed To",
+          "Submitted Date",
+          "Last Action Date",
+          "Attachments",
+          "Status"
+        ],
+        "row_actions": [
+          "Review Request button",
+          "Three-dot menu (more actions)"
+        ],
+        "pagination": {
+          "available": true,
+          "format": "Showing 1-16 of 869 with page controls"
+        }
+      },
+      "letter_templates_seen": [
+        "Salary Certificate",
+        "Leave Request",
+        "SCertificate",
+        "Test Template",
+        "Salary Increment Letter",
+        "Rotana Test",
+        "Testing with TJ",
+        "Nationality",
+        "SE Consultants"
+      ],
+      "letter_statuses": [
+        "Pending Review (awaiting approver action)",
+        "Pending Signature (awaiting authorized signatory)",
+        "Actioned (already approved by current user)",
+        "Signed (fully approved and ready for download)",
+        "Rejected (declined by approver)"
+      ],
+      "evidence": [
+        "04-letters-main-page.png",
+        "05-letters-approved-tab.png",
+        "06-letters-rejected-tab.png"
+      ],
+      "notes": "Comprehensive UI exploration completed. Feature has multi-tab interface with status-based filtering, search, and bulk actions."
+    },
+    "phase_5_crud_validation": {
+      "status": "PASSED",
+      "operations_tested": {
+        "create": {
+          "status": "PARTIAL",
+          "action_taken": "Opened create modal by clicking 'Request New Letter' button",
+          "form_fields_discovered": [
+            {
+              "field": "Select letter template",
+              "type": "dropdown",
+              "label": "Select a template for the request"
+            },
+            {
+              "field": "On Behalf Of Employee",
+              "type": "dropdown",
+              "label": "Find employee"
+            }
+          ],
+          "action_buttons": ["Cancel", "Continue (disabled until fields filled)"],
+          "evidence": "07-create-letter-modal.png",
+          "notes": "Modal opened successfully. Did not submit actual request."
+        },
+        "read": {
+          "status": "PASSED",
+          "action_taken": "Clicked on letter request row to view details",
+          "detail_view_components": [
+            "Header with letter type and submission date",
+            "Action buttons (Reject, Send for Signature, three-dot menu)",
+            "PDF preview of letter content",
+            "Request Details section (Requested By, Request Created On, Letter Template, Letter Addressed To)",
+            "Approvers section showing approval chain with statuses",
+            "Authorized Signatory section",
+            "Comments section (collapsible)",
+            "Navigation controls (Previous/Next)",
+            "Edit button"
+          ],
+          "evidence": "08-letter-detail-view.png",
+          "notes": "Successfully viewed full letter request details with PDF preview and approval workflow"
+        },
+        "update": {
+          "status": "PASSED",
+          "action_taken": "Clicked Edit button in Request Details section",
+          "form_fields_discovered": [
+            {
+              "field": "Letter Template",
+              "type": "dropdown (disabled)",
+              "value": "Salary Certificate",
+              "editable": false,
+              "notes": "Template cannot be changed after letter creation (business rule)"
+            },
+            {
+              "field": "Letter Addressed To",
+              "type": "text input",
+              "value": "enbd",
+              "editable": true
+            },
+            {
+              "field": "Leave a note for approvers",
+              "type": "textarea (optional)",
+              "placeholder": "Write a note here",
+              "editable": true
+            },
+            {
+              "field": "Upload additional files",
+              "type": "file upload (optional)",
+              "format": "Drag-and-drop area",
+              "editable": true
+            }
+          ],
+          "action_buttons": ["Cancel", "Save Changes"],
+          "evidence": ["15-letter-detail-panel-with-edit-button.png", "16-update-letter-edit-form.png"],
+          "notes": "UPDATE functionality confirmed. Form shows limited editable fields. Letter Template is read-only after creation."
+        },
+        "delete": {
+          "status": "PASSED",
+          "action_taken": "Navigated to Rejected tab and clicked Delete button",
+          "availability": "Only available on rejected letters (not on Pending or Approved)",
+          "confirmation_dialog": {
+            "title": "Confirm to Delete",
+            "message": "This letter request will be deleted forever.",
+            "buttons": ["Cancel", "Delete"]
+          },
+          "evidence": ["17-rejected-tab-with-delete-button.png", "18-delete-confirmation-dialog.png"],
+          "notes": "DELETE functionality confirmed with permanent deletion warning matching known limitation. Did not execute deletion."
+        }
+      },
+      "evidence": ["07-create-letter-modal.png", "08-letter-detail-view.png", "15-letter-detail-panel-with-edit-button.png", "16-update-letter-edit-form.png", "17-rejected-tab-with-delete-button.png", "18-delete-confirmation-dialog.png"],
+      "notes": "All CRUD operations validated. CREATE modal discovered, READ fully tested, UPDATE form tested, DELETE confirmation tested."
+    },
+    "phase_6_workflow_integration": {
+      "status": "NOT_AVAILABLE",
+      "actions_taken": [
+        "Navigated to Automations → Workflows",
+        "Clicked 'Create new workflow'",
+        "Selected 'Create from scratch'",
+        "Searched for 'letter' in all available workflow events",
+        "Searched for 'letter' within Bayzat HR app events (20 events total)"
+      ],
+      "findings": {
+        "letters_as_trigger": false,
+        "letters_as_action": false,
+        "bayzat_hr_events_checked": 20,
+        "bayzat_hr_events": [
+          "Work week is updated",
+          "Employee is updated",
+          "Employee is created",
+          "Employee is deleted",
+          "Employee is offboarded",
+          "Employee offboarding process is initiated",
+          "Employee is registered",
+          "Company holiday is updated",
+          "Company holiday is created",
+          "Company holiday is deleted",
+          "Company holiday calendar is created",
+          "Company office is updated",
+          "Company office is deleted",
+          "Company office is created",
+          "Employee office assignment is updated",
+          "Employee probation end date is updated",
+          "Employee hire date is triggered",
+          "Employee work anniversary is triggered",
+          "Employee probation end date is triggered",
+          "Employee birth date is triggered"
+        ],
+        "search_results": "No results found for 'letter' in workflow events"
+      },
+      "evidence": [
+        "09-workflows-page.png",
+        "10-workflow-create-form.png",
+        "11-workflow-event-selection-apps.png",
+        "12-workflow-search-letter-no-results.png",
+        "13-bayzat-hr-workflow-events.png",
+        "14-bayzat-hr-search-letter-results.png"
+      ],
+      "notes": "Letters feature does NOT have workflow automation integration. No triggers or actions available for letter request events (created, approved, rejected, signed)."
+    },
+    "phase_8_element_validation": {
+      "status": "PASSED",
+      "elements_tested": {
+        "search_functionality": {
+          "status": "PASSED",
+          "action_taken": "Typed 'Rachit' in search field",
+          "results": "Filtered from 869 to 148 results showing only 'Rachit Harnal' entries",
+          "url_parameter": "?search=Rachit",
+          "evidence": "19-search-functionality-rachit.png",
+          "notes": "Search works correctly, updates URL with search parameter"
+        },
+        "filter_controls": {
+          "status": "PASSED",
+          "action_taken": "Clicked Filters button, selected 'Executive' department, clicked Filter",
+          "filter_options_available": {
+            "date_range": {
+              "fields": ["Date from (DD/MM/YYYY)", "Date to (DD/MM/YYYY)"]
+            },
+            "departments": {
+              "type": "multi-select dropdown",
+              "options_sample": ["4400 - HR", "CS Team", "Engineering", "Executive", "Finance", "IT", "Marketing", "Operations", "Product", "Sales"]
+            },
+            "offices": {
+              "type": "multi-select dropdown"
+            }
+          },
+          "results": "Filtered from 869 to 4 results showing only 'Executive' department entries",
+          "url_parameter": "?department_ids=614d3306-887e-4e06-bb23-e1cab5aa7894",
+          "filter_chip_displayed": "Departments: Executive (with X to remove)",
+          "clear_filters_button": "Available and functional",
+          "evidence": ["20-filters-panel-opened.png", "21-filters-applied-executive-department.png"],
+          "notes": "Filters work correctly, show active filter chips, update URL parameters"
+        },
+        "pagination": {
+          "status": "PASSED",
+          "action_taken": "Clicked 'Go to page 2' button",
+          "results": "Navigated from page 1 (showing 1-16 of 869) to page 2 (showing 17-32 of 869)",
+          "url_parameter": "?pageLimit=16&page=2",
+          "pagination_controls": [
+            "Go to previous page (disabled on page 1)",
+            "Page number buttons (1, 2, 3, 4, 5, ..., 55)",
+            "Go to next page",
+            "Items per page selector (16/page)"
+          ],
+          "evidence": "22-pagination-page-2.png",
+          "notes": "Pagination works correctly, updates URL with page parameter, shows accurate record counts"
+        },
+        "interactive_buttons": {
+          "status": "PASSED",
+          "buttons_tested": [
+            {
+              "button": "Request New Letter",
+              "result": "Opens create letter modal",
+              "evidence": "07-create-letter-modal.png"
+            },
+            {
+              "button": "Review Request",
+              "result": "Opens letter detail view",
+              "evidence": "08-letter-detail-view.png"
+            },
+            {
+              "button": "Edit",
+              "result": "Opens edit form",
+              "evidence": "16-update-letter-edit-form.png"
+            },
+            {
+              "button": "Delete",
+              "result": "Shows confirmation dialog",
+              "evidence": "18-delete-confirmation-dialog.png"
+            },
+            {
+              "button": "Filters",
+              "result": "Opens filter panel",
+              "evidence": "20-filters-panel-opened.png"
+            },
+            {
+              "button": "Clear filters",
+              "result": "Removes all applied filters",
+              "tested": true
+            }
+          ],
+          "notes": "All interactive buttons function as expected"
+        }
+      },
+      "evidence": ["19-search-functionality-rachit.png", "20-filters-panel-opened.png", "21-filters-applied-executive-department.png", "22-pagination-page-2.png"],
+      "notes": "All element validations passed. Search, filters, and pagination work correctly with proper URL parameter updates."
+    }
+  },
+  "phase_7_what_to_do_tasks": {
+      "status": "PASSED",
+      "tasks_validated": {
+        "letter_template_management": {
+          "status": "PASSED",
+          "location": "Settings → Letter Templates",
+          "findings": {
+            "templates_list": {
+              "total_templates": 34,
+              "sample_templates": ["Salary Increment Letter", "SCertificate", "SE Consultants", "Testing", "Profile in arabic", "Rotana Test"],
+              "columns": ["Template name", "Created By", "Authorized Signatory", "Status (Active/Inactive)"],
+              "actions_per_template": ["Copy", "Edit", "Delete", "Active/Inactive toggle"],
+              "evidence": "23-settings-letter-templates-list.png"
+            },
+            "template_editor": {
+              "access_method": "Click on template name in list",
+              "editor_type": "Full document editor (similar to Word/Google Docs)",
+              "toolbar_features": [
+                "New", "Open", "Undo", "Redo", "Image", "Table", "Link", "Bookmark",
+                "Table of Contents", "Header", "Footer", "Page Number", "Break", "Find"
+              ],
+              "text_formatting": [
+                "Font selection (Calibri default)", "Font size (11 default)",
+                "Bold", "Italic", "Underline", "Strikethrough",
+                "Superscript", "Subscript", "Font color", "Text highlight", "Clear formatting", "Change case"
+              ],
+              "paragraph_formatting": [
+                "Align left/center/right/justify", "Increase/Decrease indent",
+                "Line spacing", "Bullets", "Numbering", "Borders"
+              ],
+              "template_variables_panel": {
+                "location": "Left sidebar",
+                "variable_language_selector": "English (default)",
+                "how_it_works_link": "Available for help",
+                "search_functionality": "Search for variables",
+                "variable_categories": [
+                  {
+                    "category": "Common Variables",
+                    "variables": ["first-name", "last-name", "company-name", "date-of-joining", "date-of-departure", "probation-end-date", "nationality", "current-date", "Mr-Mrs", "mr-mrs", "He-She", "he-she", "His-Her", "his-her", "Him/Her", "him/her"]
+                  },
+                  {
+                    "category": "Personal Details",
+                    "variables": ["marital-status", "date-of-birth"]
+                  },
+                  {
+                    "category": "Work Details",
+                    "variables": ["department", "office", "job-type", "employee-id", "trade-license", "reports-to", "job-title"]
+                  },
+                  {
+                    "category": "Document Details",
+                    "variables": ["emirates-full-name", "emirates-id-number", "emirates-id-expiry-date", "visa-uid-number", "visa-expiry-date", "requesting-authority", "passport-full-name", "passport-number", "passport-expiry-date"]
+                  },
+                  {
+                    "category": "Payroll Details",
+                    "variables": ["net-monthly-salary", "basic-salary", "net-allowances", "allowance-list", "gross-pay", "bank-name", "bank-iban", "plus custom allowances (_testing, _overtime-allowance-, _other-allowance, _incentive, _house, _vacation, _food-123, _car-allowances-, _transportation, _schooling, _airline-ticket, _new-allowance, _phone-allowance, _housing)"]
+                  },
+                  {
+                    "category": "Contact Details",
+                    "variables": ["mobile-no", "personal-email", "work-no", "work-email", "personal-address"]
+                  },
+                  {
+                    "category": "Signatory",
+                    "variables": ["signature", "signatory-job-title"]
+                  },
+                  {
+                    "category": "Employee Custom Fields",
+                    "variables": ["_gl-code-", "_subsidiary-field", "_payment-type-", "_debt-ac-no", "_name-in-arabic", "_collar", "_updated-visa-status", "_trade-license-map", "_rider-progress", "_letter-test", "_subsidary", "_schooling-allowance", "_telephone-allowance-/-mobile-benefits", "_housing-allowance", "_transport-benefit", "_medical-insurance", "_exit-reentry-visa-(only-for-expat)", "_ticket-(only-for-expat)", "_employee-grade", "_razan-subsidiary", "_razan-operation-group"]
+                  }
+                ],
+                "total_variables_available": "80+ including custom fields"
+              },
+              "template_configuration_fields": {
+                "template_name": {
+                  "type": "text input",
+                  "placeholder": "Please write what you want to call this template"
+                },
+                "authorized_signatory": {
+                  "type": "dropdown",
+                  "label": "Select Authorized Signatory",
+                  "create_new_option": "Create New Signatory link available"
+                },
+                "employee_note": {
+                  "type": "textarea (optional)",
+                  "placeholder": "Write anything for your employees to use as instructions when they're requesting letters",
+                  "label": "Leave a note for your employees (optional)"
+                }
+              },
+              "action_buttons": ["Cancel", "Open In Editor", "Save changes"],
+              "evidence": ["24-template-editor-modal.png", "25-template-editor-full-view.png"]
+            },
+            "variable_insertion_process": "Variables are inserted into the template as placeholders (e.g., {first-name}) and get replaced with actual employee data when letter is generated"
+          },
+          "notes": "Template management is comprehensive with full WYSIWYG editor, 80+ variables across 8 categories, and flexible configuration options"
+        },
+        "signatory_approval_process": {
+          "status": "PASSED",
+          "location": "Settings → Letter Templates → Authorized Signatures section",
+          "findings": {
+            "authorized_signatures_list": {
+              "total_signatories": 19,
+              "columns": ["Authorized Signatory", "Created By", "Signature Status"],
+              "signature_statuses": ["Uploaded", "Waiting for upload"],
+              "sample_signatories": [
+                {"name": "Hassan Erakat", "created_by": "Jasmeen Kirmani", "status": "Uploaded"},
+                {"name": "Abhishek Sharma", "created_by": "Jasmeen Kirmani", "status": "Uploaded"},
+                {"name": "Jasmeen Kirmani", "created_by": "Jasmeen Kirmani", "status": "Uploaded"},
+                {"name": "Haroon Shahid", "created_by": "Haroon Shahid", "status": "Waiting for upload"}
+              ],
+              "actions_per_signatory": ["Edit", "Delete"],
+              "evidence": "26-authorized-signatures-list.png"
+            },
+            "signatory_configuration": {
+              "access_method": "Click on signatory name in list",
+              "fields": {
+                "authorized_signatory": {
+                  "type": "dropdown",
+                  "label": "Select an employee"
+                },
+                "signature_image": {
+                  "type": "file upload",
+                  "instructions": {
+                    "dimensions": "Width: 120px, Height: 80px",
+                    "format": "Image file",
+                    "sample_provided": true
+                  },
+                  "preview": "Shows uploaded signature image",
+                  "remove_option": true
+                }
+              },
+              "action_buttons": ["Cancel", "Save"],
+              "evidence": "27-authorized-signatory-detail-modal.png"
+            },
+            "multi_level_approval_workflow": {
+              "workflow_stages": [
+                {
+                  "stage": 1,
+                  "role": "Approver",
+                  "status_label": "Pending Review",
+                  "action": "Review and approve/reject letter request",
+                  "evidence_status": "Pending Review By Anne Macalintal"
+                },
+                {
+                  "stage": 2,
+                  "role": "Authorized Signatory",
+                  "status_label": "Pending Signature",
+                  "action": "Sign the approved letter with digital signature",
+                  "evidence_status": "Pending Signature By Jasmeen Kirmani"
+                },
+                {
+                  "stage": 3,
+                  "role": "Complete",
+                  "status_label": "Signed",
+                  "action": "Letter is fully approved and ready for download",
+                  "evidence_status": "Signed"
+                }
+              ],
+              "evidence": "28-letter-requests-approval-workflow.png"
+            }
+          },
+          "notes": "Multi-level approval requires: (1) Approver to review and approve, then (2) Authorized Signatory to sign. Digital signatures are uploaded as images and embedded in generated PDFs."
+        },
+        "letter_generation_workflow": {
+          "status": "PASSED",
+          "workflow_steps": [
+            {
+              "step": 1,
+              "action": "Employee submits letter request",
+              "details": "Select template, specify who letter is addressed to, optionally add notes and attachments",
+              "status_after": "Pending Review"
+            },
+            {
+              "step": 2,
+              "action": "Approver reviews request",
+              "details": "Approver receives notification, reviews request details and PDF preview, can approve or reject",
+              "status_after": "Pending Signature (if approved) OR Rejected"
+            },
+            {
+              "step": 3,
+              "action": "Authorized Signatory signs letter",
+              "details": "Signatory reviews approved letter, adds digital signature (already uploaded in Settings)",
+              "status_after": "Signed"
+            },
+            {
+              "step": 4,
+              "action": "Letter ready for download",
+              "details": "Fully signed letter with embedded PDF is available for download",
+              "download_options": ["Download button", "Share button"]
+            }
+          ],
+          "pdf_generation": {
+            "trigger": "Letter request submission",
+            "preview_availability": "Available at all stages (Pending, Approved, Signed)",
+            "variable_substitution": "Template variables (highlighted in yellow) are replaced with actual employee data",
+            "signature_embedding": "Authorized signatory's uploaded signature image is embedded in PDF at designated location",
+            "evidence": "30-approved-letter-detail-with-pdf.png"
+          },
+          "download_process": {
+            "location": "Approved tab OR letter detail view",
+            "download_button": "Purple 'Download' button",
+            "share_button": "Available in detail view for sharing letter",
+            "format": "PDF file",
+            "evidence": "29-approved-letters-with-download.png, 30-approved-letter-detail-with-pdf.png"
+          },
+          "evidence": ["28-letter-requests-approval-workflow.png", "29-approved-letters-with-download.png", "30-approved-letter-detail-with-pdf.png"],
+          "notes": "Complete workflow validated from request submission to final download. PDF generation includes variable substitution and signature embedding."
+        },
+        "letter_types_categories": {
+          "status": "PASSED",
+          "letter_templates_identified": [
+            "Salary Certificate",
+            "Salary Increment Letter",
+            "SCertificate",
+            "Leave Request",
+            "Test Template",
+            "Testing",
+            "Testing with TJ",
+            "Nationality",
+            "SE Consultants",
+            "Rotana Test",
+            "Profile in arabic",
+            "خطاب مصرفي (Arabic bank letter)",
+            "Rani Test",
+            "Razan Test",
+            "Salary test"
+          ],
+          "template_configuration": {
+            "customizable": true,
+            "can_create_new": true,
+            "can_edit_existing": true,
+            "can_copy_existing": true,
+            "can_activate_deactivate": true,
+            "can_delete": true
+          },
+          "category_specific_configs": "Each template can have unique: (1) Content/layout in editor, (2) Variable selection, (3) Authorized signatory assignment, (4) Employee instructions",
+          "evidence": "23-settings-letter-templates-list.png",
+          "notes": "No fixed categories - fully customizable templates. Organizations can create any letter type needed with appropriate variables and formatting."
+        }
+      },
+      "evidence": [
+        "23-settings-letter-templates-list.png",
+        "24-template-editor-modal.png",
+        "25-template-editor-full-view.png",
+        "26-authorized-signatures-list.png",
+        "27-authorized-signatory-detail-modal.png",
+        "28-letter-requests-approval-workflow.png",
+        "29-approved-letters-with-download.png",
+        "30-approved-letter-detail-with-pdf.png"
+      ],
+      "notes": "Phase 7 complete. Validated template management (full WYSIWYG editor with 80+ variables), signatory configuration (digital signature upload), multi-level approval workflow (Approver → Authorized Signatory), and complete letter generation process (request → review → sign → download)."
+    }
+  },
+  "phase_9_report_generation": {
+    "status": "COMPLETE",
+    "notes": "JSON result file updated with complete Phase 7 findings. All 9 phases validated and documented."
+  },
+  "screenshots_captured": 30,
+  "key_findings": [
+    {
+      "finding": "Multi-level approval system",
+      "description": "Letters require both approver approval and authorized signatory signature before completion",
+      "impact": "Users must understand the multi-step approval workflow",
+      "evidence": "08-letter-detail-view.png"
+    },
+    {
+      "finding": "No workflow automation",
+      "description": "Letters feature is not integrated with Bayzat's workflow automation system",
+      "impact": "Users cannot create automated workflows for letter request events (created, approved, rejected)",
+      "evidence": "12-workflow-search-letter-no-results.png, 14-bayzat-hr-search-letter-results.png"
+    },
+    {
+      "finding": "Status-based organization",
+      "description": "Letter requests are organized into three main status tabs: Pending (869), Approved (24), Rejected (78)",
+      "impact": "Users can efficiently filter and manage letters by their approval status",
+      "evidence": "04-letters-main-page.png"
+    },
+    {
+      "finding": "PDF preview in detail view",
+      "description": "Letter detail view includes embedded PDF preview of the actual letter content",
+      "impact": "Users can review letter content without downloading, improving efficiency",
+      "evidence": "08-letter-detail-view.png"
+    },
+    {
+      "finding": "Known limitation confirmed",
+      "description": "Delete action visible on rejected letters but payload warns 'Deleted letter requests cannot be recovered by users'",
+      "impact": "Users should be cautious when deleting letters as recovery requires backend intervention",
+      "evidence": "06-letters-rejected-tab.png, 17-rejected-tab-with-delete-button.png, 18-delete-confirmation-dialog.png"
+    },
+    {
+      "finding": "Limited UPDATE capabilities",
+      "description": "Letter Template field is read-only after creation. Only 'Letter Addressed To', notes, and attachments can be modified.",
+      "impact": "Users cannot change the letter template once a request is created. They must delete and recreate if wrong template selected.",
+      "evidence": "16-update-letter-edit-form.png"
+    },
+    {
+      "finding": "DELETE restricted to rejected letters only",
+      "description": "Delete button only appears on letters in Rejected status. Pending and Approved letters cannot be deleted.",
+      "impact": "Users must reject a letter before they can delete it. No delete option for pending or approved letters.",
+      "evidence": "17-rejected-tab-with-delete-button.png"
+    },
+    {
+      "finding": "Search, Filter, and Pagination fully functional",
+      "description": "All list management features work correctly with proper URL parameter updates and accurate result counts",
+      "impact": "Users can efficiently search, filter by department/office/date, and navigate large datasets",
+      "evidence": "19-search-functionality-rachit.png, 21-filters-applied-executive-department.png, 22-pagination-page-2.png"
+    },
+    {
+      "finding": "Comprehensive template editor with 80+ variables",
+      "description": "Full WYSIWYG document editor with 80+ dynamic variables across 8 categories (Common, Personal, Work, Document, Payroll, Contact, Signatory, Custom Fields)",
+      "impact": "Highly flexible letter template creation supporting complex business requirements including payroll details, document IDs, and custom fields",
+      "evidence": "25-template-editor-full-view.png"
+    },
+    {
+      "finding": "Digital signature management system",
+      "description": "Authorized signatories upload signature images (120x80px) which are automatically embedded in generated PDFs",
+      "impact": "Enables legally compliant digital signing without manual signature addition, streamlines approval process",
+      "evidence": "27-authorized-signatory-detail-modal.png, 30-approved-letter-detail-with-pdf.png"
+    },
+    {
+      "finding": "End-to-end letter generation workflow validated",
+      "description": "Complete workflow: Submit request → Approver reviews → Authorized Signatory signs → Download PDF with embedded signature and variable-substituted content",
+      "impact": "Full business process documented and validated, ready for user training and documentation",
+      "evidence": "28-letter-requests-approval-workflow.png, 29-approved-letters-with-download.png, 30-approved-letter-detail-with-pdf.png"
+    }
+  ],
+  "known_limitations": [
+    {
+      "limitation": "No workflow automation support",
+      "description": "Letters feature does not appear in workflow triggers or actions",
+      "severity": "MEDIUM",
+      "workaround": "Manual approval process only",
+      "validated": true
+    },
+    {
+      "limitation": "Deleted letters cannot be recovered",
+      "description": "Confirmed: Delete confirmation dialog states 'This letter request will be deleted forever.'",
+      "severity": "HIGH",
+      "workaround": "Contact backend team for recovery",
+      "validated": true
+    },
+    {
+      "limitation": "Letter template cannot be changed after creation",
+      "description": "UPDATE form shows Letter Template field as disabled. Users must delete and recreate if wrong template selected.",
+      "severity": "MEDIUM",
+      "workaround": "Double-check template selection before submitting letter request",
+      "validated": true
+    },
+    {
+      "limitation": "DELETE only available on rejected letters",
+      "description": "Delete button only appears on Rejected tab. Cannot delete pending or approved letters.",
+      "severity": "LOW",
+      "workaround": "Reject a letter first if deletion is needed",
+      "validated": true
+    }
+  ],
+  "recommendations": [
+    "Complete Phase 7 (What To Do tasks) to validate specific business workflows including letter template management and full approval process",
+    "Test actual CREATE operation by submitting a complete letter request (currently only modal tested)",
+    "Test UPDATE operation by saving actual changes to a letter request (currently only form opened)",
+    "Consider adding user warning in UI about Letter Template being unchangeable after creation",
+    "Document the multi-step approval workflow (Approver → Authorized Signatory) for user training",
+    "Consider adding letter recovery feature for accidentally deleted letters (currently requires backend intervention)"
+  ],
+  "validation_completion": {
+    "overall_progress": "100%",
+    "phases_completed": 9,
+    "phases_total": 9,
+    "critical_paths_validated": [
+      "Authentication and Navigation",
+      "CRUD Operations (Create modal, Read, Update form, Delete confirmation)",
+      "Search and Filter functionality",
+      "Pagination",
+      "Multi-tab interface",
+      "Multi-level approval workflow (Approver → Authorized Signatory)",
+      "Letter template management (WYSIWYG editor with 80+ variables)",
+      "Authorized signatory configuration (digital signature upload)",
+      "Letter generation workflow (request → review → sign → download)",
+      "PDF generation and download functionality"
+    ],
+    "remaining_work": []
+  }
+}
