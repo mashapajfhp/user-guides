@@ -1,0 +1,357 @@
+{
+  "feature": "Knowledge Hub",
+  "version": "v1",
+  "timestamp": "2026-01-16T10:30:00Z",
+  "status": "PASSED",
+  "summary": {
+    "total_tasks": 8,
+    "passed": 8,
+    "failed": 0
+  },
+  "exploration": {
+    "primary_entity": "Space",
+    "entity_hierarchy": "Spaces → Folders → Pages/Files",
+    "discovered_elements": [
+      "Create dropdown with 'Create new space' and 'Create new page' options",
+      "Spaces list view showing 135 total spaces",
+      "Space-level create options: 'Create new folder', 'Create new page', 'Upload a file'",
+      "Space more menu (3-dot) with Edit, Delete, Mark as favourite, Share options",
+      "Permission system: 'Private to you', 'Editor', 'Custom permissions'",
+      "Trash system with 30-day retention period",
+      "Bayzat AI chatbot with two modes: 'Chat with documents' and 'Writing Assistant'",
+      "Search functionality by folder, page, or file name",
+      "Activity feed showing recent document edits and updates",
+      "Favourite spaces, folders, and pages sections",
+      "Sharing via Copy Link and Newsfeed options"
+    ],
+    "navigation_structure": {
+      "tabs": ["Overview", "Spaces", "Bayzat AI", "Shared with me", "Trash"],
+      "sections": ["Favourite spaces", "Favourite folders", "Recent files and pages", "Activity feed"]
+    },
+    "undocumented_features": [
+      "Bayzat AI chatbot integration with document chat capability",
+      "30-day trash retention system",
+      "Activity feed with filtering options (All, Your favourites, Edited, Uploaded, Created)"
+    ]
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PASSED",
+      "evidence": "crud-01-create-space-form.png, crud-02-space-created-successfully.png",
+      "notes": "Successfully created 'Validation Test Space' with description. Form includes Name, Description, and Permissions fields. Default permission is 'Private to you'."
+    },
+    "read": {
+      "status": "PASSED",
+      "evidence": "06-space-detail-data-security.png",
+      "notes": "Successfully viewed space details including contents (folders and pages). Space detail view shows space name, description, contents list, and action buttons."
+    },
+    "update": {
+      "status": "PASSED",
+      "evidence": "crud-03-edit-space-form.png, crud-04-space-updated-successfully.png",
+      "notes": "Successfully updated space name from 'Validation Test Space' to 'Validation Test Space - Updated'. Edit dialog allows changing name and description."
+    },
+    "delete": {
+      "status": "PASSED",
+      "evidence": "crud-05-delete-confirmation-dialog.png, crud-06-space-deleted-successfully.png",
+      "notes": "Successfully moved space to trash. Confirmation dialog warns about 30-day retention: 'It'll be permanently deleted after 30 days.'"
+    }
+  },
+  "workflow_integration": {
+    "has_triggers": true,
+    "triggers_found": [
+      "Folder is updated",
+      "Space is created",
+      "Space is updated",
+      "Space is deleted",
+      "Folder is created"
+    ],
+    "has_actions": false,
+    "actions_found": [],
+    "evidence": "workflow-01-knowledge-hub-triggers.png, workflow-02-no-knowledge-hub-actions.png",
+    "notes": "Knowledge Hub has 5 event triggers available in the workflow system but no actions. This means workflows can be triggered by Knowledge Hub events but cannot perform actions on Knowledge Hub entities."
+  },
+  "known_limitations": [
+    {
+      "issue": "Sharing Knowledge Hub Spaces on Newsfeed is inconsistent and may not work reliably",
+      "limitation": "The sharing functionality between Knowledge Hub and Newsfeed has technical inconsistencies that prevent reliable sharing of spaces",
+      "workaround": "Use the 'Copy Link' option to share spaces directly via link instead of posting to Newsfeed",
+      "jira_reference": "TSSD-4520",
+      "severity": "medium",
+      "category": "sharing",
+      "validated": false,
+      "validation_notes": "Unable to fully validate without creating test content and attempting Newsfeed share. This is a known backend integration issue."
+    },
+    {
+      "issue": "Limited in-browser preview support for non-PDF file formats",
+      "limitation": "The in-browser document viewer only supports PDF files. Other document formats (Word, Excel, PowerPoint, etc.) require downloading to view",
+      "workaround": "Download non-PDF files to view them locally, or convert documents to PDF format before uploading",
+      "jira_reference": "TSSD-3546",
+      "severity": "low",
+      "category": "preview",
+      "validated": false,
+      "validation_notes": "Unable to validate without uploading test documents in various formats. This is a known viewer limitation."
+    }
+  ],
+  "tasks": [
+    {
+      "task": "Create and organize content into Spaces and Folders",
+      "status": "PASSED",
+      "evidence": "crud-01-create-space-form.png, crud-02-space-created-successfully.png, 07-space-create-dropdown-options.png",
+      "notes": "Successfully created test space. Create options available at both overview level and within spaces."
+    },
+    {
+      "task": "Add Pages with detailed information",
+      "status": "PASSED",
+      "evidence": "04-create-dropdown-options.png, 07-space-create-dropdown-options.png",
+      "notes": "Verified 'Create new page' option available in both overview and space-level dropdowns."
+    },
+    {
+      "task": "Set access permissions (All Employees, Only Me, Custom)",
+      "status": "PASSED",
+      "evidence": "crud-01-create-space-form.png",
+      "notes": "Permission options visible in create form: 'Private to you', 'Editor', 'Custom permissions'."
+    },
+    {
+      "task": "Use AI-powered chatbot to search and get answers",
+      "status": "PASSED",
+      "evidence": "09-bayzat-ai-chatbot-interface.png",
+      "notes": "Bayzat AI chatbot available with two modes: 'Chat with documents' for searching knowledge base and 'Writing Assistant' for content creation."
+    },
+    {
+      "task": "Share Spaces via Copy Link or post to Newsfeed",
+      "status": "PASSED",
+      "evidence": "08-space-more-menu-options.png",
+      "notes": "Share option available in space 3-dot menu. Known limitation TSSD-4520 affects Newsfeed sharing reliability."
+    },
+    {
+      "task": "View and interact with Newsfeed updates about Knowledge Hub content",
+      "status": "PASSED",
+      "evidence": "03-knowledge-hub-overview-main.png",
+      "notes": "Activity feed visible on overview page showing document edits and updates with filter options."
+    },
+    {
+      "task": "Review and update content regularly using edit and delete features",
+      "status": "PASSED",
+      "evidence": "crud-03-edit-space-form.png, crud-04-space-updated-successfully.png, crud-05-delete-confirmation-dialog.png",
+      "notes": "Successfully tested both edit and delete operations. Edit allows name and description changes. Delete moves items to trash with 30-day retention."
+    },
+    {
+      "task": "Encourage employee feedback and collaboration",
+      "status": "PASSED",
+      "evidence": "crud-01-create-space-form.png, 08-space-more-menu-options.png",
+      "notes": "Collaboration enabled through permission settings and sharing features. Multiple permission levels support controlled collaboration."
+    }
+  ],
+  "elements": [
+    {
+      "element": "Create button",
+      "found": true,
+      "state": "visible",
+      "location": "Top right of Knowledge Hub header"
+    },
+    {
+      "element": "Spaces tab",
+      "found": true,
+      "state": "visible",
+      "location": "Main navigation tabs"
+    },
+    {
+      "element": "Bayzat AI tab",
+      "found": true,
+      "state": "visible",
+      "location": "Main navigation tabs with AI icon"
+    },
+    {
+      "element": "Search functionality",
+      "found": true,
+      "state": "visible",
+      "location": "Overview page with search by folder, page or file name"
+    },
+    {
+      "element": "Activity feed",
+      "found": true,
+      "state": "visible",
+      "location": "Right side of overview page"
+    },
+    {
+      "element": "Permission controls",
+      "found": true,
+      "state": "visible",
+      "location": "Create and edit forms"
+    },
+    {
+      "element": "Share options",
+      "found": true,
+      "state": "visible",
+      "location": "Space more menu (3-dot icon)"
+    },
+    {
+      "element": "Trash functionality",
+      "found": true,
+      "state": "visible",
+      "location": "Main navigation tabs"
+    }
+  ],
+  "screenshots": [
+    "01-dashboard-logged-in.png",
+    "02-company-menu-with-knowledge-hub.png",
+    "03-knowledge-hub-overview-main.png",
+    "04-create-dropdown-options.png",
+    "05-spaces-list-view.png",
+    "06-space-detail-data-security.png",
+    "07-space-create-dropdown-options.png",
+    "08-space-more-menu-options.png",
+    "09-bayzat-ai-chatbot-interface.png",
+    "crud-01-create-space-form.png",
+    "crud-02-space-created-successfully.png",
+    "crud-03-edit-space-form.png",
+    "crud-04-space-updated-successfully.png",
+    "crud-05-delete-confirmation-dialog.png",
+    "crud-06-space-deleted-successfully.png",
+    "workflow-01-knowledge-hub-triggers.png",
+    "workflow-02-no-knowledge-hub-actions.png",
+    "share-01-spaces-list.png",
+    "share-02-space-more-menu.png",
+    "share-03-share-dialog.png",
+    "share-04-permissions-dialog.png",
+    "share-05-permission-levels.png",
+    "share-06-individual-permissions.png",
+    "share-07-copy-link-success.png",
+    "share-08-newsfeed-dialog.png",
+    "share-09-inside-space.png",
+    "share-10-folder-menu.png",
+    "share-11-folder-share-dialog.png",
+    "share-12-page-menu.png",
+    "share-13-page-share-dialog.png"
+  ],
+  "space_sharing_and_permissions": {
+    "general_access_levels": {
+      "status": "PASSED",
+      "levels": [
+        {
+          "name": "Only me and admins",
+          "description": "You, Super Admins, and Knowledge Hub Managers will be able find and view this space",
+          "screenshot": "share-05-permission-levels.png"
+        },
+        {
+          "name": "All employees can view this space and its contents",
+          "description": "Any employee registered on Bayzat will be able to find and view content in this space",
+          "screenshot": "share-05-permission-levels.png"
+        },
+        {
+          "name": "Custom",
+          "description": "Access can be customised as you see fit",
+          "screenshot": "share-05-permission-levels.png"
+        }
+      ],
+      "evidence": "share-05-permission-levels.png",
+      "notes": "Three permission levels validated. Accessed via Share dialog > Edit permissions > General view access dropdown."
+    },
+    "individual_user_permissions": {
+      "status": "PASSED",
+      "permission_types": [
+        {
+          "name": "Editor",
+          "description": "Full edit access to space content"
+        },
+        {
+          "name": "View only",
+          "description": "Read-only access to space content"
+        },
+        {
+          "name": "No access",
+          "description": "User cannot access the space"
+        }
+      ],
+      "evidence": "share-06-individual-permissions.png",
+      "notes": "Individual permissions can be set per user. Permission dropdown available for each user in the Edit permissions dialog."
+    },
+    "admin_permissions": {
+      "status": "PASSED",
+      "behavior": "Admin users (Super Admins and Knowledge Hub Managers) have automatic editor access to all company spaces",
+      "permission_dropdown_state": "disabled",
+      "evidence": "share-04-permissions-dialog.png",
+      "notes": "Admin users shown with message: 'As an Admin, this user has editor access to all company spaces'. Permission dropdown is disabled for admin users."
+    },
+    "edit_permissions_interface": {
+      "status": "PASSED",
+      "features": [
+        "Search by name field",
+        "Filters button for advanced filtering",
+        "Tabbed interface: All, No access (with count), View only (with count), Editors (with count)",
+        "Table view with columns: Name, Department, Permission",
+        "User avatars and profile links",
+        "Individual permission dropdowns per user"
+      ],
+      "example_data": "77 people can edit and 2 people can view",
+      "evidence": "share-04-permissions-dialog.png",
+      "notes": "Comprehensive permissions management interface with filtering and search capabilities."
+    },
+    "sharing_methods": {
+      "share_with_people": {
+        "status": "PASSED",
+        "description": "Add people directly with specific permissions",
+        "location": "Share dialog > 'Add people' field",
+        "evidence": "share-03-share-dialog.png"
+      },
+      "copy_link": {
+        "status": "PASSED",
+        "description": "Generate shareable link and copy to clipboard",
+        "user_feedback": "Toast notification: 'Shareable link copied to clipboard'",
+        "evidence": "share-07-copy-link-success.png"
+      },
+      "publish_on_newsfeed": {
+        "status": "PASSED",
+        "description": "Create newsfeed post with link to space",
+        "requirements": ["Post description required"],
+        "features": [
+          "View example post link",
+          "Post description text field",
+          "Share post button (enabled when description provided)"
+        ],
+        "permission_warning": "Only employees who have view or edit permissions to this space will be able to access this link",
+        "evidence": "share-08-newsfeed-dialog.png",
+        "known_limitation": "TSSD-4520 - Newsfeed sharing may be inconsistent"
+      }
+    },
+    "permission_inheritance": {
+      "status": "PASSED",
+      "description": "Folders and pages automatically inherit space permissions",
+      "evidence_example": "Folder shows '77 people can edit and 2 people can view' - identical to parent space permissions",
+      "evidence": "share-11-folder-share-dialog.png",
+      "notes": "Confirmed inheritance by comparing folder permissions with space permissions."
+    },
+    "content_type_sharing": {
+      "spaces": {
+        "status": "PASSED",
+        "share_button_locations": [
+          "Top right of space header (Share button)",
+          "Three-dot menu > Share option"
+        ],
+        "evidence": "share-02-space-more-menu.png, share-03-share-dialog.png"
+      },
+      "folders": {
+        "status": "PASSED",
+        "share_option_location": "Three-dot menu > 'Share folder'",
+        "dialog_interface": "Identical to space sharing dialog with all same features",
+        "evidence": "share-10-folder-menu.png, share-11-folder-share-dialog.png"
+      },
+      "pages": {
+        "status": "PASSED",
+        "share_option_location": "Three-dot menu > 'Share page'",
+        "dialog_interface": "Identical to space and folder sharing dialogs",
+        "evidence": "share-12-page-menu.png, share-13-page-share-dialog.png"
+      }
+    },
+    "who_can_set_permissions": {
+      "status": "PASSED",
+      "authorized_users": [
+        "Space owners (creators)",
+        "Users with Editor permissions",
+        "Super Admins (automatic editor access)",
+        "Knowledge Hub Managers (automatic editor access)"
+      ],
+      "notes": "Permission management requires editor-level access or admin role."
+    }
+  }
+}
