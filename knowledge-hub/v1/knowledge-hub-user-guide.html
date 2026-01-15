@@ -1,409 +1,997 @@
 <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>knowledge-hub - User Guide | Bayzat</title>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Hub - User Guide</title>
 
-    <style>
-      /* CSS Reset and Base */
-      *, *::before, *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+  <style>
+    /* CSS Reset and Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background-color: #ffffff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+      color: #ffffff;
+      padding: 60px 40px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .hero-banner h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      color: #ffffff;
+    }
+
+    /* Typography - ALL BLACK */
+    h1, h2, h3, h4, h5, h6 {
+      color: #1a1a1a;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #E2E8F0;
+    }
+
+    h3 {
+      font-size: 1.35rem;
+    }
+
+    p {
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+
+    /* Sections */
+    section, .section {
+      margin-bottom: 3rem;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+    }
+
+    /* Info Boxes - Only 2 Types Allowed */
+    .info-box, .note-box, .tip-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FAF5FF;
+      border-left: 4px solid #6B46C1;
+    }
+
+    .info-box p, .note-box p, .tip-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    .warning-box, .important-box, .caution-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FFFBEB;
+      border-left: 4px solid #D97706;
+    }
+
+    .warning-box p, .important-box p, .caution-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Lists - Black text, standard bullets */
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+      color: #1a1a1a;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: #ffffff;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid #E2E8F0;
+      color: #1a1a1a;
+    }
+
+    th {
+      background: #F7FAFC;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    tr:hover {
+      background: #F7FAFC;
+    }
+
+    /* Screenshots - Centered */
+    .screenshot-container, figure {
+      margin: 24px auto;
+      text-align: center;
+    }
+
+    .screenshot, figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #E2E8F0;
+      display: block;
+      margin: 0 auto;
+    }
+
+    figcaption {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #1a1a1a;
+      font-style: italic;
+    }
+
+    /* Feature Grid and Cards */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .feature-card, .card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .feature-card h4, .card h4 {
+      color: #1a1a1a;
+      margin-top: 0;
+    }
+
+    .feature-card p, .card p {
+      color: #1a1a1a;
+    }
+
+    /* Journey Grid */
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .journey-step {
+      background: #F7FAFC;
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .journey-step .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .journey-step h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .journey-step p {
+      margin: 0;
+      color: #1a1a1a;
+    }
+
+    /* Steps */
+    .step, .step-item {
+      display: flex;
+      gap: 16px;
+      margin: 20px 0;
+      padding: 16px;
+      background: #F7FAFC;
+      border-radius: 8px;
+    }
+
+    .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-content h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .step-content p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Navigation Path */
+    .nav-path, .breadcrumb {
+      background: #F7FAFC;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: monospace;
+      color: #1a1a1a;
+      margin: 16px 0;
+    }
+
+    /* Code blocks */
+    code {
+      background: #F7FAFC;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.9em;
+      color: #1a1a1a;
+    }
+
+    pre {
+      background: #F7FAFC;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      color: #1a1a1a;
+    }
+
+    /* Links */
+    a {
+      color: #6B46C1;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Citations */
+    .citation {
+      font-size: 0.85rem;
+      color: #1a1a1a;
+      background: #F7FAFC;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* Footer */
+    footer, .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #E2E8F0;
+      text-align: center;
+      color: #1a1a1a;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        line-height: 1.6;
-        color: #1a1a1a;
-        background-color: #ffffff;
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 20px;
+        padding: 16px;
       }
 
-      /* Hero Banner */
       .hero-banner {
-        background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
-        color: #ffffff;
-        padding: 60px 40px;
-        border-radius: 12px;
-        margin-bottom: 40px;
-        text-align: center;
+        padding: 40px 24px;
       }
 
       .hero-banner h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 16px;
-        color: #ffffff;
-      }
-
-      .hero-subtitle {
-        font-size: 1.2rem;
-        opacity: 0.95;
-        color: #ffffff;
-      }
-
-      /* Typography */
-      h1, h2, h3, h4, h5, h6 {
-        color: #1a1a1a;
-        font-weight: 600;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
+        font-size: 1.75rem;
       }
 
       h2 {
-        font-size: 1.75rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #E2E8F0;
+        font-size: 1.5rem;
       }
 
-      h3 {
-        font-size: 1.35rem;
-      }
-
-      p {
-        color: #1a1a1a;
-        margin-bottom: 1rem;
-      }
-
-      /* Sections */
       section, .section {
-        margin-bottom: 3rem;
-        padding: 24px;
-        background: #ffffff;
-        border-radius: 8px;
-        border: 1px solid #E2E8F0;
+        padding: 16px;
       }
 
-      /* Info Boxes */
-      .info-box, .note-box, .tip-box {
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 20px 0;
-        background: #FAF5FF;
-        border-left: 4px solid #6B46C1;
-      }
-
-      .info-box p, .note-box p, .tip-box p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      .warning-box, .important-box, .caution-box {
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 20px 0;
-        background: #FFFBEB;
-        border-left: 4px solid #D97706;
-      }
-
-      .warning-box p, .important-box p, .caution-box p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      /* Lists */
-      ul, ol {
-        margin: 1rem 0;
-        padding-left: 2rem;
-        color: #1a1a1a;
-      }
-
-      li {
-        margin-bottom: 0.5rem;
-        color: #1a1a1a;
-      }
-
-      /* Tables */
       table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        background: #ffffff;
+        font-size: 0.9rem;
       }
 
       th, td {
-        padding: 12px 16px;
-        text-align: left;
-        border: 1px solid #E2E8F0;
-        color: #1a1a1a;
+        padding: 8px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-banner h1 {
+        font-size: 1.5rem;
       }
 
-      th {
-        background: #F7FAFC;
-        font-weight: 600;
-        color: #1a1a1a;
+      .hero-subtitle {
+        font-size: 1rem;
       }
 
-      tr:hover {
-        background: #F7FAFC;
+      .step {
+        flex-direction: column;
+        gap: 12px;
       }
+    }
 
-      /* Screenshots */
-      .screenshot-container, figure {
-        margin: 24px auto;
-        text-align: center;
-      }
-
-      .screenshot, figure img {
+    /* Print Styles */
+    @media print {
+      body {
         max-width: 100%;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border: 1px solid #E2E8F0;
-        display: block;
-        margin: 0 auto;
+        padding: 0;
       }
 
-      figcaption {
-        margin-top: 12px;
-        font-size: 0.9rem;
-        color: #1a1a1a;
-        font-style: italic;
+      .hero-banner {
+        background: #6B46C1 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
 
-      /* Feature Grid and Cards */
-      .feature-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-        margin: 20px 0;
+      section, .section {
+        break-inside: avoid;
       }
+    }
+  </style>
 
-      .feature-card, .card {
-        background: #ffffff;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: 20px;
-        margin: 16px 0;
-      }
+</head>
+<body>
+<div class="hero-banner">
+  <h1>Knowledge Hub</h1>
+  <p class="hero-subtitle">Centralize company knowledge with AI-powered search and intelligent organization</p>
+</div>
 
-      .feature-card h4, .card h4 {
-        color: #1a1a1a;
-        margin-top: 0;
-      }
+<figure>
+  <img src="validation/screenshots/03-knowledge-hub-overview-main.png" alt="Knowledge Hub Overview showing spaces, favorites, and activity feed" />
+  <figcaption>Knowledge Hub management interface in Bayzat HR</figcaption>
+</figure>
 
-      .feature-card p, .card p {
-        color: #1a1a1a;
-      }
+<section class="section">
+  <h2>What is Knowledge Hub?</h2>
 
-      /* Journey Grid */
-      .journey-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 16px;
-        margin: 20px 0;
-      }
+  <h3>Overview</h3>
+  <p>Knowledge Hub is Bayzat's centralized knowledge management platform that transforms how organizations store, organize, and access company information. It replaces scattered documents and inefficient information retrieval with an AI-powered, hierarchical content system.</p>
 
-      .journey-step {
-        background: #F7FAFC;
-        border-radius: 8px;
-        padding: 20px;
-        position: relative;
-      }
+  <h3>Key Benefits</h3>
+  <ul>
+    <li><strong>AI-Powered Search:</strong> Find information instantly using natural language queries with Bayzat AI chatbot</li>
+    <li><strong>Organized Content Structure:</strong> Create Spaces, Folders, and Pages with granular permission controls</li>
+    <li><strong>Seamless Collaboration:</strong> Share knowledge via direct links or Newsfeed with role-based access</li>
+    <li><strong>Smart Activity Tracking:</strong> Monitor content updates and engagement with real-time activity feeds</li>
+  </ul>
 
-      .journey-step .step-number {
-        background: #6B46C1;
-        color: #ffffff;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        margin-bottom: 12px;
-      }
+  <h3>Who Uses This Feature?</h3>
+  <ul>
+    <li><strong>HR Administrators:</strong> Create and maintain company policies, procedures, and resources</li>
+    <li><strong>Knowledge Hub Managers:</strong> Organize content structure and manage permissions across spaces</li>
+    <li><strong>All Employees:</strong> Search for information, access resources, and stay updated on company knowledge</li>
+    <li><strong>Department Heads:</strong> Share department-specific documentation with controlled access</li>
+  </ul>
+</section>
 
-      .journey-step h4 {
-        margin: 0 0 8px 0;
-        color: #1a1a1a;
-      }
+<section class="section">
+  <h2>Product Foundation Overview</h2>
 
-      .journey-step p {
-        margin: 0;
-        color: #1a1a1a;
-      }
-
-      /* Steps */
-      .step, .step-item {
-        display: flex;
-        gap: 16px;
-        margin: 20px 0;
-        padding: 16px;
-        background: #F7FAFC;
-        border-radius: 8px;
-      }
-
-      .step-number {
-        background: #6B46C1;
-        color: #ffffff;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        flex-shrink: 0;
-      }
-
-      .step-content {
-        flex: 1;
-      }
-
-      .step-content h4 {
-        margin: 0 0 8px 0;
-        color: #1a1a1a;
-      }
-
-      .step-content p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      /* Navigation Path */
-      .nav-path, .breadcrumb {
-        background: #F7FAFC;
-        padding: 12px 16px;
-        border-radius: 6px;
-        font-family: monospace;
-        color: #1a1a1a;
-        margin: 16px 0;
-      }
-
-      /* Code blocks */
-      code {
-        background: #F7FAFC;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-family: 'SF Mono', Monaco, monospace;
-        font-size: 0.9em;
-        color: #1a1a1a;
-      }
-
-      pre {
-        background: #F7FAFC;
-        padding: 16px;
-        border-radius: 8px;
-        overflow-x: auto;
-        color: #1a1a1a;
-      }
-
-      /* Links */
-      a {
-        color: #6B46C1;
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      /* Footer */
-      footer, .footer {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #E2E8F0;
-        text-align: center;
-        color: #1a1a1a;
-        font-size: 0.9rem;
-      }
-
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        body {
-          padding: 16px;
-        }
-
-        .hero-banner {
-          padding: 40px 24px;
-        }
-
-        .hero-banner h1 {
-          font-size: 1.75rem;
-        }
-
-        h2 {
-          font-size: 1.5rem;
-        }
-
-        section, .section {
-          padding: 16px;
-        }
-
-        table {
-          font-size: 0.9rem;
-        }
-
-        th, td {
-          padding: 8px 12px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .hero-banner h1 {
-          font-size: 1.5rem;
-        }
-
-        .hero-subtitle {
-          font-size: 1rem;
-        }
-
-        .step {
-          flex-direction: column;
-          gap: 12px;
-        }
-      }
-
-      /* Print Styles */
-      @media print {
-        body {
-          max-width: 100%;
-          padding: 0;
-        }
-
-        .hero-banner {
-          background: #6B46C1 !important;
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-
-        section, .section {
-          break-inside: avoid;
-        }
-      }
-    </style>
-
-  </head>
-  <body>
-  <div class="hero-banner">
-    <h1>knowledge-hub</h1>
-    <p class="hero-subtitle"></p>
+  <h3>Core Concepts</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Spaces</h4>
+      <p>Top-level containers for organizing related content. Each Space represents a major category of organizational knowledge.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Folders</h4>
+      <p>Sub-categories within Spaces that group related pages and files together for easier navigation.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Pages</h4>
+      <p>Rich-text documents with formatting capabilities including text, images, links, and cross-references.</p>
+    </div>
   </div>
 
-  
+  <figure>
+    <img src="validation/screenshots/05-spaces-list-view.png" alt="Spaces list showing organizational structure" />
+    <figcaption>Spaces list view showing available knowledge categories</figcaption>
+  </figure>
 
-  <section class="section" id="hero">
-      <h2>Knowledge Hub</h2><div class="content"><p><div class="hero-section"><h1>Knowledge Hub</h1><p class="tagline">Centralize company knowledge with AI-powered search and intelligent organization</p><ul class="key-benefits"><ul><li><strong>AI-Powered Search:</strong> Find information instantly using natural language queries with Bayzat AI chatbot</li><li><strong>Organized Content Structure:</strong> Create Spaces, Folders, and Pages with granular permission controls</li><li><strong>Seamless Collaboration:</strong> Share knowledge via direct links or Newsfeed with role-based access</li><li><strong>Smart Activity Tracking:</strong> Monitor content updates and engagement with real-time activity feeds</li></ul></ul></div></p></div></section>
-<section class="section" id="feature-overview">
-      <h2>Feature Overview</h2><div class="content"><p><h3>What Knowledge Hub Does</h3><p>Knowledge Hub is Bayzat's centralized knowledge management platform that transforms how organizations store, organize, and access company information. It replaces scattered documents and inefficient information retrieval with an AI-powered, hierarchical content system.</p><h3>Who Uses Knowledge Hub</h3><ul><ul><li><strong>HR Administrators:</strong> Create and maintain company policies, procedures, and resources</li><li><strong>Knowledge Hub Managers:</strong> Organize content structure and manage permissions across spaces</li><li><strong>All Employees:</strong> Search for information, access resources, and stay updated on company knowledge</li><li><strong>Department Heads:</strong> Share department-specific documentation with controlled access</li></ul><h3>Key Capabilities</h3><ul><li><strong>Hierarchical Organization:</strong> Structure content using Spaces (top-level categories), Folders (sub-categories), and Pages (detailed content)</li><li><strong>AI-Powered Discovery:</strong> Bayzat AI chatbot provides two modes: 'Chat with documents' for searching the knowledge base and 'Writing Assistant' for content creation</li><li><strong>Flexible Permissions:</strong> Control access at space level with three permission tiers: 'Only me and admins', 'All employees can view', and 'Custom' permissions</li><li><strong>Multi-Format Support:</strong> Upload files, create rich-text pages with formatting, and embed cross-links between documents</li><li><strong>Activity Monitoring:</strong> Track content changes with filterable activity feed showing edits, uploads, and creations</li><li><strong>Smart Recovery:</strong> 30-day trash retention system allows restoration of accidentally deleted content</li></ul><h3>Business Value</h3><p>Knowledge Hub eliminates the productivity drain of scattered information and manual document searches. Organizations report:</p><ul><li>Reduced time spent searching for information from hours to seconds</li><li>Improved onboarding efficiency with centralized policy access</li><li>Enhanced compliance through version-controlled document management</li><li>Better knowledge retention when employees leave the organization</li><li>Increased transparency with permission-based information sharing</li></ul></ul><blockquote data-source="zendesk" data-ref="18317905622801">Knowledge Hub provides instant information retrieval through AI chatbot responses to natural language queries, creating a centralized knowledge repository that improves organizational communication and efficiency.</blockquote></p></div></section>
-<section class="section" id="product-foundation">
-      <h2>Product Foundation</h2><div class="content"><p><h3>Technical Prerequisites</h3><p>Knowledge Hub is a core module of the Bayzat platform with the following technical requirements:</p><ul><ul><li><strong>Platform Access:</strong> Available on both web application and mobile app (iOS/Android)</li><li><strong>Browser Support:</strong> Modern web browsers (Chrome, Firefox, Safari, Edge) with JavaScript enabled</li><li><strong>Network Requirements:</strong> Stable internet connection for real-time content synchronization and AI chatbot functionality</li><li><strong>File Upload Limits:</strong> Maximum file size of 15 MB per upload for documents and attachments</li></ul><h3>Dependencies on Other Modules</h3><p>Knowledge Hub integrates with several Bayzat platform features:</p><ul><li><strong>Newsfeed:</strong> Share spaces, folders, and pages directly to company newsfeed with automatic mobile notifications</li><li><strong>User Management:</strong> Leverages employee directory for permission assignment and content sharing</li><li><strong>Bayzat AI:</strong> Integrated AI chatbot provides intelligent search across all accessible knowledge base content</li><li><strong>Bayzat Workflows:</strong> Supports 5 event triggers (Space created, Space updated, Space deleted, Folder created, Folder updated) for workflow automation</li><li><strong>Activity Tracking:</strong> Real-time activity feed monitors content changes across the platform</li></ul><h3>Licensing and Plan Requirements</h3><p>Knowledge Hub is included in standard Bayzat platform subscriptions. Key access considerations:</p><ul><li><strong>Role-Based Access:</strong> Super Admins and Knowledge Hub Managers have full control; other users receive assigned permissions</li><li><strong>No Additional Licensing:</strong> Feature is available to all active employees on the platform</li><li><strong>Storage Allocation:</strong> Document storage is included in platform subscription</li></ul><h3>Integration Points</h3><ul><li><strong>Mobile App Sync:</strong> Content created on web automatically syncs to mobile app; cross-links viewable on mobile but only creatable on web</li><li><strong>Permission System:</strong> Inherits from platform-wide role management with space-level customization</li><li><strong>Search Infrastructure:</strong> AI chatbot indexes all accessible content for natural language queries</li><li><strong>Notification System:</strong> Newsfeed shares trigger mobile push notifications for users with space permissions</li></ul><h3>Related Features</h3><p>Knowledge Hub works seamlessly with these Bayzat features:</p><ul><li><strong>Bayzat Workflows:</strong> Automate actions based on Knowledge Hub events (Space created, Space updated, Space deleted, Folder created, Folder updated). Create workflows to notify teams when critical documents are updated or trigger approval processes when new spaces are created. Navigate to <span class="nav-path">Automations → Workflows → + Create workflow</span> to set up Knowledge Hub triggers.</li><li><strong>Newsfeed:</strong> Share knowledge base content with employees through company-wide announcements and updates</li><li><strong>Employee Directory:</strong> Assign permissions and share content with specific individuals or departments</li><li><strong>Document Management:</strong> Centralized file storage with version control and access tracking</li><li><strong>Surveys:</strong> Link survey results and analysis to Knowledge Hub spaces for reference</li></ul></ul></p></div></section>
-<section class="section" id="user-journey">
-      <h2>User Journey</h2><div class="content"><p><p>The Knowledge Hub user journey follows a structured workflow for managing organizational knowledge through Spaces, Folders, and Pages. This end-to-end process enables administrators and knowledge managers to create, organize, share, and maintain company information effectively.</p><h3>Stage 1: Initial Access and Planning</h3><p>Users begin by accessing the Knowledge Hub from the Company menu in the Bayzat platform. At this stage, administrators assess what information needs to be centralized and plan the organizational structure.</p><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/02-company-menu-with-knowledge-hub.png" alt="Accessing Knowledge Hub from Company menu" class="screenshot"><figcaption>Navigating to Knowledge Hub from the Company menu</figcaption></figure><p><strong>Key Decisions:</strong></p><ul><ul><li>What categories of information need dedicated Spaces?</li><li>Who should have access to different types of content?</li><li>How should content be organized for easy discovery?</li></ul><h3>Stage 2: Space Creation and Organization</h3><p>Administrators create Spaces as top-level containers for related content. Each Space represents a major category of organizational knowledge (e.g., HR Policies, IT Resources, Company Handbooks).</p><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/crud-01-create-space-form.png" alt="Create new Space form" class="screenshot"><figcaption>Creating a new Space with name, description, and permissions</figcaption></figure><p><strong>Expected Outcomes:</strong></p><ul><li>Spaces created with descriptive names and clear purposes</li><li>Initial permission settings configured (Private to you, Editor, or Custom permissions)</li><li>Logical structure established for content organization</li></ul><h3>Stage 3: Content Population</h3><p>Once Spaces are established, users populate them with Folders, Pages, and Files. This stage involves uploading documents, creating informational pages, and organizing content hierarchically.</p><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/07-space-create-dropdown-options.png" alt="Space-level create options" class="screenshot"><figcaption>Creating folders, pages, and uploading files within a Space</figcaption></figure><p><strong>Typical Use Case Scenario:</strong></p><blockquote><p>An HR administrator creates a "Company Policies" Space, then adds folders for "Leave Policies," "Code of Conduct," and "Benefits Information." Within each folder, they create detailed pages explaining specific policies and upload supporting PDF documents.</p></blockquote><h3>Stage 4: Permission Configuration and Sharing</h3><p>Administrators configure access permissions at the Space level, determining who can view and edit content. Permissions automatically inherit to folders and pages within the Space.</p><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/share-04-permissions-dialog.png" alt="Edit permissions dialog" class="screenshot"><figcaption>Configuring individual user permissions for a Space</figcaption></figure><p><strong>Decision Points:</strong></p><ul><li><strong>General Access Level:</strong> Choose between "Only me and admins," "All employees can view," or "Custom" permissions</li><li><strong>Individual Permissions:</strong> Assign Editor, View only, or No access to specific users</li><li><strong>Sharing Method:</strong> Share via Copy Link or publish on Newsfeed</li></ul><h3>Stage 5: Content Discovery and Usage</h3><p>Employees access shared content through multiple pathways: direct links, Newsfeed posts, search functionality, or the Bayzat AI chatbot. The Overview page provides quick access to favorite spaces, recent files, and activity feeds.</p><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/03-knowledge-hub-overview-main.png" alt="Knowledge Hub Overview page" class="screenshot"><figcaption>Overview page showing favorites, recent files, and activity feed</figcaption></figure><p><strong>Expected Outcomes:</strong></p><ul><li>Employees can quickly locate needed information</li><li>AI chatbot provides instant answers to natural language queries</li><li>Activity feed keeps users informed of recent updates</li><li>Favorite spaces and pages enable quick access to frequently used content</li></ul><h3>Stage 6: Ongoing Maintenance and Updates</h3><p>Knowledge Hub content requires regular review and updates to remain accurate and relevant. Administrators edit existing pages, upload new documents, and remove outdated content.</p><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/crud-03-edit-space-form.png" alt="Edit Space dialog" class="screenshot"><figcaption>Editing Space name and description</figcaption></figure><p><strong>Maintenance Workflow:</strong></p><ol><li>Review content for accuracy and relevance</li><li>Update pages with new information</li><li>Remove or archive outdated documents</li><li>Monitor activity feed for user engagement</li><li>Respond to employee feedback and questions</li></ol><h3>Stage 7: Content Lifecycle Management</h3><p>When content is no longer needed, administrators can delete Spaces, folders, or pages. Deleted items move to the Trash with a 30-day retention period, allowing recovery if needed.</p><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/crud-05-delete-confirmation-dialog.png" alt="Delete confirmation dialog" class="screenshot"><figcaption>Confirmation dialog warning about 30-day retention period</figcaption></figure><p><strong>Final Outcomes:</strong></p><ul><li>Organized, up-to-date knowledge repository</li><li>Improved employee access to company information</li><li>Reduced time spent searching for documents</li><li>Enhanced organizational communication and transparency</li></ul></ul><div class="tip"><strong>Best Practice:</strong> Establish a regular review schedule (quarterly or bi-annually) to audit Knowledge Hub content, update outdated information, and remove obsolete documents. This ensures the knowledge base remains a trusted, current resource for all employees.</div></p></div></section>
-<section class="section" id="prerequisites">
-      <h2>Prerequisites</h2><div class="content"><p><p>Before using the Knowledge Hub feature, ensure the following requirements are met to enable successful Space creation, content management, and sharing.</p><h3>Required Permissions and Roles</h3><p>Users must have appropriate permissions to create and manage Knowledge Hub content:</p><table><thead><tr><th>Role</th><th>Capabilities</th><th>Restrictions</th></tr></thead><tbody><tr><td><strong>Super Admin</strong></td><td>Full access to all Spaces; can create, edit, delete, and manage permissions for all content; automatic editor access to all company Spaces</td><td>None - complete control</td></tr><tr><td><strong>Knowledge Hub Manager</strong></td><td>Full access to all Spaces; can create, edit, delete, and manage permissions for all content; automatic editor access to all company Spaces</td><td>None - complete control</td></tr><tr><td><strong>Editor</strong></td><td>Can create Spaces, folders, and pages; can edit and delete content they have editor access to; can upload and manage files; can set permissions for Spaces they create</td><td>Cannot access Spaces where they have View Only or No Access permissions</td></tr><tr><td><strong>View Only</strong></td><td>Can view Spaces, folders, pages, and files where granted access; can mark items as favorites; can use search and AI chatbot</td><td>Cannot create, edit, or delete any content; cannot manage permissions</td></tr><tr><td><strong>No Access</strong></td><td>No visibility of the Space or its contents</td><td>Cannot perform any actions on the Space</td></tr></tbody></table><div class="warning"><strong>⚠️ Admin Permissions Cannot Be Modified:</strong> Super Admins and Knowledge Hub Managers have automatic editor access to all company Spaces. Their permission level cannot be changed to View Only or No Access for any Space.</div><h3>Data That Must Exist</h3><p>Before creating and sharing Knowledge Hub content, ensure the following data is available:</p><h4>1. Content to Organize</h4><ul><ul><li><strong>Documents:</strong> PDF files, Word documents, Excel spreadsheets, PowerPoint presentations, or other file formats to upload</li><li><strong>Policies and Procedures:</strong> Written content to be formatted as pages within the Knowledge Hub</li><li><strong>Resource Materials:</strong> Images, templates, forms, or reference materials employees need to access</li></ul><h4>2. Organizational Structure Plan</h4><ul><li><strong>Space Categories:</strong> Defined top-level categories for organizing content (e.g., HR Policies, IT Resources, Training Materials)</li><li><strong>Folder Hierarchy:</strong> Planned subfolder structure within each Space</li><li><strong>Naming Conventions:</strong> Consistent naming standards for Spaces, folders, and pages</li></ul><h4>3. Access Control Requirements</h4><ul><li><strong>Employee List:</strong> Identification of which employees need access to specific Spaces</li><li><strong>Permission Levels:</strong> Determination of who needs Editor vs. View Only access</li><li><strong>Confidentiality Requirements:</strong> Understanding of which content should be restricted to specific users or departments</li></ul><h3>System Configuration Requirements</h3><h4>Platform Access</h4><ul><li><strong>Active Bayzat Account:</strong> Users must have an active account on the Bayzat platform</li><li><strong>Company Setup:</strong> The company must be fully onboarded to the Bayzat platform</li><li><strong>Browser Requirements:</strong> Modern web browser (Chrome, Firefox, Safari, or Edge) for full functionality</li><li><strong>Mobile App (Optional):</strong> Bayzat mobile app installed for on-the-go access</li></ul><h4>Feature Availability</h4><ul><li><strong>Knowledge Hub Module:</strong> The Knowledge Hub feature must be enabled for your company</li><li><strong>User Roles Configured:</strong> Appropriate roles assigned in the Bayzat platform (Super Admin, Knowledge Hub Manager, or Editor)</li></ul><h3>Dependencies Checklist</h3><p>Complete this checklist before beginning Knowledge Hub setup:</p><table><thead><tr><th>Requirement</th><th>Status</th><th>Notes</th></tr></thead><tbody><tr><td>User has Super Admin, Knowledge Hub Manager, or Editor role</td><td>☐</td><td>Check in Settings → Users & Permissions</td></tr><tr><td>Content to organize is prepared and accessible</td><td>☐</td><td>Gather documents, policies, and resources</td></tr><tr><td>Organizational structure is planned</td><td>☐</td><td>Define Space categories and folder hierarchy</td></tr><tr><td>Access requirements are documented</td><td>☐</td><td>List who needs access to which Spaces</td></tr><tr><td>Knowledge Hub module is enabled</td><td>☐</td><td>Visible in Company menu</td></tr><tr><td>Employees are registered on Bayzat platform</td><td>☐</td><td>Required for sharing and permissions</td></tr></tbody></table><h3>Optional Prerequisites</h3><p>While not required, these elements enhance the Knowledge Hub experience:</p><ul><li><strong>Content Templates:</strong> Pre-designed page templates for consistent formatting</li><li><strong>Style Guide:</strong> Company branding guidelines for images and formatting</li><li><strong>Review Schedule:</strong> Planned cadence for content updates and maintenance</li><li><strong>Training Plan:</strong> Strategy for educating employees on using the Knowledge Hub</li></ul></ul><div class="tip"><strong>Recommendation:</strong> Before creating your first Space, spend time planning your organizational structure. A well-planned hierarchy makes content easier to find and maintain. Consider conducting a content audit to identify what information employees frequently need and prioritize organizing that content first.</div></p></div></section>
-<section class="section" id="initial-setup">
-      <h2>Initial Setup</h2><div class="content"><p><p>Setting up the Knowledge Hub involves creating your first Space, configuring permissions, and establishing an organizational structure for your company's knowledge base. This section guides you through the first-time configuration process.</p><h3>Step 1: Access the Knowledge Hub</h3><ol><ul><li>Log in to your Bayzat account with Super Admin, Knowledge Hub Manager, or Editor permissions</li><li>Click the <strong>Company</strong> menu in the main navigation</li><li>Select <strong>Knowledge Hub</strong> from the dropdown menu</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/02-company-menu-with-knowledge-hub.png" alt="Company menu with Knowledge Hub option" class="screenshot"><figcaption>Accessing Knowledge Hub from the Company menu</figcaption></figure><p>You will land on the Knowledge Hub Overview page, which displays:</p><ul><li><strong>Favorite spaces:</strong> Quick access to your most-used Spaces (initially empty)</li><li><strong>Favorite folders:</strong> Quick access to frequently accessed folders (initially empty)</li><li><strong>Recent files and pages:</strong> Recently viewed or edited content</li><li><strong>Activity feed:</strong> Updates on document edits, uploads, and creations</li></ul><h3>Step 2: Create Your First Space</h3><p>Spaces are the top-level containers for organizing content. Create your first Space to begin building your knowledge base.</p><ol><li>Click the <strong>Create</strong> button in the top-right corner of the Knowledge Hub interface</li><li>Select <strong>Create new space</strong> from the dropdown menu</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/04-create-dropdown-options.png" alt="Create dropdown menu" class="screenshot"><figcaption>Create dropdown showing 'Create new space' and 'Create new page' options</figcaption></figure><p>The Create Space dialog will appear with the following fields:</p><h4>Required Settings</h4><table><thead><tr><th>Field</th><th>Description</th><th>Recommended Value</th></tr></thead><tbody><tr><td><strong>Name</strong></td><td>The display name for your Space</td><td>Use clear, descriptive names (e.g., "HR Policies," "IT Resources," "Employee Handbook")</td></tr><tr><td><strong>Description</strong></td><td>Brief explanation of the Space's purpose</td><td>1-2 sentences describing what content this Space contains</td></tr><tr><td><strong>Permissions</strong></td><td>Who can access this Space</td><td>Start with "Private to you" for initial setup, then adjust after adding content</td></tr></tbody></table><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/crud-01-create-space-form.png" alt="Create Space form" class="screenshot"><figcaption>Create Space form with Name, Description, and Permissions fields</figcaption></figure><ol start="3"><li>Enter a descriptive <strong>Name</strong> for your Space (e.g., "Company Policies")</li><li>Add a <strong>Description</strong> explaining the Space's purpose (e.g., "Official company policies, procedures, and guidelines for all employees")</li><li>Select initial <strong>Permissions</strong>:<ul><li><strong>Private to you:</strong> Only you, Super Admins, and Knowledge Hub Managers can access (recommended for initial setup)</li><li><strong>Editor:</strong> Specific users can edit content</li><li><strong>Custom permissions:</strong> Granular control over individual user access</li></ul></li><li>Click <strong>Create</strong> to save your Space</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/crud-02-space-created-successfully.png" alt="Space created successfully" class="screenshot"><figcaption>Confirmation that the Space was created successfully</figcaption></figure><h3>Step 3: Configure Default Permission Settings</h3><p>After creating your Space, configure permissions to control who can access and edit content. Permission settings apply to the entire Space and automatically inherit to all folders and pages within it.</p><h4>Understanding Permission Levels</h4><table><thead><tr><th>Permission Level</th><th>Description</th><th>Use Case</th></tr></thead><tbody><tr><td><strong>Only me and admins</strong></td><td>Only you, Super Admins, and Knowledge Hub Managers can view</td><td>Confidential content, draft Spaces under development</td></tr><tr><td><strong>All employees can view this space and its contents</strong></td><td>Any registered employee can view; only editors can modify</td><td>Company-wide policies, general resources, public information</td></tr><tr><td><strong>Custom</strong></td><td>Granular control with individual user permissions</td><td>Department-specific content, role-based access</td></tr></tbody></table><h4>Setting General Access Permissions</h4><ol><li>Navigate to your newly created Space</li><li>Click the <strong>Share</strong> button or select <strong>Share</strong> from the three-dot menu</li><li>In the Share dialog, click <strong>Edit permissions</strong></li><li>Under <strong>General view access</strong>, select your preferred permission level from the dropdown</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/share-05-permission-levels.png" alt="Permission levels dropdown" class="screenshot"><figcaption>General access permission levels: Only me and admins, All employees, or Custom</figcaption></figure><h4>Setting Individual User Permissions (Custom)</h4><p>If you selected <strong>Custom</strong> permissions, you can assign individual access levels:</p><ol><li>In the Edit permissions dialog, view the list of employees</li><li>For each user, select their permission level from the dropdown:<ul><li><strong>Editor:</strong> Can create, edit, and delete content within the Space</li><li><strong>View only:</strong> Can view content but cannot make changes</li><li><strong>No access:</strong> Cannot see or access the Space</li></ul></li><li>Use the search field to find specific employees</li><li>Use the <strong>Filters</strong> button to view users by permission level</li><li>Click <strong>Save</strong> to apply permission changes</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/share-06-individual-permissions.png" alt="Individual user permissions" class="screenshot"><figcaption>Setting individual permissions: Editor, View only, or No access</figcaption></figure><div class="warning"><strong>⚠️ Admin Permissions:</strong> Super Admins and Knowledge Hub Managers automatically have editor access to all company Spaces. Their permission level cannot be changed.</div><h3>Step 4: Establish Organizational Structure</h3><p>With your first Space created, establish a logical structure using folders and pages.</p><h4>Creating Folders</h4><ol><li>Navigate inside your Space</li><li>Click the <strong>Create</strong> dropdown in the Space view</li><li>Select <strong>Create new folder</strong></li><li>Enter a folder name and description</li><li>Click <strong>Create</strong></li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/knowledge-hub/v1/validation/screenshots/07-space-create-dropdown-options.png" alt="Space-level create options" class="screenshot"><figcaption>Creating folders, pages, and uploading files within a Space</figcaption></figure><h4>Creating Pages</h4><ol><li>Within a Space or folder, click <strong>Create</strong></li><li>Select <strong>Create new page</strong></li><li>Enter page title and content using the rich text editor</li><li>Add formatting, images, and links as needed</li><li>Click <strong>Save</strong> to publish the page</li></ol><h4>Uploading Files</h4><ol><li>Within a Space or folder, click <strong>Create</strong></li><li>Select <strong>Upload a file</strong></li><li>Choose files from your computer</li><li>Click <strong>Upload</strong> to add files to the Space</li></ol><h3>Step 5: Verification Steps</h3><p>After completing initial setup, verify your configuration:</p><table><thead><tr><th>Verification Task</th><th>Expected Result</th><th>Action if Failed</th></tr></thead><tbody><tr><td>Navigate to Knowledge Hub Overview</td><td>Your new Space appears in the Spaces list</td><td>Refresh the page; check that Space was saved</td></tr><tr><td>Open your Space</td><td>Space name and description display correctly</td><td>Edit Space to update name/description</td></tr><tr><td>Check permissions</td><td>Share dialog shows correct permission settings</td><td>Re-configure permissions via Share → Edit permissions</td></tr><tr><td>Test folder creation</td><td>New folder appears within the Space</td><td>Verify you have Editor permissions</td></tr><tr><td>Test page creation</td><td>New page displays with formatted content</td><td>Check browser compatibility; try different browser</td></tr><tr><td>Test file upload</td><td>Uploaded file appears in Space/folder</td><td>Verify file format is supported; check file size</td></tr></tbody></table><h3>Recommended Default Values</h3><p>For a successful initial setup, use these recommended configurations:</p><h4>First Space Configuration</h4><ul><li><strong>Name:</strong> "Company Policies" or "Employee Resources"</li><li><strong>Description:</strong> Clear statement of Space purpose</li><li><strong>Initial Permission:</strong> "Private to you" (change to "All employees" after content is added)</li></ul><h4>Folder Structure Example</h4><ul><li><strong>HR Policies</strong><ul><li>Leave Policies</li><li>Code of Conduct</li><li>Benefits Information</li></ul></li><li><strong>IT Resources</strong><ul><li>Software Guides</li><li>Security Policies</li><li>Troubleshooting</li></ul></li><li><strong>Training Materials</strong><ul><li>Onboarding</li><li>Compliance Training</li><li>Skills Development</li></ul></li></ul><h3>Next Steps After Initial Setup</h3><p>Once your first Space is configured and verified:</p><ol><li><strong>Add Content:</strong> Upload documents, create pages, and organize files within folders</li><li><strong>Adjust Permissions:</strong> Change Space permissions from "Private to you" to appropriate access level</li><li><strong>Share with Employees:</strong> Use Copy Link or Newsfeed to share the Space with your organization</li><li><strong>Create Additional Spaces:</strong> Repeat the process for other content categories</li><li><strong>Enable Favorites:</strong> Mark frequently used Spaces as favorites for quick access</li><li><strong>Monitor Activity:</strong> Review the Activity feed to track content engagement</li></ul></ol><div class="tip"><strong>Best Practice:</strong> Start with one well-organized Space rather than creating multiple incomplete Spaces. Fully populate your first Space with content, configure permissions, and share it with employees. Use feedback from this initial rollout to refine your approach before creating additional Spaces.</div></p></div></section>
+  <h3>Related Features</h3>
+  <ul>
+    <li><strong>Bayzat AI:</strong> Integrated chatbot for intelligent search across knowledge base content</li>
+    <li><strong>Newsfeed:</strong> Share spaces, folders, and pages directly to company announcements</li>
+    <li><strong>Bayzat Workflows:</strong> Automate actions based on Knowledge Hub events</li>
+    <li><strong>User Management:</strong> Leverages employee directory for permission assignment</li>
+  </ul>
 
-  <footer>
-    <p>Generated by Bayzat Documentation System</p>
-    <p>Last updated: 2026-01-15T23:19:11.934Z</p>
-  </footer>
+  <h3>Technical Prerequisites</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Platform Access</td>
+        <td>Active Bayzat account with appropriate role</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>User Role</td>
+        <td>Super Admin, Knowledge Hub Manager, or Editor permissions</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Browser</td>
+        <td>Modern web browser (Chrome, Firefox, Safari, Edge)</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>File Upload Limit</td>
+        <td>Maximum 15 MB per file</td>
+        <td>System Limit</td>
+      </tr>
+      <tr>
+        <td>Mobile App</td>
+        <td>Bayzat mobile app for on-the-go access</td>
+        <td>Optional</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
 
-  </body>
-  </html>
+<section class="section">
+  <h2>Complete User Journey Guide</h2>
+
+  <h3>Journey Overview</h3>
+  <p>The Knowledge Hub user journey involves administrators creating Spaces to organize content, configuring permissions for access control, and employees discovering information through search, navigation, or AI-powered queries.</p>
+
+  <div class="journey-grid">
+    <div class="journey-step">
+      <div class="step-number">1</div>
+      <h4>Access Knowledge Hub</h4>
+      <p>Navigate to Company menu and select Knowledge Hub</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">2</div>
+      <h4>Create Space</h4>
+      <p>Click Create and set up a new Space with name, description, and permissions</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">3</div>
+      <h4>Add Content</h4>
+      <p>Create folders, pages, and upload files within your Space</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">4</div>
+      <h4>Configure Permissions</h4>
+      <p>Set who can view and edit content using permission levels</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">5</div>
+      <h4>Share with Team</h4>
+      <p>Share via Copy Link or publish to Newsfeed</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">6</div>
+      <h4>Discover Content</h4>
+      <p>Employees find information through search, AI chatbot, or browsing</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Feature Discovery</h2>
+
+  <h3>How to Access</h3>
+  <p>Knowledge Hub is accessed through the Company menu in the main navigation. Different user roles have varying levels of access based on their permissions.</p>
+
+  <h3>Navigation Paths</h3>
+
+  <figure>
+    <img src="validation/screenshots/02-company-menu-with-knowledge-hub.png" alt="Company menu showing Knowledge Hub option" />
+    <figcaption>Accessing Knowledge Hub through the Company menu</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">A</div>
+    <div class="step-content">
+      <h4>Admin/Manager Access</h4>
+      <p>Company (main navigation) → Knowledge Hub → Create → Create new space</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">E</div>
+    <div class="step-content">
+      <h4>Employee Discovery</h4>
+      <p>Company → Knowledge Hub → Browse Spaces or use Bayzat AI chatbot for search</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">S</div>
+    <div class="step-content">
+      <h4>Sharing Content</h4>
+      <p>Open Space → Click Share → Choose Copy Link or Publish on Newsfeed</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Setup Process</h2>
+
+  <h3>Creating Your First Space</h3>
+  <p>Spaces are the top-level containers for organizing content. Follow these steps to create and configure your first Space.</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Navigate to Knowledge Hub</h4>
+      <p>Click Company in the main navigation, then select Knowledge Hub from the dropdown menu.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Click Create</h4>
+      <p>Click the Create button in the top-right corner and select 'Create new space' from the dropdown.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/crud-01-create-space-form.png" alt="Create Space form" />
+    <figcaption>Create Space form with Name, Description, and Permissions fields</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Enter Space Details</h4>
+      <p>Provide a descriptive Name (e.g., "HR Policies") and Description explaining the Space's purpose.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Set Initial Permissions</h4>
+      <p>Choose who can access the Space: 'Only me and admins', 'All employees can view', or 'Custom' for granular control.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">5</div>
+    <div class="step-content">
+      <h4>Add Content</h4>
+      <p>Within your Space, create folders to organize topics, add pages with rich text content, and upload supporting files.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/07-space-create-dropdown-options.png" alt="Space-level create options" />
+    <figcaption>Creating folders, pages, and uploading files within a Space</figcaption>
+  </figure>
+
+  <div class="info-box">
+    <p><strong>Tip:</strong> Start with 'Only me and admins' permission while building content, then change to 'All employees can view' once ready to share.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Feature Usage</h2>
+
+  <h3>Common Workflows</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Create Content</h4>
+      <p>Build organizational knowledge through Spaces, folders, pages, and file uploads with structured hierarchy.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Manage Permissions</h4>
+      <p>Control access at Space level with three permission tiers and individual user assignments.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Share Knowledge</h4>
+      <p>Distribute content via direct links or publish to Newsfeed for company-wide visibility.</p>
+    </div>
+  </div>
+
+  <h3>Managing Permissions</h3>
+  <p>Access permissions are configured at the Space level and automatically inherit to all folders and pages within.</p>
+
+  <figure>
+    <img src="validation/screenshots/share-04-permissions-dialog.png" alt="Edit permissions dialog" />
+    <figcaption>Configuring individual user permissions for a Space</figcaption>
+  </figure>
+
+  <h3>Permission Levels</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th>Description</th>
+        <th>Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Only me and admins</td>
+        <td>Only creator and admins can view</td>
+        <td>Draft content, confidential documents</td>
+      </tr>
+      <tr>
+        <td>All employees can view</td>
+        <td>Any employee can view; editors can modify</td>
+        <td>Company policies, general resources</td>
+      </tr>
+      <tr>
+        <td>Custom</td>
+        <td>Granular control per user</td>
+        <td>Department-specific content</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Individual Permission Types</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Permission</th>
+        <th>Capabilities</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Editor</strong></td>
+        <td>Can create, edit, and delete content within the Space</td>
+      </tr>
+      <tr>
+        <td><strong>View only</strong></td>
+        <td>Can view content but cannot make changes</td>
+      </tr>
+      <tr>
+        <td><strong>No access</strong></td>
+        <td>Cannot see or access the Space</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <img src="validation/screenshots/share-06-individual-permissions.png" alt="Individual user permissions" />
+    <figcaption>Setting individual permissions: Editor, View only, or No access</figcaption>
+  </figure>
+
+  <h3>Sharing Content</h3>
+  <p>Share Spaces, folders, and pages using multiple methods:</p>
+
+  <ol>
+    <li><strong>Copy Link:</strong> Generate a shareable URL that can be sent via email or chat</li>
+    <li><strong>Publish on Newsfeed:</strong> Share directly to company Newsfeed with mobile notifications</li>
+    <li><strong>Share with People:</strong> Add specific users with custom permission levels</li>
+  </ol>
+
+  <figure>
+    <img src="validation/screenshots/share-03-share-dialog.png" alt="Share dialog options" />
+    <figcaption>Share dialog showing Copy Link, Share with people, and Newsfeed options</figcaption>
+  </figure>
+
+  <div class="warning-box">
+    <p><strong>Note:</strong> Super Admins and Knowledge Hub Managers automatically have editor access to all company Spaces. Their permission level cannot be changed.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Workflow Integration</h2>
+
+  <h3>How Workflows Connect to Knowledge Hub</h3>
+  <p>The Knowledge Hub application is available as a workflow trigger source in Bayzat Workflows. This allows automation based on content changes.</p>
+
+  <div class="nav-path">Access: Automations (left sidebar) → Workflows</div>
+
+  <h3>Available Triggers</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Trigger Event</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Space created</strong></td>
+        <td>Fires when a new Space is created</td>
+      </tr>
+      <tr>
+        <td><strong>Space updated</strong></td>
+        <td>Fires when a Space name or description is modified</td>
+      </tr>
+      <tr>
+        <td><strong>Space deleted</strong></td>
+        <td>Fires when a Space is deleted</td>
+      </tr>
+      <tr>
+        <td><strong>Folder created</strong></td>
+        <td>Fires when a new folder is created within a Space</td>
+      </tr>
+      <tr>
+        <td><strong>Folder updated</strong></td>
+        <td>Fires when a folder is modified</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <img src="validation/screenshots/workflow-01-knowledge-hub-triggers.png" alt="Knowledge Hub workflow triggers" />
+    <figcaption>Available Knowledge Hub triggers in the workflow creation interface</figcaption>
+  </figure>
+
+  <h3>Example Workflow: New Space Notification</h3>
+  <div class="feature-card">
+    <h4>Notify Team When New Space is Created</h4>
+    <p><strong>Scenario:</strong> Automatically notify HR team when a new Knowledge Hub Space is created for review.</p>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Trigger</strong></td>
+          <td>Space created</td>
+        </tr>
+        <tr>
+          <td><strong>Action</strong></td>
+          <td>Send email notification to HR team</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><em>Result: HR stays informed of new content areas being created across the organization.</em></p>
+  </div>
+
+  <div class="info-box">
+    <p><strong>Note:</strong> Knowledge Hub currently supports trigger events only. No Knowledge Hub-specific actions are available in workflows.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Business Rules & Limitations</h2>
+
+  <h3>Core Business Rules</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>Description</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Permission inheritance</td>
+        <td>Folder and page permissions inherit from parent Space</td>
+        <td>Set permissions at Space level for consistent access</td>
+      </tr>
+      <tr>
+        <td>Admin override</td>
+        <td>Super Admins and KH Managers have full access to all Spaces</td>
+        <td>Cannot restrict admin access to any content</td>
+      </tr>
+      <tr>
+        <td>File size limit</td>
+        <td>Maximum 15 MB per file upload</td>
+        <td>Large files must be compressed or split</td>
+      </tr>
+      <tr>
+        <td>Trash retention</td>
+        <td>Deleted items kept for 30 days</td>
+        <td>Recovery possible within retention period</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>System Constraints</h3>
+  <ul>
+    <li>Cross-links between documents can only be created on web (viewable on mobile)</li>
+    <li>AI chatbot requires content to be indexed before searchable</li>
+    <li>Mobile app syncs content but has limited editing capabilities</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Troubleshooting & Edge Cases</h2>
+
+  <h3>Common Issues</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Issue</th>
+        <th>Cause</th>
+        <th>Resolution</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Cannot see Knowledge Hub</td>
+        <td>Feature not enabled or no permissions</td>
+        <td>Contact administrator to enable access</td>
+      </tr>
+      <tr>
+        <td>Cannot create Space</td>
+        <td>User lacks Editor role or higher</td>
+        <td>Request Editor permissions from admin</td>
+      </tr>
+      <tr>
+        <td>File upload fails</td>
+        <td>File exceeds 15 MB limit</td>
+        <td>Compress file or split into smaller parts</td>
+      </tr>
+      <tr>
+        <td>Content not in AI search</td>
+        <td>Recently added content not indexed</td>
+        <td>Wait for indexing to complete (usually minutes)</td>
+      </tr>
+      <tr>
+        <td>Cannot change admin permissions</td>
+        <td>Super Admins always have full access</td>
+        <td>This is by design and cannot be changed</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Deleted Content Recovery</h3>
+  <div class="info-box">
+    <p><strong>30-Day Trash Retention:</strong> Deleted Spaces, folders, and pages are moved to Trash and kept for 30 days. Access Trash from the Knowledge Hub menu to restore accidentally deleted content.</p>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/undoc-04-trash-view.png" alt="Trash view showing deleted items" />
+    <figcaption>Trash view with restore and permanent delete options</figcaption>
+  </figure>
+</section>
+
+<section class="section">
+  <h2>Support Resources</h2>
+
+  <h3>Frequently Asked Questions</h3>
+
+  <div class="feature-card">
+    <h4>How do I find information in Knowledge Hub?</h4>
+    <p>Use the Bayzat AI chatbot for natural language search, browse Spaces directly, or check your Favorites and Recent files on the Overview page.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Can I share content with external users?</h4>
+    <p>No, Knowledge Hub content can only be shared with registered employees on your Bayzat platform. Use Copy Link for internal sharing.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>How do I recover deleted content?</h4>
+    <p>Access the Trash from Knowledge Hub menu. Deleted items remain for 30 days and can be restored. After 30 days, content is permanently deleted.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Why can't I edit a Space?</h4>
+    <p>You need Editor permission for that Space. Contact the Space owner or a Knowledge Hub Manager to request edit access.</p>
+  </div>
+
+  <h3>Getting Help</h3>
+  <ul>
+    <li>Contact your HR Administrator for access and permission issues</li>
+    <li>Bayzat Support Team - Available for technical issues</li>
+    <li>Knowledge Base - Access additional articles and guides</li>
+    <li>In-app Help - Contextual help within the Bayzat platform</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Glossary of Terms</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Space</strong></td>
+        <td>Top-level container for organizing related knowledge content.</td>
+      </tr>
+      <tr>
+        <td><strong>Folder</strong></td>
+        <td>Sub-category within a Space for grouping related pages and files.</td>
+      </tr>
+      <tr>
+        <td><strong>Page</strong></td>
+        <td>Rich-text document with formatting, images, and links.</td>
+      </tr>
+      <tr>
+        <td><strong>Bayzat AI</strong></td>
+        <td>AI-powered chatbot for natural language search across Knowledge Hub.</td>
+      </tr>
+      <tr>
+        <td><strong>Editor</strong></td>
+        <td>Permission level allowing creation, editing, and deletion of content.</td>
+      </tr>
+      <tr>
+        <td><strong>View Only</strong></td>
+        <td>Permission level allowing content viewing without modification.</td>
+      </tr>
+      <tr>
+        <td><strong>Favorites</strong></td>
+        <td>User-marked Spaces and pages for quick access from Overview.</td>
+      </tr>
+      <tr>
+        <td><strong>Activity Feed</strong></td>
+        <td>Real-time log of content changes across Knowledge Hub.</td>
+      </tr>
+      <tr>
+        <td><strong>Trash</strong></td>
+        <td>Holding area for deleted content with 30-day retention.</td>
+      </tr>
+      <tr>
+        <td><strong>Knowledge Hub Manager</strong></td>
+        <td>Role with full access to all Spaces and administrative capabilities.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <p>Generated by Bayzat Documentation System</p>
+  <p>Last updated: 2026-01-16</p>
+</footer>
+
+</body>
+</html>
