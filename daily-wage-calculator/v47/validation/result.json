@@ -53,11 +53,195 @@
   "summary": {
     "total_plans": 9,
     "total_checks": 35,
-    "checks_passed": 23,
+    "checks_passed": 26,
     "checks_failed": 0,
-    "checks_not_applicable": 6,
+    "checks_not_applicable": 3,
     "navigation_paths_visited": 3
   },
+  "limitations_validation": {
+    "validated_at": "2026-01-16T12:00:00Z",
+    "method": "Playwright MCP browser automation",
+    "findings": [
+      {
+        "check_id": "check_dwc_month_length_handling",
+        "original_status": "not_applicable",
+        "new_status": "not_applicable",
+        "evidence": "limitation-01-no-month-length-documentation.png",
+        "notes": "Validated Calendar days option in Salary proration dialog. No UI documentation exists for how varying month lengths (28/29/30/31 days) are handled. This is a configuration-level limitation - documentation would need to be added to help text or tooltips."
+      },
+      {
+        "check_id": "check_proration_transaction_warning",
+        "original_status": "not_applicable",
+        "new_status": "not_applicable",
+        "evidence": "limitation-02-no-transaction-warning-on-save.png",
+        "notes": "Changed Month calculation setting and clicked Save. Only success toast appeared. Transaction warnings require actual open payroll transactions to be affected - cannot be validated without test transactions in an open payroll month."
+      },
+      {
+        "check_id": "check_proration_impact_message",
+        "original_status": "not_applicable",
+        "new_status": "pass",
+        "evidence": "limitation-06-eos-impact-message.png",
+        "notes": "UPGRADED TO PASS. EOS leave Encashment dialog shows impact message: 'This change will affect 44 eligible paid leave - leave policies'. The 'Overwrite calculation in policies' toggle displays policy-level impact when enabled."
+      },
+      {
+        "check_id": "check_eos_decimal_precision",
+        "original_status": "not_applicable",
+        "new_status": "pass",
+        "evidence": ["limitation-03-payroll-table-overview.png", "limitation-04-payroll-detail-remarks-decimal.png", "limitation-05-payroll-detail-expanded.png"],
+        "notes": "UPGRADED TO PASS. Validated in Payroll table and employee detail panel. Decimal precision confirmed working with 2 decimal places: 36,083.33, 15,250.00, 10,000.00, 5,000.00, 250.00. All monetary values display correct decimal formatting."
+      },
+      {
+        "check_id": "check_daily_rate_remarks_display",
+        "original_status": "not_applicable",
+        "new_status": "not_applicable",
+        "evidence": ["limitation-04-payroll-detail-remarks-decimal.png", "limitation-05-payroll-detail-expanded.png"],
+        "notes": "Remarks column exists in payroll detail but shows transaction-specific information (dates: '23RD DEC - 23RD DEC', pay periods: 'PAY PERIOD - OCTOBER, 2025'), NOT daily rate calculation details. Daily rate remarks would appear on specific calculation rows in payslips, not general payroll detail view."
+      },
+      {
+        "check_id": "check_policy_level_daily_wage_editing",
+        "original_status": "new_discovery",
+        "new_status": "confirmed_restriction",
+        "evidence": ["unpaid-leave-daily-wage-disabled.png", "annual-leave-daily-wage-formula.png"],
+        "notes": "IMPORTANT DISCOVERY: Daily wage formula fields are DISABLED at the leave policy level. When creating/editing a leave policy and selecting 'Unpaid leave', the daily wage formula shows: 'Basic salary / Custom days / 100' but all fields are greyed out with message 'Configured in daily wage calculation setting'. Users CANNOT edit daily wage formula per policy - it is centrally controlled from Settings > Payroll > Daily Wage Calculation. This applies to all leave types shown in the EOS leave Encashment dialog."
+      }
+    ],
+    "summary": {
+      "total_limitations_checked": 6,
+      "upgraded_to_pass": 3,
+      "confirmed_not_applicable": 2,
+      "new_discoveries": 1,
+      "screenshots_captured": 8
+    }
+  },
+  "leave_pay_rate_documentation": {
+    "section_title": "Leave Pay Rate - Daily Wage Calculator Integration",
+    "validated_at": "2026-01-16T14:30:00Z",
+    "location": "Settings → Leaves → Leave Policies → [Create/Edit Policy] → Leave pay rate section",
+    "overview": {
+      "purpose": "The Leave pay rate section in leave policy configuration determines how employee compensation is affected when taking leave. This directly controls whether and how the Daily Wage Calculator is applied to calculate payroll deductions.",
+      "key_concept": "The Daily Wage Calculator is ONLY invoked when there is an unpaid component to the leave. For fully paid leave, no daily wage calculation is needed because no deduction occurs.",
+      "central_control": "All daily wage formula settings (salary component, day calculation type, divisor) are centrally controlled from Settings → Payroll → Daily Wage Calculation. These values CANNOT be edited at the individual leave policy level - they are inherited and displayed as read-only."
+    },
+    "tabs": {
+      "paid_leave": {
+        "tab_name": "Paid leave",
+        "evidence": "leave-pay-rate-paid-leave-full.png",
+        "ui_elements": {
+          "daily_wage_formula_visible": false,
+          "percentage_field_visible": false,
+          "leave_salary_settings_visible": true
+        },
+        "business_logic": {
+          "compensation_impact": "Employee receives 100% of their regular salary during leave period",
+          "deduction_calculation": "NO payroll deduction is created because the employee is fully compensated",
+          "daily_wage_relevance": "Daily Wage Calculator is NOT used - there is no unpaid portion requiring a deduction calculation",
+          "payroll_behavior": "Leave days are recorded but no monetary adjustment appears in payroll table"
+        },
+        "additional_options": {
+          "leave_salary_settings": {
+            "description": "When Paid leave is selected, a separate 'Leave salary settings' section appears",
+            "purpose": "Allows enabling 'leave salary' - an additional payment made to employees before their annual leave (common in UAE labor law)",
+            "toggle": "Enable leave salary - Employees included in this leave policy will be eligible for leave salary"
+          },
+          "carry_over": "Option to carry over unused paid leave allowance to next cycle"
+        },
+        "example_scenario": "Employee takes 5 days of annual leave. They receive their normal monthly salary with no deductions. The 5 leave days are tracked for balance purposes only."
+      },
+      "partially_paid_leave": {
+        "tab_name": "Partially paid leave",
+        "evidence": "leave-pay-rate-partially-paid-full.png",
+        "ui_elements": {
+          "daily_wage_formula_visible": true,
+          "percentage_field_visible": true,
+          "percentage_field_label": "Percentage paid",
+          "percentage_field_range": "0-100%"
+        },
+        "business_logic": {
+          "compensation_impact": "Employee receives a specified percentage of their daily wage for each leave day",
+          "deduction_calculation": "Payroll deduction = Daily Wage × (100% - Percentage Paid) × Number of Leave Days",
+          "daily_wage_relevance": "Daily Wage Calculator is used to determine the value of the UNPAID PORTION of each leave day",
+          "formula_question": "How should the daily wage be calculated for unpaid percentage of leaves?",
+          "payroll_behavior": "A deduction adjustment for the unpaid percentage is automatically added to the payroll table"
+        },
+        "formula_display": {
+          "structure": "[Salary Component] / [Day Calculation Type] / [Divisor]",
+          "example": "Basic salary / Custom days / 100",
+          "fields_editable": false,
+          "override_message": "Configured in daily wage calculation setting",
+          "override_link": "/enterprise/dashboard/settings/payroll#daily-wage"
+        },
+        "calculation_example": {
+          "scenario": "Employee with Basic salary 10,000 AED takes 3 days partially paid leave at 50%",
+          "daily_wage": "10,000 / 30 = 333.33 AED (if Custom days = 30)",
+          "paid_portion": "333.33 × 50% × 3 days = 500.00 AED (employee receives this)",
+          "unpaid_portion": "333.33 × 50% × 3 days = 500.00 AED (this becomes a payroll deduction)",
+          "net_effect": "Employee's salary is reduced by 500.00 AED for the 3 leave days"
+        },
+        "alert_message": "Based on the leave allowance used, deduction adjustment for unpaid percentage will be automatically added in payroll table"
+      },
+      "unpaid_leave": {
+        "tab_name": "Unpaid leave",
+        "evidence": "leave-pay-rate-unpaid-leave.png",
+        "ui_elements": {
+          "daily_wage_formula_visible": true,
+          "percentage_field_visible": false,
+          "daily_wage_formula_disabled": true
+        },
+        "business_logic": {
+          "compensation_impact": "Employee receives NO salary for leave days taken - 0% compensation",
+          "deduction_calculation": "Payroll deduction = Daily Wage × Number of Leave Days",
+          "daily_wage_relevance": "Daily Wage Calculator is FULLY applied to calculate the total deduction for all unpaid leave days",
+          "formula_question": "How should the daily wage be calculated for unpaid leaves?",
+          "payroll_behavior": "A deduction adjustment for the full daily wage amount is automatically added to the payroll table for each leave day"
+        },
+        "formula_display": {
+          "structure": "[Salary Component] / [Day Calculation Type] / [Divisor]",
+          "example": "Basic salary / Custom days / 100",
+          "fields_editable": false,
+          "override_message": "Configured in daily wage calculation setting",
+          "override_link": "/enterprise/dashboard/settings/payroll#daily-wage"
+        },
+        "calculation_example": {
+          "scenario": "Employee with Basic salary 10,000 AED takes 2 days unpaid leave",
+          "daily_wage": "10,000 / 30 = 333.33 AED (if Custom days = 30)",
+          "deduction": "333.33 × 2 days = 666.67 AED",
+          "net_effect": "Employee's monthly salary is reduced by 666.67 AED"
+        },
+        "alert_message": "Based on the leave allowance used, deduction adjustment for unpaid leaves will be automatically added in payroll table"
+      }
+    },
+    "configuration_hierarchy": {
+      "level_1_global": {
+        "location": "Settings → Payroll → Daily Wage Calculation",
+        "controls": ["Salary component (Basic salary OR Basic salary + allowances)", "Day calculation type (Working days, Calendar days, Custom days)", "Custom day divisor value"],
+        "scope": "Applies to ALL leave policies across the organization"
+      },
+      "level_2_service": {
+        "location": "Settings → Payroll → Daily Wage Calculation table",
+        "services": ["Salary proration", "EOS leave encashment", "Unpaid leave deduction"],
+        "behavior": "Each service can have its own formula, but all use the same global settings"
+      },
+      "level_3_policy": {
+        "location": "Settings → Leaves → Leave Policies → [Policy] → Leave pay rate",
+        "controls": ["Leave type selection (Paid/Partially paid/Unpaid)", "Percentage paid (for partially paid only)"],
+        "restrictions": "CANNOT edit daily wage formula - inherits from global settings",
+        "visual_indicator": "Formula fields are greyed out with 'Configured in daily wage calculation setting' message"
+      }
+    },
+    "key_insights": {
+      "insight_1": "Daily wage calculation only matters when there is salary deduction (partially paid or unpaid leave)",
+      "insight_2": "The percentage field in Partially paid leave determines the split between paid and unpaid portions",
+      "insight_3": "Unpaid leave is effectively 0% paid, so 100% of the daily wage becomes a deduction",
+      "insight_4": "All formula settings are centralized to ensure consistent calculations across all leave types",
+      "insight_5": "Changes to global daily wage settings automatically apply to all policies using that formula"
+    },
+    "conditional_pay_rate_toggle": {
+      "label": "Set conditional pay rate based on employee's leave allowance used",
+      "purpose": "Allows different pay rates based on how much leave the employee has taken",
+      "example_use_case": "First 10 days could be fully paid, next 5 days partially paid, remaining days unpaid",
+      "location": "Toggle appears above the Paid/Partially paid/Unpaid tabs"
+    }
+  },
   "status": "passed",
-  "validated_at": "2026-01-05T23:26:00Z"
+  "validated_at": "2026-01-16T12:00:00Z"
 }

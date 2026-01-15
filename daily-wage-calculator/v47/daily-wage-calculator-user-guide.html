@@ -796,6 +796,308 @@
 </section>
 
 <section class="section">
+  <h2>Leave Pay Rate — How Leave Types Control Daily Wage Calculations</h2>
+
+  <h3>Understanding the Connection</h3>
+  <p>The <strong>Leave pay rate</strong> section in leave policy configuration is the critical junction where Daily Wage Calculator settings are applied. This section determines whether and how payroll deductions are calculated when employees take leave.</p>
+
+  <div class="info-box">
+    <strong>Key Concept:</strong> The Daily Wage Calculator is only invoked when there is an unpaid component to the leave. For fully paid leave, no daily wage calculation is needed because no deduction occurs.
+  </div>
+
+  <h3>When Does Daily Wage Calculator Apply?</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Leave Type</th>
+        <th>Daily Wage Calculator Used?</th>
+        <th>Business Logic</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Paid leave</strong></td>
+        <td>No</td>
+        <td>Employee receives 100% salary — no deduction to calculate</td>
+      </tr>
+      <tr>
+        <td><strong>Partially paid leave</strong></td>
+        <td>Yes</td>
+        <td>Calculates deduction for the unpaid percentage of salary</td>
+      </tr>
+      <tr>
+        <td><strong>Unpaid leave</strong></td>
+        <td>Yes</td>
+        <td>Calculates full deduction for all leave days taken</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Navigation Path</h3>
+  <p class="nav-path">Settings → Leaves → Leave Policies → [Create/Edit Policy] → Leave pay rate section</p>
+
+  <h3>Option 1: Paid Leave</h3>
+  <figure class="screenshot-container">
+    <img src="validation/leave-pay-rate-paid-leave-full.png" alt="Paid leave configuration showing no daily wage formula" class="screenshot">
+    <figcaption>Paid Leave tab - No daily wage formula section appears</figcaption>
+  </figure>
+
+  <h4>What Appears in the Interface</h4>
+  <ul>
+    <li>"Paid leave" button selected with checkmark</li>
+    <li><strong>NO daily wage formula section</strong> - it is completely hidden</li>
+    <li>"Leave salary settings" section appears instead</li>
+  </ul>
+
+  <h4>Business Logic Explained</h4>
+  <p>When an employee takes <strong>Paid leave</strong>:</p>
+  <ol>
+    <li><strong>Compensation:</strong> Employee receives <strong>100% of their regular salary</strong> for the leave period</li>
+    <li><strong>Payroll Impact:</strong> <strong>No deduction</strong> is created because the employee is fully compensated</li>
+    <li><strong>Daily Wage Relevance:</strong> The Daily Wage Calculator is <strong>NOT used</strong> — there is no unpaid portion requiring calculation</li>
+    <li><strong>What Gets Recorded:</strong> Leave days are tracked for balance purposes only; no monetary adjustment appears in payroll table</li>
+  </ol>
+
+  <div class="feature-card">
+    <h4>Additional Option: Leave Salary</h4>
+    <p>When Paid leave is selected, a <strong>"Leave salary settings"</strong> section appears with an <strong>"Enable leave salary"</strong> toggle. This is for UAE labor law compliance where employees may receive an additional payment before their annual leave (a common practice in the region).</p>
+  </div>
+
+  <h4>Example Scenario</h4>
+  <div class="info-box">
+    <strong>Scenario:</strong> Employee takes 5 days of annual leave (Paid leave policy).<br><br>
+    <strong>Result:</strong> They receive their normal monthly salary with no deductions. The 5 leave days are deducted from their balance for tracking purposes only. No deduction line item appears in the payroll table.
+  </div>
+
+  <h3>Option 2: Partially Paid Leave</h3>
+  <figure class="screenshot-container">
+    <img src="validation/leave-pay-rate-partially-paid-full.png" alt="Partially paid leave configuration with percentage field and disabled daily wage formula" class="screenshot">
+    <figcaption>Partially Paid Leave tab - Shows percentage field and disabled daily wage formula</figcaption>
+  </figure>
+
+  <h4>What Appears in the Interface</h4>
+  <ul>
+    <li>"Partially paid leave" button selected with checkmark</li>
+    <li><strong>"Percentage paid"</strong> field (0-100%) — this is the key control</li>
+    <li>Daily wage formula section with <strong>disabled/greyed-out fields</strong></li>
+    <li>Question: "How should the daily wage be calculated for unpaid percentage of leaves?"</li>
+    <li>Alert message about automatic deduction adjustment</li>
+  </ul>
+
+  <h4>Business Logic Explained</h4>
+  <p>When an employee takes <strong>Partially paid leave</strong>:</p>
+  <ol>
+    <li><strong>Compensation:</strong> Employee receives a <strong>specified percentage</strong> of their daily wage for each leave day</li>
+    <li><strong>The Percentage Field:</strong> Determines the split between paid and unpaid portions
+      <ul>
+        <li>Set to 75% = employee receives 75% pay, 25% is deducted</li>
+        <li>Set to 50% = employee receives 50% pay, 50% is deducted</li>
+        <li>Set to 25% = employee receives 25% pay, 75% is deducted</li>
+      </ul>
+    </li>
+    <li><strong>Daily Wage Relevance:</strong> The Daily Wage Calculator determines the value of the <strong>UNPAID PORTION</strong></li>
+    <li><strong>Formula Applied:</strong> <code>Daily Wage × (100% - Percentage Paid) × Number of Leave Days = Deduction</code></li>
+  </ol>
+
+  <h4>Calculation Example</h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Basic salary</td>
+        <td>10,000 AED/month</td>
+      </tr>
+      <tr>
+        <td>Custom days divisor</td>
+        <td>30</td>
+      </tr>
+      <tr>
+        <td>Percentage paid</td>
+        <td>50%</td>
+      </tr>
+      <tr>
+        <td>Leave days taken</td>
+        <td>3 days</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box">
+    <strong>Step-by-step calculation:</strong><br><br>
+    1. <strong>Daily wage</strong> = 10,000 ÷ 30 = <strong>333.33 AED</strong><br>
+    2. <strong>Paid portion</strong> = 333.33 × 50% × 3 = <strong>500.00 AED</strong> (employee receives this)<br>
+    3. <strong>Unpaid portion</strong> = 333.33 × 50% × 3 = <strong>500.00 AED</strong> (payroll deduction)<br>
+    4. <strong>Net effect:</strong> Employee's monthly salary reduced by <strong>500.00 AED</strong>
+  </div>
+
+  <h3>Option 3: Unpaid Leave</h3>
+  <figure class="screenshot-container">
+    <img src="validation/leave-pay-rate-unpaid-leave.png" alt="Unpaid leave configuration with disabled daily wage formula" class="screenshot">
+    <figcaption>Unpaid Leave tab - Shows disabled daily wage formula for full deduction</figcaption>
+  </figure>
+
+  <h4>What Appears in the Interface</h4>
+  <ul>
+    <li>"Unpaid leave" button selected with checkmark</li>
+    <li><strong>NO percentage field</strong> — because it's implicitly 0%</li>
+    <li>Daily wage formula section with <strong>disabled/greyed-out fields</strong></li>
+    <li>Question: "How should the daily wage be calculated for unpaid leaves?"</li>
+    <li>Alert: "Based on the leave allowance used, deduction adjustment for unpaid leaves will be automatically added in payroll table"</li>
+  </ul>
+
+  <h4>Business Logic Explained</h4>
+  <p>When an employee takes <strong>Unpaid leave</strong>:</p>
+  <ol>
+    <li><strong>Compensation:</strong> Employee receives <strong>0% salary</strong> for leave days — no pay at all</li>
+    <li><strong>Payroll Impact:</strong> <strong>Full daily wage deduction</strong> for each leave day</li>
+    <li><strong>Daily Wage Relevance:</strong> The Daily Wage Calculator is <strong>FULLY applied</strong> to calculate the total deduction</li>
+    <li><strong>Formula Applied:</strong> <code>Daily Wage × Number of Leave Days = Total Deduction</code></li>
+  </ol>
+
+  <h4>Calculation Example</h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Basic salary</td>
+        <td>10,000 AED/month</td>
+      </tr>
+      <tr>
+        <td>Custom days divisor</td>
+        <td>30</td>
+      </tr>
+      <tr>
+        <td>Leave days taken</td>
+        <td>2 days</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box">
+    <strong>Step-by-step calculation:</strong><br><br>
+    1. <strong>Daily wage</strong> = 10,000 ÷ 30 = <strong>333.33 AED</strong><br>
+    2. <strong>Deduction</strong> = 333.33 × 2 = <strong>666.67 AED</strong><br>
+    3. <strong>Net effect:</strong> Employee's monthly salary reduced by <strong>666.67 AED</strong>
+  </div>
+
+  <div class="warning-box">
+    <strong>Important:</strong> Unpaid leave is conceptually equivalent to Partially paid leave at 0%. The only difference is the UI doesn't show a percentage field because the value is always 0%.
+  </div>
+
+  <h3>Why Are Formula Fields Disabled at Policy Level?</h3>
+  <p>When configuring leave policies, you'll notice the daily wage formula fields (Salary component, Day calculation type, Divisor) are <strong>greyed out and disabled</strong>. This is intentional.</p>
+
+  <div class="feature-card">
+    <h4>Configuration Hierarchy</h4>
+    <p>The Daily Wage Calculator uses a <strong>three-level configuration hierarchy</strong>:</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Level</th>
+          <th>Location</th>
+          <th>What You Can Control</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Level 1: Global</strong></td>
+          <td>Settings → Payroll → Daily Wage Calculation</td>
+          <td>Salary component, day calculation type, divisor value</td>
+        </tr>
+        <tr>
+          <td><strong>Level 2: Service</strong></td>
+          <td>Same page, per-service rows</td>
+          <td>Per-service formula (Salary proration, EOS, Unpaid leave)</td>
+        </tr>
+        <tr>
+          <td><strong>Level 3: Policy</strong></td>
+          <td>Settings → Leaves → Leave Policies</td>
+          <td><strong>Leave type ONLY</strong> (Paid/Partially paid/Unpaid)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>Key restriction:</strong> At Level 3 (policy level), you can only choose the <strong>leave type</strong>. You <strong>CANNOT edit</strong> the daily wage formula — it is inherited from Level 1 and displayed as read-only.</p>
+
+  <h4>Visual Indicators of This Restriction</h4>
+  <ul>
+    <li>Greyed-out dropdown fields</li>
+    <li>Disabled text inputs</li>
+    <li>Message: "Configured in daily wage calculation setting"</li>
+    <li>Clickable link to navigate to the global settings</li>
+  </ul>
+
+  <h4>Why This Design?</h4>
+  <p>This centralized approach ensures:</p>
+  <ul>
+    <li><strong>Organizational consistency:</strong> All leave policies use the same daily wage formula</li>
+    <li><strong>Reduced errors:</strong> No risk of individual policies having conflicting calculation methods</li>
+    <li><strong>Easier auditing:</strong> One place to verify and document calculation settings</li>
+    <li><strong>Simplified maintenance:</strong> Changes to global settings automatically apply to all policies</li>
+  </ul>
+
+  <h3>Conditional Pay Rate Option</h3>
+  <p>Above the three leave type tabs, there's a toggle:</p>
+  <div class="info-box">
+    <strong>Toggle:</strong> "Set conditional pay rate based on <strong>employee's leave allowance used</strong>"
+  </div>
+
+  <p><strong>Purpose:</strong> Allows different pay rates based on how much leave the employee has already taken in the cycle.</p>
+
+  <h4>Example Use Case</h4>
+  <p>A company might configure a policy where:</p>
+  <ul>
+    <li>First 10 days of leave: Fully paid (100%)</li>
+    <li>Days 11-15: Partially paid (50%)</li>
+    <li>Days 16 and beyond: Unpaid (0%)</li>
+  </ul>
+  <p>This enables progressive deduction policies where employees exhaust their paid allowance before moving to partially paid or unpaid leave.</p>
+
+  <h3>Summary: Leave Pay Rate Impact on Daily Wage</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Selection</th>
+        <th>Daily Wage Formula</th>
+        <th>Deduction Created</th>
+        <th>Payroll Table Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Paid leave</strong></td>
+        <td>Not shown</td>
+        <td>None</td>
+        <td>No deduction line</td>
+      </tr>
+      <tr>
+        <td><strong>Partially paid (X%)</strong></td>
+        <td>Shown (disabled)</td>
+        <td><code>Daily Rate × (100-X)% × Days</code></td>
+        <td>Deduction for unpaid %</td>
+      </tr>
+      <tr>
+        <td><strong>Unpaid leave</strong></td>
+        <td>Shown (disabled)</td>
+        <td><code>Daily Rate × Days</code></td>
+        <td>Full deduction</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
   <h2>Feature Maintenance</h2>
   
   <h3>Ongoing Maintenance Tasks</h3>
@@ -934,6 +1236,45 @@
     <li>Document the rationale for selecting specific calculation bases (calendar days vs. working days)</li>
     <li>Ensure salary components used in calculations are consistently defined across the payroll system</li>
   </ul>
+
+  <h3>Validated Interface Features</h3>
+  <p>The following features have been validated through interface testing:</p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Status</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Impact messaging for policy changes</td>
+        <td>Confirmed Working</td>
+        <td>EOS leave Encashment dialog displays "This change will affect X eligible paid leave - leave policies" when the Overwrite toggle is enabled</td>
+      </tr>
+      <tr>
+        <td>Decimal precision in calculations</td>
+        <td>Confirmed Working</td>
+        <td>All monetary values display correct 2 decimal place formatting (e.g., 36,083.33, 15,250.00)</td>
+      </tr>
+      <tr>
+        <td>Remarks column in payroll detail</td>
+        <td>Present</td>
+        <td>Shows transaction dates and pay periods (e.g., "23RD DEC - 23RD DEC", "PAY PERIOD - OCTOBER, 2025")</td>
+      </tr>
+      <tr>
+        <td>Month length documentation</td>
+        <td>Not Available in UI</td>
+        <td>No explicit documentation in the Calendar days option about handling varying month lengths (28-31 days)</td>
+      </tr>
+      <tr>
+        <td>Transaction-level warnings</td>
+        <td>Requires Active Transactions</td>
+        <td>Warnings for open payroll with existing transactions only appear when such transactions exist</td>
+      </tr>
+    </tbody>
+  </table>
 </section>
 
 <section class="section">
