@@ -1,409 +1,1080 @@
 <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>work-expenses - User Guide | Bayzat</title>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work Expenses - User Guide | Bayzat</title>
 
-    <style>
-      /* CSS Reset and Base */
-      *, *::before, *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+  <style>
+    /* CSS Reset and Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background-color: #ffffff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+      color: #ffffff;
+      padding: 60px 40px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .hero-banner h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      color: #ffffff;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      color: #1a1a1a;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #E2E8F0;
+    }
+
+    h3 {
+      font-size: 1.35rem;
+    }
+
+    p {
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+
+    /* Sections */
+    section, .section {
+      margin-bottom: 3rem;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+    }
+
+    /* Info Boxes */
+    .info-box, .note-box, .tip-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FAF5FF;
+      border-left: 4px solid #6B46C1;
+    }
+
+    .info-box p, .note-box p, .tip-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    .warning-box, .important-box, .caution-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FFFBEB;
+      border-left: 4px solid #D97706;
+    }
+
+    .warning-box p, .important-box p, .caution-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Lists */
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+      color: #1a1a1a;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: #ffffff;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid #E2E8F0;
+      color: #1a1a1a;
+    }
+
+    th {
+      background: #F7FAFC;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    tr:hover {
+      background: #F7FAFC;
+    }
+
+    /* Screenshots */
+    .screenshot-container, figure {
+      margin: 24px auto;
+      text-align: center;
+    }
+
+    .screenshot, figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #E2E8F0;
+      display: block;
+      margin: 0 auto;
+    }
+
+    figcaption {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #1a1a1a;
+      font-style: italic;
+    }
+
+    /* Feature Grid and Cards */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .feature-card, .card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .feature-card h4, .card h4 {
+      color: #1a1a1a;
+      margin-top: 0;
+    }
+
+    .feature-card p, .card p {
+      color: #1a1a1a;
+    }
+
+    /* Journey Grid */
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .journey-step {
+      background: #F7FAFC;
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .journey-step .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .journey-step h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .journey-step p {
+      margin: 0;
+      color: #1a1a1a;
+    }
+
+    /* Steps */
+    .step, .step-item {
+      display: flex;
+      gap: 16px;
+      margin: 20px 0;
+      padding: 16px;
+      background: #F7FAFC;
+      border-radius: 8px;
+    }
+
+    .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-content h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .step-content p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Navigation Path */
+    .nav-path, .breadcrumb {
+      background: #F7FAFC;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: monospace;
+      color: #1a1a1a;
+      margin: 16px 0;
+    }
+
+    /* Code blocks */
+    code {
+      background: #F7FAFC;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.9em;
+      color: #1a1a1a;
+    }
+
+    /* Links */
+    a {
+      color: #6B46C1;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Badge */
+    .badge {
+      background: #6B46C1;
+      color: #ffffff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-warning {
+      background: #D97706;
+      color: #ffffff;
+    }
+
+    /* Status Flow */
+    .status-flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 20px 0;
+      padding: 20px;
+      background: #F7FAFC;
+      border-radius: 8px;
+    }
+
+    .status-level {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .status-pending { background: #FEF3C7; color: #92400E; }
+    .status-approved { background: #C6F6D5; color: #22543D; }
+    .status-rejected { background: #FED7D7; color: #822727; }
+    .status-payroll { background: #BEE3F8; color: #2A4365; }
+    .status-settled { background: #E9D8FD; color: #553C9A; }
+
+    .status-arrow {
+      color: #718096;
+      font-size: 1.2rem;
+    }
+
+    /* Footer */
+    footer, .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #E2E8F0;
+      text-align: center;
+      color: #1a1a1a;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        line-height: 1.6;
-        color: #1a1a1a;
-        background-color: #ffffff;
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 20px;
+        padding: 16px;
       }
 
-      /* Hero Banner */
       .hero-banner {
-        background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
-        color: #ffffff;
-        padding: 60px 40px;
-        border-radius: 12px;
-        margin-bottom: 40px;
-        text-align: center;
+        padding: 40px 24px;
       }
 
       .hero-banner h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 16px;
-        color: #ffffff;
-      }
-
-      .hero-subtitle {
-        font-size: 1.2rem;
-        opacity: 0.95;
-        color: #ffffff;
-      }
-
-      /* Typography */
-      h1, h2, h3, h4, h5, h6 {
-        color: #1a1a1a;
-        font-weight: 600;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
+        font-size: 1.75rem;
       }
 
       h2 {
-        font-size: 1.75rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #E2E8F0;
+        font-size: 1.5rem;
       }
 
-      h3 {
-        font-size: 1.35rem;
-      }
-
-      p {
-        color: #1a1a1a;
-        margin-bottom: 1rem;
-      }
-
-      /* Sections */
       section, .section {
-        margin-bottom: 3rem;
-        padding: 24px;
-        background: #ffffff;
-        border-radius: 8px;
-        border: 1px solid #E2E8F0;
+        padding: 16px;
       }
 
-      /* Info Boxes */
-      .info-box, .note-box, .tip-box {
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 20px 0;
-        background: #FAF5FF;
-        border-left: 4px solid #6B46C1;
-      }
-
-      .info-box p, .note-box p, .tip-box p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      .warning-box, .important-box, .caution-box {
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 20px 0;
-        background: #FFFBEB;
-        border-left: 4px solid #D97706;
-      }
-
-      .warning-box p, .important-box p, .caution-box p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      /* Lists */
-      ul, ol {
-        margin: 1rem 0;
-        padding-left: 2rem;
-        color: #1a1a1a;
-      }
-
-      li {
-        margin-bottom: 0.5rem;
-        color: #1a1a1a;
-      }
-
-      /* Tables */
       table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        background: #ffffff;
+        font-size: 0.9rem;
       }
 
       th, td {
-        padding: 12px 16px;
-        text-align: left;
-        border: 1px solid #E2E8F0;
-        color: #1a1a1a;
+        padding: 8px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-banner h1 {
+        font-size: 1.5rem;
       }
 
-      th {
-        background: #F7FAFC;
-        font-weight: 600;
-        color: #1a1a1a;
+      .hero-subtitle {
+        font-size: 1rem;
       }
 
-      tr:hover {
-        background: #F7FAFC;
+      .step {
+        flex-direction: column;
+        gap: 12px;
       }
 
-      /* Screenshots */
-      .screenshot-container, figure {
-        margin: 24px auto;
-        text-align: center;
+      .status-flow {
+        flex-direction: column;
       }
+    }
 
-      .screenshot, figure img {
+    /* Print Styles */
+    @media print {
+      body {
         max-width: 100%;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border: 1px solid #E2E8F0;
-        display: block;
-        margin: 0 auto;
+        padding: 0;
       }
 
-      figcaption {
-        margin-top: 12px;
-        font-size: 0.9rem;
-        color: #1a1a1a;
-        font-style: italic;
+      .hero-banner {
+        background: #6B46C1 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
 
-      /* Feature Grid and Cards */
-      .feature-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-        margin: 20px 0;
+      section, .section {
+        break-inside: avoid;
       }
+    }
+  </style>
 
-      .feature-card, .card {
-        background: #ffffff;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: 20px;
-        margin: 16px 0;
-      }
+</head>
+<body>
+<div class="hero-banner">
+  <h1>Work Expenses</h1>
+  <p class="hero-subtitle">Streamline employee expense reimbursements with automated approvals and seamless payroll integration</p>
+</div>
 
-      .feature-card h4, .card h4 {
-        color: #1a1a1a;
-        margin-top: 0;
-      }
+<figure>
+  <img src="validation/screenshots/03-work-expenses-main-page.png" alt="Work Expenses main page showing expense list" />
+  <figcaption>Work Expenses Dashboard - Track and manage employee expense reimbursements with status filtering</figcaption>
+</figure>
 
-      .feature-card p, .card p {
-        color: #1a1a1a;
-      }
+<section class="section">
+  <h2>What is Work Expenses?</h2>
 
-      /* Journey Grid */
-      .journey-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 16px;
-        margin: 20px 0;
-      }
+  <h3>Overview</h3>
+  <p>Work Expenses is a comprehensive expense management module within the Bayzat HR platform that enables employees to submit reimbursement requests for work-related expenditures. The feature automates the entire expense lifecycle—from initial submission with receipt uploads to final settlement through payroll processing.</p>
 
-      .journey-step {
-        background: #F7FAFC;
-        border-radius: 8px;
-        padding: 20px;
-        position: relative;
-      }
+  <h3>Key Benefits</h3>
+  <ul>
+    <li><strong>Effortless Submission:</strong> Employees submit expense requests with receipt uploads and OCR auto-extraction</li>
+    <li><strong>Structured Approvals:</strong> Multi-level approval workflows with line manager routing and status tracking</li>
+    <li><strong>Payroll Integration:</strong> Approved expenses automatically flow to payroll for timely reimbursement</li>
+    <li><strong>Complete Visibility:</strong> Track expenses through five distinct statuses from submission to settlement</li>
+    <li><strong>Multi-Currency Support:</strong> Submit expenses in various currencies (AED, USD, EUR, etc.)</li>
+  </ul>
 
-      .journey-step .step-number {
-        background: #6B46C1;
-        color: #ffffff;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        margin-bottom: 12px;
-      }
+  <h3>Who Uses This Feature?</h3>
+  <ul>
+    <li><strong>Employees:</strong> Submit expense requests for travel, office supplies, mileage, and other work-related costs</li>
+    <li><strong>Line Managers:</strong> Review and approve/reject expense requests from direct reports</li>
+    <li><strong>Expense Managers:</strong> Oversee all company expense requests and manage approval workflows</li>
+    <li><strong>Payroll Table Managers:</strong> Add approved expenses to payroll cycles for reimbursement processing</li>
+    <li><strong>Super Admins:</strong> Configure approval flows, manage categories, and oversee the entire expense system</li>
+  </ul>
+</section>
 
-      .journey-step h4 {
-        margin: 0 0 8px 0;
-        color: #1a1a1a;
-      }
+<section class="section">
+  <h2>Product Foundation Overview</h2>
 
-      .journey-step p {
-        margin: 0;
-        color: #1a1a1a;
-      }
-
-      /* Steps */
-      .step, .step-item {
-        display: flex;
-        gap: 16px;
-        margin: 20px 0;
-        padding: 16px;
-        background: #F7FAFC;
-        border-radius: 8px;
-      }
-
-      .step-number {
-        background: #6B46C1;
-        color: #ffffff;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        flex-shrink: 0;
-      }
-
-      .step-content {
-        flex: 1;
-      }
-
-      .step-content h4 {
-        margin: 0 0 8px 0;
-        color: #1a1a1a;
-      }
-
-      .step-content p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      /* Navigation Path */
-      .nav-path, .breadcrumb {
-        background: #F7FAFC;
-        padding: 12px 16px;
-        border-radius: 6px;
-        font-family: monospace;
-        color: #1a1a1a;
-        margin: 16px 0;
-      }
-
-      /* Code blocks */
-      code {
-        background: #F7FAFC;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-family: 'SF Mono', Monaco, monospace;
-        font-size: 0.9em;
-        color: #1a1a1a;
-      }
-
-      pre {
-        background: #F7FAFC;
-        padding: 16px;
-        border-radius: 8px;
-        overflow-x: auto;
-        color: #1a1a1a;
-      }
-
-      /* Links */
-      a {
-        color: #6B46C1;
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      /* Footer */
-      footer, .footer {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #E2E8F0;
-        text-align: center;
-        color: #1a1a1a;
-        font-size: 0.9rem;
-      }
-
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        body {
-          padding: 16px;
-        }
-
-        .hero-banner {
-          padding: 40px 24px;
-        }
-
-        .hero-banner h1 {
-          font-size: 1.75rem;
-        }
-
-        h2 {
-          font-size: 1.5rem;
-        }
-
-        section, .section {
-          padding: 16px;
-        }
-
-        table {
-          font-size: 0.9rem;
-        }
-
-        th, td {
-          padding: 8px 12px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .hero-banner h1 {
-          font-size: 1.5rem;
-        }
-
-        .hero-subtitle {
-          font-size: 1rem;
-        }
-
-        .step {
-          flex-direction: column;
-          gap: 12px;
-        }
-      }
-
-      /* Print Styles */
-      @media print {
-        body {
-          max-width: 100%;
-          padding: 0;
-        }
-
-        .hero-banner {
-          background: #6B46C1 !important;
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-
-        section, .section {
-          break-inside: avoid;
-        }
-      }
-    </style>
-
-  </head>
-  <body>
-  <div class="hero-banner">
-    <h1>work-expenses</h1>
-    <p class="hero-subtitle"></p>
+  <h3>Core Concepts</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Expense Types</h4>
+      <p>Two submission options: Standard expense reimbursements and mileage-based reimbursements with distance calculations.</p>
+    </div>
+    <div class="feature-card">
+      <h4>OCR Technology</h4>
+      <p>Upload receipts and automatically extract expense details including amount, date, and vendor information.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Approval Workflows</h4>
+      <p>Configurable multi-level approval hierarchies with line manager routing and role-based permissions.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Status Lifecycle</h4>
+      <p>Five distinct stages: Pending, Approved, Rejected, Added to Payroll, and Settled.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Payroll Integration</h4>
+      <p>Approved expenses flow directly to payroll tables for timely reimbursement processing.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Activity Feed</h4>
+      <p>Complete audit trail with approval history, comments, and status change timestamps.</p>
+    </div>
   </div>
 
-  
+  <h3>Technical Prerequisites</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Bayzat HR Platform</td>
+        <td>Active account with Payroll module enabled</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>User Roles</td>
+        <td>Expense Manager or appropriate permissions assigned</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Employee Records</td>
+        <td>Active employee profiles with email addresses</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Approval Flows</td>
+        <td>At least one approval flow configured</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Expense Categories</td>
+        <td>Categories created in Settings</td>
+        <td>Recommended</td>
+      </tr>
+      <tr>
+        <td>Line Manager Assignment</td>
+        <td>Employee reporting structure defined</td>
+        <td>Recommended</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
 
-  <section class="section" id="hero">
-      <h2>Work Expenses</h2><div class="content"><p><div class="hero-section"><h1>Work Expenses</h1><p class="tagline">Streamline employee expense reimbursements with automated approvals and seamless payroll integration</p><ul class="key-benefits"><ul><li><strong>Effortless Submission:</strong> Employees submit expense requests with receipt uploads and OCR auto-extraction</li><li><strong>Structured Approvals:</strong> Multi-level approval workflows with line manager routing and status tracking</li><li><strong>Payroll Integration:</strong> Approved expenses automatically flow to payroll for timely reimbursement</li><li><strong>Complete Visibility:</strong> Track expenses through five distinct statuses from submission to settlement</li></ul></ul></div></p></div></section>
-<section class="section" id="feature-overview">
-      <h2>Feature Overview</h2><div class="content"><p><h3>What Work Expenses Does</h3><p>Work Expenses is a comprehensive expense management module within Bayzat's payroll system that enables employees to submit reimbursement requests for work-related expenditures. The feature automates the entire expense lifecycle—from initial submission with receipt uploads to final settlement through payroll processing.</p><h3>Who Uses This Feature</h3><p>Work Expenses serves multiple user personas across your organization:</p><ul><ul><li><strong>Employees:</strong> Submit expense requests for travel, office supplies, mileage, and other work-related costs</li><li><strong>Line Managers:</strong> Review and approve/reject expense requests from direct reports</li><li><strong>Expense Managers:</strong> Oversee all company expense requests and manage approval workflows</li><li><strong>Payroll Table Managers:</strong> Add approved expenses to payroll cycles for reimbursement processing</li><li><strong>Transaction Processors:</strong> Manage expense settlements and payment tracking</li><li><strong>Super Admins:</strong> Configure approval flows, manage categories, and oversee the entire expense system</li></ul><h3>Key Capabilities</h3><ul><li><strong>Dual Submission Methods:</strong> Create standard expense reimbursements or mileage-based reimbursements with automatic distance calculations</li><li><strong>OCR Technology:</strong> Upload receipts and automatically extract expense details including amount, date, and vendor information</li><li><strong>Flexible Approval Flows:</strong> Configure multi-level approval hierarchies with line manager routing and role-based permissions</li><li><strong>Status Tracking:</strong> Monitor expenses through five stages: Pending Requests, Approved, Rejected, Added to Payroll, and Settled</li><li><strong>Bulk Operations:</strong> Select and process multiple expense requests simultaneously</li><li><strong>Comprehensive Reporting:</strong> Download expense lists as Excel files and attachments as ZIP archives</li><li><strong>Activity Feed:</strong> View complete approval history and comments for each expense request</li><li><strong>Multi-Currency Support:</strong> Submit expenses in various currencies with automatic conversion tracking</li></ul><h3>Business Value</h3><p>Work Expenses delivers measurable benefits to organizations:</p><ul><li><strong>Reduced Processing Time:</strong> OCR automation and streamlined approvals eliminate manual data entry and reduce approval cycles from days to hours</li><li><strong>Enhanced Compliance:</strong> Structured approval workflows ensure proper authorization and create audit trails for every expense transaction</li><li><strong>Improved Employee Experience:</strong> Mobile-friendly submission and transparent status tracking empower employees with self-service capabilities</li><li><strong>Financial Accuracy:</strong> Direct payroll integration eliminates manual data transfer errors and ensures timely reimbursements</li><li><strong>Cost Visibility:</strong> Comprehensive reporting and categorization provide insights into expense patterns and spending trends</li></ul></ul></p></div></section>
-<section class="section" id="product-foundation">
-      <h2>Product Foundation</h2><div class="content"><p><h3>Technical Prerequisites</h3><p>Before using Work Expenses, ensure your Bayzat environment meets these requirements:</p><ul><ul><li><strong>Active Payroll Module:</strong> Work Expenses is integrated within the Payroll module and requires payroll to be enabled</li><li><strong>Employee Profiles:</strong> Employees must have complete profiles with valid work email addresses for notifications</li><li><strong>Role Management:</strong> User roles must be configured in Settings → Role Management to assign expense-related permissions</li><li><strong>Approval Workflows:</strong> At least one approval flow must be configured for expense requests to route properly</li></ul><h3>Module Dependencies</h3><p>Work Expenses integrates with and depends on these Bayzat modules:</p><dl><dt>Payroll Module</dt><dd>Core dependency—approved expenses are added to payroll tables for reimbursement processing. Expenses cannot be settled without payroll integration.</dd><dt>Employee Management</dt><dd>Employee profiles provide the foundation for expense submissions, including line manager relationships used in approval routing.</dd><dt>Role Management</dt><dd>Defines user permissions for viewing, approving, and managing expenses. Roles include Expense Manager, Payroll Table Manager, and Transaction Processor.</dd><dt>Finance Operations</dt><dd>Work Expenses appears under the Finance Ops menu and shares navigation structure with other financial modules.</dd></dl><h3>Licensing and Plan Requirements</h3><p>Work Expenses is available to all Bayzat customers with active Payroll subscriptions. No additional licensing is required. However, certain features may have plan-specific availability:</p><ul><li><strong>Standard Plans:</strong> Full expense submission, approval, and payroll integration capabilities</li><li><strong>OCR Technology:</strong> Receipt scanning and auto-extraction available across all plans</li><li><strong>Workflow Integration:</strong> Expense-related workflow actions available with Workflows module access</li></ul><h3>Integration Points</h3><p>Work Expenses connects to these system components:</p><ul><li><strong>Payroll Tables:</strong> Approved expenses flow directly to payroll cycles for reimbursement</li><li><strong>Email System:</strong> Automated notifications sent to employees and approvers at each status change</li><li><strong>Document Storage:</strong> Receipt attachments stored securely and accessible for download</li><li><strong>Audit Logging:</strong> Complete activity history tracked for compliance and troubleshooting</li><li><strong>Reporting Engine:</strong> Expense data available for Excel export and custom reporting</li></ul></ul><h3>Related Features</h3><p>Work Expenses works alongside these complementary Bayzat features:</p><dl><dt>Bayzat Workflows</dt><dd>While Work Expenses does not currently trigger workflow events, the platform provides three workflow actions for expense automation: Create expense request, Update expense request, and Delete expense request. These actions can be triggered by other system events to automate expense creation.</dd><dt>Air Ticket Policies</dt><dd>Separate module for managing employee air ticket allowances and bookings, with similar approval flow structure</dd><dt>Payroll Adjustments</dt><dd>Complementary feature for one-time payments and deductions processed through payroll</dd><dt>Employee Loans</dt><dd>Related financial module for managing employee loan requests and repayments</dd></dl><div class="tip"><strong>Configuration Tip:</strong> Work Expenses cannot be independently disabled without also disabling the Payroll module. If your organization uses an external expense system, communicate this to employees and configure approval flows to reject unauthorized submissions.</div></p></div></section>
-<section class="section" id="user-journey">
-      <h2>User Journey: End-to-End Expense Management Workflow</h2><div class="content"><p><p>The Work Expenses feature supports a complete lifecycle for managing employee reimbursement requests, from initial submission through final settlement. This journey involves multiple stakeholders and progresses through five distinct stages.</p><h3>Journey Overview</h3><p>The expense management workflow accommodates two primary user paths:</p><ul><ul><li><strong>Employee-Initiated Requests:</strong> Employees submit their own expense reimbursement requests through the platform</li><li><strong>Admin-Initiated Requests:</strong> Administrators or managers submit expense requests on behalf of employees</li></ul><h3>Workflow Stages</h3><p>Every expense request progresses through a defined status lifecycle:</p><ol><li><strong>Pending Requests:</strong> Initial submission awaiting approval from designated approvers in the approval flow</li><li><strong>Approved:</strong> Request has been approved by all required approvers and is ready for payroll processing</li><li><strong>Rejected:</strong> Request was declined by one or more approvers in the approval chain</li><li><strong>Added to Payroll:</strong> Approved expense has been added to the payroll table for payment processing</li><li><strong>Settled:</strong> Payment has been processed and the expense is fully reimbursed</li></ol><h3>Key Decision Points</h3><h4>1. Submission Method Selection</h4><p>Users choose between two submission types based on their needs:</p><ul><li><strong>Expense Reimbursement:</strong> For general work-related expenses requiring receipt documentation</li><li><strong>Mileage Reimbursement:</strong> For travel-related expenses calculated based on distance traveled</li></ul><h4>2. Receipt Upload Approach</h4><p>When creating an expense request, users can:</p><ul><li>Start with a receipt image (OCR technology automatically extracts expense details)</li><li>Start without a receipt and manually enter all expense information</li><li>Add or update receipts after initial submission</li></ul><h4>3. Approval Flow Routing</h4><p>The system routes requests through a predefined approval hierarchy that may include:</p><ul><li>Line Managers (first-level approval)</li><li>Expense Managers (specialized expense reviewers)</li><li>Super Admins (final approval authority)</li><li>Multi-level approvers (sequential or parallel approval steps)</li></ul><p><strong>Critical Rule:</strong> If any approver in the approval flow rejects the request, it is immediately moved to Rejected status and the approval process stops.</p><h4>4. Payroll Processing Decision</h4><p>Once approved, authorized users decide when to add expenses to the payroll table:</p><ul><li>Individual expense selection for immediate processing</li><li>Bulk selection for batch processing</li><li>Alignment with specific payroll cycles</li></ul><h3>Typical Use Case Scenarios</h3><h4>Scenario 1: Employee Travel Expense</h4><ol><li>Employee attends a business conference and incurs hotel and meal expenses</li><li>Employee takes photos of receipts using mobile device</li><li>Employee submits expense request via mobile app or web platform</li><li>OCR technology extracts amount, date, and merchant information</li><li>Employee reviews auto-filled data and adds description</li><li>Request routes to Line Manager for initial approval</li><li>Line Manager reviews receipt and approves</li><li>Request automatically moves to Expense Manager for final approval</li><li>Expense Manager approves and adds to next payroll cycle</li><li>Employee receives reimbursement in next payroll payment</li></ol><h4>Scenario 2: Admin-Submitted Expense for Blue Collar Worker</h4><ol><li>Blue collar employee submits paper receipt to site supervisor</li><li>Supervisor forwards receipt to HR administrator</li><li>HR admin navigates to employee's profile in Bayzat</li><li>Admin clicks "Add Expense Reimbursement" on behalf of employee</li><li>Admin uploads receipt image and system auto-fills details</li><li>Admin submits request (automatically approved due to admin privileges)</li><li>Request appears in Approved tab immediately</li><li>Admin adds expense to payroll table for next payment cycle</li><li>Employee receives reimbursement without needing platform access</li></ol><h4>Scenario 3: Mileage Reimbursement</h4><ol><li>Employee uses personal vehicle for client meetings</li><li>Employee selects "Add Mileage Reimbursement" option</li><li>Employee enters starting location, destination, and distance traveled</li><li>System automatically calculates reimbursement amount based on configured mileage rate</li><li>Employee adds client name and trip description</li><li>Request routes through approval flow</li><li>Approvers review trip details and approve</li><li>Mileage reimbursement added to payroll and settled</li></ol><h3>Expected Outcomes at Each Stage</h3><table><thead><tr><th>Stage</th><th>Outcome</th><th>Next Steps</th></tr></thead><tbody><tr><td>Pending Requests</td><td>Request visible to approvers; employee can track status</td><td>Approvers review and take action (approve/reject/comment)</td></tr><tr><td>Approved</td><td>Request ready for payroll processing; no further approvals needed</td><td>Authorized users add to payroll table</td></tr><tr><td>Rejected</td><td>Request declined; employee notified of rejection reason</td><td>Employee can resubmit corrected request if appropriate</td></tr><tr><td>Added to Payroll</td><td>Expense included in payroll cycle; payment being processed</td><td>Payroll team processes payment; can be moved back to Approved if needed</td></tr><tr><td>Settled</td><td>Payment completed; expense fully reimbursed</td><td>No further action required; expense archived for reporting</td></tr></tbody></table><h3>Activity Tracking Throughout Journey</h3><p>The platform maintains a complete audit trail for each expense request, capturing:</p><ul><li>Submission timestamp and submitter identity</li><li>Each approval action with approver name and timestamp</li><li>Status changes and transitions</li><li>Comments and feedback from approvers</li><li>Edits and modifications to expense details</li><li>Payroll processing dates</li><li>Final settlement confirmation</li></ul></ul><p>This activity feed is visible in the expense detail modal, providing full transparency into the request lifecycle.</p></p></div></section>
-<section class="section" id="prerequisites">
-      <h2>Prerequisites</h2><div class="content"><p><p>Before using the Work Expenses feature, ensure the following requirements are met to enable smooth expense management workflows.</p><h3>Required Permissions and Roles</h3><p>Users must have one of the following roles assigned to interact with work expenses:</p><table><thead><tr><th>Role</th><th>Permissions</th><th>Assignment Method</th></tr></thead><tbody><tr><td>Super Admin</td><td>Full access: create, view, edit, approve, reject, delete expenses; configure approval flows; manage all expense statuses</td><td>Assigned in Settings → Role Management</td></tr><tr><td>Expense Manager</td><td>View and manage expenses; approve/reject requests; add expenses to payroll; cannot configure approval flows</td><td>Assigned in Settings → Role Management</td></tr><tr><td>Payroll Table Manager</td><td>Add approved expenses to payroll table; view expense details; manage payroll processing</td><td>Assigned in Settings → Role Management</td></tr><tr><td>Transaction Processor</td><td>Process expense settlements; manage payment workflows; view expense details</td><td>Assigned in Settings → Role Management</td></tr><tr><td>Line Manager</td><td>Approve/reject expenses for direct reports; view team member expenses; add comments</td><td>Assigned via employee reporting structure in employee profiles</td></tr><tr><td>Employee</td><td>Submit own expense requests; view own expense history; track request status</td><td>Automatic for all active employees</td></tr></tbody></table><div class="tip"><strong>Important:</strong> Line Manager permissions are automatically granted based on the organizational reporting structure. Ensure employee profiles have correct Line Manager assignments before configuring expense approval flows.</div><h3>Required Data and Configuration</h3><h4>1. Expense Categories</h4><p>At least one expense category must be configured before employees can submit requests:</p><ul><ul><li>Navigate to <strong>Settings → Work Expenses → Expense Categories</strong></li><li>Create categories that match your organization's expense types (e.g., Travel, Meals, Office Supplies, Client Entertainment)</li><li>Define whether each category requires receipt documentation</li><li>Set category-specific approval requirements if needed</li></ul><h4>2. Approval Flow Configuration</h4><p>A valid approval flow must be established to route expense requests:</p><ul><li>Navigate to <strong>Settings → Work Expenses → Approval Flows</strong></li><li>Define the sequence of approvers (e.g., Line Manager → Expense Manager → Super Admin)</li><li>Configure approval levels and parallel/sequential approval logic</li><li>Assign approvers to each level in the flow</li></ul><div class="warning"><strong>⚠️ Critical Requirement:</strong> Without a configured approval flow, employee-submitted expense requests cannot be processed. Admin-submitted requests bypass approval flows and are automatically approved.</div><h4>3. Employee Profiles</h4><p>Employee records must contain accurate information:</p><ul><li><strong>Work Email:</strong> Required for expense notification emails</li><li><strong>Line Manager Assignment:</strong> Required if Line Manager approval is part of the approval flow</li><li><strong>Department:</strong> May be used for approval routing or reporting</li><li><strong>Payroll Currency:</strong> Must be configured for expense settlement</li></ul><h4>4. Mileage Rate Configuration (Optional)</h4><p>If your organization reimburses mileage expenses:</p><ul><li>Navigate to <strong>Settings → Work Expenses → Mileage Rate</strong></li><li>Configure the reimbursement rate per kilometer or mile</li><li>Select which expense category will use mileage calculation</li><li>Note: Only ONE expense category can be configured with mileage rate</li></ul><h3>System Configuration Requirements</h3><h4>Module Activation</h4><ul><li>Work Expenses module must be enabled in your Bayzat subscription</li><li>Payroll module must be active for expense settlement functionality</li><li>Module cannot be disabled independently without disabling Payroll</li></ul><h4>Browser and Device Requirements</h4><ul><li><strong>Web Access:</strong> Modern browsers (Chrome, Firefox, Safari, Edge) with JavaScript enabled</li><li><strong>Mobile Access:</strong> Bayzat mobile app (iOS or Android) for on-the-go expense submission</li><li><strong>Receipt Upload:</strong> Device camera access for capturing receipt images</li></ul><h3>Integration Dependencies</h3><p>Work Expenses integrates with the following Bayzat modules:</p><ul><li><strong>Payroll Module:</strong> Required for adding expenses to payroll table and processing settlements</li><li><strong>Employee Profiles:</strong> Required for employee data, reporting structure, and contact information</li><li><strong>Role Management:</strong> Required for assigning expense management permissions</li><li><strong>Workflows (Optional):</strong> Available for automating expense-related actions (create, update, delete requests)</li></ul><h3>Prerequisites Checklist</h3><p>Before enabling Work Expenses for your organization, verify:</p><ol><li>☐ At least one Super Admin or Expense Manager role is assigned</li><li>☐ Expense categories are created and configured</li><li>☐ Approval flow is defined with valid approvers</li><li>☐ Employee profiles have required fields populated (email, line manager, currency)</li><li>☐ Mileage rate is configured (if applicable)</li><li>☐ Payroll module is active and configured</li><li>☐ User roles and permissions are assigned appropriately</li><li>☐ Employees are informed about the expense submission process</li></ul></ol><div class="tip"><strong>Recommended:</strong> Conduct a test expense submission with a pilot group before rolling out to the entire organization. This ensures approval flows work correctly and all stakeholders understand their responsibilities.</div></p></div></section>
-<section class="section" id="initial-setup">
-      <h2>Initial Setup</h2><div class="content"><p><p>This section guides you through the first-time configuration of the Work Expenses feature. Complete these steps in order to prepare the system for expense submissions.</p><h3>Step 1: Access Work Expenses Settings</h3><ol><ul><li>Log in to Bayzat as a Super Admin</li><li>Click <strong>Settings</strong> in the left navigation menu</li><li>Locate and click <strong>Work Expenses</strong> in the settings list</li></ol><p>You will see the Work Expenses configuration dashboard with the following sections:</p><ul><li>Expense Categories</li><li>Approval Flows</li><li>Mileage Rate</li><li>General Settings</li></ul><h3>Step 2: Create Expense Categories</h3><p>Expense categories organize and classify different types of expenses in your organization.</p><ol><li>In the Work Expenses settings, click <strong>Expense Categories</strong></li><li>Click <strong>+ Add Category</strong> button</li><li>Enter the following information:<ul><li><strong>Category Name:</strong> Descriptive name (e.g., "Travel Expenses", "Office Supplies", "Client Entertainment")</li><li><strong>Description:</strong> Optional explanation of what expenses belong in this category</li><li><strong>Require Receipt:</strong> Toggle ON if receipts are mandatory for this category</li></ul></li><li>Click <strong>Save</strong> to create the category</li><li>Repeat steps 2-4 to create additional categories</li></ol><div class="tip"><strong>Recommended Categories:</strong> Start with these common expense types: Travel & Transportation, Meals & Entertainment, Office Supplies, Communication Expenses, Professional Development, Client Expenses, Mileage Reimbursement.</div><h4>Category Configuration Best Practices</h4><ul><li>Create 5-10 categories to balance specificity with simplicity</li><li>Use clear, descriptive names that employees will easily understand</li><li>Enable "Require Receipt" for categories involving significant amounts</li><li>Consider your reporting needs when structuring categories</li></ul><h3>Step 3: Configure Mileage Rate (Optional)</h3><p>If your organization reimburses employees for using personal vehicles for work purposes:</p><ol><li>In Work Expenses settings, click <strong>Mileage Rate</strong></li><li>Toggle <strong>Enable Mileage Reimbursement</strong> to ON</li><li>Enter the following details:<ul><li><strong>Rate per Unit:</strong> Amount to reimburse per kilometer or mile (e.g., 0.50 AED/km)</li><li><strong>Unit Type:</strong> Select Kilometers or Miles</li><li><strong>Category:</strong> Select which expense category will use this mileage rate</li></ul></li><li>Click <strong>Save Settings</strong></li></ol><div class="warning"><strong>⚠️ Limitation:</strong> Only ONE expense category can be configured with a mileage rate. If you need different rates for different vehicle types or scenarios, you will need to manage this manually or use separate expense categories with fixed amounts.</div><h3>Step 4: Define Approval Flows</h3><p>Approval flows determine who reviews and approves expense requests before they can be processed for payment.</p><ol><li>In Work Expenses settings, click <strong>Approval Flows</strong></li><li>Click <strong>+ Create Approval Flow</strong></li><li>Configure the approval flow:<ul><li><strong>Flow Name:</strong> Descriptive name (e.g., "Standard Expense Approval", "Manager + Finance Approval")</li><li><strong>Description:</strong> Optional explanation of when this flow applies</li></ul></li><li>Add approval levels:<ul><li>Click <strong>+ Add Level</strong></li><li>Select approver type:<ul><li><strong>Line Manager:</strong> Employee's direct manager (automatically determined from employee profile)</li><li><strong>Specific User:</strong> Choose a specific user by name (e.g., Finance Manager)</li><li><strong>Role:</strong> Choose users with a specific role (e.g., all Expense Managers)</li></ul></li><li>Configure level settings:<ul><li><strong>Approval Type:</strong> Sequential (one after another) or Parallel (all at once)</li><li><strong>Required Approvers:</strong> All approvers or Any one approver (for parallel levels)</li></ul></li></ul></li><li>Add additional levels by repeating step 4</li><li>Review the approval flow sequence</li><li>Click <strong>Save Approval Flow</strong></li></ol><h4>Example Approval Flow Configurations</h4><p><strong>Simple Flow (2 levels):</strong></p><ol><li>Level 1: Line Manager (Sequential)</li><li>Level 2: Expense Manager (Sequential)</li></ol><p><strong>Complex Flow (3 levels with parallel approval):</strong></p><ol><li>Level 1: Line Manager (Sequential)</li><li>Level 2: Department Head OR Finance Manager (Parallel - any one approver)</li><li>Level 3: Super Admin (Sequential)</li></ol><div class="tip"><strong>Best Practice:</strong> Start with a simple 2-level approval flow (Line Manager → Expense Manager) and adjust based on your organization's needs. Complex flows can slow down reimbursement processing.</div><h3>Step 5: Configure General Settings</h3><ol><li>In Work Expenses settings, click <strong>General Settings</strong></li><li>Configure the following options:<ul><li><strong>Allow employees to submit expenses:</strong> Toggle ON to enable employee self-service submissions</li><li><strong>Default currency:</strong> Select the primary currency for expense reporting</li><li><strong>Enable multi-currency expenses:</strong> Toggle ON if employees travel internationally</li><li><strong>Require expense description:</strong> Toggle ON to make description field mandatory</li><li><strong>Enable OCR for receipts:</strong> Toggle ON to automatically extract data from receipt images</li></ul></li><li>Click <strong>Save Settings</strong></li></ol><h3>Step 6: Assign User Roles and Permissions</h3><p>Ensure the right people have access to manage expenses:</p><ol><li>Navigate to <strong>Settings → Role Management</strong></li><li>Assign the following roles as needed:<ul><li><strong>Expense Manager:</strong> Users who will approve and manage expense requests</li><li><strong>Payroll Table Manager:</strong> Users who will add approved expenses to payroll</li><li><strong>Transaction Processor:</strong> Users who will process expense settlements</li></ul></li><li>For each role:<ul><li>Click <strong>Edit</strong> next to the role name</li><li>Click <strong>+ Add User</strong></li><li>Search for and select the user</li><li>Click <strong>Save</strong></li></ul></li></ol><h3>Step 7: Configure Line Manager Relationships</h3><p>If your approval flow includes Line Manager approval:</p><ol><li>Navigate to <strong>People → Employees</strong></li><li>For each employee, click on their profile</li><li>Click <strong>Edit</strong> in the Organization section</li><li>Select the employee's <strong>Line Manager</strong> from the dropdown</li><li>Click <strong>Save</strong></li><li>Repeat for all employees who will submit expense requests</li></ol><div class="warning"><strong>⚠️ Critical:</strong> If an employee's Line Manager is not set and your approval flow requires Line Manager approval, expense requests from that employee will fail to route correctly.</div><h3>Step 8: Test the Configuration</h3><p>Before rolling out to all employees, validate your setup:</p><ol><li>Create a test expense request:<ul><li>Navigate to <strong>Finance → Work Expenses</strong></li><li>Click <strong>+ Add Expense Reimbursement</strong></li><li>Select a test employee</li><li>Fill in expense details with test data</li><li>Upload a sample receipt</li><li>Click <strong>Submit</strong></li></ul></li><li>Verify the approval flow:<ul><li>Check that the request appears in <strong>Pending Requests</strong> tab</li><li>Confirm the first approver receives a notification</li><li>Log in as the approver and approve the request</li><li>Verify the request moves to the next approval level</li><li>Complete the full approval cycle</li></ul></li><li>Test payroll integration:<ul><li>Navigate to the <strong>Approved</strong> tab</li><li>Select the test expense</li><li>Click <strong>Add to Payroll</strong></li><li>Verify the expense appears in <strong>Added to Payroll</strong> tab</li><li>Check that the expense is visible in the payroll table</li></ul></li><li>Delete the test expense after validation</li></ol><h3>Step 9: Communicate to Employees</h3><p>Once configuration is complete, inform employees about the new expense submission process:</p><ul><li>Send an announcement email explaining:<ul><li>How to access Work Expenses (web and mobile)</li><li>What types of expenses can be submitted</li><li>Required information and documentation</li><li>Expected approval timelines</li><li>Contact person for questions</li></ul></li><li>Provide training materials or conduct a demo session</li><li>Share quick reference guides for common expense scenarios</li></ul><h3>Initial Setup Verification Checklist</h3><p>Before going live, confirm:</p><ol><li>☐ At least 3-5 expense categories are created</li><li>☐ Mileage rate is configured (if applicable)</li><li>☐ At least one approval flow is defined and saved</li><li>☐ General settings are configured appropriately</li><li>☐ Expense Manager and other roles are assigned to users</li><li>☐ Line Manager relationships are set for all employees</li><li>☐ Test expense request successfully completed full approval cycle</li><li>☐ Test expense successfully added to payroll table</li><li>☐ Employees have been notified and trained</li><li>☐ Support contact information is communicated</li></ul></ol><div class="tip"><strong>Post-Launch Monitoring:</strong> During the first month, closely monitor expense submissions to identify any configuration issues, common user questions, or approval bottlenecks. Adjust settings and provide additional training as needed.</div></p></div></section>
+<section class="section">
+  <h2>Complete User Journey Guide</h2>
 
-  <footer>
-    <p>Generated by Bayzat Documentation System</p>
-    <p>Last updated: 2026-01-15T06:03:07.124Z</p>
-  </footer>
+  <h3>Journey Overview</h3>
+  <p>The Work Expenses journey involves employees or admins submitting expense requests, routing through approval workflows, and processing through payroll for reimbursement.</p>
 
-  </body>
-  </html>
+  <div class="journey-grid">
+    <div class="journey-step">
+      <div class="step-number">1</div>
+      <h4>Submit Expense</h4>
+      <p>Employee clicks "Add Expense" and fills in details with receipt upload</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">2</div>
+      <h4>OCR Processing</h4>
+      <p>System extracts data from receipt image automatically</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">3</div>
+      <h4>Pending Review</h4>
+      <p>Request appears in Pending tab awaiting approval</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">4</div>
+      <h4>Approval Decision</h4>
+      <p>Approvers review and approve or reject the expense</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">5</div>
+      <h4>Add to Payroll</h4>
+      <p>Approved expense is added to payroll table</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">6</div>
+      <h4>Settlement</h4>
+      <p>Payment processed and expense marked as settled</p>
+    </div>
+  </div>
+
+  <h3>Expense Status Lifecycle</h3>
+  <p>Every expense request progresses through a defined status lifecycle:</p>
+
+  <div class="status-flow">
+    <span class="status-level status-pending">Pending Requests</span>
+    <span class="status-arrow">→</span>
+    <span class="status-level status-approved">Approved</span>
+    <span class="status-arrow">→</span>
+    <span class="status-level status-payroll">Added to Payroll</span>
+    <span class="status-arrow">→</span>
+    <span class="status-level status-settled">Settled</span>
+  </div>
+  <div class="status-flow">
+    <span class="status-level status-pending">Pending Requests</span>
+    <span class="status-arrow">→</span>
+    <span class="status-level status-rejected">Rejected</span>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/04-approved-expenses-tab.png" alt="Approved expenses tab showing list of approved expense requests" />
+    <figcaption>Approved Tab - View all approved expense requests ready for payroll processing</figcaption>
+  </figure>
+</section>
+
+<section class="section">
+  <h2>Feature Discovery</h2>
+
+  <h3>How to Access</h3>
+  <p>Work Expenses is accessed through the Finance Ops menu in the main navigation sidebar.</p>
+
+  <h3>Navigation Paths</h3>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Access Work Expenses</h4>
+      <p>Finance Ops → Work Expenses → View expense requests by status tabs</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/02-finance-ops-menu-expanded.png" alt="Finance Ops menu expanded showing Work Expenses option" />
+    <figcaption>Finance Ops menu with Work Expenses highlighted in the navigation sidebar</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>View Expense Dashboard</h4>
+      <p>The main page shows status tabs: Pending Requests, Approved, Rejected, Added to Payroll, Settled</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/03-work-expenses-main-page.png" alt="Work Expenses main dashboard" />
+    <figcaption>Main Work Expenses page with status tabs and expense list</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Filter and Search</h4>
+      <p>Use search bar and filter options to find specific expenses by employee, date, or amount</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Managing Expenses</h2>
+
+  <h3>Creating a New Expense Request</h3>
+  <p>Click the "Add expense reimbursement" or "Add mileage reimbursement" button to create a new expense request.</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Open Add Expense Dialog</h4>
+      <p>Click the purple "Add expense reimbursement" button in the top-right corner</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/06-crud-create-form.png" alt="Add Expense form initial view" />
+    <figcaption>Add Expense Reimbursement dialog - Initial form with receipt upload option</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Upload Receipt (Optional)</h4>
+      <p>Upload a receipt image for OCR processing to auto-fill expense details</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Fill Expense Details</h4>
+      <p>Enter expense category, amount, currency, date, and description</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/07-crud-create-full-form.png" alt="Complete expense form with all fields" />
+    <figcaption>Complete expense form showing all required and optional fields</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Submit Request</h4>
+      <p>Click "Submit" to create the expense request and route it through the approval workflow</p>
+    </div>
+  </div>
+
+  <h3>Viewing Expense Details</h3>
+  <p>Click on any expense row to view the complete details including payment information, approvers, and activity feed.</p>
+
+  <figure>
+    <img src="validation/screenshots/05-expense-detail-modal-read.png" alt="Expense detail modal showing complete information" />
+    <figcaption>Expense Detail Modal - View payment details, approvers, and activity history</figcaption>
+  </figure>
+
+  <div class="info-box">
+    <p><strong>Activity Feed:</strong> Every expense has a complete audit trail showing submission, approvals, status changes, and comments from approvers.</p>
+  </div>
+
+  <h3>Editing and Deleting Expenses</h3>
+  <p>Use the three-dot action menu on each expense row to access edit and delete options.</p>
+
+  <figure>
+    <img src="validation/screenshots/08-crud-update-delete-menu.png" alt="Action menu showing Edit and Delete options" />
+    <figcaption>Action menu with Edit and Delete options for expense management</figcaption>
+  </figure>
+</section>
+
+<section class="section">
+  <h2>User Roles & Permissions</h2>
+
+  <h3>Role Definitions</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Role</th>
+        <th>Permissions</th>
+        <th>Assignment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Super Admin</strong></td>
+        <td>Full access: create, view, edit, approve, reject, delete expenses; configure approval flows and categories</td>
+        <td>Settings → Role Management</td>
+      </tr>
+      <tr>
+        <td><strong>Expense Manager</strong></td>
+        <td>View and manage all expenses; approve/reject requests; add expenses to payroll</td>
+        <td>Settings → Role Management</td>
+      </tr>
+      <tr>
+        <td><strong>Payroll Table Manager</strong></td>
+        <td>Add approved expenses to payroll table; view expense details; manage payroll processing</td>
+        <td>Settings → Role Management</td>
+      </tr>
+      <tr>
+        <td><strong>Transaction Processor</strong></td>
+        <td>Process expense settlements; manage payment workflows; view expense details</td>
+        <td>Settings → Role Management</td>
+      </tr>
+      <tr>
+        <td><strong>Line Manager</strong></td>
+        <td>Approve/reject expenses for direct reports; view team member expenses</td>
+        <td>Employee reporting structure</td>
+      </tr>
+      <tr>
+        <td><strong>Employee</strong></td>
+        <td>Submit own expense requests; view own expense history; track request status</td>
+        <td>Automatic for all employees</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warning-box">
+    <p><strong>Important:</strong> Line Manager permissions are automatically granted based on the organizational reporting structure. Ensure employee profiles have correct Line Manager assignments.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Workflow Integration</h2>
+
+  <h3>Automation Capabilities</h3>
+  <p>Work Expenses integrates with Bayzat Workflows for automation. While expenses cannot trigger workflows, three workflow actions are available for expense automation.</p>
+
+  <figure>
+    <img src="validation/screenshots/workflow-03-available-actions.png" alt="Workflow actions available for Work Expenses" />
+    <figcaption>Available Workflow Actions: Create, Update, and Delete expense requests</figcaption>
+  </figure>
+
+  <h3>Available Workflow Actions</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Action</th>
+        <th>Description</th>
+        <th>Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Create expense request</td>
+        <td>Automatically create a new expense request</td>
+        <td>Auto-generate recurring expenses or travel allowances</td>
+      </tr>
+      <tr>
+        <td>Update expense request</td>
+        <td>Modify existing expense request details</td>
+        <td>Auto-update status or add notes based on triggers</td>
+      </tr>
+      <tr>
+        <td>Delete expense request</td>
+        <td>Remove an expense request from the system</td>
+        <td>Clean up duplicate or invalid requests</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box">
+    <p><strong>No Triggers Available:</strong> Work Expenses does not currently support workflow triggers. Expenses cannot trigger events like "expense submitted" or "expense approved." Actions can only be triggered by other system events.</p>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/workflow-02-no-triggers-found.png" alt="No workflow triggers found for Work Expenses" />
+    <figcaption>Workflow trigger search showing no available triggers for Work Expenses</figcaption>
+  </figure>
+</section>
+
+<section class="section">
+  <h2>Reporting & Downloads</h2>
+
+  <h3>Export Options</h3>
+  <p>Work Expenses provides comprehensive reporting and export capabilities for tracking and compliance.</p>
+
+  <ul>
+    <li><strong>Excel Export:</strong> Download expense list as an Excel file with all details</li>
+    <li><strong>Attachment Downloads:</strong> Download all receipts and attachments as a ZIP file</li>
+    <li><strong>Filtered Reports:</strong> Apply filters before export to get specific data sets</li>
+  </ul>
+
+  <h3>Available Filters</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Filter</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Status</td>
+        <td>Filter by Pending, Approved, Rejected, Added to Payroll, or Settled</td>
+      </tr>
+      <tr>
+        <td>Date Range</td>
+        <td>Filter expenses by submission date range</td>
+      </tr>
+      <tr>
+        <td>Employee</td>
+        <td>Search for expenses by specific employee</td>
+      </tr>
+      <tr>
+        <td>Amount Range</td>
+        <td>Filter by expense amount</td>
+      </tr>
+      <tr>
+        <td>Category</td>
+        <td>Filter by expense category type</td>
+      </tr>
+      <tr>
+        <td>Pending By</td>
+        <td>Show expenses pending your approval</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <h2>Business Rules & Limitations</h2>
+
+  <h3>Core Business Rules</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>Description</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Admin Auto-Approval</td>
+        <td>Expenses submitted by admins on behalf of employees are automatically approved</td>
+        <td>No approval workflow required for admin-submitted expenses</td>
+      </tr>
+      <tr>
+        <td>Payroll Dependency</td>
+        <td>Work Expenses module cannot be disabled without disabling Payroll</td>
+        <td>Modules are tightly integrated</td>
+      </tr>
+      <tr>
+        <td>Single Mileage Category</td>
+        <td>Only ONE expense category can be configured with mileage rate</td>
+        <td>Mileage reimbursement limited to one rate</td>
+      </tr>
+      <tr>
+        <td>Approval Chain</td>
+        <td>If any approver rejects, the expense is immediately rejected</td>
+        <td>Sequential approval stops on first rejection</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Known Limitations</h3>
+  <ul>
+    <li><strong>No Bulk Deletion:</strong> Users cannot perform bulk deletions of work expenses via UI</li>
+    <li><strong>No Custom Triggers:</strong> Work expenses cannot trigger workflow events</li>
+    <li><strong>Limited Role Control:</strong> Cannot selectively disable Work Expenses by role</li>
+    <li><strong>No Dynamic Columns:</strong> Report views cannot be customized with custom fields</li>
+    <li><strong>Currency Mismatch:</strong> Deletion may fail if expense currency differs from payroll currency</li>
+    <li><strong>No Client-Based Routing:</strong> Approval workflows cannot use client or project fields as criteria</li>
+  </ul>
+
+  <div class="warning-box">
+    <p><strong>Data Export Warning:</strong> Admin users can download all company expense data via Excel export. Ensure proper data governance policies are in place.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Troubleshooting & Edge Cases</h2>
+
+  <h3>Common Issues</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Issue</th>
+        <th>Cause</th>
+        <th>Resolution</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Cannot submit expense</td>
+        <td>Missing required fields or permissions</td>
+        <td>Ensure all required fields are filled and you have appropriate role</td>
+      </tr>
+      <tr>
+        <td>Employee not in dropdown</td>
+        <td>Employee not active in system</td>
+        <td>Verify employee status in HR system</td>
+      </tr>
+      <tr>
+        <td>Expense stuck in pending</td>
+        <td>No approvers assigned or approval flow misconfigured</td>
+        <td>Check approval flow configuration in Settings</td>
+      </tr>
+      <tr>
+        <td>OCR not extracting data</td>
+        <td>Poor image quality or unsupported format</td>
+        <td>Upload clear, high-resolution receipt images</td>
+      </tr>
+      <tr>
+        <td>Cannot delete expense</td>
+        <td>Currency mismatch with payroll</td>
+        <td>Contact admin for backend intervention</td>
+      </tr>
+      <tr>
+        <td>Expense not in payroll</td>
+        <td>Not yet added to payroll table</td>
+        <td>Authorized user must add approved expense to payroll</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Best Practices</h3>
+
+  <div class="feature-card">
+    <h4>Upload Clear Receipts</h4>
+    <p>For best OCR results, upload clear, well-lit photos of receipts with all text visible.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Submit Promptly</h4>
+    <p>Submit expense requests as soon as possible after incurring the expense to maintain accurate records.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Add Detailed Descriptions</h4>
+    <p>Include business purpose and relevant details to expedite approval process.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Configure Before Launch</h4>
+    <p>Set up approval flows, categories, and roles before enabling expense submissions for employees.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Support Resources</h2>
+
+  <h3>Frequently Asked Questions</h3>
+
+  <div class="feature-card">
+    <h4>How do I submit an expense request?</h4>
+    <p>Navigate to Finance Ops → Work Expenses → Click "Add expense reimbursement" → Upload receipt (optional) → Fill in expense details → Click Submit.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Why is my expense stuck in Pending?</h4>
+    <p>Expenses require approval from designated approvers. Check if your Line Manager or Expense Manager needs to take action. Contact HR if the approval flow seems stuck.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Can I edit an expense after submission?</h4>
+    <p>Yes, if the expense is still in Pending status. Use the three-dot action menu to access the Edit option. Once approved, expenses cannot be edited.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>How do I submit a mileage expense?</h4>
+    <p>Click "Add mileage reimbursement" instead of regular expense. Enter starting point, destination, and distance traveled. The system calculates reimbursement based on configured mileage rate.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>When will I receive reimbursement?</h4>
+    <p>After approval, your expense must be added to the payroll table and processed with the next payroll cycle. Check the "Added to Payroll" and "Settled" tabs to track progress.</p>
+  </div>
+
+  <h3>Getting Help</h3>
+  <ul>
+    <li>Contact your HR Administrator for policy questions and approval flow issues</li>
+    <li>Submit support tickets through the Bayzat platform for technical issues</li>
+    <li>Bayzat Support Team - Available for platform-wide technical assistance</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Glossary of Terms</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Expense Reimbursement</strong></td>
+        <td>A request for repayment of work-related costs incurred by an employee.</td>
+      </tr>
+      <tr>
+        <td><strong>Mileage Reimbursement</strong></td>
+        <td>A specific type of expense calculated based on distance traveled using personal vehicle.</td>
+      </tr>
+      <tr>
+        <td><strong>OCR (Optical Character Recognition)</strong></td>
+        <td>Technology that extracts text data from receipt images automatically.</td>
+      </tr>
+      <tr>
+        <td><strong>Approval Flow</strong></td>
+        <td>The configured sequence of approvers that expense requests must pass through.</td>
+      </tr>
+      <tr>
+        <td><strong>Line Manager</strong></td>
+        <td>An employee's direct supervisor, often the first approver in expense workflows.</td>
+      </tr>
+      <tr>
+        <td><strong>Expense Manager</strong></td>
+        <td>A role with permissions to view and manage all company expense requests.</td>
+      </tr>
+      <tr>
+        <td><strong>Payroll Table Manager</strong></td>
+        <td>A role responsible for adding approved expenses to payroll for processing.</td>
+      </tr>
+      <tr>
+        <td><strong>Pending Requests</strong></td>
+        <td>Expenses awaiting approval from designated approvers.</td>
+      </tr>
+      <tr>
+        <td><strong>Added to Payroll</strong></td>
+        <td>Status indicating the expense has been included in a payroll cycle for payment.</td>
+      </tr>
+      <tr>
+        <td><strong>Settled</strong></td>
+        <td>Final status indicating the expense has been fully reimbursed to the employee.</td>
+      </tr>
+      <tr>
+        <td><strong>Activity Feed</strong></td>
+        <td>A chronological log of all actions taken on an expense request.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <p>Generated by Bayzat Documentation System</p>
+  <p>Last updated: 2026-01-15</p>
+</footer>
+
+</body>
+</html>
