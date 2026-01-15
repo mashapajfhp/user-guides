@@ -1,403 +1,1291 @@
 <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>workflows - User Guide | Bayzat</title>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bayzat Workflows - User Guide</title>
 
-    <style>
-      /* CSS Reset and Base */
-      *, *::before, *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+  <style>
+    /* CSS Reset and Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background-color: #ffffff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+      color: #ffffff;
+      padding: 60px 40px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .hero-banner h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      color: #ffffff;
+    }
+
+    /* Typography - ALL BLACK */
+    h1, h2, h3, h4, h5, h6 {
+      color: #1a1a1a;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #E2E8F0;
+    }
+
+    h3 {
+      font-size: 1.35rem;
+    }
+
+    p {
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+
+    /* Sections */
+    section, .section {
+      margin-bottom: 3rem;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+    }
+
+    /* Info Boxes - Only 2 Types Allowed */
+    .info-box, .note-box, .tip-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FAF5FF;
+      border-left: 4px solid #6B46C1;
+    }
+
+    .info-box p, .note-box p, .tip-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    .warning-box, .important-box, .caution-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FFFBEB;
+      border-left: 4px solid #D97706;
+    }
+
+    .warning-box p, .important-box p, .caution-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Lists - Black text, standard bullets */
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+      color: #1a1a1a;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: #ffffff;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid #E2E8F0;
+      color: #1a1a1a;
+    }
+
+    th {
+      background: #F7FAFC;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    tr:hover {
+      background: #F7FAFC;
+    }
+
+    /* Screenshots - Centered */
+    .screenshot-container, figure {
+      margin: 24px auto;
+      text-align: center;
+    }
+
+    .screenshot, figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #E2E8F0;
+      display: block;
+      margin: 0 auto;
+    }
+
+    figcaption {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #1a1a1a;
+      font-style: italic;
+    }
+
+    /* Feature Grid and Cards */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .feature-card, .card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .feature-card h4, .card h4 {
+      color: #1a1a1a;
+      margin-top: 0;
+    }
+
+    .feature-card p, .card p {
+      color: #1a1a1a;
+    }
+
+    /* Journey Grid */
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .journey-step {
+      background: #F7FAFC;
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .journey-step .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .journey-step h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .journey-step p {
+      margin: 0;
+      color: #1a1a1a;
+    }
+
+    /* Steps */
+    .step, .step-item {
+      display: flex;
+      gap: 16px;
+      margin: 20px 0;
+      padding: 16px;
+      background: #F7FAFC;
+      border-radius: 8px;
+    }
+
+    .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-content h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .step-content p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Navigation Path */
+    .nav-path, .breadcrumb {
+      background: #F7FAFC;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: monospace;
+      color: #1a1a1a;
+      margin: 16px 0;
+    }
+
+    /* Code blocks */
+    code {
+      background: #F7FAFC;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.9em;
+      color: #1a1a1a;
+    }
+
+    pre {
+      background: #F7FAFC;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      color: #1a1a1a;
+    }
+
+    /* Links */
+    a {
+      color: #6B46C1;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Citations */
+    .citation {
+      font-size: 0.85rem;
+      color: #1a1a1a;
+      background: #F7FAFC;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* Footer */
+    footer, .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #E2E8F0;
+      text-align: center;
+      color: #1a1a1a;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        line-height: 1.6;
-        color: #1a1a1a;
-        background-color: #ffffff;
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 20px;
+        padding: 16px;
       }
 
-      /* Hero Banner */
       .hero-banner {
-        background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
-        color: #ffffff;
-        padding: 60px 40px;
-        border-radius: 12px;
-        margin-bottom: 40px;
-        text-align: center;
+        padding: 40px 24px;
       }
 
       .hero-banner h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 16px;
-        color: #ffffff;
-      }
-
-      .hero-subtitle {
-        font-size: 1.2rem;
-        opacity: 0.95;
-        color: #ffffff;
-      }
-
-      /* Typography */
-      h1, h2, h3, h4, h5, h6 {
-        color: #1a1a1a;
-        font-weight: 600;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
+        font-size: 1.75rem;
       }
 
       h2 {
-        font-size: 1.75rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #E2E8F0;
+        font-size: 1.5rem;
       }
 
-      h3 {
-        font-size: 1.35rem;
-      }
-
-      p {
-        color: #1a1a1a;
-        margin-bottom: 1rem;
-      }
-
-      /* Sections */
       section, .section {
-        margin-bottom: 3rem;
-        padding: 24px;
-        background: #ffffff;
-        border-radius: 8px;
-        border: 1px solid #E2E8F0;
+        padding: 16px;
       }
 
-      /* Info Boxes */
-      .info-box, .note-box, .tip-box {
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 20px 0;
-        background: #FAF5FF;
-        border-left: 4px solid #6B46C1;
-      }
-
-      .info-box p, .note-box p, .tip-box p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      .warning-box, .important-box, .caution-box {
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 20px 0;
-        background: #FFFBEB;
-        border-left: 4px solid #D97706;
-      }
-
-      .warning-box p, .important-box p, .caution-box p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      /* Lists */
-      ul, ol {
-        margin: 1rem 0;
-        padding-left: 2rem;
-        color: #1a1a1a;
-      }
-
-      li {
-        margin-bottom: 0.5rem;
-        color: #1a1a1a;
-      }
-
-      /* Tables */
       table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        background: #ffffff;
+        font-size: 0.9rem;
       }
 
       th, td {
-        padding: 12px 16px;
-        text-align: left;
-        border: 1px solid #E2E8F0;
-        color: #1a1a1a;
+        padding: 8px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-banner h1 {
+        font-size: 1.5rem;
       }
 
-      th {
-        background: #F7FAFC;
-        font-weight: 600;
-        color: #1a1a1a;
+      .hero-subtitle {
+        font-size: 1rem;
       }
 
-      tr:hover {
-        background: #F7FAFC;
+      .step {
+        flex-direction: column;
+        gap: 12px;
       }
+    }
 
-      /* Screenshots */
-      .screenshot-container, figure {
-        margin: 24px auto;
-        text-align: center;
-      }
-
-      .screenshot, figure img {
+    /* Print Styles */
+    @media print {
+      body {
         max-width: 100%;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border: 1px solid #E2E8F0;
-        display: block;
-        margin: 0 auto;
+        padding: 0;
       }
 
-      figcaption {
-        margin-top: 12px;
-        font-size: 0.9rem;
-        color: #1a1a1a;
-        font-style: italic;
+      .hero-banner {
+        background: #6B46C1 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
 
-      /* Feature Grid and Cards */
-      .feature-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-        margin: 20px 0;
+      section, .section {
+        break-inside: avoid;
       }
+    }
+  </style>
 
-      .feature-card, .card {
-        background: #ffffff;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: 20px;
-        margin: 16px 0;
-      }
+</head>
+<body>
+<div class="hero-banner">
+  <h1>Bayzat Workflows</h1>
+  <p class="hero-subtitle">Automate HR processes with event-driven workflows across your organization</p>
+</div>
 
-      .feature-card h4, .card h4 {
-        color: #1a1a1a;
-        margin-top: 0;
-      }
+<figure>
+  <img src="validation/screenshots/02-workflows-main-page.png" alt="Bayzat Workflows main interface showing active workflows" />
+  <figcaption>Bayzat Workflows management interface with workflow list and status indicators</figcaption>
+</figure>
 
-      .feature-card p, .card p {
-        color: #1a1a1a;
-      }
+<section class="section">
+  <h2>What is Bayzat Workflows?</h2>
 
-      /* Journey Grid */
-      .journey-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 16px;
-        margin: 20px 0;
-      }
+  <h3>Overview</h3>
+  <p>Bayzat Workflows is a powerful automation engine that connects events across your HR platform to automated actions. When something happens in your organization—an employee joins, a leave request is submitted, a probation period ends—Workflows can automatically trigger notifications, create tasks, update records, or send messages to your team.</p>
 
-      .journey-step {
-        background: #F7FAFC;
-        border-radius: 8px;
-        padding: 20px;
-        position: relative;
-      }
+  <h3>Key Benefits</h3>
+  <ul>
+    <li>Eliminate manual, repetitive HR tasks with intelligent automation</li>
+    <li>Connect 60+ event triggers across 13+ Bayzat applications</li>
+    <li>Execute actions across 20+ integrations including Email, Slack, and Google Calendar</li>
+    <li>Track workflow performance with comprehensive execution logs</li>
+  </ul>
 
-      .journey-step .step-number {
-        background: #6B46C1;
-        color: #ffffff;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        margin-bottom: 12px;
-      }
+  <h3>Who Uses This Feature?</h3>
+  <ul>
+    <li><strong>HR Administrators:</strong> Set up organization-wide automation for onboarding, offboarding, and employee lifecycle events</li>
+    <li><strong>Payroll Managers:</strong> Automate notifications for salary changes, payroll cycle events, and financial approvals</li>
+    <li><strong>Department Managers:</strong> Receive automated alerts about team changes, leave requests, and important milestones</li>
+    <li><strong>System Administrators:</strong> Configure integrations with external tools like Slack, email systems, and task management platforms</li>
+  </ul>
+</section>
 
-      .journey-step h4 {
-        margin: 0 0 8px 0;
-        color: #1a1a1a;
-      }
+<section class="section">
+  <h2>Product Foundation Overview</h2>
 
-      .journey-step p {
-        margin: 0;
-        color: #1a1a1a;
-      }
-
-      /* Steps */
-      .step, .step-item {
-        display: flex;
-        gap: 16px;
-        margin: 20px 0;
-        padding: 16px;
-        background: #F7FAFC;
-        border-radius: 8px;
-      }
-
-      .step-number {
-        background: #6B46C1;
-        color: #ffffff;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        flex-shrink: 0;
-      }
-
-      .step-content {
-        flex: 1;
-      }
-
-      .step-content h4 {
-        margin: 0 0 8px 0;
-        color: #1a1a1a;
-      }
-
-      .step-content p {
-        color: #1a1a1a;
-        margin: 0;
-      }
-
-      /* Navigation Path */
-      .nav-path, .breadcrumb {
-        background: #F7FAFC;
-        padding: 12px 16px;
-        border-radius: 6px;
-        font-family: monospace;
-        color: #1a1a1a;
-        margin: 16px 0;
-      }
-
-      /* Code blocks */
-      code {
-        background: #F7FAFC;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-family: 'SF Mono', Monaco, monospace;
-        font-size: 0.9em;
-        color: #1a1a1a;
-      }
-
-      pre {
-        background: #F7FAFC;
-        padding: 16px;
-        border-radius: 8px;
-        overflow-x: auto;
-        color: #1a1a1a;
-      }
-
-      /* Links */
-      a {
-        color: #6B46C1;
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      /* Footer */
-      footer, .footer {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #E2E8F0;
-        text-align: center;
-        color: #1a1a1a;
-        font-size: 0.9rem;
-      }
-
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        body {
-          padding: 16px;
-        }
-
-        .hero-banner {
-          padding: 40px 24px;
-        }
-
-        .hero-banner h1 {
-          font-size: 1.75rem;
-        }
-
-        h2 {
-          font-size: 1.5rem;
-        }
-
-        section, .section {
-          padding: 16px;
-        }
-
-        table {
-          font-size: 0.9rem;
-        }
-
-        th, td {
-          padding: 8px 12px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .hero-banner h1 {
-          font-size: 1.5rem;
-        }
-
-        .hero-subtitle {
-          font-size: 1rem;
-        }
-
-        .step {
-          flex-direction: column;
-          gap: 12px;
-        }
-      }
-
-      /* Print Styles */
-      @media print {
-        body {
-          max-width: 100%;
-          padding: 0;
-        }
-
-        .hero-banner {
-          background: #6B46C1 !important;
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-
-        section, .section {
-          break-inside: avoid;
-        }
-      }
-    </style>
-
-  </head>
-  <body>
-  <div class="hero-banner">
-    <h1>workflows</h1>
-    <p class="hero-subtitle"></p>
+  <h3>Core Concepts</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Triggers</h4>
+      <p>Events that start a workflow. Choose from 60+ events across HR, Payroll, Timeoff, Employee Tickets, and external webhooks.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Actions</h4>
+      <p>What happens when a workflow runs. Send emails, Slack messages, create tasks, add calendar events, or create pay adjustments.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Conditions</h4>
+      <p>Optional criteria that filter when workflows execute. Apply rules based on employee data, departments, or custom fields.</p>
+    </div>
   </div>
 
-  
+  <figure>
+    <img src="validation/screenshots/06-trigger-applications.png" alt="Trigger applications showing available event sources" />
+    <figcaption>Available trigger applications including Bayzat HR, Payroll, Timeoff, and external webhooks</figcaption>
+  </figure>
 
-  <section class="section" id="hero">
-      <h2>Bayzat Workflows</h2><div class="content"><p>Automate HR processes with event-driven workflows across your organization</p><div class="feature-grid"><div class="feature-card"><p>Automate repetitive HR tasks with 60+ event triggers across 13+ applications</p></div><div class="feature-card"><p>Connect your HR ecosystem with 20+ action integrations including Email, Slack, and Google Calendar</p></div><div class="feature-card"><p>Reduce manual work with conditional logic and multi-step automation sequences</p></div><div class="feature-card"><p>Track workflow performance with comprehensive execution logs and analytics</p></div></div></div></section>
-<section class="section" id="feature-overview">
-      <h2>Feature Overview</h2><div class="content"><p><h3>What Bayzat Workflows Does</h3><p>Bayzat Workflows is a powerful automation engine that connects events across your HR platform to automated actions. When something happens in your organization—an employee joins, a leave request is submitted, a probation period ends—Workflows can automatically trigger notifications, create tasks, update records, or send messages to your team.</p><p>Workflows eliminates manual, repetitive tasks by creating intelligent automation sequences. Instead of manually sending welcome emails to new hires or reminding managers about pending approvals, you define the rules once and let Workflows handle the execution.</p><h3>Who Uses Workflows</h3><ul><ul><li><strong>HR Administrators:</strong> Set up organization-wide automation for onboarding, offboarding, and employee lifecycle events</li><li><strong>Payroll Managers:</strong> Automate notifications for salary changes, payroll cycle events, and financial approvals</li><li><strong>Department Managers:</strong> Receive automated alerts about team changes, leave requests, and important milestones</li><li><strong>System Administrators:</strong> Configure integrations with external tools like Slack, email systems, and task management platforms</li></ul><h3>Key Capabilities</h3><ul><li><strong>Event-Driven Triggers:</strong> 60+ events across Bayzat HR, Payroll, Timeoff, Employee Tickets, and external webhooks</li><li><strong>Conditional Logic:</strong> Apply criteria filters to execute workflows only when specific conditions are met</li><li><strong>Multi-Action Sequences:</strong> Chain multiple actions together in a single workflow</li><li><strong>Template Library:</strong> Pre-built workflow templates for common HR scenarios</li><li><strong>Custom Variables:</strong> Personalize messages and actions with dynamic employee data</li><li><strong>Execution Tracking:</strong> Monitor workflow performance with detailed activity logs showing success, failure, and in-progress executions</li></ul></ul><h3>Business Value</h3><p>Workflows transforms your HR operations from reactive to proactive. By automating routine processes, your team can focus on strategic initiatives while ensuring consistent, timely communication across the organization. Workflows reduces human error, improves response times, and creates a more connected employee experience.</p><p>Organizations using Workflows report significant time savings in onboarding processes, improved compliance with approval flows, and better visibility into HR operations through automated notifications and task creation.</p></p></div></section>
-<section class="section" id="product-foundation">
-      <h2>Product Foundation</h2><div class="content"><p><h3>Technical Prerequisites</h3><p>Bayzat Workflows is available to all Bayzat platform users with appropriate administrative permissions. To use Workflows effectively, your organization should have:</p><ul><ul><li><strong>Active Bayzat Account:</strong> Workflows is integrated into the Bayzat platform and requires an active account</li><li><strong>Administrative Access:</strong> Workflow creation and management requires admin-level permissions in Settings</li><li><strong>Configured HR Data:</strong> Employee profiles, departments, offices, and organizational structure should be set up for workflow criteria to function properly</li><li><strong>Email System:</strong> Work email addresses configured for employees to receive workflow notifications</li></ul><h3>Module Dependencies</h3><p>Workflows integrates deeply with other Bayzat modules and external applications:</p><h4>Core Bayzat Modules</h4><ul><li><strong>Bayzat HR:</strong> 20 event triggers including employee creation, updates, hire dates, probation end dates, and work week changes</li><li><strong>Bayzat Payroll:</strong> 2 event triggers for salary creation and updates; actions to create pay adjustment requests</li><li><strong>Bayzat Timeoff:</strong> Leave request update triggers</li><li><strong>Bayzat Employee Ticket:</strong> Ticket creation and status update triggers</li><li><strong>Bayzat Task Management:</strong> Create task actions for workflow-driven task assignment</li></ul><h4>External Integrations</h4><ul><li><strong>Email:</strong> Send automated email notifications to employees, managers, or custom recipients</li><li><strong>Slack:</strong> 4 available actions to send messages to Slack channels (requires webhook configuration)</li><li><strong>Google Calendar:</strong> Create calendar events automatically</li><li><strong>Mobile Notifications:</strong> Send push notifications to the Bayzat mobile app</li><li><strong>Incoming Integration:</strong> Webhook URL triggers to connect external systems</li><li><strong>Custom n8n Actions:</strong> Advanced automation actions including attendance report generation</li></ul><h3>Account Limitations</h3><div class="warning"><strong>⚠️ Workflow Creation Limits</strong><p>Demo and trial accounts may have workflow creation limits. The validation testing encountered a 21-workflow maximum on the demo account. Production accounts typically have higher or unlimited workflow capacity depending on your subscription plan.</p><p><strong>Action Required:</strong> Contact your account manager to understand workflow limits for your organization.</p></div><h3>System Configuration Requirements</h3><ul><li><strong>Role Management:</strong> Line Manager and other approval roles must be configured in Role Management for approval-based workflows</li><li><strong>Department Structure:</strong> Departments and offices must be created in Settings for department-based workflow criteria</li><li><strong>Approval Flows:</strong> Existing approval flow configurations (for expenses, payroll, tickets) work in conjunction with Workflows</li><li><strong>Slack Workspace:</strong> Admin access to your Slack workspace required to generate webhook URLs for Slack integration</li></ul><h3>Related Features</h3><p>Workflows connects to and enhances these Bayzat features:</p><ul><li><strong>Approval Flows:</strong> Workflows can trigger notifications at different stages of approval processes for expenses, payroll transactions, leave requests, and employee tickets</li><li><strong>Task Management:</strong> Automatically create tasks when workflow conditions are met, assigning them to specific employees or roles</li><li><strong>Employee Onboarding:</strong> Automate welcome emails, document requests, and task assignments for new hires</li><li><strong>Payroll Cycles:</strong> Trigger notifications when payroll cycles close or when salary adjustments occur</li><li><strong>Leave Management:</strong> Automate manager notifications when leave requests are submitted or approved</li><li><strong>Air Ticket Management:</strong> Use the Air Tickets Auto Encashment workflow template to automatically generate encashment requests</li></ul><h3>Integration Points</h3><p>Workflows serves as the central automation hub connecting:</p><ul><li><strong>Internal Events:</strong> 13+ Bayzat applications generating 60+ distinct event types</li><li><strong>External Actions:</strong> 20+ applications available for workflow actions</li><li><strong>Data Sources:</strong> Employee profiles, payroll data, leave balances, ticket information</li><li><strong>Communication Channels:</strong> Email, Slack, mobile notifications, task assignments</li></ul></ul><p>This interconnected architecture allows you to create sophisticated automation sequences that span multiple systems and business processes, all managed from a single workflow interface.</p></p></div></section>
+  <h3>Available Trigger Applications</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Application</th>
+        <th>Event Examples</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Bayzat HR</strong></td>
+        <td>Employee created, updated, hire date, probation end, work week changes</td>
+      </tr>
+      <tr>
+        <td><strong>Bayzat Payroll</strong></td>
+        <td>Salary created, salary updated</td>
+      </tr>
+      <tr>
+        <td><strong>Bayzat Timeoff</strong></td>
+        <td>Leave request updated</td>
+      </tr>
+      <tr>
+        <td><strong>Bayzat Employee Ticket</strong></td>
+        <td>Ticket created, ticket status updated</td>
+      </tr>
+      <tr>
+        <td><strong>Incoming Integration</strong></td>
+        <td>External webhook triggers from third-party systems</td>
+      </tr>
+    </tbody>
+  </table>
 
-  <footer>
-    <p>Generated by Bayzat Documentation System</p>
-    <p>Last updated: 2026-01-15T07:46:05.042Z</p>
-  </footer>
+  <figure>
+    <img src="validation/screenshots/07-bayzat-hr-triggers.png" alt="Bayzat HR trigger events list" />
+    <figcaption>Bayzat HR application showing 20 available trigger events</figcaption>
+  </figure>
 
-  </body>
-  </html>
+  <h3>Available Action Applications</h3>
+
+  <figure>
+    <img src="validation/screenshots/10-action-applications.png" alt="Action applications available for workflows" />
+    <figcaption>20+ action applications available for workflow automation</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Application</th>
+        <th>Action Types</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Email</strong></td>
+        <td>Send customized email notifications to employees, managers, or custom recipients</td>
+      </tr>
+      <tr>
+        <td><strong>Slack</strong></td>
+        <td>Send messages to Slack channels via webhook integration</td>
+      </tr>
+      <tr>
+        <td><strong>Google Calendar</strong></td>
+        <td>Create calendar events automatically</td>
+      </tr>
+      <tr>
+        <td><strong>Bayzat Task</strong></td>
+        <td>Create tasks assigned to specific employees or roles</td>
+      </tr>
+      <tr>
+        <td><strong>Bayzat Payroll</strong></td>
+        <td>Create pay adjustment requests (additions or deductions)</td>
+      </tr>
+      <tr>
+        <td><strong>Mobile Notification</strong></td>
+        <td>Send push notifications to the Bayzat mobile app</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <img src="validation/screenshots/11-email-actions.png" alt="Email action configuration options" />
+    <figcaption>Email action configuration showing notification options</figcaption>
+  </figure>
+
+  <figure>
+    <img src="validation/screenshots/12-slack-actions.png" alt="Slack action configuration options" />
+    <figcaption>Slack integration with 4 available messaging actions</figcaption>
+  </figure>
+
+  <h3>Technical Prerequisites</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Administrative Access</td>
+        <td>Admin-level permissions required to create and manage workflows</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Configured HR Data</td>
+        <td>Employee profiles, departments, and organizational structure</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Email System</td>
+        <td>Work email addresses configured for employees</td>
+        <td>Required</td>
+      </tr>
+      <tr>
+        <td>Slack Workspace</td>
+        <td>Admin access to generate webhook URLs for Slack integration</td>
+        <td>Optional</td>
+      </tr>
+      <tr>
+        <td>Role Management</td>
+        <td>Line Manager and approval roles for role-based workflows</td>
+        <td>Optional</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <h2>Complete User Journey Guide</h2>
+
+  <h3>Journey Overview</h3>
+  <p>Creating a workflow involves selecting a trigger event, configuring conditions, adding actions, and activating the workflow. The system then automatically executes the workflow whenever the trigger conditions are met.</p>
+
+  <div class="journey-grid">
+    <div class="journey-step">
+      <div class="step-number">1</div>
+      <h4>Access Workflows</h4>
+      <p>Navigate to Automations in the left sidebar and select Workflows</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">2</div>
+      <h4>Create Workflow</h4>
+      <p>Click Create workflow button and choose from scratch or template</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">3</div>
+      <h4>Configure Trigger</h4>
+      <p>Select the application and event that will start the workflow</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">4</div>
+      <h4>Add Conditions</h4>
+      <p>Optionally add criteria to filter when the workflow runs</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">5</div>
+      <h4>Add Actions</h4>
+      <p>Configure what happens when the workflow executes</p>
+    </div>
+    <div class="journey-step">
+      <div class="step-number">6</div>
+      <h4>Activate</h4>
+      <p>Save and activate the workflow to start automation</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Feature Discovery</h2>
+
+  <h3>How to Access</h3>
+  <p>Workflows is accessed through the Automations section in the main navigation. From here you can view all workflows, create new ones, and monitor execution history.</p>
+
+  <h3>Navigation Path</h3>
+  <div class="nav-path">Automations (left sidebar) → Workflows</div>
+
+  <figure>
+    <img src="validation/screenshots/03-create-workflow-menu.png" alt="Create workflow dropdown menu" />
+    <figcaption>Create workflow options: start from scratch or use a template</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>View All Workflows</h4>
+      <p>The main Workflows page displays all configured workflows with their status (Active/Inactive), trigger type, and last execution time.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Create New Workflow</h4>
+      <p>Click the purple "Create workflow" button. Choose "Create from scratch" for custom workflows or "Start from template" to use pre-built configurations.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Manage Applications</h4>
+      <p>Access the Applications tab to view and configure available trigger sources and action destinations.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/14-applications-page.png" alt="Applications page showing configured integrations" />
+    <figcaption>Applications page displaying available integrations and their status</figcaption>
+  </figure>
+</section>
+
+<section class="section">
+  <h2>Using Workflow Templates</h2>
+
+  <h3>Pre-Built Templates</h3>
+  <p>Bayzat provides ready-to-use workflow templates for common HR automation scenarios. Templates can be customized after selection.</p>
+
+  <figure>
+    <img src="validation/screenshots/04-workflow-templates.png" alt="Workflow template library" />
+    <figcaption>Template library with pre-built workflows for common HR scenarios</figcaption>
+  </figure>
+
+  <h3>Available Templates</h3>
+  <ul>
+    <li><strong>Welcome Email:</strong> Automatically send welcome emails to new employees on their hire date</li>
+    <li><strong>Probation Reminder:</strong> Notify managers before employee probation periods end</li>
+    <li><strong>Leave Request Notification:</strong> Alert managers when team members submit leave requests</li>
+    <li><strong>Air Tickets Auto Encashment:</strong> Generate encashment requests for air ticket allowances</li>
+    <li><strong>Birthday Notification:</strong> Send birthday greetings to employees</li>
+  </ul>
+
+  <div class="info-box">
+    <p><strong>Tip:</strong> Start with templates to understand workflow structure, then create custom workflows for your specific needs.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Creating a Workflow</h2>
+
+  <h3>Step-by-Step Guide</h3>
+  <p>Follow these steps to create a new workflow from scratch.</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Start Creation</h4>
+      <p>Click "Create workflow" → "Create from scratch". Enter a descriptive name for your workflow.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/05-create-workflow-form.png" alt="Workflow creation form" />
+    <figcaption>Workflow creation form with name input and trigger/action configuration</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Select Trigger Application</h4>
+      <p>Click on the trigger section and select the application that will fire the event. Options include Bayzat HR, Payroll, Timeoff, Employee Ticket, and Incoming Integration.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/08-trigger-selected.png" alt="Trigger application selected" />
+    <figcaption>Selecting a trigger application for the workflow</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Choose Trigger Event</h4>
+      <p>Select the specific event that will start the workflow. Each application has multiple events to choose from.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Configure Trigger Conditions</h4>
+      <p>Optionally add conditions to filter when the workflow runs. For example, trigger only for specific departments or employee types.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/09-trigger-configured.png" alt="Trigger configuration complete" />
+    <figcaption>Completed trigger configuration with event and conditions</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">5</div>
+    <div class="step-content">
+      <h4>Add Action</h4>
+      <p>Select an action application (Email, Slack, Task, etc.) and configure the action details. You can add multiple actions to a single workflow.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">6</div>
+    <div class="step-content">
+      <h4>Save and Activate</h4>
+      <p>Click Save to create the workflow. Toggle the status to Active to enable the automation.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/16-crud-create-form.png" alt="Workflow save confirmation" />
+    <figcaption>Final workflow configuration ready to save</figcaption>
+  </figure>
+
+  <div class="warning-box">
+    <p><strong>Account Limits:</strong> Demo and trial accounts may have workflow creation limits. If you see an error about reaching the maximum number of workflows, contact your account manager.</p>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/17-crud-create-limit-error.png" alt="Workflow limit error message" />
+    <figcaption>Error message when workflow creation limit is reached</figcaption>
+  </figure>
+</section>
+
+<section class="section">
+  <h2>Managing Workflows</h2>
+
+  <h3>Viewing Workflow Details</h3>
+  <p>Click on any workflow to view its complete configuration, execution history, and activity log.</p>
+
+  <figure>
+    <img src="validation/screenshots/18-crud-read-workflow-details-dialog.png" alt="Workflow details dialog" />
+    <figcaption>Workflow details showing trigger, conditions, and actions configuration</figcaption>
+  </figure>
+
+  <h3>Workflow Activity</h3>
+  <p>The activity tab shows a timeline of all workflow executions, including successful runs, failures, and in-progress executions.</p>
+
+  <figure>
+    <img src="validation/screenshots/19-crud-read-workflow-activity.png" alt="Workflow activity timeline" />
+    <figcaption>Activity timeline showing workflow execution history</figcaption>
+  </figure>
+
+  <h3>Execution Details</h3>
+  <p>Click on any execution to see detailed information about what happened, including trigger data, action results, and any errors.</p>
+
+  <figure>
+    <img src="validation/screenshots/20-crud-read-execution-details.png" alt="Execution details view" />
+    <figcaption>Detailed view of a single workflow execution with action results</figcaption>
+  </figure>
+
+  <h3>Workflow Actions Menu</h3>
+  <p>Use the three-dot menu on any workflow to access quick actions.</p>
+
+  <figure>
+    <img src="validation/screenshots/21-crud-workflow-action-menu.png" alt="Workflow action menu" />
+    <figcaption>Action menu with Edit, Duplicate, Deactivate, and Delete options</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Action</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Edit</strong></td>
+        <td>Modify workflow name, triggers, conditions, and actions</td>
+      </tr>
+      <tr>
+        <td><strong>Duplicate</strong></td>
+        <td>Create a copy of the workflow with a new name</td>
+      </tr>
+      <tr>
+        <td><strong>Activate/Deactivate</strong></td>
+        <td>Toggle workflow status without deleting</td>
+      </tr>
+      <tr>
+        <td><strong>Delete</strong></td>
+        <td>Permanently remove the workflow</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <h2>Editing Workflows</h2>
+
+  <h3>Modifying an Existing Workflow</h3>
+  <p>To edit a workflow, click the three-dot menu and select Edit, or click directly on the workflow to open the details panel.</p>
+
+  <figure>
+    <img src="validation/screenshots/22-crud-update-edit-form.png" alt="Workflow edit form" />
+    <figcaption>Editing workflow configuration</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Make Changes</h4>
+      <p>Update the workflow name, trigger configuration, conditions, or actions as needed.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/23-crud-update-name-modified.png" alt="Workflow name being modified" />
+    <figcaption>Modifying the workflow name</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Save Changes</h4>
+      <p>Click Save to apply your changes. The workflow will continue using the updated configuration for future executions.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/24-crud-update-name-corrected.png" alt="Updated workflow name" />
+    <figcaption>Workflow name updated and ready to save</figcaption>
+  </figure>
+
+  <figure>
+    <img src="validation/screenshots/25-crud-update-success.png" alt="Workflow update success" />
+    <figcaption>Workflow successfully updated</figcaption>
+  </figure>
+
+  <div class="info-box">
+    <p><strong>Note:</strong> Changes to active workflows take effect immediately for future trigger events. Executions already in progress will complete with the original configuration.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Deactivating and Deleting Workflows</h2>
+
+  <h3>Deactivating a Workflow</h3>
+  <p>Deactivation pauses a workflow without deleting it. This is useful for temporarily stopping automation or troubleshooting issues.</p>
+
+  <figure>
+    <img src="validation/screenshots/26-crud-delete-workflow-deactivated.png" alt="Deactivated workflow" />
+    <figcaption>Workflow shown in deactivated state with Inactive badge</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Toggle Status</h4>
+      <p>Use the status toggle on the workflow card or select "Deactivate" from the action menu. The workflow will stop executing but remain visible in your list.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Reactivate When Ready</h4>
+      <p>Toggle the status back to Active to resume automation. The workflow will start executing again for new trigger events.</p>
+    </div>
+  </div>
+
+  <h3>Deleting a Workflow</h3>
+  <p>Deletion permanently removes a workflow and its execution history. This action cannot be undone.</p>
+
+  <div class="warning-box">
+    <p><strong>Caution:</strong> Deleting a workflow removes all execution history. Consider deactivating instead if you may need the workflow again.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Monitoring Executions</h2>
+
+  <h3>Execution Overview</h3>
+  <p>The Executions tab provides a centralized view of all workflow activity across your organization.</p>
+
+  <figure>
+    <img src="validation/screenshots/13-workflow-executions.png" alt="Workflow executions list" />
+    <figcaption>Executions tab showing workflow run history with status indicators</figcaption>
+  </figure>
+
+  <h3>Execution Statuses</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Meaning</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Success</td>
+        <td>Workflow completed all actions successfully</td>
+        <td>No action needed</td>
+      </tr>
+      <tr>
+        <td>In Progress</td>
+        <td>Workflow is currently executing</td>
+        <td>Wait for completion</td>
+      </tr>
+      <tr>
+        <td>Failed</td>
+        <td>One or more actions failed to execute</td>
+        <td>Review error details</td>
+      </tr>
+      <tr>
+        <td>Skipped</td>
+        <td>Conditions not met, workflow did not run</td>
+        <td>Verify conditions if unexpected</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <h2>Managing Tags</h2>
+
+  <h3>Organizing Workflows with Tags</h3>
+  <p>Use tags to categorize and filter workflows. Tags help organize workflows by department, purpose, or any custom classification.</p>
+
+  <figure>
+    <img src="validation/screenshots/15-manage-tags.png" alt="Manage tags interface" />
+    <figcaption>Tag management interface for organizing workflows</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Create Tags</h4>
+      <p>Click "Manage tags" to create new tags. Enter a tag name and optional color.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Apply Tags to Workflows</h4>
+      <p>When creating or editing a workflow, select applicable tags from the dropdown.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Filter by Tags</h4>
+      <p>Use the tag filter on the main Workflows page to view workflows with specific tags.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Real-World Workflow Examples</h2>
+
+  <h3>Common Automation Scenarios</h3>
+  <p>The following examples demonstrate practical workflow implementations:</p>
+
+  <div class="feature-card">
+    <h4>Example 1: New Employee Welcome Email</h4>
+    <p><strong>Scenario:</strong> Automatically send a welcome email to new employees on their hire date.</p>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Trigger</strong></td>
+          <td>Bayzat HR → Employee hire date</td>
+        </tr>
+        <tr>
+          <td><strong>Condition</strong></td>
+          <td>None (fires for all new hires)</td>
+        </tr>
+        <tr>
+          <td><strong>Action</strong></td>
+          <td>Email → Send welcome email with onboarding information</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="feature-card">
+    <h4>Example 2: Manager Notification for Leave Requests</h4>
+    <p><strong>Scenario:</strong> Notify managers when team members submit leave requests.</p>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Trigger</strong></td>
+          <td>Bayzat Timeoff → Leave request updated</td>
+        </tr>
+        <tr>
+          <td><strong>Condition</strong></td>
+          <td>Status = Pending</td>
+        </tr>
+        <tr>
+          <td><strong>Action</strong></td>
+          <td>Mobile Notification → Send push notification to line manager</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="feature-card">
+    <h4>Example 3: Probation End Reminder</h4>
+    <p><strong>Scenario:</strong> Remind HR and managers before employee probation periods end.</p>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Trigger</strong></td>
+          <td>Bayzat HR → Employee probation end date</td>
+        </tr>
+        <tr>
+          <td><strong>Condition</strong></td>
+          <td>Days before = 7</td>
+        </tr>
+        <tr>
+          <td><strong>Action</strong></td>
+          <td>Email → Send reminder to HR and line manager</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="feature-card">
+    <h4>Example 4: Ticket Approval to Payroll</h4>
+    <p><strong>Scenario:</strong> Automatically create payroll adjustments when expense tickets are approved.</p>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Trigger</strong></td>
+          <td>Bayzat Employee Ticket → Ticket status updated</td>
+        </tr>
+        <tr>
+          <td><strong>Condition</strong></td>
+          <td>Status = Approved</td>
+        </tr>
+        <tr>
+          <td><strong>Action</strong></td>
+          <td>Bayzat Payroll → Create pay adjustment request</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Business Rules & Limitations</h2>
+
+  <h3>Core Business Rules</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>Description</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Admin access required</td>
+        <td>Only administrators can create and manage workflows</td>
+        <td>Request access from system admin</td>
+      </tr>
+      <tr>
+        <td>Account workflow limits</td>
+        <td>Demo/trial accounts may have maximum workflow counts</td>
+        <td>Contact account manager for upgrades</td>
+      </tr>
+      <tr>
+        <td>Trigger-action mapping</td>
+        <td>Each workflow requires one trigger and at least one action</td>
+        <td>Cannot save workflow without both</td>
+      </tr>
+      <tr>
+        <td>Immediate effect</td>
+        <td>Active workflows execute immediately when triggered</td>
+        <td>Test in inactive state first</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>System Constraints</h3>
+  <ul>
+    <li>Workflows execute in real-time when trigger events occur</li>
+    <li>Slack integration requires webhook URL configuration in your Slack workspace</li>
+    <li>Email actions require employees to have valid email addresses configured</li>
+    <li>Payroll actions require the Payroll module to be active</li>
+    <li>Deleted workflows cannot be recovered</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Troubleshooting & Edge Cases</h2>
+
+  <h3>Common Issues</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Issue</th>
+        <th>Cause</th>
+        <th>Resolution</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Workflow not executing</td>
+        <td>Workflow is inactive or conditions not met</td>
+        <td>Verify status is Active and check conditions</td>
+      </tr>
+      <tr>
+        <td>Cannot create workflow</td>
+        <td>Account limit reached</td>
+        <td>Delete unused workflows or contact support</td>
+      </tr>
+      <tr>
+        <td>Email not received</td>
+        <td>Invalid email address or spam filter</td>
+        <td>Verify employee email, check spam folder</td>
+      </tr>
+      <tr>
+        <td>Slack message failed</td>
+        <td>Invalid webhook URL or channel permissions</td>
+        <td>Regenerate webhook URL in Slack admin</td>
+      </tr>
+      <tr>
+        <td>Action shows failed</td>
+        <td>Missing required data or integration error</td>
+        <td>Check execution details for error message</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Known Limitations</h3>
+
+  <div class="warning-box">
+    <p><strong>No Undo for Executions:</strong> Once a workflow executes, actions cannot be reversed automatically. For example, sent emails cannot be recalled.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Sequential Actions:</strong> Actions in a workflow execute in sequence. If one action fails, subsequent actions may not execute.</p>
+  </div>
+
+  <h3>Edge Cases</h3>
+  <ul>
+    <li><strong>Duplicate triggers:</strong> If an employee record is updated multiple times quickly, the workflow may execute multiple times</li>
+    <li><strong>Circular workflows:</strong> Avoid creating workflows that trigger each other in loops</li>
+    <li><strong>Historical data:</strong> Workflows only trigger on new events, not historical data</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Support Resources</h2>
+
+  <h3>Frequently Asked Questions</h3>
+
+  <div class="feature-card">
+    <h4>How do I test a workflow before activating?</h4>
+    <p>Create the workflow in inactive state, review the configuration, then manually trigger a test event in a non-production context. Activate once confirmed working.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Can I have multiple triggers for one workflow?</h4>
+    <p>No, each workflow has exactly one trigger. To respond to multiple events, create separate workflows with the same actions.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>How do I connect Slack to workflows?</h4>
+    <p>Generate an Incoming Webhook URL in your Slack workspace settings, then configure it in the Slack action when creating your workflow.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Why is my workflow showing as failed?</h4>
+    <p>Click on the failed execution to see detailed error information. Common causes include missing employee data, invalid email addresses, or integration configuration issues.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Can I schedule workflows to run at specific times?</h4>
+    <p>Workflows are event-driven, not time-based. However, some triggers like "hire date" or "probation end" can be configured to fire a certain number of days before/after the date.</p>
+  </div>
+
+  <h3>Getting Help</h3>
+  <ul>
+    <li>Contact your System Administrator for workflow configuration support</li>
+    <li>Bayzat Support Team - Available for technical issues and integration help</li>
+    <li>Knowledge Base - Access additional articles and workflow examples</li>
+    <li>In-app Help - Contextual help available within the Bayzat platform</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Glossary of Terms</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Workflow</strong></td>
+        <td>An automated sequence that executes actions when triggered by specific events.</td>
+      </tr>
+      <tr>
+        <td><strong>Trigger</strong></td>
+        <td>The event that starts a workflow execution (e.g., employee created, leave request submitted).</td>
+      </tr>
+      <tr>
+        <td><strong>Action</strong></td>
+        <td>What the workflow does when triggered (e.g., send email, create task, post to Slack).</td>
+      </tr>
+      <tr>
+        <td><strong>Condition</strong></td>
+        <td>Optional criteria that filter when a workflow executes based on data values.</td>
+      </tr>
+      <tr>
+        <td><strong>Execution</strong></td>
+        <td>A single run of a workflow from trigger to action completion.</td>
+      </tr>
+      <tr>
+        <td><strong>Active Status</strong></td>
+        <td>Workflow is enabled and will execute when triggered.</td>
+      </tr>
+      <tr>
+        <td><strong>Inactive Status</strong></td>
+        <td>Workflow is paused and will not execute even when trigger events occur.</td>
+      </tr>
+      <tr>
+        <td><strong>Webhook</strong></td>
+        <td>A URL endpoint that receives data from external systems to trigger workflows.</td>
+      </tr>
+      <tr>
+        <td><strong>Template</strong></td>
+        <td>Pre-built workflow configuration that can be customized for your organization.</td>
+      </tr>
+      <tr>
+        <td><strong>Tag</strong></td>
+        <td>A label used to categorize and filter workflows for easier management.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <p>Generated by Bayzat Documentation System</p>
+  <p>Last updated: 2026-01-15</p>
+</footer>
+
+</body>
+</html>
