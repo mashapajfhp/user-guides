@@ -1,0 +1,178 @@
+{
+  "nextVersion": "v1",
+  "feature_info": {
+    "feature_name": "workflows",
+    "feature_slug": "workflows",
+    "next_version": "v1"
+  },
+  "primary_entity": {
+    "discovery_instructions": [
+      "Identify what the main item/entity is for this feature (e.g., ticket, workflow, employee, record)",
+      "Look for list/table views - the rows represent the primary entity",
+      "Check page headers and breadcrumbs for entity naming",
+      "Note the singular and plural forms used in the UI"
+    ],
+    "crud_operations": {
+      "create": {
+        "action": "Create new item",
+        "find_trigger": [
+          "Look for buttons with: + Add, + Create, + New, plus icon",
+          "Check top-right corner of the page",
+          "Check for floating action buttons (FAB)",
+          "Look in empty state messages for create prompts"
+        ],
+        "validation": "New item appears in list with unique identifier"
+      },
+      "read": {
+        "action": "View item details",
+        "find_trigger": [
+          "Click on any row in a list/table",
+          "Look for 'View' or eye icon buttons",
+          "Check if rows are clickable (cursor changes)"
+        ],
+        "validation": "Detail panel, modal, or page opens showing full information"
+      },
+      "update": {
+        "action": "Edit/modify item",
+        "find_trigger": [
+          "Look for Edit button, pencil icon",
+          "Check for inline editing (click on field to edit)",
+          "Look for status change dropdowns or buttons",
+          "Check action menus (three-dot menu) for edit option"
+        ],
+        "validation": "Changes persist after save, reflected in list view"
+      },
+      "delete": {
+        "action": "Delete/remove item",
+        "find_trigger": [
+          "Look for Delete button, trash icon",
+          "Check action menus (three-dot menu) for delete option",
+          "Look for bulk delete with checkboxes",
+          "Some features use 'Archive' or 'Cancel' instead of delete"
+        ],
+        "validation": "Item removed from list or status changed to deleted/archived"
+      }
+    }
+  },
+  "exploration_phase": {
+    "enabled": true,
+    "run_before_what_to_do": true,
+    "instructions": [
+      "Navigate to the feature's main section",
+      "Take a full page snapshot to understand the layout",
+      "Identify the primary entity - what 'item' does this feature manage?",
+      "Find ALL clickable elements: buttons, links, tabs, dropdowns, icons",
+      "Map the navigation structure: tabs, sidebar items, breadcrumbs",
+      "Click each tab/sub-section and document what appears",
+      "Locate CRUD controls for the primary entity",
+      "Check for action menus (three-dot menus, right-click menus)",
+      "Document any modals, dialogs, slide-out panels",
+      "Identify form fields and input types when forms appear",
+      "Look for filters, search, sort, and export options",
+      "Check for bulk action controls (checkboxes, select all)",
+      "Note any settings or configuration options"
+    ],
+    "discovery_targets": [
+      "Primary action buttons (create/add new item)",
+      "List/table of items with row actions",
+      "Detail view or edit forms",
+      "Status indicators and state changes",
+      "Filter and search controls",
+      "Navigation tabs within the feature",
+      "Settings or configuration sections",
+      "Related features or cross-links"
+    ]
+  },
+  "workflow_integration": {
+    "enabled": true,
+    "check_instructions": [
+      "Navigate to Automations in the left sidebar",
+      "Click on Workflows",
+      "Click + Create workflow (or similar create button)",
+      "In trigger selection, search for this feature's name",
+      "Check if this feature appears as a trigger source",
+      "Document any trigger events found (e.g., 'item created', 'status changed')",
+      "Check Actions section for actions related to this feature",
+      "Screenshot available triggers and actions"
+    ],
+    "nav_path": "Automations → Workflows → + Create workflow"
+  },
+  "execution_order": [
+    "1. EXPLORATION: Navigate to feature and discover all UI elements",
+    "2. IDENTIFY ENTITY: Determine what the primary item/entity is",
+    "3. CRUD TEST: Test create, read, update, delete for the primary entity",
+    "4. WORKFLOW CHECK: Verify if feature has workflow triggers/actions",
+    "5. WHAT_TO_DO: Execute specific validation tasks from payload",
+    "6. DOCUMENTATION: Capture screenshots of key screens"
+  ],
+  "playwright_context": {
+    "feature_metadata": {
+      "name": "workflows",
+      "slug": "workflows",
+      "category": "automations",
+      "version": "",
+      "is_new": null
+    },
+    "what_to_do": [
+      {
+        "task": "Create and manage workflows for automation including air ticket auto encashments, payroll approval flows, expense approval flows, and workflow actions such as sending emails and Slack messages.",
+        "steps": [
+          "Access Workflows in Settings.",
+          "Create a new workflow and select the appropriate recipe (e.g., Air Tickets Auto Encashment).",
+          "Define workflow trigger time and criteria for the workflow.",
+          "Set request details such as application, request type, and assign employee.",
+          "Save and activate the workflow.",
+          "For payroll approval flows, navigate to Settings > Approval Flows > Payroll Transaction Request, set up approval hierarchy with AND/OR/Step conditions, and configure multiple approval roles.",
+          "Submit payroll transactions, review details, add comments, approve or reject transactions, and download SIF files or process payroll.",
+          "For expense approval flows, define approval hierarchy, assign Line Manager roles, and set up approval sequence.",
+          "Configure workflow actions to send emails to specific recipients based on employee attributes, send Slack messages to company channels, and compose message content with variables.",
+          "Activate workflows and monitor workflow activity logs."
+        ],
+        "expected_outcome": "Workflows are successfully created, activated, and executed according to defined triggers and criteria, automating tasks such as encashments, approvals, notifications, and payroll processing.",
+        "source_articles": [
+          "31099964679057",
+          "19615093272849",
+          "19674849725329",
+          "14309308626449",
+          "28081403016337"
+        ]
+      }
+    ],
+    "what_to_watch_out_for": [
+      {
+        "issue": "Limited recipient selection in workflows and lack of a universal 'all employees' option.",
+        "limitation": "Workflows recipient selection requires manual updates and does not automatically reflect organizational changes or new employees.",
+        "workaround": "Manually select departments or offices to approximate coverage; no automatic update available.",
+        "jira_reference": "TSSD-4812",
+        "severity": "medium"
+      },
+      {
+        "issue": "No time-based workflow triggers for leave approval notifications and escalations.",
+        "limitation": "System cannot automatically notify or escalate pending leave requests to line managers after a specific time threshold.",
+        "workaround": "Manual follow-up required for pending leave approvals.",
+        "jira_reference": "TSSD-4385",
+        "severity": "high"
+      },
+      {
+        "issue": "Missing workflow triggers for employee financial data changes such as salary and IBAN updates.",
+        "limitation": "Cannot create automated workflows to track or respond to employee financial data modifications.",
+        "workaround": "Manual monitoring and updates outside workflow automation.",
+        "jira_reference": "TSSD-4278",
+        "severity": "medium"
+      },
+      {
+        "issue": "Lack of payroll-specific workflow configurations and actions.",
+        "limitation": "Cannot create workflows tailored to payroll events and actions within the system.",
+        "workaround": "Payroll workflows need to be managed manually or outside the current workflow system.",
+        "jira_reference": "OS-1105",
+        "severity": "medium"
+      }
+    ],
+    "consolidation_summary": {
+      "jira_tickets_received": 4,
+      "jira_tickets_consolidated": 4,
+      "zendesk_articles_received": 5,
+      "tasks_consolidated": 1
+    }
+  }
+}
