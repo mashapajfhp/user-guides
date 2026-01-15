@@ -1312,6 +1312,876 @@
 </section>
 
 <section class="section">
+  <h2>Custom Variables Deep Dive</h2>
+
+  <h3>Mastering Custom Variables</h3>
+  <p>Custom variables are one of the most powerful features in Bayzat Workflows. They allow you to transform, calculate, and look up data to create values that aren't directly available from trigger events. This section provides a comprehensive guide to help you master custom variables.</p>
+
+  <figure>
+    <img src="validation/custom-vars-04-workflow-with-manage-custom-vars-button.png" alt="Workflow builder showing Manage custom variables button" />
+    <figcaption>The "Manage custom variables" button appears after selecting a trigger event</figcaption>
+  </figure>
+
+  <h3>Accessing Custom Variables</h3>
+  <p>To create custom variables, you must first configure a trigger for your workflow. Once a trigger is selected, the "Manage custom variables" button appears next to the Event section.</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Select Your Trigger</h4>
+      <p>Choose an application and event that will trigger your workflow. Custom variables are available after the trigger is configured.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/custom-vars-02-select-event-applications.png" alt="Selecting trigger application" />
+    <figcaption>Select the application that will trigger your workflow</figcaption>
+  </figure>
+
+  <figure>
+    <img src="validation/custom-vars-03-bayzat-hr-events-list.png" alt="Bayzat HR events list" />
+    <figcaption>Bayzat HR offers 20 different trigger events for employee lifecycle automation</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Click Manage Custom Variables</h4>
+      <p>After selecting your trigger, click the "Manage custom variables" button to open the Custom Variables dialog.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/custom-vars-05-empty-custom-variables-dialog.png" alt="Empty custom variables dialog" />
+    <figcaption>The Custom Variables dialog when no variables have been created yet</figcaption>
+  </figure>
+
+  <h3>Complete Function Reference</h3>
+  <p>Bayzat provides <strong>111 built-in functions</strong> organized into six categories. Each function has detailed documentation including syntax, examples, and notes.</p>
+
+  <figure>
+    <img src="validation/custom-vars-11-all-function-categories.png" alt="All six function categories" />
+    <figcaption>All 111 functions are organized into 6 categories with a search feature</figcaption>
+  </figure>
+
+  <h4>Mathematics Functions (21 functions)</h4>
+  <p>Perform calculations, rounding, and arithmetic operations on numeric values.</p>
+
+  <figure>
+    <img src="validation/custom-vars-07-mathematics-functions.png" alt="Mathematics functions list" />
+    <figcaption>21 mathematics functions for numerical calculations</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Function</th>
+        <th>Description</th>
+        <th>Example Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>ABS</strong></td>
+        <td>Returns absolute value</td>
+        <td>Convert negative values to positive</td>
+      </tr>
+      <tr>
+        <td><strong>ADD</strong></td>
+        <td>Add two numbers</td>
+        <td>Calculate total allowances</td>
+      </tr>
+      <tr>
+        <td><strong>SUBTRACT</strong></td>
+        <td>Subtract one number from another</td>
+        <td>Calculate remaining leave days</td>
+      </tr>
+      <tr>
+        <td><strong>MULTIPLY</strong></td>
+        <td>Multiply two numbers</td>
+        <td>Calculate overtime pay (hours × rate)</td>
+      </tr>
+      <tr>
+        <td><strong>DIVIDE</strong></td>
+        <td>Divide one number by another</td>
+        <td>Calculate daily rate from monthly salary</td>
+      </tr>
+      <tr>
+        <td><strong>ROUND</strong></td>
+        <td>Round to specified decimal places</td>
+        <td>Round calculated amounts to 2 decimals</td>
+      </tr>
+      <tr>
+        <td><strong>FLOOR</strong></td>
+        <td>Round down to nearest integer</td>
+        <td>Calculate complete months of service</td>
+      </tr>
+      <tr>
+        <td><strong>CEILING</strong></td>
+        <td>Round up to nearest integer</td>
+        <td>Round up partial days for accruals</td>
+      </tr>
+      <tr>
+        <td><strong>MOD</strong></td>
+        <td>Return remainder after division</td>
+        <td>Calculate odd/even employee numbers</td>
+      </tr>
+      <tr>
+        <td><strong>PERCENTAGE</strong></td>
+        <td>Calculate percentage of a value</td>
+        <td>Calculate bonus as percentage of salary</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <img src="validation/custom-vars-08-multiply-function-config.png" alt="MULTIPLY function configuration" />
+    <figcaption>MULTIPLY function showing syntax, sample usages, and result structure</figcaption>
+  </figure>
+
+  <h4>Lookup Functions (21 functions)</h4>
+  <p>Retrieve data from Bayzat domains including employees, departments, offices, and more. Lookup functions are essential for cross-referencing data.</p>
+
+  <figure>
+    <img src="validation/custom-vars-12-lookup-functions.png" alt="Lookup functions list" />
+    <figcaption>21 lookup functions for retrieving data from Bayzat domains</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Function</th>
+        <th>Description</th>
+        <th>Returns</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>DEPARTMENT_BY_ID</strong></td>
+        <td>Get department by ID</td>
+        <td>Department name, manager, parent</td>
+      </tr>
+      <tr>
+        <td><strong>DEPARTMENT_BY_NAME</strong></td>
+        <td>Find department by name</td>
+        <td>Department details object</td>
+      </tr>
+      <tr>
+        <td><strong>EMPLOYEE_BY_ID</strong></td>
+        <td>Get employee by Bayzat ID</td>
+        <td>Full employee record</td>
+      </tr>
+      <tr>
+        <td><strong>EMPLOYEE_BY_EXTERNAL_ID</strong></td>
+        <td>Find employee by external system ID</td>
+        <td>Full employee record</td>
+      </tr>
+      <tr>
+        <td><strong>OFFICE_BY_NAME</strong></td>
+        <td>Find office by name</td>
+        <td>Office details</td>
+      </tr>
+      <tr>
+        <td><strong>COUNTRY_BY_ID</strong></td>
+        <td>Get country information</td>
+        <td>Country name, code</td>
+      </tr>
+      <tr>
+        <td><strong>CURRENCY_BY_ID</strong></td>
+        <td>Get currency details</td>
+        <td>Currency name, symbol, code</td>
+      </tr>
+      <tr>
+        <td><strong>SALARY_COMPONENT_BY_ID</strong></td>
+        <td>Get salary component details</td>
+        <td>Component name, type</td>
+      </tr>
+      <tr>
+        <td><strong>LEAVE_TYPE_BY_ID</strong></td>
+        <td>Get leave type details</td>
+        <td>Leave type name, policy</td>
+      </tr>
+      <tr>
+        <td><strong>TIMEOFF_BALANCE</strong></td>
+        <td>Get employee leave balance</td>
+        <td>Available leave days</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box">
+    <p><strong>Data Table Feature:</strong> Lookup functions include a Data Table that shows all valid values from your company data. This helps you understand what values are available and ensures accuracy.</p>
+  </div>
+
+  <figure>
+    <img src="validation/custom-vars-13-lookup-department-with-data-table.png" alt="Lookup function with Data Table" />
+    <figcaption>DEPARTMENT_BY_NAME function showing the Data Table with company departments</figcaption>
+  </figure>
+
+  <h4>Text Functions (17 functions)</h4>
+  <p>Manipulate and format text strings. Essential for creating readable messages and combining data.</p>
+
+  <figure>
+    <img src="validation/custom-vars-14-text-functions.png" alt="Text functions list" />
+    <figcaption>17 text functions for string manipulation</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Function</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>CLEAN</strong></td>
+        <td>Remove non-printable characters</td>
+        <td>Clean imported text data</td>
+      </tr>
+      <tr>
+        <td><strong>CONCAT</strong></td>
+        <td>Join two strings</td>
+        <td>CONCAT("Hello ", name) → "Hello John"</td>
+      </tr>
+      <tr>
+        <td><strong>FIND</strong></td>
+        <td>Find position of substring</td>
+        <td>Locate "@" in email address</td>
+      </tr>
+      <tr>
+        <td><strong>LEFT</strong></td>
+        <td>Extract characters from start</td>
+        <td>Get first name initials</td>
+      </tr>
+      <tr>
+        <td><strong>RIGHT</strong></td>
+        <td>Extract characters from end</td>
+        <td>Get last 4 digits of ID</td>
+      </tr>
+      <tr>
+        <td><strong>LEN</strong></td>
+        <td>Count characters in string</td>
+        <td>Validate field length</td>
+      </tr>
+      <tr>
+        <td><strong>LOWER</strong></td>
+        <td>Convert to lowercase</td>
+        <td>Standardize email addresses</td>
+      </tr>
+      <tr>
+        <td><strong>UPPER</strong></td>
+        <td>Convert to uppercase</td>
+        <td>Format department codes</td>
+      </tr>
+      <tr>
+        <td><strong>PROPER</strong></td>
+        <td>Capitalize first letter of each word</td>
+        <td>Format employee names</td>
+      </tr>
+      <tr>
+        <td><strong>TRIM</strong></td>
+        <td>Remove leading/trailing spaces</td>
+        <td>Clean user input</td>
+      </tr>
+      <tr>
+        <td><strong>TEXT_JOIN</strong></td>
+        <td>Join multiple values with delimiter</td>
+        <td>Create comma-separated lists</td>
+      </tr>
+      <tr>
+        <td><strong>SUBSTITUTE</strong></td>
+        <td>Replace text within string</td>
+        <td>Update outdated terms</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Date & Time Functions (27 functions)</h4>
+  <p>The largest category with 27 functions for date calculations, formatting, and time zone handling.</p>
+
+  <figure>
+    <img src="validation/custom-vars-15-datetime-functions.png" alt="Date and Time functions list" />
+    <figcaption>27 date and time functions for temporal calculations</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Function</th>
+        <th>Description</th>
+        <th>Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>DATE</strong></td>
+        <td>Create date from components</td>
+        <td>Build specific dates</td>
+      </tr>
+      <tr>
+        <td><strong>DATE_ADD</strong></td>
+        <td>Add days/months/years to date</td>
+        <td>Calculate probation end date</td>
+      </tr>
+      <tr>
+        <td><strong>DATE_DIFF</strong></td>
+        <td>Calculate days between dates</td>
+        <td>Calculate tenure in days</td>
+      </tr>
+      <tr>
+        <td><strong>DATE_FORMAT</strong></td>
+        <td>Format date for display</td>
+        <td>Format as "January 15, 2026"</td>
+      </tr>
+      <tr>
+        <td><strong>YEAR</strong></td>
+        <td>Extract year from date</td>
+        <td>Get hire year</td>
+      </tr>
+      <tr>
+        <td><strong>MONTH</strong></td>
+        <td>Extract month from date</td>
+        <td>Identify birth month</td>
+      </tr>
+      <tr>
+        <td><strong>DAY</strong></td>
+        <td>Extract day from date</td>
+        <td>Get day of month</td>
+      </tr>
+      <tr>
+        <td><strong>WEEKDAY</strong></td>
+        <td>Get day of week (1-7)</td>
+        <td>Check if weekend</td>
+      </tr>
+      <tr>
+        <td><strong>TODAY</strong></td>
+        <td>Get current date</td>
+        <td>Compare with hire date</td>
+      </tr>
+      <tr>
+        <td><strong>NOW</strong></td>
+        <td>Get current date and time</td>
+        <td>Timestamp for logging</td>
+      </tr>
+      <tr>
+        <td><strong>WORKDAYS</strong></td>
+        <td>Calculate working days between dates</td>
+        <td>Calculate business days</td>
+      </tr>
+      <tr>
+        <td><strong>EOMONTH</strong></td>
+        <td>Get end of month date</td>
+        <td>Calculate payroll cutoff</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Logic Functions (8 functions)</h4>
+  <p>Create conditional logic and decision-based calculations.</p>
+
+  <figure>
+    <img src="validation/custom-vars-16-logic-functions.png" alt="Logic functions list" />
+    <figcaption>8 logic functions for conditional calculations</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Function</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>AND</strong></td>
+        <td>Returns true if all conditions true</td>
+        <td>Check multiple criteria</td>
+      </tr>
+      <tr>
+        <td><strong>OR</strong></td>
+        <td>Returns true if any condition true</td>
+        <td>Check alternative conditions</td>
+      </tr>
+      <tr>
+        <td><strong>NOT</strong></td>
+        <td>Reverses boolean value</td>
+        <td>Negate a condition</td>
+      </tr>
+      <tr>
+        <td><strong>IF_DATE</strong></td>
+        <td>Conditional based on date comparison</td>
+        <td>Different message before/after date</td>
+      </tr>
+      <tr>
+        <td><strong>IF_NUMBER</strong></td>
+        <td>Conditional based on numeric comparison</td>
+        <td>Different action based on salary range</td>
+      </tr>
+      <tr>
+        <td><strong>IF_TEXT</strong></td>
+        <td>Conditional based on text comparison</td>
+        <td>Different message by department</td>
+      </tr>
+      <tr>
+        <td><strong>IF_BOOLEAN</strong></td>
+        <td>Conditional based on true/false</td>
+        <td>Check if employee is active</td>
+      </tr>
+      <tr>
+        <td><strong>SWITCH</strong></td>
+        <td>Multiple condition matching</td>
+        <td>Map status codes to labels</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Operator Functions (17 functions)</h4>
+  <p>Compare values and test conditions. Essential for building workflow conditions.</p>
+
+  <figure>
+    <img src="validation/custom-vars-17-operator-functions.png" alt="Operator functions list" />
+    <figcaption>17 operator functions for comparisons and testing</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Function</th>
+        <th>Description</th>
+        <th>Returns</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>EQ_NUMBER</strong></td>
+        <td>Check if numbers are equal</td>
+        <td>TRUE or FALSE</td>
+      </tr>
+      <tr>
+        <td><strong>EQ_TEXT</strong></td>
+        <td>Check if texts are equal</td>
+        <td>TRUE or FALSE</td>
+      </tr>
+      <tr>
+        <td><strong>EQ_DATE</strong></td>
+        <td>Check if dates are equal</td>
+        <td>TRUE or FALSE</td>
+      </tr>
+      <tr>
+        <td><strong>GT_NUMBER</strong></td>
+        <td>Check if first number is greater</td>
+        <td>TRUE or FALSE</td>
+      </tr>
+      <tr>
+        <td><strong>GT_DATE</strong></td>
+        <td>Check if first date is later</td>
+        <td>TRUE or FALSE</td>
+      </tr>
+      <tr>
+        <td><strong>LT_NUMBER</strong></td>
+        <td>Check if first number is less</td>
+        <td>TRUE or FALSE</td>
+      </tr>
+      <tr>
+        <td><strong>LT_DATE</strong></td>
+        <td>Check if first date is earlier</td>
+        <td>TRUE or FALSE</td>
+      </tr>
+      <tr>
+        <td><strong>IS_EMPTY</strong></td>
+        <td>Check if value is empty</td>
+        <td>TRUE or FALSE</td>
+      </tr>
+      <tr>
+        <td><strong>IS_NOT_EMPTY</strong></td>
+        <td>Check if value has content</td>
+        <td>TRUE or FALSE</td>
+      </tr>
+      <tr>
+        <td><strong>CONTAINS</strong></td>
+        <td>Check if text contains substring</td>
+        <td>TRUE or FALSE</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Step-by-Step: Creating Your First Custom Variable</h3>
+  <p>Let's walk through creating a custom variable that calculates an employee's age multiplied by 2 (a simple example to demonstrate the concept).</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Open the Custom Variables Dialog</h4>
+      <p>After configuring your trigger, click "Manage custom variables" to open the dialog.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Click "Add custom variable"</h4>
+      <p>This opens the function selection panel where you can browse or search for functions.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/custom-vars-06-function-categories.png" alt="Function categories in Add Variable dialog" />
+    <figcaption>Browse function categories or use the search box to find specific functions</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Select a Function</h4>
+      <p>For this example, select "Mathematics" category, then choose the "MULTIPLY" function.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Review Function Documentation</h4>
+      <p>The function configuration panel shows complete documentation including syntax, sample usages, result structure, and notes.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">5</div>
+    <div class="step-content">
+      <h4>Configure Parameters</h4>
+      <p>Enter values or click the f(x) button to insert workflow variables. For MULTIPLY, you need two parameters.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/custom-vars-09-workflow-variables-dropdown.png" alt="Workflow variables dropdown" />
+    <figcaption>Click f(x) to see available workflow variables from the trigger event</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">6</div>
+    <div class="step-content">
+      <h4>Insert Variables as Parameters</h4>
+      <p>Select a variable like "Employee → age" to insert it. Variables appear as purple tags.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/custom-vars-10-variable-inserted-as-tag.png" alt="Variable inserted as purple tag" />
+    <figcaption>The "Employee → age" variable inserted into the MULTIPLY function parameter</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">7</div>
+    <div class="step-content">
+      <h4>Name and Save</h4>
+      <p>Give your custom variable a descriptive name and click "Add Variable" to save it.</p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <p><strong>Pro Tip:</strong> Use the search box at the top of the function categories to quickly find functions. For example, searching "date" will show all date-related functions across categories.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Use Case Identification Guide</h2>
+
+  <h3>How to Identify Workflow Opportunities</h3>
+  <p>One of the biggest challenges teams face is knowing when workflows can help automate their processes. This guide helps you identify automation opportunities by understanding the trigger events available and matching them to your business needs.</p>
+
+  <div class="info-box">
+    <p><strong>Key Principle:</strong> If you find yourself thinking "I wish the system would automatically do X when Y happens," that's a workflow opportunity. The trigger is "Y happens" and the action is "do X."</p>
+  </div>
+
+  <h3>Available Trigger Applications</h3>
+  <p>Bayzat Workflows supports <strong>13 applications</strong> as trigger sources, with over 61 unique events across them.</p>
+
+  <figure>
+    <img src="validation/custom-vars-18-all-applications.png" alt="All 13 trigger applications" />
+    <figcaption>13 applications available as workflow trigger sources</figcaption>
+  </figure>
+
+  <h3>Bayzat Payroll Triggers (10 Events)</h3>
+  <p>Automate notifications and processes around salary and payroll changes.</p>
+
+  <figure>
+    <img src="validation/custom-vars-19-payroll-events.png" alt="Bayzat Payroll events" />
+    <figcaption>10 payroll-related trigger events</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>When It Fires</th>
+        <th>Automation Opportunity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Salary is created</strong></td>
+        <td>New salary record added for employee</td>
+        <td>Send welcome package with compensation details</td>
+      </tr>
+      <tr>
+        <td><strong>Salary is updated</strong></td>
+        <td>Existing salary modified</td>
+        <td>Notify employee and update records</td>
+      </tr>
+      <tr>
+        <td><strong>Loan is created</strong></td>
+        <td>New employee loan added</td>
+        <td>Generate acknowledgment and repayment schedule</td>
+      </tr>
+      <tr>
+        <td><strong>Loan is updated</strong></td>
+        <td>Loan terms modified</td>
+        <td>Notify employee of changes</td>
+      </tr>
+      <tr>
+        <td><strong>Pay adjustment created</strong></td>
+        <td>Bonus, deduction, or allowance added</td>
+        <td>Approval notification to finance</td>
+      </tr>
+      <tr>
+        <td><strong>Pay adjustment updated</strong></td>
+        <td>Adjustment modified</td>
+        <td>Update tracking and notify stakeholders</td>
+      </tr>
+      <tr>
+        <td><strong>Payroll cycle runs</strong></td>
+        <td>Monthly/weekly payroll processed</td>
+        <td>Send payslip availability notifications</td>
+      </tr>
+      <tr>
+        <td><strong>EOS calculation</strong></td>
+        <td>End of service benefits calculated</td>
+        <td>Notify HR and finance for review</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="feature-card">
+    <h4>Example Use Cases for Payroll</h4>
+    <ul>
+      <li>Automatically notify managers when team member salaries change</li>
+      <li>Send congratulations email when salary increases are processed</li>
+      <li>Alert finance team when large pay adjustments are created</li>
+      <li>Create tasks for payroll review when EOS is calculated</li>
+      <li>Notify employees when their loan payments are processed</li>
+    </ul>
+  </div>
+
+  <h3>Bayzat Timeoff Triggers (3 Events)</h3>
+  <p>Streamline leave management and keep managers informed.</p>
+
+  <figure>
+    <img src="validation/custom-vars-20-timeoff-events.png" alt="Bayzat Timeoff events" />
+    <figcaption>3 timeoff-related trigger events</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>When It Fires</th>
+        <th>Automation Opportunity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Leave request is created</strong></td>
+        <td>Employee submits new leave request</td>
+        <td>Immediate notification to manager</td>
+      </tr>
+      <tr>
+        <td><strong>Leave request is updated</strong></td>
+        <td>Request status changes (approved/rejected)</td>
+        <td>Notify employee and update calendar</td>
+      </tr>
+      <tr>
+        <td><strong>Leave balance changes</strong></td>
+        <td>Available leave days modified</td>
+        <td>Notify employee of balance update</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="feature-card">
+    <h4>Example Use Cases for Timeoff</h4>
+    <ul>
+      <li>Send push notification to managers for pending leave approvals</li>
+      <li>Create calendar events when leave is approved</li>
+      <li>Notify HR when emergency leave is requested</li>
+      <li>Alert employees when their leave balance falls below threshold</li>
+      <li>Send reminder to complete handover when leave is approaching</li>
+    </ul>
+  </div>
+
+  <h3>Bayzat Attendance Triggers (6 Events)</h3>
+  <p>Monitor attendance patterns and shift assignments.</p>
+
+  <figure>
+    <img src="validation/custom-vars-21-attendance-events.png" alt="Bayzat Attendance events" />
+    <figcaption>6 attendance-related trigger events</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>When It Fires</th>
+        <th>Automation Opportunity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Shift is created</strong></td>
+        <td>New shift schedule assigned</td>
+        <td>Notify employee of their schedule</td>
+      </tr>
+      <tr>
+        <td><strong>Shift is updated</strong></td>
+        <td>Shift timing or assignment changed</td>
+        <td>Alert employee of schedule change</td>
+      </tr>
+      <tr>
+        <td><strong>Attendance recorded</strong></td>
+        <td>Employee clocks in/out</td>
+        <td>Log attendance for reporting</td>
+      </tr>
+      <tr>
+        <td><strong>Late arrival detected</strong></td>
+        <td>Employee arrives after shift start</td>
+        <td>Notify manager of tardiness</td>
+      </tr>
+      <tr>
+        <td><strong>Early departure detected</strong></td>
+        <td>Employee leaves before shift end</td>
+        <td>Alert HR for follow-up</td>
+      </tr>
+      <tr>
+        <td><strong>Absence detected</strong></td>
+        <td>Employee missing without leave</td>
+        <td>Escalate to manager immediately</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="feature-card">
+    <h4>Example Use Cases for Attendance</h4>
+    <ul>
+      <li>Send automatic reminder when shift starts in 30 minutes</li>
+      <li>Alert managers when employees are absent without notice</li>
+      <li>Create tasks for HR to follow up on attendance issues</li>
+      <li>Notify employees when their shifts are modified</li>
+      <li>Generate weekly attendance summary for department heads</li>
+    </ul>
+  </div>
+
+  <h3>Decision Framework: Is This a Workflow Candidate?</h3>
+  <p>Use this checklist to determine if a process can be automated with Bayzat Workflows:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Question</th>
+        <th>If Yes</th>
+        <th>If No</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Does this process start when something specific happens?</td>
+        <td>Good candidate - identify the trigger event</td>
+        <td>May need scheduled reports instead</td>
+      </tr>
+      <tr>
+        <td>Is the action consistent every time?</td>
+        <td>Perfect for automation</td>
+        <td>Consider if conditions can handle variations</td>
+      </tr>
+      <tr>
+        <td>Does it involve notifying someone?</td>
+        <td>Email/Slack/Push notification actions</td>
+        <td>Consider other action types</td>
+      </tr>
+      <tr>
+        <td>Does it happen frequently?</td>
+        <td>High ROI for automation</td>
+        <td>Still valuable for consistency</td>
+      </tr>
+      <tr>
+        <td>Is timing critical?</td>
+        <td>Workflows execute immediately</td>
+        <td>Automation ensures nothing is missed</td>
+      </tr>
+      <tr>
+        <td>Are there multiple stakeholders?</td>
+        <td>Add multiple actions to one workflow</td>
+        <td>Single notification still valuable</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Common Automation Patterns</h3>
+
+  <div class="feature-card">
+    <h4>Pattern 1: Lifecycle Notifications</h4>
+    <p><strong>When:</strong> Key employee milestones occur</p>
+    <p><strong>Triggers:</strong> Hire date, probation end, work anniversary, birthday</p>
+    <p><strong>Actions:</strong> Send congratulations, remind managers, create celebration tasks</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Pattern 2: Approval Alerts</h4>
+    <p><strong>When:</strong> Items need manager attention</p>
+    <p><strong>Triggers:</strong> Leave request created, expense submitted, ticket created</p>
+    <p><strong>Actions:</strong> Push notification to approver, email with details, Slack message</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Pattern 3: Compliance Reminders</h4>
+    <p><strong>When:</strong> Deadlines are approaching</p>
+    <p><strong>Triggers:</strong> Visa expiry, contract end, certification renewal</p>
+    <p><strong>Actions:</strong> Email reminders at intervals, create HR tasks, notify employee</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Pattern 4: Data Synchronization</h4>
+    <p><strong>When:</strong> Information needs to flow to other systems</p>
+    <p><strong>Triggers:</strong> Employee created/updated, salary changed, department changed</p>
+    <p><strong>Actions:</strong> Webhook to external systems, create calendar events, update tasks</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Pattern 5: Exception Handling</h4>
+    <p><strong>When:</strong> Something unexpected happens</p>
+    <p><strong>Triggers:</strong> Late arrival, absence, failed approval, error detected</p>
+    <p><strong>Actions:</strong> Alert managers, escalate to HR, create investigation tasks</p>
+  </div>
+
+  <h3>Getting Started: Your First 5 Workflows</h3>
+  <p>If you're new to Bayzat Workflows, start with these high-value, low-complexity automations:</p>
+
+  <ol>
+    <li><strong>New Employee Welcome:</strong> Trigger: Employee hire date → Action: Send welcome email</li>
+    <li><strong>Leave Request Alert:</strong> Trigger: Leave request created → Action: Push notification to manager</li>
+    <li><strong>Birthday Celebration:</strong> Trigger: Employee birthday → Action: Send birthday greeting</li>
+    <li><strong>Probation Reminder:</strong> Trigger: Probation end date (7 days before) → Action: Email to manager and HR</li>
+    <li><strong>Salary Change Notification:</strong> Trigger: Salary updated → Action: Email confirmation to employee</li>
+  </ol>
+
+  <div class="warning-box">
+    <p><strong>Start Simple:</strong> Begin with single-action workflows to understand how they work. Add complexity (conditions, custom variables, multiple actions) as you become more comfortable with the system.</p>
+  </div>
+</section>
+
+<section class="section">
   <h2>Real-World Workflow Examples</h2>
 
   <h3>Common Automation Scenarios</h3>
