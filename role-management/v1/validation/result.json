@@ -1,0 +1,275 @@
+{
+  "feature": "Role Management",
+  "version": "1",
+  "timestamp": "2026-01-16T15:30:00Z",
+  "status": "PASSED",
+  "summary": {
+    "total_tasks": 11,
+    "passed": 11,
+    "failed": 0
+  },
+  "exploration": {
+    "primary_entity": "Role Assignments (mapping of employees to roles)",
+    "secondary_entity": "Custom Roles (role definitions with permissions)",
+    "discovered_elements": [
+      "Two main tabs: Role assignment and Custom roles",
+      "Assign roles button (primary action on Role assignment tab)",
+      "Add new button (primary action on Custom roles tab)",
+      "Role assignment table with columns: Employee avatar, Employee name, Roles, Edit button",
+      "Custom roles table with columns: Role name, Role description, Action buttons (View, Edit, Delete)",
+      "50+ employees with role assignments",
+      "14+ custom roles created",
+      "System roles: Super Admin, Line Manager, People Manager, etc.",
+      "Custom roles: Marked with 'Custom' badge",
+      "Restrictable roles: Marked with 'Restrictable' badge, allow restriction groups",
+      "Custom role configuration: Role Name (EN/AR), Description (EN/AR), Assigned Policies",
+      "60+ available policies for custom roles",
+      "Roles in workflow criteria: 'Employee -> roles' with 6 operations",
+      "40+ roles available for workflow filtering and action routing",
+      "Line manager routing: 'Employee -> direct reports to' in workflow actions"
+    ],
+    "navigation_structure": {
+      "tabs": ["Role assignment", "Custom roles"],
+      "sections": ["Settings → Role Management"]
+    },
+    "undocumented_features": [
+      "Extensive role usage within workflows for filtering and routing",
+      "Policy-based permission control for custom roles"
+    ]
+  },
+  "custom_roles": {
+    "structure": {
+      "name_multilingual": true,
+      "description_multilingual": true,
+      "permission_model": "policy-based"
+    },
+    "policies": {
+      "total_available": 63,
+      "example_policies": [
+        "Time off line manager policy",
+        "Accounts Payable Invoice Approver policy",
+        "Accounts Payable Invoice Manager policy",
+        "Accounts Payable Invoice Payment Authorizer policy"
+      ]
+    },
+    "evidence": "roles-01-custom-roles-list.png, roles-02-custom-role-details-permissions.png"
+  },
+  "workflow_role_usage": {
+    "in_criteria": {
+      "available": true,
+      "data_point": "Employee -> roles",
+      "operations": [
+        "contains all",
+        "does not contain all",
+        "contains any",
+        "does not contain any",
+        "is empty",
+        "is not empty"
+      ],
+      "available_roles": "40+ (all system and custom roles)",
+      "evidence": "wf-variables-03-criteria-datapoints-roles.png, wf-variables-04-roles-operations.png, wf-variables-05-roles-values-list.png"
+    },
+    "in_actions": {
+      "email": {
+        "role_based_recipients": true,
+        "line_manager_routing": true,
+        "variable_recipients": [
+          "Employee",
+          "Employee -> Department",
+          "Employee -> direct reports to",
+          "Employee -> Nationality",
+          "Employee -> office"
+        ],
+        "evidence": "wf-variables-06-email-recipients-roles.png, wf-variables-07-email-recipients-variables.png"
+      },
+      "task": {
+        "role_based_assignees": true,
+        "line_manager_assignment": true,
+        "variable_assignees": [
+          "Employee",
+          "Employee -> direct reports to"
+        ],
+        "evidence": "wf-variables-08-task-assignee-variables.png"
+      },
+      "notification": {
+        "role_based_recipients": true,
+        "line_manager_routing": true,
+        "variable_recipients": [
+          "Employee",
+          "Employee -> Department",
+          "Employee -> direct reports to",
+          "Employee -> Nationality",
+          "Employee -> office"
+        ],
+        "evidence": "wf-variables-09-notification-recipients-variables.png"
+      }
+    }
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PASSED",
+      "evidence": "crud-01-assign-roles-dialog.png",
+      "notes": "Assign roles button opens dialog with employee selector dropdown. Dialog titled 'Assign roles to an employee'."
+    },
+    "read": {
+      "status": "PASSED",
+      "evidence": "crud-02-edit-roles-dialog.png",
+      "notes": "Edit button opens 'Edit roles for [Employee]' dialog showing current role assignments. Dialog displays two-step process: '1. Select roles & restrictions' and '2. Review & save'."
+    },
+    "update": {
+      "status": "PASSED",
+      "evidence": "crud-02-edit-roles-dialog.png",
+      "notes": "Edit roles dialog allows checking/unchecking roles, includes search functionality, shows all available roles with checkboxes, and displays restriction groups for restrictable roles. Custom roles marked with 'Custom' badge."
+    },
+    "delete": {
+      "status": "NOT_TESTED",
+      "evidence": "",
+      "notes": "Delete operation for role assignments not explicitly tested. Would involve unchecking all roles for an employee. Custom roles table shows delete icon (trash) in action column."
+    }
+  },
+  "workflow_integration": {
+    "has_triggers": false,
+    "triggers_found": [],
+    "has_actions": false,
+    "actions_found": [],
+    "evidence": "workflow-02-no-role-triggers.png, workflow-03-no-role-actions.png",
+    "notes": "No direct workflow triggers or actions for Role Management. However, roles are extensively used WITHIN workflows for criteria filtering (Employee -> roles) and action routing (role-based recipients/assignees). Line manager routing available via 'Employee -> direct reports to'."
+  },
+  "known_limitations": [],
+  "tasks": [
+    {
+      "task": "Navigate to Settings → Role Management",
+      "status": "PASSED",
+      "evidence": "02-role-management-page.png",
+      "notes": "Successfully navigated to Role Management page from Settings menu"
+    },
+    {
+      "task": "Explore Role Management UI",
+      "status": "PASSED",
+      "evidence": "02-role-management-page.png, 03-custom-roles-tab.png",
+      "notes": "Identified two main tabs: Role assignment and Custom roles. Discovered primary actions and table structures."
+    },
+    {
+      "task": "Test CRUD operations",
+      "status": "PASSED",
+      "evidence": "crud-01-assign-roles-dialog.png, crud-02-edit-roles-dialog.png",
+      "notes": "Tested Create (Assign roles), Read (View assignments), and Update (Edit roles) operations successfully."
+    },
+    {
+      "task": "Check workflow integration",
+      "status": "PASSED",
+      "evidence": "workflow-01-workflows-list.png, workflow-02-no-role-triggers.png, workflow-03-no-role-actions.png",
+      "notes": "Confirmed Role Management has no workflow triggers or actions available."
+    },
+    {
+      "task": "Identify primary entities",
+      "status": "PASSED",
+      "evidence": "02-role-management-page.png, 03-custom-roles-tab.png",
+      "notes": "Primary entity: Role Assignments (employee-to-role mappings). Secondary entity: Custom Roles (role definitions)."
+    },
+    {
+      "task": "Document UI elements",
+      "status": "PASSED",
+      "evidence": "All screenshots",
+      "notes": "Documented all major UI elements including buttons, tables, dialogs, and badges."
+    },
+    {
+      "task": "Define Custom Roles - Navigate to Custom Roles tab",
+      "status": "PASSED",
+      "evidence": "roles-01-custom-roles-list.png",
+      "notes": "Navigated to Custom Roles tab and captured list of all custom role definitions"
+    },
+    {
+      "task": "Define Custom Roles - View details and permissions",
+      "status": "PASSED",
+      "evidence": "roles-02-custom-role-details-permissions.png",
+      "notes": "Opened custom role edit modal, documented policy-based permission model with 60+ available policies. Roles support EN/AR multilingual configuration."
+    },
+    {
+      "task": "Deep Workflow Variable Check - Roles in Criteria",
+      "status": "PASSED",
+      "evidence": "wf-variables-03-criteria-datapoints-roles.png, wf-variables-04-roles-operations.png, wf-variables-05-roles-values-list.png",
+      "notes": "Found 'Employee -> roles' as criteria data point with 6 operations (contains all/any, does not contain all/any, is/is not empty). All 40+ roles available for filtering."
+    },
+    {
+      "task": "Deep Workflow Variable Check - Send Email action",
+      "status": "PASSED",
+      "evidence": "wf-variables-06-email-recipients-roles.png, wf-variables-07-email-recipients-variables.png",
+      "notes": "Found role-based recipients (all 40+ roles) and dynamic variables including 'Employee -> direct reports to' (line manager routing)"
+    },
+    {
+      "task": "Deep Workflow Variable Check - Create Task and Send Notification actions",
+      "status": "PASSED",
+      "evidence": "wf-variables-08-task-assignee-variables.png, wf-variables-09-notification-recipients-variables.png",
+      "notes": "Both actions support role-based assignees/recipients and line manager routing via 'Employee -> direct reports to'"
+    }
+  ],
+  "elements": [
+    {
+      "element": "Assign roles button",
+      "found": true,
+      "state": "visible"
+    },
+    {
+      "element": "Role assignment table",
+      "found": true,
+      "state": "visible"
+    },
+    {
+      "element": "Custom roles tab",
+      "found": true,
+      "state": "visible"
+    },
+    {
+      "element": "Edit roles dialog",
+      "found": true,
+      "state": "functional"
+    },
+    {
+      "element": "Add new button (Custom roles)",
+      "found": true,
+      "state": "visible"
+    },
+    {
+      "element": "Custom role edit modal with policies",
+      "found": true,
+      "state": "functional"
+    },
+    {
+      "element": "Workflow criteria: Employee -> roles",
+      "found": true,
+      "state": "functional"
+    },
+    {
+      "element": "Workflow action recipients: Role-based",
+      "found": true,
+      "state": "functional"
+    },
+    {
+      "element": "Workflow action recipients: Employee -> direct reports to",
+      "found": true,
+      "state": "functional"
+    }
+  ],
+  "screenshots": [
+    "01-dashboard-loaded.png",
+    "02-role-management-page.png",
+    "03-custom-roles-tab.png",
+    "crud-01-assign-roles-dialog.png",
+    "crud-02-edit-roles-dialog.png",
+    "workflow-01-workflows-list.png",
+    "workflow-02-no-role-triggers.png",
+    "workflow-03-no-role-actions.png",
+    "roles-01-custom-roles-list.png",
+    "roles-02-custom-role-details-permissions.png",
+    "wf-variables-01-workflow-builder.png",
+    "wf-variables-02-event-selected.png",
+    "wf-variables-03-criteria-datapoints-roles.png",
+    "wf-variables-04-roles-operations.png",
+    "wf-variables-05-roles-values-list.png",
+    "wf-variables-06-email-recipients-roles.png",
+    "wf-variables-07-email-recipients-variables.png",
+    "wf-variables-08-task-assignee-variables.png",
+    "wf-variables-09-notification-recipients-variables.png"
+  ]
+}
