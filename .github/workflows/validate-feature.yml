@@ -162,33 +162,32 @@ jobs:
           - Use the sidebar menu on the left to navigate to different sections
           - If a menu item has a submenu, click the parent first, then click the child item
 
-          ### Step 2: Login
+          ### Step 2: Login (USE browser_type - DO NOT USE JavaScript)
+
+          **CRITICAL: You MUST use browser_type for form fields. DO NOT use browser_evaluate for login!**
+
           1. Call browser_navigate with url from CREDENTIALS section (Base URL)
           2. Call browser_resize with width=1280 and height=900
           3. Call browser_wait_for with time=3 (wait for page to fully load)
-          4. Call browser_snapshot to see the page structure
-          5. If you see textbox fields for "Email address" and "Password":
-             a. Use browser_type on the Email textbox (find the ref in snapshot)
-             b. Use browser_type on the Password textbox
-             c. Use browser_click on the "Log in" button
-          6. If browser_type fails, use this JavaScript approach via browser_evaluate:
-             () => {
-               const email = document.querySelector('input[placeholder="Email address"]');
-               const pass = document.querySelector('input[placeholder="Password"]');
-               if (email && pass) {
-                 email.value = 'USERNAME_PLACEHOLDER';
-                 email.dispatchEvent(new Event('input', { bubbles: true }));
-                 pass.value = 'PASSWORD_PLACEHOLDER';
-                 pass.dispatchEvent(new Event('input', { bubbles: true }));
-                 const btn = document.querySelector('button[type="submit"]');
-                 if (btn) btn.click();
-                 return 'Login submitted';
-               }
-               return 'Form not found';
-             }
-             (Replace USERNAME_PLACEHOLDER and PASSWORD_PLACEHOLDER with actual values from CREDENTIALS)
-          7. Call browser_wait_for with time=5 (wait for dashboard)
-          8. Call browser_snapshot to verify you're on the dashboard (should see "Home", "Company", etc. in sidebar)
+          4. Call browser_snapshot to see the page structure and get element refs
+          5. Find the Email textbox ref from snapshot (usually labeled "Email address")
+          6. Call browser_type with:
+             - ref: [the ref from snapshot for email field]
+             - element: "Email address field"
+             - text: [username from CREDENTIALS]
+          7. Find the Password textbox ref from snapshot
+          8. Call browser_type with:
+             - ref: [the ref from snapshot for password field]
+             - element: "Password field"
+             - text: [password from CREDENTIALS]
+          9. Find the "Log in" button ref from snapshot
+          10. Call browser_click with:
+              - ref: [the ref from snapshot for login button]
+              - element: "Log in button"
+          11. Call browser_wait_for with time=5 (wait for dashboard)
+          12. Call browser_snapshot to verify you're on the dashboard (should see "Home", "Company", etc. in sidebar)
+
+          **IMPORTANT: The snapshot will show element refs like "S1E2", "S1E5" etc. Use those exact refs.**
 
           ### Step 3: Dismiss ALL onboarding/tour popovers (RELOAD APPROACH)
 
