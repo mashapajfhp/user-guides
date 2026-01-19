@@ -163,10 +163,11 @@ jobs:
           - If a menu item has a submenu, click the parent first, then click the child item
 
           ### Step 2: Login (FAST METHOD)
-          1. Navigate to the base URL (login page)
+          1. Navigate to the base URL (from CREDENTIALS section below)
           2. Call browser_resize with width=1280 and height=900
-          3. Fill BOTH fields at once using browser_evaluate (EXACTLY this function, no markdown fences):
-             () => { document.querySelector('input[name="username"], input[type="email"]').value = '$APP_USERNAME'; document.querySelector('input[name="password"], input[type="password"]').value = '$APP_PASSWORD'; document.querySelectorAll('input').forEach(i => i.dispatchEvent(new Event('input', {bubbles:true}))); return 'credentials filled'; }
+          3. Fill credentials using browser_fill_form with these fields:
+             - Field 1: name="Email/Username", type="textbox", ref=(get from snapshot), value=(Username from CREDENTIALS)
+             - Field 2: name="Password", type="textbox", ref=(get from snapshot), value=(Password from CREDENTIALS)
           4. Click the "Log in" button
           5. Wait 3 seconds (browser_wait_for with time=3)
 
