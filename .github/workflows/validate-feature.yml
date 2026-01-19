@@ -162,14 +162,23 @@ jobs:
           - Use the sidebar menu on the left to navigate to different sections
           - If a menu item has a submenu, click the parent first, then click the child item
 
-          ### Step 2: Login (FAST METHOD)
-          1. Navigate to the base URL (from CREDENTIALS section below)
+          ### Step 2: Login
+          1. Call browser_navigate with url from CREDENTIALS section (Base URL)
           2. Call browser_resize with width=1280 and height=900
-          3. Fill credentials using browser_fill_form with these fields:
-             - Field 1: name="Email/Username", type="textbox", ref=(get from snapshot), value=(Username from CREDENTIALS)
-             - Field 2: name="Password", type="textbox", ref=(get from snapshot), value=(Password from CREDENTIALS)
-          4. Click the "Log in" button
-          5. Wait 3 seconds (browser_wait_for with time=3)
+          3. Call browser_wait_for with time=2 (wait for page to load)
+          4. Call browser_snapshot to get element refs
+          5. Look at the snapshot output - find the textbox refs for "Email address" and "Password" fields
+          6. Call browser_type to fill Email field:
+             - element: "Email address field"
+             - ref: (the ref from snapshot for the email textbox)
+             - text: (Username from CREDENTIALS section)
+          7. Call browser_type to fill Password field:
+             - element: "Password field"
+             - ref: (the ref from snapshot for the password textbox)
+             - text: (Password from CREDENTIALS section)
+          8. Call browser_snapshot again to see the "Log in" button ref
+          9. Call browser_click on the "Log in" button using its ref
+          10. Call browser_wait_for with time=3 (wait for dashboard to load)
 
           ### Step 3: Dismiss ALL onboarding/tour popovers
 
