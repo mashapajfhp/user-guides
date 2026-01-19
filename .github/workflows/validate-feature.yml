@@ -257,8 +257,13 @@ jobs:
           - Success/error messages
           - Permission-based visibility (what might be hidden for other roles)
 
-          ## OUTPUT FORMAT
-          At the end, create a JSON result with this structure:
+          ## OUTPUT FORMAT - MANDATORY JSON RESPONSE
+
+          **CRITICAL: You MUST output a JSON result wrapped in ```json code blocks.**
+          This JSON is automatically extracted and used for user guide generation.
+          Without proper JSON output, the workflow will fail.
+
+          At the end of your exploration, output the JSON result with this EXACT structure:
           {
             "validation_status": "completed" or "partial" or "blocked",
             "login_success": true/false,
@@ -454,6 +459,27 @@ jobs:
           - If you're at turn 100+, STOP exploring and output the JSON immediately
           - ALWAYS end with the complete JSON result - this is REQUIRED
           - An incomplete exploration WITH JSON output is better than complete exploration WITHOUT JSON
+
+          ## FINAL OUTPUT REMINDER - DO NOT SKIP
+
+          When you finish exploring, you MUST output a JSON block like this:
+
+          \`\`\`json
+          {
+            "validation_status": "completed",
+            "login_success": true,
+            "feature_accessible": true,
+            "feature_info": { ... },
+            "exploration_journey": [ ... ],
+            "tasks_explored": [ ... ],
+            "what_works": [ ... ],
+            "whats_not_working": [ ... ],
+            "screenshots_taken": 16,
+            "summary": "Your comprehensive summary here"
+          }
+          \`\`\`
+
+          **The JSON block is MANDATORY. Without it, the workflow fails and your work is lost.**
           EOF
 
           echo "Starting Playwright validation for: $FEATURE_NAME"
