@@ -162,45 +162,34 @@ jobs:
           - Use the sidebar menu on the left to navigate to different sections
           - If a menu item has a submenu, click the parent first, then click the child item
 
-          ### Step 2: Login
+          ### Step 2: Login (FAST METHOD)
           1. Navigate to the base URL (login page)
-          2. Call browser_resize with width=1280 and height=900 (ensure viewport is set)
-          3. Take a snapshot to see the login form
-          4. Fill the login form IN THIS ORDER:
-             a. First, click on the Email/Username field
-             b. Use browser_type to enter the username
-             c. Then click on the Password field
-             d. Use browser_type to enter the password
-          5. Click the "Log in" button
-          6. Wait 5 seconds for the page to fully load (browser_wait_for with time=5)
-          7. Take a screenshot to confirm login success
+          2. Call browser_resize with width=1280 and height=900
+          3. Fill BOTH fields at once using browser_evaluate (EXACTLY this function, no markdown fences):
+             () => { document.querySelector('input[name="username"], input[type="email"]').value = '$APP_USERNAME'; document.querySelector('input[name="password"], input[type="password"]').value = '$APP_PASSWORD'; document.querySelectorAll('input').forEach(i => i.dispatchEvent(new Event('input', {bubbles:true}))); return 'credentials filled'; }
+          4. Click the "Log in" button
+          5. Wait 3 seconds (browser_wait_for with time=3)
 
-          ### Step 3: Dismiss ALL onboarding modals
-          After login, you MUST dismiss all onboarding tour modals before proceeding.
+          ### Step 3: Dismiss ALL onboarding/tour popovers (ROBUST)
+          Do this AFTER login and AFTER the dashboard loads. Repeat the sequence 3 times.
 
-          **3a. Press Escape key 5 times**
-          Call browser_press_key with key="Escape" five times in a row.
-          This closes most modal dialogs.
+          **3a. Wait for tours to appear**
+          Call browser_wait_for with time=2
 
-          **3b. Run JavaScript to force-remove any remaining modals**
-          Call browser_evaluate with this function:
-          ```javascript
-          () => {
-            // Remove all modal/tour/popover elements
-            const removeSelectors = [
-              '[class*="popover"]', '[class*="tour"]', '[class*="modal"]',
-              '[class*="dialog"]', '[class*="tooltip"]', '[class*="onboarding"]',
-              '[role="dialog"]', '[aria-modal="true"]',
-              '[class*="backdrop"]', '[class*="overlay"]'
-            ];
-            removeSelectors.forEach(sel => {
-              document.querySelectorAll(sel).forEach(el => el.remove());
-            });
-            return 'All modals removed';
-          }
-          ```
+          **3b. Click close buttons AND remove overlays**
+          Call browser_evaluate with EXACTLY this function (no markdown fences, no backticks):
+          () => { const clicks = []; const closeCandidates = ['button[aria-label="Close"]', 'button[aria-label="close"]', 'button[title="Close"]', 'button[title="close"]', '[role="button"][aria-label="Close"]', '[role="button"][title="Close"]', 'button:has(svg)', 'button:has([data-icon="close"])']; for (const sel of closeCandidates) { document.querySelectorAll(sel).forEach(btn => { const r = btn.getBoundingClientRect(); if (r.width > 0 && r.height > 0) { try { btn.click(); clicks.push(sel); } catch (e) {} } }); } const titleMatch = Array.from(document.querySelectorAll('*')).find(el => el.textContent && el.textContent.trim() === 'Announcements in Home'); if (titleMatch) { const container = titleMatch.closest('[role="dialog"], [class*="popover"], div') || titleMatch.parentElement; if (container) { const allBtns = Array.from(container.querySelectorAll('button, [role="button"]')); const topRight = allBtns.sort((a,b) => { const ra=a.getBoundingClientRect(), rb=b.getBoundingClientRect(); return (ra.top+ra.right) - (rb.top+rb.right); })[0]; if (topRight) { try { topRight.click(); clicks.push('title-scoped-close'); } catch (e) {} } } } const overlaySelectors = ['[role="dialog"]', '[aria-modal="true"]', '[class*="backdrop"]', '[class*="overlay"]', '[class*="popover"]', '[class*="tour"]', '[class*="tooltip"]', '[class*="onboarding"]']; overlaySelectors.forEach(sel => { document.querySelectorAll(sel).forEach(el => { const s = window.getComputedStyle(el); const isLayer = (s.position === 'fixed' || s.position === 'absolute') && (parseInt(s.zIndex || '0', 10) >= 10); if (isLayer) el.remove(); }); }); document.querySelectorAll('body *').forEach(el => { const s = window.getComputedStyle(el); const isLayer = (s.position === 'fixed' || s.position === 'absolute') && (parseInt(s.zIndex || '0', 10) >= 1000); if (isLayer) el.style.pointerEvents = 'none'; }); return { clicks, done: true }; }
 
-          **3c. Take a snapshot to verify**
+          **3c. Press Escape 5 times**
+          Call browser_press_key with key="Escape" five times.
+
+          **3d. Set tour dismissed flags (prevents re-render)**
+          Call browser_evaluate with EXACTLY this function:
+          () => { const keys = ['tour', 'onboarding', 'joyride', 'walkthrough', 'guide', 'intro', 'productTour']; keys.forEach(k => { try { localStorage.setItem(k + ':dismissed', 'true'); } catch(e) {} try { localStorage.setItem(k + ':completed', 'true'); } catch(e) {} try { sessionStorage.setItem(k + ':dismissed', 'true'); } catch(e) {} try { sessionStorage.setItem(k + ':completed', 'true'); } catch(e) {} }); return { ok: true, keysTried: keys }; }
+
+          **3e. Repeat 3a-3c two more times** (total 3 iterations)
+
+          **3f. Take a snapshot to verify**
           Confirm the dashboard is clean with NO modals blocking the sidebar.
 
           ### Step 4: Explore the Feature
