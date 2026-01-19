@@ -601,6 +601,99 @@ PYEXTRACT
           echo "============================================"
           echo "Validation complete"
 
+      - name: Merge Payload Data into Result
+        if: steps.detect.outputs.skip != 'true'
+        run: |
+          PAYLOAD_FILE="${{ steps.detect.outputs.payload_file }}"
+          RESULT_FILE="${{ steps.dirs.outputs.result_file }}"
+
+          echo "Merging payload data into result.json..."
+
+          # Merge what_to_watch_out_for, what_to_do, feature_info from payload into result
+          python3 << 'PYMERGE' "$PAYLOAD_FILE" "$RESULT_FILE"
+import sys
+import json
+
+payload_file = sys.argv[1]
+result_file = sys.argv[2]
+
+# Load payload
+try:
+    with open(payload_file, 'r') as f:
+        payload_data = json.load(f)
+        # Handle array wrapper (payload is often wrapped in array)
+        if isinstance(payload_data, list) and len(payload_data) > 0:
+            payload_data = payload_data[0]
+except Exception as e:
+    print(f"Warning: Could not load payload: {e}")
+    payload_data = {}
+
+# Load existing result
+try:
+    with open(result_file, 'r') as f:
+        result_data = json.load(f)
+except Exception as e:
+    print(f"Warning: Could not load result: {e}")
+    result_data = {}
+
+# Extract data from payload (check multiple possible locations)
+playwright_context = payload_data.get('playwright_context', {})
+
+# Get what_to_watch_out_for (limitations from Jira)
+what_to_watch_out_for = (
+    playwright_context.get('what_to_watch_out_for') or
+    payload_data.get('what_to_watch_out_for') or
+    []
+)
+
+# Get what_to_do (tasks from Zendesk)
+what_to_do = (
+    playwright_context.get('what_to_do') or
+    payload_data.get('what_to_do') or
+    []
+)
+
+# Get feature_info
+feature_info = (
+    payload_data.get('feature_info') or
+    playwright_context.get('feature_metadata') or
+    {}
+)
+
+# Get detected_integrations
+detected_integrations = (
+    payload_data.get('detected_integrations') or
+    playwright_context.get('detected_integrations') or
+    {}
+)
+
+# Merge into result
+result_data['payload_context'] = {
+    'what_to_watch_out_for': what_to_watch_out_for,
+    'what_to_do': what_to_do,
+    'feature_info': feature_info,
+    'detected_integrations': detected_integrations,
+    'limitations_count': len(what_to_watch_out_for),
+    'tasks_count': len(what_to_do)
+}
+
+# Also add at top level for easy access
+if what_to_watch_out_for and 'what_to_watch_out_for' not in result_data:
+    result_data['what_to_watch_out_for'] = what_to_watch_out_for
+
+if what_to_do and 'what_to_do' not in result_data:
+    result_data['what_to_do'] = what_to_do
+
+# Save merged result
+with open(result_file, 'w') as f:
+    json.dump(result_data, f, indent=2)
+
+print(f"Merged payload data into result:")
+print(f"  - what_to_watch_out_for: {len(what_to_watch_out_for)} items")
+print(f"  - what_to_do: {len(what_to_do)} tasks")
+print(f"  - feature_info: {feature_info.get('feature_name', 'unknown')}")
+PYMERGE
+
       - name: Generate Report
         if: steps.detect.outputs.skip != 'true'
         run: |
