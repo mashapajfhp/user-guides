@@ -165,20 +165,30 @@ jobs:
           ### Step 2: Login
           1. Call browser_navigate with url from CREDENTIALS section (Base URL)
           2. Call browser_resize with width=1280 and height=900
-          3. Call browser_wait_for with time=2 (wait for page to load)
-          4. Call browser_snapshot to get element refs
-          5. Look at the snapshot output - find the textbox refs for "Email address" and "Password" fields
-          6. Call browser_type to fill Email field:
-             - element: "Email address field"
-             - ref: (the ref from snapshot for the email textbox)
-             - text: (Username from CREDENTIALS section)
-          7. Call browser_type to fill Password field:
-             - element: "Password field"
-             - ref: (the ref from snapshot for the password textbox)
-             - text: (Password from CREDENTIALS section)
-          8. Call browser_snapshot again to see the "Log in" button ref
-          9. Call browser_click on the "Log in" button using its ref
-          10. Call browser_wait_for with time=3 (wait for dashboard to load)
+          3. Call browser_wait_for with time=3 (wait for page to fully load)
+          4. Call browser_snapshot to see the page structure
+          5. If you see textbox fields for "Email address" and "Password":
+             a. Use browser_type on the Email textbox (find the ref in snapshot)
+             b. Use browser_type on the Password textbox
+             c. Use browser_click on the "Log in" button
+          6. If browser_type fails, use this JavaScript approach via browser_evaluate:
+             () => {
+               const email = document.querySelector('input[placeholder="Email address"]');
+               const pass = document.querySelector('input[placeholder="Password"]');
+               if (email && pass) {
+                 email.value = 'USERNAME_PLACEHOLDER';
+                 email.dispatchEvent(new Event('input', { bubbles: true }));
+                 pass.value = 'PASSWORD_PLACEHOLDER';
+                 pass.dispatchEvent(new Event('input', { bubbles: true }));
+                 const btn = document.querySelector('button[type="submit"]');
+                 if (btn) btn.click();
+                 return 'Login submitted';
+               }
+               return 'Form not found';
+             }
+             (Replace USERNAME_PLACEHOLDER and PASSWORD_PLACEHOLDER with actual values from CREDENTIALS)
+          7. Call browser_wait_for with time=5 (wait for dashboard)
+          8. Call browser_snapshot to verify you're on the dashboard (should see "Home", "Company", etc. in sidebar)
 
           ### Step 3: Dismiss ALL onboarding/tour popovers
 
