@@ -190,27 +190,29 @@ jobs:
           7. Call browser_wait_for with time=5 (wait for dashboard)
           8. Call browser_snapshot to verify you're on the dashboard (should see "Home", "Company", etc. in sidebar)
 
-          ### Step 3: Dismiss ALL onboarding/tour popovers
+          ### Step 3: Dismiss ALL onboarding/tour popovers (RELOAD APPROACH)
 
-          Bayzat uses MUI Tooltip-based tours with specific data-external-id attributes.
+          The tours render on page load. We prevent them by setting localStorage THEN reloading.
 
-          **A) Set localStorage flags to mark ALL tours complete (MOST RELIABLE)**
+          **A) Set localStorage flags to mark ALL tours complete**
           Call browser_evaluate with function:
-          () => { const tourKeys = { '_bayzat_app_new_web_ia_tour': '{"value":5}', '_bayzat_app_ai-reports-tooltip-visible': '{"value":false}', '_bayzat_app_space_creation_walkthrough': '5', '_bayzat_app_employee-ticket-list-library-intro-dialog': '{"value":true}', '_bayzat_app_setup_categories_walkthrough_step': '{"value":99}', '_bayzat_app_list_library_walkthrough_step': '{"value":99}' }; Object.entries(tourKeys).forEach(([k,v]) => localStorage.setItem(k,v)); return 'Tour localStorage flags set: ' + Object.keys(tourKeys).join(', '); }
+          () => { const tourKeys = { '_bayzat_app_new_web_ia_tour': '{"value":5}', '_bayzat_app_ai-reports-tooltip-visible': '{"value":false}', '_bayzat_app_space_creation_walkthrough': '5', '_bayzat_app_employee-ticket-list-library-intro-dialog': '{"value":true}', '_bayzat_app_setup_categories_walkthrough_step': '{"value":99}', '_bayzat_app_list_library_walkthrough_step': '{"value":99}', '_bayzat_app_announcements_tour': '{"value":true}', '_bayzat_app_home_tour': '{"value":5}' }; Object.entries(tourKeys).forEach(([k,v]) => localStorage.setItem(k,v)); return 'Tour flags set: ' + Object.keys(tourKeys).length; }
 
-          **B) Wait for any tours to render**
-          Call browser_wait_for with time=2
-
-          **C) Click dismiss buttons using data-external-id selectors**
+          **B) RELOAD the page to apply localStorage (CRITICAL)**
           Call browser_evaluate with function:
-          () => { const dismissed = []; const selectors = ['[data-external-id="close-button"]', '[data-external-id="confirm-button"]', '[data-external-id="next-button"]']; selectors.forEach(sel => { document.querySelectorAll(sel).forEach(btn => { try { btn.click(); dismissed.push(sel); } catch(e) {} }); }); document.querySelectorAll('[role="tooltip"]').forEach(t => t.remove()); return { dismissed, count: dismissed.length }; }
+          () => { window.location.reload(); return 'Reloading...'; }
 
-          **D) Verify dismissal**
-          Call browser_wait_for with time=1, then call browser_snapshot.
-          If any [role="tooltip"] with walkthrough content remains visible, repeat step C once more.
+          **C) Wait for page to reload and stabilize**
+          Call browser_wait_for with time=4
+
+          **D) Take snapshot to verify clean dashboard (no tours)**
+          Call browser_snapshot - you should see the dashboard WITHOUT any tour popovers.
+          If tours still appear, click dismiss buttons as fallback:
+          Call browser_evaluate with function:
+          () => { const dismissed = []; ['[data-external-id="close-button"]', '[data-external-id="confirm-button"]', 'button:has-text("Got it")'].forEach(sel => { document.querySelectorAll(sel).forEach(btn => { try { btn.click(); dismissed.push(sel); } catch(e) {} }); }); return { dismissed: dismissed.length }; }
 
           **E) Continue to feature exploration**
-          After dismissal, proceed to Step 4 without taking dismissal screenshots (saves time).
+          After reload, the dashboard should be clean. Proceed to Step 4.
 
           ### Step 4: Explore the Feature
           Based on the payload's "where_to_go" and "what_to_do" sections:
