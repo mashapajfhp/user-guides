@@ -172,26 +172,36 @@ jobs:
           5. Wait 3 seconds (browser_wait_for with time=3)
 
           ### Step 3: Dismiss ALL onboarding/tour popovers (ROBUST)
-          Do this AFTER login and AFTER the dashboard loads. Repeat the sequence 3 times.
+          Do this AFTER login and AFTER the dashboard loads.
 
-          **3a. Wait for tours to appear**
+          **IMPORTANT: Execute these steps IN ORDER, exactly as written:**
+
+          **3a. First, set localStorage flags to prevent tours from re-appearing**
+          Call browser_evaluate with function:
+          () => { ['tour','onboarding','joyride','walkthrough','guide','intro','productTour'].forEach(k => { localStorage.setItem(k+':dismissed','true'); localStorage.setItem(k+':completed','true'); sessionStorage.setItem(k+':dismissed','true'); }); return 'flags set'; }
+
+          **3b. Wait 2 seconds for any tours to render**
           Call browser_wait_for with time=2
 
-          **3b. Click close buttons AND remove overlays**
-          Call browser_evaluate with EXACTLY this function (no markdown fences, no backticks):
-          () => { const clicks = []; const closeCandidates = ['button[aria-label="Close"]', 'button[aria-label="close"]', 'button[title="Close"]', 'button[title="close"]', '[role="button"][aria-label="Close"]', '[role="button"][title="Close"]', 'button:has(svg)', 'button:has([data-icon="close"])']; for (const sel of closeCandidates) { document.querySelectorAll(sel).forEach(btn => { const r = btn.getBoundingClientRect(); if (r.width > 0 && r.height > 0) { try { btn.click(); clicks.push(sel); } catch (e) {} } }); } const titleMatch = Array.from(document.querySelectorAll('*')).find(el => el.textContent && el.textContent.trim() === 'Announcements in Home'); if (titleMatch) { const container = titleMatch.closest('[role="dialog"], [class*="popover"], div') || titleMatch.parentElement; if (container) { const allBtns = Array.from(container.querySelectorAll('button, [role="button"]')); const topRight = allBtns.sort((a,b) => { const ra=a.getBoundingClientRect(), rb=b.getBoundingClientRect(); return (ra.top+ra.right) - (rb.top+rb.right); })[0]; if (topRight) { try { topRight.click(); clicks.push('title-scoped-close'); } catch (e) {} } } } const overlaySelectors = ['[role="dialog"]', '[aria-modal="true"]', '[class*="backdrop"]', '[class*="overlay"]', '[class*="popover"]', '[class*="tour"]', '[class*="tooltip"]', '[class*="onboarding"]']; overlaySelectors.forEach(sel => { document.querySelectorAll(sel).forEach(el => { const s = window.getComputedStyle(el); const isLayer = (s.position === 'fixed' || s.position === 'absolute') && (parseInt(s.zIndex || '0', 10) >= 10); if (isLayer) el.remove(); }); }); document.querySelectorAll('body *').forEach(el => { const s = window.getComputedStyle(el); const isLayer = (s.position === 'fixed' || s.position === 'absolute') && (parseInt(s.zIndex || '0', 10) >= 1000); if (isLayer) el.style.pointerEvents = 'none'; }); return { clicks, done: true }; }
+          **3c. Click ALL visible close buttons**
+          Call browser_evaluate with function:
+          () => { let clicked=0; document.querySelectorAll('button[aria-label*="lose"],button[title*="lose"],[role="button"][aria-label*="lose"]').forEach(b=>{if(b.offsetWidth>0){b.click();clicked++}}); return 'clicked '+clicked+' close buttons'; }
 
-          **3c. Press Escape 5 times**
-          Call browser_press_key with key="Escape" five times.
+          **3d. Press Escape key 5 times**
+          Call browser_press_key with key="Escape" - do this 5 times in a row.
 
-          **3d. Set tour dismissed flags (prevents re-render)**
-          Call browser_evaluate with EXACTLY this function:
-          () => { const keys = ['tour', 'onboarding', 'joyride', 'walkthrough', 'guide', 'intro', 'productTour']; keys.forEach(k => { try { localStorage.setItem(k + ':dismissed', 'true'); } catch(e) {} try { localStorage.setItem(k + ':completed', 'true'); } catch(e) {} try { sessionStorage.setItem(k + ':dismissed', 'true'); } catch(e) {} try { sessionStorage.setItem(k + ':completed', 'true'); } catch(e) {} }); return { ok: true, keysTried: keys }; }
+          **3e. Remove overlay elements by z-index**
+          Call browser_evaluate with function:
+          () => { let removed=0; document.querySelectorAll('[role="dialog"],[aria-modal="true"],[class*="modal"],[class*="popover"],[class*="overlay"],[class*="backdrop"]').forEach(el=>{const s=getComputedStyle(el);if(s.position==='fixed'||s.position==='absolute'){el.remove();removed++}}); return 'removed '+removed+' overlays'; }
 
-          **3e. Repeat 3a-3c two more times** (total 3 iterations)
+          **3f. Disable pointer-events on remaining high z-index elements**
+          Call browser_evaluate with function:
+          () => { document.querySelectorAll('body *').forEach(el=>{const s=getComputedStyle(el);if((s.position==='fixed'||s.position==='absolute')&&parseInt(s.zIndex||0)>=1000){el.style.pointerEvents='none'}}); return 'disabled pointer events'; }
 
-          **3f. Take a snapshot to verify**
-          Confirm the dashboard is clean with NO modals blocking the sidebar.
+          **3g. Repeat steps 3b through 3f two more times** (3 total iterations)
+
+          **3h. Take a snapshot to verify dashboard is clean**
+          If any modal/tour is still visible, repeat the dismissal steps.
 
           ### Step 4: Explore the Feature
           Based on the payload's "where_to_go" and "what_to_do" sections:
