@@ -1,7 +1,7 @@
 # Validation Report: bayzat_ai
 
-**Generated**: 2026-01-19T12:11:33Z
-**Run ID**: 21136624519
+**Generated**: 2026-01-19T12:25:50Z
+**Run ID**: 21137099251
 
 ## Result
 
@@ -609,6 +609,10 @@
 
 ## Screenshots
 
+### 01 dashboard after login.png 2026 01 19T12 18 35 135Z
+
+![01-dashboard-after-login.png-2026-01-19T12-18-35-135Z.png](screenshots/01-dashboard-after-login.png-2026-01-19T12-18-35-135Z.png)
+
 ### 01 login page 2026 01 19T10 36 04 074Z
 
 ![01-login-page-2026-01-19T10-36-04-074Z.png](screenshots/01-login-page-2026-01-19T10-36-04-074Z.png)
@@ -629,6 +633,10 @@
 
 ![02-after-login-2026-01-19T11-44-57-919Z.png](screenshots/02-after-login-2026-01-19T11-44-57-919Z.png)
 
+### 02 home dashboard.png 2026 01 19T12 19 47 189Z
+
+![02-home-dashboard.png-2026-01-19T12-19-47-189Z.png](screenshots/02-home-dashboard.png-2026-01-19T12-19-47-189Z.png)
+
 ### 02 page after wait 2026 01 19T12 01 29 537Z
 
 ![02-page-after-wait-2026-01-19T12-01-29-537Z.png](screenshots/02-page-after-wait-2026-01-19T12-01-29-537Z.png)
@@ -636,6 +644,10 @@
 ### 03 after login attempt 2026 01 19T12 03 27 088Z
 
 ![03-after-login-attempt-2026-01-19T12-03-27-088Z.png](screenshots/03-after-login-attempt-2026-01-19T12-03-27-088Z.png)
+
+### 03 bayzat ai landing.png 2026 01 19T12 19 58 132Z
+
+![03-bayzat-ai-landing.png-2026-01-19T12-19-58-132Z.png](screenshots/03-bayzat-ai-landing.png-2026-01-19T12-19-58-132Z.png)
 
 ### 03 clean dashboard 2026 01 19T11 45 10 809Z
 
@@ -648,6 +660,10 @@
 ### 04 bayzat ai main 2026 01 19T10 37 00 085Z
 
 ![04-bayzat-ai-main-2026-01-19T10-37-00-085Z.png](screenshots/04-bayzat-ai-main-2026-01-19T10-37-00-085Z.png)
+
+### 04 bayzat ai main page.png 2026 01 19T12 20 09 308Z
+
+![04-bayzat-ai-main-page.png-2026-01-19T12-20-09-308Z.png](screenshots/04-bayzat-ai-main-page.png-2026-01-19T12-20-09-308Z.png)
 
 ### 04 bayzat ai page 2026 01 19T11 46 03 245Z
 
@@ -668,6 +684,14 @@
 ### 05 current view 2026 01 19T10 38 46 142Z
 
 ![05-current-view-2026-01-19T10-38-46-142Z.png](screenshots/05-current-view-2026-01-19T10-38-46-142Z.png)
+
+### 05 insights section.png 2026 01 19T12 21 18 547Z
+
+![05-insights-section.png-2026-01-19T12-21-18-547Z.png](screenshots/05-insights-section.png-2026-01-19T12-21-18-547Z.png)
+
+### 06 after insights click.png 2026 01 19T12 21 45 387Z
+
+![06-after-insights-click.png-2026-01-19T12-21-45-387Z.png](screenshots/06-after-insights-click.png-2026-01-19T12-21-45-387Z.png)
 
 ### 06 bayzat ai knowledge hub 2026 01 19T11 46 42 668Z
 
@@ -693,9 +717,17 @@
 
 ![07-clean-dashboard-2026-01-19T12-06-22-194Z.png](screenshots/07-clean-dashboard-2026-01-19T12-06-22-194Z.png)
 
+### 07 upload and chat.png 2026 01 19T12 22 01 245Z
+
+![07-upload-and-chat.png-2026-01-19T12-22-01-245Z.png](screenshots/07-upload-and-chat.png-2026-01-19T12-22-01-245Z.png)
+
 ### 08 bayzat ai main page 2026 01 19T12 06 37 450Z
 
 ![08-bayzat-ai-main-page-2026-01-19T12-06-37-450Z.png](screenshots/08-bayzat-ai-main-page-2026-01-19T12-06-37-450Z.png)
+
+### 08 bayzat ai scrolled.png 2026 01 19T12 22 13 521Z
+
+![08-bayzat-ai-scrolled.png-2026-01-19T12-22-13-521Z.png](screenshots/08-bayzat-ai-scrolled.png-2026-01-19T12-22-13-521Z.png)
 
 ### 08 insights menu 2026 01 19T11 47 19 713Z
 
@@ -713,6 +745,10 @@
 
 ![09-insights-menu-2026-01-19T12-07-04-519Z.png](screenshots/09-insights-menu-2026-01-19T12-07-04-519Z.png)
 
+### 09 insights menu.png 2026 01 19T12 22 36 247Z
+
+![09-insights-menu.png-2026-01-19T12-22-36-247Z.png](screenshots/09-insights-menu.png-2026-01-19T12-22-36-247Z.png)
+
 ### 09 insights submenu 2026 01 19T11 47 31 054Z
 
 ![09-insights-submenu-2026-01-19T11-47-31-054Z.png](screenshots/09-insights-submenu-2026-01-19T11-47-31-054Z.png)
@@ -720,6 +756,10 @@
 ### 10 ai reports page 2026 01 19T11 47 44 836Z
 
 ![10-ai-reports-page-2026-01-19T11-47-44-836Z.png](screenshots/10-ai-reports-page-2026-01-19T11-47-44-836Z.png)
+
+### 10 daily tasks clicked.png 2026 01 19T12 23 29 571Z
+
+![10-daily-tasks-clicked.png-2026-01-19T12-23-29-571Z.png](screenshots/10-daily-tasks-clicked.png-2026-01-19T12-23-29-571Z.png)
 
 ### 10 dashboard created 2026 01 19T10 41 37 195Z
 
@@ -741,9 +781,17 @@
 
 ![11-insights-main-page-2026-01-19T12-08-09-872Z.png](screenshots/11-insights-main-page-2026-01-19T12-08-09-872Z.png)
 
+### 11 spaces section.png 2026 01 19T12 23 46 598Z
+
+![11-spaces-section.png-2026-01-19T12-23-46-598Z.png](screenshots/11-spaces-section.png-2026-01-19T12-23-46-598Z.png)
+
 ### 12 back to bayzat ai 2026 01 19T12 08 28 917Z
 
 ![12-back-to-bayzat-ai-2026-01-19T12-08-28-917Z.png](screenshots/12-back-to-bayzat-ai-2026-01-19T12-08-28-917Z.png)
+
+### 12 final bayzat ai view.png 2026 01 19T12 24 03 322Z
+
+![12-final-bayzat-ai-view.png-2026-01-19T12-24-03-322Z.png](screenshots/12-final-bayzat-ai-view.png-2026-01-19T12-24-03-322Z.png)
 
 ### 12 help dialog 2026 01 19T10 43 11 535Z
 
@@ -806,4 +854,4 @@
 ![18-report-loading-status-2026-01-19T10-46-21-035Z.png](screenshots/18-report-loading-status-2026-01-19T10-46-21-035Z.png)
 
 
-**Total screenshots captured**: 49
+**Total screenshots captured**: 61
