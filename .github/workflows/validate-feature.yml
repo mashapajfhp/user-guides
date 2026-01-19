@@ -693,22 +693,22 @@ jobs:
           REPORT_FILE="${{ steps.dirs.outputs.report_file }}"
           SCREENSHOTS_DIR="${{ steps.dirs.outputs.screenshots_dir }}"
 
-          # Start report
-          cat > "$REPORT_FILE" << EOF
-# Validation Report: ${FEATURE_NAME}
-
-**Generated**: $(date -u +%Y-%m-%dT%H:%M:%SZ)
-**Run ID**: ${{ github.run_id }}
-
-## Result
-
-\`\`\`json
-$(cat "$RESULT_FILE" 2>/dev/null || echo '{"error": "No result file generated"}')
-\`\`\`
-
-## Screenshots
-
-EOF
+          # Start report - write header
+          {
+            echo "# Validation Report: ${FEATURE_NAME}"
+            echo ""
+            echo "**Generated**: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "**Run ID**: ${{ github.run_id }}"
+            echo ""
+            echo "## Result"
+            echo ""
+            echo '```json'
+            cat "$RESULT_FILE" 2>/dev/null || echo '{"error": "No result file generated"}'
+            echo '```'
+            echo ""
+            echo "## Screenshots"
+            echo ""
+          } > "$REPORT_FILE"
 
           # Add screenshots as markdown image links
           if [ -d "$SCREENSHOTS_DIR" ] && [ "$(ls -A "$SCREENSHOTS_DIR" 2>/dev/null)" ]; then
