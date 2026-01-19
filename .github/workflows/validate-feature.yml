@@ -171,42 +171,27 @@ jobs:
           4. Click the "Log in" button
           5. Wait 3 seconds (browser_wait_for with time=3)
 
-          ### Step 3: Dismiss ALL onboarding/tour popovers (must show evidence)
+          ### Step 3: Dismiss ALL onboarding/tour popovers
 
-          IMPORTANT:
-          - Tours may appear 1-5 seconds AFTER dashboard loads. You must wait and then dismiss.
-          - You must provide before/after proof screenshots.
+          Bayzat uses MUI Tooltip-based tours with specific data-external-id attributes.
 
-          **A) Set localStorage flags to prevent tour re-render**
+          **A) Set localStorage flags to mark ALL tours complete (MOST RELIABLE)**
           Call browser_evaluate with function:
-          () => { ['tour','onboarding','joyride','walkthrough','guide','intro','productTour','announcements'].forEach(k => { try { localStorage.setItem(k+':dismissed','true'); localStorage.setItem(k+':completed','true'); sessionStorage.setItem(k+':dismissed','true'); } catch(e){} }); return 'tour flags set'; }
+          () => { const tourKeys = { '_bayzat_app_new_web_ia_tour': '{"value":5}', '_bayzat_app_ai-reports-tooltip-visible': '{"value":false}', '_bayzat_app_space_creation_walkthrough': '5', '_bayzat_app_employee-ticket-list-library-intro-dialog': '{"value":true}', '_bayzat_app_setup_categories_walkthrough_step': '{"value":99}', '_bayzat_app_list_library_walkthrough_step': '{"value":99}' }; Object.entries(tourKeys).forEach(([k,v]) => localStorage.setItem(k,v)); return 'Tour localStorage flags set: ' + Object.keys(tourKeys).join(', '); }
 
-          **B) Wait for tours to appear**
-          Call browser_wait_for with time=3
+          **B) Wait for any tours to render**
+          Call browser_wait_for with time=2
 
-          **C) Take snapshot and BEFORE screenshot**
-          Call browser_snapshot, then save screenshot as: "dashboard-before-dismissal.png"
+          **C) Click dismiss buttons using data-external-id selectors**
+          Call browser_evaluate with function:
+          () => { const dismissed = []; const selectors = ['[data-external-id="close-button"]', '[data-external-id="confirm-button"]', '[data-external-id="next-button"]']; selectors.forEach(sel => { document.querySelectorAll(sel).forEach(btn => { try { btn.click(); dismissed.push(sel); } catch(e) {} }); }); document.querySelectorAll('[role="tooltip"]').forEach(t => t.remove()); return { dismissed, count: dismissed.length }; }
 
-          **D) Run dismissal routine 3 times:**
+          **D) Verify dismissal**
+          Call browser_wait_for with time=1, then call browser_snapshot.
+          If any [role="tooltip"] with walkthrough content remains visible, repeat step C once more.
 
-          For each iteration (1, 2, 3):
-            1) Press Escape 5 times (call browser_press_key with key="Escape" five times)
-            2) Call browser_wait_for with time=1
-            3) Call browser_evaluate with EXACTLY this function (no markdown fences):
-               () => { const title = 'Announcements in Home'; const closeSelectors = ['button[aria-label="Close"]', 'button[title="Close"]', 'button[aria-label="close"]', 'button[title="close"]', '[role="button"][aria-label="Close"]', '[role="button"][title="Close"]']; closeSelectors.forEach(sel => { document.querySelectorAll(sel).forEach(btn => { const r = btn.getBoundingClientRect(); if (r.width > 0 && r.height > 0) { try { btn.click(); } catch(e) {} } }); }); const el = [...document.querySelectorAll('*')].find(n => (n.textContent || '').trim() === title); if (el) { const container = el.closest('[role="dialog"], [aria-modal="true"], [class*="popover"], [class*="tooltip"], [class*="tour"], div') || el.parentElement; if (container) { const btns = [...container.querySelectorAll('button,[role="button"]')]; if (btns.length) { const topRight = btns.sort((a,b) => { const ra=a.getBoundingClientRect(), rb=b.getBoundingClientRect(); return (ra.top+ra.right) - (rb.top+rb.right); })[0]; try { topRight.click(); } catch(e) {} } } } const overlaySelectors = ['[role="dialog"]', '[aria-modal="true"]', '[class*="backdrop"]', '[class*="overlay"]', '[class*="popover"]', '[class*="tour"]', '[class*="tooltip"]', '[class*="onboarding"]']; overlaySelectors.forEach(sel => { document.querySelectorAll(sel).forEach(node => { const s = window.getComputedStyle(node); const isLayer = (s.position === 'fixed' || s.position === 'absolute') && (parseInt(s.zIndex || '0', 10) >= 10); if (isLayer) node.remove(); }); }); return { dismissed: true }; }
-            4) Call browser_wait_for with time=1
-
-          **E) Take snapshot and AFTER screenshot**
-          Call browser_snapshot, then save screenshot as: "dashboard-after-dismissal.png"
-
-          **F) Document dismissal results in JSON**
-          Include in your final JSON output:
-          - onboarding_dismissal.before_screenshot: "dashboard-before-dismissal.png"
-          - onboarding_dismissal.after_screenshot: "dashboard-after-dismissal.png"
-          - onboarding_dismissal.still_visible: true/false
-          - onboarding_dismissal.iterations_run: 3
-
-          If any tour card is still visible, set still_visible=true but continue with exploration.
+          **E) Continue to feature exploration**
+          After dismissal, proceed to Step 4 without taking dismissal screenshots (saves time).
 
           ### Step 4: Explore the Feature
           Based on the payload's "where_to_go" and "what_to_do" sections:
