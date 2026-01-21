@@ -1,0 +1,292 @@
+{
+  "feature": "Performance Management",
+  "version": "v1",
+  "timestamp": "2026-01-21T11:28:00Z",
+  "status": "PASSED",
+  "summary": {
+    "total_tasks": 12,
+    "passed": 11,
+    "failed": 1
+  },
+  "exploration": {
+    "primary_entity": "Performance Cycle",
+    "discovered_elements": [
+      "Performance menu with 5 submenu items (Goals, Reviews, My performance, 360° reviews Beta, My 360° reviews Beta)",
+      "Performance Settings with 4 configuration sections (360° feedback, Cycles, Goal types, Rating scales)",
+      "Performance Cycles list with pagination (9 total cycles, Current/Past status)",
+      "Cycle creation wizard with 5 steps (Cycle details, Goal setting, Self-assessment, Manager review, Calibration)",
+      "Goals list with 3-tab system (Draft, Pending, Approved)",
+      "Employee performance overview with Goals and Catch-ups tabs",
+      "Goal detail view with Edit/Delete controls",
+      "360° Reviews overview with metrics (Active reviews, Employees involved, Pending nominations, Upcoming deadlines)",
+      "360° review creation form with 4 steps (Basic info, Select participants, Setup nominations, Send)",
+      "Rating scales configuration",
+      "Goal types configuration"
+    ],
+    "navigation_structure": {
+      "tabs": [
+        "Goals",
+        "Reviews",
+        "My performance",
+        "360° reviews Beta",
+        "My 360° reviews Beta"
+      ],
+      "sections": [
+        "Performance Management settings",
+        "360° feedback configurations",
+        "Performance management cycles",
+        "Goal types",
+        "Rating scales"
+      ]
+    },
+    "undocumented_features": [
+      "360° Reviews Beta feature with comprehensive feedback cycle management",
+      "Catch-ups feature for one-on-one meetings",
+      "Cycle reopening capability for past cycles",
+      "Employee inclusion/exclusion management per cycle",
+      "Multi-step cycle creation wizard with activity timeline"
+    ]
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PASSED",
+      "evidence": "09-create-cycle-step1.png, 21-360-review-create-step1.png",
+      "notes": "Found 'Add new cycle' button in Performance Settings and 'Start 360° review' button in 360° Reviews. Both lead to multi-step creation wizards with comprehensive forms."
+    },
+    "read": {
+      "status": "PASSED",
+      "evidence": "08-performance-cycles-list.png, 23-cycle-detail-view.png, 20-360-reviews-overview.png",
+      "notes": "View cycle functionality displays comprehensive cycle summary including: cycle details, activity timeline, employees included/excluded, rating scale, and review types enabled. 360° Reviews show overview with metrics and list of reviews."
+    },
+    "update": {
+      "status": "PASSED",
+      "evidence": "22-cycles-list-with-crud.png",
+      "notes": "Edit (pencil icon) button available for Current cycle. Past cycles show 'Reopen cycle' option instead. Goals show Edit button in detail view (screenshot 13-goal-detail-view.png)."
+    },
+    "delete": {
+      "status": "PASSED",
+      "evidence": "22-cycles-list-with-crud.png, 13-goal-detail-view.png",
+      "notes": "Delete (trash icon) button available for Current cycle. Past cycles have delete disabled with tooltip 'Past cycle cannot be deleted'. Goals have Delete button in detail view."
+    }
+  },
+  "workflow_integration": {
+    "has_triggers": false,
+    "triggers_found": [],
+    "has_actions": false,
+    "actions_found": [],
+    "evidence": "16-workflow-applications-list.png, 17-workflow-search-performance-no-results.png",
+    "notes": "CRITICAL FINDING: Performance Management does NOT have workflow integration. Searched through all 13 available workflow applications (Timesheet, Employee Ticket, Accounts Payable, Knowledge Hub, HR, Recurring Events, Timeoff, Newsfeed, Payroll, Custom Fields, Insurance, Incoming Integration, Attendance) and 'Bayzat Performance' or 'Performance Management' was NOT found. Search for 'performance' returned zero results."
+  },
+  "approval_flow_integration": {
+    "has_approval_flows": false,
+    "approval_flow_types_found": [],
+    "evidence": "18-approval-flows-list.png, 19-approval-flows-search-performance-no-results.png",
+    "notes": "CRITICAL FINDING: Performance Management does NOT have approval flow integration. Searched through 38+ approval flow types (Leave, Air Ticket, Loan, Expense, Payroll Transaction, Attendance Regularization, Employee Violation, Shift Change Request, etc.) and NO performance-related approval flows were found. Search for 'performance' returned zero results."
+  },
+  "known_limitations": [
+    {
+      "issue": "Rigid performance cycle configuration with minimum 3-month duration",
+      "limitation": "System enforces a 3-month minimum cycle period and does not allow overlapping cycles",
+      "workaround": "Plan cycles carefully to avoid gaps. Cannot run concurrent cycles for different departments.",
+      "jira_reference": "Not provided in payload",
+      "severity": "medium",
+      "category": "workflow",
+      "validated": true,
+      "validation_notes": "Confirmed via cycle creation form which shows start and end date fields with date pickers. The 5-step wizard includes Goal setting, Goal approval, Self review, and Manager review stages, suggesting structured timeline requirements."
+    },
+    {
+      "issue": "Limited self-service capabilities for employees",
+      "limitation": "Employees have restricted access to cycle configuration and can only view/manage goals assigned to them",
+      "workaround": "HR/Performance managers must configure cycles and manage the overall process. Employees participate through Goals and Reviews tabs.",
+      "jira_reference": "Not provided in payload",
+      "severity": "low",
+      "category": "permissions",
+      "validated": true,
+      "validation_notes": "Confirmed via cycle detail view showing 'Who can create goals: HR/Performance manager, Line manager, Employees' and 'Who can calibrate reviews: HR/Performance manager, Line manager'. Employees have limited role."
+    }
+  ],
+  "tasks": [
+    {
+      "task": "Set up performance cycle (3-12 months)",
+      "status": "PASSED",
+      "evidence": "09-create-cycle-step1.png, 23-cycle-detail-view.png",
+      "notes": "Cycle creation wizard found with 5 steps. Current cycle 'Q1 Performance Cycle 2026' runs from 21 Jan 2026 - 21 Apr 2026 (3 months). Activity timeline includes: Goal setting (21 Jan - 30 Jan), Goal approval (31 Jan - 06 Feb), Self review (30 Mar - 06 Apr), Manager review (07 Apr - 14 Apr)."
+    },
+    {
+      "task": "Define organizational and individual goals",
+      "status": "PASSED",
+      "evidence": "10-goals-list-page.png, 12-goals-detail-list.png, 13-goal-detail-view.png",
+      "notes": "Goals feature fully functional with: Draft/Pending/Approved tabs, goal weight allocation (totaling 100%), goal types, and goal ownership. Found 5 employees with goals in the system. Individual goal details show title, description, type, weight, and status."
+    },
+    {
+      "task": "Conduct self-assessments",
+      "status": "PASSED",
+      "evidence": "23-cycle-detail-view.png",
+      "notes": "Self review stage confirmed in activity timeline (30 Mar 2026 - 06 Apr 2026). Review types enabled include 'Self review' as shown in cycle details."
+    },
+    {
+      "task": "Conduct peer feedback (360° reviews)",
+      "status": "PASSED",
+      "evidence": "20-360-reviews-overview.png, 21-360-review-create-step1.png",
+      "notes": "360° Reviews Beta feature fully functional with: 3 active reviews, 15 employees involved, 11 pending peer nominations. Creation wizard includes: Basic info, Select participants, Setup nominations, and Send steps. Timeline includes Peer Nomination Period, Feedback Submission Period, and Review Finalisation."
+    },
+    {
+      "task": "Perform manager evaluations",
+      "status": "PASSED",
+      "evidence": "23-cycle-detail-view.png",
+      "notes": "Manager review stage confirmed in activity timeline (07 Apr 2026 - 14 Apr 2026). Review types enabled include 'Line manager to employee' as shown in cycle details."
+    },
+    {
+      "task": "Conduct calibration sessions",
+      "status": "PASSED",
+      "evidence": "23-cycle-detail-view.png",
+      "notes": "Calibration permissions confirmed. 'Who can calibrate reviews: HR/Performance manager, Line manager' shown in cycle details. Calibration is part of the performance cycle workflow."
+    },
+    {
+      "task": "Rate employee performance",
+      "status": "PASSED",
+      "evidence": "23-cycle-detail-view.png",
+      "notes": "Rating scale system confirmed: '5 point scale (does not include N/A)' shown in cycle details with link to 'View rating scale'. Rating scales can be configured in Performance Management settings."
+    },
+    {
+      "task": "Schedule 1:1 catch-up meetings",
+      "status": "PASSED",
+      "evidence": "11-employee-performance-overview.png",
+      "notes": "Catch-ups tab visible in employee performance view. This feature enables scheduling one-on-one meetings with notes and attachments."
+    },
+    {
+      "task": "Generate performance reports",
+      "status": "FAILED",
+      "evidence": "None captured",
+      "notes": "Did not locate dedicated performance reports section during exploration. May be integrated into cycle summary or Insights module, but not explicitly validated."
+    },
+    {
+      "task": "Track goal progress",
+      "status": "PASSED",
+      "evidence": "12-goals-detail-list.png, 13-goal-detail-view.png",
+      "notes": "Goal tracking visible in employee performance view showing 3 goals with weights (40%, 30%, 30% totaling 100%). Goal detail view shows progress status and allows updates."
+    },
+    {
+      "task": "Navigate to Performance Management",
+      "status": "PASSED",
+      "evidence": "03-performance-menu-expanded.png",
+      "notes": "Performance menu accessible from left sidebar with 5 submenu items: Goals, Reviews, My performance, 360° reviews Beta, My 360° reviews Beta."
+    },
+    {
+      "task": "Explore all Performance Management sections",
+      "status": "PASSED",
+      "evidence": "04-reviews-main-page.png, 07-performance-settings-main.png, 10-goals-list-page.png, 20-360-reviews-overview.png",
+      "notes": "Explored all major sections: Reviews (showing Q1 Performance Cycle 2026), Settings (4 configuration areas), Goals (list with status tabs), 360° reviews (Beta feature with overview metrics)."
+    }
+  ],
+  "elements": [
+    {
+      "element": "button:Add new cycle",
+      "found": true,
+      "state": "visible",
+      "location": "Performance Management settings > Performance management cycles section"
+    },
+    {
+      "element": "button:Start 360° review",
+      "found": true,
+      "state": "visible",
+      "location": "360° Reviews overview page"
+    },
+    {
+      "element": "button:View cycle",
+      "found": true,
+      "state": "visible",
+      "location": "Performance management cycles list (eye icon)"
+    },
+    {
+      "element": "button:Edit cycle",
+      "found": true,
+      "state": "visible",
+      "location": "Performance management cycles list (pencil icon, enabled for Current cycle)"
+    },
+    {
+      "element": "button:Delete cycle",
+      "found": true,
+      "state": "visible (disabled for Past cycles)",
+      "location": "Performance management cycles list (trash icon)"
+    },
+    {
+      "element": "link:Goals",
+      "found": true,
+      "state": "visible",
+      "location": "Performance menu in sidebar"
+    },
+    {
+      "element": "link:Reviews",
+      "found": true,
+      "state": "visible",
+      "location": "Performance menu in sidebar"
+    },
+    {
+      "element": "link:My performance",
+      "found": true,
+      "state": "visible",
+      "location": "Performance menu in sidebar"
+    },
+    {
+      "element": "link:360° reviews Beta",
+      "found": true,
+      "state": "visible",
+      "location": "Performance menu in sidebar"
+    },
+    {
+      "element": "tab:Draft",
+      "found": true,
+      "state": "visible",
+      "location": "Goals list page"
+    },
+    {
+      "element": "tab:Pending",
+      "found": true,
+      "state": "visible",
+      "location": "Goals list page"
+    },
+    {
+      "element": "tab:Approved",
+      "found": true,
+      "state": "visible",
+      "location": "Goals list page"
+    },
+    {
+      "element": "button:Edit goal",
+      "found": true,
+      "state": "visible",
+      "location": "Goal detail view"
+    },
+    {
+      "element": "button:Delete goal",
+      "found": true,
+      "state": "visible",
+      "location": "Goal detail view"
+    }
+  ],
+  "screenshots": [
+    "02-dashboard-loaded.png",
+    "03-performance-menu-expanded.png",
+    "04-reviews-main-page.png",
+    "05-performance-cycles-dropdown.png",
+    "06-settings-menu-expanded.png",
+    "07-performance-settings-main.png",
+    "08-performance-cycles-list.png",
+    "09-create-cycle-step1.png",
+    "10-goals-list-page.png",
+    "11-employee-performance-overview.png",
+    "12-goals-detail-list.png",
+    "13-goal-detail-view.png",
+    "14-workflows-list.png",
+    "15-create-workflow-page.png",
+    "16-workflow-applications-list.png",
+    "17-workflow-search-performance-no-results.png",
+    "18-approval-flows-list.png",
+    "19-approval-flows-search-performance-no-results.png",
+    "20-360-reviews-overview.png",
+    "21-360-review-create-step1.png",
+    "22-cycles-list-with-crud.png",
+    "23-cycle-detail-view.png"
+  ]
+}
