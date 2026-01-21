@@ -1,112 +1,985 @@
-<!DOCTYPE html>                                                                                                                   
-  <html lang="en">                                                                                                                                
-  <head>                                                                                                                                          
-    <meta charset="UTF-8">                                                                                                                        
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">                                                                        
-    <title>performance - User Guide | Bayzat</title>                                                                                           
-    <style>                                                                                                                                       
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }                                                                   
-      body {                                                                                                                                      
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;                                           
-        line-height: 1.6;                                                                                                                         
-        color: #1a1a1a;                                                                                                                           
-        background-color: #ffffff;                                                                                                                
-        max-width: 900px;                                                                                                                         
-        margin: 0 auto;                                                                                                                           
-        padding: 20px;                                                                                                                            
-      }                                                                                                                                           
-      .hero-banner {                                                                                                                              
-        background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);                                                                            
-        color: #ffffff;                                                                                                                           
-        padding: 60px 40px;                                                                                                                       
-        border-radius: 12px;                                                                                                                      
-        margin-bottom: 40px;                                                                                                                      
-        text-align: center;                                                                                                                       
-      }                                                                                                                                           
-      .hero-banner h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 16px; }                                                               
-      .hero-subtitle { font-size: 1.2rem; opacity: 0.95; margin-bottom: 20px; }                                                                   
-      .hero-benefits { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }                                    
-      .hero-benefit { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; }                             
-      h2 { font-size: 1.75rem; font-weight: 600; padding-bottom: 0.5rem; border-bottom: 2px solid #E2E8F0; margin-top: 2rem; margin-bottom: 1rem; 
-  }                                                                                                                                               
-      h3 { font-size: 1.35rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }                                                    
-      h4 { font-size: 1.1rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; }                                                        
-      p { margin-bottom: 1rem; }                                                                                                                  
-      .section { margin-bottom: 3rem; padding: 24px; background: #ffffff; border-radius: 8px; border: 1px solid #E2E8F0; }                        
-      .subsection { margin: 1.5rem 0; padding-left: 1rem; border-left: 3px solid #E2E8F0; }                                                       
-      .info-box { padding: 16px 20px; border-radius: 8px; margin: 20px 0; background: #FAF5FF; border-left: 4px solid #6B46C1; }                  
-      .info-box p { margin: 0; }                                                                                                                  
-      .warning-box { padding: 16px 20px; border-radius: 8px; margin: 20px 0; background: #FFFBEB; border-left: 4px solid #D97706; }               
-      .warning-box p { margin: 0 0 8px 0; }                                                                                                       
-      .warning-box p:last-child { margin: 0; }                                                                                                    
-      ul, ol { margin: 1rem 0; padding-left: 2rem; }                                                                                              
-      li { margin-bottom: 0.5rem; }                                                                                                               
-      table { width: 100%; border-collapse: collapse; margin: 20px 0; }                                                                           
-      th, td { padding: 12px 16px; text-align: left; border: 1px solid #E2E8F0; }                                                                 
-      th { background: #F7FAFC; font-weight: 600; }                                                                                               
-      tr:hover { background: #F7FAFC; }                                                                                                           
-      figure { margin: 24px auto; text-align: center; }                                                                                           
-      figure img, .screenshot { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border: 1px solid    
-  #E2E8F0; display: block; margin: 0 auto; }                                                                                                      
-      figcaption { margin-top: 12px; font-size: 0.9rem; font-style: italic; color: #666; }                                                        
-      .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }                    
-      .feature-card { background: #ffffff; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px; }                                        
-      .feature-card h4 { margin-top: 0; }                                                                                                         
-      .journey-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin: 20px 0; }                    
-      .journey-step { background: #F7FAFC; border-radius: 8px; padding: 20px; }                                                                   
-      .journey-step .step-number { background: #6B46C1; color: #ffffff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items:
-   center; justify-content: center; font-weight: 600; margin-bottom: 12px; }                                                                      
-      .journey-step h4 { margin: 0 0 8px 0; }                                                                                                     
-      .journey-step p { margin: 0; }                                                                                                              
-      .step { display: flex; gap: 16px; margin: 20px 0; padding: 16px; background: #F7FAFC; border-radius: 8px; }                                 
-      .step-number { background: #6B46C1; color: #ffffff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center;      
-  justify-content: center; font-weight: 600; flex-shrink: 0; }                                                                                    
-      .step-content { flex: 1; }                                                                                                                  
-      .step-content h4 { margin: 0 0 8px 0; }                                                                                                     
-      .step-content p { margin: 0; }                                                                                                              
-      .step-content ul { margin: 8px 0 0 0; }                                                                                                     
-      .nav-path { background: #F7FAFC; padding: 12px 16px; border-radius: 6px; font-family: 'SF Mono', Monaco, monospace; margin: 16px 0; }       
-      code { background: #F7FAFC; padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, monospace; font-size: 0.9em; }            
-      pre { background: #F7FAFC; padding: 16px; border-radius: 8px; overflow-x: auto; }                                                           
-      blockquote { border-left: 4px solid #E2E8F0; padding-left: 16px; margin: 16px 0; font-style: italic; color: #666; }                         
-      a { color: #6B46C1; text-decoration: none; }                                                                                                
-      a:hover { text-decoration: underline; }                                                                                                     
-      footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #E2E8F0; text-align: center; color: #666; font-size: 0.9rem; }          
-      @media (max-width: 768px) { body { padding: 16px; } .hero-banner { padding: 40px 24px; } .hero-banner h1 { font-size: 1.75rem; } .section { 
-  padding: 16px; } th, td { padding: 8px 12px; } }                                                                                                
-      @media (max-width: 480px) { .hero-banner h1 { font-size: 1.5rem; } .hero-subtitle { font-size: 1rem; } .step { flex-direction: column; gap: 
-  12px; } }                                                                                                                                       
-      @media print { body { max-width: 100%; padding: 0; } .hero-banner { background: #6B46C1 !important; -webkit-print-color-adjust: exact;      
-  print-color-adjust: exact; } .section { break-inside: avoid; } }                                                                                
-    </style>                                                                                                                                      
-  </head>                                                                                                                                         
-  <body>                                                                                                                                          
-  <div class="hero-banner">                                                                                                                       
-    <h1>performance</h1>                                                                                                                       
-    <p class="hero-subtitle">Manage performance in Bayzat</p>                                                                                                       
-                                                                                                                               
-  </div>                                                                                                                                          
-  <section class="section" id="hero">                                                                                       
-      <h2>Performance Management</h2><div class="content">{"feature_name":"Performance Management","tagline":"Streamline employee development with structured performance cycles and goal tracking","key_benefits":["Create and manage comprehensive performance review cycles","Set and track employee goals with approval workflows","Conduct 360° feedback reviews for holistic performance insights","Configure custom rating scales and goal types for your organization"]}</div></section>
-<section class="section" id="feature-overview">                                                                                       
-      <h2>What is Performance Management?</h2><div class="content"><h3>Overview</h3><p>Bayzat Performance Management is a comprehensive system for managing employee performance cycles, goals, and reviews. It enables HR administrators and managers to structure performance evaluation processes, track employee development, and gather multi-directional feedback through 360° reviews.</p><p>The platform centers around <strong>Performance Cycles</strong> - structured periods during which organizations conduct goal setting, self-assessments, manager reviews, and calibration sessions. Each cycle can be customized with specific timelines, rating scales, and review types to match your organization's performance management methodology.</p><h3>Key Capabilities</h3><ul><li><strong>Performance Cycles:</strong> Create multi-step review cycles with configurable stages including goal setting, self-assessment, manager review, and calibration</li><li><strong>Goal Management:</strong> Set, track, and approve employee goals with three-state workflow (Draft, Pending, Approved)</li><li><strong>360° Reviews (Beta):</strong> Gather comprehensive feedback from peers, direct reports, and managers through structured nomination and review processes</li><li><strong>Catch-ups:</strong> Schedule and document one-on-one meetings between managers and employees</li><li><strong>Custom Configuration:</strong> Define organization-specific goal types and rating scales</li><li><strong>Employee Inclusion Management:</strong> Control which employees participate in each performance cycle</li></ul><h3>Who Uses This Feature</h3><dl><dt>HR Administrators</dt><dd>Configure performance cycles, rating scales, and goal types. Manage organization-wide performance settings and monitor cycle progress across the company.</dd><dt>Managers</dt><dd>Conduct performance reviews, provide feedback on employee goals, and participate in calibration sessions. Write evaluations and track team member development.</dd><dt>Employees</dt><dd>Set personal goals, complete self-assessments, view performance feedback, and participate in 360° reviews as nominees or reviewers.</dd></dl><h3>Business Value</h3><p>Performance Management transforms ad-hoc review processes into structured, data-driven evaluation cycles. By centralizing goal tracking, review workflows, and feedback collection, organizations can:</p><ul><li>Ensure consistent performance evaluation standards across teams</li><li>Maintain historical records of employee development and achievements</li><li>Identify high performers and development opportunities through calibration</li><li>Foster continuous feedback culture through catch-ups and 360° reviews</li><li>Align individual goals with organizational objectives</li></ul></div></section>
-<section class="section" id="product-foundation">                                                                                       
-      <h2>Product Foundation</h2><div class="content"><h3>Prerequisites</h3><h4>System Requirements</h4><ul><li><strong>Active Bayzat HR Account:</strong> Performance Management is a module within Bayzat HR platform</li><li><strong>Employee Records:</strong> Employees must exist in the system before they can be included in performance cycles</li><li><strong>Organizational Structure:</strong> Manager-employee relationships must be defined for review workflows to function properly</li></ul><h4>Access Requirements</h4><ul><li><strong>Administrator Permissions:</strong> Required to access Performance Settings, create cycles, configure rating scales, and manage goal types</li><li><strong>Manager Permissions:</strong> Required to conduct reviews, approve goals, and access team performance data</li><li><strong>Employee Access:</strong> All employees can access their own performance data through "My performance" section</li></ul><h4>Configuration Prerequisites</h4><p>Before creating your first performance cycle, ensure the following are configured:</p><ol><li><strong>Rating Scales:</strong> Define the rating system you'll use for evaluations (e.g., 1-5 scale, Exceeds/Meets/Below expectations)</li><li><strong>Goal Types:</strong> Create categories for different types of goals (e.g., Individual, Team, Developmental)</li><li><strong>Review Timeline:</strong> Plan the duration and stages of your performance cycle</li></ol><h3>Technical Dependencies</h3><h4>Module Integration</h4><p>Performance Management operates as a standalone module with the following integration points:</p><ul><li><strong>HR Core:</strong> Pulls employee data, organizational structure, and manager relationships</li><li><strong>User Permissions:</strong> Leverages Bayzat's role-based access control system</li><li><strong>Notifications:</strong> Sends email notifications for cycle milestones and review deadlines</li></ul><h4>No Workflow Integration</h4><div class="tip"><strong>Important:</strong> Performance Management does not currently integrate with Bayzat Workflows. Automated triggers and actions are not available for performance-related events. All cycle progression and notifications are managed within the Performance module itself.</div><h4>Data Dependencies</h4><ul><li><strong>Employee Master Data:</strong> Names, departments, job titles, and manager assignments</li><li><strong>Organizational Hierarchy:</strong> Required for manager review assignments and 360° review nominations</li><li><strong>Historical Data:</strong> Past cycle data is retained and can be referenced but cannot be modified once a cycle is marked as "Past"</li></ul><h3>Licensing and Plan Requirements</h3><p>Performance Management availability depends on your Bayzat subscription plan. Contact your account manager to confirm feature access for your organization.</p><h3>Related Features</h3><h4>Within Performance Module</h4><ul><li><strong>Goals:</strong> Standalone goal management outside of formal cycles</li><li><strong>Reviews:</strong> Access to all review types and history</li><li><strong>My Performance:</strong> Employee self-service view of goals and reviews</li><li><strong>360° Reviews (Beta):</strong> Multi-rater feedback system</li><li><strong>Catch-ups:</strong> One-on-one meeting documentation</li></ul><h4>Cross-Module Connections</h4><ul><li><strong>Employee Profiles:</strong> Performance data appears in employee records</li><li><strong>Reporting:</strong> Performance metrics may be available in HR analytics (if enabled)</li><li><strong>Learning & Development:</strong> Performance reviews may inform training recommendations (if L&D module is active)</li></ul><h4>Configuration Features</h4><ul><li><strong>Performance Settings:</strong> Central hub for all performance configuration</li><li><strong>Rating Scales:</strong> Define evaluation criteria</li><li><strong>Goal Types:</strong> Categorize organizational goals</li><li><strong>360° Feedback Settings:</strong> Configure multi-rater review parameters</li></ul></div></section>
-<section class="section" id="core-tasks">                                                                                       
-      <h2>Feature Usage with Common Workflows</h2><div class="content"><p>This section covers the essential tasks for managing Performance Cycles, Goals, and 360° Reviews in Bayzat Performance Management. Tasks are organized by workflow type to help you efficiently manage your organization's performance processes.</p><h3>Performance Cycle Management</h3><h4>Creating a New Performance Cycle</h4><p>Performance Cycles are the foundation of your performance management process. Follow these steps to create a new cycle:</p><ol><li>Navigate to <strong>Performance → Settings → Cycles</strong></li><li>Click the <strong>Add new cycle</strong> button</li><li>Complete the 5-step creation wizard:<ul><li><strong>Step 1: Cycle details</strong> - Enter cycle name, start/end dates, and description</li><li><strong>Step 2: Goal setting</strong> - Configure goal-related settings and deadlines</li><li><strong>Step 3: Self-assessment</strong> - Set up employee self-review parameters</li><li><strong>Step 4: Manager review</strong> - Configure manager review settings and deadlines</li><li><strong>Step 5: Calibration</strong> - Set calibration meeting parameters</li></ul></li><li>Review your settings and click <strong>Create cycle</strong></li></ol><figure class="screenshot-container"><!-- Screenshot not found: 09-create-cycle-step1.png --><figcaption>Creating a new performance cycle - Step 1: Cycle details</figcaption></figure><div class="tip"><strong>Best Practice:</strong> Plan your cycle dates carefully. While cycles can be edited, date modifications for active cycles require backend support intervention (see limitations section).</div><h4>Viewing Performance Cycle Details</h4><p>To view comprehensive information about a performance cycle:</p><ol><li>Go to <strong>Performance → Settings → Cycles</strong></li><li>Browse the cycles list showing Current and Past cycles</li><li>Click on any cycle name to view its detail page</li></ol><p>The cycle detail view displays:</p><ul><li>Cycle overview with status (Current/Past)</li><li>Activity timeline showing all review stages</li><li>Employees included and excluded from the cycle</li><li>Rating scale configuration</li><li>Review types enabled (Self-review, Manager review, etc.)</li><li>Goal setting parameters</li></ul><figure class="screenshot-container"><!-- Screenshot not found: 08-performance-cycles-list.png --><figcaption>Performance Cycles list with pagination showing Current and Past cycles</figcaption></figure><figure class="screenshot-container"><!-- Screenshot not found: 23-cycle-detail-view.png --><figcaption>Detailed view of a performance cycle with activity timeline and configuration</figcaption></figure><h4>Editing a Performance Cycle</h4><p>You can modify cycle settings for Current cycles:</p><ol><li>Navigate to <strong>Performance → Settings → Cycles</strong></li><li>Locate the cycle you want to edit (must be in Current status)</li><li>Click the <strong>Edit</strong> icon (pencil) next to the cycle name</li><li>Update the necessary fields in the cycle wizard</li><li>Save your changes</li></ol><figure class="screenshot-container"><!-- Screenshot not found: 22-cycles-list-with-crud.png --><figcaption>Cycle list showing Edit and Delete controls for Current cycles</figcaption></figure><div class="warning"><strong>⚠️ Date Modification Limitation</strong><p><strong>Impact:</strong> Active performance cycle dates (including self-review and manager review deadlines) cannot be modified directly through the user interface. Changes require backend intervention from Bayzat support staff, creating potential delays.</p><p><strong>Workaround:</strong> Contact Bayzat support with specific date change requests, including cycle name and desired new dates for each review stage.</p><span class="jira-ref">Reference: TSSD-464</span></div><h4>Reopening a Past Cycle</h4><p>If you need to reactivate a completed cycle:</p><ol><li>Go to <strong>Performance → Settings → Cycles</strong></li><li>Find the Past cycle you want to reopen</li><li>Click <strong>Reopen cycle</strong> option</li><li>Confirm the action</li></ol><p>The cycle status will change from Past to Current, allowing employees and managers to access and complete reviews.</p><h4>Deleting a Performance Cycle</h4><p>You can delete Current cycles that are no longer needed:</p><ol><li>Navigate to <strong>Performance → Settings → Cycles</strong></li><li>Locate the cycle to delete (must be Current status)</li><li>Click the <strong>Delete</strong> icon (trash) next to the cycle name</li><li>Confirm the deletion in the dialog box</li></ol><div class="warning"><strong>⚠️ Deletion Restriction:</strong> Past cycles cannot be deleted. The delete button is disabled with the tooltip "Past cycle cannot be deleted". This protects historical performance data.</div><h3>Goal Management</h3><h4>Viewing Goals</h4><p>Goals are organized into three status categories:</p><ol><li>Navigate to <strong>Performance → Goals</strong></li><li>Use the tab system to filter goals:<ul><li><strong>Draft</strong> - Goals being created or edited</li><li><strong>Pending</strong> - Goals awaiting approval</li><li><strong>Approved</strong> - Finalized and active goals</li></ul></li><li>Click on any goal to view its details</li></ol><p>The goal detail view shows:</p><ul><li>Goal title and description</li><li>Goal type and category</li><li>Target dates and milestones</li><li>Progress tracking</li><li>Associated employees</li><li>Edit and Delete controls</li></ul><figure class="screenshot-container"><!-- Screenshot not found: 13-goal-detail-view.png --><figcaption>Goal detail view with Edit and Delete controls</figcaption></figure><h4>Editing Goals</h4><p>To modify an existing goal:</p><ol><li>Navigate to the goal detail page</li><li>Click the <strong>Edit</strong> button</li><li>Update goal information as needed</li><li>Save your changes</li></ol><div class="tip"><strong>Note:</strong> Goal editing permissions depend on the goal status and your role. Approved goals may require re-approval after editing.</div><h4>Deleting Goals</h4><p>To remove a goal:</p><ol><li>Open the goal detail page</li><li>Click the <strong>Delete</strong> button</li><li>Confirm the deletion</li></ol><div class="warning"><strong>Caution:</strong> Deleting a goal removes it permanently and cannot be undone. Ensure you have proper authorization before deleting goals.</div><h3>Employee Performance Overview</h3><h4>Accessing Individual Performance Data</h4><p>To view an employee's performance information:</p><ol><li>Navigate to <strong>Performance → My performance</strong> (for your own data) or access through employee profiles</li><li>Use the tab system to navigate:<ul><li><strong>Goals</strong> - View assigned goals and progress</li><li><strong>Catch-ups</strong> - Access one-on-one meeting notes and history</li></ul></li></ol><p>The performance overview provides a consolidated view of goals, reviews, and development activities for each employee.</p><h3>360° Reviews Management</h3><h4>Creating a 360° Review</h4><p>The 360° Reviews feature (Beta) enables comprehensive multi-rater feedback:</p><ol><li>Navigate to <strong>Performance → 360° reviews Beta</strong></li><li>Click <strong>Start 360° review</strong></li><li>Complete the 4-step creation wizard:<ul><li><strong>Step 1: Basic info</strong> - Enter review name, description, and timeline</li><li><strong>Step 2: Select participants</strong> - Choose employees to be reviewed</li><li><strong>Step 3: Setup nominations</strong> - Configure nomination process for reviewers</li><li><strong>Step 4: Send</strong> - Review and launch the 360° review</li></ul></li><li>Click <strong>Send</strong> to activate the review</li></ol><figure class="screenshot-container"><!-- Screenshot not found: 21-360-review-create-step1.png --><figcaption>Creating a 360° review - Step 1: Basic information</figcaption></figure><h4>Monitoring 360° Review Progress</h4><p>The 360° Reviews overview dashboard provides key metrics:</p><ol><li>Navigate to <strong>Performance → 360° reviews Beta</strong></li><li>View dashboard metrics:<ul><li>Active reviews count</li><li>Employees involved</li><li>Pending nominations</li><li>Upcoming deadlines</li></ul></li><li>Click on individual reviews to see detailed progress</li></ol><figure class="screenshot-container"><!-- Screenshot not found: 20-360-reviews-overview.png --><figcaption>360° Reviews overview showing active reviews and key metrics</figcaption></figure><h3>Configuration Tasks</h3><h4>Managing Employee Inclusion/Exclusion</h4><p>Control which employees participate in each performance cycle:</p><ol><li>Open the cycle detail view</li><li>Navigate to the <strong>Employees</strong> section</li><li>Use the inclusion/exclusion controls to:<ul><li>Add employees to the cycle</li><li>Remove employees from the cycle</li><li>View lists of included and excluded employees</li></ul></li></ol><p>This feature is useful for phased rollouts or excluding employees on leave during the review period.</p><h4>Configuring Rating Scales</h4><p>Set up rating scales used in performance reviews:</p><ol><li>Go to <strong>Performance → Settings → Rating scales</strong></li><li>Create or edit rating scales</li><li>Define scale levels and descriptions</li><li>Assign scales to performance cycles</li></ol><h4>Managing Goal Types</h4><p>Configure goal categories for your organization:</p><ol><li>Navigate to <strong>Performance → Settings → Goal types</strong></li><li>Add new goal types or edit existing ones</li><li>Define goal type properties and behaviors</li></ol><p>Goal types help organize and categorize employee objectives (e.g., Individual Goals, Team Goals, Development Goals).</p></div></section>
-<section class="section" id="workflow-integration">                                                                                       
-      <h2>Workflow Integration</h2><div class="content"><div class="tip"><strong>⚠️ Workflow Integration Status:</strong> Performance Management does not currently have workflow triggers or actions available in Bayzat Workflows. The feature operates independently without automated workflow capabilities.</div><p>During validation, we searched through all 13 available workflow applications in the Bayzat platform (Timesheet, Employee Ticket, Accounts Payable, Knowledge Hub, HR, Recurring Events, Timeoff, Newsfeed, Payroll, Custom Fields, Insurance, Incoming Integration, and Attendance). Performance Management was not found in the workflow applications list, and searches for "performance" returned zero results.</p><figure class="screenshot-container"><!-- Screenshot not found: 16-workflow-applications-list.png --><figcaption>Available workflow applications - Performance Management not included</figcaption></figure><figure class="screenshot-container"><!-- Screenshot not found: 17-workflow-search-performance-no-results.png --><figcaption>Search for performance workflows returns no results</figcaption></figure><h3>Potential Workflow Scenarios</h3><p>While Performance Management doesn't currently integrate with Bayzat Workflows, automation could add significant value in these scenarios:</p><h4>Scenario 1: Automated Review Reminders</h4><p><strong>Business Value:</strong> Reduce manual follow-up and improve completion rates</p><p><strong>Potential Trigger:</strong> Performance review deadline approaching (7 days before due date)</p><p><strong>Potential Actions:</strong></p><ul><li>Send email reminder to employees with pending self-assessments</li><li>Notify managers of outstanding reviews</li><li>Create task in employee's to-do list</li><li>Send Slack/Teams notification</li></ul><p><strong>Expected Outcome:</strong> Higher on-time completion rates and reduced administrative burden on HR teams</p><h4>Scenario 2: Goal Approval Notifications</h4><p><strong>Business Value:</strong> Streamline goal-setting process and improve transparency</p><p><strong>Potential Trigger:</strong> Goal status changes to "Pending" or "Approved"</p><p><strong>Potential Actions:</strong></p><ul><li>Notify manager when employee submits goals for approval</li><li>Alert employee when goals are approved or require revision</li><li>Update employee record with goal completion status</li><li>Log goal approval in performance history</li></ul><p><strong>Expected Outcome:</strong> Faster goal approval cycles and clearer communication between employees and managers</p><h4>Scenario 3: Cycle Completion Workflows</h4><p><strong>Business Value:</strong> Ensure consistent follow-up actions after reviews</p><p><strong>Potential Trigger:</strong> Performance cycle status changes to "Completed"</p><p><strong>Potential Actions:</strong></p><ul><li>Generate performance summary reports</li><li>Create development plan tasks based on review outcomes</li><li>Schedule follow-up meetings for low performers</li><li>Update compensation review queue for high performers</li><li>Archive review documentation</li></ul><p><strong>Expected Outcome:</strong> Systematic post-review actions and better integration with talent management processes</p><h4>Scenario 4: 360° Review Coordination</h4><p><strong>Business Value:</strong> Simplify multi-rater feedback collection</p><p><strong>Potential Trigger:</strong> 360° review launched or nomination deadline approaching</p><p><strong>Potential Actions:</strong></p><ul><li>Send nomination requests to employees</li><li>Remind reviewers to complete feedback</li><li>Notify HR when all feedback is collected</li><li>Compile feedback summary for review subject</li></ul><p><strong>Expected Outcome:</strong> Higher participation rates and more timely feedback collection</p><h4>Scenario 5: Cross-Module Integration</h4><p><strong>Business Value:</strong> Connect performance data with other HR processes</p><p><strong>Potential Trigger:</strong> Performance rating finalized</p><p><strong>Potential Actions:</strong></p><ul><li>Update employee record with performance rating</li><li>Trigger compensation review workflow for eligible employees</li><li>Create training requests based on development needs</li><li>Update succession planning data</li><li>Generate analytics reports</li></ul><p><strong>Expected Outcome:</strong> Holistic talent management with performance data driving other HR decisions</p><h3>Current Workarounds</h3><p>Until workflow integration is available, consider these manual alternatives:</p><div class="tip"><strong>Email Reminders:</strong> Use calendar reminders or email scheduling tools to send review deadline notifications manually.</div><div class="tip"><strong>Status Tracking:</strong> Maintain a spreadsheet or project management tool to track review completion status across the organization.</div><div class="tip"><strong>Integration via API:</strong> If your organization has development resources, explore Bayzat's API documentation for custom integration possibilities.</div><h3>Requesting Workflow Integration</h3><p>If workflow automation for Performance Management would benefit your organization:</p><ol><li>Contact your Bayzat Customer Success Manager</li><li>Describe your specific automation needs and use cases</li><li>Provide examples of how workflows would improve your performance management process</li><li>Request to be notified when workflow integration becomes available</li></ol><p>Your feedback helps Bayzat prioritize feature development and understand customer needs.</p></div></section>
-<section class="section" id="business-rules-limitations">                                                                                       
-      <h2>Business Rules & Limitations</h2><div class="content"><h3>Business Rules</h3><p>The Performance Management module operates under the following business rules:</p><ul><li><strong>Cycle Status:</strong> Performance cycles can have two states: Current or Past. Only Current cycles can be edited or deleted through the UI.</li><li><strong>Past Cycle Management:</strong> Past cycles cannot be deleted but can be reopened. Once reopened, they become Current cycles and can be managed normally.</li><li><strong>Employee Inclusion:</strong> Administrators can include or exclude specific employees from performance cycles on a per-cycle basis.</li><li><strong>Review Stage Sequencing:</strong> Performance cycles follow a structured workflow: Goal setting → Self-assessment → Manager review → Calibration. Each stage must be configured during cycle creation.</li><li><strong>360° Reviews (Beta):</strong> The 360° feedback feature is in Beta status and follows a separate workflow from standard performance cycles.</li><li><strong>Goal Approval Workflow:</strong> Goals progress through three states: Draft → Pending → Approved. Goals must be approved before they can be evaluated in performance reviews.</li><li><strong>Rating Scale Assignment:</strong> Each performance cycle must be associated with a rating scale. Rating scales are configured globally and applied at the cycle level.</li></ul><h3>Known Limitations</h3><div class="warning"><strong>⚠️ Performance Cycle Date Modification Requires Backend Support</strong><p><strong>Impact:</strong> Administrators cannot modify active performance cycle dates (such as self-review deadlines or manager review end dates) through the user interface. Changes to cycle dates require manual backend configuration by Bayzat support staff.</p><p><strong>Workaround:</strong> Contact Bayzat support with the specific cycle and date changes required. Support will process the request through backend configuration tools.</p><span class="jira-ref">Reference: TSSD-464</span></div><div class="tip"><strong>Note:</strong> No additional product limitations have been documented for this feature at this time. As the Performance Management module evolves, particularly with the 360° Reviews Beta feature, additional constraints may be identified.</div><h3>Configuration Constraints</h3><ul><li><strong>Rating Scales:</strong> Rating scales must be configured before creating performance cycles. Cycles cannot be created without an assigned rating scale.</li><li><strong>Goal Types:</strong> Goal types must be defined in Settings before employees can create goals. Custom goal types can be created to match organizational objectives.</li><li><strong>Workflow Integration:</strong> Performance Management does not currently integrate with Bayzat Workflows. Automation of performance-related tasks is not available through the Workflows module.</li><li><strong>Approval Automation:</strong> The module does not have built-in approval flow automation. Goal approvals and review completions are managed manually within the Performance interface.</li></ul></div></section>
-<section class="section" id="troubleshooting-edge-cases">                                                                                       
-      <h2>Troubleshooting & Edge Cases</h2><div class="content"><h3>Common Issues and Solutions</h3><h4>Issue: Cannot Delete a Performance Cycle</h4><p><strong>Symptom:</strong> The delete button is disabled or shows a tooltip stating "Past cycle cannot be deleted."</p><p><strong>Cause:</strong> Only Current cycles can be deleted. Once a cycle's end date has passed, it automatically becomes a Past cycle and deletion is disabled.</p><p><strong>Solution:</strong></p><ol><li>If you need to remove a Past cycle, first reopen it using the "Reopen cycle" option</li><li>The cycle will return to Current status</li><li>You can then delete it using the delete (trash) icon</li><li>Note: Reopening a cycle may affect historical reporting data</li></ol><h4>Issue: Need to Extend Performance Cycle Deadlines</h4><p><strong>Symptom:</strong> Review deadlines are approaching but employees need more time to complete self-assessments or managers need additional time for reviews.</p><p><strong>Cause:</strong> Cycle dates cannot be modified through the UI once the cycle is created and active.</p><p><strong>Solution:</strong></p><ol><li>Contact Bayzat support immediately with your request</li><li>Provide the cycle name and specific dates that need to be changed</li><li>Include the new target dates for each review stage</li><li>Support will process the backend configuration change</li><li>Allow 1-2 business days for the change to be implemented</li></ol><p><strong>Reference:</strong> TSSD-464</p><h4>Issue: Goals Not Appearing in Performance Review</h4><p><strong>Symptom:</strong> Employee goals are not visible during the performance review process.</p><p><strong>Possible Causes and Solutions:</strong></p><ul><li><strong>Goal Status:</strong> Goals must be in "Approved" status to appear in reviews. Check the Goals tab and ensure goals have moved from Draft → Pending → Approved.</li><li><strong>Cycle Configuration:</strong> Verify that goal setting was enabled when creating the performance cycle. If disabled, goals won't be included in the review process.</li><li><strong>Employee Inclusion:</strong> Confirm the employee is included in the performance cycle. Check the cycle's employee inclusion list.</li></ul><h4>Issue: 360° Review Nominations Not Received</h4><p><strong>Symptom:</strong> Participants haven't received nomination requests for 360° feedback.</p><p><strong>Solution:</strong></p><ol><li>Navigate to Performance → 360° reviews Beta</li><li>Locate the specific review in the list</li><li>Verify the review status - it should show as "Active"</li><li>Check the "Pending nominations" count on the overview dashboard</li><li>Confirm participant email addresses are correct in the review setup</li><li>Check if nomination emails are in spam/junk folders</li><li>If issues persist, you may need to resend nominations through the review detail view</li></ol><h3>Edge Cases</h3><h4>Edge Case: Employee Leaves During Active Performance Cycle</h4><p><strong>Scenario:</strong> An employee included in a performance cycle is terminated or resigns before the cycle completes.</p><p><strong>Handling:</strong></p><ul><li>The employee remains in the cycle even after termination</li><li>Managers should complete the review based on performance during employment</li><li>Alternatively, exclude the employee from the cycle using the employee inclusion/exclusion management feature</li><li>Historical data is preserved for reporting purposes</li></ul><h4>Edge Case: Manager Changes Mid-Cycle</h4><p><strong>Scenario:</strong> An employee's reporting manager changes while a performance cycle is in progress.</p><p><strong>Handling:</strong></p><ul><li>Update the employee's reporting structure in HR → Employees</li><li>The new manager will automatically inherit review responsibilities</li><li>Previous manager's draft reviews are not automatically transferred</li><li>Consider having both managers collaborate on the final review if significant work was completed under the previous manager</li></ul><h4>Edge Case: Multiple Active Cycles</h4><p><strong>Scenario:</strong> Organization wants to run multiple performance cycles simultaneously (e.g., quarterly reviews for some departments, annual for others).</p><p><strong>Handling:</strong></p><ul><li>Multiple Current cycles can exist simultaneously</li><li>Use employee inclusion/exclusion to assign employees to the appropriate cycle</li><li>Ensure clear communication about which employees are in which cycle</li><li>Be mindful of overlapping review periods which may create workload issues for managers</li></ul><h4>Edge Case: Rating Scale Changes After Cycle Creation</h4><p><strong>Scenario:</strong> Organization modifies a rating scale that's already assigned to an active performance cycle.</p><p><strong>Impact:</strong></p><ul><li>Changes to rating scales may affect active cycles using that scale</li><li>In-progress reviews may show updated rating options</li><li>Completed reviews retain their original ratings</li></ul><p><strong>Best Practice:</strong> Create a new rating scale version rather than modifying an existing one if cycles are active.</p><h3>Error Messages</h3><table class="limitations-table"><thead><tr><th>Error Message</th><th>Meaning</th><th>Resolution</th></tr></thead><tbody><tr><td>"Past cycle cannot be deleted"</td><td>Attempting to delete a cycle that has ended</td><td>Use "Reopen cycle" first, then delete</td></tr><tr><td>"Rating scale is required"</td><td>Attempting to create a cycle without selecting a rating scale</td><td>Configure rating scales in Settings first, then select one during cycle creation</td></tr><tr><td>"No employees selected"</td><td>Attempting to create a cycle without including any employees</td><td>Use the employee inclusion feature to add at least one employee to the cycle</td></tr></tbody></table><h3>Performance Optimization Tips</h3><ul><li><strong>Large Employee Populations:</strong> When creating cycles for organizations with 500+ employees, the employee inclusion step may take longer to load. Be patient and avoid refreshing the page.</li><li><strong>Bulk Goal Management:</strong> For organizations requiring many employees to set goals, communicate deadlines clearly and monitor progress through the Goals tab filtered by status.</li><li><strong>Review Period Planning:</strong> Allow sufficient time between review stages (minimum 1-2 weeks per stage) to prevent bottlenecks.</li><li><strong>360° Review Timing:</strong> Schedule 360° reviews to avoid overlap with annual performance cycles to prevent feedback fatigue.</li></ul></div></section>
-<section class="section" id="support-resources">                                                                                       
-      <h2>Support Resources</h2><div class="content"><h3>Frequently Asked Questions</h3><h4>General Questions</h4><details><summary><strong>Q: What's the difference between Performance Cycles and 360° Reviews?</strong></summary><p><strong>A:</strong> Performance Cycles are comprehensive review processes that include goal setting, self-assessment, manager review, and calibration stages. They follow a structured timeline and are typically conducted annually or semi-annually. 360° Reviews (Beta) are separate feedback collection processes where an employee receives feedback from multiple sources including peers, direct reports, and managers. They can be run independently of performance cycles.</p></details><details><summary><strong>Q: Can I run multiple performance cycles at the same time?</strong></summary><p><strong>A:</strong> Yes, you can have multiple Current cycles running simultaneously. Use the employee inclusion/exclusion feature to assign different employee groups to different cycles. This is useful for organizations with different review schedules for different departments or employee levels.</p></details><details><summary><strong>Q: How do I write effective performance reviews?</strong></summary><p><strong>A:</strong> Follow these best practices:</p><ul><li>Use simple, clear language that's easy to understand</li><li>Provide specific examples of work and behaviors</li><li>Balance constructive feedback with recognition of strengths</li><li>Focus on future development and growth opportunities</li><li>Avoid absolute terms like "always" or "never"</li><li>Maintain ongoing notes throughout the review period to avoid recency bias</li><li>Make feedback actionable with clear suggestions for improvement</li></ul><p><strong>Reference:</strong> <a href="https://bayzathelp.zendesk.com/hc/en-gb/articles/19820354365969" target="_blank">Writing an effective Performance evaluation</a></p></details><details><summary><strong>Q: What happens to goals when an employee changes roles?</strong></summary><p><strong>A:</strong> Goals remain associated with the employee regardless of role changes. When an employee changes positions, you should:</p><ul><li>Review existing goals for continued relevance</li><li>Edit or archive goals that no longer apply</li><li>Create new goals aligned with the new role</li><li>Discuss the transition with the employee and new manager</li></ul></details><details><summary><strong>Q: Can employees see each other's performance reviews?</strong></summary><p><strong>A:</strong> No. Performance reviews are confidential and only visible to:</p><ul><li>The employee being reviewed</li><li>The employee's direct manager</li><li>HR administrators with appropriate permissions</li><li>Senior managers involved in calibration (if applicable)</li></ul></details><h4>Configuration Questions</h4><details><summary><strong>Q: How do I create custom rating scales?</strong></summary><p><strong>A:</strong> Navigate to Performance → Settings → Rating scales. Click "Add new rating scale" and define:</p><ul><li>Scale name (e.g., "5-Point Performance Scale")</li><li>Rating levels (e.g., 1-5 or Exceeds/Meets/Below Expectations)</li><li>Description for each rating level</li><li>Color coding for visual differentiation</li></ul><p>Rating scales must be created before you can assign them to performance cycles.</p></details><details><summary><strong>Q: Can I change a performance cycle after it's started?</strong></summary><p><strong>A:</strong> Limited changes are possible:</p><ul><li><strong>Employee inclusion/exclusion:</strong> Can be modified at any time</li><li><strong>Cycle dates:</strong> Cannot be changed through UI - requires support request (TSSD-464)</li><li><strong>Rating scale:</strong> Cannot be changed once cycle is created</li><li><strong>Review stages:</strong> Cannot be added/removed after creation</li></ul><p>Plan your cycle configuration carefully before creation.</p></details><details><summary><strong>Q: What's the recommended frequency for performance cycles?</strong></summary><p><strong>A:</strong> Best practices vary by organization:</p><ul><li><strong>Annual cycles:</strong> Traditional approach, comprehensive reviews once per year</li><li><strong>Semi-annual cycles:</strong> More frequent feedback, typically every 6 months</li><li><strong>Quarterly cycles:</strong> Agile approach for fast-paced organizations</li></ul><p>Consider your organization's size, industry, and culture when deciding. Many organizations combine formal cycles with informal check-ins using the Catch-ups feature.</p></details><h4>Workflow and Automation Questions</h4><details><summary><strong>Q: Can I automate performance review reminders?</strong></summary><p><strong>A:</strong> Performance Management does not currently integrate with Bayzat Workflows. Reminders must be sent manually or through external calendar systems. Consider:</p><ul><li>Setting calendar reminders for key milestone dates</li><li>Using the activity timeline in cycle details to track progress</li><li>Communicating deadlines clearly during cycle kickoff</li><li>Monitoring completion rates through the Reviews tab</li></ul></details><details><summary><strong>Q: Is there an approval workflow for performance reviews?</strong></summary><p><strong>A:</strong> Performance reviews do not have a formal approval workflow. However:</p><ul><li>Goals follow a Draft → Pending → Approved workflow</li><li>Manager reviews are submitted directly without additional approval</li><li>Calibration stage allows senior leaders to review and adjust ratings</li><li>HR administrators can monitor review completion through the dashboard</li></ul></details><h3>Getting Help</h3><h4>Bayzat Support Channels</h4><p>If you need assistance with Performance Management, use these support channels:</p><div class="tip"><strong>📧 Email Support</strong><p>Send detailed questions to: <a href="mailto:support@bayzat.com">support@bayzat.com</a></p><p>Include:</p><ul><li>Your company name and account details</li><li>Specific feature or cycle name</li><li>Screenshots of any errors or issues</li><li>Steps you've already tried</li></ul><p>Response time: 24-48 hours for standard requests</p></div><div class="tip"><strong>💬 In-App Chat</strong><p>Access live chat support from within the Bayzat platform:</p><ol><li>Click the help icon (?) in the bottom-right corner</li><li>Select "Chat with Support"</li><li>Describe your issue to connect with a support agent</li></ol><p>Available: Sunday-Thursday, 9 AM - 6 PM GST</p></div><div class="tip"><strong>📚 Help Center</strong><p>Browse self-service articles and guides:</p><p><a href="https://bayzathelp.zendesk.com" target="_blank">https://bayzathelp.zendesk.com</a></p><p>Search for topics like:</p><ul><li>Performance management setup</li><li>Writing effective reviews</li><li>Goal setting best practices</li><li>360° feedback configuration</li></ul></div><h4>Urgent Issues Requiring Backend Support</h4><p>The following issues require Bayzat support intervention:</p><ul><li><strong>Cycle date modifications:</strong> Changes to review stage deadlines or cycle end dates (Reference: TSSD-464)</li><li><strong>Data recovery:</strong> Restoring accidentally deleted cycles or reviews</li><li><strong>Permission issues:</strong> Access problems that can't be resolved through role configuration</li><li><strong>System errors:</strong> Technical issues preventing normal feature operation</li></ul><p>For urgent issues affecting active performance cycles, mark your support request as "High Priority" and include business impact details.</p><h4>Training and Onboarding</h4><p>For team training on Performance Management:</p><ul><li><strong>Administrator Training:</strong> Contact your Bayzat Customer Success Manager to schedule training sessions for HR administrators</li><li><strong>Manager Training:</strong> Request access to manager training materials covering review best practices and system usage</li><li><strong>Employee Guides:</strong> Share Zendesk articles with employees explaining goal setting and self-assessment processes</li></ul><h4>Feature Requests and Feedback</h4><p>To suggest improvements or report issues:</p><ol><li>Document your suggestion with specific use cases</li><li>Contact support via email or chat</li><li>Explain the business value of the requested feature</li><li>Include examples of how it would improve your workflow</li></ol><p>Your feedback helps shape future development of the Performance Management module.</p></div></section>
-<section class="section" id="glossary">                                                                                       
-      <h2>Glossary of Terms</h2><div class="content"><h3>Glossary</h3><dl><dt>360° Review</dt><dd>A comprehensive feedback process where an employee receives performance input from multiple sources including managers, peers, direct reports, and sometimes external stakeholders. In Bayzat, this is a Beta feature separate from standard performance cycles.</dd><dt>Calibration</dt><dd>The final stage of a performance cycle where senior leaders and HR review performance ratings across teams to ensure consistency, fairness, and alignment with organizational standards. Helps prevent rating inflation or deflation.</dd><dt>Catch-ups</dt><dd>Informal one-on-one meetings between employees and managers for ongoing feedback and development discussions. Accessible through the "My performance" tab and separate from formal performance reviews.</dd><dt>Current Cycle</dt><dd>A performance cycle that is currently active and has not yet reached its end date. Current cycles can be edited and deleted through the user interface.</dd><dt>Goal Setting</dt><dd>The first stage of a performance cycle where employees define objectives and key results for the review period. Goals progress through Draft, Pending, and Approved statuses.</dd><dt>Goal Type</dt><dd>A category or classification for goals (e.g., "Individual Development," "Team Objective," "Company Goal"). Goal types are configured in Performance Settings and help organize goals by purpose or scope.</dd><dt>Line Manager Review</dt><dd>The stage where an employee's direct manager evaluates performance, provides ratings, and writes feedback. Also called "Manager Review" or "Manager-to-Employee Review."</dd><dt>Nomination</dt><dd>In 360° reviews, the process of selecting individuals who will provide feedback about an employee. Participants can nominate peers, direct reports, or other colleagues to contribute feedback.</dd><dt>Past Cycle</dt><dd>A performance cycle that has completed and reached its end date. Past cycles cannot be deleted but can be reopened to become Current cycles again. Used for historical reference and reporting.</dd><dt>Performance Cycle</dt><dd>A structured, time-bound process for evaluating employee performance. Typically includes stages for goal setting, self-assessment, manager review, and calibration. Cycles can be annual, semi-annual, or quarterly.</dd><dt>Primary Entity</dt><dd>The main object or item managed by a feature. For Performance Management, the primary entity is the Performance Cycle.</dd><dt>Rating Scale</dt><dd>A standardized system for evaluating performance, defining the possible ratings (e.g., 1-5 or Exceeds/Meets/Below Expectations) and their meanings. Rating scales are configured globally and assigned to performance cycles.</dd><dt>Recency Bias</dt><dd>The tendency to give disproportionate weight to recent events when evaluating performance over a longer period. Best practices recommend maintaining ongoing notes throughout the review period to avoid this bias.</dd><dt>Reopen Cycle</dt><dd>The action of converting a Past cycle back to Current status, allowing it to be edited or deleted. Used when cycle dates need to be extended or corrections need to be made to completed cycles.</dd><dt>Review Stage</dt><dd>A distinct phase within a performance cycle (e.g., Goal Setting, Self-Assessment, Manager Review, Calibration). Each stage has its own timeline and required actions.</dd><dt>Self-Assessment</dt><dd>The stage where employees evaluate their own performance against goals and provide self-ratings. Completed before the manager review stage to give employees a voice in the evaluation process.</dd></dl></div></section>                                                                                                                                 
-  <footer>                                                                                                                                        
-    <p>Generated by Bayzat Documentation System</p>                                                                                               
-    <p>Last updated: 2025-01-15T00:00:00Z</p>                                                       
-  </footer>                                                                                                                                       
-  </body>                                                                                                                                         
-  </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Management - User Guide</title>
+    <style>
+        /* CSS Reset and Base */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background-color: #ffffff;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+            color: #ffffff;
+            padding: 60px 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            color: #ffffff;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E2E8F0;
+        }
+
+        h3 {
+            font-size: 1.35rem;
+        }
+
+        p {
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        /* Sections */
+        section, .section {
+            margin-bottom: 3rem;
+            padding: 24px;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+        }
+
+        /* Info Boxes */
+        .info-box, .note-box, .tip-box {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            background: #FAF5FF;
+            border-left: 4px solid #6B46C1;
+        }
+
+        .info-box p, .note-box p, .tip-box p {
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .warning-box, .important-box, .caution-box {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            background: #FFFBEB;
+            border-left: 4px solid #D97706;
+        }
+
+        .warning-box p, .important-box p, .caution-box p {
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+            color: #1a1a1a;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #ffffff;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border: 1px solid #E2E8F0;
+            color: #1a1a1a;
+        }
+
+        th {
+            background: #F7FAFC;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        tr:hover {
+            background: #F7FAFC;
+        }
+
+        /* Screenshots */
+        .screenshot-container, figure {
+            margin: 24px auto;
+            text-align: center;
+        }
+
+        .screenshot, figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #E2E8F0;
+            display: block;
+            margin: 0 auto;
+        }
+
+        figcaption {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+            font-style: italic;
+        }
+
+        /* Feature Grid and Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .feature-card, .card {
+            background: #ffffff;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .feature-card h4, .card h4 {
+            color: #1a1a1a;
+            margin-top: 0;
+        }
+
+        .feature-card p, .card p {
+            color: #1a1a1a;
+        }
+
+        /* Journey Grid */
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .journey-step {
+            background: #F7FAFC;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .journey-step .step-number {
+            background: #6B46C1;
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .journey-step h4 {
+            margin: 0 0 8px 0;
+            color: #1a1a1a;
+        }
+
+        .journey-step p {
+            margin: 0;
+            color: #1a1a1a;
+        }
+
+        /* Steps */
+        .step, .step-item {
+            display: flex;
+            gap: 16px;
+            margin: 20px 0;
+            padding: 16px;
+            background: #F7FAFC;
+            border-radius: 8px;
+        }
+
+        .step-number {
+            background: #6B46C1;
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            margin: 0 0 8px 0;
+            color: #1a1a1a;
+        }
+
+        .step-content p {
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        /* Navigation Path */
+        .nav-path, .breadcrumb {
+            background: #F7FAFC;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-family: monospace;
+            color: #1a1a1a;
+            margin: 16px 0;
+        }
+
+        /* Code blocks */
+        code {
+            background: #F7FAFC;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9em;
+            color: #1a1a1a;
+        }
+
+        pre {
+            background: #F7FAFC;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            color: #1a1a1a;
+        }
+
+        /* Links */
+        a {
+            color: #6B46C1;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer, .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #E2E8F0;
+            text-align: center;
+            color: #1a1a1a;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body { padding: 16px; }
+            .hero-banner { padding: 40px 24px; }
+            .hero-banner h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            section, .section { padding: 16px; }
+            table { font-size: 0.9rem; }
+            th, td { padding: 8px 12px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-banner h1 { font-size: 1.5rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .step { flex-direction: column; gap: 12px; }
+        }
+
+        /* Print Styles */
+        @media print {
+            body { max-width: 100%; padding: 0; }
+            .hero-banner { background: #6B46C1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            section, .section { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-banner">
+        <h1>Performance Management</h1>
+        <p class="hero-subtitle">Streamline employee development with structured performance cycles and goal tracking</p>
+    </div>
+
+    <figure class="screenshot-container">
+        <img src="validation/screenshots/08-performance-cycles-list.png" alt="Performance Management cycles list interface" class="screenshot">
+        <figcaption>Performance Management cycles overview in Bayzat HR</figcaption>
+    </figure>
+
+    <section>
+        <h2>What is Performance Management?</h2>
+
+        <h3>Overview</h3>
+        <p>Bayzat Performance Management is a comprehensive system for managing employee performance cycles, goals, and reviews. It enables HR administrators and managers to structure performance evaluation processes, track employee development, and gather multi-directional feedback through 360° reviews.</p>
+
+        <p>The platform centers around <strong>Performance Cycles</strong> - structured periods during which organizations conduct goal setting, self-assessments, manager reviews, and calibration sessions. Each cycle can be customized with specific timelines, rating scales, and review types to match your organization's performance management methodology.</p>
+
+        <h3>Key Benefits</h3>
+        <ul>
+            <li>Create and manage comprehensive performance review cycles</li>
+            <li>Set and track employee goals with approval workflows</li>
+            <li>Conduct 360° feedback reviews for holistic performance insights</li>
+            <li>Configure custom rating scales and goal types for your organization</li>
+        </ul>
+
+        <h3>Who Uses This Feature?</h3>
+        <ul>
+            <li><strong>HR Administrators:</strong> Configure performance cycles, rating scales, and goal types. Manage organization-wide performance settings and monitor cycle progress across the company.</li>
+            <li><strong>Managers:</strong> Conduct performance reviews, provide feedback on employee goals, and participate in calibration sessions. Write evaluations and track team member development.</li>
+            <li><strong>Employees:</strong> Set personal goals, complete self-assessments, view performance feedback, and participate in 360° reviews as nominees or reviewers.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Product Foundation Overview</h2>
+
+        <h3>Core Concepts</h3>
+
+        <h4>Performance Cycles</h4>
+        <p>Structured, time-bound processes for evaluating employee performance. Typically includes stages for goal setting, self-assessment, manager review, and calibration. Cycles can be annual, semi-annual, or quarterly.</p>
+
+        <h4>Goal Management</h4>
+        <p>Set, track, and approve employee goals with three-state workflow (Draft, Pending, Approved). Goals help align individual objectives with organizational targets.</p>
+
+        <h4>360° Reviews (Beta)</h4>
+        <p>Gather comprehensive feedback from peers, direct reports, and managers through structured nomination and review processes.</p>
+
+        <h4>Catch-ups</h4>
+        <p>Schedule and document one-on-one meetings between managers and employees for ongoing feedback and development discussions.</p>
+
+        <h3>Related Features</h3>
+        <ul>
+            <li><strong>Goals:</strong> Standalone goal management outside of formal cycles</li>
+            <li><strong>Reviews:</strong> Access to all review types and history</li>
+            <li><strong>My Performance:</strong> Employee self-service view of goals and reviews</li>
+            <li><strong>Performance Settings:</strong> Central hub for all performance configuration</li>
+            <li><strong>Rating Scales:</strong> Define evaluation criteria</li>
+            <li><strong>Goal Types:</strong> Categorize organizational goals</li>
+        </ul>
+
+        <h3>Technical Prerequisites</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Active Bayzat HR Account</td>
+                    <td>Performance Management is a module within Bayzat HR platform</td>
+                    <td>Required</td>
+                </tr>
+                <tr>
+                    <td>Employee Records</td>
+                    <td>Employees must exist in the system before inclusion in cycles</td>
+                    <td>Required</td>
+                </tr>
+                <tr>
+                    <td>Organizational Structure</td>
+                    <td>Manager-employee relationships must be defined for review workflows</td>
+                    <td>Required</td>
+                </tr>
+                <tr>
+                    <td>Rating Scales</td>
+                    <td>Define the rating system for evaluations before creating cycles</td>
+                    <td>Required</td>
+                </tr>
+                <tr>
+                    <td>Goal Types</td>
+                    <td>Create categories for different types of goals</td>
+                    <td>Optional</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Complete User Journey Guide</h2>
+
+        <h3>Journey Overview</h3>
+        <p>The Performance Management journey involves HR setting up cycles, employees setting goals and completing self-assessments, managers conducting reviews, and calibration sessions ensuring fairness.</p>
+
+        <div class="journey-grid">
+            <div class="journey-step">
+                <div class="step-number">1</div>
+                <h4>Configure Settings</h4>
+                <p>HR sets up rating scales, goal types, and creates a new performance cycle</p>
+            </div>
+            <div class="journey-step">
+                <div class="step-number">2</div>
+                <h4>Goal Setting</h4>
+                <p>Employees set goals and submit for manager approval</p>
+            </div>
+            <div class="journey-step">
+                <div class="step-number">3</div>
+                <h4>Self-Assessment</h4>
+                <p>Employees complete self-reviews against their goals</p>
+            </div>
+            <div class="journey-step">
+                <div class="step-number">4</div>
+                <h4>Manager Review</h4>
+                <p>Managers evaluate employee performance and provide feedback</p>
+            </div>
+            <div class="journey-step">
+                <div class="step-number">5</div>
+                <h4>Calibration</h4>
+                <p>Senior leaders review ratings for consistency across teams</p>
+            </div>
+            <div class="journey-step">
+                <div class="step-number">6</div>
+                <h4>Completion</h4>
+                <p>Cycle ends, results are shared, and cycle moves to Past status</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Feature Discovery</h2>
+
+        <h3>How to Access</h3>
+        <p>Performance Management features are accessed through the Performance menu in the left sidebar. Different views are available based on user role - employees see "My Performance" while managers and HR see additional management options.</p>
+
+        <h3>Navigation Paths</h3>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/01-performance-menu-expanded.png" alt="Performance menu showing all options" class="screenshot">
+            <figcaption>Accessing Performance Management through the left sidebar menu</figcaption>
+        </figure>
+
+        <div class="nav-path">
+            <strong>Employee - My Performance</strong><br>
+            Performance (left sidebar) → My performance → View Goals and Catch-ups tabs
+        </div>
+
+        <div class="nav-path">
+            <strong>Manager - Team Reviews</strong><br>
+            Performance → Reviews → Select cycle → View team member reviews
+        </div>
+
+        <div class="nav-path">
+            <strong>HR Admin - Cycle Management</strong><br>
+            Performance → Settings → Cycles → Create or manage performance cycles
+        </div>
+
+        <div class="nav-path">
+            <strong>360° Reviews (Beta)</strong><br>
+            Performance → 360° reviews Beta → Start or manage multi-rater feedback
+        </div>
+    </section>
+
+    <section>
+        <h2>Setup Process</h2>
+
+        <h3>Configuring Rating Scales (Admin)</h3>
+        <p>Before creating performance cycles, HR administrators must configure rating scales. This defines how employees will be evaluated.</p>
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4>Navigate to Rating Scales</h4>
+                <p>Go to Performance → Settings → Rating scales. This opens the rating scale configuration page.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4>Create a New Rating Scale</h4>
+                <p>Click 'Add new rating scale'. Enter a name (e.g., "5-Point Performance Scale") and define each rating level with descriptions.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4>Define Rating Levels</h4>
+                <p>Add levels such as: Exceeds Expectations, Meets Expectations, Needs Improvement. Include descriptions for each level to guide evaluators.</p>
+            </div>
+        </div>
+
+        <h3>Creating a Performance Cycle</h3>
+        <p>Performance Cycles are the foundation of your performance management process. Follow these steps to create a new cycle.</p>
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4>Access Cycle Settings</h4>
+                <p>Navigate to Performance → Settings → Cycles and click the "Add new cycle" button.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4>Enter Cycle Details</h4>
+                <p>Complete Step 1 of the wizard: Enter cycle name, start/end dates, and description.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4>Configure Goal Setting</h4>
+                <p>Step 2: Set up goal-related settings including deadlines for employees to submit goals.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h4>Set Up Self-Assessment</h4>
+                <p>Step 3: Configure employee self-review parameters and deadlines.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+                <h4>Configure Manager Review</h4>
+                <p>Step 4: Set up manager review settings and submission deadlines.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">6</div>
+            <div class="step-content">
+                <h4>Set Calibration Parameters</h4>
+                <p>Step 5: Configure calibration meeting settings where leaders review ratings across teams.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">7</div>
+            <div class="step-content">
+                <h4>Review and Create</h4>
+                <p>Review all settings and click 'Create cycle'. The cycle is now active for the configured employees.</p>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <p><strong>Important:</strong> Plan your cycle dates carefully. Once a cycle is created and active, date modifications require backend support intervention (see limitations section).</p>
+        </div>
+
+        <h3>Managing Goal Types</h3>
+        <p>Configure goal categories for your organization to help organize and classify employee objectives.</p>
+
+        <ol>
+            <li>Navigate to Performance → Settings → Goal types</li>
+            <li>Click "Add new goal type"</li>
+            <li>Enter goal type name (e.g., "Individual Development", "Team Objective", "Company Goal")</li>
+            <li>Save the goal type</li>
+        </ol>
+
+        <div class="tip-box">
+            <p><strong>Tip:</strong> Create goal types that align with your organization's objective-setting methodology, such as OKRs or KPIs.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Feature Usage</h2>
+
+        <h3>Common Workflows</h3>
+
+        <h4>Goal Setting (Employee)</h4>
+        <p>Employees create and submit goals for manager approval during the goal-setting phase of a performance cycle.</p>
+
+        <h4>Self-Assessment (Employee)</h4>
+        <p>Employees evaluate their own performance against goals and provide self-ratings during the review period.</p>
+
+        <h4>Manager Review (Manager)</h4>
+        <p>Managers evaluate team members' performance, provide ratings, and write feedback.</p>
+
+        <h3>Setting Goals (Employee Flow)</h3>
+        <p>Employees set goals through the Performance menu. Goals progress through Draft, Pending, and Approved statuses.</p>
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4>Navigate to Goals</h4>
+                <p>Click Performance in the left sidebar, then select Goals.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/04-goals-draft-tab.png" alt="Goals page showing draft goals" class="screenshot">
+            <figcaption>Goals page with Draft, Pending, and Approved tabs</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4>Create New Goal</h4>
+                <p>Click "Add goal" to create a new goal. Enter the goal title, description, and select the goal type.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4>Set Target Dates</h4>
+                <p>Define start and end dates for the goal, along with any milestones.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h4>Submit for Approval</h4>
+                <p>Save as Draft to continue editing later, or submit the goal to move it to Pending status for manager approval.</p>
+            </div>
+        </div>
+
+        <h3>Understanding Goal Statuses</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Meaning</th>
+                    <th>Next Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Draft</td>
+                    <td>Goal being created or edited</td>
+                    <td>Complete details and submit</td>
+                </tr>
+                <tr>
+                    <td>Pending</td>
+                    <td>Awaiting manager approval</td>
+                    <td>Wait for manager review</td>
+                </tr>
+                <tr>
+                    <td>Approved</td>
+                    <td>Finalized and active</td>
+                    <td>Track progress</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Conducting Reviews (Manager Flow)</h3>
+        <ol>
+            <li>Navigate to Performance → Reviews</li>
+            <li>Select the active performance cycle</li>
+            <li>Click on a team member to open their review</li>
+            <li>Review their self-assessment and goals</li>
+            <li>Provide ratings and written feedback</li>
+            <li>Submit the review</li>
+        </ol>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/03-reviews-tab.png" alt="Reviews tab showing team reviews" class="screenshot">
+            <figcaption>Reviews tab for managers to evaluate team member performance</figcaption>
+        </figure>
+
+        <h3>360° Reviews (Beta)</h3>
+        <p>The 360° Reviews feature enables comprehensive multi-rater feedback collection.</p>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/07-360-reviews-beta-page.png" alt="360° Reviews Beta page" class="screenshot">
+            <figcaption>360° Reviews Beta overview showing active reviews and metrics</figcaption>
+        </figure>
+
+        <h4>Creating a 360° Review</h4>
+        <ol>
+            <li>Navigate to Performance → 360° reviews Beta</li>
+            <li>Click "Start 360° review"</li>
+            <li>Complete the 4-step wizard:
+                <ul>
+                    <li><strong>Basic info:</strong> Enter review name, description, and timeline</li>
+                    <li><strong>Select participants:</strong> Choose employees to be reviewed</li>
+                    <li><strong>Setup nominations:</strong> Configure nomination process for reviewers</li>
+                    <li><strong>Send:</strong> Review and launch the 360° review</li>
+                </ul>
+            </li>
+            <li>Click "Send" to activate the review</li>
+        </ol>
+
+        <h3>Viewing Performance Cycle Details</h3>
+        <p>To view comprehensive information about a performance cycle:</p>
+
+        <ol>
+            <li>Go to Performance → Settings → Cycles</li>
+            <li>Browse the cycles list showing Current and Past cycles</li>
+            <li>Click on any cycle name to view its detail page</li>
+        </ol>
+
+        <p>The cycle detail view displays:</p>
+        <ul>
+            <li>Cycle overview with status (Current/Past)</li>
+            <li>Activity timeline showing all review stages</li>
+            <li>Employees included and excluded from the cycle</li>
+            <li>Rating scale configuration</li>
+            <li>Review types enabled (Self-review, Manager review, etc.)</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Workflow Integration</h2>
+
+        <div class="warning-box">
+            <p><strong>Important:</strong> Performance Management does not currently integrate with Bayzat Workflows. Automated triggers and actions are not available for performance-related events. All cycle progression and notifications are managed within the Performance module itself.</p>
+        </div>
+
+        <p>During validation, we searched through all 13 available workflow applications in the Bayzat platform (Timesheet, Employee Ticket, Accounts Payable, Knowledge Hub, HR, Recurring Events, Timeoff, Newsfeed, Payroll, Custom Fields, Insurance, Incoming Integration, and Attendance). Performance Management was not found in the workflow applications list.</p>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/14-workflow-applications-list.png" alt="Available workflow applications list" class="screenshot">
+            <figcaption>Available workflow applications - Performance Management not included</figcaption>
+        </figure>
+
+        <h3>Current Workarounds</h3>
+        <p>Until workflow integration is available, consider these manual alternatives:</p>
+
+        <div class="tip-box">
+            <p><strong>Email Reminders:</strong> Use calendar reminders or email scheduling tools to send review deadline notifications manually.</p>
+        </div>
+
+        <div class="tip-box">
+            <p><strong>Status Tracking:</strong> Maintain a spreadsheet or project management tool to track review completion status across the organization.</p>
+        </div>
+
+        <h3>Potential Future Automation Scenarios</h3>
+        <p>While not currently available, workflow automation could add value in these scenarios:</p>
+        <ul>
+            <li><strong>Automated Review Reminders:</strong> Send notifications when review deadlines approach</li>
+            <li><strong>Goal Approval Notifications:</strong> Alert managers when employees submit goals for approval</li>
+            <li><strong>Cycle Completion Workflows:</strong> Trigger follow-up actions when cycles complete</li>
+            <li><strong>360° Review Coordination:</strong> Automate nomination requests and feedback collection</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Business Rules & Limitations</h2>
+
+        <h3>Core Business Rules</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rule</th>
+                    <th>Description</th>
+                    <th>Impact</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Cycle Status</td>
+                    <td>Cycles can be Current or Past. Only Current cycles can be edited/deleted through UI</td>
+                    <td>Plan configurations before creating cycles</td>
+                </tr>
+                <tr>
+                    <td>Past Cycle Protection</td>
+                    <td>Past cycles cannot be deleted but can be reopened</td>
+                    <td>Historical data is preserved</td>
+                </tr>
+                <tr>
+                    <td>Goal Workflow</td>
+                    <td>Goals progress through Draft → Pending → Approved states</td>
+                    <td>Goals must be approved before inclusion in reviews</td>
+                </tr>
+                <tr>
+                    <td>Rating Scale Required</td>
+                    <td>Cycles cannot be created without an assigned rating scale</td>
+                    <td>Configure rating scales first</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Known Limitations</h3>
+
+        <div class="warning-box">
+            <p><strong>Performance Cycle Date Modification Requires Backend Support</strong></p>
+            <p>Administrators cannot modify active performance cycle dates (such as self-review deadlines or manager review end dates) through the user interface. Changes to cycle dates require manual backend configuration by Bayzat support staff.</p>
+            <p><strong>Workaround:</strong> Contact Bayzat support with the specific cycle and date changes required.</p>
+        </div>
+
+        <h3>System Constraints</h3>
+        <ul>
+            <li>Rating scales must be configured before creating performance cycles</li>
+            <li>Goal types must be defined in Settings before employees can create goals</li>
+            <li>Performance Management does not integrate with Bayzat Workflows</li>
+            <li>The module does not have built-in approval flow automation</li>
+            <li>360° Reviews is in Beta status and may have additional limitations</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Troubleshooting & Edge Cases</h2>
+
+        <h3>Common Issues</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Issue</th>
+                    <th>Cause</th>
+                    <th>Resolution</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Cannot delete a cycle</td>
+                    <td>Cycle is in Past status</td>
+                    <td>Reopen the cycle first, then delete</td>
+                </tr>
+                <tr>
+                    <td>Goals not in review</td>
+                    <td>Goals not in Approved status</td>
+                    <td>Ensure goals are approved before review period</td>
+                </tr>
+                <tr>
+                    <td>Cannot change cycle dates</td>
+                    <td>UI limitation for active cycles</td>
+                    <td>Contact Bayzat support</td>
+                </tr>
+                <tr>
+                    <td>Employee missing from cycle</td>
+                    <td>Not included in cycle settings</td>
+                    <td>Use employee inclusion management</td>
+                </tr>
+                <tr>
+                    <td>Rating scale required error</td>
+                    <td>No rating scale configured</td>
+                    <td>Create rating scale in Settings first</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Edge Cases</h3>
+
+        <h4>Employee Leaves During Active Cycle</h4>
+        <p>The employee remains in the cycle even after termination. Managers should complete the review based on performance during employment, or exclude the employee using the inclusion/exclusion management feature.</p>
+
+        <h4>Manager Changes Mid-Cycle</h4>
+        <p>Update the employee's reporting structure in HR → Employees. The new manager will inherit review responsibilities. Previous manager's draft reviews are not automatically transferred.</p>
+
+        <h4>Multiple Active Cycles</h4>
+        <p>Multiple Current cycles can exist simultaneously. Use employee inclusion/exclusion to assign different employee groups to different cycles.</p>
+    </section>
+
+    <section>
+        <h2>Support Resources</h2>
+
+        <h3>Frequently Asked Questions</h3>
+
+        <h4>What's the difference between Performance Cycles and 360° Reviews?</h4>
+        <p>Performance Cycles are comprehensive review processes including goal setting, self-assessment, manager review, and calibration. 360° Reviews (Beta) are separate feedback collection processes where an employee receives feedback from multiple sources including peers and direct reports.</p>
+
+        <h4>Can I run multiple performance cycles at the same time?</h4>
+        <p>Yes, you can have multiple Current cycles running simultaneously. Use the employee inclusion/exclusion feature to assign different employee groups to different cycles.</p>
+
+        <h4>Can I edit a submitted goal?</h4>
+        <p>Goals in Draft status can be freely edited. Once submitted to Pending status, editing may require the goal to go through approval again. Contact your manager or HR for guidance on modifying approved goals.</p>
+
+        <h4>How do I extend review deadlines?</h4>
+        <p>Cycle dates cannot be modified through the UI. Contact Bayzat support with the cycle name and desired new dates for each review stage.</p>
+
+        <h3>Getting Help</h3>
+        <ul>
+            <li>Contact your HR Administrator for policy questions and configuration support</li>
+            <li>Bayzat Support Team - Available for technical issues and feature questions</li>
+            <li>Knowledge Base - Access additional articles at <a href="https://bayzathelp.zendesk.com" target="_blank">bayzathelp.zendesk.com</a></li>
+            <li>In-app Help - Contextual help available within the Bayzat platform</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Glossary of Terms</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Term</th>
+                    <th>Definition</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Performance Cycle</strong></td>
+                    <td>A structured, time-bound process for evaluating employee performance with stages for goal setting, self-assessment, manager review, and calibration.</td>
+                </tr>
+                <tr>
+                    <td><strong>360° Review</strong></td>
+                    <td>A comprehensive feedback process where an employee receives performance input from multiple sources including managers, peers, and direct reports.</td>
+                </tr>
+                <tr>
+                    <td><strong>Rating Scale</strong></td>
+                    <td>A standardized system for evaluating performance, defining possible ratings and their meanings.</td>
+                </tr>
+                <tr>
+                    <td><strong>Goal Type</strong></td>
+                    <td>A category for goals (e.g., Individual Development, Team Objective) configured in Performance Settings.</td>
+                </tr>
+                <tr>
+                    <td><strong>Calibration</strong></td>
+                    <td>The final stage where senior leaders review ratings across teams to ensure consistency and fairness.</td>
+                </tr>
+                <tr>
+                    <td><strong>Self-Assessment</strong></td>
+                    <td>The stage where employees evaluate their own performance against goals and provide self-ratings.</td>
+                </tr>
+                <tr>
+                    <td><strong>Catch-ups</strong></td>
+                    <td>Informal one-on-one meetings between employees and managers for ongoing feedback and development.</td>
+                </tr>
+                <tr>
+                    <td><strong>Current Cycle</strong></td>
+                    <td>An active performance cycle that can be edited and deleted through the user interface.</td>
+                </tr>
+                <tr>
+                    <td><strong>Past Cycle</strong></td>
+                    <td>A completed performance cycle that cannot be deleted but can be reopened.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <footer>
+        <p>Generated by Bayzat Documentation System</p>
+        <p>Last updated: 2026-01-21</p>
+    </footer>
+</body>
+</html>
