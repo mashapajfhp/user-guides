@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>biometric-attendance - User Guide | Bayzat</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background-color: #ffffff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+      color: #ffffff;
+      padding: 60px 40px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    .hero-banner h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 16px; }
+    .hero-subtitle { font-size: 1.2rem; opacity: 0.95; margin-bottom: 20px; }
+    .hero-benefits { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
+    .hero-benefit { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; }
+    h2 { font-size: 1.75rem; font-weight: 600; padding-bottom: 0.5rem; border-bottom: 2px solid #E2E8F0; margin-top: 2rem; margin-bottom: 1rem; }
+    h3 { font-size: 1.35rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    h4 { font-size: 1.1rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; }
+    p { margin-bottom: 1rem; }
+    .section { margin-bottom: 3rem; padding: 24px; background: #ffffff; border-radius: 8px; border: 1px solid #E2E8F0; }
+    .subsection { margin: 1.5rem 0; padding-left: 1rem; border-left: 3px solid #E2E8F0; }
+    .info-box { padding: 16px 20px; border-radius: 8px; margin: 20px 0; background: #FAF5FF; border-left: 4px solid #6B46C1; }
+    .info-box p { margin: 0; }
+    .warning-box { padding: 16px 20px; border-radius: 8px; margin: 20px 0; background: #FFFBEB; border-left: 4px solid #D97706; }
+    .warning-box p { margin: 0 0 8px 0; }
+    .warning-box p:last-child { margin: 0; }
+    ul, ol { margin: 1rem 0; padding-left: 2rem; }
+    li { margin-bottom: 0.5rem; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th, td { padding: 12px 16px; text-align: left; border: 1px solid #E2E8F0; }
+    th { background: #F7FAFC; font-weight: 600; }
+    tr:hover { background: #F7FAFC; }
+    figure { margin: 24px auto; text-align: center; }
+    figure img, .screenshot { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border: 1px solid #E2E8F0; display: block; margin: 0 auto; }
+    figcaption { margin-top: 12px; font-size: 0.9rem; font-style: italic; color: #666; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
+    .feature-card { background: #ffffff; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px; }
+    .feature-card h4 { margin-top: 0; }
+    .journey-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin: 20px 0; }
+    .journey-step { background: #F7FAFC; border-radius: 8px; padding: 20px; }
+    .journey-step .step-number { background: #6B46C1; color: #ffffff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; margin-bottom: 12px; }
+    .journey-step h4 { margin: 0 0 8px 0; }
+    .journey-step p { margin: 0; }
+    .step { display: flex; gap: 16px; margin: 20px 0; padding: 16px; background: #F7FAFC; border-radius: 8px; }
+    .step-number { background: #6B46C1; color: #ffffff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+    .step-content { flex: 1; }
+    .step-content h4 { margin: 0 0 8px 0; }
+    .step-content p { margin: 0; }
+    .step-content ul { margin: 8px 0 0 0; }
+    .nav-path { background: #F7FAFC; padding: 12px 16px; border-radius: 6px; font-family: 'SF Mono', Monaco, monospace; margin: 16px 0; }
+    code { background: #F7FAFC; padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, monospace; font-size: 0.9em; }
+    pre { background: #F7FAFC; padding: 16px; border-radius: 8px; overflow-x: auto; }
+    blockquote { border-left: 4px solid #E2E8F0; padding-left: 16px; margin: 16px 0; font-style: italic; color: #666; }
+    a { color: #6B46C1; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #E2E8F0; text-align: center; color: #666; font-size: 0.9rem; }
+    @media (max-width: 768px) { body { padding: 16px; } .hero-banner { padding: 40px 24px; } .hero-banner h1 { font-size: 1.75rem; } .section { padding: 16px; } th, td { padding: 8px 12px; } }
+    @media (max-width: 480px) { .hero-banner h1 { font-size: 1.5rem; } .hero-subtitle { font-size: 1rem; } .step { flex-direction: column; gap: 12px; } }
+    @media print { body { max-width: 100%; padding: 0; } .hero-banner { background: #6B46C1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; } .section { break-inside: avoid; } }
+  </style>
+</head>
+<body>
+<div class="hero-banner">
+  <h1>biometric-attendance</h1>
+  <p class="hero-subtitle">Manage biometric-attendance in Bayzat</p>
+  
+</div>
+<section class="section" id="hero">
+    <h2>Biometric Attendance</h2><div class="content"><h3>Biometric Attendance</h3><p>Automated time tracking through biometric device integration and facial recognition technology</p><div class="feature-grid"><div class="feature-card"><p>Eliminate manual attendance tracking and reduce time theft through biometric verification</p></div><div class="feature-card"><p>Seamlessly integrate physical biometric devices with centralized attendance management</p></div><div class="feature-card"><p>Enable facial recognition check-ins for remote and mobile workforce attendance</p></div><div class="feature-card"><p>Synchronize biometric logs automatically to maintain accurate attendance records</p></div></div></div></section>
+<section class="section" id="feature-overview">
+    <h2>What is Biometric Attendance?</h2><div class="content"><p>Biometric Attendance is Bayzat's time tracking solution that integrates physical biometric devices and facial recognition technology with your HR platform. The feature enables organizations to capture employee check-ins and check-outs through fingerprint scanners, facial recognition cameras, and mobile app-based facial verification. Biometric data is synchronized with the platform to create accurate attendance records, enforce attendance policies, and generate compliance reports.</p>
+
+<h3>Key Benefits</h3>
+<ul>
+  <li><strong>Eliminate Time Fraud:</strong> Biometric verification prevents buddy punching and ensures only authorized employees can clock in</li>
+  <li><strong>Automated Data Synchronization:</strong> Device logs sync automatically with the platform, reducing manual data entry and errors</li>
+  <li><strong>Multi-Device Support:</strong> Integrate various biometric devices including fingerprint scanners, facial recognition terminals, and mobile apps</li>
+  <li><strong>Location-Based Tracking:</strong> Associate attendance records with specific office locations for multi-site organizations</li>
+  <li><strong>Real-Time Monitoring:</strong> Track attendance patterns and identify anomalies as they occur</li>
+  <li><strong>Compliance Reporting:</strong> Generate audit trails and reports for labor law compliance and payroll processing</li>
+</ul>
+
+<h3>Who Uses This Feature?</h3>
+<table>
+  <thead>
+    <tr>
+      <th>User Role</th>
+      <th>What They Do</th>
+      <th>Value Proposition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>HR Administrators</strong></td>
+      <td>Configure biometric devices, manage device assignments to office locations, monitor synchronization status, and troubleshoot integration issues</td>
+      <td>Reduce device configuration time from hours to minutes while ensuring accurate attendance capture across multiple locations—eliminating manual device setup and spreadsheet-based tracking</td>
+    </tr>
+    <tr>
+      <td><strong>Time & Attendance Managers</strong></td>
+      <td>Monitor daily attendance logs, validate biometric data accuracy, investigate attendance discrepancies, and generate attendance reports</td>
+      <td>Make confident payroll and compliance decisions backed by verified biometric data rather than relying on manual timesheets or self-reported hours</td>
+    </tr>
+    <tr>
+      <td><strong>Employees</strong></td>
+      <td>Clock in and out using biometric devices or facial recognition on mobile apps, view their attendance history, and verify their recorded hours</td>
+      <td>Eliminate time card disputes and payroll errors by having biometric proof of attendance, ensuring accurate compensation without manual intervention</td>
+    </tr>
+    <tr>
+      <td><strong>IT Administrators</strong></td>
+      <td>Integrate biometric devices with the Bayzat platform, configure API connections, manage device firmware, and ensure data security compliance</td>
+      <td>Enable seamless device integration through standardized APIs instead of building custom solutions, reducing implementation time and ongoing maintenance burden</td>
+    </tr>
+    <tr>
+      <td><strong>Payroll Administrators</strong></td>
+      <td>Extract verified attendance data for payroll processing, reconcile hours worked, and generate compliance reports</td>
+      <td>Reduce payroll processing time by accessing pre-validated biometric attendance data rather than manually verifying timesheets and resolving discrepancies</td>
+    </tr>
+  </tbody>
+</table></div></section>
+<section class="section" id="product-foundation">
+    <h2>Product Foundation</h2><div class="content"><h3>Core Concepts</h3>
+<div class="feature-grid">
+  <div class="feature-card">
+    <h4>Biometric Devices</h4>
+    <p>Physical hardware terminals (fingerprint scanners, facial recognition cameras) installed at office locations that capture employee attendance through biometric verification. Each device must be manually configured with a serial number and assigned to a specific office location.</p>
+  </div>
+  <div class="feature-card">
+    <h4>Attendance Logs</h4>
+    <p>Timestamped records of employee check-ins and check-outs captured by biometric devices. Logs are synchronized with the platform and processed within a one-week window. Each log entry includes employee identification, timestamp, device ID, and location information.</p>
+  </div>
+  <div class="feature-card">
+    <h4>Facial Recognition Check-In</h4>
+    <p>Mobile app-based attendance capture using facial verification technology. Employees take a selfie to clock in or out, with the system verifying identity through facial matching. Includes retry limits and error handling for failed verification attempts.</p>
+  </div>
+  <div class="feature-card">
+    <h4>Device Synchronization</h4>
+    <p>Automated process that transfers attendance logs from biometric devices to the Bayzat platform. Synchronization occurs at regular intervals, with limitations on high-volume data ingestion and a processing window of one week for biometric data.</p>
+  </div>
+  <div class="feature-card">
+    <h4>Location Validation</h4>
+    <p>System capability to verify that attendance records are associated with authorized office locations. Current implementation has limitations in full location validation during check-ins, requiring manual monitoring for compliance.</p>
+  </div>
+  <div class="feature-card">
+    <h4>Fraud Detection</h4>
+    <p>Monitoring mechanisms to identify suspicious attendance patterns, duplicate check-ins, or unauthorized device usage. Detection capabilities are limited when device IDs are null or missing from attendance records.</p>
+  </div>
+</div>
+
+<h3>Related Features</h3>
+<ul>
+  <li><strong>Attendance Policies:</strong> Define rules for working hours, late arrivals, early departures, and overtime that are enforced against biometric attendance data</li>
+  <li><strong>Time Off Management:</strong> Integrate biometric attendance with leave requests to ensure accurate tracking of working days versus approved absences</li>
+  <li><strong>Payroll Processing:</strong> Use verified biometric attendance data as input for calculating employee compensation and overtime</li>
+  <li><strong>Shift Management:</strong> Coordinate biometric check-ins with scheduled shifts to validate attendance against planned work schedules</li>
+  <li><strong>Reporting & Analytics:</strong> Generate attendance reports using biometric data through Looker and custom report builders</li>
+  <li><strong>Mobile App Attendance:</strong> Enable employees to check in using mobile devices with facial recognition when not near physical biometric terminals</li>
+</ul>
+
+<h3>Prerequisites</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Description</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Biometric Devices</strong></td>
+      <td>Physical biometric terminals (fingerprint scanners or facial recognition cameras) must be procured and installed at office locations</td>
+      <td>Required</td>
+    </tr>
+    <tr>
+      <td><strong>Device Compatibility</strong></td>
+      <td>Verify that biometric devices are compatible with Bayzat integration methods. Different devices require different integration approaches</td>
+      <td>Required</td>
+    </tr>
+    <tr>
+      <td><strong>Network Connectivity</strong></td>
+      <td>Stable internet connection at device locations to enable log synchronization with the Bayzat platform</td>
+      <td>Required</td>
+    </tr>
+    <tr>
+      <td><strong>Office Locations</strong></td>
+      <td>Office locations must be configured in Bayzat before assigning biometric devices to specific sites</td>
+      <td>Required</td>
+    </tr>
+    <tr>
+      <td><strong>Employee Biometric Enrollment</strong></td>
+      <td>Employees must register their biometric data (fingerprints or facial profiles) with the devices before they can check in</td>
+      <td>Required</td>
+    </tr>
+    <tr>
+      <td><strong>Attendance Policies</strong></td>
+      <td>Define attendance policies and working hours before enabling biometric tracking to ensure proper policy enforcement</td>
+      <td>Recommended</td>
+    </tr>
+    <tr>
+      <td><strong>Technical Resources</strong></td>
+      <td>IT staff or technical support to configure device integration, API connections, and troubleshoot synchronization issues</td>
+      <td>Required</td>
+    </tr>
+    <tr>
+      <td><strong>Biometric Consent</strong></td>
+      <td>Employee consent for biometric data collection and storage, as required by local privacy and labor laws</td>
+      <td>Required (Legal)</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="warning-box">
+  <p><strong>⚠️ Integration Complexity and Device Compatibility</strong></p>
+  <p><strong>Impact:</strong> Different biometric devices require different integration methods; not all devices are seamlessly supported; manual configuration is necessary.</p>
+  <p><strong>Workaround:</strong> Technical resources and developer involvement may be required; verify device compatibility before integration.</p>
+  <p><em>Reference: TSSD-2869</em></p>
+</div>
+
+<div class="info-box">
+  <p><strong>Note:</strong> The Biometric Attendance feature was not accessible during validation testing due to navigation limitations in the demo environment. The information in this guide is compiled from Jira ticket analysis and known system capabilities. Users should verify feature availability and navigation paths in their production environment.</p>
+</div></div></section>
+<section class="section" id="user-journey">
+    <h2>Complete User Journey</h2><div class="content"><p>The biometric attendance journey involves setting up devices, configuring attendance policies, synchronizing employee check-in/check-out data, and monitoring attendance records. This end-to-end workflow ensures accurate time tracking while managing the technical complexities of biometric device integration.</p>
+
+<div class="journey-grid">
+  <div class="journey-step">
+    <div class="step-number">1</div>
+    <h4>Device Procurement and Planning</h4>
+    <p>Identify biometric device requirements based on office locations and employee count. Verify device compatibility with Bayzat platform before purchase. Different devices require different integration methods, so technical assessment is critical at this stage.</p>
+  </div>
+  
+  <div class="journey-step">
+    <div class="step-number">2</div>
+    <h4>Manual Device Configuration</h4>
+    <p>Manually add each biometric device to the platform with required details including serial number, device type, and office assignment. This step requires technical resources as device configuration is not automated and varies by manufacturer.</p>
+  </div>
+  
+  <div class="journey-step">
+    <div class="step-number">3</div>
+    <h4>Attendance Policy Setup</h4>
+    <p>Configure attendance policies that govern how biometric check-ins are processed. Define working hours, overtime rules, and location validation requirements. Note that policy enforcement may have inconsistencies between biometric devices and mobile app attendance.</p>
+  </div>
+  
+  <div class="journey-step">
+    <div class="step-number">4</div>
+    <h4>Employee Enrollment</h4>
+    <p>Enroll employees in the biometric system by capturing their biometric data (fingerprint, facial recognition, etc.). For facial recognition, be aware of retry limits and potential security gaps where blank images may be accepted.</p>
+  </div>
+  
+  <div class="journey-step">
+    <div class="step-number">5</div>
+    <h4>Data Synchronization Monitoring</h4>
+    <p>Monitor biometric log synchronization between devices and the platform. The system has a one-week window for processing biometric data, and high-volume log ingestion may require manual intervention. Location validation during check-ins has known limitations.</p>
+  </div>
+  
+  <div class="journey-step">
+    <div class="step-number">6</div>
+    <h4>Attendance Tracking and Reporting</h4>
+    <p>Track daily check-ins and check-outs through the attendance module. Access reports via Looker for biometric device data, noting that centralized automated reporting is not available. API-based attendance records may not include office location details in custom reports.</p>
+  </div>
+  
+  <div class="journey-step">
+    <div class="step-number">7</div>
+    <h4>Fraud Detection and Audit</h4>
+    <p>Review attendance data for anomalies and potential fraud. Be aware that fraud detection reporting has limitations when device IDs are missing. Future-timestamped biometric data cannot be rendered in the UI, which may affect audit capabilities.</p>
+  </div>
+  
+  <div class="journey-step">
+    <div class="step-number">8</div>
+    <h4>Ongoing Maintenance and Troubleshooting</h4>
+    <p>Perform regular device maintenance, handle synchronization errors, and address employee check-in issues. Manual monitoring is required for large data volumes and error cases. Facial recognition failures may require user education on retry limits and error states.</p>
+  </div>
+</div>
+
+<h3>Decision Points in the Process</h3>
+<ul>
+  <li><strong>Device Selection:</strong> Choose between fingerprint readers, facial recognition cameras, or card-based systems based on security requirements, budget, and technical capabilities</li>
+  <li><strong>Integration Method:</strong> Determine whether to use API integration or manual data uploads based on device compatibility and IT resources</li>
+  <li><strong>Location Validation:</strong> Decide whether to enforce strict location validation during check-ins, understanding current system limitations</li>
+  <li><strong>Consent Management:</strong> Establish manual consent tracking processes as the platform lacks standardized biometric consent management</li>
+  <li><strong>Reporting Strategy:</strong> Choose between Looker reports and custom API-based reports, considering the limitations of each approach</li>
+</ul>
+
+<h3>Expected Outcomes at Each Stage</h3>
+<div class="feature-grid">
+  <div class="feature-card">
+    <h4>After Device Setup</h4>
+    <p>Biometric devices are registered in the system with accurate serial numbers and office assignments. Devices are physically installed and network-connected.</p>
+  </div>
+  
+  <div class="feature-card">
+    <h4>After Policy Configuration</h4>
+    <p>Attendance rules are defined and active. Employees understand check-in/check-out requirements and any location-based restrictions.</p>
+  </div>
+  
+  <div class="feature-card">
+    <h4>After Employee Enrollment</h4>
+    <p>All employees have biometric profiles created. Facial recognition or fingerprint data is captured and stored securely.</p>
+  </div>
+  
+  <div class="feature-card">
+    <h4>After Data Synchronization</h4>
+    <p>Check-in/check-out records flow from devices to the platform within the one-week processing window. Attendance data is visible in reports.</p>
+  </div>
+  
+  <div class="feature-card">
+    <h4>After Reporting Setup</h4>
+    <p>HR administrators can access attendance data through Looker or custom reports. Anomalies and patterns are identifiable for payroll processing.</p>
+  </div>
+</div>
+
+<h3>Typical Use Case Scenarios</h3>
+
+<div class="feature-card">
+  <h4>Scenario 1: Multi-Office Deployment</h4>
+  <p>A company with five office locations deploys biometric attendance to replace manual timesheets. Each office receives fingerprint readers assigned to specific locations. HR administrators manually configure each device with office details and monitor synchronization daily. Location validation is enabled but with awareness of its limitations. Looker reports are used for weekly attendance summaries.</p>
+</div>
+
+<div class="feature-card">
+  <h4>Scenario 2: Facial Recognition Implementation</h4>
+  <p>An organization implements facial recognition cameras for contactless attendance. Employees are enrolled with facial biometric data, and retry limits are communicated clearly. HR monitors for blank image acceptance issues and manually tracks biometric consent. Technical teams handle API integration challenges and provide ongoing support for error states.</p>
+</div>
+
+<div class="feature-card">
+  <h4>Scenario 3: High-Volume Manufacturing Environment</h4>
+  <p>A manufacturing facility with 500+ employees uses biometric devices for shift tracking. Due to high log volumes, manual monitoring is implemented to catch synchronization delays. The one-week processing window is closely managed to ensure payroll accuracy. Dropdowns are used for employee selection in mass upload workflows to maintain data integrity.</p>
+</div>
+
+<div class="feature-card">
+  <h4>Scenario 4: Hybrid API and Manual Integration</h4>
+  <p>A company uses API integration for real-time attendance data but supplements with manual uploads for devices that lack API support. Developer resources are engaged to handle integration complexity. Custom reports are built with awareness that office location details may not be available for API-based records.</p>
+</div></div></section>
+<section class="section" id="feature-entry-points">
+    <h2>How to Access Biometric Attendance</h2><div class="content"><p>Accessing the biometric attendance feature requires proper permissions and account configuration. Based on validation testing, navigation to this feature may vary depending on your account setup and enabled modules.</p>
+
+<div class="warning-box">
+  <p><strong>⚠️ Access Prerequisites Required</strong></p>
+  <p><strong>Important:</strong> The biometric attendance feature may not be accessible in all account types. Ensure your account has the Time module enabled and that you have the necessary permissions before attempting to access this feature.</p>
+</div>
+
+<h3>Primary Navigation Path</h3>
+<p>The biometric attendance feature is typically located within the Time module of the Bayzat platform. Follow this navigation path:</p>
+
+<div class="nav-path">
+  Dashboard → Time → Attendance → Biometric Attendance
+</div>
+
+<ol>
+  <li>Log in to your Bayzat account at <code>app.bayzat.com</code></li>
+  <li>From the main dashboard, locate the <strong>Time</strong> menu item in the left sidebar</li>
+  <li>Click on <strong>Time</strong> to expand the submenu options</li>
+  <li>Select <strong>Attendance</strong> from the submenu</li>
+  <li>Navigate to the <strong>Biometric Attendance</strong> section</li>
+</ol>
+
+<h3>Alternative Access Methods</h3>
+
+<div class="feature-grid">
+  <div class="feature-card">
+    <h4>Settings Path</h4>
+    <p>Access biometric device configuration through:</p>
+    <div class="nav-path">Dashboard → Settings → Time Management → Biometric Devices</div>
+  </div>
+  
+  <div class="feature-card">
+    <h4>Quick Search</h4>
+    <p>Use the search bar at the top of the dashboard to search for "biometric" or "attendance devices" to quickly navigate to relevant sections.</p>
+  </div>
+  
+  <div class="feature-card">
+    <h4>Direct URL Access</h4>
+    <p>If you know the direct URL pattern for your organization, you may be able to access the feature directly. However, note that direct URL navigation may return 404 errors if proper session context is not established.</p>
+  </div>
+</div>
+
+<h3>Menu Locations and Quick Access</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Section</th>
+      <th>Location</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Device Management</strong></td>
+      <td>Settings → Time Management → Biometric Devices</td>
+      <td>Add, configure, and manage biometric devices</td>
+    </tr>
+    <tr>
+      <td><strong>Attendance Records</strong></td>
+      <td>Time → Attendance → View Records</td>
+      <td>View and export employee check-in/check-out data</td>
+    </tr>
+    <tr>
+      <td><strong>Reports</strong></td>
+      <td>Insights → Looker Reports → Biometric Attendance</td>
+      <td>Access attendance reports and analytics</td>
+    </tr>
+    <tr>
+      <td><strong>Policy Configuration</strong></td>
+      <td>Settings → Time Management → Attendance Policies</td>
+      <td>Configure attendance rules and validation settings</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Troubleshooting Access Issues</h3>
+
+<div class="info-box">
+  <p><strong>Cannot Find Time Menu:</strong> If the Time menu item is not visible in your sidebar, verify that:</p>
+  <ul>
+    <li>Your account has the Time module enabled (contact your account administrator)</li>
+    <li>You have the necessary role permissions to access time management features</li>
+    <li>Your subscription plan includes biometric attendance functionality</li>
+  </ul>
+</div>
+
+<div class="info-box">
+  <p><strong>Menu Items Not Clickable:</strong> If sidebar menu items appear but do not respond to clicks:</p>
+  <ul>
+    <li>Ensure JavaScript is enabled in your browser</li>
+    <li>Try refreshing the page or clearing your browser cache</li>
+    <li>Check if hovering over menu items reveals submenu options</li>
+    <li>Contact support if the issue persists</li>
+  </ul>
+</div>
+
+<div class="info-box">
+  <p><strong>404 Errors on Direct Navigation:</strong> Direct URL access may fail if:</p>
+  <ul>
+    <li>You are not properly authenticated (log in first)</li>
+    <li>The feature is not enabled for your account type</li>
+    <li>The URL pattern has changed in recent platform updates</li>
+  </ul>
+</div>
+
+<h3>Required Permissions</h3>
+<p>To access biometric attendance features, you typically need one of the following roles:</p>
+
+<ul>
+  <li><strong>HR Administrator:</strong> Full access to configure devices, view all attendance records, and manage policies</li>
+  <li><strong>Time Management Admin:</strong> Access to attendance records and device monitoring</li>
+  <li><strong>Payroll Manager:</strong> Read-only access to attendance data for payroll processing</li>
+  <li><strong>Office Manager:</strong> Limited access to view attendance for specific office locations</li>
+</ul>
+
+<p>If you do not have the necessary permissions, contact your system administrator to request access.</p></div></section>
+<section class="section" id="initial-setup">
+    <h2>Initial Setup Process</h2><div class="content"><p>Setting up biometric attendance requires careful planning, technical configuration, and ongoing monitoring. This process involves hardware procurement, manual device registration, policy configuration, and data synchronization setup.</p>
+
+<div class="warning-box">
+  <p><strong>⚠️ Technical Resources Required</strong></p>
+  <p><strong>Important:</strong> Biometric attendance setup requires technical expertise and developer involvement. Different biometric devices require different integration methods, and manual configuration is necessary for all devices. Plan for IT resource allocation before beginning setup.</p>
+  <p><em>Reference: TSSD-2869</em></p>
+</div>
+
+<h3>Step 1: Device Compatibility Verification</h3>
+<p>Before purchasing biometric devices, verify compatibility with the Bayzat platform:</p>
+
+<ol>
+  <li>Review the list of supported biometric device manufacturers</li>
+  <li>Confirm that your chosen device supports the required integration method (API or manual upload)</li>
+  <li>Verify network connectivity requirements for device-to-platform communication</li>
+  <li>Consult with Bayzat support or technical documentation to confirm device compatibility</li>
+  <li>Consider integration complexity: some devices require custom API development</li>
+</ol>
+
+<div class="info-box">
+  <p><strong>Note:</strong> Not all biometric devices are seamlessly supported. Technical resources and developer involvement may be required for complex integrations. Verify device compatibility before purchase to avoid integration challenges.</p>
+  <p><em>Reference: TSSD-2869</em></p>
+</div>
+
+<h3>Step 2: Manual Device Registration</h3>
+<p>Once devices are procured and installed, manually add each device to the Bayzat platform:</p>
+
+<ol>
+  <li>Navigate to <strong>Settings → Time Management → Biometric Devices</strong></li>
+  <li>Click <strong>Add Device</strong> or equivalent button</li>
+  <li>Enter required device details:
+    <ul>
+      <li><strong>Device Serial Number:</strong> Unique identifier from the device</li>
+      <li><strong>Device Type:</strong> Fingerprint reader, facial recognition camera, card reader, etc.</li>
+      <li><strong>Office Assignment:</strong> Select the office location where the device is installed</li>
+      <li><strong>Device Name:</strong> Descriptive name for easy identification (e.g., "Main Entrance - Building A")</li>
+      <li><strong>Network Configuration:</strong> IP address or connection details if applicable</li>
+    </ul>
+  </li>
+  <li>Save the device configuration</li>
+  <li>Repeat for each biometric device across all office locations</li>
+</ol>
+
+<div class="info-box">
+  <p><strong>Manual Configuration Required:</strong> Each biometric device must be manually added with required details such as serial number and office assignment. There is no automated device discovery or bulk import functionality.</p>
+  <p><em>Reference: TSSD-2792</em></p>
+</div>
+
+<h3>Step 3: Attendance Policy Configuration</h3>
+<p>Configure attendance policies that govern how biometric check-ins are processed:</p>
+
+<ol>
+  <li>Navigate to <strong>Settings → Time Management → Attendance Policies</strong></li>
+  <li>Create or edit an attendance policy</li>
+  <li>Define working hours and shift schedules</li>
+  <li>Configure overtime calculation rules</li>
+  <li>Set up location validation requirements (with awareness of current limitations)</li>
+  <li>Define grace periods for late check-ins</li>
+  <li>Configure break time rules</li>
+  <li>Save and activate the policy</li>
+  <li>Assign the policy to relevant employee groups</li>
+</ol>
+
+<div class="warning-box">
+  <p><strong>⚠️ Policy Enforcement Inconsistencies</strong></p>
+  <p><strong>Impact:</strong> Policy enforcement may have inconsistencies between biometric device attendance and mobile app attendance. The same attendance policy may be applied differently depending on the check-in method.</p>
+  <p><strong>Workaround:</strong> Monitor attendance data from both sources and manually reconcile discrepancies. Communicate clear expectations to employees about which check-in method to use.</p>
+  <p><em>Reference: TSSD-4683</em></p>
+</div>
+
+<h3>Step 4: API Integration Setup (If Applicable)</h3>
+<p>If using API-based integration for real-time data synchronization:</p>
+
+<ol>
+  <li>Obtain API credentials from Bayzat support</li>
+  <li>Review the biometric API documentation (note: documentation may be outdated)</li>
+  <li>Develop or configure API integration to send attendance logs from devices to Bayzat</li>
+  <li>Test API connectivity and data transmission</li>
+  <li>Implement error handling for failed API calls</li>
+  <li>Set up monitoring for API synchronization status</li>
+</ol>
+
+<div class="warning-box">
+  <p><strong>⚠️ API Limitations</strong></p>
+  <p><strong>Impact:</strong> API integration does not support passing office location details, and biometric API documentation may be outdated or unclear.</p>
+  <p><strong>Workaround:</strong> Refer to the most recent platform updates and manual configuration steps. Developer involvement is necessary for complex integrations. Office location may need to be inferred from device ID rather than passed explicitly.</p>
+  <p><em>Reference: TSSD-4151, TSSD-2349</em></p>
+</div>
+
+<h3>Step 5: Employee Enrollment</h3>
+<p>Enroll employees in the biometric system:</p>
+
+<ol>
+  <li>For fingerprint readers:
+    <ul>
+      <li>Have each employee scan their fingerprint at the device</li>
+      <li>Capture multiple fingerprint samples for accuracy</li>
+      <li>Verify successful enrollment by testing a check-in</li>
+    </ul>
+  </li>
+  <li>For facial recognition systems:
+    <ul>
+      <li>Capture employee facial images according to device requirements</li>
+      <li>Ensure proper lighting and image quality</li>
+      <li>Be aware of retry limits and error handling limitations</li>
+      <li>Manually track biometric consent as standardized consent tracking is not available</li>
+    </ul>
+  </li>
+  <li>Link biometric profiles to employee records in Bayzat</li>
+  <li>Test check-in/check-out functionality for each enrolled employee</li>
+</ol>
+
+<div class="warning-box">
+  <p><strong>⚠️ Facial Recognition Security Gaps</strong></p>
+  <p><strong>Impact:</strong> Facial recognition can accept blank images, posing security risks. Retry limits and failure screens lack consistent handling, and there is no standardized consent tracking for biometric features.</p>
+  <p><strong>Workaround:</strong> Manually validate facial recognition enrollments to ensure image quality. Implement manual consent management processes. Inform employees of retry limits and error states. Monitor for blank image acceptance issues.</p>
+  <p><em>Reference: OS-3136, OS-3047, OS-3229</em></p>
+</div>
+
+<h3>Step 6: Data Synchronization Configuration</h3>
+<p>Configure how biometric logs are synchronized from devices to the platform:</p>
+
+<ol>
+  <li>Set synchronization frequency (real-time, hourly, daily)</li>
+  <li>Configure the one-week processing window for biometric data</li>
+  <li>Set up monitoring for synchronization failures</li>
+  <li>Establish manual intervention procedures for high-volume log ingestion</li>
+  <li>Configure location validation settings (with awareness of limitations)</li>
+  <li>Test synchronization with sample attendance data</li>
+</ol>
+
+<div class="warning-box">
+  <p><strong>⚠️ Data Synchronization Challenges</strong></p>
+  <p><strong>Impact:</strong> The platform struggles with high-volume biometric log ingestion, lacks full location validation during check-ins, and has a limited one-week window for processing biometric data. Fraud detection is limited when device IDs are null.</p>
+  <p><strong>Workaround:</strong> Manual monitoring and intervention may be required for large data volumes and error cases. Configure devices carefully and be aware of policy enforcement inconsistencies. Use dropdowns for employee selection in mass uploads to maintain data integrity.</p>
+  <p><em>Reference: TSSD-4710, TSSD-3737, TSSD-2381, OS-3136, TSSD-287, TSSD-2792, TSSD-4683, TSSD-3180, OS-3137</em></p>
+</div>
+
+<h3>Step 7: Reporting Setup</h3>
+<p>Configure access to attendance reports:</p>
+
+<ol>
+  <li>Navigate to <strong>Insights → Looker Reports</strong></li>
+  <li>Locate biometric attendance reports</li>
+  <li>Configure report parameters (date range, office location, employee groups)</li>
+  <li>Set up scheduled report delivery if needed</li>
+  <li>Grant report access to relevant stakeholders (HR, payroll, managers)</li>
+  <li>Be aware that centralized automated reporting for biometric devices is not available</li>
+</ol>
+
+<div class="info-box">
+  <p><strong>Reporting Limitations:</strong> There is no centralized automated reporting for biometric devices. Reports must be manually accessed through Looker. Future-timestamped biometric data cannot be rendered in the UI, which may affect reporting accuracy.</p>
+  <p><em>Reference: TSSD-4269, AV-9035</em></p>
+</div>
+
+<h3>Step 8: Verification and Testing</h3>
+<p>Verify that the biometric attendance system is functioning correctly:</p>
+
+<ol>
+  <li>Test check-in and check-out for multiple employees across different devices</li>
+  <li>Verify that attendance data appears in the platform within expected timeframes</li>
+  <li>Check that office location assignments are correct</li>
+  <li>Test location validation rules (if enabled)</li>
+  <li>Verify that attendance data flows correctly to payroll reports</li>
+  <li>Test error handling for failed check-ins or synchronization issues</li>
+  <li>Confirm that fraud detection mechanisms are functioning (with awareness of limitations)</li>
+</ol>
+
+<h3>Recommended Default Values</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Setting</th>
+      <th>Recommended Value</th>
+      <th>Rationale</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Synchronization Frequency</strong></td>
+      <td>Every 4 hours</td>
+      <td>Balances real-time needs with system performance; avoids overwhelming the platform with high-volume log ingestion</td>
+    </tr>
+    <tr>
+      <td><strong>Data Processing Window</strong></td>
+      <td>7 days (maximum allowed)</td>
+      <td>Provides buffer for delayed synchronization while staying within platform limits</td>
+    </tr>
+    <tr>
+      <td><strong>Location Validation</strong></td>
+      <td>Enabled with manual review</td>
+      <td>Provides basic fraud prevention while accounting for validation limitations</td>
+    </tr>
+    <tr>
+      <td><strong>Facial Recognition Retry Limit</strong></td>
+      <td>3 attempts</td>
+      <td>Balances user experience with security; prevents excessive failed attempts</td>
+    </tr>
+    <tr>
+      <td><strong>Grace Period for Late Check-in</strong></td>
+      <td>15 minutes</td>
+      <td>Accommodates minor delays without penalizing employees</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Post-Setup Checklist</h3>
+<p>After completing initial setup, verify the following:</p>
+
+<ul>
+  <li>✓ All biometric devices are registered with correct serial numbers and office assignments</li>
+  <li>✓ Attendance policies are configured and assigned to employee groups</li>
+  <li>✓ API integration is functioning (if applicable) or manual upload process is documented</li>
+  <li>✓ All employees are enrolled with biometric profiles</li>
+  <li>✓ Data synchronization is occurring within the one-week processing window</li>
+  <li>✓ Reports are accessible to HR and payroll teams</li>
+  <li>✓ Manual monitoring procedures are established for high-volume periods</li>
+  <li>✓ Biometric consent tracking process is documented (manual)</li>
+  <li>✓ Error handling and troubleshooting procedures are documented</li>
+  <li>✓ Employees are trained on how to use biometric devices</li>
+</ul>
+
+<div class="info-box">
+  <p><strong>Ongoing Maintenance:</strong> Biometric attendance requires continuous monitoring and manual intervention. Establish regular review cycles to check synchronization status, address errors, and update device configurations as needed.</p>
+</div></div></section>
+<section class="section" id="core-tasks">
+    <h2>Feature Usage with Common Workflows</h2><div class="content"><div class="warning-box"><p><strong>⚠️ Feature Access Currently Unavailable</strong></p><p><strong>Impact:</strong> The Biometric Attendance feature could not be accessed during validation. Navigation to the Time section and direct URL access resulted in errors. This may indicate the feature requires specific permissions, account configuration, or is not enabled in demo environments.</p><p><strong>Workaround:</strong> Contact your Bayzat account administrator to verify that Biometric Attendance is enabled for your organization and that your user role has the necessary permissions to access Time & Attendance features.</p></div><h3>Device Configuration and Management</h3><p>Biometric attendance requires manual configuration of biometric devices before attendance tracking can begin. Based on system capabilities, the following tasks are typically performed:</p><div class="feature-grid"><div class="feature-card"><h4>Add Biometric Devices</h4><p>Manually register each biometric device in the system with required details including serial number, device type, and office assignment. Each device must be configured individually to ensure proper data synchronization.</p><ul><li>Navigate to Time section (when accessible)</li><li>Access Biometric Devices configuration</li><li>Enter device serial number and assign to office location</li><li>Configure synchronization settings</li></ul><p><em>Reference: TSSD-2792</em></p></div><div class="feature-card"><h4>Monitor Device Synchronization</h4><p>Biometric device logs must be properly synchronized with the platform. The system has a limited one-week window for processing biometric data, and high-volume log ingestion may require manual monitoring.</p><ul><li>Check device connection status regularly</li><li>Monitor data synchronization logs</li><li>Be aware of the one-week processing window limitation</li><li>Manual intervention may be required for large data volumes</li></ul><p><em>Reference: TSSD-4710, TSSD-2381</em></p></div><div class="feature-card"><h4>Track Attendance Data</h4><p>Use the attendance module to monitor biometric check-ins and check-outs. Location validation during check-ins has known limitations that may affect accuracy.</p><ul><li>View attendance records by employee or date range</li><li>Verify check-in/check-out timestamps</li><li>Note location validation limitations</li><li>Cross-reference with policy enforcement rules</li></ul><p><em>Reference: TSSD-3737, TSSD-3180, TSSD-4683</em></p></div></div><h3>CRUD Operations Status</h3><div class="info-box"><p><strong>Note:</strong> Standard CRUD operations (Create, Read, Update, Delete) for biometric attendance records are not available through the standard UI. Attendance data is captured automatically by biometric devices and synchronized with the platform. Manual data entry or modification is not supported through typical CRUD workflows.</p></div><table><thead><tr><th>Operation</th><th>Status</th><th>Notes</th></tr></thead><tbody><tr><td><strong>Create</strong></td><td>Not Available</td><td>Attendance records are created automatically by biometric device check-ins. Manual creation is not supported.</td></tr><tr><td><strong>Read</strong></td><td>Not Available</td><td>Could not validate during exploration due to feature access limitations. Attendance viewing capabilities exist but navigation was blocked.</td></tr><tr><td><strong>Update</strong></td><td>Not Available</td><td>Direct editing of biometric attendance records is not supported. Corrections require administrative intervention.</td></tr><tr><td><strong>Delete</strong></td><td>Not Available</td><td>Deletion of biometric attendance records is not supported through standard UI operations.</td></tr></tbody></table><h3>Facial Recognition Check-In Process</h3><p>The platform supports facial recognition as a check-in method, though this feature has known limitations in error handling and validation:</p><ol><li><strong>Employee Initiates Check-In:</strong> Employee uses facial recognition feature on mobile device or kiosk</li><li><strong>Image Capture:</strong> System captures facial image for verification (note: system can accept blank images, posing security risks)</li><li><strong>Verification Process:</strong> Platform attempts to match facial image with employee records</li><li><strong>Retry Handling:</strong> Limited retry attempts available; failure screens lack consistent handling</li><li><strong>Attendance Recording:</strong> Successful verification records check-in with timestamp and location data</li></ol><div class="warning-box"><p><strong>⚠️ Facial Recognition Security Gaps</strong></p><p><strong>Impact:</strong> Facial recognition lacks robust error handling and image validation. The system can accept blank images, creating security vulnerabilities. Retry limits and failure screens lack consistent handling, potentially frustrating users.</p><p><strong>Workaround:</strong> Users should be informed of retry limits and error states. Manual consent management may be needed. Security risks require attention from development teams and may necessitate additional verification methods.</p><p><em>Reference: OS-3136, OS-3137, OS-3047, OS-3229</em></p></div><h3>Mass Upload Workflows</h3><p>When bulk attendance data needs to be uploaded, specific constraints apply:</p><ul><li><strong>Employee Selection:</strong> Use dropdown selections for employee identification rather than direct Employee ID input</li><li><strong>Data Integrity:</strong> Dropdown approach maintains data integrity and prevents ID mismatches</li><li><strong>Validation:</strong> System validates employee existence before processing attendance records</li></ul><p><em>Reference: TSSD-2658</em></p><h3>Reporting and Data Access</h3><div class="feature-card"><h4>Access Attendance Reports</h4><p>Attendance data can be viewed through reporting interfaces, though centralized automated reporting for biometric devices is not available.</p><ul><li>Navigate to reporting section (when accessible)</li><li>Select attendance or time tracking reports</li><li>Filter by date range, employee, or department</li><li>Export data for external analysis</li><li>Access Looker reports for advanced biometric device data analysis</li></ul><p><strong>Limitations:</strong></p><ul><li>No centralized automated reporting for biometric devices</li><li>Custom reports may not include office location details for API-based attendance</li><li>Future timestamped biometric data cannot be rendered in UI</li><li>Fraud detection reporting limited when device IDs are null</li></ul><p><em>Reference: TSSD-4269, TSSD-4151, AV-9035, TSSD-287</em></p></div><h3>Policy Enforcement Considerations</h3><div class="info-box"><p><strong>Important:</strong> Policy enforcement inconsistencies exist between biometric device attendance and mobile app attendance. Users must manually configure devices and be aware that attendance policies may not be applied uniformly across all check-in methods.</p><p><em>Reference: TSSD-4683</em></p></div></div></section>
+<section class="section" id="workflow-integration">
+    <h2>Workflow Integration</h2><div class="content"><div class="info-box"><p><strong>No Workflow Integration Available:</strong> biometric-attendance does not currently integrate with Bayzat Workflows. No triggers or actions are available for workflow automation at this time.</p></div><h3>About Bayzat Workflows</h3><p>Bayzat Workflows allow you to automate repetitive tasks and business processes across the platform. While biometric attendance does not currently offer workflow integration, understanding potential automation scenarios can help you plan for future enhancements or identify manual processes that could benefit from automation.</p><p>To access Workflows in Bayzat:</p><div class="nav-path">Automations → Workflows → + Create workflow</div><h3>Potential Workflow Scenarios</h3><p>While workflow integration is not currently available, the following scenarios illustrate how automation could add value to biometric attendance management:</p><div class="feature-grid"><div class="feature-card"><h4>Scenario 1: Device Offline Notification</h4><p><strong>Potential Benefit:</strong> Automatically alert administrators when biometric devices go offline or fail to synchronize data, enabling rapid response to connectivity issues before they impact attendance tracking.</p><ul><li><strong>Trigger:</strong> Biometric device fails to sync data for more than 2 hours</li><li><strong>Action:</strong> Send notification to HR administrators and IT support team</li><li><strong>Business Value:</strong> Reduce data loss and ensure continuous attendance tracking by identifying device issues immediately rather than discovering gaps during payroll processing</li></ul></div><div class="feature-card"><h4>Scenario 2: High-Volume Data Processing Alert</h4><p><strong>Potential Benefit:</strong> Proactively manage the platform's one-week processing window by alerting administrators when biometric log volumes approach system capacity limits.</p><ul><li><strong>Trigger:</strong> Biometric log ingestion reaches 80% of processing capacity</li><li><strong>Action:</strong> Notify system administrators and create task for manual monitoring</li><li><strong>Business Value:</strong> Prevent data processing delays and ensure timely attendance record updates, eliminating the need for reactive troubleshooting when logs are rejected</li></ul></div><div class="feature-card"><h4>Scenario 3: Location Validation Exception Handling</h4><p><strong>Potential Benefit:</strong> Automatically flag attendance records with location validation issues for review, ensuring policy compliance without manual log auditing.</p><ul><li><strong>Trigger:</strong> Biometric check-in recorded with location validation failure</li><li><strong>Action:</strong> Create review task for HR team and flag employee record for follow-up</li><li><strong>Business Value:</strong> Maintain attendance policy integrity by surfacing location mismatches immediately, rather than discovering compliance issues during audits or payroll reconciliation</li></ul></div><div class="feature-card"><h4>Scenario 4: Facial Recognition Failure Follow-Up</h4><p><strong>Potential Benefit:</strong> Track employees experiencing repeated facial recognition failures and proactively schedule re-enrollment sessions to improve check-in success rates.</p><ul><li><strong>Trigger:</strong> Employee experiences 3+ facial recognition failures within a week</li><li><strong>Action:</strong> Create task for HR to schedule facial recognition re-enrollment and send employee notification with alternative check-in instructions</li><li><strong>Business Value:</strong> Reduce employee frustration and improve biometric system adoption by identifying and resolving recognition issues before they become chronic problems</li></ul></div><div class="feature-card"><h4>Scenario 5: Device Assignment and Configuration Workflow</h4><p><strong>Potential Benefit:</strong> Streamline new biometric device deployment by automating the configuration checklist and ensuring all required setup steps are completed before devices go live.</p><ul><li><strong>Trigger:</strong> New biometric device added to system</li><li><strong>Action:</strong> Create multi-step task list for IT team (assign office location, configure sync settings, test connectivity, train local administrators) and send completion confirmation to HR</li><li><strong>Business Value:</strong> Eliminate device configuration errors and reduce deployment time by ensuring consistent setup procedures across all locations, preventing the common issue of devices being installed but not properly configured</li></ul></div><div class="feature-card"><h4>Scenario 6: Fraud Detection Alert</h4><p><strong>Potential Benefit:</strong> Automatically flag suspicious attendance patterns such as check-ins from devices with null device IDs or multiple simultaneous check-ins for the same employee.</p><ul><li><strong>Trigger:</strong> Attendance record created with missing device ID or duplicate timestamp</li><li><strong>Action:</strong> Create high-priority investigation task for HR compliance team and temporarily flag employee record</li><li><strong>Business Value:</strong> Strengthen attendance fraud detection by surfacing anomalies in real-time rather than relying on periodic manual audits, addressing the current limitation where fraud detection is limited when device IDs are null</li></ul></div></div><h3>Implementing Workflow-Like Processes Manually</h3><p>Until workflow integration becomes available, consider these manual approaches to achieve similar outcomes:</p><ul><li><strong>Scheduled Reviews:</strong> Set calendar reminders to review device synchronization status, location validation exceptions, and facial recognition failure rates on a weekly basis</li><li><strong>Alert Checklists:</strong> Create standardized checklists for common scenarios (device offline, high failure rates, location mismatches) and distribute to relevant teams</li><li><strong>Reporting Dashboards:</strong> Use Looker reports to create custom dashboards that surface key metrics and anomalies requiring attention</li><li><strong>Email Notifications:</strong> Configure manual email alerts for critical thresholds (e.g., device offline for 24+ hours, sync failures exceeding 10%)</li><li><strong>Documentation:</strong> Maintain clear standard operating procedures for responding to common biometric attendance issues, ensuring consistent handling across your team</li></ul><div class="info-box"><p><strong>Future Enhancement:</strong> If workflow integration becomes available for biometric attendance, you'll be able to automate many of these manual processes directly within the Bayzat platform. Check the Automations → Workflows section periodically for updates to available triggers and actions.</p></div></div></section>
+<section class="section" id="business-rules-limitations">
+    <h2>Business Rules & Limitations</h2><div class="content"><h3>Business Rules & Limitations</h3><p>Biometric Attendance has several important limitations and constraints that administrators should understand before implementation. These limitations affect data synchronization, API integration, user experience, reporting capabilities, and device compatibility.</p><h4>Critical Limitations</h4><div class="warning-box"><p><strong>⚠️ Data Synchronization and Integration Challenges</strong></p><p><strong>Impact:</strong> The platform struggles with high-volume biometric log ingestion, lacks full location validation during check-ins, and has a limited one-week window for processing biometric data. Facial recognition lacks robust error handling and image validation, and fraud detection is limited when device IDs are null.</p><p><strong>Workaround:</strong> Manual monitoring and intervention may be required for large data volumes and error cases. Users must manually configure devices and be aware of policy enforcement inconsistencies. Use dropdowns for employee selection in mass uploads to maintain data integrity.</p><p><em>Reference: TSSD-4710, TSSD-3737, TSSD-2381, OS-3136, TSSD-287, TSSD-2792, TSSD-4683, TSSD-3180, OS-3137</em></p></div><div class="warning-box"><p><strong>⚠️ User Experience and Security Gaps in Facial Recognition</strong></p><p><strong>Impact:</strong> Facial recognition retry limits and failure screens lack consistent handling; no standardized consent tracking for biometric features; facial recognition can accept blank images, posing security risks.</p><p><strong>Workaround:</strong> Users should be informed of retry limits and error states; manual consent management may be needed; security risks require attention from development teams.</p><p><em>Reference: OS-3136, OS-3047, OS-3229</em></p></div><h4>Medium Severity Limitations</h4><table class="limitations-table"><thead><tr><th>Issue</th><th>Impact</th><th>Workaround</th><th>Reference</th></tr></thead><tbody><tr><td>Limited API and documentation support for biometric attendance integration</td><td>API integration does not support passing office location details, and biometric API documentation may be outdated or unclear.</td><td>Refer to the most recent platform updates and manual configuration steps; developer involvement may be necessary for complex integrations.</td><td>TSSD-4151, TSSD-2349</td></tr><tr><td>Feature and reporting limitations in biometric attendance data management</td><td>Mass upload workflows restrict direct Employee ID input; no centralized automated reporting for biometric devices; future timestamped biometric data cannot be rendered in UI.</td><td>Use dropdown selections for employee identification; manually access Looker reports; be aware of UI rendering limitations.</td><td>TSSD-2658, TSSD-4269, AV-9035</td></tr><tr><td>Integration complexity and device compatibility challenges</td><td>Different biometric devices require different integration methods; not all devices are seamlessly supported; manual configuration is necessary.</td><td>Technical resources and developer involvement may be required; verify device compatibility before integration.</td><td>TSSD-2869</td></tr></tbody></table><h4>Key Business Rules</h4><ul><li><strong>One-Week Processing Window:</strong> Biometric data must be processed within one week of capture. Data older than one week may not be properly ingested or displayed.</li><li><strong>Manual Device Configuration:</strong> All biometric devices must be manually added to the system with serial numbers and office assignments. Automatic device discovery is not supported.</li><li><strong>Location Validation Gaps:</strong> The system has limited capability to validate employee location during biometric check-ins, which may affect policy enforcement.</li><li><strong>Policy Enforcement Inconsistencies:</strong> Attendance policies may be enforced differently between biometric devices and mobile app check-ins. Administrators should verify policy application across all attendance methods.</li><li><strong>Employee Selection Constraints:</strong> Mass upload workflows require using dropdown selections for employee identification. Direct Employee ID input is not supported to maintain data integrity.</li><li><strong>Reporting Access:</strong> Centralized automated reporting for biometric devices is not available within the platform. Administrators must access Looker reports separately for comprehensive biometric data analysis.</li><li><strong>Fraud Detection Limitations:</strong> When device IDs are missing or null, fraud detection capabilities are significantly reduced. Ensure all devices are properly configured with unique identifiers.</li></ul><h4>Data Volume Considerations</h4><div class="info-box"><p><strong>High-Volume Environments:</strong> Organizations with large numbers of employees or multiple biometric devices may experience synchronization delays during peak check-in/check-out times. Plan for manual monitoring during high-traffic periods such as shift changes or start/end of workday.</p></div></div></section>
+<section class="section" id="troubleshooting-edge-cases">
+    <h2>Troubleshooting & Edge Cases</h2><div class="content"><h3>Troubleshooting & Edge Cases</h3><p>This section covers common issues encountered when using Biometric Attendance, their causes, and recommended resolutions.</p><h4>Common Issues</h4><table><thead><tr><th>Issue</th><th>Cause</th><th>Resolution</th></tr></thead><tbody><tr><td>Biometric logs not syncing to platform</td><td>High volume of data, network connectivity issues, or data older than one-week processing window</td><td>Verify network connection between device and platform. Check timestamp of logs—data older than one week may not be processed. Contact support if issue persists with recent data.</td></tr><tr><td>Employee check-in not showing in attendance records</td><td>Location validation failure, device not properly configured, or policy enforcement inconsistency</td><td>Verify device is registered with correct office location. Check attendance policy settings for location requirements. Ensure device ID is not null in system configuration.</td></tr><tr><td>Facial recognition failing repeatedly</td><td>Poor image quality, lighting conditions, retry limit reached, or blank image acceptance</td><td>Ensure adequate lighting and proper camera positioning. Inform employees of retry limits. If blank images are being accepted, report to technical support as this is a known security gap.</td></tr><tr><td>Office location not appearing in attendance reports</td><td>API integration limitation—office location details not supported in API calls</td><td>Use manual configuration to associate devices with office locations. Access Looker reports for location-based analysis rather than relying on API-generated reports.</td></tr><tr><td>Unable to upload attendance data via mass upload</td><td>Direct Employee ID input attempted instead of using dropdown selection</td><td>Use dropdown menus to select employees rather than typing Employee IDs directly. This maintains data integrity and prevents upload errors.</td></tr><tr><td>Future-dated attendance records not displaying in UI</td><td>UI limitation—cannot render biometric data with future timestamps</td><td>Ensure device clocks are synchronized with correct time. Future-dated records will not display properly even if stored in database.</td></tr><tr><td>Fraud detection not flagging suspicious activity</td><td>Device ID is null or missing, limiting fraud detection capabilities</td><td>Verify all devices have unique device IDs configured. Update device configuration to include proper identification.</td></tr><tr><td>Device not appearing in device list after configuration</td><td>Manual configuration incomplete or device serial number not properly registered</td><td>Re-enter device details including serial number and office assignment. Verify device is powered on and connected to network.</td></tr></tbody></table><h4>Known Limitations</h4><div class="info-box"><p><strong>API Documentation:</strong> Biometric API documentation may be outdated or unclear. Always refer to the most recent platform updates and consult with technical support or developers when implementing API integrations.</p></div><div class="info-box"><p><strong>Consent Management:</strong> There is no standardized consent tracking mechanism for biometric features. Organizations must implement manual consent management processes to comply with privacy regulations and company policies.</p></div><div class="info-box"><p><strong>Device Compatibility:</strong> Not all biometric devices are seamlessly supported. Different devices may require different integration methods. Verify device compatibility with Bayzat support before purchase or implementation.</p></div><h4>Edge Cases</h4><ul><li><strong>Multi-Office Employees:</strong> Employees who work across multiple office locations may experience inconsistent location validation. Ensure attendance policies account for multi-location scenarios.</li><li><strong>Shift Change Overlaps:</strong> During peak times when large numbers of employees check in/out simultaneously, synchronization delays may occur. Plan for potential delays during shift changes.</li><li><strong>Device Clock Drift:</strong> If device clocks are not synchronized, attendance timestamps may be inaccurate. Implement regular clock synchronization procedures for all biometric devices.</li><li><strong>Network Interruptions:</strong> Temporary network outages may cause data to queue on devices. Once connectivity is restored, large data volumes may take time to process within the one-week window.</li><li><strong>Facial Recognition in Low Light:</strong> Facial recognition accuracy decreases significantly in poor lighting conditions. Position devices in well-lit areas or supplement with additional lighting.</li><li><strong>Employee Appearance Changes:</strong> Significant changes in employee appearance (facial hair, glasses, hairstyle) may affect facial recognition accuracy. Re-enrollment may be necessary.</li><li><strong>Duplicate Check-ins:</strong> If an employee checks in on both biometric device and mobile app, policy enforcement may vary. Define clear guidelines for which method takes precedence.</li></ul><h4>When to Escalate</h4><p>Contact Bayzat Support if you encounter:</p><ul><li>Persistent synchronization failures lasting more than 24 hours</li><li>Security concerns related to blank image acceptance in facial recognition</li><li>Data loss or corruption in attendance records</li><li>Device compatibility issues preventing proper integration</li><li>Fraud detection failures despite proper device configuration</li><li>API integration challenges requiring developer assistance</li></ul></div></section>
+<section class="section" id="support-resources">
+    <h2>Support & Resources</h2><div class="content"><h3>Support & Resources</h3><h4>Frequently Asked Questions</h4><div class="feature-grid"><div class="feature-card"><h4>How long does it take for biometric data to sync to the platform?</h4><p>Synchronization timing varies based on network connectivity and data volume. Under normal conditions, data should sync within minutes. However, during high-volume periods or with large datasets, delays may occur. The platform has a one-week processing window—data older than one week may not be properly ingested.</p></div><div class="feature-card"><h4>Why isn't my biometric device appearing in the system?</h4><p>Biometric devices must be manually configured in the system. Automatic device discovery is not supported. Ensure you have entered the device serial number, assigned it to the correct office location, and verified network connectivity. Device IDs must not be null for proper functionality including fraud detection.</p></div><div class="feature-card"><h4>Can I use the API to integrate biometric attendance with other systems?</h4><p>Yes, API integration is available, but with limitations. The API does not support passing office location details, and documentation may be outdated. Developer involvement is typically necessary for complex integrations. Refer to the most recent platform updates and consult with technical support for API implementation guidance.</p></div><div class="feature-card"><h4>How do I generate reports for biometric attendance data?</h4><p>Centralized automated reporting for biometric devices is not available within the main platform interface. You must access Looker reports separately for comprehensive biometric data analysis. Note that API-generated reports may not include office location details due to integration limitations.</p></div><div class="feature-card"><h4>What should I do if facial recognition keeps failing for an employee?</h4><p>Facial recognition failures can occur due to poor lighting, image quality issues, or changes in employee appearance. Ensure the device is positioned in a well-lit area. Be aware that the system has retry limits with inconsistent error handling. If blank images are being accepted, this is a known security gap that should be reported to support. Employee re-enrollment may be necessary if appearance has changed significantly.</p></div><div class="feature-card"><h4>How do I ensure attendance policies are enforced consistently?</h4><p>Policy enforcement may vary between biometric devices and mobile app check-ins. Review your attendance policy settings and verify they are configured correctly for all check-in methods. Location validation during biometric check-ins has known limitations. Manual monitoring may be required to ensure consistent policy application across all attendance tracking methods.</p></div><div class="feature-card"><h4>Can I upload historical biometric data in bulk?</h4><p>Mass upload workflows are available but have constraints. You must use dropdown selections to choose employees rather than entering Employee IDs directly. This restriction maintains data integrity. Be aware that data older than one week may not be processed properly due to the platform's processing window limitation.</p></div><div class="feature-card"><h4>What biometric devices are compatible with Bayzat?</h4><p>Device compatibility varies, and not all biometric devices are seamlessly supported. Different devices require different integration methods and manual configuration. Verify device compatibility with Bayzat support before purchasing or implementing new devices. Technical resources and developer involvement may be required for integration.</p></div><div class="feature-card"><h4>How is biometric consent managed in the system?</h4><p>There is no standardized consent tracking mechanism built into the biometric attendance feature. Organizations must implement manual consent management processes to comply with privacy regulations and company policies. Document employee consent outside the system and maintain records according to your jurisdiction's requirements.</p></div><div class="feature-card"><h4>Why is fraud detection not identifying suspicious attendance patterns?</h4><p>Fraud detection capabilities are limited when device IDs are null or missing. Ensure all biometric devices have unique device IDs properly configured in the system. Additionally, manual monitoring may be necessary to identify patterns that automated fraud detection does not catch.</p></div></div><h4>Getting Help</h4><ul><li><strong>HR Administrator:</strong> Your organization's HR administrator can assist with attendance policy configuration, device setup, and day-to-day operational questions.</li><li><strong>Technical Support:</strong> Contact Bayzat Support for technical issues including device integration problems, synchronization failures, API integration assistance, and security concerns. Support can also provide the most current API documentation.</li><li><strong>Knowledge Base:</strong> Access the Bayzat Knowledge Base for additional articles, guides, and best practices related to biometric attendance and time tracking features.</li><li><strong>In-App Help:</strong> Use the help icon within the Bayzat platform to access contextual help and submit support tickets directly from the interface where you're experiencing issues.</li><li><strong>Developer Resources:</strong> For API integration and custom development needs, consult with your technical team or request developer documentation from Bayzat Support. Be aware that API documentation may require updates—always verify with support for the latest information.</li></ul><h4>Escalation Path</h4><p>For critical issues requiring immediate attention:</p><ol><li>Document the issue with screenshots, error messages, and steps to reproduce</li><li>Note any Jira reference numbers if the issue relates to known limitations</li><li>Contact Bayzat Support with detailed information</li><li>For security concerns (such as blank image acceptance in facial recognition), mark the ticket as high priority</li><li>For data synchronization issues affecting payroll or compliance, escalate through your account manager</li></ol></div></section>
+<section class="section" id="glossary">
+    <h2>Glossary of Terms</h2><div class="content"><h3>Glossary of Terms</h3><table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td><strong>Biometric Attendance</strong></td><td>A time tracking method that uses biological characteristics (such as fingerprints or facial recognition) to verify employee identity during check-in and check-out.</td></tr><tr><td><strong>Biometric Device</strong></td><td>Hardware equipment installed at office locations that captures biometric data (fingerprints, facial images) to record employee attendance.</td></tr><tr><td><strong>Check-In/Check-Out</strong></td><td>The process of recording an employee's arrival at or departure from the workplace using biometric verification.</td></tr><tr><td><strong>Device ID</strong></td><td>A unique identifier assigned to each biometric device in the system. Required for proper functionality including fraud detection and attendance tracking.</td></tr><tr><td><strong>Facial Recognition</strong></td><td>A biometric authentication method that uses facial features to verify employee identity during attendance recording.</td></tr><tr><td><strong>Fraud Detection</strong></td><td>System capability to identify suspicious attendance patterns such as buddy punching or time theft. Effectiveness is limited when device IDs are missing.</td></tr><tr><td><strong>Location Validation</strong></td><td>The process of verifying that an employee is checking in from an authorized office location. Current implementation has known limitations.</td></tr><tr><td><strong>Log Ingestion</strong></td><td>The process of importing biometric attendance data from devices into the Bayzat platform. Subject to volume limitations and one-week processing window.</td></tr><tr><td><strong>Looker Reports</strong></td><td>External reporting tool used for comprehensive biometric attendance data analysis, as centralized automated reporting is not available within the main platform.</td></tr><tr><td><strong>Mass Upload</strong></td><td>Bulk import functionality for attendance data. Requires using dropdown selections for employee identification rather than direct Employee ID input.</td></tr><tr><td><strong>Office Assignment</strong></td><td>The configuration that associates a biometric device with a specific office location. Required during manual device setup.</td></tr><tr><td><strong>Policy Enforcement</strong></td><td>The application of attendance rules and regulations to check-in/check-out records. May vary between biometric devices and mobile app methods.</td></tr><tr><td><strong>Processing Window</strong></td><td>The one-week timeframe within which biometric data must be ingested and processed. Data older than one week may not be properly handled by the system.</td></tr><tr><td><strong>Retry Limit</strong></td><td>The maximum number of attempts allowed for facial recognition verification before the system requires alternative authentication. Error handling for retry limits is inconsistent.</td></tr><tr><td><strong>Serial Number</strong></td><td>Unique hardware identifier for a biometric device, required during manual device configuration in the system.</td></tr><tr><td><strong>Synchronization</strong></td><td>The process of transferring attendance data from biometric devices to the Bayzat platform. May experience delays during high-volume periods.</td></tr><tr><td><strong>Timestamp</strong></td><td>The date and time recorded when an employee checks in or out. Future-dated timestamps cannot be rendered in the UI due to system limitations.</td></tr></tbody></table></div></section>
+<footer>
+  <p>Generated by Bayzat Documentation System</p>
+  <p>Last updated: 2026-01-22</p>
+</footer>
+</body>
+</html>
