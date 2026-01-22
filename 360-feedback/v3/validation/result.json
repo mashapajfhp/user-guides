@@ -1,0 +1,344 @@
+{
+  "validation_status": "blocked",
+  "login_success": false,
+  "feature_accessible": false,
+  "feature_info": {
+    "name": "360\u00b0 Reviews",
+    "slug": "360-feedback",
+    "category": "performance",
+    "url": "/performance/360-reviews"
+  },
+  "exploration_journey": [
+    {
+      "screen_name": "Login Page",
+      "url": "https://app.bayzat.com/",
+      "screenshot": "01-login-page-2026-01-22T06-22-54-794Z.png",
+      "what_i_went_through": "Navigated to the Bayzat application login page. Set viewport to 1280x900 for full UI visibility.",
+      "what_i_came_across": "Standard login form with email and password fields, social login options (Google, Microsoft), and promotional content for Smart Invoice Management.",
+      "what_i_saw": {
+        "page_structure": "Login page with centered login form, left sidebar promotional content, and authentication options",
+        "visible_elements": [
+          "Email address input field",
+          "Password input field",
+          "Log in button",
+          "Log in without password link",
+          "Send me a magic link option",
+          "Keep me logged in checkbox",
+          "Log in with Google button",
+          "Log in with Microsoft button",
+          "Forgot password link",
+          "Sign up link",
+          "Promotional banner for Invoice Management"
+        ],
+        "data_displayed": "Login form with email/password authentication and alternative login methods",
+        "empty_states": "Clean login form with placeholder text in input fields"
+      },
+      "actions_i_performed": [
+        {
+          "action": "Attempted to fill email field using JavaScript event simulation",
+          "target": "Email address input field",
+          "result": "JavaScript filled the value but React state did not update properly",
+          "screenshot_after": "02-credentials-filled-2026-01-22T06-24-19-186Z.png"
+        },
+        {
+          "action": "Attempted to fill password field using JavaScript",
+          "target": "Password input field",
+          "result": "JavaScript filled the value but React state did not update",
+          "screenshot_after": "02-credentials-filled-2026-01-22T06-24-19-186Z.png"
+        },
+        {
+          "action": "Clicked Log in button",
+          "target": "Log in button",
+          "result": "Login did not proceed - form validation failed due to React state not being properly updated",
+          "screenshot_after": "03-after-login-2026-01-22T06-24-31-617Z.png"
+        },
+        {
+          "action": "Multiple attempts using different JavaScript approaches including setNativeValue with React event dispatch",
+          "target": "Email and password fields",
+          "result": "All approaches failed to properly update React component state",
+          "screenshot_after": "06-before-login-click-2026-01-22T06-26-11-609Z.png"
+        },
+        {
+          "action": "Attempted direct navigation to /dashboard",
+          "target": "Dashboard URL",
+          "result": "Received 404 error - dashboard not accessible without authentication",
+          "screenshot_after": "08-dashboard-direct-nav-2026-01-22T06-26-47-469Z.png"
+        }
+      ],
+      "results_i_got": {
+        "success_outcomes": [],
+        "error_outcomes": [
+          "Unable to successfully log in to the application",
+          "Form validation errors: 'Please enter your email address' and 'Please enter your password'",
+          "404 errors when attempting to access authenticated pages directly",
+          "React form state not updating through JavaScript automation"
+        ],
+        "unexpected_behaviors": [
+          "Playwright's standard fill methods (playwright_fill) timed out waiting for input elements",
+          "JavaScript value setting did not trigger React onChange handlers properly",
+          "Multiple event dispatch approaches (input, change, blur) failed to update component state"
+        ]
+      }
+    }
+  ],
+  "tasks_explored": [
+    {
+      "task": "Login to Bayzat application",
+      "status": "blocked",
+      "notes": "Unable to successfully authenticate. Multiple approaches attempted including JavaScript value setting, React event simulation, and direct form manipulation. The React application's form state management prevents automated login through Playwright. Browser automation tools cannot properly trigger React's synthetic event system in this implementation.",
+      "screenshots": [
+        "01-login-page-2026-01-22T06-22-54-794Z.png",
+        "02-credentials-filled-2026-01-22T06-24-19-186Z.png",
+        "03-after-login-2026-01-22T06-24-31-617Z.png",
+        "04-login-page-reload-2026-01-22T06-25-23-132Z.png",
+        "05-dashboard-after-login-2026-01-22T06-25-43-868Z.png",
+        "06-before-login-click-2026-01-22T06-26-11-609Z.png",
+        "07-after-login-attempt-2026-01-22T06-26-27-822Z.png",
+        "08-dashboard-direct-nav-2026-01-22T06-26-47-469Z.png"
+      ]
+    },
+    {
+      "task": "Create and manage 360 Review Surveys",
+      "status": "blocked",
+      "notes": "Could not attempt this task due to inability to log in to the application. The task requires navigating to Performance > 360\u00b0 Reviews > Surveys section, which is only accessible after authentication.",
+      "screenshots": []
+    }
+  ],
+  "full_behavior_catalog": {
+    "buttons": [
+      {
+        "label": "Log in",
+        "location": "Center of login form, below password field",
+        "state": "enabled when form is valid, disabled when fields are empty or invalid",
+        "action_result": "Submits login credentials - but automation could not successfully trigger this"
+      },
+      {
+        "label": "Log in with Google",
+        "location": "Below main login button in OAuth section",
+        "state": "enabled",
+        "action_result": "Not tested - redirects to Google OAuth flow"
+      },
+      {
+        "label": "Log in with Microsoft",
+        "location": "Below Google login button",
+        "state": "enabled",
+        "action_result": "Not tested - redirects to Microsoft OAuth flow"
+      }
+    ],
+    "dropdowns": [],
+    "form_fields": [
+      {
+        "label": "Email address",
+        "type": "email",
+        "required": true,
+        "placeholder": "Email address",
+        "validation": "Email format validation - shows 'Please enter your email address' when empty or invalid",
+        "error_message": "Please enter your email address"
+      },
+      {
+        "label": "Password",
+        "type": "password",
+        "required": true,
+        "placeholder": "Password",
+        "validation": "Required field validation - shows 'Please enter your password' when empty",
+        "error_message": "Please enter your password"
+      }
+    ],
+    "tabs": [],
+    "modals_dialogs": [],
+    "tables": [],
+    "filters": [],
+    "notifications_alerts": [
+      {
+        "type": "error",
+        "trigger": "When login form validation fails",
+        "message": "Please enter your email address / Please enter your password"
+      }
+    ]
+  },
+  "ui_behaviors_documented": {
+    "disabled_states": [
+      {
+        "element": "Log in button",
+        "condition": "Disabled when email or password fields are empty or invalid"
+      }
+    ],
+    "conditional_logic": [
+      {
+        "trigger": "Form field validation",
+        "result": "Error messages appear below fields when validation fails"
+      }
+    ],
+    "progressive_disclosure": [],
+    "required_fields": [
+      "Email address",
+      "Password"
+    ],
+    "optional_fields": [
+      "Keep me logged in"
+    ],
+    "default_values": [],
+    "validation_rules": [
+      {
+        "field": "Email address",
+        "rule": "Required, must be valid email format",
+        "error_message": "Please enter your email address"
+      },
+      {
+        "field": "Password",
+        "rule": "Required",
+        "error_message": "Please enter your password"
+      }
+    ],
+    "tooltips_help_text": []
+  },
+  "what_works": [],
+  "what_made_it_work": [],
+  "whats_not_working": [
+    {
+      "issue": "Automated login through Playwright blocked by React form state management",
+      "symptoms": "JavaScript value assignment does not trigger React component state updates. Form validation shows 'Please enter your email address' and 'Please enter your password' even after values are set via JavaScript. Login button click does not submit credentials.",
+      "impact": "Complete blocking of automation testing and validation workflows. Unable to access any authenticated features of the application including the 360\u00b0 Reviews feature.",
+      "possible_cause": "React application uses controlled components with synthetic event system that requires proper event dispatching. Standard JavaScript value assignment bypasses React's state management. The application likely uses specific event listeners or form libraries (like Formik or React Hook Form) that expect proper event bubbling and React's synthetic events."
+    },
+    {
+      "issue": "Direct URL navigation to authenticated pages returns 404",
+      "symptoms": "Attempting to navigate directly to /dashboard or other authenticated routes returns 404 error page with message 'Whoops, there doesn't seem to be anything here'",
+      "impact": "Cannot bypass login through direct navigation. All routes require proper authentication flow.",
+      "possible_cause": "Application uses client-side routing with authentication guards. Routes are not accessible without valid authentication token/session."
+    }
+  ],
+  "ui_sections_explored": [
+    "Login page"
+  ],
+  "issues_found": [
+    "Login automation blocked by React form state management",
+    "Unable to access authenticated application areas",
+    "404 errors on direct navigation to protected routes",
+    "Playwright fill methods timing out on input element detection",
+    "JavaScript event simulation not triggering React state updates"
+  ],
+  "known_issues_validated": [
+    {
+      "issue": "Lack of comprehensive 360 feedback report viewing and management",
+      "status": "not_validated",
+      "evidence": "Could not access the 360\u00b0 Reviews feature due to login failure. Unable to validate this known issue."
+    },
+    {
+      "issue": "Inability to edit 360 feedback content after creation",
+      "status": "not_validated",
+      "evidence": "Could not access the 360\u00b0 Reviews feature due to login failure. Unable to validate this known issue."
+    },
+    {
+      "issue": "Absence of advanced 360 feedback reports and analytics",
+      "status": "not_validated",
+      "evidence": "Could not access the 360\u00b0 Reviews feature due to login failure. Unable to validate this known issue."
+    }
+  ],
+  "screenshots_taken": 8,
+  "validation_timestamp": "2026-01-22T06:26:47.000Z",
+  "recommendations_for_user_guide": [
+    "BLOCKER: This validation was unable to proceed due to technical limitations with automated browser testing on the Bayzat login form.",
+    "The React-based login form does not respond to standard automation techniques, preventing access to the 360\u00b0 Reviews feature.",
+    "To create a comprehensive user guide for 360\u00b0 Reviews, manual exploration or alternative authentication methods are required.",
+    "Recommended approaches: 1) Manual screen recording and documentation by a human user, 2) API-based authentication if available, 3) Use of session cookies from a real browser session, 4) Coordination with development team to add test-friendly attributes or disable form validation in test environments.",
+    "Based on payload information, the user guide should cover: Creating surveys with participant groups (up to 4 groups), AI-assisted vs manual survey creation, Question customization and types, Survey preview functionality, Response collection management.",
+    "Known limitations to document: Cannot edit surveys after creation, Limited reporting/analytics capabilities, No consolidated report viewing for all participants, No dedicated views for line managers or employees."
+  ],
+  "summary": "Validation attempt was blocked at the authentication stage. Multiple attempts to log in through automated browser testing failed due to React form state management preventing JavaScript automation from properly triggering form submission. The Bayzat login form uses controlled React components that require proper synthetic event handling, which standard Playwright automation techniques cannot replicate. Attempted approaches included: direct value assignment with event dispatch, React-specific setNativeValue techniques, multiple event type simulation (input, change, blur), and direct navigation to authenticated routes. All approaches resulted in either form validation errors or 404 responses. Without successful authentication, the 360\u00b0 Reviews feature located at Performance > 360\u00b0 Reviews could not be explored, and none of the validation tasks (survey creation, participant group selection, question customization) could be executed. Eight screenshots were captured documenting the various login attempts and error states. This represents a technical limitation of browser automation tools when interacting with modern React applications that use strict form state management. Manual validation by a human user or alternative authentication mechanisms are required to proceed with comprehensive feature exploration and user guide creation.",
+  "payload_context": {
+    "what_to_watch_out_for": [
+      {
+        "issue": "Lack of comprehensive 360 feedback report viewing and management",
+        "limitation": "The platform currently does not support viewing and managing 360 feedback reports for all participants in a consolidated manner, nor does it provide dedicated views for line managers or employees.",
+        "workaround": "No workaround available currently.",
+        "jira_reference": "JRV-1932,JRV-1933,JRV-1938,JRV-1939",
+        "severity": "medium"
+      },
+      {
+        "issue": "Inability to edit 360 feedback content after creation",
+        "limitation": "Users cannot edit or update 360 feedback survey content once created, limiting adaptability and customization.",
+        "workaround": "No workaround available currently.",
+        "jira_reference": "JRV-1937",
+        "severity": "medium"
+      },
+      {
+        "issue": "Absence of advanced 360 feedback reports and analytics",
+        "limitation": "The platform lacks dedicated reporting and analytics features for 360 feedback, restricting users from gaining deeper insights.",
+        "workaround": "No workaround available currently.",
+        "jira_reference": "JRV-1912",
+        "severity": "medium"
+      }
+    ],
+    "what_to_do": [
+      {
+        "task": "Create and manage 360 Review Surveys",
+        "steps": [
+          "Navigate to Performance > 360\u00b0 Reviews > Surveys section",
+          "Choose participant groups (up to 4 groups per review)",
+          "Create surveys using AI-assisted or manual methods",
+          "Add and customize questions with various question types",
+          "Preview and save surveys before response collection",
+          "Manage surveys prior to collecting responses"
+        ],
+        "expected_outcome": "Successfully created and saved 360 review surveys with selected participant groups and customized questions, ready for response collection.",
+        "source_articles": [
+          "40398452045073"
+        ]
+      }
+    ],
+    "feature_info": {
+      "feature_name": "360_feedback",
+      "feature_slug": "360-feedback",
+      "next_version": "v3"
+    },
+    "detected_integrations": {
+      "has_workflows": null,
+      "workflow_evidence": "No evidence found",
+      "has_approval_flow": null,
+      "approval_evidence": "No evidence found"
+    },
+    "limitations_count": 3,
+    "tasks_count": 1
+  },
+  "what_to_watch_out_for": [
+    {
+      "issue": "Lack of comprehensive 360 feedback report viewing and management",
+      "limitation": "The platform currently does not support viewing and managing 360 feedback reports for all participants in a consolidated manner, nor does it provide dedicated views for line managers or employees.",
+      "workaround": "No workaround available currently.",
+      "jira_reference": "JRV-1932,JRV-1933,JRV-1938,JRV-1939",
+      "severity": "medium"
+    },
+    {
+      "issue": "Inability to edit 360 feedback content after creation",
+      "limitation": "Users cannot edit or update 360 feedback survey content once created, limiting adaptability and customization.",
+      "workaround": "No workaround available currently.",
+      "jira_reference": "JRV-1937",
+      "severity": "medium"
+    },
+    {
+      "issue": "Absence of advanced 360 feedback reports and analytics",
+      "limitation": "The platform lacks dedicated reporting and analytics features for 360 feedback, restricting users from gaining deeper insights.",
+      "workaround": "No workaround available currently.",
+      "jira_reference": "JRV-1912",
+      "severity": "medium"
+    }
+  ],
+  "what_to_do": [
+    {
+      "task": "Create and manage 360 Review Surveys",
+      "steps": [
+        "Navigate to Performance > 360\u00b0 Reviews > Surveys section",
+        "Choose participant groups (up to 4 groups per review)",
+        "Create surveys using AI-assisted or manual methods",
+        "Add and customize questions with various question types",
+        "Preview and save surveys before response collection",
+        "Manage surveys prior to collecting responses"
+      ],
+      "expected_outcome": "Successfully created and saved 360 review surveys with selected participant groups and customized questions, ready for response collection.",
+      "source_articles": [
+        "40398452045073"
+      ]
+    }
+  ]
+}
