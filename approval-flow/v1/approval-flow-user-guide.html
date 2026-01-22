@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>approval-flow - User Guide | Bayzat</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background-color: #ffffff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+      color: #ffffff;
+      padding: 60px 40px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    .hero-banner h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 16px; }
+    .hero-subtitle { font-size: 1.2rem; opacity: 0.95; margin-bottom: 20px; }
+    .hero-benefits { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
+    .hero-benefit { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; }
+    h2 { font-size: 1.75rem; font-weight: 600; padding-bottom: 0.5rem; border-bottom: 2px solid #E2E8F0; margin-top: 2rem; margin-bottom: 1rem; }
+    h3 { font-size: 1.35rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    h4 { font-size: 1.1rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; }
+    p { margin-bottom: 1rem; }
+    .section { margin-bottom: 3rem; padding: 24px; background: #ffffff; border-radius: 8px; border: 1px solid #E2E8F0; }
+    .subsection { margin: 1.5rem 0; padding-left: 1rem; border-left: 3px solid #E2E8F0; }
+    .info-box { padding: 16px 20px; border-radius: 8px; margin: 20px 0; background: #FAF5FF; border-left: 4px solid #6B46C1; }
+    .info-box p { margin: 0; }
+    .warning-box { padding: 16px 20px; border-radius: 8px; margin: 20px 0; background: #FFFBEB; border-left: 4px solid #D97706; }
+    .warning-box p { margin: 0 0 8px 0; }
+    .warning-box p:last-child { margin: 0; }
+    ul, ol { margin: 1rem 0; padding-left: 2rem; }
+    li { margin-bottom: 0.5rem; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th, td { padding: 12px 16px; text-align: left; border: 1px solid #E2E8F0; }
+    th { background: #F7FAFC; font-weight: 600; }
+    tr:hover { background: #F7FAFC; }
+    figure { margin: 24px auto; text-align: center; }
+    figure img, .screenshot { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border: 1px solid #E2E8F0; display: block; margin: 0 auto; }
+    figcaption { margin-top: 12px; font-size: 0.9rem; font-style: italic; color: #666; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
+    .feature-card { background: #ffffff; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px; }
+    .feature-card h4 { margin-top: 0; }
+    .journey-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin: 20px 0; }
+    .journey-step { background: #F7FAFC; border-radius: 8px; padding: 20px; }
+    .journey-step .step-number { background: #6B46C1; color: #ffffff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; margin-bottom: 12px; }
+    .journey-step h4 { margin: 0 0 8px 0; }
+    .journey-step p { margin: 0; }
+    .step { display: flex; gap: 16px; margin: 20px 0; padding: 16px; background: #F7FAFC; border-radius: 8px; }
+    .step-number { background: #6B46C1; color: #ffffff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+    .step-content { flex: 1; }
+    .step-content h4 { margin: 0 0 8px 0; }
+    .step-content p { margin: 0; }
+    .step-content ul { margin: 8px 0 0 0; }
+    .nav-path { background: #F7FAFC; padding: 12px 16px; border-radius: 6px; font-family: 'SF Mono', Monaco, monospace; margin: 16px 0; }
+    code { background: #F7FAFC; padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, monospace; font-size: 0.9em; }
+    pre { background: #F7FAFC; padding: 16px; border-radius: 8px; overflow-x: auto; }
+    blockquote { border-left: 4px solid #E2E8F0; padding-left: 16px; margin: 16px 0; font-style: italic; color: #666; }
+    a { color: #6B46C1; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #E2E8F0; text-align: center; color: #666; font-size: 0.9rem; }
+    @media (max-width: 768px) { body { padding: 16px; } .hero-banner { padding: 40px 24px; } .hero-banner h1 { font-size: 1.75rem; } .section { padding: 16px; } th, td { padding: 8px 12px; } }
+    @media (max-width: 480px) { .hero-banner h1 { font-size: 1.5rem; } .hero-subtitle { font-size: 1rem; } .step { flex-direction: column; gap: 12px; } }
+    @media print { body { max-width: 100%; padding: 0; } .hero-banner { background: #6B46C1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; } .section { break-inside: avoid; } }
+  </style>
+</head>
+<body>
+<div class="hero-banner">
+  <h1>approval-flow</h1>
+  <p class="hero-subtitle">Manage approval-flow in Bayzat</p>
+  
+</div>
+<section class="section" id="hero">
+    <h2>Approval Flows</h2><div class="content"><h3>Approval Flows</h3><p>Configure intelligent approval routing for employee requests across 40+ request types</p><div class="feature-grid"><div class="feature-card"><p>Define conditional approval paths based on employee attributes and request criteria</p></div><div class="feature-card"><p>Create multi-step approval hierarchies with parallel or sequential approvers</p></div><div class="feature-card"><p>Centralize approval governance across leave, expenses, loans, and custom request types</p></div><div class="feature-card"><p>Reduce approval bottlenecks with flexible routing logic and role-based approvers</p></div></div></div></section>
+<section class="section" id="feature-overview">
+    <h2>What are Approval Flows?</h2><div class="content"><p>Approval Flows enable HR administrators to define and manage the routing logic for employee requests across the Bayzat platform. Instead of manually reviewing every request, you configure intelligent approval paths that automatically route requests to the right approvers based on criteria such as employee department, grade, location, or request amount. The system supports both simple default flows and advanced conditional flows with complex business rules.</p>
+
+<p>With Approval Flows, you can create sophisticated approval hierarchies that mirror your organization's decision-making structure. Configure parallel approvers where any one person can approve, sequential multi-step approvals, and conditional routing that changes based on request attributes. The feature covers over 40 request types including leave, expenses, loans, attendance regularization, shift changes, and custom ticket types.</p>
+
+<h3>Key Benefits</h3>
+<ul>
+  <li><strong>Automated Request Routing:</strong> Requests automatically flow to the correct approvers without manual intervention, eliminating routing errors and delays</li>
+  <li><strong>Conditional Logic:</strong> Create advanced flows with "if-then" criteria that route requests differently based on employee attributes, departments, grades, or custom data points</li>
+  <li><strong>Multi-Step Hierarchies:</strong> Build approval chains with multiple sequential steps, ensuring proper governance for high-value or sensitive requests</li>
+  <li><strong>Parallel Approvers:</strong> Configure OR logic where any approver in a group can approve, reducing bottlenecks when key stakeholders are unavailable</li>
+  <li><strong>Centralized Governance:</strong> Manage all approval flows from a single interface, providing visibility and control over organizational approval policies</li>
+  <li><strong>Role-Based Flexibility:</strong> Assign approvers by role (Line Manager, Department Head, HR Admin) or specific individuals, adapting to organizational changes</li>
+</ul>
+
+<h3>Who Uses This Feature?</h3>
+<table>
+  <thead>
+    <tr>
+      <th>User Role</th>
+      <th>What They Do</th>
+      <th>Value Proposition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Super Admin</strong></td>
+      <td>Configure approval flows for all request types, define conditional routing criteria, assign approver roles, and maintain approval governance policies</td>
+      <td>Reduce approval configuration time from hours to minutes while ensuring consistent governance across all request types—eliminating the need to manually route each request or rely on scattered email approvals</td>
+    </tr>
+    <tr>
+      <td><strong>HR Administrator</strong></td>
+      <td>Monitor approval flow effectiveness, identify bottlenecks in approval chains, and recommend flow optimizations based on request patterns</td>
+      <td>Make data-driven decisions about approval process improvements backed by actual routing patterns rather than relying on anecdotal feedback or gut instinct about where delays occur</td>
+    </tr>
+    <tr>
+      <td><strong>Line Managers</strong></td>
+      <td>Receive requests routed by approval flows, approve or reject within their assigned approval steps, and rely on the system to escalate to next approvers</td>
+      <td>Eliminate confusion about which requests require their approval and which have already been handled—receiving only relevant requests instead of being copied on everything</td>
+    </tr>
+    <tr>
+      <td><strong>Department Heads</strong></td>
+      <td>Serve as secondary or final approvers in multi-step flows, review high-value requests that meet specific criteria, and provide governance oversight</td>
+      <td>Enable strategic oversight of department decisions without micromanaging every request—focusing attention only on requests that meet defined thresholds or criteria</td>
+    </tr>
+    <tr>
+      <td><strong>Finance Team</strong></td>
+      <td>Act as approvers for expense, loan, and payroll transaction requests, enforce budget compliance through approval criteria, and maintain financial controls</td>
+      <td>Reduce financial risk by ensuring all monetary requests pass through appropriate approval gates based on amount, category, or employee level—rather than discovering unauthorized spending after the fact</td>
+    </tr>
+  </tbody>
+</table></div></section>
+<section class="section" id="product-foundation">
+    <h2>Product Foundation</h2><div class="content"><h3>Core Concepts</h3>
+
+<div class="feature-grid">
+  <div class="feature-card">
+    <h4>Request Types</h4>
+    <p>Approval Flows support over 40 different request types, each with its own dedicated configuration tab. Common types include Leave, Expenses, Loans, Attendance Regularization, Shift Changes, Work From Home, Business Trips, and custom ticket types. Each request type can have completely different approval logic tailored to its specific governance requirements.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Advanced Flows (If Conditions)</h4>
+    <p>Advanced flows use conditional logic to route requests based on criteria. You define "if" conditions using employee attributes (department, grade, location, custom fields) or request attributes (amount, duration, category). When criteria match, the request follows the advanced flow's approval path. Multiple advanced flows can exist with priority ordering—the system evaluates them top-to-bottom and uses the first matching flow.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Default Flows (Else)</h4>
+    <p>The default flow acts as the "else" condition—it applies when no advanced flow criteria match. Every request type must have a default flow configured. This ensures all requests have an approval path even if they don't meet any advanced flow criteria. Default flows typically use simpler approval structures like routing to the employee's Line Manager.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Approval Steps</h4>
+    <p>Each flow consists of one or more approval steps executed sequentially. A request must be approved at Step 1 before moving to Step 2, and so on. Steps can contain single approvers or multiple approvers. If any approver rejects the request at any step, the entire request is immediately rejected without proceeding to subsequent steps.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Approvers and Roles</h4>
+    <p>Approvers can be assigned by role (Line Manager, Department Head, HR Admin, custom roles) or as specific individuals. Role-based approvers adapt automatically when organizational structure changes—if an employee's Line Manager changes, requests automatically route to the new manager. Individual approvers provide stability for specialized approval responsibilities.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Parallel Approvers (OR Logic)</h4>
+    <p>Within a single approval step, you can configure multiple approvers with OR logic. This means any one of the approvers can approve the request to move it forward. Parallel approvers reduce bottlenecks when key stakeholders are unavailable—the request doesn't wait for a specific person. This is particularly useful for peer-level approvals or when multiple people have equivalent authority.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Criteria and Data Points</h4>
+    <p>Advanced flows use criteria to determine when they apply. Criteria are built from data points—employee attributes like Department, Grade, Location, Employment Type, or custom employee fields. You can create complex conditions using multiple criteria combined with AND/OR logic. For example: "If Department = Sales AND Grade = Senior AND Expense Amount > 5000".</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Blocks</h4>
+    <p>Blocks are groupings within approval flows that allow you to organize complex approval structures. The "Add block" functionality enables you to create nested approval logic or group related approval steps together. This is an advanced organizational feature for managing sophisticated approval hierarchies.</p>
+  </div>
+</div>
+
+<h3>Related Features</h3>
+
+<p>Approval Flows integrate with and depend on several other Bayzat features:</p>
+
+<ul>
+  <li><strong>Role Management:</strong> Line Manager roles and custom approver roles must be configured in Role Management before they can be used in approval flows. Approvers need appropriate permissions to view and act on requests.</li>
+  <li><strong>Employee Profiles:</strong> Approval criteria pull data from employee profiles (department, grade, location, custom fields). Accurate employee data is essential for conditional flows to route correctly.</li>
+  <li><strong>Leave Management:</strong> Leave requests submitted by employees are routed through configured approval flows. The approval outcome determines whether leave is granted and reflected in leave balances.</li>
+  <li><strong>Expense Management:</strong> Expense claims follow approval flows to ensure financial controls and budget compliance before reimbursement processing.</li>
+  <li><strong>Loan Requests:</strong> Employee loan applications route through approval flows, typically requiring finance team approval in addition to line manager approval.</li>
+  <li><strong>Attendance Regularization:</strong> Requests to correct attendance records follow approval flows to maintain attendance data integrity and prevent abuse.</li>
+  <li><strong>Custom Request Types:</strong> Organizations can create custom ticket types (grievances, IT requests, facility requests) and configure dedicated approval flows for each type.</li>
+  <li><strong>Notifications:</strong> The system sends automatic notifications to approvers when requests reach their approval step, and to requesters when requests are approved or rejected.</li>
+</ul>
+
+<h3>Prerequisites</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Description</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Super Admin Access</strong></td>
+      <td>Only users with Super Admin role can configure approval flows. This permission is required to access the Approval Flows configuration interface.</td>
+      <td>Required</td>
+    </tr>
+    <tr>
+      <td><strong>Role Management Configuration</strong></td>
+      <td>Line Manager roles and any custom approver roles must be defined and assigned in Role Management before they can be used in approval flows.</td>
+      <td>Required</td>
+    </tr>
+    <tr>
+      <td><strong>Employee Data</strong></td>
+      <td>Employee profiles must have accurate department, grade, location, and other attributes that will be used in approval criteria. Missing or incorrect data causes routing failures.</td>
+      <td>Required</td>
+    </tr>
+    <tr>
+      <td><strong>Request Type Activation</strong></td>
+      <td>The request types you want to configure (Leave, Expenses, etc.) must be activated in your Bayzat instance. Not all organizations use all request types.</td>
+      <td>Required</td>
+    </tr>
+    <tr>
+      <td><strong>Organizational Structure</strong></td>
+      <td>Understanding of your organization's approval hierarchy and governance policies. You should know who approves what types of requests and under what conditions.</td>
+      <td>Recommended</td>
+    </tr>
+    <tr>
+      <td><strong>Custom Employee Fields</strong></td>
+      <td>If using custom employee attributes in approval criteria, these fields must be created and populated in employee profiles before configuring flows.</td>
+      <td>Optional</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="info-box">
+  <p><strong>Important:</strong> Approval flows are internal routing mechanisms that apply automatically when employees submit requests. They are not exposed as workflow triggers or actions in Bayzat Workflows. The approval routing happens within the request submission process itself.</p>
+</div></div></section>
+<section class="section" id="core-tasks">
+    <h2>Feature Usage with Common Workflows</h2><div class="content"><h3>Managing Approval Flows</h3><p>Approval flows define the routing and approval hierarchy for various request types in Bayzat. You can create advanced flows with conditional logic or configure default flows that apply when no conditions match.</p><div class="info-box"><p><strong>Note:</strong> Only Super Admins can configure approval flows. Changes affect all future requests of the selected type.</p></div><h3>Creating a New Advanced Approval Flow</h3><p>Advanced flows allow you to route requests based on specific criteria such as employee attributes, department, or request amount.</p><ol><li>Navigate to <strong>Settings → Approval Flows</strong></li><li>Select the request type tab you want to configure (e.g., Leave, Expense, Air Ticket)</li><li>In the <strong>Advanced approval flow (If conditions)</strong> section, click <strong>Add advance flow</strong></li><li>In the dialog that appears, configure the following fields:<ul><li><strong>Flow name:</strong> Enter a descriptive name for this approval flow</li><li><strong>Description:</strong> Provide details about when this flow applies</li><li><strong>Criteria section:</strong> Click <strong>Add criteria</strong> to define conditions<ul><li>Select a data point (e.g., Department, Employee Grade, Cost Center)</li><li>Choose an operator (equals, not equals, contains, etc.)</li><li>Enter the value to match</li><li>Add multiple criteria as needed (all must match)</li></ul></li><li><strong>Approval flow section:</strong> Click <strong>Add step</strong> to create approval stages<ul><li>Click <strong>Add approver</strong> within each step</li><li>Select roles from the dropdown (e.g., Line Manager, Department Head, HR Manager)</li><li>Configure parallel approvers using OR logic if needed</li><li>Add multiple steps for sequential approval</li></ul></li></ul></li><li>Click <strong>Save</strong> or <strong>Add</strong> to create the flow</li><li>Click <strong>Update approval flows</strong> at the bottom of the page to apply changes</li></ol><figure class="screenshot-container"><img src="validation/screenshots/04-advanced-flow-builder.png" alt="04-advanced-flow-builder.png" /><figcaption>Creating a new advanced approval flow with criteria and approval steps</figcaption></figure><h3>Viewing Existing Approval Flows</h3><p>You can view all configured approval flows for each request type to understand current routing logic.</p><ol><li>Navigate to <strong>Settings → Approval Flows</strong></li><li>Use the search bar or scroll to find the request type tab</li><li>Review the <strong>Advanced approval flow (If conditions)</strong> section to see all conditional flows<ul><li>Each flow displays its name, description, criteria, and approval steps</li><li>Multiple flows are listed in priority order</li></ul></li><li>Review the <strong>Default approval flow (Else)</strong> section to see the fallback routing<ul><li>This applies when no advanced flow criteria match</li><li>Shows configured approval steps and approvers</li></ul></li></ol><figure class="screenshot-container"><img src="validation/screenshots/03-approval-flows-page.png" alt="03-approval-flows-page.png" /><figcaption>Viewing configured approval flows on the main page</figcaption></figure><figure class="screenshot-container"><img src="validation/screenshots/07-expense-tab.png" alt="07-expense-tab.png" /><figcaption>Expense tab showing one advanced flow named 'test'</figcaption></figure><figure class="screenshot-container"><img src="validation/screenshots/10-air-ticket-tab.png" alt="10-air-ticket-tab.png" /><figcaption>Air Ticket tab displaying multiple advanced flows with descriptions</figcaption></figure><h3>Editing an Existing Approval Flow</h3><p>Modify approval flows to adjust criteria, add or remove approval steps, or change approver roles.</p><ol><li>Navigate to <strong>Settings → Approval Flows</strong></li><li>Select the request type tab containing the flow you want to edit</li><li>Locate the advanced flow in the list</li><li>Click the <strong>Edit</strong> button (pencil icon) next to the flow</li><li>Modify any of the following:<ul><li>Flow name or description</li><li>Criteria conditions (add, remove, or change data points)</li><li>Approval steps (add or remove steps)</li><li>Approvers within steps (add, remove, or change roles)</li></ul></li><li>Click <strong>Save</strong> to preserve your changes</li><li>Click <strong>Update approval flows</strong> at the bottom of the page to apply changes globally</li></ol><figure class="screenshot-container"><img src="validation/screenshots/10-air-ticket-tab.png" alt="10-air-ticket-tab.png" /><figcaption>Edit buttons visible next to each advanced flow entry</figcaption></figure><div class="warning-box"><p><strong>⚠️ Changes Affect Future Requests Only</strong></p><p>Modifying an approval flow does not affect requests already in progress. Only new requests submitted after clicking "Update approval flows" will use the updated routing logic.</p></div><h3>Deleting an Approval Flow</h3><p>Remove approval flows that are no longer needed or were created for testing purposes.</p><ol><li>Navigate to <strong>Settings → Approval Flows</strong></li><li>Select the request type tab containing the flow you want to delete</li><li>Locate the advanced flow in the list</li><li>Click the <strong>Delete</strong> button (trash icon) next to the flow</li><li>Confirm the deletion when prompted</li><li>Click <strong>Update approval flows</strong> at the bottom of the page to apply the removal</li></ol><figure class="screenshot-container"><img src="validation/screenshots/10-air-ticket-tab.png" alt="10-air-ticket-tab.png" /><figcaption>Delete buttons visible next to each advanced flow entry</figcaption></figure><div class="info-box"><p><strong>Tip:</strong> If you delete all advanced flows, the default approval flow will apply to all requests of that type.</p></div><h3>Configuring Default Approval Flows</h3><p>The default flow acts as a fallback when no advanced flow criteria match. This ensures every request has a defined approval path.</p><ol><li>Navigate to <strong>Settings → Approval Flows</strong></li><li>Select the request type tab</li><li>Scroll to the <strong>Default approval flow (Else)</strong> section</li><li>Click <strong>Add step</strong> to create approval stages</li><li>Click <strong>Add approver</strong> within each step and select roles</li><li>Configure multiple steps for sequential approval if needed</li><li>Click <strong>Update approval flows</strong> to save changes</li></ol><h3>Using Parallel Approvers (OR Logic)</h3><p>Configure multiple approvers within a single step where approval from any one approver is sufficient to proceed.</p><ol><li>When creating or editing an approval flow, add a step</li><li>Click <strong>Add approver</strong> multiple times within the same step</li><li>Select different roles for each approver</li><li>The system will route to all approvers simultaneously</li><li>Approval from any one approver in the step allows the request to proceed</li></ol><div class="info-box"><p><strong>Note:</strong> If any approver in a step rejects the request, the entire approval process stops immediately, regardless of whether other approvers in that step have approved.</p></div><h3>Working with Criteria and Data Points</h3><p>Criteria determine when an advanced flow applies. You can use a rich set of employee attributes and request properties.</p><p><strong>Available data points include:</strong></p><ul><li>Employee attributes: Department, Grade, Cost Center, Location, Job Title</li><li>Request properties: Amount, Duration, Date range</li><li>Custom fields configured for the request type</li></ul><p><strong>To add criteria:</strong></p><ol><li>In the advanced flow builder, click <strong>Add criteria</strong></li><li>Select a data point from the dropdown</li><li>Choose an operator (equals, not equals, contains, greater than, etc.)</li><li>Enter the comparison value</li><li>Add additional criteria as needed (all must match for the flow to apply)</li></ol><h3>Managing Multiple Advanced Flows</h3><p>When multiple advanced flows exist for a request type, they are evaluated in priority order from top to bottom.</p><ol><li>The system evaluates each advanced flow's criteria in sequence</li><li>The first flow whose criteria match is applied</li><li>If no advanced flow matches, the default flow is used</li><li>To change priority, you may need to delete and recreate flows in the desired order</li></ol><div class="warning-box"><p><strong>⚠️ Flow Priority Matters</strong></p><p>If you have overlapping criteria in multiple flows, only the first matching flow will be used. Order your flows from most specific to most general.</p></div><h3>Assigning Line Manager Roles</h3><p>Before using Line Manager as an approver role, ensure the role is properly assigned in Role Management.</p><ol><li>Navigate to <strong>Settings → Role Management</strong></li><li>Locate the Line Manager role</li><li>Assign the role to the appropriate employees who will act as line managers</li><li>Return to Approval Flows to configure Line Manager as an approver</li></ol><blockquote data-source="zendesk" data-ref="14309308626449"><p>Only Super Admin can configure approval flows. Line Managers must have the role assigned in Role Management before they can be used as approvers.</p></blockquote></div></section>
+<section class="section" id="workflow-integration">
+    <h2>Workflow Integration</h2><div class="content"><div class="info-box"><p><strong>No Workflow Integration Available:</strong> Approval flows do not currently integrate with Bayzat Workflows. No triggers or actions are available for approval flow configuration.</p></div><p>Approval flows are internal routing mechanisms that automatically apply when requests are submitted. They operate independently of the Bayzat Workflows automation system.</p><h3>How Approval Flows Work</h3><p>When an employee submits a request (leave, expense, air ticket, etc.), the system automatically:</p><ol><li>Evaluates all advanced approval flows for that request type in priority order</li><li>Applies the first flow whose criteria match the request and employee attributes</li><li>If no advanced flow matches, applies the default approval flow</li><li>Routes the request to the configured approvers in sequence</li><li>Sends notifications to approvers at each step</li><li>Advances to the next step when approval is granted</li><li>Stops the process immediately if any approver rejects</li></ol><h3>Potential Workflow Scenarios</h3><p>While workflow integration is not currently available, the following scenarios illustrate how automation could add value to approval flow management:</p><div class="feature-grid"><div class="feature-card"><h4>Scenario 1: Approval Flow Change Notifications</h4><p><strong>Potential Benefit:</strong> Automatically notify relevant stakeholders when approval flows are modified, ensuring transparency and awareness of routing changes.</p><ul><li><strong>Trigger:</strong> Approval flow updated for a request type</li><li><strong>Action:</strong> Send notification to department heads, HR managers, and affected employees</li><li><strong>Business Value:</strong> Reduce confusion about approval routing changes and ensure stakeholders are informed of new approval requirements before submitting requests</li></ul></div><div class="feature-card"><h4>Scenario 2: Approval Flow Audit Trail</h4><p><strong>Potential Benefit:</strong> Maintain a comprehensive audit log of approval flow configuration changes for compliance and troubleshooting.</p><ul><li><strong>Trigger:</strong> Approval flow created, edited, or deleted</li><li><strong>Action:</strong> Log change details to external audit system or create record in tracking sheet</li><li><strong>Business Value:</strong> Enable compliance reporting and root cause analysis when approval routing issues arise, eliminating manual audit trail maintenance</li></ul></div><div class="feature-card"><h4>Scenario 3: Conditional Approver Notifications</h4><p><strong>Potential Benefit:</strong> Notify backup approvers or escalate to higher authority when primary approvers don't respond within SLA timeframes.</p><ul><li><strong>Trigger:</strong> Request pending approval for more than X days</li><li><strong>Action:</strong> Send escalation notification to backup approver or department head</li><li><strong>Business Value:</strong> Prevent approval bottlenecks and ensure requests are processed within acceptable timeframes, improving employee experience and operational efficiency</li></ul></div><div class="feature-card"><h4>Scenario 4: Approval Flow Validation</h4><p><strong>Potential Benefit:</strong> Automatically validate that approval flows have required approvers configured before activation.</p><ul><li><strong>Trigger:</strong> Approval flow saved with "Update approval flows" button</li><li><strong>Action:</strong> Check for missing approvers, validate role assignments, send warning if issues detected</li><li><strong>Business Value:</strong> Prevent misconfigured approval flows from causing request routing failures, reducing support tickets and employee frustration</li></ul></div></div><h3>Integration with Request Submission</h3><p>Although approval flows don't integrate with Bayzat Workflows, they are tightly integrated with the request submission process:</p><ul><li><strong>Leave Requests:</strong> Automatically routed through configured leave approval flows</li><li><strong>Expense Requests:</strong> Routed based on expense approval flow criteria (amount, department, etc.)</li><li><strong>Air Ticket Requests:</strong> Follow air ticket approval flows with travel-specific criteria</li><li><strong>Custom Request Types:</strong> Each custom ticket type has its own configurable approval flow</li></ul><div class="info-box"><p><strong>Note:</strong> Approval flow routing happens automatically at the time of request submission. Employees do not need to select or specify which approval flow applies—the system determines this based on configured criteria.</p></div><h3>Known Integration Limitations</h3><p>Based on reported issues, there are some limitations in how approval flows integrate with other Bayzat features:</p><div class="warning-box"><p><strong>⚠️ Workflow Notification Reliability</strong></p><p><strong>Impact:</strong> In rare cases, workflows configured to send notifications when requests are approved may fail to trigger, even when all conditions are met. This has been observed with leave approval workflows for specific employees.</p><p><strong>Workaround:</strong> Monitor approval notifications manually for critical requests. If notifications fail, check the workflow execution logs and contact Bayzat support with the specific employee and request details.</p><p><em>Reference: TSSD-4940</em></p></div><p>This limitation suggests that while approval flows execute reliably, external workflows that react to approval events may experience intermittent failures. The approval flow itself completes successfully, but downstream notifications may not fire consistently.</p></div></section>
+<section class="section" id="business-rules-limitations">
+    <h2>Business Rules and Limitations</h2><div class="content"><h3>Business Rules</h3><p>Approval flows operate under the following business rules:</p><ul><li><strong>Super Admin Only:</strong> Only users with Super Admin permissions can create, edit, or delete approval flows</li><li><strong>Immediate Rejection:</strong> If any approver in a step rejects a request, the entire request is immediately rejected and does not proceed to subsequent approval steps</li><li><strong>Role-Based Approvers:</strong> Line Managers and other roles must be properly assigned in Role Management before they can be configured as approvers</li><li><strong>Feature-Specific Flows:</strong> Each request type (Leave, Expense, etc.) has its own independent approval flow configuration</li><li><strong>Priority Ordering:</strong> When multiple advanced flows exist for a feature, they are evaluated in priority order until a matching condition is found</li><li><strong>Default Fallback:</strong> If no advanced flow criteria match, the request routes through the default approval flow</li></ul><h3>Known Limitations</h3><div class="info-box"><p><strong>No Known Limitations:</strong> Currently, there are no documented limitations for the Approval Flow feature. The system operates as designed with all core functionality available.</p></div><h3>Workflow Execution Reliability</h3><div class="info-box"><p><strong>Note:</strong> While not a limitation of the approval flow configuration itself, there is a known issue (TSSD-4940) where workflow notifications triggered by approval events may occasionally fail to execute despite all conditions being met. This is an intermittent issue in the workflow execution engine, not the approval flow feature. If you notice missing notifications, verify the workflow configuration and contact support if the issue persists.</p></div></div></section>
+<section class="section" id="troubleshooting-edge-cases">
+    <h2>Troubleshooting and Edge Cases</h2><div class="content"><h3>Common Issues</h3><table><thead><tr><th>Issue</th><th>Cause</th><th>Resolution</th></tr></thead><tbody><tr><td>Cannot create or edit approval flows</td><td>User lacks Super Admin permissions</td><td>Contact your organization's Super Admin to request access or have them make the changes</td></tr><tr><td>Line Manager not appearing in approver list</td><td>Line Manager role not assigned in Role Management</td><td>Navigate to Settings → Role Management and assign the Line Manager role to the appropriate users</td></tr><tr><td>Request not routing through expected flow</td><td>Advanced flow criteria not matching employee attributes</td><td>Review the criteria conditions in the advanced flow. Check employee profile data to ensure it matches the configured criteria</td></tr><tr><td>Changes not taking effect</td><td>Forgot to click "Update approval flows" button</td><td>Always click the "Update approval flows" button at the bottom of the page after making changes to save your configuration</td></tr><tr><td>Request stuck in approval</td><td>Approver has not taken action</td><td>Contact the pending approver directly. Admins can view approval status in the Requests tab</td></tr><tr><td>Cannot delete advanced flow</td><td>Flow may be in use by pending requests</td><td>Wait for pending requests to complete, or contact support if deletion is urgent</td></tr></tbody></table><h3>Edge Cases</h3><ul><li><strong>Parallel Approvers with OR Logic:</strong> When multiple approvers are configured in a single step with OR logic, approval by any one approver advances the request. Ensure this matches your organization's approval policy</li><li><strong>Multiple Matching Advanced Flows:</strong> If an employee's attributes match multiple advanced flow criteria, only the first matching flow (by priority order) is applied. Review priority ordering carefully</li><li><strong>Approver Role Changes:</strong> If an approver's role is removed after a request is submitted but before they approve, the request may become stuck. Manual intervention by Super Admin may be required</li><li><strong>Employee Attribute Changes:</strong> If an employee's attributes change after submitting a request (e.g., department transfer), the request continues through the originally assigned approval flow, not the new one</li><li><strong>No Default Flow Configured:</strong> If no default approval flow is configured and no advanced flows match, requests may fail to route properly. Always configure a default flow as a fallback</li><li><strong>Complex Block Structures:</strong> Using "Add block" to create nested approval logic can become difficult to visualize and troubleshoot. Document complex flows externally for reference</li></ul><h3>Diagnostic Steps</h3><ol><li><strong>Verify Flow Configuration:</strong> Review the approval flow settings for the specific request type to ensure criteria and approvers are correctly configured</li><li><strong>Check Employee Profile:</strong> Verify the employee's profile data (department, grade, location, etc.) matches the advanced flow criteria</li><li><strong>Review Role Assignments:</strong> Confirm that all configured approvers have the necessary roles assigned in Role Management</li><li><strong>Test with Sample Request:</strong> Create a test request to validate the approval flow routes correctly before rolling out to all employees</li><li><strong>Check Audit Trail:</strong> Review the request history to see which approvers received the request and what actions they took</li></ol></div></section>
+<section class="section" id="support-resources">
+    <h2>Support and Resources</h2><div class="content"><h3>Frequently Asked Questions</h3><div class="feature-grid"><div class="feature-card"><h4>Can employees see the approval flow before submitting a request?</h4><p>No, employees do not see the approval flow configuration when submitting requests. The approval routing is applied automatically based on their profile attributes. Only Super Admins can view and configure approval flows.</p></div><div class="feature-card"><h4>What happens if an approver is on leave?</h4><p>The request will remain pending until the approver returns and takes action. Consider configuring backup approvers or parallel approval steps with OR logic to prevent bottlenecks. Some organizations also configure workflows to escalate or notify alternate approvers after a certain time period.</p></div><div class="feature-card"><h4>Can I set up automatic approval for certain requests?</h4><p>Not directly through approval flows. However, you can configure a single-step approval flow with a specific role, then use Bayzat Workflows to automatically approve requests that meet certain criteria. This requires both approval flow configuration and workflow setup.</p></div><div class="feature-card"><h4>How many advanced flows can I create per feature?</h4><p>There is no documented limit on the number of advanced flows per feature. However, for maintainability, it's recommended to keep the number manageable (typically under 10) and use clear naming conventions to identify each flow's purpose.</p></div><div class="feature-card"><h4>Can I copy approval flows from one request type to another?</h4><p>No, there is no built-in copy function. You must manually configure approval flows for each request type. Consider documenting your approval flow patterns externally to make replication easier.</p></div><div class="feature-card"><h4>What's the difference between advanced flows and default flows?</h4><p>Advanced flows use "If" conditions to route requests based on employee attributes (department, grade, location, etc.). Default flows are "Else" fallbacks that apply when no advanced flow criteria match. Every request type should have a default flow configured.</p></div><div class="feature-card"><h4>Can I require multiple approvers to all approve before proceeding?</h4><p>Yes, configure multiple approvers in a single step without OR logic. The request will only proceed to the next step when all approvers in the current step have approved. This is AND logic (all must approve).</p></div><div class="feature-card"><h4>How do I know which approval flow was applied to a specific request?</h4><p>View the request details in the Requests tab. The approval history shows which approvers received the request, indicating which flow was applied. The flow name is not explicitly displayed, but you can infer it from the approver sequence.</p></div></div><h3>Getting Help</h3><ul><li><strong>HR Administrator:</strong> Contact your organization's HR administrator or Super Admin for assistance with approval flow configuration and policy questions</li><li><strong>Bayzat Support:</strong> Submit a support ticket through the Bayzat platform or email support@bayzat.com for technical issues or feature questions</li><li><strong>Knowledge Base:</strong> Search the Bayzat Help Center at <a href="https://bayzathelp.zendesk.com" target="_blank">bayzathelp.zendesk.com</a> for additional articles and guides</li><li><strong>In-App Help:</strong> Click the help icon (?) in the top navigation bar for contextual help and quick access to support resources</li><li><strong>Training Resources:</strong> Request access to Bayzat's admin training materials to learn best practices for approval flow design and configuration</li></ul><blockquote data-source="zendesk" data-ref="14309308626449"><p>For detailed guidance on creating approval flows for expenses, refer to the Zendesk article: <a href="https://bayzathelp.zendesk.com/hc/en-gb/articles/14309308626449-Creating-approval-flows-for-expenses" target="_blank">Creating approval flows for expenses</a>. While this article focuses on expenses, the principles apply to all request types.</p></blockquote></div></section>
+<section class="section" id="glossary">
+    <h2>Glossary of Terms</h2><div class="content"><h3>Key Terms</h3><table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td><strong>Advanced Flow</strong></td><td>A conditional approval routing configuration that applies "If" criteria to match employee attributes and route requests to specific approvers. Multiple advanced flows can exist per feature with priority ordering.</td></tr><tr><td><strong>Approval Flow</strong></td><td>The sequence of approvers that a request must pass through before being fully approved. Flows can be simple (single step) or complex (multiple steps with conditional logic).</td></tr><tr><td><strong>Approver</strong></td><td>A user with the authority to approve or reject a request. Approvers are typically assigned by role (e.g., Line Manager, Department Head) rather than by individual user.</td></tr><tr><td><strong>Block</strong></td><td>A grouping mechanism in advanced flows that allows complex nested approval logic. Blocks can contain multiple steps and criteria conditions.</td></tr><tr><td><strong>Criteria</strong></td><td>The conditions used in advanced flows to match employee attributes (e.g., department, grade, location). When criteria match, the associated approval flow is applied.</td></tr><tr><td><strong>Data Point</strong></td><td>An employee attribute or profile field that can be used as criteria in advanced flows. Examples include department, employee grade, location, and custom fields.</td></tr><tr><td><strong>Default Flow</strong></td><td>The "Else" fallback approval routing that applies when no advanced flow criteria match. Every request type should have a default flow configured to ensure all requests can be routed.</td></tr><tr><td><strong>Line Manager</strong></td><td>The direct supervisor of an employee, typically configured as the first approver in many approval flows. Line Manager relationships are defined in the organizational hierarchy.</td></tr><tr><td><strong>OR Logic</strong></td><td>A parallel approval configuration where approval by any one of multiple approvers in a step is sufficient to advance the request. Used for backup approvers or peer approval scenarios.</td></tr><tr><td><strong>Parallel Approvers</strong></td><td>Multiple approvers configured in a single step with OR logic. The request advances when any one of them approves, providing flexibility and preventing bottlenecks.</td></tr><tr><td><strong>Priority Order</strong></td><td>The sequence in which advanced flows are evaluated. When multiple flows could match an employee's attributes, the first matching flow (by priority) is applied.</td></tr><tr><td><strong>Request Type</strong></td><td>A category of employee request that requires approval, such as Leave, Expense, Loan, or Attendance Regularization. Each request type has its own independent approval flow configuration.</td></tr><tr><td><strong>Step</strong></td><td>A single stage in an approval flow containing one or more approvers. Requests proceed sequentially through steps, and all approvers in a step must approve (unless OR logic is used) before advancing.</td></tr><tr><td><strong>Super Admin</strong></td><td>The highest permission level in Bayzat, with full access to configure approval flows, manage users, and control all system settings. Only Super Admins can create or edit approval flows.</td></tr></tbody></table></div></section>
+<footer>
+  <p>Generated by Bayzat Documentation System</p>
+  <p>Last updated: 2026-01-22</p>
+</footer>
+</body>
+</html>
