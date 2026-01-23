@@ -863,6 +863,72 @@
   <p><em>Reference: TSSD-2792</em></p>
 </div>
 
+<h4>Configure Attendance API for Device Integration</h4>
+
+<p>When integrating biometric devices or third-party systems that send attendance data via API, you must configure the API token and data structure settings.</p>
+
+<p><strong>Accessing the API Token</strong></p>
+<p>You can access the Attendance API Token through two paths:</p>
+
+<p><em>Path 1: Through Automations</em></p>
+<ol>
+  <li>Navigate to <strong>Automations</strong> in the left sidebar</li>
+  <li>Click <strong>API Token</strong></li>
+  <li>Select the <strong>Attendance</strong> tab</li>
+</ol>
+
+<p><em>Path 2: Through Settings</em></p>
+<ol>
+  <li>Navigate to <strong>Settings</strong> → <strong>Attendance</strong></li>
+  <li>Scroll down to the <strong>Attendance API Settings</strong> section</li>
+  <li>Click the <strong>API token</strong> link in the description</li>
+</ol>
+
+<figure>
+  <img src="validation/screenshots/api-token-attendance-tab.png" alt="API Token page showing the Attendance tab with token management options" />
+  <figcaption>API Token page accessed through Automations showing the Attendance tab</figcaption>
+</figure>
+
+<p><strong>Managing the API Token</strong></p>
+<ul>
+  <li><strong>View Token:</strong> Click the eye icon to reveal the full API token. The token is hidden by default for security.</li>
+  <li><strong>Copy Token:</strong> Click the copy icon to copy the API token to your clipboard. Use this token when configuring your biometric device or third-party integration.</li>
+  <li><strong>Regenerate Token:</strong> Click <strong>Regenerate token</strong> to create a new API token. This immediately invalidates the old token.</li>
+</ul>
+
+<div class="warning-box">
+  <p><strong>Important:</strong> When you regenerate the API token, any existing integrations using the old token will immediately stop working. Ensure you update all connected biometric devices and third-party systems with the new token.</p>
+</div>
+
+<p><strong>Configure API Data Structure</strong></p>
+<p>Access this setting through <strong>Settings</strong> → <strong>Attendance</strong> → <strong>Attendance API Settings</strong>:</p>
+
+<figure>
+  <img src="validation/screenshots/attendance-api-settings-details.png" alt="Attendance API Settings showing data structure options and threshold configuration" />
+  <figcaption>Attendance API Settings with data structure options and check-in threshold</figcaption>
+</figure>
+
+<p><em>Includes Punch Type (Recommended)</em></p>
+<ul>
+  <li>Select this option when your biometric device sends explicit punch types (check in, check out, break in, break out)</li>
+  <li>The system uses the threshold value to determine which shift the check-in applies to</li>
+  <li>Any unrecognized punch types are excluded from processing</li>
+</ul>
+
+<p><em>Excludes Punch Type</em></p>
+<ul>
+  <li>Select this option when your biometric device does not send punch type information</li>
+  <li>The system uses the threshold value to identify the first punch as check-in</li>
+  <li>Subsequent punches are automatically classified as break-in, break-out, and check-out</li>
+</ul>
+
+<p><strong>Threshold for Check-in</strong></p>
+<p>The threshold value (1-300 minutes) determines how the system associates punches with active shifts. When a punch is received, the system checks if it falls within the threshold time before or after a scheduled shift. The default threshold is 60 minutes.</p>
+
+<div class="info-box">
+  <p><strong>Example:</strong> With a 60-minute threshold and a shift starting at 9:00 AM, a punch received anytime between 8:00 AM and the shift end time would be considered a potential check-in for that shift.</p>
+</div>
+
 <h4>Step 3: Configure Employee Biometric IDs</h4>
 
 <p>Choose one of two methods to assign biometric IDs to employees:</p>
