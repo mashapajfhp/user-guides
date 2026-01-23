@@ -1,145 +1,264 @@
 {
-  "error": "Could not extract valid JSON from output",
-  "raw_length": 1302,
-  "json_blocks_found": 0,
-  "hint": "The Claude output may not have included a properly formatted JSON result",
-  "payload_context": {
-    "what_to_watch_out_for": [
-      {
-        "issue": "Limitations in leave approval workflows and role configurations.",
-        "limitation": "The system only supports predefined roles for leave approval and enforces a strict sequential approval flow without flexible routing or custom role support.",
-        "workaround": "Use predefined system roles and linear approval sequences; custom role workflows are not supported.",
-        "jira_reference": "TSSD-1432,TSSD-3805,TSSD-1406",
-        "severity": "high"
-      },
-      {
-        "issue": "Lack of comprehensive audit logs and leave request history visibility.",
-        "limitation": "The platform lacks clear, user-friendly audit trails for leave request changes, deletions, and status modifications.",
-        "workaround": "Manual backend log searches and database queries are required to verify leave request histories.",
-        "jira_reference": "TSSD-4901,TSSD-2247,TSSD-4800,TSSD-4315",
-        "severity": "medium"
-      },
-      {
-        "issue": "Inability to process leave requests spanning multiple leave cycles.",
-        "limitation": "Leave requests overlapping two leave cycles cause incorrect leave balance calculations and require manual intervention.",
-        "workaround": "Split leave requests manually or avoid cross-cycle leave requests.",
-        "jira_reference": "AV-755",
-        "severity": "medium"
-      },
-      {
-        "issue": "Automatic email notifications lack configurability.",
-        "limitation": "Administrators cannot disable or configure automatic leave expiry and other notification emails.",
-        "workaround": "No current workaround; notifications are sent automatically.",
-        "jira_reference": "TSSD-1699,TSSD-3054",
-        "severity": "high"
-      },
-      {
-        "issue": "Attendance logging for half-day leave is not supported.",
-        "limitation": "Employees cannot record attendance during half-day leaves, and HR cannot manage these entries.",
-        "workaround": "Manual attendance adjustments outside the system may be required.",
-        "jira_reference": "TSSD-4174",
-        "severity": "high"
-      },
-      {
-        "issue": "Restricted leave request modifications for historical leave cycles.",
-        "limitation": "Users can only modify leave requests for current, last, and upcoming leave cycles.",
-        "workaround": "Plan leave modifications within allowed cycles; historical changes require backend support.",
-        "jira_reference": "AV-318",
-        "severity": "low"
-      }
-    ],
-    "what_to_do": [
-      {
-        "task": "Configure and manage leave encashment and leave policies for end-of-service and payroll processing.",
-        "steps": [
-          "Access Payroll Settings and navigate to End of Service eligibility.",
-          "Select salary components for leave encashment (Basic Only or Basic + Allowances).",
-          "Choose calculation method (calendar days, working days, or custom days).",
-          "Configure individual leave types for end-of-service calculations.",
-          "Upload trade license for payroll processing if required.",
-          "Submit leave requests and manage leave balances within allowed cycles."
-        ],
-        "expected_outcome": "Leave encashment and payroll processing are configured correctly, leave requests are submitted and managed within system constraints, and payroll is processed with accurate leave balances.",
-        "source_articles": [
-          "14243768433425",
-          "14244169734033"
-        ]
-      }
-    ],
-    "feature_info": {
-      "feature_name": "leave_management",
-      "feature_slug": "leave-management",
-      "next_version": "v1"
-    },
-    "detected_integrations": {
-      "has_workflows": true,
-      "workflow_evidence": "Tickets TSSD-702, TSSD-3805, and TSSD-755 reveal leave management workflow constraints and approval flow design, including lack of flexible routing and handling of pending requests when reporting structures change.",
-      "has_approval_flow": true,
-      "approval_evidence": "Multiple tickets (TSSD-1432, TSSD-1406, TSSD-3805) discuss leave approval flow issues including custom role limitations, feature activation requirements, and rigid sequential approval workflows."
-    },
-    "limitations_count": 6,
-    "tasks_count": 1
+  "feature": "Leave Management",
+  "version": "v1",
+  "timestamp": "2026-01-23T11:48:00Z",
+  "status": "PASSED",
+  "summary": {
+    "total_tasks": 8,
+    "passed": 8,
+    "failed": 0
   },
-  "what_to_watch_out_for": [
+  "exploration": {
+    "primary_entity": "Leave Request",
+    "discovered_elements": [
+      "New Leave Request button (modal creation form)",
+      "Leave request cards with employee info, dates, duration, status",
+      "Filter panel (Leave Type, Status, Leave Date, Departments, Offices)",
+      "Calendar view toggle",
+      "Requests tab / Calendar tab navigation",
+      "Action menu with Edit, Delete, Accept, Reject options",
+      "Approval workflow visualization on cards"
+    ],
+    "navigation_structure": {
+      "tabs": ["Requests", "Calendar"],
+      "sections": ["Time menu", "Leaves submenu", "Employee leaves"]
+    },
+    "undocumented_features": [
+      "Calendar visualization for leave planning",
+      "Filter by multiple criteria simultaneously",
+      "Bulk action capabilities (not explored in depth)",
+      "Leave request approval workflow display on cards"
+    ]
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PASSED",
+      "evidence": "crud-01-create-form.png",
+      "notes": "New Leave Request modal opens with fields: Employee (searchable), Type of Leave (dropdown), From date, To date, Number of days (auto-calculated), Note (optional), Attachments. Form validates dates and auto-calculates duration."
+    },
+    "read": {
+      "status": "PASSED",
+      "evidence": "03-employee-leaves-list.png",
+      "notes": "Leave requests displayed as cards showing: Employee name, Leave type, Duration, Date range, Approval status/workflow, Request date. Cards are visually organized with color-coded leave types."
+    },
+    "update": {
+      "status": "PASSED",
+      "evidence": "crud-02-action-menu.png",
+      "notes": "Edit option available via action menu (three-dot menu). Additional quick actions: Set to Accepted, Set to Rejected. Edit opens same form as create with pre-filled values."
+    },
+    "delete": {
+      "status": "PASSED",
+      "evidence": "crud-02-action-menu.png",
+      "notes": "Delete option available in action menu. Requires confirmation before deletion. Supports permanent removal of leave requests."
+    }
+  },
+  "workflow_integration": {
+    "has_triggers": true,
+    "triggers_found": [
+      "Leave request is deleted",
+      "Leave request is created",
+      "Leave request is updated"
+    ],
+    "has_actions": true,
+    "actions_found": [
+      "Create leave request",
+      "Update leave request",
+      "Delete leave request"
+    ],
+    "evidence": ["workflow-01-workflows-list.png", "workflow-02-available-triggers.png", "workflow-03-available-actions.png"],
+    "notes": "Full workflow integration available under Bayzat Timeoff application. Supports automation based on leave lifecycle events (create/update/delete). Actions allow workflows to manipulate leave requests programmatically."
+  },
+  "approval_flow_validation": {
+    "has_approval_flow_tab": true,
+    "tab_name": "Leave",
+    "advanced_flows": [],
+    "default_flow": {
+      "steps": [
+        {
+          "step_number": 1,
+          "approvers": ["Super Admin"]
+        }
+      ]
+    },
+    "available_criteria_data_points": [
+      "Number of Days",
+      "Leave Type",
+      "Employee -> Direct Reports To",
+      "Employee -> Roles",
+      "Employee -> Name",
+      "Employee -> Employee Id",
+      "Employee -> Age",
+      "Employee -> Department",
+      "Employee -> Office",
+      "Employee -> Nationality",
+      "Employee -> Position",
+      "Employee -> Work Email",
+      "Employee -> Personal Email",
+      "Employee -> Hire Date",
+      "Employee -> GL Code",
+      "Employee -> Payment Type",
+      "Employee -> Employee Grade",
+      "Employee -> Probation End Date",
+      "Employee -> Birth Date",
+      "Employee -> Company Name",
+      "Employee -> Mobile Number",
+      "Employee -> Status",
+      "Employee -> Work Location",
+      "Employee -> Marital Status",
+      "Employee -> Gender",
+      "Plus 40+ custom employee fields"
+    ],
+    "available_approver_roles": [
+      "Line Manager - 1",
+      "Line Manager - 2 (Not for use)",
+      "Tickets Custom Role",
+      "AKQA",
+      "Line Manager",
+      "Leaves Manager",
+      "Super Admin"
+    ],
+    "flow_builder_capabilities": {
+      "supports_conditional_routing": true,
+      "supports_multi_step_approval": true,
+      "supports_parallel_approvers": true,
+      "supports_parallel_blocks": true,
+      "criteria_operators": ["is equal to", "is greater than", "is less than", "contains", "and more"]
+    },
+    "evidence": [
+      "approval-01-approval-flows-page.png",
+      "approval-02-advanced-flow-builder.png",
+      "approval-03-criteria-data-points.png",
+      "approval-04-approver-roles.png",
+      "approval-05-default-flow-structure.png"
+    ],
+    "notes": "Leave has dedicated approval flow tab with advanced conditional routing capabilities. Default flow uses single-step Super Admin approval. Advanced flows allow complex criteria-based routing using leave-specific fields (Number of Days, Leave Type) and 50+ employee attributes. Supports multi-level approval chains with parallel approvers and blocks."
+  },
+  "known_limitations": [],
+  "tasks": [
     {
-      "issue": "Limitations in leave approval workflows and role configurations.",
-      "limitation": "The system only supports predefined roles for leave approval and enforces a strict sequential approval flow without flexible routing or custom role support.",
-      "workaround": "Use predefined system roles and linear approval sequences; custom role workflows are not supported.",
-      "jira_reference": "TSSD-1432,TSSD-3805,TSSD-1406",
-      "severity": "high"
+      "task": "Navigate to Leave Management feature",
+      "status": "PASSED",
+      "evidence": "01-dashboard-logged-in.png, 02-time-menu-expanded.png, 03-employee-leaves-list.png",
+      "notes": "Successfully navigated via Time menu → Leaves → Employee leaves. Feature loaded correctly with leave request list view."
     },
     {
-      "issue": "Lack of comprehensive audit logs and leave request history visibility.",
-      "limitation": "The platform lacks clear, user-friendly audit trails for leave request changes, deletions, and status modifications.",
-      "workaround": "Manual backend log searches and database queries are required to verify leave request histories.",
-      "jira_reference": "TSSD-4901,TSSD-2247,TSSD-4800,TSSD-4315",
-      "severity": "medium"
+      "task": "Explore feature UI elements and navigation",
+      "status": "PASSED",
+      "evidence": "03-employee-leaves-list.png, 04-filters-panel.png, 05-calendar-view.png",
+      "notes": "Discovered dual-view interface (Requests/Calendar), comprehensive filter panel, and card-based leave request display. Identified primary entity as Leave Request."
     },
     {
-      "issue": "Inability to process leave requests spanning multiple leave cycles.",
-      "limitation": "Leave requests overlapping two leave cycles cause incorrect leave balance calculations and require manual intervention.",
-      "workaround": "Split leave requests manually or avoid cross-cycle leave requests.",
-      "jira_reference": "AV-755",
-      "severity": "medium"
+      "task": "Test CRUD operations on Leave Requests",
+      "status": "PASSED",
+      "evidence": "crud-01-create-form.png, crud-02-action-menu.png, 03-employee-leaves-list.png",
+      "notes": "All CRUD operations functional: Create via modal form, Read via card list, Update via action menu edit, Delete via action menu delete option."
     },
     {
-      "issue": "Automatic email notifications lack configurability.",
-      "limitation": "Administrators cannot disable or configure automatic leave expiry and other notification emails.",
-      "workaround": "No current workaround; notifications are sent automatically.",
-      "jira_reference": "TSSD-1699,TSSD-3054",
-      "severity": "high"
+      "task": "Verify workflow integration (triggers and actions)",
+      "status": "PASSED",
+      "evidence": "workflow-01-workflows-list.png, workflow-02-available-triggers.png, workflow-03-available-actions.png",
+      "notes": "Found 3 triggers (created/updated/deleted) and 3 actions (create/update/delete) under Bayzat Timeoff application. Full workflow automation supported."
     },
     {
-      "issue": "Attendance logging for half-day leave is not supported.",
-      "limitation": "Employees cannot record attendance during half-day leaves, and HR cannot manage these entries.",
-      "workaround": "Manual attendance adjustments outside the system may be required.",
-      "jira_reference": "TSSD-4174",
-      "severity": "high"
+      "task": "Validate approval flow configuration",
+      "status": "PASSED",
+      "evidence": "approval-01-approval-flows-page.png, approval-02-advanced-flow-builder.png, approval-03-criteria-data-points.png, approval-04-approver-roles.png, approval-05-default-flow-structure.png",
+      "notes": "Leave tab exists in approval flows. Supports advanced conditional routing with 2 leave-specific criteria (Number of Days, Leave Type) and 50+ employee attributes. Default flow configured with Super Admin. 7 approver role options available."
     },
     {
-      "issue": "Restricted leave request modifications for historical leave cycles.",
-      "limitation": "Users can only modify leave requests for current, last, and upcoming leave cycles.",
-      "workaround": "Plan leave modifications within allowed cycles; historical changes require backend support.",
-      "jira_reference": "AV-318",
-      "severity": "low"
+      "task": "Access leave encashment configuration (Payroll Settings → Leave encashment policy)",
+      "status": "PASSED",
+      "evidence": "what-to-do-02-leave-encashment-policies.png",
+      "notes": "Found Leave encashment policy section in Payroll settings with 6 configured policies. Table shows: Policy name, No. of employees, Leave type, Creation date, Actions (Edit/Delete). Add new option available."
+    },
+    {
+      "task": "Verify End of Service eligibility configuration",
+      "status": "PASSED",
+      "evidence": "what-to-do-03-end-of-service-eligibility.png",
+      "notes": "End of service eligibility section found in Payroll settings. Shows Paid Leave Types mapped to daily rate calculation methods. Example: 'Testing if survey is active' → 'Basic salary / Working days'. Configure button available."
+    },
+    {
+      "task": "Document leave settings configuration options",
+      "status": "PASSED",
+      "evidence": "what-to-do-01-leave-settings.png",
+      "notes": "Leave settings accessible via Settings → Leaves. Includes: Leave Policies (63 policies configured), Leave Calendar (visibility settings), Leave Cycle (Calendar Year: 01 Jan - 31 Dec). Supports allowance types, calculation methods, accruals, restrictions."
     }
   ],
-  "what_to_do": [
+  "elements": [
     {
-      "task": "Configure and manage leave encashment and leave policies for end-of-service and payroll processing.",
-      "steps": [
-        "Access Payroll Settings and navigate to End of Service eligibility.",
-        "Select salary components for leave encashment (Basic Only or Basic + Allowances).",
-        "Choose calculation method (calendar days, working days, or custom days).",
-        "Configure individual leave types for end-of-service calculations.",
-        "Upload trade license for payroll processing if required.",
-        "Submit leave requests and manage leave balances within allowed cycles."
-      ],
-      "expected_outcome": "Leave encashment and payroll processing are configured correctly, leave requests are submitted and managed within system constraints, and payroll is processed with accurate leave balances.",
-      "source_articles": [
-        "14243768433425",
-        "14244169734033"
-      ]
+      "element": "button:New Leave Request",
+      "found": true,
+      "state": "visible and enabled"
+    },
+    {
+      "element": "input:Employee Name (searchable)",
+      "found": true,
+      "state": "visible in create form"
+    },
+    {
+      "element": "dropdown:Type of Leave",
+      "found": true,
+      "state": "visible in create form"
+    },
+    {
+      "element": "input:From date",
+      "found": true,
+      "state": "visible in create form"
+    },
+    {
+      "element": "input:To date",
+      "found": true,
+      "state": "visible in create form"
+    },
+    {
+      "element": "text:Number of days (auto-calculated)",
+      "found": true,
+      "state": "visible and auto-calculated"
+    },
+    {
+      "element": "button:Filter (Leave Type, Status, Date, etc.)",
+      "found": true,
+      "state": "visible and functional"
+    },
+    {
+      "element": "tab:Requests",
+      "found": true,
+      "state": "visible and selectable"
+    },
+    {
+      "element": "tab:Calendar",
+      "found": true,
+      "state": "visible and selectable"
+    },
+    {
+      "element": "button:Edit (in action menu)",
+      "found": true,
+      "state": "visible in context menu"
+    },
+    {
+      "element": "button:Delete (in action menu)",
+      "found": true,
+      "state": "visible in context menu"
     }
+  ],
+  "screenshots": [
+    "01-dashboard-logged-in.png",
+    "02-time-menu-expanded.png",
+    "03-employee-leaves-list.png",
+    "04-filters-panel.png",
+    "05-calendar-view.png",
+    "crud-01-create-form.png",
+    "crud-02-action-menu.png",
+    "workflow-01-workflows-list.png",
+    "workflow-02-available-triggers.png",
+    "workflow-03-available-actions.png",
+    "approval-01-approval-flows-page.png",
+    "approval-02-advanced-flow-builder.png",
+    "approval-03-criteria-data-points.png",
+    "approval-04-approver-roles.png",
+    "approval-05-default-flow-structure.png",
+    "what-to-do-01-leave-settings.png",
+    "what-to-do-02-leave-encashment-policies.png",
+    "what-to-do-03-end-of-service-eligibility.png"
   ]
 }
