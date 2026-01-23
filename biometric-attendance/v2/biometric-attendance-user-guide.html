@@ -1085,6 +1085,68 @@
   <figcaption>Employee Attendance report with check-in/check-out times and schedule comparison</figcaption>
 </figure>
 
+<h3>View Biometric Device Data</h3>
+<p>The <strong>Attendance Raw Data</strong> tab provides direct access to biometric punch data from integrated devices. This is essential for troubleshooting device integration issues and verifying that biometric data is being captured correctly.</p>
+
+<ol>
+  <li>Navigate to <strong>Time</strong> → <strong>Employee attendance</strong></li>
+  <li>Click the <strong>Attendance Raw Data</strong> tab</li>
+  <li>Select the appropriate data source tab:
+    <ul>
+      <li><strong>API Data:</strong> Attendance data received via API integrations</li>
+      <li><strong>Device Data:</strong> Raw punch data from biometric devices (fingerprint scanners, etc.)</li>
+      <li><strong>Legacy Raw Data:</strong> Historical data from previous system versions</li>
+    </ul>
+  </li>
+</ol>
+
+<h4>Device Data View</h4>
+<p>The Device Data tab displays raw biometric punch records from physical devices. This view helps administrators verify that biometric devices are correctly recording employee attendance.</p>
+
+<p><strong>Device Data columns:</strong></p>
+<ul>
+  <li><strong>Device Serial Number:</strong> The unique identifier of the biometric device that recorded the punch</li>
+  <li><strong>Punch Input Type:</strong> The method used for the punch (e.g., fingerprint, card)</li>
+  <li><strong>Punch Type:</strong> Whether the punch is a check-in or check-out</li>
+  <li><strong>Employee ID on Device:</strong> The biometric ID stored on the device (must match employee's Biometric Device User ID)</li>
+  <li><strong>Employee:</strong> The matched employee name</li>
+  <li><strong>Status:</strong> Processing status of the punch record</li>
+  <li><strong>Office:</strong> The office location associated with the device</li>
+  <li><strong>Punch Date:</strong> The date the punch was recorded</li>
+  <li><strong>Punch Time:</strong> The exact time the punch was recorded</li>
+  <li><strong>Attendance Date:</strong> The attendance date the punch applies to</li>
+  <li><strong>Evaluated As:</strong> How the system evaluated this punch (check-in, check-out, etc.)</li>
+</ul>
+
+<figure>
+  <img src="validation/screenshots/attendance-raw-data-device-data.png" alt="Attendance Raw Data - Device Data tab showing biometric device punch records" />
+  <figcaption>Device Data view showing raw biometric punch data from physical devices</figcaption>
+</figure>
+
+<h4>API Data View</h4>
+<p>The API Data tab displays attendance records received through API integrations. This is used when biometric data is pushed to Bayzat from external systems.</p>
+
+<p><strong>API Data columns:</strong></p>
+<ul>
+  <li><strong>Name:</strong> Employee name</li>
+  <li><strong>Employee ID:</strong> The employee's ID in the system</li>
+  <li><strong>Email:</strong> Employee email address</li>
+  <li><strong>Status:</strong> Processing status</li>
+  <li><strong>Punch Date Time:</strong> Combined date and time of the punch</li>
+  <li><strong>Punch Type:</strong> Type of punch (check-in/check-out)</li>
+  <li><strong>Attendance Date:</strong> The attendance date</li>
+  <li><strong>Evaluated As:</strong> System evaluation of the punch</li>
+</ul>
+
+<figure>
+  <img src="validation/screenshots/attendance-raw-data-api-data.png" alt="Attendance Raw Data - API Data tab showing attendance records from API integrations" />
+  <figcaption>API Data view showing attendance records received via API integrations</figcaption>
+</figure>
+
+<div class="info-box">
+  <p><strong>Troubleshooting Tip:</strong> If employee punches are not appearing in attendance reports, check the Device Data or API Data tabs first. If raw data exists but isn't reflected in reports, verify that the Employee ID on Device matches the employee's Biometric Device User ID configured in their profile (Work tab).</p>
+</div>
+
 <div class="warning-box"><p><strong>⚠️ API integration lacks office location details in attendance reports</strong></p><p><strong>Impact:</strong> Custom reports cannot display office information for API-integrated attendance punches.</p><p><strong>Workaround:</strong> No workaround provided.</p><p><em>Reference: TSSD-4151</em></p></div><div class="warning-box"><p><strong>⚠️ Logs for shifts not showing due to admin panel bug</strong></p><p><strong>Impact:</strong> Incomplete audit logs for shift scheduler and hrcore entities limit historical data tracking.</p><p><strong>Workaround:</strong> No workaround provided.</p><p><em>Reference: TSSD-4634</em></p></div><h3>Configure Facial Recognition</h3><p>Administrators can enable facial recognition as an additional biometric authentication method for attendance tracking. The system uses two key verification mechanisms:</p>
 <div class="info-box">
   <p><strong>Image Comparison:</strong> When an employee attempts to check in, the system captures a live image and compares it against the stored reference photo using facial feature matching algorithms. The comparison analyzes facial geometry, key landmark positions, and unique facial characteristics to verify identity.</p>
