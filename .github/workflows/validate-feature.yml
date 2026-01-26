@@ -139,54 +139,58 @@ jobs:
 
           ## PHASE 0: BROWSER SETUP & LOGIN
 
-          ### Step 0.1: Set Large Viewport
-          BEFORE doing anything else, set a large viewport to see all UI elements:
-          Call browser_resize with width=1280 and height=900
-
-          ### Step 0.2: Login (USE browser_type - DO NOT USE JavaScript)
-
-          **CRITICAL: You MUST use browser_type for form fields. DO NOT use browser_evaluate for login!**
-
+          ### Step 0.1: Initialize Browser
           1. Call browser_navigate with url from CREDENTIALS section (Base URL)
           2. Call browser_resize with width=1280 and height=900
-          3. Call browser_wait_for with time=3 (wait for page to fully load)
-          4. Call browser_snapshot to see the page structure and get element refs
-          5. Find the Email textbox ref from snapshot (usually labeled "Email address")
-          6. Call browser_type with:
-             - ref: [the ref from snapshot for email field]
-             - element: "Email address field"
-             - text: [username from CREDENTIALS]
-          7. Find the Password textbox ref from snapshot
-          8. Call browser_type with:
-             - ref: [the ref from snapshot for password field]
-             - element: "Password field"
-             - text: [password from CREDENTIALS]
-          9. Find the "Log in" button ref from snapshot
-          10. Call browser_click with:
-              - ref: [the ref from snapshot for login button]
-              - element: "Log in button"
-          11. Call browser_wait_for with time=5 (wait for dashboard)
-          12. Call browser_snapshot to verify you're on the dashboard
+          3. Call browser_wait_for with time=5 (allow page to fully load)
 
-          **IMPORTANT: The snapshot will show element refs like "S1E2", "S1E5" etc. Use those exact refs.**
+          ### Step 0.2: Login (OPTIMIZED - USE browser_fill_form)
+
+          **CRITICAL: Use browser_fill_form to fill BOTH fields in ONE call. This is faster and more reliable.**
+
+          1. Call browser_snapshot to see the login page structure
+             - Look for element refs for: Email field, Password field, Log in button
+             - Note the exact refs (e.g., "S1E3", "S1E5", "S1E8")
+
+          2. Call browser_fill_form with fields array containing BOTH email and password:
+             ```
+             fields: [
+               { "name": "Email", "type": "textbox", "ref": "[email-field-ref]", "value": "[username from CREDENTIALS]" },
+               { "name": "Password", "type": "textbox", "ref": "[password-field-ref]", "value": "[password from CREDENTIALS]" }
+             ]
+             ```
+
+          3. Call browser_click with the Log in button ref
+
+          4. Call browser_wait_for with time=7 (allow dashboard to fully load)
+
+          5. Call browser_snapshot to verify you're on the dashboard
+             - Success indicator: You should see sidebar items like "Home", "Company", "People", etc.
+
+          **LOGIN RETRY LOGIC:**
+          If login fails (still on login page after clicking):
+          - Wait 3 more seconds: browser_wait_for with time=3
+          - Take another snapshot to check state
+          - If fields are empty, refill using browser_fill_form
+          - Click login button again
+          - If still failing after 2 retries, document the error and proceed to output JSON
+
+          **COMMON LOGIN ISSUES:**
+          - If snapshot shows "undefined" for refs, wait longer and retry snapshot
+          - If fields don't accept input, the React app may not be fully loaded - wait and retry
+          - If you see "Invalid credentials", verify you're using the correct CREDENTIALS values
 
           ### Step 0.3: Dismiss Onboarding Tours
 
-          Set localStorage flags then reload:
+          After successful login, dismiss any tour popovers:
 
-          **A) Set localStorage flags:**
           Call browser_evaluate with function:
           () => { const tourKeys = { '_bayzat_app_new_web_ia_tour': '{"value":5}', '_bayzat_app_ai-reports-tooltip-visible': '{"value":false}', '_bayzat_app_space_creation_walkthrough': '5', '_bayzat_app_employee-ticket-list-library-intro-dialog': '{"value":true}', '_bayzat_app_setup_categories_walkthrough_step': '{"value":99}', '_bayzat_app_list_library_walkthrough_step': '{"value":99}', '_bayzat_app_announcements_tour': '{"value":true}', '_bayzat_app_home_tour': '{"value":5}' }; Object.entries(tourKeys).forEach(([k,v]) => localStorage.setItem(k,v)); return 'Tour flags set'; }
 
-          **B) Reload the page:**
-          Call browser_evaluate with function:
-          () => { window.location.reload(); return 'Reloading...'; }
-
-          **C) Wait for reload:**
-          Call browser_wait_for with time=4
-
-          **D) Verify clean dashboard:**
-          Call browser_snapshot - proceed when no tour popovers visible.
+          Then reload and wait:
+          - Call browser_evaluate: () => { window.location.reload(); return 'Reloading'; }
+          - Call browser_wait_for with time=5
+          - Call browser_snapshot to verify clean dashboard
 
           ---
 
@@ -198,7 +202,7 @@ jobs:
 
           ### When execution_order says "EXPLORATION":
           Read and execute each instruction in `exploration_phase.instructions[]`:
-          - Navigate to the feature's main section
+          - Navigate to the feature's main section by CLICKING sidebar menu items
           - Take snapshots to understand layout
           - Find all clickable elements
           - Map navigation structure
@@ -243,7 +247,7 @@ jobs:
           **Only if `workflow_exploration.enabled` is true:**
 
           Read and execute `workflow_exploration.check_instructions[]`:
-          - Navigate to: `workflow_exploration.nav_path` (Automations → Workflows → + Create workflow)
+          - Navigate to: `workflow_exploration.nav_path` (Automations -> Workflows -> + Create workflow)
           - In trigger selection, search for this feature's name
           - Check if feature appears as trigger source
           - Document trigger events found (e.g., 'item created', 'status changed')
@@ -320,6 +324,13 @@ jobs:
           - The only time to use browser_navigate is for the initial login page
           - Many routes return 404 when accessed directly - they MUST be reached via UI clicks
 
+          **SIDEBAR NAVIGATION TIPS:**
+          - Take a snapshot first to see all menu items and their refs
+          - Main menu items are usually in the left sidebar
+          - Some items have submenus - click the parent first, then the child
+          - If a click doesn't navigate, wait 2 seconds and try again
+          - After clicking, always wait and take a snapshot to confirm navigation
+
           ---
 
           ## SCREEN DOCUMENTATION PROTOCOL
@@ -363,6 +374,7 @@ jobs:
           {
             "validation_status": "completed | partial | blocked",
             "login_success": true,
+            "login_method": "browser_fill_form",
             "feature_accessible": true,
             "feature_info": {
               "name": "Feature Name",
@@ -475,15 +487,14 @@ jobs:
           $(cat "$PAYLOAD_FILE")
 
           ## BEGIN EXPLORATION
-          Start by setting up the browser, then login, then follow the execution_order from the payload.
+          Start with PHASE 0 (browser setup and login), then follow the execution_order from the payload.
 
-          **CRITICAL: You have LIMITED turns (300 max). Be efficient!**
-          - Follow the execution_order array step by step
+          **EFFICIENCY REMINDERS:**
+          - Use browser_fill_form for login (fills email AND password in ONE call)
+          - Wait sufficiently after page loads (5-7 seconds for React apps)
+          - If something fails, wait and retry once before moving on
           - Focus on the main feature workflows
-          - After completing the execution_order steps, OUTPUT YOUR JSON RESULT
-          - If you're at turn 200+, STOP exploring and output the JSON immediately
-          - ALWAYS end with the complete JSON result - this is REQUIRED
-          - An incomplete exploration WITH JSON output is better than complete exploration WITHOUT JSON
+          - ALWAYS end with the complete JSON result
 
           ## FINAL OUTPUT REMINDER - DO NOT SKIP
 
@@ -493,6 +504,7 @@ jobs:
           {
             "validation_status": "completed",
             "login_success": true,
+            "login_method": "browser_fill_form",
             "feature_accessible": true,
             "feature_info": { ... },
             "execution_order_followed": [ ... ],
