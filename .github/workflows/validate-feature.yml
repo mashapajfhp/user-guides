@@ -142,7 +142,7 @@ jobs:
           ### Step 0.1: Initialize Browser
           1. Call browser_navigate with url from CREDENTIALS section (Base URL)
           2. Call browser_resize with width=1280 and height=900
-          3. Call browser_wait_for with time=5 (allow page to fully load)
+          3. Call browser_wait_for with time=6 (allow page to fully render - React apps need extra time)
 
           ### Step 0.2: Login (OPTIMIZED - USE browser_fill_form)
 
@@ -151,46 +151,81 @@ jobs:
           1. Call browser_snapshot to see the login page structure
              - Look for element refs for: Email field, Password field, Log in button
              - Note the exact refs (e.g., "S1E3", "S1E5", "S1E8")
+             - If snapshot shows no refs or undefined, wait 3 seconds and retry
 
           2. Call browser_fill_form with fields array containing BOTH email and password:
-             ```
              fields: [
                { "name": "Email", "type": "textbox", "ref": "[email-field-ref]", "value": "[username from CREDENTIALS]" },
                { "name": "Password", "type": "textbox", "ref": "[password-field-ref]", "value": "[password from CREDENTIALS]" }
              ]
-             ```
 
           3. Call browser_click with the Log in button ref
 
-          4. Call browser_wait_for with time=7 (allow dashboard to fully load)
+          4. Call browser_wait_for with time=8 (allow dashboard to fully load - this is critical!)
 
           5. Call browser_snapshot to verify you're on the dashboard
              - Success indicator: You should see sidebar items like "Home", "Company", "People", etc.
+             - If still on login page, go to RETRY LOGIC below
 
-          **LOGIN RETRY LOGIC:**
-          If login fails (still on login page after clicking):
-          - Wait 3 more seconds: browser_wait_for with time=3
+          **LOGIN RETRY LOGIC (if first attempt fails):**
+          - Wait 5 more seconds: browser_wait_for with time=5
           - Take another snapshot to check state
-          - If fields are empty, refill using browser_fill_form
-          - Click login button again
+          - If still on login page with empty fields:
+            a. Re-snapshot to get fresh refs
+            b. Use browser_fill_form again with new refs
+            c. Click login button
+            d. Wait 8 seconds
           - If still failing after 2 retries, document the error and proceed to output JSON
 
-          **COMMON LOGIN ISSUES:**
-          - If snapshot shows "undefined" for refs, wait longer and retry snapshot
-          - If fields don't accept input, the React app may not be fully loaded - wait and retry
-          - If you see "Invalid credentials", verify you're using the correct CREDENTIALS values
+          **COMMON LOGIN ISSUES AND SOLUTIONS:**
+          - "Snapshot shows undefined refs" → Wait longer (5-10 sec) and retry snapshot
+          - "Fields don't accept input" → React not hydrated, wait and retry
+          - "Login button click has no effect" → Page not ready, wait and retry
+          - "Invalid credentials error" → Verify CREDENTIALS values are correct
 
-          ### Step 0.3: Dismiss Onboarding Tours
+          ### Step 0.3: Dismiss Onboarding Tours (CLICK-BASED - NOT JavaScript!)
 
-          After successful login, dismiss any tour popovers:
+          **CRITICAL: browser_evaluate often returns undefined. Use CLICK-BASED dismissal instead!**
 
-          Call browser_evaluate with function:
-          () => { const tourKeys = { '_bayzat_app_new_web_ia_tour': '{"value":5}', '_bayzat_app_ai-reports-tooltip-visible': '{"value":false}', '_bayzat_app_space_creation_walkthrough': '5', '_bayzat_app_employee-ticket-list-library-intro-dialog': '{"value":true}', '_bayzat_app_setup_categories_walkthrough_step': '{"value":99}', '_bayzat_app_list_library_walkthrough_step': '{"value":99}', '_bayzat_app_announcements_tour': '{"value":true}', '_bayzat_app_home_tour': '{"value":5}' }; Object.entries(tourKeys).forEach(([k,v]) => localStorage.setItem(k,v)); return 'Tour flags set'; }
+          After successful login, tour popovers may appear. Dismiss them using clicks:
 
-          Then reload and wait:
-          - Call browser_evaluate: () => { window.location.reload(); return 'Reloading'; }
-          - Call browser_wait_for with time=5
-          - Call browser_snapshot to verify clean dashboard
+          1. Call browser_snapshot to see if any tour/popover elements are visible
+
+          2. Look for these tour indicators in the snapshot:
+             - Elements with text "Got it", "Next", "Skip", "Close", "Dismiss"
+             - X or close icons (usually in top-right of popover)
+             - Buttons with data-external-id containing "close" or "confirm"
+             - Overlay/backdrop elements
+
+          3. If tour elements found, click the dismiss button:
+             - Call browser_click with the ref of the dismiss/close/Got it button
+             - Call browser_wait_for with time=2
+             - Call browser_snapshot to check if dismissed
+
+          4. Repeat steps 2-3 until no more tour popovers visible (max 5 iterations)
+
+          5. If tours persist after 5 attempts:
+             - Try pressing Escape key: browser_press_key with key="Escape"
+             - Try clicking outside the popover on the main content area
+             - Document that tours could not be dismissed and continue
+
+          **WHY NOT JavaScript?** The browser_evaluate function often returns undefined in this environment,
+          making localStorage and JS-based dismissal unreliable. Click-based dismissal works consistently.
+
+          **TOUR ELEMENT PATTERNS TO LOOK FOR:**
+          - "Got it" button (most common)
+          - "Skip tour" link
+          - "X" close icon in popover header
+          - "Next" / "Finish" buttons (click through the tour)
+          - Elements with class containing "tour", "walkthrough", "onboarding", "popover"
+
+          ### Step 0.4: Verify Session is Active
+
+          Before proceeding to feature exploration:
+          1. Call browser_snapshot
+          2. Verify you see the main dashboard/sidebar
+          3. If you see the login page instead, the session was lost - retry login
+          4. Take a screenshot of the clean dashboard state
 
           ---
 
@@ -327,9 +362,14 @@ jobs:
           **SIDEBAR NAVIGATION TIPS:**
           - Take a snapshot first to see all menu items and their refs
           - Main menu items are usually in the left sidebar
-          - Some items have submenus - click the parent first, then the child
-          - If a click doesn't navigate, wait 2 seconds and try again
-          - After clicking, always wait and take a snapshot to confirm navigation
+          - Some items have submenus - click the parent first, wait 2 sec, then click the child
+          - If a click doesn't navigate, wait 3 seconds and try again
+          - After clicking, ALWAYS wait 3-5 seconds and take a snapshot to confirm navigation
+
+          **SESSION HEALTH CHECKS:**
+          - If you suddenly see the login page, your session expired - re-login
+          - If navigation stops working, take a snapshot to diagnose
+          - If the page seems frozen, wait 10 seconds then take a snapshot
 
           ---
 
@@ -364,6 +404,16 @@ jobs:
 
           ---
 
+          ## TIMEOUT PREVENTION
+
+          To avoid workflow timeout (60 min limit):
+          - Be efficient with exploration - don't over-explore unrelated areas
+          - After 150 turns, start wrapping up and prepare JSON output
+          - After 200 turns, STOP exploring and output JSON immediately
+          - If stuck on any step for more than 5 retries, skip it and document the blocker
+
+          ---
+
           ## OUTPUT FORMAT - MANDATORY JSON RESPONSE
 
           **CRITICAL: You MUST output a JSON result wrapped in ```json code blocks.**
@@ -375,6 +425,12 @@ jobs:
             "validation_status": "completed | partial | blocked",
             "login_success": true,
             "login_method": "browser_fill_form",
+            "tour_dismissal": {
+              "method": "click_based",
+              "tours_found": 2,
+              "tours_dismissed": 2,
+              "issues": []
+            },
             "feature_accessible": true,
             "feature_info": {
               "name": "Feature Name",
@@ -459,6 +515,11 @@ jobs:
             },
             "what_works": [{ "feature_aspect": "", "description": "", "user_benefit": "" }],
             "whats_not_working": [{ "issue": "", "symptoms": "", "impact": "" }],
+            "session_health": {
+              "login_attempts": 1,
+              "session_losses": 0,
+              "tour_dismissal_attempts": 2
+            },
             "screenshots_taken": 0,
             "validation_timestamp": "ISO timestamp",
             "summary": "Comprehensive summary"
@@ -467,8 +528,8 @@ jobs:
 
           **TURN LIMIT WARNING:**
           - You have LIMITED turns (300 max). Be efficient!
-          - After exploring key screens, OUTPUT YOUR JSON RESULT
-          - If at turn 200+, STOP and output JSON immediately
+          - After 150 turns, start wrapping up
+          - After 200 turns, STOP and output JSON immediately
           - An incomplete exploration WITH JSON is better than complete exploration WITHOUT JSON
 
           PROMPT_HEADER
@@ -491,29 +552,29 @@ jobs:
 
           **EFFICIENCY REMINDERS:**
           - Use browser_fill_form for login (fills email AND password in ONE call)
-          - Wait sufficiently after page loads (5-7 seconds for React apps)
+          - Use CLICK-BASED tour dismissal (browser_evaluate is unreliable)
+          - Wait sufficiently after page loads (6-8 seconds for React apps)
           - If something fails, wait and retry once before moving on
+          - Check session health periodically (are you still logged in?)
           - Focus on the main feature workflows
           - ALWAYS end with the complete JSON result
 
           ## FINAL OUTPUT REMINDER - DO NOT SKIP
 
-          When you finish exploring, you MUST output a JSON block like this:
+          When you finish exploring, you MUST output a JSON block. This is MANDATORY.
 
           \`\`\`json
           {
             "validation_status": "completed",
             "login_success": true,
             "login_method": "browser_fill_form",
+            "tour_dismissal": { "method": "click_based", "tours_dismissed": 2 },
             "feature_accessible": true,
             "feature_info": { ... },
             "execution_order_followed": [ ... ],
             "primary_entity_identified": { ... },
             "exploration_journey": [ ... ],
-            "workflow_integration": { ... },
-            "approval_flow": { ... },
-            "what_to_do_results": [ ... ],
-            "what_to_watch_out_for_validated": [ ... ],
+            "session_health": { "login_attempts": 1, "session_losses": 0 },
             "screenshots_taken": 16,
             "summary": "Your comprehensive summary here"
           }
