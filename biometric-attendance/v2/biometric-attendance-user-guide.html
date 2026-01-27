@@ -453,105 +453,85 @@
     </tr>
   </tbody>
 </table></div></section>
-<section class="section" id="product-foundation">
-  <h2>Product Foundation Overview</h2>
+<section class="section section-product-foundation" id="product-foundation">
+    <header class="section-header">
+      <h2 class="section-title">Product Foundation Overview</h2>
+    </header>
+    <div class="section-body">
+      <div class="subsection">
+        <h3>How Biometric Attendance Fits</h3>
+        <p>Biometric Attendance is an <strong>authentication layer</strong> that captures employee check-ins via fingerprint, RFID, or facial recognition. Data syncs to Bayzat and feeds into attendance reports, overtime calculations, and payroll.</p>
+        <div class="info-box">
+          <p><strong>Mental model:</strong> Biometric Device/App → API Sync → Attendance Record → Shift Validation → Payroll</p>
+        </div>
+        <p>Biometric data provides tamper-proof attendance records. Changes to device configuration affect all future syncs for assigned employees.</p>
+      </div>
 
-  <h3>Core Concepts</h3>
-  <div class="feature-grid">
-    <div class="feature-card">
-      <h4>Biometric Devices</h4>
-      <p>Third-party hardware (fingerprint scanners, RFID readers) that capture employee authentication data and send it to Bayzat via API integration. Each device must be manually configured with a unique serial number and assigned to a specific office location.</p>
-    </div>
-    <div class="feature-card">
-      <h4>Biometric IDs</h4>
-      <p>Unique identifiers assigned to each employee that match their biometric template in the physical device. These IDs must be precisely synchronized between Bayzat and the biometric hardware to ensure accurate attendance tracking.</p>
-    </div>
-    <div class="feature-card">
-      <h4>Facial Recognition</h4>
-      <p>Mobile-based authentication method that uses device cameras to verify employee identity during check-in. The system performs <strong>image comparison</strong> against stored reference photos and <strong>liveliness validation</strong> to ensure a real person is present (preventing photo or video spoofing). Requires reference photos, configurable retry limits, and fallback options when recognition fails.</p>
-    </div>
-    <div class="feature-card">
-      <h4>Shift Integration</h4>
-      <p>Automatic linking of biometric attendance data with employee shift schedules. Enables validation of check-in locations, calculation of overtime, and tracking of schedule adherence.</p>
-    </div>
-    <div class="feature-card">
-      <h4>API Data Sync</h4>
-      <p>Automated process that transfers attendance punches from biometric devices to Bayzat. Operates within a one-week data window and requires proper device configuration to maintain sync integrity.</p>
-    </div>
-  </div>
+      <div class="subsection">
+        <h3>Key Decisions Before Setup</h3>
+        <p>Answer these questions before configuring biometric attendance:</p>
+        <ul>
+          <li><strong>Authentication method?</strong> — Fingerprint, RFID, facial recognition, or combination?</li>
+          <li><strong>Device or mobile?</strong> — Fixed biometric terminals, mobile app, or both?</li>
+          <li><strong>Multi-location?</strong> — Different devices per office location?</li>
+          <li><strong>Fallback options?</strong> — What happens when facial recognition fails?</li>
+        </ul>
+      </div>
 
-  <figure>
-    <img src="validation/screenshots/10-biometric-devices-section.png" alt="Biometric devices configuration section in attendance settings" />
-    <figcaption>Biometric Devices configuration section in Attendance Settings</figcaption>
-  </figure>
+      <div class="subsection">
+        <h3>Related Features</h3>
+        <ul>
+          <li><strong>Shift Scheduler</strong> — Defines schedules that biometric attendance validates against</li>
+          <li><strong>Attendance Reports</strong> — Displays biometric check-in data with scheduled shifts</li>
+          <li><strong>Time Off Management</strong> — Integrates to account for approved absences</li>
+          <li><strong>Overtime Requests</strong> — Uses biometric data for overtime calculations</li>
+          <li><strong>Payroll Processing</strong> — Consumes attendance data for salary calculations</li>
+          <li><strong>Mobile App</strong> — Provides facial recognition check-in capability</li>
+        </ul>
+      </div>
 
-  <h3>Related Features</h3>
-<ul>
-  <li><strong>Shift Scheduler:</strong> Defines employee work schedules that biometric attendance validates against</li>
-  <li><strong>Employee Attendance Reports:</strong> Displays biometric check-in data alongside scheduled shifts for analysis and editing</li>
-  <li><strong>Time Off Management:</strong> Integrates with attendance data to account for approved absences</li>
-  <li><strong>Overtime Requests:</strong> Uses biometric attendance to calculate overtime hours (note: policy enforcement inconsistencies exist)</li>
-  <li><strong>Payroll Processing:</strong> Consumes attendance data for accurate salary calculations</li>
-  <li><strong>Mobile App:</strong> Provides facial recognition check-in capability for employees</li>
-</ul>
-
-<h3>Prerequisites</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Item</th>
-      <th>Description</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>Biometric Hardware</strong></td>
-      <td>Third-party biometric devices (fingerprint scanners, RFID readers) compatible with Bayzat API</td>
-      <td>Required for device-based attendance</td>
-    </tr>
-    <tr>
-      <td><strong>API Integration</strong></td>
-      <td>Technical setup to connect biometric devices to Bayzat attendance system</td>
-      <td>Required for automated data sync</td>
-    </tr>
-    <tr>
-      <td><strong>Employee Biometric IDs</strong></td>
-      <td>Unique identifiers matching employee records in both Bayzat and biometric devices</td>
-      <td>Required for accurate tracking</td>
-    </tr>
-    <tr>
-      <td><strong>Office Locations</strong></td>
-      <td>Defined office locations in Bayzat for device assignment and location validation</td>
-      <td>Required for multi-location tracking</td>
-    </tr>
-    <tr>
-      <td><strong>Shift Schedules</strong></td>
-      <td>Employee shift assignments for attendance validation and overtime calculation</td>
-      <td>Recommended for shift workers</td>
-    </tr>
-    <tr>
-      <td><strong>Mobile App Access</strong></td>
-      <td>Bayzat mobile app installed on employee devices for facial recognition check-ins</td>
-      <td>Required for facial recognition</td>
-    </tr>
-    <tr>
-      <td><strong>Camera Permissions</strong></td>
-      <td>Device camera access granted for facial recognition functionality</td>
-      <td>Required for facial recognition</td>
-    </tr>
-    <tr>
-      <td><strong>Reference Photos</strong></td>
-      <td>Employee facial images captured for facial recognition matching</td>
-      <td>Required for facial recognition</td>
-    </tr>
-    <tr>
-      <td><strong>Attendance Policy</strong></td>
-      <td>Company policy defining attendance rules and approval workflows</td>
-      <td>Recommended for governance</td>
-    </tr>
-  </tbody>
-</table>
+      <div class="subsection">
+        <h3>Prerequisites & Requirements</h3>
+        <table class="requirements-table">
+          <thead>
+            <tr><th>Requirement</th><th>Description</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Biometric Hardware</td>
+              <td>Third-party devices compatible with Bayzat API</td>
+              <td>Required for device-based</td>
+            </tr>
+            <tr>
+              <td>API Integration</td>
+              <td>Technical setup to connect devices to Bayzat</td>
+              <td>Required for auto sync</td>
+            </tr>
+            <tr>
+              <td>Employee Biometric IDs</td>
+              <td>Unique identifiers matching in Bayzat and devices</td>
+              <td>Required</td>
+            </tr>
+            <tr>
+              <td>Office Locations</td>
+              <td>Defined locations for device assignment</td>
+              <td>Required for multi-location</td>
+            </tr>
+            <tr>
+              <td>Mobile App + Camera</td>
+              <td>App installed with camera permissions granted</td>
+              <td>Required for facial recognition</td>
+            </tr>
+            <tr>
+              <td>Reference Photos</td>
+              <td>Employee facial images for matching</td>
+              <td>Required for facial recognition</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 
 <div class="warning-box">
   <p><strong>⚠️ Known Configuration Gaps</strong></p>
