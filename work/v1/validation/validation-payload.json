@@ -1,0 +1,426 @@
+{
+  "nextVersion": "v1",
+  "feature_info": {
+    "feature_name": "work",
+    "feature_slug": "work",
+    "next_version": "v1"
+  },
+  "primary_entity": {
+    "discovery_instructions": [
+      "Identify what the main item/entity is for this feature (e.g., ticket, workflow, employee, record)",
+      "Look for list/table views - the rows represent the primary entity",
+      "Check page headers and breadcrumbs for entity naming",
+      "Note the singular and plural forms used in the UI"
+    ],
+    "crud_operations": {
+      "create": {
+        "action": "Create new item",
+        "find_trigger": [
+          "Look for buttons with: + Add, + Create, + New, plus icon",
+          "Check top-right corner of the page",
+          "Check for floating action buttons (FAB)",
+          "Look in empty state messages for create prompts"
+        ],
+        "validation": "New item appears in list with unique identifier"
+      },
+      "read": {
+        "action": "View item details",
+        "find_trigger": [
+          "Click on any row in a list/table",
+          "Look for 'View' or eye icon buttons",
+          "Check if rows are clickable (cursor changes)"
+        ],
+        "validation": "Detail panel, modal, or page opens showing full information"
+      },
+      "update": {
+        "action": "Edit/modify item",
+        "find_trigger": [
+          "Look for Edit button, pencil icon",
+          "Check for inline editing (click on field to edit)",
+          "Look for status change dropdowns or buttons",
+          "Check action menus (three-dot menu) for edit option"
+        ],
+        "validation": "Changes persist after save, reflected in list view"
+      },
+      "delete": {
+        "action": "Delete/remove item",
+        "find_trigger": [
+          "Look for Delete button, trash icon",
+          "Check action menus (three-dot menu) for delete option",
+          "Look for bulk delete with checkboxes",
+          "Some features use 'Archive' or 'Cancel' instead of delete"
+        ],
+        "validation": "Item removed from list or status changed to deleted/archived"
+      }
+    }
+  },
+  "exploration_phase": {
+    "enabled": true,
+    "run_before_what_to_do": true,
+    "instructions": [
+      "Navigate to the feature's main section",
+      "Take a full page snapshot to understand the layout",
+      "Identify the primary entity",
+      "Find ALL clickable elements: buttons, links, tabs, dropdowns, icons",
+      "Map the navigation structure: tabs, sidebar items, breadcrumbs",
+      "Click each tab/sub-section and document what appears",
+      "Locate CRUD controls for the primary entity",
+      "Check for action menus (three-dot menus, right-click menus)",
+      "Document any modals, dialogs, slide-out panels",
+      "Identify form fields and input types when forms appear",
+      "Look for filters, search, sort, and export options",
+      "Check for bulk action controls (checkboxes, select all)",
+      "Note any settings or configuration options"
+    ],
+    "discovery_targets": [
+      "Primary action buttons (create/add new item)",
+      "List/table of items with row actions",
+      "Detail view or edit forms",
+      "Status indicators and state changes",
+      "Filter and search controls",
+      "Navigation tabs within the feature",
+      "Settings or configuration sections",
+      "Related features or cross-links"
+    ]
+  },
+  "prd_context": {
+    "how_it_works_summary": [
+      "Users access any Accounts Payable table and click the Columns button to select which fields to display, including core payable fields, payment details, and custom fields.",
+      "Custom AP fields can be configured as filterable through Settings, allowing users to filter tables by those fields.",
+      "The table updates dynamically without page reload when columns are added or removed.",
+      "Filters do NOT dynamically update based on column selection in Phase 1; Phase 2 introduces dynamic filter sync.",
+      "Users navigate to Finance Ops → Vendor Management and click Vendor Automation to set default values for vendor invoice and accounting fields.",
+      "When creating a new invoice, selecting a vendor auto-fills all configured defaults, which can be overridden at invoice level.",
+      "Users open any AI Reports dashboard and click the Schedule button to create and manage report schedules with recipient emails and frequency options."
+    ],
+    "key_actions_steps": [
+      "Click Columns button on any AP table",
+      "Select/deselect columns from the menu (core fields, payment fields, custom fields)",
+      "Table updates without page reload",
+      "Configure Allowed Filters for custom fields in Settings > AP",
+      "Apply filters to narrow down payables list",
+      "Navigate to Finance Ops > Vendor Management > Vendor Automation button",
+      "Set custom field defaults per vendor and save",
+      "Configure Xero defaults per vendor and save",
+      "Map invoice fields to accounting fields globally",
+      "During invoice creation, vendor defaults auto-populate",
+      "Open any AI Reports dashboard",
+      "Click Schedule button",
+      "Enter schedule name and recipient emails",
+      "Select frequency and configure day if applicable",
+      "Click Schedule Report to activate",
+      "Manage existing schedules: view, edit, copy, or delete"
+    ],
+    "rules_limitations_constraints": [
+      "Custom fields must be configured with Allowed Filters to appear as filter options",
+      "Filters apply to all AP statuses (Draft, Pending Approval, Approved, Pending Authorization, Paid, Rejected, Cancelled)",
+      "Field mapping is global and applies to all vendors; invoice-level overrides do not modify vendor automation data",
+      "Mapping changes do not retroactively overwrite manually saved accounting defaults",
+      "At least one valid email address required for scheduling reports",
+      "All fields must be filled before Schedule button enables",
+      "Monthly schedules on non-existent days fall back to last day of month",
+      "Unsaved changes/incomplete schedules are discarded on modal close",
+      "Recipients added as BCC for privacy"
+    ],
+    "data_inputs_required": [
+      "Column selection preferences from user",
+      "Filter configurations for custom fields",
+      "AP custom field definitions from Settings",
+      "Payable data across all statuses",
+      "Invoice custom field values (Project, Region, Department, Cost Center)",
+      "Accounting field values (Expense Account, Tax Category, Bank Account, Tracking Categories)",
+      "Field mapping configuration between invoice and accounting fields",
+      "Schedule name",
+      "Recipient email addresses",
+      "Scheduling frequency and day selection",
+      "Dashboard selection"
+    ],
+    "edge_cases_warnings": [
+      "Switching between AP statuses must maintain column-filter parity",
+      "Filter UI must adapt to field data types (text, dropdown, date range, numeric range, boolean)",
+      "Custom fields must be explicitly enabled for filtering",
+      "Vendor-level accounting overrides are preserved even when field mapping exists",
+      "Mapping changes only affect future propagation, not retroactive",
+      "Overrides at invoice level never modify vendor automation data",
+      "Monthly report scheduled for day 31 sends on last day of month for shorter months",
+      "Unsaved changes are discarded on modal close"
+    ],
+    "hierarchical_task_analysis": [
+      "Configure AP Custom Fields (Settings > AP) → Create/edit custom field → Set Allowed Filters",
+      "Customize Table View → Open AP table → Click Columns button → Select/deselect fields → View updated table",
+      "Filter Data → Open filters panel → Select filter criteria → Apply filters",
+      "Access Vendor Automation → Finance Ops > Vendor Management → Click Vendor Automation button",
+      "Set Invoice Defaults → Open Invoice Defaults tab → Set field values per vendor → Save",
+      "Set Accounting Defaults → Open Accounting Defaults tab → Configure Xero fields per vendor → Save",
+      "Configure Field Mapping → Open Field Mapping tab → Map invoice field to accounting field → Save",
+      "Create Schedule → Open dashboard → Click Schedule → Enter name and emails → Select frequency → Configure day → Click Schedule Report",
+      "Manage Schedules → Open scheduling modal → View/edit/delete schedules",
+      "Receive Report → System sends email at scheduled time → Open Excel attachment"
+    ]
+  },
+  "detected_integrations": {
+    "has_workflows": true,
+    "workflow_evidence": "Scheduling reports triggers automated email delivery; Vendor Automation auto-fills invoice fields; AP table filters dynamically update based on user selections.",
+    "has_approval_flow": null,
+    "approval_evidence": "No explicit evidence of approval flows related to this feature found in PRD, Zendesk, or Jira data."
+  },
+  "workflow_exploration": {
+    "enabled": true,
+    "priority": "required",
+    "evidence": "Scheduling reports triggers automated email delivery; Vendor Automation auto-fills invoice fields; AP table filters dynamically update based on user selections.",
+    "check_instructions": [
+      "Navigate to Automations in the left sidebar",
+      "Click on Workflows",
+      "Click + Create workflow (or similar create button)",
+      "In trigger selection, search for this feature's name",
+      "Check if this feature appears as a trigger source",
+      "Document any trigger events found (e.g., 'item created', 'status changed')",
+      "Check Actions section for actions related to this feature",
+      "Screenshot available triggers and actions"
+    ],
+    "nav_path": "Automations → Workflows → + Create workflow"
+  },
+  "approval_flow_exploration": {
+    "enabled": true,
+    "priority": "optional",
+    "evidence": "No explicit evidence of approval flows related to this feature found in PRD, Zendesk, or Jira data.",
+    "check_instructions": [
+      "Look for 'Approval' or 'Pending Approval' status in the feature",
+      "Check if items have approval workflow indicators",
+      "Look for 'Submit for Approval' buttons or actions",
+      "Find approval settings in feature configuration",
+      "Document the approval chain (who approves what)",
+      "Test approval/rejection flow if test data available",
+      "Check for approval history or audit trail",
+      "Screenshot approval-related UI elements"
+    ],
+    "detection_signals": [
+      "Status dropdown with 'Pending Approval' option",
+      "Approve/Reject buttons",
+      "Approval history section",
+      "'Requires approval' toggle in settings",
+      "Approver assignment fields"
+    ]
+  },
+  "execution_order": [
+    "1. EXPLORATION: Navigate to feature and discover all UI elements",
+    "2. IDENTIFY ENTITY: Determine what the primary item/entity is",
+    "3. CRUD TEST: Test create, read, update, delete for the primary entity",
+    "4. WORKFLOW CHECK: Verify if feature has workflow triggers/actions",
+    "5. APPROVAL FLOW: Test approval process if present",
+    "6. WHAT_TO_DO: Execute specific validation tasks from payload",
+    "7. WHAT_TO_WATCH_OUT_FOR: Validate constraints, limitations, and edge cases",
+    "8. DOCUMENTATION: Capture screenshots of key screens"
+  ],
+  "what_to_watch_out_for": [
+    {
+      "issue": "Lack of flexible approval workflow configuration for custom roles.",
+      "limitation": "Approval steps must be completed sequentially; no OR logic for approval roles; custom roles cannot be integrated into approval flows.",
+      "workaround": "Use standard roles for approval workflows; avoid complex custom role configurations.",
+      "jira_reference": "TSSD-2893, TSSD-926, TSSD-1432",
+      "severity": "High"
+    },
+    {
+      "issue": "Inability to self-service payroll period adjustments and deletion of closed payroll months.",
+      "limitation": "Users cannot undo closed payroll months or reset payroll periods via UI; requires manual backend intervention.",
+      "workaround": "Contact support for payroll period adjustments.",
+      "jira_reference": "TSSD-1906, TSSD-820",
+      "severity": "High"
+    },
+    {
+      "issue": "Calculation bugs affecting leave balances and payroll deductions.",
+      "limitation": "Leave balance calculations may be inaccurate for leap year hires and end-of-service encashments; public holiday additions do not trigger automatic recalculations.",
+      "workaround": "Manual verification and adjustments may be required.",
+      "jira_reference": "TSSD-3822, TSSD-4813, TSSD-4464",
+      "severity": "High"
+    },
+    {
+      "issue": "Limited email notification control.",
+      "limitation": "Users cannot comprehensively disable specific automated email notifications.",
+      "workaround": "Manage notifications at available settings; no full control.",
+      "jira_reference": "TSSD-2061",
+      "severity": "Medium"
+    },
+    {
+      "issue": "Work Expenses module lacks granular controls and mobile features.",
+      "limitation": "No bulk approve/reject on mobile; limited filtering and visibility controls for managers.",
+      "workaround": "Use desktop interface for full functionality.",
+      "jira_reference": "TSSD-4606, TSSD-3547",
+      "severity": "Medium"
+    }
+  ],
+  "playwright_context": {
+    "feature_metadata": {
+      "name": "work",
+      "slug": "work",
+      "category": "Profile",
+      "version": "",
+      "is_new": null
+    },
+    "prd_context": {
+      "how_it_works_summary": [
+        "Users access any Accounts Payable table and click the Columns button to select which fields to display, including core payable fields, payment details, and custom fields.",
+        "Custom AP fields can be configured as filterable through Settings, allowing users to filter tables by those fields.",
+        "The table updates dynamically without page reload when columns are added or removed.",
+        "Filters do NOT dynamically update based on column selection in Phase 1; Phase 2 introduces dynamic filter sync.",
+        "Users navigate to Finance Ops → Vendor Management and click Vendor Automation to set default values for vendor invoice and accounting fields.",
+        "When creating a new invoice, selecting a vendor auto-fills all configured defaults, which can be overridden at invoice level.",
+        "Users open any AI Reports dashboard and click the Schedule button to create and manage report schedules with recipient emails and frequency options."
+      ],
+      "key_actions_steps": [
+        "Click Columns button on any AP table",
+        "Select/deselect columns from the menu (core fields, payment fields, custom fields)",
+        "Table updates without page reload",
+        "Configure Allowed Filters for custom fields in Settings > AP",
+        "Apply filters to narrow down payables list",
+        "Navigate to Finance Ops > Vendor Management > Vendor Automation button",
+        "Set custom field defaults per vendor and save",
+        "Configure Xero defaults per vendor and save",
+        "Map invoice fields to accounting fields globally",
+        "During invoice creation, vendor defaults auto-populate",
+        "Open any AI Reports dashboard",
+        "Click Schedule button",
+        "Enter schedule name and recipient emails",
+        "Select frequency and configure day if applicable",
+        "Click Schedule Report to activate",
+        "Manage existing schedules: view, edit, copy, or delete"
+      ],
+      "rules_limitations_constraints": [
+        "Custom fields must be configured with Allowed Filters to appear as filter options",
+        "Filters apply to all AP statuses (Draft, Pending Approval, Approved, Pending Authorization, Paid, Rejected, Cancelled)",
+        "Field mapping is global and applies to all vendors; invoice-level overrides do not modify vendor automation data",
+        "Mapping changes do not retroactively overwrite manually saved accounting defaults",
+        "At least one valid email address required for scheduling reports",
+        "All fields must be filled before Schedule button enables",
+        "Monthly schedules on non-existent days fall back to last day of month",
+        "Unsaved changes/incomplete schedules are discarded on modal close",
+        "Recipients added as BCC for privacy"
+      ],
+      "data_inputs_required": [
+        "Column selection preferences from user",
+        "Filter configurations for custom fields",
+        "AP custom field definitions from Settings",
+        "Payable data across all statuses",
+        "Invoice custom field values (Project, Region, Department, Cost Center)",
+        "Accounting field values (Expense Account, Tax Category, Bank Account, Tracking Categories)",
+        "Field mapping configuration between invoice and accounting fields",
+        "Schedule name",
+        "Recipient email addresses",
+        "Scheduling frequency and day selection",
+        "Dashboard selection"
+      ],
+      "edge_cases_warnings": [
+        "Switching between AP statuses must maintain column-filter parity",
+        "Filter UI must adapt to field data types (text, dropdown, date range, numeric range, boolean)",
+        "Custom fields must be explicitly enabled for filtering",
+        "Vendor-level accounting overrides are preserved even when field mapping exists",
+        "Mapping changes only affect future propagation, not retroactive",
+        "Overrides at invoice level never modify vendor automation data",
+        "Monthly report scheduled for day 31 sends on last day of month for shorter months",
+        "Unsaved changes are discarded on modal close"
+      ],
+      "hierarchical_task_analysis": [
+        "Configure AP Custom Fields (Settings > AP) → Create/edit custom field → Set Allowed Filters",
+        "Customize Table View → Open AP table → Click Columns button → Select/deselect fields → View updated table",
+        "Filter Data → Open filters panel → Select filter criteria → Apply filters",
+        "Access Vendor Automation → Finance Ops > Vendor Management → Click Vendor Automation button",
+        "Set Invoice Defaults → Open Invoice Defaults tab → Set field values per vendor → Save",
+        "Set Accounting Defaults → Open Accounting Defaults tab → Configure Xero fields per vendor → Save",
+        "Configure Field Mapping → Open Field Mapping tab → Map invoice field to accounting field → Save",
+        "Create Schedule → Open dashboard → Click Schedule → Enter name and emails → Select frequency → Configure day → Click Schedule Report",
+        "Manage Schedules → Open scheduling modal → View/edit/delete schedules",
+        "Receive Report → System sends email at scheduled time → Open Excel attachment"
+      ]
+    },
+    "detected_integrations": {
+      "has_workflows": true,
+      "workflow_evidence": "Scheduling reports triggers automated email delivery; Vendor Automation auto-fills invoice fields; AP table filters dynamically update based on user selections.",
+      "has_approval_flow": null,
+      "approval_evidence": "No explicit evidence of approval flows related to this feature found in PRD, Zendesk, or Jira data."
+    },
+    "what_to_do": [
+      {
+        "task": "Customize Accounts Payable tables by selecting columns and applying filters to view relevant payable data.",
+        "steps": [
+          "Click the Columns button on any AP table.",
+          "Select or deselect columns including core, payment, and custom fields.",
+          "Apply filters configured for custom fields to narrow down the payable list.",
+          "Verify the table updates dynamically without page reload."
+        ],
+        "expected_outcome": "The AP table displays the selected columns and filters the payable data accordingly, maintaining parity across all AP statuses.",
+        "source_articles": []
+      },
+      {
+        "task": "Set vendor-specific invoice and accounting defaults to automate invoice creation.",
+        "steps": [
+          "Navigate to Finance Ops > Vendor Management and click Vendor Automation.",
+          "In the Invoice Defaults tab, set default values for each vendor's invoice custom fields and save.",
+          "In the Accounting Defaults tab, configure vendor-specific accounting settings for Xero sync and save.",
+          "Map invoice fields to accounting fields globally in the Field Mapping tab and save.",
+          "During invoice creation, select a vendor to auto-fill configured defaults, overriding if necessary."
+        ],
+        "expected_outcome": "Vendor defaults auto-populate invoice fields during creation, with the ability to override without affecting saved settings.",
+        "source_articles": []
+      },
+      {
+        "task": "Schedule AI Reports dashboards to be sent automatically via email.",
+        "steps": [
+          "Open any AI Reports dashboard and click the Schedule button.",
+          "Enter a schedule name and recipient email addresses.",
+          "Select the frequency: Daily, Weekly (choose day), or Monthly (choose date).",
+          "Click Schedule Report to activate the schedule.",
+          "Manage existing schedules by viewing, editing, copying, or deleting them."
+        ],
+        "expected_outcome": "Reports are generated and emailed to recipients at scheduled times with Excel attachments containing dashboard data.",
+        "source_articles": [
+          "14243704039185"
+        ]
+      }
+    ],
+    "what_to_watch_out_for": [
+      {
+        "issue": "Lack of flexible approval workflow configuration for custom roles.",
+        "limitation": "Approval steps must be completed sequentially; no OR logic for approval roles; custom roles cannot be integrated into approval flows.",
+        "workaround": "Use standard roles for approval workflows; avoid complex custom role configurations.",
+        "jira_reference": "TSSD-2893, TSSD-926, TSSD-1432",
+        "severity": "High"
+      },
+      {
+        "issue": "Inability to self-service payroll period adjustments and deletion of closed payroll months.",
+        "limitation": "Users cannot undo closed payroll months or reset payroll periods via UI; requires manual backend intervention.",
+        "workaround": "Contact support for payroll period adjustments.",
+        "jira_reference": "TSSD-1906, TSSD-820",
+        "severity": "High"
+      },
+      {
+        "issue": "Calculation bugs affecting leave balances and payroll deductions.",
+        "limitation": "Leave balance calculations may be inaccurate for leap year hires and end-of-service encashments; public holiday additions do not trigger automatic recalculations.",
+        "workaround": "Manual verification and adjustments may be required.",
+        "jira_reference": "TSSD-3822, TSSD-4813, TSSD-4464",
+        "severity": "High"
+      },
+      {
+        "issue": "Limited email notification control.",
+        "limitation": "Users cannot comprehensively disable specific automated email notifications.",
+        "workaround": "Manage notifications at available settings; no full control.",
+        "jira_reference": "TSSD-2061",
+        "severity": "Medium"
+      },
+      {
+        "issue": "Work Expenses module lacks granular controls and mobile features.",
+        "limitation": "No bulk approve/reject on mobile; limited filtering and visibility controls for managers.",
+        "workaround": "Use desktop interface for full functionality.",
+        "jira_reference": "TSSD-4606, TSSD-3547",
+        "severity": "Medium"
+      }
+    ],
+    "consolidation_summary": {
+      "prds_received": 3,
+      "prds_consolidated": 3,
+      "zendesk_articles_received": 5,
+      "tasks_consolidated": 3,
+      "jira_tickets_received": 30,
+      "jira_tickets_consolidated": 5
+    }
+  }
+}
