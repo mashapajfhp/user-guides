@@ -939,16 +939,160 @@ footer {
       </header>
       <div class="section-body">
         <figure class="screenshot-container"><img src="validation/screenshots/04-work-timing-create-form.png" alt="04-work-timing-create-form.png" class="screenshot"><figcaption>Work timing creation form showing schedule and attendance rule configuration</figcaption></figure>
-        <p>Click "Add new" from the Work Timings list to open the creation form. Configure the following:</p>
+        <p>Click "Add new" from the Work Timings list to open the creation form.</p>
+
+        <h4>Basic Settings</h4>
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Description</th><th>Default</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Name</strong></td>
+              <td>Unique identifier for this work timing configuration. Use descriptive names (e.g., "Standard 9-5", "Night Shift", "Part-time Morning").</td>
+              <td>Required</td>
+            </tr>
+            <tr>
+              <td><strong>Flexible work timing</strong></td>
+              <td>When enabled, allows employees to check in within a flexible window rather than a fixed start time. Late arrival and early departure rules show as "N/A" for flexible schedules.</td>
+              <td>Off</td>
+            </tr>
+            <tr>
+              <td><strong>Starts at / Ends at</strong></td>
+              <td>Define the expected work period. For overnight shifts, set end time earlier than start time (e.g., 11:00 PM to 7:00 AM).</td>
+              <td>09:00 AM – 06:00 PM</td>
+            </tr>
+            <tr>
+              <td><strong>This is a half-day timing</strong></td>
+              <td>Mark this schedule as a half-day configuration. Used for Friday schedules, partial work days, or religious observances.</td>
+              <td>Off</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Attendance Violation Rules</h4>
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Description</th><th>Default</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Late arrival</strong></td>
+              <td>Enable to track when employees check in after the scheduled start time. Set a threshold in minutes—employees arriving later than this threshold are flagged as late.</td>
+              <td>Off (15 mins when enabled)</td>
+            </tr>
+            <tr>
+              <td><strong>Early departure</strong></td>
+              <td>Enable to track when employees check out before the scheduled end time. Set a threshold in minutes—employees leaving earlier than this threshold are flagged.</td>
+              <td>Off (15 mins when enabled)</td>
+            </tr>
+            <tr>
+              <td><strong>Absent day</strong></td>
+              <td>Defines when a late check-in results in marking the employee as absent for the entire day. "Consider as absent day if delayed more than X minutes" sets the threshold.</td>
+              <td>On (300 minutes)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Understanding Violation Levels</h4>
+        <p>Both Late arrival and Early departure support <strong>multiple levels</strong> for progressive tracking. Click "Add more levels" to create tiered thresholds.</p>
+        <figure class="screenshot-container">
+          <img src="validation/screenshots/form-late-arrival-levels.png" alt="Late arrival multi-level configuration" class="screenshot">
+          <figcaption>Late arrival configured with three escalating levels</figcaption>
+        </figure>
+        <p><strong>How levels work:</strong></p>
         <ul>
-          <li><strong>Name</strong> - Identifier for this timing configuration</li>
-          <li><strong>Flexible timing</strong> - Toggle to allow check-in within a window rather than fixed time</li>
-          <li><strong>Start/End time</strong> - Define the workday boundaries</li>
-          <li><strong>Late arrival tolerance</strong> - Grace period before marking late</li>
-          <li><strong>Early departure threshold</strong> - When leaving early triggers a violation</li>
-          <li><strong>Absent day threshold</strong> - Duration after which absence is recorded</li>
-          <li><strong>Extra Hours calculation</strong> - Method for calculating overtime</li>
+          <li><strong>Level 1 (15 mins):</strong> Employee is 15+ minutes late → recorded as "Level 1 late arrival"</li>
+          <li><strong>Level 2 (30 mins):</strong> Employee is 30+ minutes late → recorded as "Level 2 late arrival"</li>
+          <li><strong>Level 3 (60 mins):</strong> Employee is 60+ minutes late → recorded as "Level 3 late arrival"</li>
         </ul>
+        <p><strong>Why use levels?</strong> Levels integrate with <strong>Deductions Policies for Payroll</strong> (in Attendance settings), where you can assign different deduction amounts per level. For example: Level 1 = warning only, Level 2 = 50 AED deduction, Level 3 = 100 AED deduction.</p>
+
+        <h4>Check-in Controls</h4>
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Description</th><th>Default</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Allow breaks</strong></td>
+              <td>Enable to allow employees to take breaks during work hours. When enabled, specify the total allowed break duration in minutes.</td>
+              <td>Off (15 mins when enabled)</td>
+            </tr>
+            <tr>
+              <td><strong>Allow out of office check-ins</strong></td>
+              <td>When enabled, employees can check in from locations outside the designated office. Useful for field workers or remote arrangements.</td>
+              <td>Off</td>
+            </tr>
+            <tr>
+              <td><strong>Disallow check-in before work start time</strong></td>
+              <td>When enabled, prevents employees from checking in earlier than the scheduled start time. Useful for preventing time manipulation.</td>
+              <td>Off</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Extra Hours Calculation</h4>
+        <table>
+          <thead>
+            <tr><th>Option</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Total hours</strong></td>
+              <td>Calculates extra hours as total hours worked more than the scheduled hours. If schedule is 8 hours and employee works 10, extra hours = 2.</td>
+            </tr>
+            <tr>
+              <td><strong>After work end time</strong></td>
+              <td>Calculates extra hours only from time worked after the scheduled end time. Hours worked before start time are not counted as extra.</td>
+            </tr>
+            <tr>
+              <td><strong>All hours worked</strong></td>
+              <td>Counts all hours worked by the employee regardless of schedule. Used for tracking total attendance time.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Break Time Inclusion</h4>
+        <p>This checkbox controls whether break time counts as working time. The setting affects how scheduled hours, hours worked, and extra hours are calculated.</p>
+
+        <div class="info-box">
+          <p><strong>Example scenario:</strong> Work timing is 9:00 AM – 6:00 PM (9 hours), with 1 hour allowed break. Employee works the full day and takes the 1-hour break.</p>
+        </div>
+
+        <table>
+          <thead>
+            <tr><th>Calculation</th><th>Break Time Inclusion OFF</th><th>Break Time Inclusion ON</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Scheduled working hours</strong></td>
+              <td>9 hours − 1 hour break = <strong>8 hours</strong></td>
+              <td><strong>9 hours</strong> (break not subtracted)</td>
+            </tr>
+            <tr>
+              <td><strong>Hours worked</strong></td>
+              <td>9 hours − 1 hour used = <strong>8 hours</strong></td>
+              <td><strong>9 hours</strong> (break not subtracted)</td>
+            </tr>
+            <tr>
+              <td><strong>Extra hours</strong></td>
+              <td>8 − 8 = <strong>0 extra hours</strong></td>
+              <td>9 − 9 = <strong>0 extra hours</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p><strong>When to use each setting:</strong></p>
+        <ul>
+          <li><strong>OFF (default):</strong> Break time does NOT count as work. Use when employees are not paid during breaks.</li>
+          <li><strong>ON:</strong> Break time counts as work. Use when employees are paid during breaks or when break time should be included in total attendance.</li>
+        </ul>
+
+        <div class="warning-box">
+          <p><strong>Important:</strong> Any edits to work timings affect the attendance data of all employees currently assigned to this work timing. Changes apply to future attendance only—historical records remain unchanged.</p>
+        </div>
+
         <p>Click "Save" to create the configuration. It becomes immediately available for assignment to employees.</p>
       </div>
     </section>
