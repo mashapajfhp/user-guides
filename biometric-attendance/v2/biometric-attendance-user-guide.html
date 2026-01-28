@@ -527,6 +527,24 @@
     .phase-link:hover {
       text-decoration: underline;
     }
+
+    /* FAQ Accordion */
+    .faq-accordion { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+    .faq-item { border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; background: #ffffff; transition: all 0.2s ease; }
+    .faq-item:hover { border-color: #6B46C1; box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); }
+    .faq-item[open] { border-color: #6B46C1; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15); }
+    .faq-question { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; font-weight: 600; font-size: 1rem; color: #1a1a2e; cursor: pointer; background: #f8f9ff; list-style: none; transition: all 0.2s ease; }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-question::after { content: ''; width: 10px; height: 10px; border-right: 2px solid #6B46C1; border-bottom: 2px solid #6B46C1; transform: rotate(-45deg); transition: transform 0.3s ease; flex-shrink: 0; margin-left: 16px; }
+    .faq-item[open] .faq-question::after { transform: rotate(45deg); }
+    .faq-question:hover { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); color: #6B46C1; }
+    .faq-item[open] .faq-question { background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%); border-bottom: 1px solid #e2e8f0; color: #1a1a2e; }
+    .faq-item[open] .faq-question::after { border-color: #1a1a2e; }
+    .faq-answer { padding: 20px; background: #ffffff; color: #334155; line-height: 1.7; border-top: 1px solid #E2E8F0; animation: fadeIn 0.3s ease; }
+    .faq-answer p { margin: 0; color: #334155; }
+    .faq-answer ul, .faq-answer ol { margin: 12px 0; padding-left: 24px; }
+    .faq-answer li { margin-bottom: 8px; color: #334155; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -1697,66 +1715,90 @@
 
 <h4>Frequently Asked Questions</h4>
 
-<div class="feature-grid">
-  <div class="feature-card">
-    <h4>Can I enable facial recognition for only certain employees?</h4>
-    <p>No. Facial recognition must be enabled company-wide for all employees. You cannot selectively enable it for specific departments or employee groups. All employees must capture reference photos if facial recognition is activated.</p>
-  </div>
+<div class="faq-accordion">
+  <details class="faq-item">
+    <summary class="faq-question">Can I enable facial recognition for only certain employees?</summary>
+    <div class="faq-answer">
+      <p>No. Facial recognition must be enabled company-wide for all employees. You cannot selectively enable it for specific departments or employee groups. All employees must capture reference photos if facial recognition is activated.</p>
+    </div>
+  </details>
 
-  <div class="feature-card">
-    <h4>What happens if attendance data doesn't sync for more than a week?</h4>
-    <p>Attendance data older than one week cannot be processed or recovered after device connectivity loss. To prevent permanent data loss, ensure biometric devices sync with Bayzat servers at least weekly. Monitor device connectivity regularly.</p>
-  </div>
+  <details class="faq-item">
+    <summary class="faq-question">What happens if attendance data doesn't sync for more than a week?</summary>
+    <div class="faq-answer">
+      <p>Attendance data older than one week cannot be processed or recovered after device connectivity loss. To prevent permanent data loss, ensure biometric devices sync with Bayzat servers at least weekly. Monitor device connectivity regularly.</p>
+    </div>
+  </details>
 
-  <div class="feature-card">
-    <h4>Why don't my custom reports show office locations for attendance data?</h4>
-    <p>API-integrated attendance records lack office location details. Custom reports built using the API cannot display office information. Use standard Bayzat attendance reports instead, which include office location data.</p>
-  </div>
+  <details class="faq-item">
+    <summary class="faq-question">Why don't my custom reports show office locations for attendance data?</summary>
+    <div class="faq-answer">
+      <p>API-integrated attendance records lack office location details. Custom reports built using the API cannot display office information. Use standard Bayzat attendance reports instead, which include office location data.</p>
+    </div>
+  </details>
 
-  <div class="feature-card">
-    <h4>How do I update biometric IDs for multiple employees?</h4>
-    <p>Navigate to the Employees section and use the bulk Excel upload feature. Note that the system requires you to select employee names from dropdowns rather than entering Employee IDs directly. For large batches, break uploads into smaller groups.</p>
-  </div>
+  <details class="faq-item">
+    <summary class="faq-question">How do I update biometric IDs for multiple employees?</summary>
+    <div class="faq-answer">
+      <p>Navigate to the Employees section and use the bulk Excel upload feature. Note that the system requires you to select employee names from dropdowns rather than entering Employee IDs directly. For large batches, break uploads into smaller groups.</p>
+    </div>
+  </details>
 
-  <div class="feature-card">
-    <h4>Why are employees able to check in from locations different from their scheduled shifts?</h4>
-    <p>The system uses flexible location validation with a broad geofence radius. It cannot strictly enforce biometric-only authentication or precise location validation. Review attendance records regularly and contact HR to correct mismatched check-ins.</p>
-  </div>
+  <details class="faq-item">
+    <summary class="faq-question">Why are employees able to check in from locations different from their scheduled shifts?</summary>
+    <div class="faq-answer">
+      <p>The system uses flexible location validation with a broad geofence radius. It cannot strictly enforce biometric-only authentication or precise location validation. Review attendance records regularly and contact HR to correct mismatched check-ins.</p>
+    </div>
+  </details>
 
-  <div class="feature-card">
-    <h4>What should I do if facial recognition fails repeatedly?</h4>
-    <p>Ensure adequate lighting and proper camera positioning. Verify facial recognition retry limits are configured correctly. Check for image validation issues, as the system may accept blank images. Configure fallback authentication methods for employees who consistently experience failures.</p>
-  </div>
+  <details class="faq-item">
+    <summary class="faq-question">What should I do if facial recognition fails repeatedly?</summary>
+    <div class="faq-answer">
+      <p>Ensure adequate lighting and proper camera positioning. Verify facial recognition retry limits are configured correctly. Check for image validation issues, as the system may accept blank images. Configure fallback authentication methods for employees who consistently experience failures.</p>
+    </div>
+  </details>
 
-  <div class="feature-card">
-    <h4>Why don't overtime requests trigger for biometric check-ins?</h4>
-    <p>Biometric attendance bypasses overtime request policies, causing inconsistencies with mobile app check-ins. Manually review overtime hours and submit requests through the standard workflow. Work with HR to reconcile policy enforcement differences between biometric and mobile app attendance.</p>
-  </div>
+  <details class="faq-item">
+    <summary class="faq-question">Why don't overtime requests trigger for biometric check-ins?</summary>
+    <div class="faq-answer">
+      <p>Biometric attendance bypasses overtime request policies, causing inconsistencies with mobile app check-ins. Manually review overtime hours and submit requests through the standard workflow. Work with HR to reconcile policy enforcement differences between biometric and mobile app attendance.</p>
+    </div>
+  </details>
 
-  <div class="feature-card">
-    <h4>How do I configure a new biometric device?</h4>
-    <p>Biometric devices require manual configuration. You must add each device with its serial number and office assignment. There is no automatic device discovery. Navigate to the device management section and enter device details manually.</p>
-  </div>
+  <details class="faq-item">
+    <summary class="faq-question">How do I configure a new biometric device?</summary>
+    <div class="faq-answer">
+      <p>Biometric devices require manual configuration. You must add each device with its serial number and office assignment. There is no automatic device discovery. Navigate to the device management section and enter device details manually.</p>
+    </div>
+  </details>
 
-  <div class="feature-card">
-    <h4>Can I track employee consent for facial recognition?</h4>
-    <p>No built-in consent tracking exists for facial recognition. There is no standardized consent pop-up or management for camera access in mobile or kiosk modes. Implement a manual consent tracking process outside the system and document employee consent separately.</p>
-  </div>
+  <details class="faq-item">
+    <summary class="faq-question">Can I track employee consent for facial recognition?</summary>
+    <div class="faq-answer">
+      <p>No built-in consent tracking exists for facial recognition. There is no standardized consent pop-up or management for camera access in mobile or kiosk modes. Implement a manual consent tracking process outside the system and document employee consent separately.</p>
+    </div>
+  </details>
 
-  <div class="feature-card">
-    <h4>Why can't I see shift change history in the admin panel?</h4>
-    <p>Audit logs for shift scheduler and hrcore entities are incomplete, limiting historical data tracking. Maintain separate documentation of shift changes and contact support to report missing audit data.</p>
-  </div>
+  <details class="faq-item">
+    <summary class="faq-question">Why can't I see shift change history in the admin panel?</summary>
+    <div class="faq-answer">
+      <p>Audit logs for shift scheduler and hrcore entities are incomplete, limiting historical data tracking. Maintain separate documentation of shift changes and contact support to report missing audit data.</p>
+    </div>
+  </details>
 
-  <div class="feature-card">
-    <h4>What happens if a biometric device is replaced temporarily?</h4>
-    <p>Attendance data from replacement devices may not sync correctly. Document all device swaps and manually reconcile attendance records during the replacement period. Update device serial numbers in the system if the replacement is permanent.</p>
-  </div>
+  <details class="faq-item">
+    <summary class="faq-question">What happens if a biometric device is replaced temporarily?</summary>
+    <div class="faq-answer">
+      <p>Attendance data from replacement devices may not sync correctly. Document all device swaps and manually reconcile attendance records during the replacement period. Update device serial numbers in the system if the replacement is permanent.</p>
+    </div>
+  </details>
 
-  <div class="feature-card">
-    <h4>How do I access device metadata for reporting?</h4>
-    <p>Centralized automated reporting for biometric devices is not available. You must manually access Looker explore links to retrieve device metadata. Contact support for assistance navigating Looker reports.</p>
-  </div>
+  <details class="faq-item">
+    <summary class="faq-question">How do I access device metadata for reporting?</summary>
+    <div class="faq-answer">
+      <p>Centralized automated reporting for biometric devices is not available. You must manually access Looker explore links to retrieve device metadata. Contact support for assistance navigating Looker reports.</p>
+    </div>
+  </details>
 </div>
 
 <h4>Getting Help</h4>

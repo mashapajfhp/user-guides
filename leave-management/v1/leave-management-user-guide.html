@@ -164,6 +164,23 @@
       text-decoration: none;
     }
     .phase-link:hover { color: #805AD5; }
+    /* FAQ Accordion */
+    .faq-accordion { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+    .faq-item { border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; background: #ffffff; transition: all 0.2s ease; }
+    .faq-item:hover { border-color: #6B46C1; box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); }
+    .faq-item[open] { border-color: #6B46C1; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15); }
+    .faq-question { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; font-weight: 600; font-size: 1rem; color: #1a1a2e; cursor: pointer; background: #f8f9ff; list-style: none; transition: all 0.2s ease; }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-question::after { content: ''; width: 10px; height: 10px; border-right: 2px solid #6B46C1; border-bottom: 2px solid #6B46C1; transform: rotate(-45deg); transition: transform 0.3s ease; flex-shrink: 0; margin-left: 16px; }
+    .faq-item[open] .faq-question::after { transform: rotate(45deg); }
+    .faq-question:hover { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); color: #6B46C1; }
+    .faq-item[open] .faq-question { background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%); border-bottom: 1px solid #e2e8f0; color: #1a1a2e; }
+    .faq-item[open] .faq-question::after { border-color: #1a1a2e; }
+    .faq-answer { padding: 20px; background: #ffffff; color: #334155; line-height: 1.7; border-top: 1px solid #E2E8F0; animation: fadeIn 0.3s ease; }
+    .faq-answer p { margin: 0; color: #334155; }
+    .faq-answer ul, .faq-answer ol { margin: 12px 0; padding-left: 24px; }
+    .faq-answer li { margin-bottom: 8px; color: #334155; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -1221,7 +1238,50 @@
 <section class="section" id="troubleshooting-edge-cases">
     <h2>Troubleshooting & Edge Cases</h2><div class="content"><h3>Common Issues</h3><table><thead><tr><th>Issue</th><th>Cause</th><th>Resolution</th></tr></thead><tbody><tr><td>Cannot create leave request</td><td>Employee not selected or leave type not configured</td><td>Ensure employee is selected from the searchable dropdown and that leave types are properly configured in system settings</td></tr><tr><td>Duration not calculating correctly</td><td>Date range includes non-working days or public holidays</td><td>Verify that the working days calendar is configured correctly. The system calculates based on working days only</td></tr><tr><td>Leave request not appearing in list</td><td>Filters are applied that exclude the request</td><td>Clear all filters using the filter panel or check that the correct tab (Requests/Calendar) is selected</td></tr><tr><td>Cannot edit or delete leave request</td><td>Insufficient permissions or request already processed</td><td>Verify user has appropriate admin permissions. Accepted/Rejected requests may have restrictions on modifications</td></tr><tr><td>Calendar view not loading</td><td>Large dataset or browser compatibility issue</td><td>Try reducing the date range filter or use the Requests tab view instead. Clear browser cache if issue persists</td></tr></tbody></table><h3>Edge Cases</h3><ul><li><strong>Overlapping Leave Requests:</strong> The system allows creation of overlapping leave requests for the same employee. HR admins should manually verify for conflicts when reviewing requests</li><li><strong>Past-Dated Requests:</strong> Leave requests can be created with dates in the past, useful for recording historical leave but requiring careful validation</li><li><strong>Cross-Year Leave:</strong> Leave requests spanning multiple calendar years are supported, but balance deductions follow configured year-end policies</li><li><strong>Partial Day Leave:</strong> The system calculates leave in full-day increments. Half-day or hourly leave may require special configuration or manual adjustment</li><li><strong>Leave Type Changes:</strong> If a leave type is deleted or modified, existing requests using that type may display inconsistently</li><li><strong>Multiple Approvers:</strong> When approval workflows involve multiple approvers, the card display shows the approval chain but may not indicate which approver is currently required to act</li></ul><h3>Performance Considerations</h3><div class="info-box"><p><strong>Tip:</strong> For organizations with large employee counts or extensive leave history, use the filter panel to narrow results by date range, department, or office. This improves page load times and makes it easier to locate specific requests.</p></div></div></section>
 <section class="section" id="support-resources">
-    <h2>Support & Resources</h2><div class="content"><h3>Frequently Asked Questions</h3><div class="feature-grid"><div class="feature-card"><h4>How do I adjust an employee's leave balance?</h4><p>Leave balance adjustments require HR admin intervention. Navigate to the employee's profile and access their leave balance settings. Manual adjustments can be made to add compensatory time off or correct discrepancies. Reference: TSSD-1820</p></div><div class="feature-card"><h4>Can employees submit their own leave requests?</h4><p>The Leave Management feature is designed for HR admin use. Employee self-service leave requests are typically handled through the employee portal. This interface allows admins to create requests on behalf of employees or manage submitted requests.</p></div><div class="feature-card"><h4>What happens when I delete a leave request?</h4><p>Deleting a leave request permanently removes it from the system. The action requires confirmation and cannot be undone. Ensure you want to permanently delete the request before confirming, as there is no recovery option.</p></div><div class="feature-card"><h4>How does the system calculate leave duration?</h4><p>The system automatically calculates the number of days based on the selected date range, taking into account working days as configured in your organization's calendar settings. Public holidays and weekends are excluded from the calculation.</p></div><div class="feature-card"><h4>Can I filter leave requests by multiple criteria?</h4><p>Yes, the filter panel supports simultaneous filtering by Leave Type, Status, Leave Date range, Departments, and Offices. Apply multiple filters to narrow down the list to specific requests you need to review.</p></div><div class="feature-card"><h4>What's the difference between Requests and Calendar views?</h4><p>The Requests tab displays leave requests as cards in a list format with detailed information. The Calendar tab provides a visual timeline view for leave planning, making it easier to identify overlapping leave periods and plan team coverage.</p></div></div><h3>Getting Help</h3><ul><li><strong>HR Admin Support:</strong> Contact your organization's HR administrator for policy questions, leave balance inquiries, or approval process guidance</li><li><strong>Technical Support:</strong> For system issues, bugs, or feature questions, reach out to Bayzat Support through the in-app help center or your designated support channel</li><li><strong>Knowledge Base:</strong> Access the Bayzat Help Center at <a href="https://bayzathelp.zendesk.com" target="_blank">bayzathelp.zendesk.com</a> for additional articles and guides</li><li><strong>In-App Help:</strong> Use the help icon within the Bayzat platform to access contextual help and submit support tickets directly</li><li><strong>Training Resources:</strong> Request access to Bayzat training materials or schedule a session with your account manager for comprehensive feature walkthroughs</li></ul><div class="info-box"><p><strong>Quick Support Tip:</strong> When contacting support, include the leave request ID, employee name, and screenshots of any error messages to expedite resolution.</p></div></div></section>
+    <h2>Support & Resources</h2><div class="content"><h3>Frequently Asked Questions</h3>
+  <div class="faq-accordion">
+    <details class="faq-item">
+      <summary class="faq-question">How do I adjust an employee's leave balance?</summary>
+      <div class="faq-answer">
+        <p>Leave balance adjustments require HR admin intervention. Navigate to the employee's profile and access their leave balance settings. Manual adjustments can be made to add compensatory time off or correct discrepancies. Reference: TSSD-1820</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">Can employees submit their own leave requests?</summary>
+      <div class="faq-answer">
+        <p>The Leave Management feature is designed for HR admin use. Employee self-service leave requests are typically handled through the employee portal. This interface allows admins to create requests on behalf of employees or manage submitted requests.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">What happens when I delete a leave request?</summary>
+      <div class="faq-answer">
+        <p>Deleting a leave request permanently removes it from the system. The action requires confirmation and cannot be undone. Ensure you want to permanently delete the request before confirming, as there is no recovery option.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">How does the system calculate leave duration?</summary>
+      <div class="faq-answer">
+        <p>The system automatically calculates the number of days based on the selected date range, taking into account working days as configured in your organization's calendar settings. Public holidays and weekends are excluded from the calculation.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">Can I filter leave requests by multiple criteria?</summary>
+      <div class="faq-answer">
+        <p>Yes, the filter panel supports simultaneous filtering by Leave Type, Status, Leave Date range, Departments, and Offices. Apply multiple filters to narrow down the list to specific requests you need to review.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">What's the difference between Requests and Calendar views?</summary>
+      <div class="faq-answer">
+        <p>The Requests tab displays leave requests as cards in a list format with detailed information. The Calendar tab provides a visual timeline view for leave planning, making it easier to identify overlapping leave periods and plan team coverage.</p>
+      </div>
+    </details>
+  </div><h3>Getting Help</h3><ul><li><strong>HR Admin Support:</strong> Contact your organization's HR administrator for policy questions, leave balance inquiries, or approval process guidance</li><li><strong>Technical Support:</strong> For system issues, bugs, or feature questions, reach out to Bayzat Support through the in-app help center or your designated support channel</li><li><strong>Knowledge Base:</strong> Access the Bayzat Help Center at <a href="https://bayzathelp.zendesk.com" target="_blank">bayzathelp.zendesk.com</a> for additional articles and guides</li><li><strong>In-App Help:</strong> Use the help icon within the Bayzat platform to access contextual help and submit support tickets directly</li><li><strong>Training Resources:</strong> Request access to Bayzat training materials or schedule a session with your account manager for comprehensive feature walkthroughs</li></ul><div class="info-box"><p><strong>Quick Support Tip:</strong> When contacting support, include the leave request ID, employee name, and screenshots of any error messages to expedite resolution.</p></div></div></section>
 <section class="section" id="glossary">
     <h2>Glossary of Terms</h2><div class="content"><h3>Key Terms</h3><table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td><strong>Leave Request</strong></td><td>A formal submission requesting time off from work for a specified period. Contains employee information, leave type, dates, duration, and optional notes or attachments.</td></tr><tr><td><strong>Leave Type</strong></td><td>A category of leave defined by the organization (e.g., Annual Leave, Sick Leave, Unpaid Leave). Each type may have different balance rules, approval requirements, and policies.</td></tr><tr><td><strong>Leave Balance</strong></td><td>The remaining amount of leave days available to an employee for a specific leave type, calculated based on accrual rules and previous usage.</td></tr><tr><td><strong>Duration</strong></td><td>The length of a leave request measured in working days, automatically calculated by the system based on the date range and working calendar.</td></tr><tr><td><strong>Status</strong></td><td>The current state of a leave request in the approval process. Common statuses include Pending, Accepted, and Rejected.</td></tr><tr><td><strong>Approval Workflow</strong></td><td>The sequence of approvers who must review and authorize a leave request before it is finalized. May involve multiple levels of management.</td></tr><tr><td><strong>Compensatory Time Off</strong></td><td>Leave granted in compensation for overtime work or work performed on rest days. Also known as "days in lieu" or "comp time."</td></tr><tr><td><strong>Working Days</strong></td><td>Days on which employees are scheduled to work, excluding weekends and public holidays as defined in the organization's calendar configuration.</td></tr><tr><td><strong>Calendar View</strong></td><td>A visual representation of leave requests displayed on a timeline, useful for identifying leave patterns, overlaps, and planning team coverage.</td></tr><tr><td><strong>Action Menu</strong></td><td>The three-dot menu icon on leave request cards that provides access to operations like Edit, Delete, Accept, and Reject.</td></tr><tr><td><strong>Filter Panel</strong></td><td>The interface component that allows users to narrow down the list of leave requests by applying criteria such as leave type, status, date range, department, or office.</td></tr><tr><td><strong>Attachment</strong></td><td>Supporting documentation uploaded with a leave request, such as medical certificates, travel itineraries, or other relevant files.</td></tr><tr><td><strong>Employee Portal</strong></td><td>The self-service interface where employees can view their leave balances, submit leave requests, and track approval status (separate from the admin interface).</td></tr><tr><td><strong>Leave Policy</strong></td><td>The organizational rules governing leave entitlements, accrual rates, carryover limits, approval requirements, and usage restrictions.</td></tr></tbody></table></div></section>
 <footer>

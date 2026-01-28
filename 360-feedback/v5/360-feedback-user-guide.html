@@ -418,6 +418,24 @@
     .phase-content .nav-path { font-size: 0.85rem; color: #64748b; margin: 0 0 12px 0; padding: 8px 12px; background: #f8fafc; border-radius: 6px; }
     .phase-link { display: inline-flex; align-items: center; gap: 4px; font-size: 0.85rem; color: #6B46C1; text-decoration: none; font-weight: 500; }
     .phase-link:hover { text-decoration: underline; }
+
+    /* FAQ Accordion */
+    .faq-accordion { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+    .faq-item { border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; background: #ffffff; transition: all 0.2s ease; }
+    .faq-item:hover { border-color: #6B46C1; box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); }
+    .faq-item[open] { border-color: #6B46C1; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15); }
+    .faq-question { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; font-weight: 600; font-size: 1rem; color: #1a1a2e; cursor: pointer; background: #f8f9ff; list-style: none; transition: all 0.2s ease; }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-question::after { content: ''; width: 10px; height: 10px; border-right: 2px solid #6B46C1; border-bottom: 2px solid #6B46C1; transform: rotate(-45deg); transition: transform 0.3s ease; flex-shrink: 0; margin-left: 16px; }
+    .faq-item[open] .faq-question::after { transform: rotate(45deg); }
+    .faq-question:hover { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); color: #6B46C1; }
+    .faq-item[open] .faq-question { background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%); border-bottom: 1px solid #e2e8f0; color: #1a1a2e; }
+    .faq-item[open] .faq-question::after { border-color: #1a1a2e; }
+    .faq-answer { padding: 20px; background: #ffffff; color: #334155; line-height: 1.7; border-top: 1px solid #E2E8F0; animation: fadeIn 0.3s ease; }
+    .faq-answer p { margin: 0; color: #334155; }
+    .faq-answer ul, .faq-answer ol { margin: 12px 0; padding-left: 24px; }
+    .faq-answer li { margin-bottom: 8px; color: #334155; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 
 </head>
@@ -1363,59 +1381,83 @@
 
   <h3>Frequently Asked Questions</h3>
 
-  <div class="feature-card">
-    <h4>What is a 360° review?</h4>
-    <p>A 360° review is a comprehensive performance evaluation method where an employee receives feedback from multiple sources: managers, peers, direct reports, and sometimes external stakeholders. This multi-directional feedback provides a holistic view of an employee's performance, skills, and behaviors.</p>
-  </div>
+  <div class="faq-accordion">
+    <details class="faq-item">
+      <summary class="faq-question">What is a 360° review?</summary>
+      <div class="faq-answer">
+        <p>A 360° review is a comprehensive performance evaluation method where an employee receives feedback from multiple sources: managers, peers, direct reports, and sometimes external stakeholders. This multi-directional feedback provides a holistic view of an employee's performance, skills, and behaviors.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>Who can create 360° reviews?</h4>
-    <p>Administrators with access to the Performance module can create and manage 360° reviews. The specific permission requirements depend on your organization's role configuration in Bayzat.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">Who can create 360° reviews?</summary>
+      <div class="faq-answer">
+        <p>Administrators with access to the Performance module can create and manage 360° reviews. The specific permission requirements depend on your organization's role configuration in Bayzat.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>How many employees can be included in a single review cycle?</h4>
-    <p>There is no hard limit on the number of participants. However, consider the administrative overhead and time required for larger groups. The interface supports searching and filtering for managing larger participant lists.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">How many employees can be included in a single review cycle?</summary>
+      <div class="faq-answer">
+        <p>There is no hard limit on the number of participants. However, consider the administrative overhead and time required for larger groups. The interface supports searching and filtering for managing larger participant lists.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>Can I edit a review after it has started?</h4>
-    <p>Yes, you can edit reviews using the Edit option in the action menu. The edit functionality uses the same 4-step wizard as creation. Consider the impact on participants who may have already started providing nominations or feedback.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">Can I edit a review after it has started?</summary>
+      <div class="faq-answer">
+        <p>Yes, you can edit reviews using the Edit option in the action menu. The edit functionality uses the same 4-step wizard as creation. Consider the impact on participants who may have already started providing nominations or feedback.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>What happens if an employee doesn't submit peer nominations by the deadline?</h4>
-    <p>The system tracks pending peer nominations in the Overview dashboard. Monitor the count regularly, send reminders before the deadline, and follow up individually with employees who haven't completed nominations.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">What happens if an employee doesn't submit peer nominations by the deadline?</summary>
+      <div class="faq-answer">
+        <p>The system tracks pending peer nominations in the Overview dashboard. Monitor the count regularly, send reminders before the deadline, and follow up individually with employees who haven't completed nominations.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>Can I duplicate a review from a previous cycle?</h4>
-    <p>Yes, the "Duplicate" option is available in the review action menu. This creates a copy of the review configuration, which you can then modify for a new cycle. This is useful for recurring reviews where the structure remains similar.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">Can I duplicate a review from a previous cycle?</summary>
+      <div class="faq-answer">
+        <p>Yes, the "Duplicate" option is available in the review action menu. This creates a copy of the review configuration, which you can then modify for a new cycle. This is useful for recurring reviews where the structure remains similar.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>How do I configure the feedback questions?</h4>
-    <p>Feedback questions are managed in Settings > 360° feedback configurations. You can create and organize questions in the Question Bank, group them into Feedback Categories, and customize categories to match your organization's competency framework.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">How do I configure the feedback questions?</summary>
+      <div class="faq-answer">
+        <p>Feedback questions are managed in Settings > 360° feedback configurations. You can create and organize questions in the Question Bank, group them into Feedback Categories, and customize categories to match your organization's competency framework.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>What rating scale is used for feedback?</h4>
-    <p>360° reviews use your organization's configured rating scale, set up in Settings > Performance > Rating Scale. The scale can be 3-10 points with optional "Not Applicable" (N/A) option.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">What rating scale is used for feedback?</summary>
+      <div class="faq-answer">
+        <p>360° reviews use your organization's configured rating scale, set up in Settings > Performance > Rating Scale. The scale can be 3-10 points with optional "Not Applicable" (N/A) option.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>Can I export 360° review data?</h4>
-    <p>The Reports tab provides access to generated reports for completed reviews. Individual reports can be accessed through the Reports tab or employee profiles.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">Can I export 360° review data?</summary>
+      <div class="faq-answer">
+        <p>The Reports tab provides access to generated reports for completed reviews. Individual reports can be accessed through the Reports tab or employee profiles.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>Is this feature available on mobile devices?</h4>
-    <p>The feature is optimized for desktop use. For the best experience, access 360° reviews through a desktop or laptop computer. Mobile access capabilities should be verified with Bayzat support.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">Is this feature available on mobile devices?</summary>
+      <div class="faq-answer">
+        <p>The feature is optimized for desktop use. For the best experience, access 360° reviews through a desktop or laptop computer. Mobile access capabilities should be verified with Bayzat support.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>What does the "Beta" badge mean?</h4>
-    <p>The Beta badge indicates this feature is in active testing and development. While fully functional, the feature may receive updates or changes based on user feedback. Report any issues or suggestions to Bayzat support.</p>
+    <details class="faq-item">
+      <summary class="faq-question">What does the "Beta" badge mean?</summary>
+      <div class="faq-answer">
+        <p>The Beta badge indicates this feature is in active testing and development. While fully functional, the feature may receive updates or changes based on user feedback. Report any issues or suggestions to Bayzat support.</p>
+      </div>
+    </details>
   </div>
 
   <h3>Getting Help</h3>

@@ -409,6 +409,24 @@
     .phase-content .nav-path { font-size: 0.85rem; color: #64748b; margin: 0 0 12px 0; padding: 8px 12px; background: #f8fafc; border-radius: 6px; }
     .phase-link { display: inline-flex; align-items: center; gap: 4px; font-size: 0.85rem; color: #6B46C1; text-decoration: none; font-weight: 500; }
     .phase-link:hover { text-decoration: underline; }
+
+    /* FAQ Accordion */
+    .faq-accordion { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+    .faq-item { border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; background: #ffffff; transition: all 0.2s ease; }
+    .faq-item:hover { border-color: #6B46C1; box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); }
+    .faq-item[open] { border-color: #6B46C1; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15); }
+    .faq-question { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; font-weight: 600; font-size: 1rem; color: #1a1a2e; cursor: pointer; background: #f8f9ff; list-style: none; transition: all 0.2s ease; }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-question::after { content: ''; width: 10px; height: 10px; border-right: 2px solid #6B46C1; border-bottom: 2px solid #6B46C1; transform: rotate(-45deg); transition: transform 0.3s ease; flex-shrink: 0; margin-left: 16px; }
+    .faq-item[open] .faq-question::after { transform: rotate(45deg); }
+    .faq-question:hover { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); color: #6B46C1; }
+    .faq-item[open] .faq-question { background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%); border-bottom: 1px solid #e2e8f0; color: #1a1a2e; }
+    .faq-item[open] .faq-question::after { border-color: #1a1a2e; }
+    .faq-answer { padding: 20px; background: #ffffff; color: #334155; line-height: 1.7; border-top: 1px solid #E2E8F0; animation: fadeIn 0.3s ease; }
+    .faq-answer p { margin: 0; color: #334155; }
+    .faq-answer ul, .faq-answer ol { margin: 12px 0; padding-left: 24px; }
+    .faq-answer li { margin-bottom: 8px; color: #334155; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 
 </head>
@@ -1196,34 +1214,48 @@
 
   <h3>Frequently Asked Questions</h3>
 
-  <div class="feature-card">
-    <h4>Can employees see which approval flow is applied to their request?</h4>
-    <p>No, employees see the approvers assigned to their request but not the flow name. The routing is applied automatically based on their profile attributes.</p>
-  </div>
+  <div class="faq-accordion">
+    <details class="faq-item">
+      <summary class="faq-question">Can employees see which approval flow is applied to their request?</summary>
+      <div class="faq-answer">
+        <p>No, employees see the approvers assigned to their request but not the flow name. The routing is applied automatically based on their profile attributes.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>What happens if an approver is on leave?</h4>
-    <p>The request remains pending until the approver returns. Consider using parallel approvers (OR logic) to prevent bottlenecks when key people are unavailable.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">What happens if an approver is on leave?</summary>
+      <div class="faq-answer">
+        <p>The request remains pending until the approver returns. Consider using parallel approvers (OR logic) to prevent bottlenecks when key people are unavailable.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>Can I set up automatic approval for certain requests?</h4>
-    <p>Not directly through Approval Flows. You would need to configure a single-step flow and potentially use Bayzat Workflows to trigger automatic approvals based on conditions.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">Can I set up automatic approval for certain requests?</summary>
+      <div class="faq-answer">
+        <p>Not directly through Approval Flows. You would need to configure a single-step flow and potentially use Bayzat Workflows to trigger automatic approvals based on conditions.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>How many advanced flows can I create per request type?</h4>
-    <p>There is no documented limit. For maintainability, keep the number manageable (typically under 10) with clear naming conventions.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">How many advanced flows can I create per request type?</summary>
+      <div class="faq-answer">
+        <p>There is no documented limit. For maintainability, keep the number manageable (typically under 10) with clear naming conventions.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>What's the difference between parallel approvers and sequential steps?</h4>
-    <p>Parallel approvers (within one step) = any one can approve. Sequential steps = all must approve in order. Use parallel for flexibility, sequential for governance.</p>
-  </div>
+    <details class="faq-item">
+      <summary class="faq-question">What's the difference between parallel approvers and sequential steps?</summary>
+      <div class="faq-answer">
+        <p>Parallel approvers (within one step) = any one can approve. Sequential steps = all must approve in order. Use parallel for flexibility, sequential for governance.</p>
+      </div>
+    </details>
 
-  <div class="feature-card">
-    <h4>Can I require ALL approvers in a step to approve?</h4>
-    <p>Add each approver as a separate sequential step rather than multiple approvers in one step. This ensures all must approve before the request proceeds.</p>
+    <details class="faq-item">
+      <summary class="faq-question">Can I require ALL approvers in a step to approve?</summary>
+      <div class="faq-answer">
+        <p>Add each approver as a separate sequential step rather than multiple approvers in one step. This ensures all must approve before the request proceeds.</p>
+      </div>
+    </details>
   </div>
 
   <h3>Getting Help</h3>
