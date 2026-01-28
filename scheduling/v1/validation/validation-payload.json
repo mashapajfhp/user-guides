@@ -1,0 +1,342 @@
+{
+  "nextVersion": "v1",
+  "feature_info": {
+    "feature_name": "scheduling",
+    "feature_slug": "scheduling",
+    "next_version": "v1"
+  },
+  "primary_entity": {
+    "discovery_instructions": [
+      "Identify what the main item/entity is for this feature (e.g., ticket, workflow, employee, record)",
+      "Look for list/table views - the rows represent the primary entity",
+      "Check page headers and breadcrumbs for entity naming",
+      "Note the singular and plural forms used in the UI"
+    ],
+    "crud_operations": {
+      "create": {
+        "action": "Create new item",
+        "find_trigger": [
+          "Look for buttons with: + Add, + Create, + New, plus icon",
+          "Check top-right corner of the page",
+          "Check for floating action buttons (FAB)",
+          "Look in empty state messages for create prompts"
+        ],
+        "validation": "New item appears in list with unique identifier"
+      },
+      "read": {
+        "action": "View item details",
+        "find_trigger": [
+          "Click on any row in a list/table",
+          "Look for 'View' or eye icon buttons",
+          "Check if rows are clickable (cursor changes)"
+        ],
+        "validation": "Detail panel, modal, or page opens showing full information"
+      },
+      "update": {
+        "action": "Edit/modify item",
+        "find_trigger": [
+          "Look for Edit button, pencil icon",
+          "Check for inline editing (click on field to edit)",
+          "Look for status change dropdowns or buttons",
+          "Check action menus (three-dot menu) for edit option"
+        ],
+        "validation": "Changes persist after save, reflected in list view"
+      },
+      "delete": {
+        "action": "Delete/remove item",
+        "find_trigger": [
+          "Look for Delete button, trash icon",
+          "Check action menus (three-dot menu) for delete option",
+          "Look for bulk delete with checkboxes",
+          "Some features use 'Archive' or 'Cancel' instead of delete"
+        ],
+        "validation": "Item removed from list or status changed to deleted/archived"
+      }
+    }
+  },
+  "exploration_phase": {
+    "enabled": true,
+    "run_before_what_to_do": true,
+    "instructions": [
+      "Navigate to the feature's main section",
+      "Take a full page snapshot to understand the layout",
+      "Identify the primary entity",
+      "Find ALL clickable elements: buttons, links, tabs, dropdowns, icons",
+      "Map the navigation structure: tabs, sidebar items, breadcrumbs",
+      "Click each tab/sub-section and document what appears",
+      "Locate CRUD controls for the primary entity",
+      "Check for action menus (three-dot menus, right-click menus)",
+      "Document any modals, dialogs, slide-out panels",
+      "Identify form fields and input types when forms appear",
+      "Look for filters, search, sort, and export options",
+      "Check for bulk action controls (checkboxes, select all)",
+      "Note any settings or configuration options"
+    ],
+    "discovery_targets": [
+      "Primary action buttons (create/add new item)",
+      "List/table of items with row actions",
+      "Detail view or edit forms",
+      "Status indicators and state changes",
+      "Filter and search controls",
+      "Navigation tabs within the feature",
+      "Settings or configuration sections",
+      "Related features or cross-links"
+    ]
+  },
+  "prd_context": {
+    "how_it_works_summary": [
+      "Users open any AI Reports dashboard and click the Schedule button to open the scheduling modal.",
+      "The modal displays existing schedules on the left and configuration options on the right.",
+      "Users enter a schedule name, recipient email addresses, and select frequency (Daily, Weekly with day selection, or Monthly with date selection).",
+      "Multiple schedules can be created for the same dashboard with different recipients and frequencies.",
+      "When the scheduled time arrives, the system generates an Excel file with separate tabs for each dashboard tile and emails it to all recipients.",
+      "Users can edit, copy, or delete existing schedules from within the modal."
+    ],
+    "key_actions_steps": [
+      "1) Open any AI Reports dashboard;",
+      "2) Click Schedule button (or Explore from banner);",
+      "3) In modal, enter schedule name and recipient emails (comma-separated);",
+      "4) Select frequency: Daily, Weekly (pick day), or Monthly (pick date);",
+      "5) Click Schedule Report to activate;",
+      "6) Manage existing schedules: view, edit, copy, or delete"
+    ],
+    "rules_limitations_constraints": [
+      "At least one valid email address required (must contain @);",
+      "All fields must be filled before Schedule button enables;",
+      "Monthly schedules on non-existent days (e.g., 31st) fall back to last day of month;",
+      "Unsaved changes/incomplete schedules are discarded on modal close;",
+      "Recipients added as BCC for privacy"
+    ],
+    "data_inputs_required": [
+      "Schedule name;",
+      "Recipient email addresses (comma-separated);",
+      "Scheduling frequency (Daily/Weekly/Monthly);",
+      "Day of week (for weekly) or day of month (for monthly);",
+      "Dashboard selection"
+    ],
+    "edge_cases_warnings": [
+      "Monthly report scheduled for day 31 sends on last day of month for shorter months;",
+      "Announcement banner can be permanently dismissed per user;",
+      "Copying a schedule adds \"(Copy)\" to name;",
+      "Delete requires confirmation modal;",
+      "Save changes button greyed out until changes made"
+    ],
+    "hierarchical_task_analysis": [
+      "1.0 Create Schedule → 1.1 Open dashboard → 1.2 Click Schedule/Explore → 1.3 Enter name → 1.4 Add emails → 1.5 Select frequency → 1.6 Configure day (if weekly/monthly) → 1.7 Click Schedule Report;",
+      "2.0 Manage Schedules → 2.1 Open scheduling modal → 2.2 View existing schedules in left panel → 2.3 Click to edit/view details → 2.4 Save changes or delete;",
+      "3.0 Receive Report → 3.1 System sends email at scheduled time → 3.2 Open Excel attachment with dashboard data"
+    ]
+  },
+  "detected_integrations": {
+    "has_workflows": true,
+    "workflow_evidence": "Scheduling involves automatic generation and emailing of reports at scheduled times, indicating workflow automation.",
+    "has_approval_flow": null,
+    "approval_evidence": "No explicit evidence found regarding approval flows in scheduling."
+  },
+  "workflow_exploration": {
+    "enabled": true,
+    "priority": "required",
+    "evidence": "Scheduling involves automatic generation and emailing of reports at scheduled times, indicating workflow automation.",
+    "check_instructions": [
+      "Navigate to Automations in the left sidebar",
+      "Click on Workflows",
+      "Click + Create workflow (or similar create button)",
+      "In trigger selection, search for this feature's name",
+      "Check if this feature appears as a trigger source",
+      "Document any trigger events found (e.g., 'item created', 'status changed')",
+      "Check Actions section for actions related to this feature",
+      "Screenshot available triggers and actions"
+    ],
+    "nav_path": "Automations → Workflows → + Create workflow"
+  },
+  "approval_flow_exploration": {
+    "enabled": true,
+    "priority": "optional",
+    "evidence": "No explicit evidence found regarding approval flows in scheduling.",
+    "check_instructions": [
+      "Look for 'Approval' or 'Pending Approval' status in the feature",
+      "Check if items have approval workflow indicators",
+      "Look for 'Submit for Approval' buttons or actions",
+      "Find approval settings in feature configuration",
+      "Document the approval chain (who approves what)",
+      "Test approval/rejection flow if test data available",
+      "Check for approval history or audit trail",
+      "Screenshot approval-related UI elements"
+    ],
+    "detection_signals": [
+      "Status dropdown with 'Pending Approval' option",
+      "Approve/Reject buttons",
+      "Approval history section",
+      "'Requires approval' toggle in settings",
+      "Approver assignment fields"
+    ]
+  },
+  "execution_order": [
+    "1. EXPLORATION: Navigate to feature and discover all UI elements",
+    "2. IDENTIFY ENTITY: Determine what the primary item/entity is",
+    "3. CRUD TEST: Test create, read, update, delete for the primary entity",
+    "4. WORKFLOW CHECK: Verify if feature has workflow triggers/actions",
+    "5. APPROVAL FLOW: Test approval process if present",
+    "6. WHAT_TO_DO: Execute specific validation tasks from payload",
+    "7. WHAT_TO_WATCH_OUT_FOR: Validate constraints, limitations, and edge cases",
+    "8. DOCUMENTATION: Capture screenshots of key screens"
+  ],
+  "what_to_watch_out_for": [
+    {
+      "issue": "Monthly schedules set on non-existent days (e.g., 31st) fall back to the last day of the month.",
+      "limitation": "Unsaved or incomplete schedules are discarded when the scheduling modal is closed.",
+      "workaround": "Ensure all required fields are filled before closing the modal to avoid losing schedule data.",
+      "jira_reference": "",
+      "severity": "Medium"
+    },
+    {
+      "issue": "No administrative override to suppress automatic leave expiry emails sent at 60 and 30 days before expiration.",
+      "limitation": "Lack of configurable email notification settings for leave expiry reminders.",
+      "workaround": "Currently, administrators cannot disable these notifications.",
+      "jira_reference": "TSSD-1699",
+      "severity": "High"
+    },
+    {
+      "issue": "Attendance system limitations including strict validation rules requiring shifts to be published before check-ins are accepted.",
+      "limitation": "Check-ins before shift publication or after shift status changes are rejected; single check-in/out per shift only; lack of robust location validation for biometric check-ins.",
+      "workaround": "Ensure shifts are published before check-ins; users must adhere to single check-in/out per shift; no automatic prevention of location mismatches.",
+      "jira_reference": "TSSD-3555, TSSD-2957, TSSD-3737",
+      "severity": "High"
+    },
+    {
+      "issue": "Shift scheduler lacks mass upload functionality and flexible filtering for line managers.",
+      "limitation": "Manual or limited bulk scheduling options create operational challenges for large employee groups; no granular role-based access controls.",
+      "workaround": "Use existing copy schedule and schedule planner features; manual filtering.",
+      "jira_reference": "TSSD-2695, TSSD-3848",
+      "severity": "Medium"
+    },
+    {
+      "issue": "Audit logs for shift scheduler and related modules are incomplete or not exportable.",
+      "limitation": "Lack of detailed audit logging and automated export/delivery functionality.",
+      "workaround": "Audit logs accessible only via admin panel screenshots; no scheduled reports.",
+      "jira_reference": "TSSD-160, TSSD-1856, TSSD-4634",
+      "severity": "Medium"
+    }
+  ],
+  "playwright_context": {
+    "feature_metadata": {
+      "name": "Scheduling",
+      "slug": "scheduling",
+      "category": "time",
+      "version": "",
+      "is_new": null
+    },
+    "prd_context": {
+      "how_it_works_summary": [
+        "Users open any AI Reports dashboard and click the Schedule button to open the scheduling modal.",
+        "The modal displays existing schedules on the left and configuration options on the right.",
+        "Users enter a schedule name, recipient email addresses, and select frequency (Daily, Weekly with day selection, or Monthly with date selection).",
+        "Multiple schedules can be created for the same dashboard with different recipients and frequencies.",
+        "When the scheduled time arrives, the system generates an Excel file with separate tabs for each dashboard tile and emails it to all recipients.",
+        "Users can edit, copy, or delete existing schedules from within the modal."
+      ],
+      "key_actions_steps": [
+        "1) Open any AI Reports dashboard;",
+        "2) Click Schedule button (or Explore from banner);",
+        "3) In modal, enter schedule name and recipient emails (comma-separated);",
+        "4) Select frequency: Daily, Weekly (pick day), or Monthly (pick date);",
+        "5) Click Schedule Report to activate;",
+        "6) Manage existing schedules: view, edit, copy, or delete"
+      ],
+      "rules_limitations_constraints": [
+        "At least one valid email address required (must contain @);",
+        "All fields must be filled before Schedule button enables;",
+        "Monthly schedules on non-existent days (e.g., 31st) fall back to last day of month;",
+        "Unsaved changes/incomplete schedules are discarded on modal close;",
+        "Recipients added as BCC for privacy"
+      ],
+      "data_inputs_required": [
+        "Schedule name;",
+        "Recipient email addresses (comma-separated);",
+        "Scheduling frequency (Daily/Weekly/Monthly);",
+        "Day of week (for weekly) or day of month (for monthly);",
+        "Dashboard selection"
+      ],
+      "edge_cases_warnings": [
+        "Monthly report scheduled for day 31 sends on last day of month for shorter months;",
+        "Announcement banner can be permanently dismissed per user;",
+        "Copying a schedule adds \"(Copy)\" to name;",
+        "Delete requires confirmation modal;",
+        "Save changes button greyed out until changes made"
+      ],
+      "hierarchical_task_analysis": [
+        "1.0 Create Schedule → 1.1 Open dashboard → 1.2 Click Schedule/Explore → 1.3 Enter name → 1.4 Add emails → 1.5 Select frequency → 1.6 Configure day (if weekly/monthly) → 1.7 Click Schedule Report;",
+        "2.0 Manage Schedules → 2.1 Open scheduling modal → 2.2 View existing schedules in left panel → 2.3 Click to edit/view details → 2.4 Save changes or delete;",
+        "3.0 Receive Report → 3.1 System sends email at scheduled time → 3.2 Open Excel attachment with dashboard data"
+      ]
+    },
+    "detected_integrations": {
+      "has_workflows": true,
+      "workflow_evidence": "Scheduling involves automatic generation and emailing of reports at scheduled times, indicating workflow automation.",
+      "has_approval_flow": null,
+      "approval_evidence": "No explicit evidence found regarding approval flows in scheduling."
+    },
+    "what_to_do": [
+      {
+        "task": "Create and manage scheduled reports for AI dashboards.",
+        "steps": [
+          "Open any AI Reports dashboard.",
+          "Click the Schedule button or Explore from the banner.",
+          "Enter a schedule name and recipient email addresses (comma-separated).",
+          "Select the scheduling frequency: Daily, Weekly (choose day), or Monthly (choose date).",
+          "Click Schedule Report to activate the schedule.",
+          "Manage existing schedules by viewing, editing, copying, or deleting them."
+        ],
+        "expected_outcome": "Scheduled reports are generated as Excel files with separate tabs for each dashboard tile and emailed to all recipients at the scheduled times.",
+        "source_articles": [
+          "4618027031"
+        ]
+      }
+    ],
+    "what_to_watch_out_for": [
+      {
+        "issue": "Monthly schedules set on non-existent days (e.g., 31st) fall back to the last day of the month.",
+        "limitation": "Unsaved or incomplete schedules are discarded when the scheduling modal is closed.",
+        "workaround": "Ensure all required fields are filled before closing the modal to avoid losing schedule data.",
+        "jira_reference": "",
+        "severity": "Medium"
+      },
+      {
+        "issue": "No administrative override to suppress automatic leave expiry emails sent at 60 and 30 days before expiration.",
+        "limitation": "Lack of configurable email notification settings for leave expiry reminders.",
+        "workaround": "Currently, administrators cannot disable these notifications.",
+        "jira_reference": "TSSD-1699",
+        "severity": "High"
+      },
+      {
+        "issue": "Attendance system limitations including strict validation rules requiring shifts to be published before check-ins are accepted.",
+        "limitation": "Check-ins before shift publication or after shift status changes are rejected; single check-in/out per shift only; lack of robust location validation for biometric check-ins.",
+        "workaround": "Ensure shifts are published before check-ins; users must adhere to single check-in/out per shift; no automatic prevention of location mismatches.",
+        "jira_reference": "TSSD-3555, TSSD-2957, TSSD-3737",
+        "severity": "High"
+      },
+      {
+        "issue": "Shift scheduler lacks mass upload functionality and flexible filtering for line managers.",
+        "limitation": "Manual or limited bulk scheduling options create operational challenges for large employee groups; no granular role-based access controls.",
+        "workaround": "Use existing copy schedule and schedule planner features; manual filtering.",
+        "jira_reference": "TSSD-2695, TSSD-3848",
+        "severity": "Medium"
+      },
+      {
+        "issue": "Audit logs for shift scheduler and related modules are incomplete or not exportable.",
+        "limitation": "Lack of detailed audit logging and automated export/delivery functionality.",
+        "workaround": "Audit logs accessible only via admin panel screenshots; no scheduled reports.",
+        "jira_reference": "TSSD-160, TSSD-1856, TSSD-4634",
+        "severity": "Medium"
+      }
+    ],
+    "consolidation_summary": {
+      "prds_received": 3,
+      "prds_consolidated": 1,
+      "zendesk_articles_received": 6,
+      "tasks_consolidated": 1,
+      "jira_tickets_received": 30,
+      "jira_tickets_consolidated": 5
+    }
+  }
+}
