@@ -613,6 +613,10 @@
       <span class="card-icon">📋</span>
       <span class="card-label">Feature Usage</span>
     </a>
+    <a class="nav-card" href="#approval-flow">
+      <span class="card-icon">✅</span>
+      <span class="card-label">Approval Flow</span>
+    </a>
     <a class="nav-card" href="#troubleshooting">
       <span class="card-icon">🔧</span>
       <span class="card-label">Troubleshooting</span>
@@ -1013,6 +1017,316 @@
   </figure>
 </section>
 
+<section class="section" id="approval-flow">
+  <h2>Approval Flow</h2>
+
+  <p>The approval flow determines how expense requests are routed through your organization for review and authorization. Bayzat provides both basic (default) and advanced approval flow configurations to match your company's expense policies.</p>
+
+  <h3>Approval Workflow for Managers</h3>
+  <p>As an expense approver, you can review and take action on pending expense requests from your team.</p>
+
+  <h4>Accessing Pending Expenses</h4>
+  <p>Navigate to <strong>Finance Ops → Employee Work Expenses</strong> to view expenses pending your approval.</p>
+
+  <figure>
+    <img src="approval-flow-pending-list.png" alt="Pending expenses list with Reject and Accept action buttons" />
+    <figcaption>Pending Expenses - View expenses awaiting approval with Reject and Accept action buttons</figcaption>
+  </figure>
+
+  <h4>Reviewing Expense Details</h4>
+  <p>Click on any expense to open the detail modal showing the receipt image, expense information, and approver chain.</p>
+
+  <figure>
+    <img src="approval-detail-modal.png" alt="Expense detail modal showing receipt and approvers section" />
+    <figcaption>Expense Detail Modal - View receipt, payment details, and approval chain</figcaption>
+  </figure>
+
+  <h4>Activity Feed & Audit Trail</h4>
+  <p>The Activity Feed tab provides a complete audit trail of all actions taken on the expense, including comments and status changes.</p>
+
+  <figure>
+    <img src="approval-activity-feed.png" alt="Activity feed showing comments and audit trail" />
+    <figcaption>Activity Feed - Complete history of actions, comments, and approvals</figcaption>
+  </figure>
+
+  <h4>Approving an Expense</h4>
+  <p>Click the <strong>Accept</strong> button to approve the expense. A success message confirms the approval.</p>
+
+  <figure>
+    <img src="approval-success-message.png" alt="Success message after approving expense" />
+    <figcaption>Approval Success - Confirmation message after approving an expense</figcaption>
+  </figure>
+
+  <h4>Rejecting an Expense</h4>
+  <p>Click the <strong>Reject</strong> button to reject an expense. You must provide a rejection reason which will be visible to the employee in the Activity Feed.</p>
+
+  <figure>
+    <img src="approval-reject-dialog.png" alt="Rejection confirmation dialog with reason field" />
+    <figcaption>Reject Dialog - Enter a mandatory reason for rejection</figcaption>
+  </figure>
+
+  <h4>Viewing Approved Expenses</h4>
+  <p>Approved expenses appear in the Approved tab with an <strong>Add to payroll</strong> action button for payroll processing.</p>
+
+  <figure>
+    <img src="approval-approved-list.png" alt="Approved expenses list with Add to payroll button" />
+    <figcaption>Approved Expenses - Ready for payroll processing</figcaption>
+  </figure>
+
+  <h4>Viewing Rejected Expenses</h4>
+  <p>Rejected expenses are listed in the Rejected tab. The rejection reason is visible in the expense detail's Activity Feed.</p>
+
+  <figure>
+    <img src="approval-rejected-list.png" alt="Rejected expenses list" />
+    <figcaption>Rejected Expenses - View all rejected expense requests</figcaption>
+  </figure>
+
+  <figure>
+    <img src="approval-rejected-detail-with-reason.png" alt="Rejected expense showing rejection reason in activity feed" />
+    <figcaption>Rejection Reason - Visible in the Activity Feed for transparency</figcaption>
+  </figure>
+
+  <h3>Configuring Approval Flows (Admin)</h3>
+  <p>Administrators can configure approval flows to match organizational policies. Navigate to <strong>Automations → Approval flows → Expense</strong>.</p>
+
+  <figure>
+    <img src="approval-flow-expense-overview.png" alt="Expense approval flow configuration page" />
+    <figcaption>Approval Flow Configuration - Manage default and advanced approval flows</figcaption>
+  </figure>
+
+  <h4>Flow Structure</h4>
+  <p>Expense approval flows follow an <strong>If/Else</strong> logic:</p>
+  <ul>
+    <li><strong>Advanced Approval Flow (If conditions):</strong> Conditional routing based on criteria like amount thresholds, categories, or employee attributes</li>
+    <li><strong>Default Approval Flow (Else):</strong> Used when no advanced criteria match - this is the fallback flow</li>
+  </ul>
+
+  <div class="info-box">
+    <p><strong>How it works:</strong> When an expense is submitted, the system checks each advanced flow's criteria in order. If a match is found, that flow's approvers are used. If no criteria match, the default flow applies.</p>
+  </div>
+
+  <h4>Creating Advanced Approval Flows</h4>
+  <p>Click <strong>Add advance flow</strong> to create conditional approval routing based on expense attributes.</p>
+
+  <figure>
+    <img src="approval-flow-advanced-edit.png" alt="Advanced flow editor with criteria configuration" />
+    <figcaption>Advanced Flow Editor - Configure criteria-based approval routing</figcaption>
+  </figure>
+
+  <h4>Available Criteria Data Points</h4>
+  <p>Advanced flows can be configured using these criteria:</p>
+
+  <figure>
+    <img src="approval-flow-criteria-options.png" alt="Available criteria data points for approval flow" />
+    <figcaption>Criteria Options - Category, Amount, Currency, and Employee attributes</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Data Point</th>
+        <th>Description</th>
+        <th>Example Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Category</strong></td>
+        <td>Expense category type</td>
+        <td>Route "Travel" expenses to Travel Manager</td>
+      </tr>
+      <tr>
+        <td><strong>Requested Amount → Currency</strong></td>
+        <td>Currency of the expense</td>
+        <td>Route USD expenses to Finance Director</td>
+      </tr>
+      <tr>
+        <td><strong>Requested Amount → Amount</strong></td>
+        <td>Numeric value of expense</td>
+        <td>Expenses over 5000 AED require VP approval</td>
+      </tr>
+      <tr>
+        <td><strong>Employee attributes</strong></td>
+        <td>Department, location, etc.</td>
+        <td>Route by department or employee level</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Amount Operations</h4>
+  <p>When using amount-based criteria, the following operations are available:</p>
+
+  <figure>
+    <img src="approval-flow-amount-operations.png" alt="Operations available for amount criteria" />
+    <figcaption>Amount Operations - Comparison operators for amount-based routing</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Operation</th>
+        <th>Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>is between</code></td>
+        <td>Amount within a range (e.g., 100-500 AED)</td>
+      </tr>
+      <tr>
+        <td><code>is not between</code></td>
+        <td>Amount outside a range</td>
+      </tr>
+      <tr>
+        <td><code>is equal to</code></td>
+        <td>Exact amount match</td>
+      </tr>
+      <tr>
+        <td><code>is not equal to</code></td>
+        <td>Exclude specific amount</td>
+      </tr>
+      <tr>
+        <td><code>is greater than</code></td>
+        <td>Above threshold (e.g., > 5000 AED)</td>
+      </tr>
+      <tr>
+        <td><code>is greater than or equal to</code></td>
+        <td>At or above threshold</td>
+      </tr>
+      <tr>
+        <td><code>is less than</code></td>
+        <td>Below threshold</td>
+      </tr>
+      <tr>
+        <td><code>is less than or equal to</code></td>
+        <td>At or below threshold</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <img src="approval-flow-criteria-value-input.png" alt="Value input with variables option" />
+    <figcaption>Value Input - Enter amounts directly or use dynamic variables</figcaption>
+  </figure>
+
+  <h4>Configuring Approvers</h4>
+  <p>Each approval flow step requires one or more approvers. Available approver roles include:</p>
+
+  <figure>
+    <img src="approval-flow-approver-roles.png" alt="Available approver roles dropdown" />
+    <figcaption>Approver Roles - Select from available roles for each approval step</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Role</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Work Expense Manager</strong></td>
+        <td>Dedicated role for expense approval</td>
+      </tr>
+      <tr>
+        <td><strong>Expense Manager</strong></td>
+        <td>General expense management role</td>
+      </tr>
+      <tr>
+        <td><strong>Line Manager</strong></td>
+        <td>Employee's direct manager (with hierarchy level options)</td>
+      </tr>
+      <tr>
+        <td><strong>Super Admin</strong></td>
+        <td>System administrator with full access</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Line Manager Hierarchy Levels</h4>
+  <p>When using Line Manager as an approver, you can specify the hierarchy level:</p>
+
+  <figure>
+    <img src="approval-flow-line-manager-level.png" alt="Line Manager with level selector" />
+    <figcaption>Line Manager Level - Select specific management level</figcaption>
+  </figure>
+
+  <figure>
+    <img src="approval-flow-line-manager-levels.png" alt="All hierarchy level options (1-5 and All)" />
+    <figcaption>Hierarchy Levels - Choose from Level 1 (direct manager) through Level 5, or All levels</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th>Meaning</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Level 1</strong></td>
+        <td>Direct manager (immediate supervisor)</td>
+      </tr>
+      <tr>
+        <td><strong>Level 2</strong></td>
+        <td>Manager's manager</td>
+      </tr>
+      <tr>
+        <td><strong>Level 3</strong></td>
+        <td>Third level up in hierarchy</td>
+      </tr>
+      <tr>
+        <td><strong>Level 4</strong></td>
+        <td>Fourth level up in hierarchy</td>
+      </tr>
+      <tr>
+        <td><strong>Level 5</strong></td>
+        <td>Fifth level up in hierarchy</td>
+      </tr>
+      <tr>
+        <td><strong>All</strong></td>
+        <td>All managers in the reporting chain</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Parallel Approval (AND Logic)</h4>
+  <p>For expenses requiring approval from multiple parties simultaneously, use <strong>Add block</strong> to create parallel approval paths. All blocks must approve for the expense to proceed.</p>
+
+  <figure>
+    <img src="approval-flow-add-block-parallel.png" alt="Parallel AND approval blocks" />
+    <figcaption>Parallel Approval - Multiple blocks use AND logic (all must approve)</figcaption>
+  </figure>
+
+  <div class="info-box">
+    <p><strong>Example:</strong> A high-value expense might require BOTH the Line Manager AND the Finance Director to approve before proceeding. Configure two parallel blocks with different approver roles.</p>
+  </div>
+
+  <h3>Approval Flow Best Practices</h3>
+
+  <div class="feature-card">
+    <h4>Start Simple</h4>
+    <p>Begin with a basic default flow and add advanced conditions as needed based on actual business requirements.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Use Amount Thresholds</h4>
+    <p>Configure different approval levels based on expense amounts. Small expenses may need only line manager approval, while larger amounts require additional oversight.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Test Before Deploying</h4>
+    <p>Submit test expenses to verify the approval flow routes correctly before rolling out to the organization.</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Document Your Flows</h4>
+    <p>Maintain documentation of your approval flow logic so team members understand the routing rules.</p>
+  </div>
+</section>
+
 <section class="section" id="roles-permissions">
   <h2>User Roles & Permissions</h2>
 
@@ -1392,7 +1706,7 @@
 
 <footer>
   <p>Generated by Bayzat Documentation System</p>
-  <p>Last updated: 2026-01-15</p>
+  <p>Last updated: 2026-01-28</p>
 </footer>
 
 </body>
