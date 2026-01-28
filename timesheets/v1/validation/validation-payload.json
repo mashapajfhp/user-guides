@@ -1,0 +1,297 @@
+{
+  "nextVersion": "v1",
+  "feature_info": {
+    "feature_name": "timesheets",
+    "feature_slug": "timesheets",
+    "next_version": "v1"
+  },
+  "primary_entity": {
+    "discovery_instructions": [
+      "Identify what the main item/entity is for this feature (e.g., ticket, workflow, employee, record)",
+      "Look for list/table views - the rows represent the primary entity",
+      "Check page headers and breadcrumbs for entity naming",
+      "Note the singular and plural forms used in the UI"
+    ],
+    "crud_operations": {
+      "create": {
+        "action": "Create new item",
+        "find_trigger": [
+          "Look for buttons with: + Add, + Create, + New, plus icon",
+          "Check top-right corner of the page",
+          "Check for floating action buttons (FAB)",
+          "Look in empty state messages for create prompts"
+        ],
+        "validation": "New item appears in list with unique identifier"
+      },
+      "read": {
+        "action": "View item details",
+        "find_trigger": [
+          "Click on any row in a list/table",
+          "Look for 'View' or eye icon buttons",
+          "Check if rows are clickable (cursor changes)"
+        ],
+        "validation": "Detail panel, modal, or page opens showing full information"
+      },
+      "update": {
+        "action": "Edit/modify item",
+        "find_trigger": [
+          "Look for Edit button, pencil icon",
+          "Check for inline editing (click on field to edit)",
+          "Look for status change dropdowns or buttons",
+          "Check action menus (three-dot menu) for edit option"
+        ],
+        "validation": "Changes persist after save, reflected in list view"
+      },
+      "delete": {
+        "action": "Delete/remove item",
+        "find_trigger": [
+          "Look for Delete button, trash icon",
+          "Check action menus (three-dot menu) for delete option",
+          "Look for bulk delete with checkboxes",
+          "Some features use 'Archive' or 'Cancel' instead of delete"
+        ],
+        "validation": "Item removed from list or status changed to deleted/archived"
+      }
+    }
+  },
+  "exploration_phase": {
+    "enabled": true,
+    "run_before_what_to_do": true,
+    "instructions": [
+      "Navigate to the feature's main section",
+      "Take a full page snapshot to understand the layout",
+      "Identify the primary entity",
+      "Find ALL clickable elements: buttons, links, tabs, dropdowns, icons",
+      "Map the navigation structure: tabs, sidebar items, breadcrumbs",
+      "Click each tab/sub-section and document what appears",
+      "Locate CRUD controls for the primary entity",
+      "Check for action menus (three-dot menus, right-click menus)",
+      "Document any modals, dialogs, slide-out panels",
+      "Identify form fields and input types when forms appear",
+      "Look for filters, search, sort, and export options",
+      "Check for bulk action controls (checkboxes, select all)",
+      "Note any settings or configuration options"
+    ],
+    "discovery_targets": [
+      "Primary action buttons (create/add new item)",
+      "List/table of items with row actions",
+      "Detail view or edit forms",
+      "Status indicators and state changes",
+      "Filter and search controls",
+      "Navigation tabs within the feature",
+      "Settings or configuration sections",
+      "Related features or cross-links"
+    ]
+  },
+  "prd_context": {
+    "how_it_works_summary": [
+      "Employee prepares tasks/activities for upcoming day or week.",
+      "Employee logs time spent on each project/client/activity.",
+      "Mark tasks as billable or non-billable.",
+      "Submit timesheet for approval.",
+      "Line manager reviews and approves timesheet.",
+      "System tracks productivity and compliance metrics.",
+      "Generate reports for billability analysis."
+    ],
+    "key_actions_steps": [
+      "1. Employee prepares tasks/activities for upcoming day or week.",
+      "2. Employee logs time spent on each project/client/activity.",
+      "3. Mark tasks as billable or non-billable.",
+      "4. Submit timesheet for approval.",
+      "5. Line manager reviews and approves timesheet.",
+      "6. System tracks productivity and compliance metrics.",
+      "7. Generate reports for billability analysis."
+    ],
+    "rules_limitations_constraints": [
+      "MVP focuses on productivity and compliance, not full billability features initially.",
+      "Competing with existing methods (WhatsApp groups, Google Docs).",
+      "40% of decisions based on assumptions due to time constraints.",
+      "Timesheet products typically standalone - significant functionality needed to compete."
+    ],
+    "data_inputs_required": [
+      "Project/client assignments",
+      "Task descriptions",
+      "Time spent per activity",
+      "Billable vs non-billable classification",
+      "Employee work schedules",
+      "Approval workflow configuration",
+      "Check-in/check-out data for cross-reference"
+    ],
+    "edge_cases_warnings": [
+      "Employees may fill timesheets just for compliance without accurate data.",
+      "Existing methods (WhatsApp, Google Docs) are entrenched.",
+      "Work-from-home scenarios require trust in self-reported data.",
+      "Must handle: retroactive entries, partial day tracking, overlapping projects, rejected timesheets requiring revision."
+    ],
+    "hierarchical_task_analysis": [
+      "1. Task Planning (1.1 Create tasks for upcoming period, 1.2 Assign to projects/clients, 1.3 Set time estimates).",
+      "2. Time Logging (2.1 Record start/end times, 2.2 Add task descriptions, 2.3 Mark billable status).",
+      "3. Submission (3.1 Review daily/weekly entries, 3.2 Submit for approval, 3.3 Receive confirmation).",
+      "4. Manager Review (4.1 View subordinate timesheets, 4.2 Compare against expectations, 4.3 Approve or request changes).",
+      "5. Reporting (5.1 Generate productivity reports, 5.2 Calculate billable hours, 5.3 Analyze by project/client)."
+    ]
+  },
+  "detected_integrations": {
+    "has_workflows": true,
+    "workflow_evidence": "Timesheets submitted for approval and reviewed by line managers; system tracks productivity and compliance metrics; Jira ticket TSSD-3455 indicates lack of configurable approval routing mechanism, implying workflow integration is relevant.",
+    "has_approval_flow": true,
+    "approval_evidence": "Timesheets require submission for approval and line manager review per PRD; Jira ticket TSSD-3455 highlights lack of hierarchical approval routing; PRD and Zendesk mention submission and approval steps."
+  },
+  "workflow_exploration": {
+    "enabled": true,
+    "priority": "required",
+    "evidence": "Timesheets submitted for approval and reviewed by line managers; system tracks productivity and compliance metrics; Jira ticket TSSD-3455 indicates lack of configurable approval routing mechanism, implying workflow integration is relevant.",
+    "check_instructions": [
+      "Navigate to Automations in the left sidebar",
+      "Click on Workflows",
+      "Click + Create workflow (or similar create button)",
+      "In trigger selection, search for this feature's name",
+      "Check if this feature appears as a trigger source",
+      "Document any trigger events found (e.g., 'item created', 'status changed')",
+      "Check Actions section for actions related to this feature",
+      "Screenshot available triggers and actions"
+    ],
+    "nav_path": "Automations → Workflows → + Create workflow"
+  },
+  "approval_flow_exploration": {
+    "enabled": true,
+    "priority": "required",
+    "evidence": "Timesheets require submission for approval and line manager review per PRD; Jira ticket TSSD-3455 highlights lack of hierarchical approval routing; PRD and Zendesk mention submission and approval steps.",
+    "check_instructions": [
+      "Look for 'Approval' or 'Pending Approval' status in the feature",
+      "Check if items have approval workflow indicators",
+      "Look for 'Submit for Approval' buttons or actions",
+      "Find approval settings in feature configuration",
+      "Document the approval chain (who approves what)",
+      "Test approval/rejection flow if test data available",
+      "Check for approval history or audit trail",
+      "Screenshot approval-related UI elements"
+    ],
+    "detection_signals": [
+      "Status dropdown with 'Pending Approval' option",
+      "Approve/Reject buttons",
+      "Approval history section",
+      "'Requires approval' toggle in settings",
+      "Approver assignment fields"
+    ]
+  },
+  "execution_order": [
+    "1. EXPLORATION: Navigate to feature and discover all UI elements",
+    "2. IDENTIFY ENTITY: Determine what the primary item/entity is",
+    "3. CRUD TEST: Test create, read, update, delete for the primary entity",
+    "4. WORKFLOW CHECK: Verify if feature has workflow triggers/actions",
+    "5. APPROVAL FLOW: Test approval process if present",
+    "6. WHAT_TO_DO: Execute specific validation tasks from payload",
+    "7. WHAT_TO_WATCH_OUT_FOR: Validate constraints, limitations, and edge cases",
+    "8. DOCUMENTATION: Capture screenshots of key screens"
+  ],
+  "what_to_watch_out_for": [
+    {
+      "issue": "Lack of intuitive navigation and filtering in admin panel for time and pay adjustment requests.",
+      "limitation": "Users face difficulty locating specific action logs and timestamps; no bulk deletion or mass management of adjustment requests; inability to handle time entries spanning multiple days; lack of filtering by line manager; no configurable approval routing; no admin intervention in timesheet creation/modification; limited UI features for editing and filtering.",
+      "workaround": "Manual backend processing required for bulk deletions; employees must manually split shifts spanning midnight; rely on manual follow-ups for approvals and notifications.",
+      "jira_reference": "TSSD-3451, TSSD-2086, TSSD-2851, TSSD-4285, TSSD-4398, TSSD-2592, TSSD-3455, TSSD-4949, AV-8967, OS-2033, AV-2350, AV-2343, AV-7730, AV-2200",
+      "severity": "High"
+    }
+  ],
+  "playwright_context": {
+    "feature_metadata": {
+      "name": "timesheets",
+      "slug": "timesheets",
+      "category": "time",
+      "version": "",
+      "is_new": null
+    },
+    "prd_context": {
+      "how_it_works_summary": [
+        "Employee prepares tasks/activities for upcoming day or week.",
+        "Employee logs time spent on each project/client/activity.",
+        "Mark tasks as billable or non-billable.",
+        "Submit timesheet for approval.",
+        "Line manager reviews and approves timesheet.",
+        "System tracks productivity and compliance metrics.",
+        "Generate reports for billability analysis."
+      ],
+      "key_actions_steps": [
+        "1. Employee prepares tasks/activities for upcoming day or week.",
+        "2. Employee logs time spent on each project/client/activity.",
+        "3. Mark tasks as billable or non-billable.",
+        "4. Submit timesheet for approval.",
+        "5. Line manager reviews and approves timesheet.",
+        "6. System tracks productivity and compliance metrics.",
+        "7. Generate reports for billability analysis."
+      ],
+      "rules_limitations_constraints": [
+        "MVP focuses on productivity and compliance, not full billability features initially.",
+        "Competing with existing methods (WhatsApp groups, Google Docs).",
+        "40% of decisions based on assumptions due to time constraints.",
+        "Timesheet products typically standalone - significant functionality needed to compete."
+      ],
+      "data_inputs_required": [
+        "Project/client assignments",
+        "Task descriptions",
+        "Time spent per activity",
+        "Billable vs non-billable classification",
+        "Employee work schedules",
+        "Approval workflow configuration",
+        "Check-in/check-out data for cross-reference"
+      ],
+      "edge_cases_warnings": [
+        "Employees may fill timesheets just for compliance without accurate data.",
+        "Existing methods (WhatsApp, Google Docs) are entrenched.",
+        "Work-from-home scenarios require trust in self-reported data.",
+        "Must handle: retroactive entries, partial day tracking, overlapping projects, rejected timesheets requiring revision."
+      ],
+      "hierarchical_task_analysis": [
+        "1. Task Planning (1.1 Create tasks for upcoming period, 1.2 Assign to projects/clients, 1.3 Set time estimates).",
+        "2. Time Logging (2.1 Record start/end times, 2.2 Add task descriptions, 2.3 Mark billable status).",
+        "3. Submission (3.1 Review daily/weekly entries, 3.2 Submit for approval, 3.3 Receive confirmation).",
+        "4. Manager Review (4.1 View subordinate timesheets, 4.2 Compare against expectations, 4.3 Approve or request changes).",
+        "5. Reporting (5.1 Generate productivity reports, 5.2 Calculate billable hours, 5.3 Analyze by project/client)."
+      ]
+    },
+    "detected_integrations": {
+      "has_workflows": true,
+      "workflow_evidence": "Timesheets submitted for approval and reviewed by line managers; system tracks productivity and compliance metrics; Jira ticket TSSD-3455 indicates lack of configurable approval routing mechanism, implying workflow integration is relevant.",
+      "has_approval_flow": true,
+      "approval_evidence": "Timesheets require submission for approval and line manager review per PRD; Jira ticket TSSD-3455 highlights lack of hierarchical approval routing; PRD and Zendesk mention submission and approval steps."
+    },
+    "what_to_do": [
+      {
+        "task": "Record and submit timesheets for approval including task creation, time logging, and billable classification.",
+        "steps": [
+          "Open Bayzat Work Life Platform or Bayzat App and navigate to Timesheets.",
+          "Create new tasks for the upcoming period and assign to projects/clients.",
+          "Enter task details including descriptions and time spent per activity.",
+          "Mark tasks as billable or non-billable as applicable.",
+          "Review daily or weekly timesheet entries.",
+          "Submit timesheet for approval.",
+          "Line manager accesses team timesheet view, reviews entries, and approves or requests changes.",
+          "Generate reports for productivity and billability analysis."
+        ],
+        "expected_outcome": "Timesheets are accurately recorded, submitted, and approved with productivity and compliance metrics tracked. Reports generated reflect billable and non-billable hours by project/client.",
+        "source_articles": [
+          "14309538480913",
+          "23311932155537"
+        ]
+      }
+    ],
+    "what_to_watch_out_for": [
+      {
+        "issue": "Lack of intuitive navigation and filtering in admin panel for time and pay adjustment requests.",
+        "limitation": "Users face difficulty locating specific action logs and timestamps; no bulk deletion or mass management of adjustment requests; inability to handle time entries spanning multiple days; lack of filtering by line manager; no configurable approval routing; no admin intervention in timesheet creation/modification; limited UI features for editing and filtering.",
+        "workaround": "Manual backend processing required for bulk deletions; employees must manually split shifts spanning midnight; rely on manual follow-ups for approvals and notifications.",
+        "jira_reference": "TSSD-3451, TSSD-2086, TSSD-2851, TSSD-4285, TSSD-4398, TSSD-2592, TSSD-3455, TSSD-4949, AV-8967, OS-2033, AV-2350, AV-2343, AV-7730, AV-2200",
+        "severity": "High"
+      }
+    ],
+    "consolidation_summary": {
+      "prds_received": 1,
+      "prds_consolidated": 1,
+      "zendesk_articles_received": 2,
+      "tasks_consolidated": 1,
+      "jira_tickets_received": 24,
+      "jira_tickets_consolidated": 1
+    }
+  }
+}
