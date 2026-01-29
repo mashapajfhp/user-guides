@@ -1,0 +1,299 @@
+{
+  "nextVersion": "v1",
+  "feature_info": {
+    "feature_name": "company_custom_data",
+    "feature_slug": "company-custom-data",
+    "next_version": "v1"
+  },
+  "primary_entity": {
+    "discovery_instructions": [
+      "Identify what the main item/entity is for this feature (e.g., ticket, workflow, employee, record)",
+      "Look for list/table views - the rows represent the primary entity",
+      "Check page headers and breadcrumbs for entity naming",
+      "Note the singular and plural forms used in the UI"
+    ],
+    "crud_operations": {
+      "create": {
+        "action": "Create new item",
+        "find_trigger": [
+          "Look for buttons with: + Add, + Create, + New, plus icon",
+          "Check top-right corner of the page",
+          "Check for floating action buttons (FAB)",
+          "Look in empty state messages for create prompts"
+        ],
+        "validation": "New item appears in list with unique identifier"
+      },
+      "read": {
+        "action": "View item details",
+        "find_trigger": [
+          "Click on any row in a list/table",
+          "Look for 'View' or eye icon buttons",
+          "Check if rows are clickable (cursor changes)"
+        ],
+        "validation": "Detail panel, modal, or page opens showing full information"
+      },
+      "update": {
+        "action": "Edit/modify item",
+        "find_trigger": [
+          "Look for Edit button, pencil icon",
+          "Check for inline editing (click on field to edit)",
+          "Look for status change dropdowns or buttons",
+          "Check action menus (three-dot menu) for edit option"
+        ],
+        "validation": "Changes persist after save, reflected in list view"
+      },
+      "delete": {
+        "action": "Delete/remove item",
+        "find_trigger": [
+          "Look for Delete button, trash icon",
+          "Check action menus (three-dot menu) for delete option",
+          "Look for bulk delete with checkboxes",
+          "Some features use 'Archive' or 'Cancel' instead of delete"
+        ],
+        "validation": "Item removed from list or status changed to deleted/archived"
+      }
+    }
+  },
+  "exploration_phase": {
+    "enabled": true,
+    "run_before_what_to_do": true,
+    "instructions": [
+      "Navigate to the feature's main section",
+      "Take a full page snapshot to understand the layout",
+      "Identify the primary entity",
+      "Find ALL clickable elements: buttons, links, tabs, dropdowns, icons",
+      "Map the navigation structure: tabs, sidebar items, breadcrumbs",
+      "Click each tab/sub-section and document what appears",
+      "Locate CRUD controls for the primary entity",
+      "Check for action menus (three-dot menus, right-click menus)",
+      "Document any modals, dialogs, slide-out panels",
+      "Identify form fields and input types when forms appear",
+      "Look for filters, search, sort, and export options",
+      "Check for bulk action controls (checkboxes, select all)",
+      "Note any settings or configuration options"
+    ],
+    "discovery_targets": [
+      "Primary action buttons (create/add new item)",
+      "List/table of items with row actions",
+      "Detail view or edit forms",
+      "Status indicators and state changes",
+      "Filter and search controls",
+      "Navigation tabs within the feature",
+      "Settings or configuration sections",
+      "Related features or cross-links"
+    ]
+  },
+  "prd_context": {
+    "how_it_works_summary": [
+      "Admins create global payroll templates from the admin panel, configuring both EDR (Employee Data Record) and SCR rows.",
+      "Templates support multiple export formats including SIF, CSV, and Excel with optional column headers.",
+      "New data points are available including net pay after deductions, formatted day counts, grand totals, and company custom data.",
+      "Templates can include dynamic values like extraction date and payment period with permanent suffixes."
+    ],
+    "key_actions_steps": [
+      "Bayzat Admin sets up new global template in admin panel",
+      "Configure EDR (Employee Data Row) data mappings",
+      "Configure SCR (Summary/Consolidation Row) data mappings",
+      "Add new data points: Net Pay after deductions only",
+      "Configure grand totals in SCR row (sum of EDR columns)",
+      "Set permanent suffix + extraction date + payment period (for HSBC)",
+      "User downloads report in selected format (.SIF, .CSV, .EXCEL)",
+      "User selects whether to include column headers (CSV/EXCEL)",
+      "User uploads file to banking portal"
+    ],
+    "rules_limitations_constraints": [
+      "HSBC format: Calendar days must be 4-digit format (e.g., 0031 for 31 days)",
+      "HSBC requires permanent suffix with extraction date + payment period (changes per account number and TL)",
+      "ADCB format: File must open in both .SIF and .CSV extension",
+      "CSV and EXCEL formats: Option to exclude column headers",
+      "SCR row: Consolidates/sums EDR rows",
+      "Net Pay after deductions only: Removes deductions from net pay without adding additions",
+      "Company custom data support required"
+    ],
+    "data_inputs_required": [
+      "EDR data mappings (employee-level data fields)",
+      "SCR data mappings (summary row fields)",
+      "New data points: Net Pay after deductions only",
+      "Bank-specific configuration (HSBC, ADCB, etc.)",
+      "Permanent suffix configuration (per account number/TL)",
+      "Calendar days in payment month",
+      "File format preference (.SIF, .CSV, .EXCEL)",
+      "Column header preference (include/exclude)",
+      "Company custom data"
+    ],
+    "edge_cases_warnings": [
+      "Volvo blocker: SCR row was required but not available",
+      "HSBC calendar days: Must pad to 4 digits (30 → 0030)",
+      "Permanent suffix: Varies by account number and TL - must be configurable per company",
+      "ADCB dual format: Same content must work with both .SIF and .CSV extensions",
+      "Column headers: Some banks require no headers in CSV/EXCEL",
+      "Grand totals: User must be able to select which EDR columns to sum in SCR"
+    ],
+    "hierarchical_task_analysis": [
+      "Template Configuration (Internal/Admin)",
+      "Create new global template in admin panel",
+      "Map EDR data fields",
+      "Map SCR data fields",
+      "Configure grand total columns (sum of EDR)",
+      "Add new data points (Net Pay after deductions)",
+      "Set bank-specific settings",
+      "HSBC: 4-digit calendar days, permanent suffix",
+      "ADCB: Dual format support",
+      "File Generation (User)",
+      "Navigate to payroll templates",
+      "Select template",
+      "Choose file format (.SIF, .CSV, .EXCEL)",
+      "Configure header preference",
+      "Download file",
+      "Banking Upload",
+      "Open file in banking portal",
+      "Upload for salary transfer"
+    ]
+  },
+  "detected_integrations": {
+    "has_workflows": null,
+    "workflow_evidence": "No evidence found",
+    "has_approval_flow": null,
+    "approval_evidence": "No evidence found"
+  },
+  "workflow_exploration": {
+    "enabled": true,
+    "priority": "optional",
+    "evidence": "No evidence found",
+    "check_instructions": [
+      "Navigate to Automations in the left sidebar",
+      "Click on Workflows",
+      "Click + Create workflow (or similar create button)",
+      "In trigger selection, search for this feature's name",
+      "Check if this feature appears as a trigger source",
+      "Document any trigger events found (e.g., 'item created', 'status changed')",
+      "Check Actions section for actions related to this feature",
+      "Screenshot available triggers and actions"
+    ],
+    "nav_path": "Automations → Workflows → + Create workflow"
+  },
+  "approval_flow_exploration": {
+    "enabled": true,
+    "priority": "optional",
+    "evidence": "No evidence found",
+    "check_instructions": [
+      "Look for 'Approval' or 'Pending Approval' status in the feature",
+      "Check if items have approval workflow indicators",
+      "Look for 'Submit for Approval' buttons or actions",
+      "Find approval settings in feature configuration",
+      "Document the approval chain (who approves what)",
+      "Test approval/rejection flow if test data available",
+      "Check for approval history or audit trail",
+      "Screenshot approval-related UI elements"
+    ],
+    "detection_signals": [
+      "Status dropdown with 'Pending Approval' option",
+      "Approve/Reject buttons",
+      "Approval history section",
+      "'Requires approval' toggle in settings",
+      "Approver assignment fields"
+    ]
+  },
+  "execution_order": [
+    "1. EXPLORATION: Navigate to feature and discover all UI elements",
+    "2. IDENTIFY ENTITY: Determine what the primary item/entity is",
+    "3. CRUD TEST: Test create, read, update, delete for the primary entity",
+    "4. WORKFLOW CHECK: Verify if feature has workflow triggers/actions",
+    "5. APPROVAL FLOW: Test approval process if present",
+    "6. WHAT_TO_DO: Execute specific validation tasks from payload",
+    "7. DOCUMENTATION: Capture screenshots of key screens"
+  ],
+  "what_to_watch_out_for": [],
+  "playwright_context": {
+    "feature_metadata": {
+      "name": "company_custom_data",
+      "slug": "company-custom-data",
+      "category": "prd",
+      "version": "",
+      "is_new": null
+    },
+    "prd_context": {
+      "how_it_works_summary": [
+        "Admins create global payroll templates from the admin panel, configuring both EDR (Employee Data Record) and SCR rows.",
+        "Templates support multiple export formats including SIF, CSV, and Excel with optional column headers.",
+        "New data points are available including net pay after deductions, formatted day counts, grand totals, and company custom data.",
+        "Templates can include dynamic values like extraction date and payment period with permanent suffixes."
+      ],
+      "key_actions_steps": [
+        "Bayzat Admin sets up new global template in admin panel",
+        "Configure EDR (Employee Data Row) data mappings",
+        "Configure SCR (Summary/Consolidation Row) data mappings",
+        "Add new data points: Net Pay after deductions only",
+        "Configure grand totals in SCR row (sum of EDR columns)",
+        "Set permanent suffix + extraction date + payment period (for HSBC)",
+        "User downloads report in selected format (.SIF, .CSV, .EXCEL)",
+        "User selects whether to include column headers (CSV/EXCEL)",
+        "User uploads file to banking portal"
+      ],
+      "rules_limitations_constraints": [
+        "HSBC format: Calendar days must be 4-digit format (e.g., 0031 for 31 days)",
+        "HSBC requires permanent suffix with extraction date + payment period (changes per account number and TL)",
+        "ADCB format: File must open in both .SIF and .CSV extension",
+        "CSV and EXCEL formats: Option to exclude column headers",
+        "SCR row: Consolidates/sums EDR rows",
+        "Net Pay after deductions only: Removes deductions from net pay without adding additions",
+        "Company custom data support required"
+      ],
+      "data_inputs_required": [
+        "EDR data mappings (employee-level data fields)",
+        "SCR data mappings (summary row fields)",
+        "New data points: Net Pay after deductions only",
+        "Bank-specific configuration (HSBC, ADCB, etc.)",
+        "Permanent suffix configuration (per account number/TL)",
+        "Calendar days in payment month",
+        "File format preference (.SIF, .CSV, .EXCEL)",
+        "Column header preference (include/exclude)",
+        "Company custom data"
+      ],
+      "edge_cases_warnings": [
+        "Volvo blocker: SCR row was required but not available",
+        "HSBC calendar days: Must pad to 4 digits (30 → 0030)",
+        "Permanent suffix: Varies by account number and TL - must be configurable per company",
+        "ADCB dual format: Same content must work with both .SIF and .CSV extensions",
+        "Column headers: Some banks require no headers in CSV/EXCEL",
+        "Grand totals: User must be able to select which EDR columns to sum in SCR"
+      ],
+      "hierarchical_task_analysis": [
+        "Template Configuration (Internal/Admin)",
+        "Create new global template in admin panel",
+        "Map EDR data fields",
+        "Map SCR data fields",
+        "Configure grand total columns (sum of EDR)",
+        "Add new data points (Net Pay after deductions)",
+        "Set bank-specific settings",
+        "HSBC: 4-digit calendar days, permanent suffix",
+        "ADCB: Dual format support",
+        "File Generation (User)",
+        "Navigate to payroll templates",
+        "Select template",
+        "Choose file format (.SIF, .CSV, .EXCEL)",
+        "Configure header preference",
+        "Download file",
+        "Banking Upload",
+        "Open file in banking portal",
+        "Upload for salary transfer"
+      ]
+    },
+    "detected_integrations": {
+      "has_workflows": null,
+      "workflow_evidence": "No evidence found",
+      "has_approval_flow": null,
+      "approval_evidence": "No evidence found"
+    },
+    "what_to_do": [],
+    "what_to_watch_out_for": [],
+    "consolidation_summary": {
+      "prds_received": 1,
+      "prds_consolidated": 1,
+      "zendesk_articles_received": 0,
+      "tasks_consolidated": 0,
+      "jira_tickets_received": 0,
+      "jira_tickets_consolidated": 0
+    }
+  }
+}
