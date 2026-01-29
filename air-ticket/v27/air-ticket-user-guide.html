@@ -1121,6 +1121,135 @@
   <div class="info-box">
     <p><strong>Note:</strong> No air ticket-specific actions are available in the workflow system. Standard actions (Send email, Create task, etc.) can be used with the air ticket cycle renewal trigger.</p>
   </div>
+
+  <h3>Approval Flow Configuration</h3>
+  <p>Air Ticket requests follow configurable approval flows that route requests to the appropriate approvers based on defined criteria. Access approval flow configuration via <strong>Automations → Approval flows → Air Ticket</strong>.</p>
+
+  <figure>
+    <img src="validation/screenshots/air-ticket-approval-flows-overview.png" alt="Air Ticket approval flows overview" />
+    <figcaption>Air Ticket approval flows showing advanced flows and default flow configuration</figcaption>
+  </figure>
+
+  <h4>Approval Flow Types</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Flow Type</th>
+        <th>Description</th>
+        <th>When Used</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Advanced Approval Flow</strong></td>
+        <td>Conditional flows that route approvals based on specific criteria (e.g., amount thresholds, currency)</td>
+        <td>When request matches the defined criteria conditions</td>
+      </tr>
+      <tr>
+        <td><strong>Default Approval Flow</strong></td>
+        <td>Fallback flow used when no advanced flow criteria matches</td>
+        <td>All requests that don't match any advanced flow conditions</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Available Criteria for Advanced Flows</h4>
+  <p>When creating advanced approval flows, you can filter requests based on the following data points:</p>
+
+  <figure>
+    <img src="validation/screenshots/air-ticket-approval-criteria-options.png" alt="Available criteria for Air Ticket approval flows" />
+    <figcaption>Data point options available when configuring approval flow criteria</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Available Fields</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Air Ticket Specific</strong></td>
+        <td>Policy, Redeem Option, Policy Allowance Amount → Currency, Policy Allowance Amount → Amount</td>
+      </tr>
+      <tr>
+        <td><strong>Employee Fields</strong></td>
+        <td>Department, Position, Nationality, Office, Direct Reports To, Roles, Employee Grade, and 50+ additional attributes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Example: Amount-Based Approval Flow</h4>
+  <p>The following example shows an advanced approval flow that routes high-value requests to the Line Manager:</p>
+
+  <figure>
+    <img src="validation/screenshots/air-ticket-advanced-flow-1-details.png" alt="Advanced approval flow configuration" />
+    <figcaption>Advanced flow configured to route requests over 3000 AED to Line Manager</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Configuration</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Flow Name</strong></td>
+        <td>Amount exceeding 3000</td>
+      </tr>
+      <tr>
+        <td><strong>Criteria 1</strong></td>
+        <td>Policy Allowance Amount → Amount <em>is greater than</em> 3000</td>
+      </tr>
+      <tr>
+        <td><strong>Criteria 2</strong></td>
+        <td>Policy Allowance Amount → Currency <em>is equal to</em> AED</td>
+      </tr>
+      <tr>
+        <td><strong>Logic</strong></td>
+        <td>Execute when ALL criteria match (AND)</td>
+      </tr>
+      <tr>
+        <td><strong>Approver</strong></td>
+        <td>Line Manager (1 level)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Available Approver Types</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Approver Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Line Manager</strong></td>
+        <td>Employee's direct manager (configurable levels: 1, 2, or more levels up)</td>
+      </tr>
+      <tr>
+        <td><strong>Super Admin</strong></td>
+        <td>Users with Super Admin role</td>
+      </tr>
+      <tr>
+        <td><strong>Payroll Table Admin</strong></td>
+        <td>Users with Payroll administration permissions</td>
+      </tr>
+      <tr>
+        <td><strong>Specific User/Role</strong></td>
+        <td>Named individuals or custom roles</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box">
+    <p><strong>Tip:</strong> You can create multiple advanced flows with different criteria. The system evaluates flows in order and uses the first matching flow. If no advanced flow matches, the default flow is used.</p>
+  </div>
 </section>
 
 <section class="section" id="business-rules">
