@@ -134,6 +134,32 @@ Examples:
 
 ## Session Feedback - January 30, 2026
 
+### 360° Feedback User Guide
+
+**Feedback 1: Document ALL Survey Creation Paths**
+- User asked: "did you explore the bulk create survey experience AND EXPERIENCE FOR CREATING SURVEYS FOR AN INDIVIDUAL, including the modes for creating surveys - from scratch or from AI we need to test all the paths and document them"
+- **Action:** Captured and documented all survey creation flows:
+  - Individual survey creation → Blank Survey path (Question Bank)
+  - Individual survey creation → Start with AI path (AI generation interface)
+  - Bulk survey creation ("Create all surveys") → Same mode selection
+- **Screenshots captured:** 8 new screenshots covering the complete survey creation flow
+- **Rule:** When a feature has multiple creation modes/paths, document ALL of them with screenshots
+
+**Feedback 2: Remove Irrelevant Configuration Sections**
+- Rating Scale configuration is part of Performance Management module, NOT 360° Feedback
+- User said: "remove rating scale from here"
+- **Action:** Removed:
+  - Rating Scale row from Prerequisites & Requirements table
+  - Entire "Step 3: Configure Rating Scale (Optional)" section
+  - Renumbered remaining setup steps
+- **Rule:** Only include configuration steps that are ACTUALLY part of the feature being documented. Cross-reference with the live interface to verify what settings exist.
+
+**Feedback 3: Capture Post-Creation Dialogs**
+- After creating a 360° review, a success dialog appears with "Set up surveys now" button
+- User provided screenshot showing this dialog
+- **Action:** Documented the post-creation flow showing users can immediately proceed to survey setup
+- **Rule:** Capture success/confirmation dialogs that offer next-step actions - they're part of the user journey
+
 ### Timesheets User Guide
 
 **Feedback 1: Keep Use Cases Relevant and Focused**
@@ -265,6 +291,8 @@ Examples:
 - [ ] **Navigation paths validated** with Playwright
 - [ ] **Admin vs Employee paths separated** where applicable
 - [ ] **Screenshots contextually correct** (no tour popups, relevant to section)
+- [ ] **All creation modes documented** (e.g., Blank vs AI-generated, individual vs bulk)
+- [ ] **Only feature-specific settings included** (don't include settings from other modules)
 
 ---
 
@@ -304,4 +332,4 @@ When documenting Admin features like Timesheets:
 
 ---
 
-*This document reflects learnings from Performance Management v1, Timesheets v1, Work Expenses v1, and Air Ticket v27 guide creation - apply these standards to ALL future user guides*
+*This document reflects learnings from Performance Management v1, Timesheets v1, Work Expenses v1, Air Ticket v27, and 360° Feedback v5 guide creation - apply these standards to ALL future user guides*
