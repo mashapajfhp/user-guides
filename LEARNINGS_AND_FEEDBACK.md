@@ -1,6 +1,6 @@
 # Workflow Learnings & Feedback
 
-*Last updated: 2026-01-21*
+*Last updated: 2026-01-30*
 
 ## User Guide Documentation Standards
 
@@ -132,4 +132,79 @@ Examples:
 
 ---
 
-*This document reflects learnings from Performance Management v1 guide creation - apply these standards to ALL future user guides*
+## Session Feedback - January 30, 2026
+
+### Timesheets User Guide
+
+**Feedback 1: Keep Use Cases Relevant and Focused**
+- When listing workflow use cases, keep only 3 that are directly related to the feature
+- User said: "choose only 3 scenarios that are very close to timesheets not just general"
+- **Action:** Reduced from 8 generic use cases to 3 timesheet-specific ones:
+  1. Notify manager of overtime (uses Duration criteria)
+  2. Billable hours tracking (uses Project + Billable criteria)
+  3. Timesheet modification audit (uses Timesheet is updated event)
+
+**Feedback 2: Remove Irrelevant Sections**
+- If a screenshot or section shows content for a different feature (e.g., Leave approval flows instead of Timesheet), remove it
+- User showed screenshot of "Leave" approval flows and said "remove this"
+- **Lesson:** Always ensure screenshots and content are specifically relevant to the feature being documented
+
+**Feedback 3: Add Screenshots to Workflow Sections**
+- User said: "you did not put any screenshot to workflow"
+- **Action:** Added workflow event and action screenshots to support documentation
+- **Rule:** Every documented feature capability should have a supporting screenshot
+
+**Feedback 4: FAQ Styling Consistency**
+- FAQs must match the established styling pattern from other guides
+- User referenced work-timings guide as the standard
+- **Required CSS Structure:**
+```html
+<div class="faq-accordion">
+  <details class="faq-item">
+    <summary class="faq-question">Question text?</summary>
+    <div class="faq-answer">
+      <p>Answer text</p>
+    </div>
+  </details>
+</div>
+```
+- **Not:** `<details class="faq-item"><summary>Question</summary><p>Answer</p></details>`
+
+### Air Ticket User Guide
+
+**Feedback 5: Document Approval Flows Comprehensively**
+- User said: "look at both advanced and basic approval flow"
+- User said: "explore the existing approval flows"
+- **Action:** Explored and documented:
+  - Advanced approval flows with criteria (amount thresholds, currency)
+  - Default approval flow (fallback)
+  - Available criteria options (Policy, Redeem Option, Amount, Currency, Employee fields)
+  - Available approver types (Line Manager, Super Admin, Payroll Admin)
+
+### General Process
+
+**Feedback 6: Use Existing Folders**
+- User said: "folder already exists please add images to the existing folder"
+- **Rule:** Before creating new folders, check if they already exist
+- Use `find` or `ls` to verify folder structure before `mkdir`
+
+---
+
+## Updated Quality Checklist
+
+- [ ] All multi-step processes have screenshots for EACH step
+- [ ] Management/list dialogs are captured
+- [ ] Filter options are visible and documented
+- [ ] Error states are shown where applicable
+- [ ] Screenshots have sequential numbering
+- [ ] Alt text is descriptive
+- [ ] Figcaptions explain the screenshot context
+- [ ] **Workflow sections have screenshots** (events, criteria, actions)
+- [ ] **Use cases are feature-specific** (not generic examples)
+- [ ] **FAQs use correct CSS classes** (faq-accordion, faq-question, faq-answer)
+- [ ] **Approval flows documented** if applicable (advanced + default)
+- [ ] **Check existing folders** before creating new ones
+
+---
+
+*This document reflects learnings from Performance Management v1, Timesheets v1, and Air Ticket v27 guide creation - apply these standards to ALL future user guides*
