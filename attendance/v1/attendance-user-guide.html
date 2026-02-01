@@ -2199,13 +2199,16 @@
 
   <h4>Example Workflow Scenarios Using Variables</h4>
 
-  <p>The following scenarios demonstrate how custom variables transform basic workflows into intelligent automation. Each example shows how multiple functions work together to solve real attendance challenges.</p>
+  <p>The following scenarios are based on real business requirements. They demonstrate how custom variables eliminate manual HR work by automating complex calculations and policy enforcement.</p>
 
   <div class="feature-card">
-    <h5>Scenario 1: Smart Late Arrival Detection with Department-Based Escalation</h5>
-    <p><strong>Business Challenge:</strong> The company needs to detect late arrivals, calculate exactly how late each employee is, and route alerts to the correct manager based on department—all automatically without manual monitoring.</p>
+    <h5>Scenario 1: Monthly Overtime Capping with Auto-Conversion to Leave</h5>
 
-    <p><strong>Why Variables Are Essential:</strong> A basic workflow can only check "did employee check in?" but cannot calculate lateness or determine who to notify. Variables enable the workflow to compute the exact minutes late and look up the right escalation contact.</p>
+    <p><strong>The Manual Pain Point:</strong></p>
+    <p>HR currently checks overtime for 330+ employees every month to ensure no one exceeds 100 hours. Overtime above the cap must be excluded from payroll and converted to lieu days (time-off in lieu). This manual verification is extremely time-consuming and error-prone.</p>
+
+    <p><strong>The Automated Solution:</strong></p>
+    <p>A workflow that tracks cumulative monthly overtime per employee, alerts when approaching the 100-hour cap, and automatically triggers the conversion process when exceeded.</p>
 
     <p><strong>Variables Used:</strong></p>
     <table>
@@ -2214,98 +2217,56 @@
       </thead>
       <tbody>
         <tr>
-          <td><code>lateThreshold</code></td>
-          <td><code>TIME_ADD_MINUTES(shiftStartTime, 15)</code></td>
-          <td>Calculate the grace period cutoff (shift start + 15 minutes)</td>
+          <td><code>monthStart</code></td>
+          <td><code>DATE(YEAR(TODAY()), MONTH(TODAY()), 1)</code></td>
+          <td>Get first day of current month for period calculation</td>
         </tr>
         <tr>
-          <td><code>minutesLate</code></td>
-          <td><code>TIME_DIFF_MINUTES(actualCheckIn, shiftStartTime)</code></td>
-          <td>Calculate exact lateness for the notification message</td>
+          <td><code>monthlyOTHours</code></td>
+          <td><code>SUM(employee.overtimeHours, monthStart, TODAY())</code></td>
+          <td>Calculate cumulative overtime hours for the month</td>
         </tr>
         <tr>
-          <td><code>deptInfo</code></td>
-          <td><code>DEPARTMENT_BY_NAME(employee.department)</code></td>
-          <td>Look up department details to get manager email</td>
+          <td><code>remainingCap</code></td>
+          <td><code>IF_NUMBER(100 - monthlyOTHours > 0, 100 - monthlyOTHours, 0)</code></td>
+          <td>Calculate how many OT hours remain before hitting 100-hour cap</td>
         </tr>
         <tr>
-          <td><code>escalationEmail</code></td>
-          <td><code>IF_STRING(minutesLate > 30, "hr@company.com", deptInfo.managerEmail)</code></td>
-          <td>Route to HR if severely late, otherwise to department manager</td>
+          <td><code>excessHours</code></td>
+          <td><code>IF_NUMBER(monthlyOTHours > 100, monthlyOTHours - 100, 0)</code></td>
+          <td>Calculate hours to be converted to lieu days</td>
+        </tr>
+        <tr>
+          <td><code>lieuDays</code></td>
+          <td><code>DIVIDE(excessHours, 8)</code></td>
+          <td>Convert excess hours to leave days (8 hours = 1 day)</td>
         </tr>
       </tbody>
     </table>
 
     <p><strong>Workflow Configuration:</strong></p>
     <ul>
-      <li><strong>Event:</strong> Timesheet is created</li>
-      <li><strong>Criteria:</strong> <code>actualCheckIn > lateThreshold</code></li>
-      <li><strong>Action:</strong> Send email to <code>escalationEmail</code> with message: "Employee [name] checked in [minutesLate] minutes late on [date]"</li>
-    </ul>
-
-    <p><strong>Outcome:</strong> Managers receive immediate, accurate alerts with calculated lateness. Severe cases (30+ minutes) automatically escalate to HR without manual intervention.</p>
-  </div>
-
-  <div class="feature-card">
-    <h5>Scenario 2: Overtime Compliance Monitor with Threshold Warnings</h5>
-    <p><strong>Business Challenge:</strong> UAE labor law restricts overtime to 2 hours per day. The company needs to warn managers when employees approach this limit and block further overtime when exceeded—preventing compliance violations before they happen.</p>
-
-    <p><strong>Why Variables Are Essential:</strong> Basic workflows cannot perform calculations on timesheet data. Variables enable real-time computation of worked hours, comparison against legal limits, and percentage-based threshold warnings.</p>
-
-    <p><strong>Variables Used:</strong></p>
-    <table>
-      <thead>
-        <tr><th>Variable Name</th><th>Function</th><th>Purpose</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>workTiming</code></td>
-          <td><code>WORK_TIMING(employee.assignedShift)</code></td>
-          <td>Get the employee's assigned shift details including standard hours</td>
-        </tr>
-        <tr>
-          <td><code>standardHours</code></td>
-          <td><code>workTiming.dailyHours</code></td>
-          <td>Extract standard working hours (e.g., 8 hours)</td>
-        </tr>
-        <tr>
-          <td><code>actualHours</code></td>
-          <td><code>TIME_DIFF_HOURS(checkOut, checkIn)</code></td>
-          <td>Calculate actual hours worked from timesheet</td>
-        </tr>
-        <tr>
-          <td><code>overtimeHours</code></td>
-          <td><code>IF_NUMBER(actualHours > standardHours, actualHours - standardHours, 0)</code></td>
-          <td>Calculate overtime (only if exceeds standard)</td>
-        </tr>
-        <tr>
-          <td><code>overtimePercent</code></td>
-          <td><code>DIVIDE(overtimeHours, 2) * 100</code></td>
-          <td>Calculate percentage of legal overtime limit used</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p><strong>Workflow Configuration:</strong></p>
-    <ul>
-      <li><strong>Event:</strong> Timesheet is updated (checkout recorded)</li>
-      <li><strong>Criteria:</strong> <code>overtimePercent >= 80</code></li>
-      <li><strong>Action:</strong>
+      <li><strong>Event:</strong> Timesheet is updated (overtime recorded)</li>
+      <li><strong>Criteria:</strong> <code>monthlyOTHours >= 80</code> (trigger at 80% of cap)</li>
+      <li><strong>Actions:</strong>
         <ul>
-          <li>If <code>overtimePercent >= 80 AND < 100</code>: Send warning to manager "Employee approaching overtime limit ([overtimePercent]% used)"</li>
-          <li>If <code>overtimePercent >= 100</code>: Send alert to HR and manager "COMPLIANCE ALERT: Overtime limit exceeded by [overtimeHours - 2] hours"</li>
+          <li><strong>At 80 hours:</strong> Send warning to employee and manager: "You have used 80 of 100 overtime hours this month. Remaining: [remainingCap] hours."</li>
+          <li><strong>At 100+ hours:</strong> Send alert to HR and payroll: "OVERTIME CAP REACHED: [employee.name] has [excessHours] hours to convert to [lieuDays] lieu days. Exclude from payroll processing."</li>
         </ul>
       </li>
     </ul>
 
-    <p><strong>Outcome:</strong> Proactive compliance management. Managers receive warnings at 80% threshold, giving time to adjust schedules. HR is immediately notified of any violations for corrective action.</p>
+    <p><strong>Business Impact:</strong> Eliminates monthly manual checks for 330+ employees. Payroll receives automatic notifications for exclusions. Employees and managers get proactive warnings before hitting caps.</p>
   </div>
 
   <div class="feature-card">
-    <h5>Scenario 3: Intelligent Absence Response with Context-Aware Actions</h5>
-    <p><strong>Business Challenge:</strong> When employees are marked absent, the response should vary based on context: is it a weekend (which shouldn't trigger alerts), is the employee on probation (requiring stricter monitoring), and which office/department needs to be notified?</p>
+    <h5>Scenario 2: Hourly Leave Request Blocking with Monthly Limits</h5>
 
-    <p><strong>Why Variables Are Essential:</strong> Basic workflows treat all absences the same. Variables enable context-aware decisions—checking the day of week, employee status, and routing notifications appropriately based on multiple conditions.</p>
+    <p><strong>The Manual Pain Point:</strong></p>
+    <p>The company offers a special hourly leave type for late arrivals or early departures with strict rules: maximum 4 hours per month, maximum 2 hours per request, and only 2 requests allowed per month. HR must manually verify whether an employee has already used their 2 requests before approving—leading to delays and occasional policy violations.</p>
+
+    <p><strong>The Automated Solution:</strong></p>
+    <p>A workflow that automatically calculates the employee's monthly usage and blocks the request at submission if limits are exceeded—preventing the 3rd request entirely.</p>
 
     <p><strong>Variables Used:</strong></p>
     <table>
@@ -2314,51 +2275,119 @@
       </thead>
       <tbody>
         <tr>
-          <td><code>dayOfWeek</code></td>
-          <td><code>WEEKDAY(absenceDate)</code></td>
-          <td>Determine if absence falls on a weekend (6=Friday, 7=Saturday in UAE)</td>
+          <td><code>monthStart</code></td>
+          <td><code>DATE(YEAR(TODAY()), MONTH(TODAY()), 1)</code></td>
+          <td>First day of current month for counting requests</td>
         </tr>
         <tr>
-          <td><code>isWorkday</code></td>
-          <td><code>AND(dayOfWeek != 6, dayOfWeek != 7)</code></td>
-          <td>Boolean check: only process workday absences</td>
+          <td><code>requestsThisMonth</code></td>
+          <td><code>COUNT(employee.hourlyLeaveRequests, monthStart, TODAY())</code></td>
+          <td>Count how many hourly leave requests submitted this month</td>
         </tr>
         <tr>
-          <td><code>daysSinceJoining</code></td>
-          <td><code>DATE_DIFF_DAYS(employee.joiningDate, TODAY())</code></td>
-          <td>Calculate tenure to identify probation employees</td>
+          <td><code>hoursUsedThisMonth</code></td>
+          <td><code>SUM(employee.hourlyLeaveHours, monthStart, TODAY())</code></td>
+          <td>Total hourly leave hours used this month</td>
         </tr>
         <tr>
-          <td><code>isOnProbation</code></td>
-          <td><code>daysSinceJoining < 90</code></td>
-          <td>Flag employees in first 90 days</td>
+          <td><code>remainingRequests</code></td>
+          <td><code>IF_NUMBER(2 - requestsThisMonth > 0, 2 - requestsThisMonth, 0)</code></td>
+          <td>Calculate remaining request allowance (max 2)</td>
         </tr>
         <tr>
-          <td><code>officeInfo</code></td>
-          <td><code>OFFICE_BY_NAME(employee.office)</code></td>
-          <td>Get office details for location-specific notifications</td>
+          <td><code>remainingHours</code></td>
+          <td><code>IF_NUMBER(4 - hoursUsedThisMonth > 0, 4 - hoursUsedThisMonth, 0)</code></td>
+          <td>Calculate remaining hours allowance (max 4)</td>
         </tr>
         <tr>
-          <td><code>notificationTarget</code></td>
-          <td><code>IF_STRING(isOnProbation, "hr@company.com", officeInfo.adminEmail)</code></td>
-          <td>Route probation absences to HR, others to office admin</td>
+          <td><code>canSubmit</code></td>
+          <td><code>AND(requestsThisMonth < 2, hoursUsedThisMonth < 4, requestedHours <= 2)</code></td>
+          <td>Validate all three rules: requests, total hours, per-request limit</td>
         </tr>
       </tbody>
     </table>
 
     <p><strong>Workflow Configuration:</strong></p>
     <ul>
-      <li><strong>Event:</strong> Employees are marked as absent for past day</li>
-      <li><strong>Criteria:</strong> <code>isWorkday = TRUE</code> (ignore weekend absences)</li>
-      <li><strong>Action:</strong> Send email to <code>notificationTarget</code> with context:
+      <li><strong>Event:</strong> Hourly leave request is submitted</li>
+      <li><strong>Criteria:</strong> <code>canSubmit = FALSE</code></li>
+      <li><strong>Actions:</strong>
         <ul>
-          <li>If probation: "PROBATION ALERT: [name] absent on [date]. Days since joining: [daysSinceJoining]"</li>
-          <li>If regular: "Absence notification: [name] from [office] was absent on [date]"</li>
+          <li><strong>Block submission</strong> and notify employee: "Request cannot be submitted. You have used [requestsThisMonth] of 2 allowed requests and [hoursUsedThisMonth] of 4 allowed hours this month."</li>
+          <li>If <code>requestedHours > 2</code>: "Maximum 2 hours per request. Please reduce your request."</li>
         </ul>
       </li>
     </ul>
 
-    <p><strong>Outcome:</strong> Intelligent absence handling that filters noise (weekends), prioritizes risk (probation employees), and routes to the right person—all without manual triage.</p>
+    <p><strong>Approval Flow Integration:</strong> When <code>canSubmit = TRUE</code>, route to: Department Head → HR → Copy to Security/Gate for exit control.</p>
+
+    <p><strong>Business Impact:</strong> Policy violations blocked at source. HR no longer manually verifies request counts. Security receives automatic notification for gate access.</p>
+  </div>
+
+  <div class="feature-card">
+    <h5>Scenario 3: Comp-Off Expiry Tracking Based on Work Date</h5>
+
+    <p><strong>The Manual Pain Point:</strong></p>
+    <p>For non-overtime employees (e.g., admin staff), extra work results in comp-off leave. These comp-offs must expire exactly 365 days from the actual work date—not based on leave year or employee anniversary. HR struggles to track individual expiry dates, leading to either premature forfeiture or employees using expired comp-offs.</p>
+
+    <p><strong>The Automated Solution:</strong></p>
+    <p>A workflow that calculates the exact expiry date for each comp-off based on when the extra work occurred, sends proactive reminders before expiry, and automatically expires unused balances.</p>
+
+    <p><strong>Variables Used:</strong></p>
+    <table>
+      <thead>
+        <tr><th>Variable Name</th><th>Function</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>workDate</code></td>
+          <td><code>compOff.earnedDate</code></td>
+          <td>The date the extra work was performed</td>
+        </tr>
+        <tr>
+          <td><code>expiryDate</code></td>
+          <td><code>DATE_ADD_DAYS(workDate, 365)</code></td>
+          <td>Calculate exact expiry: 365 days from work date</td>
+        </tr>
+        <tr>
+          <td><code>daysUntilExpiry</code></td>
+          <td><code>DATE_DIFF_DAYS(TODAY(), expiryDate)</code></td>
+          <td>Calculate remaining days before comp-off expires</td>
+        </tr>
+        <tr>
+          <td><code>isExpiringSoon</code></td>
+          <td><code>AND(daysUntilExpiry <= 30, daysUntilExpiry > 0)</code></td>
+          <td>Flag comp-offs expiring within 30 days</td>
+        </tr>
+        <tr>
+          <td><code>isExpired</code></td>
+          <td><code>daysUntilExpiry <= 0</code></td>
+          <td>Flag comp-offs that have passed expiry date</td>
+        </tr>
+        <tr>
+          <td><code>employeeType</code></td>
+          <td><code>EMPLOYEE_STATUS_BY_ID(employee.statusId)</code></td>
+          <td>Verify employee is non-OT eligible for comp-off rules</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Workflow Configuration:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Daily scheduled check (Custom Recurring Event)</li>
+      <li><strong>Criteria:</strong> <code>employeeType = "Non-OT"</code> AND comp-off balance exists</li>
+      <li><strong>Actions:</strong>
+        <ul>
+          <li><strong>30 days before expiry:</strong> Send reminder to employee: "Your comp-off earned on [workDate] will expire on [expiryDate]. You have [daysUntilExpiry] days to use it."</li>
+          <li><strong>7 days before expiry:</strong> Send urgent reminder to employee and manager</li>
+          <li><strong>On expiry:</strong> Automatically forfeit comp-off and notify: "Comp-off from [workDate] has expired and been removed from your balance."</li>
+        </ul>
+      </li>
+    </ul>
+
+    <p><strong>Example:</strong> Employee worked extra on 27 Jan 2026. The system calculates expiry as 26 Jan 2027. Reminders sent on 27 Dec 2026 (30 days) and 19 Jan 2027 (7 days). Auto-expired on 27 Jan 2027 if unused.</p>
+
+    <p><strong>Business Impact:</strong> No more manual expiry tracking. Employees receive timely reminders. Automatic forfeiture ensures policy compliance. HR has accurate comp-off balance reporting.</p>
   </div>
 
   <figure>
@@ -2367,7 +2396,7 @@
   </figure>
 
   <div class="info-box">
-    <p><strong>Note:</strong> These scenarios demonstrate the power of combining multiple variables. Workflows are configured at the company level and can be adapted to your organization's specific policies, thresholds, and escalation paths.</p>
+    <p><strong>Note:</strong> These scenarios represent real business requirements. The specific thresholds (100 hours, 4 hours, 365 days) can be configured to match your organization's policies. Workflows are set at company level and combine multiple variables to replace manual HR processes.</p>
   </div>
 </section>
 
