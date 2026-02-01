@@ -2195,6 +2195,85 @@
     </ul>
   </div>
 
+  <h4>Attendance Violation Scenarios</h4>
+
+  <div class="feature-card">
+    <h5>Scenario 7: Late Arrival Alert</h5>
+    <p><strong>Business Need:</strong> Automatically notify managers when employees check in late, enabling immediate follow-up and tracking of tardiness patterns.</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Timesheet is created (captures check-in data)</li>
+      <li><strong>Custom Variable:</strong> Use <code>TIME_ADD_MINUTES(shiftStartTime, graceMinutes)</code> to calculate the late threshold</li>
+      <li><strong>Criteria:</strong> Filter where actual check-in time is greater than (shift start + grace period)</li>
+      <li><strong>Action:</strong> Send email/Slack to manager with employee name, scheduled time, actual check-in time, and minutes late</li>
+    </ul>
+    <p><strong>Example:</strong> If shift starts at 9:00 AM with 15-minute grace, alert triggers when check-in is after 9:15 AM.</p>
+  </div>
+
+  <div class="feature-card">
+    <h5>Scenario 8: Early Departure Warning</h5>
+    <p><strong>Business Need:</strong> Track employees who leave before their scheduled shift ends for compliance and payroll accuracy.</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Timesheet is updated (captures check-out data)</li>
+      <li><strong>Custom Variable:</strong> Use <code>TIME_ADD_MINUTES(shiftEndTime, -toleranceMinutes)</code> to calculate minimum checkout time</li>
+      <li><strong>Criteria:</strong> Filter where actual check-out time is less than (shift end - tolerance)</li>
+      <li><strong>Action:</strong> Log violation and notify HR for pattern analysis</li>
+    </ul>
+    <p><strong>Example:</strong> If shift ends at 6:00 PM with 10-minute tolerance, alert triggers when checkout is before 5:50 PM.</p>
+  </div>
+
+  <div class="feature-card">
+    <h5>Scenario 9: Repeated Absence Escalation</h5>
+    <p><strong>Business Need:</strong> When an employee is marked absent multiple times in a period, escalate to HR for intervention.</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Employees are marked as absent for past day</li>
+      <li><strong>Custom Variable:</strong> Use <code>DATE_DIFF_DAYS(TODAY(), periodStartDate)</code> to define the monitoring window</li>
+      <li><strong>Criteria:</strong> Filter employees with absence count exceeding threshold within the period</li>
+      <li><strong>Action:</strong> Send escalation email to HR with absence history and recommend counseling session</li>
+    </ul>
+    <p><strong>Example:</strong> Trigger escalation when employee has 3+ unplanned absences within 30 days.</p>
+  </div>
+
+  <div class="feature-card">
+    <h5>Scenario 10: Missing Check-out Follow-up</h5>
+    <p><strong>Business Need:</strong> When employees forget to check out, send reminder and flag for manager review to ensure accurate hours tracking.</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Timesheet is created (check-in recorded but no check-out by end of day)</li>
+      <li><strong>Custom Variable:</strong> Use <code>TIME_ADD_HOURS(shiftEndTime, bufferHours)</code> to determine when to flag</li>
+      <li><strong>Logic:</strong> Use <code>IF_STRING</code> to check if checkout field is empty</li>
+      <li><strong>Action:</strong> Send push notification to employee reminding them to check out; if still missing next morning, alert manager</li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h5>Scenario 11: Geo-fence Violation Alert</h5>
+    <p><strong>Business Need:</strong> When employees attempt to check in from outside designated work locations, alert security or compliance team.</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Timesheet is created</li>
+      <li><strong>Custom Variable:</strong> Use <code>WORK_LOCATION_BY_ID(employeeLocationId)</code> to get assigned office coordinates</li>
+      <li><strong>Criteria:</strong> Filter where check-in location is flagged as outside geo-fence radius</li>
+      <li><strong>Action:</strong> Send alert to compliance team with employee details, check-in coordinates, and distance from office</li>
+    </ul>
+    <p><strong>Example:</strong> Alert when employee checks in more than 500 meters from assigned office location.</p>
+  </div>
+
+  <div class="feature-card">
+    <h5>Scenario 12: Overtime Threshold Warning</h5>
+    <p><strong>Business Need:</strong> Alert managers when employees approach or exceed maximum allowed overtime hours for labor law compliance.</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Timesheet is updated</li>
+      <li><strong>Custom Variable:</strong> Calculate cumulative weekly/monthly overtime using <code>DATE_DIFF_DAYS</code> and sum functions</li>
+      <li><strong>Criteria:</strong> Filter where calculated overtime approaches threshold (e.g., 80% of max allowed)</li>
+      <li><strong>Action:</strong> Send warning to manager and HR; block further overtime assignments if limit reached</li>
+    </ul>
+    <p><strong>Example:</strong> UAE labor law limits overtime to 2 hours/day. Alert when employee reaches 1.5 hours of overtime.</p>
+  </div>
+
   <figure>
     <img src="screenshots/workflow-datetime-functions.png" alt="Date & Time Functions" />
     <figcaption>Date & Time functions enable calculations for shift scheduling, overtime, and period-based automation</figcaption>
