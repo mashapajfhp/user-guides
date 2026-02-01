@@ -2120,23 +2120,118 @@
   <h3>Known Limitations</h3>
 
   <div class="warning-box">
-    <p><strong>Half-Day Leave:</strong> Employees cannot record attendance and HR cannot view or edit attendance for half-day leave periods. This is a current system limitation.</p>
+    <p><strong>Half-Day Leave Check-in:</strong> Employees cannot check in on the same day they have taken a half-day leave. The system prevents attendance recording during half-day leave periods.</p>
   </div>
 
   <div class="warning-box">
-    <p><strong>Attendance Variance Reporting:</strong> Cannot export or display pre-edit attendance values in reports, limiting tracking of attendance modifications.</p>
+    <p><strong>Single Check-in/Check-out Per Shift:</strong> The system only supports a single check-in and check-out per shift. Multiple check-ins/outs during a single shift (e.g., for complex operational hours) are not supported.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Leave Approval Overwrites Attendance:</strong> When leave requests are approved, existing attendance records for those dates are automatically deleted. Historical attendance data is not preserved when leave is approved.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Attendance Record Download:</strong> Employees cannot directly download their personal attendance records from the platform. Attendance data export requires administrative access.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Extra Hours Reversal:</strong> Once an extra hours request is approved and days are added to leave balance, there is no built-in mechanism to reverse or edit the transaction.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Line Manager Edit Access:</strong> Line managers have default edit access to attendance records that cannot be disabled or restricted by super admins. There are no configurable permission settings to create view-only access.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Extra Hours Display:</strong> Extra hours are calculated based on work timing configuration regardless of overtime policy settings. There is no option to hide or suppress the display of extra hours in attendance records.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Attendance Audit Trail:</strong> The system lacks comprehensive audit logging for attendance record modifications. Changes to attendance entries (who edited, when, and what was changed) are not fully tracked.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Attendance Variance Reporting:</strong> Cannot export or display pre-edit attendance values in reports, limiting tracking of attendance modifications and historical timing before edits.</p>
   </div>
 
   <div class="warning-box">
     <p><strong>Overtime Validation:</strong> Hours worked are calculated automatically without validating checkout legitimacy or indicating missing/manipulated records.</p>
   </div>
 
+  <div class="warning-box">
+    <p><strong>Bulk Shift Upload:</strong> The platform does not support direct Excel-based bulk upload for shift scheduling. Use the Schedule Planner feature as an alternative.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Bulk T&P Rejection:</strong> Mass rejection of Time and Pay adjustment records is not available through the standard user interface. Large volumes of historical records must be processed individually.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Retroactive Shift Scheduling:</strong> Shifts cannot be scheduled or attendance records updated for dates before an employee's work center assignment date.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Days Off in Cumulative Report:</strong> The Cumulative Attendance Report displays days present, absent, and on leave but does not account for scheduled days off or weekends for different shift configurations.</p>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Biometric High Volume Processing:</strong> The system may struggle with high-volume biometric log ingestion (100,000+ records). Large batches of attendance data from third-party biometric devices may require throttling.</p>
+  </div>
+
   <h3>Edge Cases</h3>
-  <ul>
-    <li><strong>Multiple location visits:</strong> Enable Multiple Visits feature for employees who work at multiple client sites daily</li>
-    <li><strong>Biometric vs App conflicts:</strong> When both methods are used, ensure device serial numbers are correctly mapped to offices</li>
-    <li><strong>Timezone considerations:</strong> Attendance times are recorded in the configured office timezone</li>
-  </ul>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Scenario</th>
+        <th>Behavior</th>
+        <th>Recommended Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>24-hour shifts crossing midnight</td>
+        <td>Day boundary resets at midnight, complicating shift configurations</td>
+        <td>Configure shift end time as 11:59 PM or use custom timing rules</td>
+      </tr>
+      <tr>
+        <td>Multiple location visits in one day</td>
+        <td>Standard check-in/out doesn't track multiple sites</td>
+        <td>Enable Multiple Visits feature for field employees</td>
+      </tr>
+      <tr>
+        <td>Biometric and app used simultaneously</td>
+        <td>May create duplicate or conflicting records</td>
+        <td>Ensure device serial numbers are correctly mapped to offices</td>
+      </tr>
+      <tr>
+        <td>Employee removed from deduction policy</td>
+        <td>No automatic alert to administrators</td>
+        <td>Regularly audit policy assignments to prevent missed violations</td>
+      </tr>
+      <tr>
+        <td>Work timing changed after check-in</td>
+        <td>Records locked to original configuration</td>
+        <td>Use regularization request to correct historical records</td>
+      </tr>
+      <tr>
+        <td>Attendance times in UTC</td>
+        <td>System logs times in UTC internally</td>
+        <td>Verify office timezone configuration for correct display</td>
+      </tr>
+      <tr>
+        <td>Bulk office assignment</td>
+        <td>No bulk mechanism for check-in/out office assignment</td>
+        <td>Assign offices individually or contact support for bulk updates</td>
+      </tr>
+      <tr>
+        <td>People manager editing office location</td>
+        <td>Role restricted from editing office locations</td>
+        <td>Request Attendance Manager or Super Admin to make changes</td>
+      </tr>
+    </tbody>
+  </table>
 </section>
 
 <section class="section" id="support-resources">
