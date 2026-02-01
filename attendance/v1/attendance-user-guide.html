@@ -2029,6 +2029,81 @@
 
   <p>Custom variables allow you to create dynamic values that can be used throughout your workflow logic. These variables enable sophisticated automation scenarios by combining event data with functions for calculations, lookups, and conditional logic.</p>
 
+  <div class="info-box">
+    <p><strong>Why Custom Variables Matter:</strong> Custom variables transform basic "if this, then that" workflows into intelligent automation that can calculate, compare, and make decisions based on dynamic data.</p>
+  </div>
+
+  <h4>Basic Workflows vs Custom Variables</h4>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Capability</th>
+        <th>Basic Workflow</th>
+        <th>With Custom Variables</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Data Access</strong></td>
+        <td>Only direct event fields (employee name, shift date, check-in time)</td>
+        <td>Look up related data from any Bayzat domain (department info, work timing details, manager email)</td>
+      </tr>
+      <tr>
+        <td><strong>Comparisons</strong></td>
+        <td>Static values only (e.g., "department equals Sales")</td>
+        <td>Dynamic calculations (e.g., "check-in time > shift start + 15 minutes")</td>
+      </tr>
+      <tr>
+        <td><strong>Notifications</strong></td>
+        <td>Fixed message content</td>
+        <td>Computed values in messages (e.g., "Employee is 23 minutes late")</td>
+      </tr>
+      <tr>
+        <td><strong>Criteria Logic</strong></td>
+        <td>Simple field matching</td>
+        <td>Conditional logic with AND/OR/IF to handle complex rules</td>
+      </tr>
+      <tr>
+        <td><strong>Date Handling</strong></td>
+        <td>Cannot calculate date differences</td>
+        <td>Calculate days until deadline, add/subtract periods, detect weekends</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>What You Can Achieve with Custom Variables</h4>
+
+  <div class="feature-card">
+    <h5>Calculate Derived Values</h5>
+    <p>Compute values that don't exist in the raw event data:</p>
+    <ul>
+      <li><code>minutesLate = checkInTime - (shiftStartTime + gracePeriod)</code></li>
+      <li><code>daysUntilProbationEnds = DATE_DIFF_DAYS(TODAY(), probationEndDate)</code></li>
+      <li><code>weeklyOvertimeHours = SUM(dailyExtraHours)</code></li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h5>Look Up Related Information</h5>
+    <p>Access data from other Bayzat domains to enrich your workflow:</p>
+    <ul>
+      <li><code>DEPARTMENT_BY_NAME(employee.department)</code> → Get department manager's email for notifications</li>
+      <li><code>WORK_TIMING(shiftType)</code> → Get shift start/end times and break durations</li>
+      <li><code>EMPLOYEE_BY_BIOMETRICS_ID(deviceId)</code> → Match biometric clock data to employees</li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h5>Apply Conditional Logic</h5>
+    <p>Make smart decisions based on multiple conditions:</p>
+    <ul>
+      <li><code>IF_STRING(department = "Operations", "ops-manager@company.com", "hr@company.com")</code></li>
+      <li><code>IF_NUMBER(hoursWorked > 8, hoursWorked - 8, 0)</code> → Calculate overtime only if exceeded</li>
+      <li><code>AND(isWeekend, shiftAssigned)</code> → Detect weekend work assignments</li>
+    </ul>
+  </div>
+
   <figure>
     <img src="screenshots/workflow-custom-variables-categories.png" alt="Custom Variables Function Categories" />
     <figcaption>Custom variables can be created using functions from six categories: Mathematics, Lookup, Text, Date & Time, Logic, and Operator</figcaption>
