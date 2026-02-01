@@ -2197,114 +2197,168 @@
     </tbody>
   </table>
 
-  <h4>Practical Attendance Automation Scenarios</h4>
+  <h4>Example Workflow Scenarios Using Variables</h4>
+
+  <p>The following scenarios demonstrate how custom variables transform basic workflows into intelligent automation. Each example shows how multiple functions work together to solve real attendance challenges.</p>
 
   <div class="feature-card">
-    <h5>Scenario 1: Night Shift Premium Notification</h5>
-    <p><strong>Business Need:</strong> Automatically notify payroll when employees are assigned to night shifts so they can apply shift premiums.</p>
-    <p><strong>Implementation:</strong></p>
-    <ul>
-      <li><strong>Event:</strong> Employee shift is created</li>
-      <li><strong>Custom Variable:</strong> Use <code>WORK_TIMING(Night Shift)</code> to identify night shift assignments</li>
-      <li><strong>Criteria:</strong> Filter where assigned work timing equals the night shift variable</li>
-      <li><strong>Action:</strong> Send email to payroll with employee name and shift dates</li>
-    </ul>
-  </div>
+    <h5>Scenario 1: Smart Late Arrival Detection with Department-Based Escalation</h5>
+    <p><strong>Business Challenge:</strong> The company needs to detect late arrivals, calculate exactly how late each employee is, and route alerts to the correct manager based on department—all automatically without manual monitoring.</p>
 
-  <div class="feature-card">
-    <h5>Scenario 2: Weekend Assignment Alert</h5>
-    <p><strong>Business Need:</strong> Alert managers when employees are scheduled to work on weekends (for companies where weekend work requires approval).</p>
-    <p><strong>Implementation:</strong></p>
-    <ul>
-      <li><strong>Event:</strong> Employee shift is created</li>
-      <li><strong>Custom Variable:</strong> Use <code>WEEKDAY(shiftDate)</code> to get the day number (1=Sunday, 7=Saturday)</li>
-      <li><strong>Criteria:</strong> Filter where weekday equals 6 (Friday) or 7 (Saturday)</li>
-      <li><strong>Action:</strong> Send Slack notification to #weekend-scheduling channel</li>
-    </ul>
-  </div>
+    <p><strong>Why Variables Are Essential:</strong> A basic workflow can only check "did employee check in?" but cannot calculate lateness or determine who to notify. Variables enable the workflow to compute the exact minutes late and look up the right escalation contact.</p>
 
-  <div class="feature-card">
-    <h5>Scenario 3: Department-Specific Absence Escalation</h5>
-    <p><strong>Business Need:</strong> Different departments require different escalation paths when employees are marked absent.</p>
-    <p><strong>Implementation:</strong></p>
-    <ul>
-      <li><strong>Event:</strong> Employees are marked as absent for past day</li>
-      <li><strong>Custom Variable:</strong> Use <code>DEPARTMENT_BY_NAME(employee.department)</code> to get department info</li>
-      <li><strong>Logic:</strong> Use <code>IF_STRING</code> to determine escalation email based on department</li>
-      <li><strong>Action:</strong> Send targeted notification to appropriate department head</li>
-    </ul>
-  </div>
+    <p><strong>Variables Used:</strong></p>
+    <table>
+      <thead>
+        <tr><th>Variable Name</th><th>Function</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>lateThreshold</code></td>
+          <td><code>TIME_ADD_MINUTES(shiftStartTime, 15)</code></td>
+          <td>Calculate the grace period cutoff (shift start + 15 minutes)</td>
+        </tr>
+        <tr>
+          <td><code>minutesLate</code></td>
+          <td><code>TIME_DIFF_MINUTES(actualCheckIn, shiftStartTime)</code></td>
+          <td>Calculate exact lateness for the notification message</td>
+        </tr>
+        <tr>
+          <td><code>deptInfo</code></td>
+          <td><code>DEPARTMENT_BY_NAME(employee.department)</code></td>
+          <td>Look up department details to get manager email</td>
+        </tr>
+        <tr>
+          <td><code>escalationEmail</code></td>
+          <td><code>IF_STRING(minutesLate > 30, "hr@company.com", deptInfo.managerEmail)</code></td>
+          <td>Route to HR if severely late, otherwise to department manager</td>
+        </tr>
+      </tbody>
+    </table>
 
-  <div class="feature-card">
-    <h5>Scenario 4: Shift Duration Validation</h5>
-    <p><strong>Business Need:</strong> Flag shifts that exceed maximum allowed hours for compliance reporting.</p>
-    <p><strong>Implementation:</strong></p>
+    <p><strong>Workflow Configuration:</strong></p>
     <ul>
       <li><strong>Event:</strong> Timesheet is created</li>
-      <li><strong>Custom Variable:</strong> Use <code>DATE_DIFF_DAYS</code> or time functions to calculate shift duration</li>
-      <li><strong>Criteria:</strong> Filter where calculated hours exceed threshold (e.g., 12 hours)</li>
-      <li><strong>Action:</strong> Create compliance alert or send notification to HR</li>
+      <li><strong>Criteria:</strong> <code>actualCheckIn > lateThreshold</code></li>
+      <li><strong>Action:</strong> Send email to <code>escalationEmail</code> with message: "Employee [name] checked in [minutesLate] minutes late on [date]"</li>
     </ul>
+
+    <p><strong>Outcome:</strong> Managers receive immediate, accurate alerts with calculated lateness. Severe cases (30+ minutes) automatically escalate to HR without manual intervention.</p>
   </div>
 
   <div class="feature-card">
-    <h5>Scenario 5: Ramadan Schedule Transition</h5>
-    <p><strong>Business Need:</strong> Automatically switch employees to Ramadan timing during the holy month.</p>
-    <p><strong>Implementation:</strong></p>
+    <h5>Scenario 2: Overtime Compliance Monitor with Threshold Warnings</h5>
+    <p><strong>Business Challenge:</strong> UAE labor law restricts overtime to 2 hours per day. The company needs to warn managers when employees approach this limit and block further overtime when exceeded—preventing compliance violations before they happen.</p>
+
+    <p><strong>Why Variables Are Essential:</strong> Basic workflows cannot perform calculations on timesheet data. Variables enable real-time computation of worked hours, comparison against legal limits, and percentage-based threshold warnings.</p>
+
+    <p><strong>Variables Used:</strong></p>
+    <table>
+      <thead>
+        <tr><th>Variable Name</th><th>Function</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>workTiming</code></td>
+          <td><code>WORK_TIMING(employee.assignedShift)</code></td>
+          <td>Get the employee's assigned shift details including standard hours</td>
+        </tr>
+        <tr>
+          <td><code>standardHours</code></td>
+          <td><code>workTiming.dailyHours</code></td>
+          <td>Extract standard working hours (e.g., 8 hours)</td>
+        </tr>
+        <tr>
+          <td><code>actualHours</code></td>
+          <td><code>TIME_DIFF_HOURS(checkOut, checkIn)</code></td>
+          <td>Calculate actual hours worked from timesheet</td>
+        </tr>
+        <tr>
+          <td><code>overtimeHours</code></td>
+          <td><code>IF_NUMBER(actualHours > standardHours, actualHours - standardHours, 0)</code></td>
+          <td>Calculate overtime (only if exceeds standard)</td>
+        </tr>
+        <tr>
+          <td><code>overtimePercent</code></td>
+          <td><code>DIVIDE(overtimeHours, 2) * 100</code></td>
+          <td>Calculate percentage of legal overtime limit used</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Workflow Configuration:</strong></p>
     <ul>
-      <li><strong>Event:</strong> Custom Recurring Event (scheduled trigger)</li>
-      <li><strong>Custom Variable:</strong> Use <code>WORK_TIMING(Ramadan Shift)</code> to look up Ramadan timing</li>
-      <li><strong>Logic:</strong> Use <code>DATE</code> functions to check if current date falls within Ramadan period</li>
-      <li><strong>Action:</strong> Update schedule cell with Ramadan work timing</li>
+      <li><strong>Event:</strong> Timesheet is updated (checkout recorded)</li>
+      <li><strong>Criteria:</strong> <code>overtimePercent >= 80</code></li>
+      <li><strong>Action:</strong>
+        <ul>
+          <li>If <code>overtimePercent >= 80 AND < 100</code>: Send warning to manager "Employee approaching overtime limit ([overtimePercent]% used)"</li>
+          <li>If <code>overtimePercent >= 100</code>: Send alert to HR and manager "COMPLIANCE ALERT: Overtime limit exceeded by [overtimeHours - 2] hours"</li>
+        </ul>
+      </li>
     </ul>
+
+    <p><strong>Outcome:</strong> Proactive compliance management. Managers receive warnings at 80% threshold, giving time to adjust schedules. HR is immediately notified of any violations for corrective action.</p>
   </div>
 
   <div class="feature-card">
-    <h5>Scenario 6: Biometrics Integration Sync</h5>
-    <p><strong>Business Need:</strong> When receiving biometric clock data from external devices, match employees correctly.</p>
-    <p><strong>Implementation:</strong></p>
-    <ul>
-      <li><strong>Event:</strong> Incoming Integration (webhook from biometric device)</li>
-      <li><strong>Custom Variable:</strong> Use <code>EMPLOYEE_BY_BIOMETRICS_ID(deviceEmployeeId)</code> to find the Bayzat employee</li>
-      <li><strong>Action:</strong> Create or update attendance record with matched employee</li>
-    </ul>
-  </div>
+    <h5>Scenario 3: Intelligent Absence Response with Context-Aware Actions</h5>
+    <p><strong>Business Challenge:</strong> When employees are marked absent, the response should vary based on context: is it a weekend (which shouldn't trigger alerts), is the employee on probation (requiring stricter monitoring), and which office/department needs to be notified?</p>
 
-  <h4>Attendance Violation Examples</h4>
+    <p><strong>Why Variables Are Essential:</strong> Basic workflows treat all absences the same. Variables enable context-aware decisions—checking the day of week, employee status, and routing notifications appropriately based on multiple conditions.</p>
 
-  <p>The following are examples of how workflows can automate attendance violation detection and response. Organizations can adapt these patterns to their specific policies.</p>
+    <p><strong>Variables Used:</strong></p>
+    <table>
+      <thead>
+        <tr><th>Variable Name</th><th>Function</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>dayOfWeek</code></td>
+          <td><code>WEEKDAY(absenceDate)</code></td>
+          <td>Determine if absence falls on a weekend (6=Friday, 7=Saturday in UAE)</td>
+        </tr>
+        <tr>
+          <td><code>isWorkday</code></td>
+          <td><code>AND(dayOfWeek != 6, dayOfWeek != 7)</code></td>
+          <td>Boolean check: only process workday absences</td>
+        </tr>
+        <tr>
+          <td><code>daysSinceJoining</code></td>
+          <td><code>DATE_DIFF_DAYS(employee.joiningDate, TODAY())</code></td>
+          <td>Calculate tenure to identify probation employees</td>
+        </tr>
+        <tr>
+          <td><code>isOnProbation</code></td>
+          <td><code>daysSinceJoining < 90</code></td>
+          <td>Flag employees in first 90 days</td>
+        </tr>
+        <tr>
+          <td><code>officeInfo</code></td>
+          <td><code>OFFICE_BY_NAME(employee.office)</code></td>
+          <td>Get office details for location-specific notifications</td>
+        </tr>
+        <tr>
+          <td><code>notificationTarget</code></td>
+          <td><code>IF_STRING(isOnProbation, "hr@company.com", officeInfo.adminEmail)</code></td>
+          <td>Route probation absences to HR, others to office admin</td>
+        </tr>
+      </tbody>
+    </table>
 
-  <div class="feature-card">
-    <h5>Example: Time Violation Alerts (Late Arrival / Early Departure)</h5>
-    <p>Automatically detect and notify managers when employees check in after the grace period or leave before their shift ends.</p>
-    <ul>
-      <li><strong>Event:</strong> Timesheet is created/updated</li>
-      <li><strong>Custom Variable:</strong> Use <code>TIME_ADD_MINUTES(shiftStartTime, graceMinutes)</code> to calculate thresholds</li>
-      <li><strong>Action:</strong> Send notification to manager with employee name, scheduled vs actual time, and variance</li>
-    </ul>
-    <p><em>Example: Alert when check-in is after 9:15 AM (9:00 AM shift + 15-min grace) or checkout is before 5:50 PM (6:00 PM end - 10-min tolerance).</em></p>
-  </div>
-
-  <div class="feature-card">
-    <h5>Example: Absence Pattern Escalation</h5>
-    <p>Escalate to HR when an employee's unplanned absences exceed a threshold, or when check-out records are consistently missing.</p>
+    <p><strong>Workflow Configuration:</strong></p>
     <ul>
       <li><strong>Event:</strong> Employees are marked as absent for past day</li>
-      <li><strong>Custom Variable:</strong> Use <code>DATE_DIFF_DAYS(TODAY(), periodStartDate)</code> to define monitoring window</li>
-      <li><strong>Action:</strong> Send escalation to HR with absence history for intervention</li>
+      <li><strong>Criteria:</strong> <code>isWorkday = TRUE</code> (ignore weekend absences)</li>
+      <li><strong>Action:</strong> Send email to <code>notificationTarget</code> with context:
+        <ul>
+          <li>If probation: "PROBATION ALERT: [name] absent on [date]. Days since joining: [daysSinceJoining]"</li>
+          <li>If regular: "Absence notification: [name] from [office] was absent on [date]"</li>
+        </ul>
+      </li>
     </ul>
-    <p><em>Example: Trigger escalation when employee has 3+ unplanned absences within 30 days.</em></p>
-  </div>
 
-  <div class="feature-card">
-    <h5>Example: Compliance Violation Alerts (Geo-fence / Overtime)</h5>
-    <p>Alert compliance or HR when employees check in outside designated locations or approach overtime limits set by labor law.</p>
-    <ul>
-      <li><strong>Event:</strong> Timesheet is created/updated</li>
-      <li><strong>Custom Variable:</strong> Use <code>WORK_LOCATION_BY_ID(locationId)</code> for geo-fence validation or time functions for overtime calculation</li>
-      <li><strong>Action:</strong> Send alert to compliance team or block further overtime assignments</li>
-    </ul>
-    <p><em>Example: Alert when check-in is &gt;500m from office, or when daily overtime approaches the 2-hour UAE labor law limit.</em></p>
+    <p><strong>Outcome:</strong> Intelligent absence handling that filters noise (weekends), prioritizes risk (probation employees), and routes to the right person—all without manual triage.</p>
   </div>
 
   <figure>
@@ -2313,7 +2367,7 @@
   </figure>
 
   <div class="info-box">
-    <p><strong>Note:</strong> Workflows are configured at the company level and apply organization-wide. Criteria can be added to filter workflows by department, employee grade, or other attributes. Custom variables extend workflow capabilities by enabling dynamic value computation and conditional logic.</p>
+    <p><strong>Note:</strong> These scenarios demonstrate the power of combining multiple variables. Workflows are configured at the company level and can be adapted to your organization's specific policies, thresholds, and escalation paths.</p>
   </div>
 </section>
 
