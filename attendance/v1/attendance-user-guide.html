@@ -2025,8 +2025,183 @@
     </tbody>
   </table>
 
+  <h3>Custom Variables for Advanced Automation</h3>
+
+  <p>Custom variables allow you to create dynamic values that can be used throughout your workflow logic. These variables enable sophisticated automation scenarios by combining event data with functions for calculations, lookups, and conditional logic.</p>
+
+  <figure>
+    <img src="screenshots/workflow-custom-variables-categories.png" alt="Custom Variables Function Categories" />
+    <figcaption>Custom variables can be created using functions from six categories: Mathematics, Lookup, Text, Date & Time, Logic, and Operator</figcaption>
+  </figure>
+
+  <h4>Function Categories</h4>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Functions</th>
+        <th>Attendance Use Cases</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Lookup</strong></td>
+        <td>21 functions</td>
+        <td>Look up work timings, schedule cell types, employees by biometrics ID, departments, offices</td>
+      </tr>
+      <tr>
+        <td><strong>Date & Time</strong></td>
+        <td>27 functions</td>
+        <td>Calculate shift durations, determine weekdays, add/subtract days from dates, get current time</td>
+      </tr>
+      <tr>
+        <td><strong>Logic</strong></td>
+        <td>8 functions</td>
+        <td>Create conditional workflows based on shift type, department, or time of day</td>
+      </tr>
+      <tr>
+        <td><strong>Mathematics</strong></td>
+        <td>21 functions</td>
+        <td>Calculate overtime hours, sum attendance data, compute averages</td>
+      </tr>
+      <tr>
+        <td><strong>Text</strong></td>
+        <td>17 functions</td>
+        <td>Format employee names for notifications, create custom message templates</td>
+      </tr>
+      <tr>
+        <td><strong>Operator</strong></td>
+        <td>17 functions</td>
+        <td>Compare values, check equality, evaluate conditions for workflow criteria</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Key Lookup Functions for Attendance</h4>
+
+  <figure>
+    <img src="screenshots/workflow-schedule-cell-type-function.png" alt="SCHEDULE_CELL_TYPE Function" />
+    <figcaption>SCHEDULE_CELL_TYPE function - look up schedule cell types like "Day Off" or "Working Day"</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Function</th>
+        <th>Syntax</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>WORK_TIMING</code></td>
+        <td><code>WORK_TIMING(workTimingName)</code></td>
+        <td>Look up a work timing by name (e.g., "Morning Shift", "Night Shift")</td>
+      </tr>
+      <tr>
+        <td><code>SCHEDULE_CELL_TYPE</code></td>
+        <td><code>SCHEDULE_CELL_TYPE(cellTypeId)</code></td>
+        <td>Look up schedule cell type: DAY_OFF or WORKING_DAY</td>
+      </tr>
+      <tr>
+        <td><code>EMPLOYEE_BY_BIOMETRICS_ID</code></td>
+        <td><code>EMPLOYEE_BY_BIOMETRICS_ID(id)</code></td>
+        <td>Find employee attributes using their biometrics ID</td>
+      </tr>
+      <tr>
+        <td><code>DEPARTMENT_BY_NAME</code></td>
+        <td><code>DEPARTMENT_BY_NAME(name)</code></td>
+        <td>Look up department details for filtering or notifications</td>
+      </tr>
+      <tr>
+        <td><code>OFFICE_BY_NAME</code></td>
+        <td><code>OFFICE_BY_NAME(name)</code></td>
+        <td>Find office information for location-based workflow logic</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Practical Attendance Automation Scenarios</h4>
+
+  <div class="feature-card">
+    <h5>Scenario 1: Night Shift Premium Notification</h5>
+    <p><strong>Business Need:</strong> Automatically notify payroll when employees are assigned to night shifts so they can apply shift premiums.</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Employee shift is created</li>
+      <li><strong>Custom Variable:</strong> Use <code>WORK_TIMING(Night Shift)</code> to identify night shift assignments</li>
+      <li><strong>Criteria:</strong> Filter where assigned work timing equals the night shift variable</li>
+      <li><strong>Action:</strong> Send email to payroll with employee name and shift dates</li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h5>Scenario 2: Weekend Assignment Alert</h5>
+    <p><strong>Business Need:</strong> Alert managers when employees are scheduled to work on weekends (for companies where weekend work requires approval).</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Employee shift is created</li>
+      <li><strong>Custom Variable:</strong> Use <code>WEEKDAY(shiftDate)</code> to get the day number (1=Sunday, 7=Saturday)</li>
+      <li><strong>Criteria:</strong> Filter where weekday equals 6 (Friday) or 7 (Saturday)</li>
+      <li><strong>Action:</strong> Send Slack notification to #weekend-scheduling channel</li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h5>Scenario 3: Department-Specific Absence Escalation</h5>
+    <p><strong>Business Need:</strong> Different departments require different escalation paths when employees are marked absent.</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Employees are marked as absent for past day</li>
+      <li><strong>Custom Variable:</strong> Use <code>DEPARTMENT_BY_NAME(employee.department)</code> to get department info</li>
+      <li><strong>Logic:</strong> Use <code>IF_STRING</code> to determine escalation email based on department</li>
+      <li><strong>Action:</strong> Send targeted notification to appropriate department head</li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h5>Scenario 4: Shift Duration Validation</h5>
+    <p><strong>Business Need:</strong> Flag shifts that exceed maximum allowed hours for compliance reporting.</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Timesheet is created</li>
+      <li><strong>Custom Variable:</strong> Use <code>DATE_DIFF_DAYS</code> or time functions to calculate shift duration</li>
+      <li><strong>Criteria:</strong> Filter where calculated hours exceed threshold (e.g., 12 hours)</li>
+      <li><strong>Action:</strong> Create compliance alert or send notification to HR</li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h5>Scenario 5: Ramadan Schedule Transition</h5>
+    <p><strong>Business Need:</strong> Automatically switch employees to Ramadan timing during the holy month.</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Custom Recurring Event (scheduled trigger)</li>
+      <li><strong>Custom Variable:</strong> Use <code>WORK_TIMING(Ramadan Shift)</code> to look up Ramadan timing</li>
+      <li><strong>Logic:</strong> Use <code>DATE</code> functions to check if current date falls within Ramadan period</li>
+      <li><strong>Action:</strong> Update schedule cell with Ramadan work timing</li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h5>Scenario 6: Biometrics Integration Sync</h5>
+    <p><strong>Business Need:</strong> When receiving biometric clock data from external devices, match employees correctly.</p>
+    <p><strong>Implementation:</strong></p>
+    <ul>
+      <li><strong>Event:</strong> Incoming Integration (webhook from biometric device)</li>
+      <li><strong>Custom Variable:</strong> Use <code>EMPLOYEE_BY_BIOMETRICS_ID(deviceEmployeeId)</code> to find the Bayzat employee</li>
+      <li><strong>Action:</strong> Create or update attendance record with matched employee</li>
+    </ul>
+  </div>
+
+  <figure>
+    <img src="screenshots/workflow-datetime-functions.png" alt="Date & Time Functions" />
+    <figcaption>Date & Time functions enable calculations for shift scheduling, overtime, and period-based automation</figcaption>
+  </figure>
+
   <div class="info-box">
-    <p><strong>Note:</strong> Workflows are configured at the company level and apply organization-wide. Criteria can be added to filter workflows by department, employee grade, or other attributes.</p>
+    <p><strong>Note:</strong> Workflows are configured at the company level and apply organization-wide. Criteria can be added to filter workflows by department, employee grade, or other attributes. Custom variables extend workflow capabilities by enabling dynamic value computation and conditional logic.</p>
   </div>
 </section>
 
