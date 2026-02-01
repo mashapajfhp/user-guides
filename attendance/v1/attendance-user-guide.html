@@ -436,6 +436,7 @@
     <a class="nav-card" href="#time-pay-adjustments"><span class="card-icon">💰</span><span class="card-label">Time & Pay Adjustments</span></a>
     <a class="nav-card" href="#attendance-raw-data"><span class="card-icon">📊</span><span class="card-label">Raw Data</span></a>
     <a class="nav-card" href="#regularization-approval"><span class="card-icon">✅</span><span class="card-label">Regularization Approval</span></a>
+    <a class="nav-card" href="#approval-flows"><span class="card-icon">🔄</span><span class="card-label">Approval Flows</span></a>
     <a class="nav-card" href="#troubleshooting"><span class="card-icon">🔧</span><span class="card-label">Troubleshooting</span></a>
     <a class="nav-card" href="#support-resources"><span class="card-icon">💬</span><span class="card-label">Support & FAQ</span></a>
   </div>
@@ -1760,6 +1761,123 @@
 
   <h3>Downloading Reports</h3>
   <p>Click the <strong>Download</strong> button to export the ticket list as a report. Click <strong>View reports</strong> to access previously generated reports.</p>
+</section>
+
+<section class="section" id="approval-flows">
+  <h2>Approval Flows for Attendance</h2>
+
+  <h3>Overview</h3>
+  <p>Approval flows determine who reviews and approves attendance-related requests. Navigate to <strong>Automations → Approval flows</strong> to configure how attendance regularization requests are routed for approval.</p>
+
+  <div class="nav-path">Automations → Approval flows → Attendance Regularization</div>
+
+  <figure>
+    <img src="validation/screenshots/approval-flow-attendance-regularization.png" alt="Approval flow configuration for Attendance Regularization" />
+    <figcaption>Configuring the approval flow for Attendance Regularization requests</figcaption>
+  </figure>
+
+  <h3>Flow Types</h3>
+  <p>The Attendance Regularization approval flow supports two types of routing:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Flow Type</th>
+        <th>Description</th>
+        <th>When Used</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Advanced Approval Flow</strong></td>
+        <td>Conditional routing based on defined criteria (If conditions)</td>
+        <td>When different departments, roles, or conditions require different approvers</td>
+      </tr>
+      <tr>
+        <td><strong>Default Approval Flow</strong></td>
+        <td>Fallback flow when no advanced conditions match (Else)</td>
+        <td>Standard approval path for all requests not matching advanced criteria</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Configuring Advanced Approval Flows</h3>
+  <p>Click <strong>Add advance flow</strong> to create conditional approval routing. Advanced flows allow you to route requests to different approvers based on specific criteria.</p>
+
+  <figure>
+    <img src="validation/screenshots/advanced-approval-flow-dialog.png" alt="Define advanced approval flow dialog" />
+    <figcaption>Creating an advanced approval flow with custom criteria</figcaption>
+  </figure>
+
+  <h4>Available Criteria for Routing</h4>
+  <p>When defining advanced approval flow conditions, you can use the following data points:</p>
+
+  <figure>
+    <img src="validation/screenshots/approval-flow-criteria-options.png" alt="Criteria options for advanced approval flow" />
+    <figcaption>Data points available for defining approval criteria</figcaption>
+  </figure>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Data Points</th>
+        <th>Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Dynamic Fields</strong></td>
+        <td>Notes, Check In Date, Check In Time, Check Out Date, Check Out Time</td>
+        <td>Route based on request-specific information</td>
+      </tr>
+      <tr>
+        <td><strong>Employee</strong></td>
+        <td>Department, Office, Position, Roles, Employee Grade, Direct Reports To, Nationality, Status</td>
+        <td>Route based on the employee who the request is for</td>
+      </tr>
+      <tr>
+        <td><strong>Creator Employee</strong></td>
+        <td>Same fields as Employee</td>
+        <td>Route based on who submitted the request</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Default Approval Flow Configuration</h3>
+  <p>The default approval flow is used when no advanced flow conditions match. You can configure:</p>
+  <ul>
+    <li><strong>Approval Steps</strong> - Add sequential approval stages (Step 1, Step 2, etc.)</li>
+    <li><strong>Approvers</strong> - Assign roles (e.g., Super Admin, Line Manager) or specific users</li>
+    <li><strong>Approval Blocks</strong> - Group multiple approvers for parallel approval</li>
+  </ul>
+
+  <div class="info-box">
+    <p><strong>Save Changes:</strong> After configuring approval flows, click <strong>Update approval flows</strong> to save your changes. Unsaved changes will not take effect.</p>
+  </div>
+
+  <h3>Use Case Examples</h3>
+
+  <div class="feature-card">
+    <h4>Example 1: Department-Based Routing</h4>
+    <p>Route IT department regularization requests to the IT Manager, while Finance department requests go to the Finance Director.</p>
+    <p><strong>Criteria:</strong> Employee → Department equals "IT"<br>
+    <strong>Approver:</strong> IT Manager</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Example 2: Grade-Based Escalation</h4>
+    <p>Senior employees (Grade A) require Director approval, while junior employees need only Manager approval.</p>
+    <p><strong>Criteria:</strong> Employee → Employee Grade equals "Grade A"<br>
+    <strong>Approver:</strong> Director</p>
+  </div>
+
+  <div class="feature-card">
+    <h4>Example 3: Multi-Step Approval</h4>
+    <p>All requests first go to the Line Manager, then to HR for final verification.</p>
+    <p><strong>Step 1:</strong> Direct Reports To (Line Manager)<br>
+    <strong>Step 2:</strong> HR Admin</p>
+  </div>
 </section>
 
 <section class="section">
