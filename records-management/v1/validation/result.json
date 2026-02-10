@@ -144,9 +144,9 @@
     {
       "issue_id": "WOF-004",
       "theme": "Employee Record Deletion & Relationship Management",
-      "status": "NOT_REPRODUCED",
-      "notes": "Employee deletion tested successfully on demo account. Created and deleted test employee 'TestDelete ValidationDemo'. Deletion confirmation dialog warns about data loss and insurance plan implications. No errors or relationship conflicts encountered during deletion of a newly created employee without dependents or linked records.",
-      "screenshots": ["36-delete-confirmation-dialog.png"]
+      "status": "PARTIALLY_REPRODUCED",
+      "notes": "Deep deletion testing performed on employee with linked data (Playwright TestUser with draft document attached). Key findings: (1) Deletion confirmation dialog is GENERIC - shows same 'All related information and documents will be lost!' message regardless of how much linked data exists. No specific relationship enumeration (doesn't list documents, insurance plans, payroll records, etc.). (2) Same dialog shown for Bayzlander (94% profile, extensive documents, insurance, payroll) as for minimal-data employee. (3) No protection against admin self-deletion - system allows selecting and deleting the currently logged-in admin user. (4) No soft-delete/archive option - only hard Delete or Cancel. (5) Single-step confirmation with no additional verification for high-risk deletions (e.g., employees with active insurance). (6) Stale UI after deletion - employee row persists in list table until manual page refresh despite success toast. (7) Cascade deletion confirmed - linked draft documents silently removed with employee, no orphan data warnings. Insurance cancellation note appears as static text regardless of actual insurance status.",
+      "screenshots": ["36-delete-confirmation-dialog.png", "63-search-playwright-user-for-deletion.png", "64-employee-selected-delete-option.png", "65-delete-confirmation-dialog-with-document.png", "66-delete-dialog-established-employee.png", "67-deletion-success-toast.png", "68-employee-deleted-confirmed-empty.png"]
     },
     {
       "issue_id": "WOF-005",
@@ -259,17 +259,23 @@
     "59-document-type-dropdown.png",
     "60-passport-type-no-ocr.png",
     "61-real-passport-uploaded-draft.png",
-    "62-real-passport-misclassified-no-ocr.png"
+    "62-real-passport-misclassified-no-ocr.png",
+    "63-search-playwright-user-for-deletion.png",
+    "64-employee-selected-delete-option.png",
+    "65-delete-confirmation-dialog-with-document.png",
+    "66-delete-dialog-established-employee.png",
+    "67-deletion-success-toast.png",
+    "68-employee-deleted-confirmed-empty.png"
   ],
   "summary": {
-    "total_screenshots": 49,
+    "total_screenshots": 55,
     "crud_pass": 4,
     "crud_not_validated": 0,
     "wtd_passed": 11,
     "wtd_not_tested": 1,
     "wtd_not_validated": 0,
-    "wof_not_reproduced": 5,
-    "wof_partially_reproduced": 5,
+    "wof_not_reproduced": 4,
+    "wof_partially_reproduced": 6,
     "wof_not_tested": 1,
     "wof_reproduced": 1
   }

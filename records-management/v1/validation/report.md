@@ -12,13 +12,13 @@
 
 | Category | Result |
 |----------|--------|
-| Total Screenshots | 49 |
+| Total Screenshots | 55 |
 | CRUD Passed | 4/4 |
 | CRUD Not Validated | 0 |
 | What To Do Passed | 11/12 |
 | What To Do Not Tested | 1 (mobile-only) |
-| Watch Out For Not Reproduced | 5/12 |
-| Watch Out For Partially Reproduced | 5/12 |
+| Watch Out For Not Reproduced | 4/12 |
+| Watch Out For Partially Reproduced | 6/12 |
 | Watch Out For Not Tested | 1/12 |
 | Watch Out For Reproduced | 1/12 |
 
@@ -119,9 +119,16 @@ Document upload and OCR processing gaps fully confirmed with two test uploads:
 6. **Accepted formats**: gif, bmp, heic, jpeg, jpg, jp2, svg, tiff, tif, webp, png, pdf (max 5MB).
 - **Screenshots:** `55-playwright-user-documents-tab.png`, `56-accepted-formats-tooltip.png`, `57-document-uploaded-draft.png`, `58-document-fill-details-form.png`, `59-document-type-dropdown.png`, `60-passport-type-no-ocr.png`, `61-real-passport-uploaded-draft.png`, `62-real-passport-misclassified-no-ocr.png`
 
-### WOF-004: Employee Record Deletion & Relationship Management - NOT_REPRODUCED
-Employee deletion tested successfully on demo account. Created and deleted test employee 'TestDelete ValidationDemo'. Deletion confirmation dialog warns about data loss and insurance plan implications. No errors or relationship conflicts encountered during deletion of a newly created employee without dependents or linked records.
-- **Screenshots:** `36-delete-confirmation-dialog.png`
+### WOF-004: Employee Record Deletion & Relationship Management - PARTIALLY_REPRODUCED
+Deep deletion testing performed on employee with linked data (Playwright TestUser with draft document attached) and compared with established employee (Bayzlander, 94% profile completion). Key findings:
+1. **Generic deletion dialog**: Confirmation shows same "All related information and documents will be lost!" message regardless of linked data volume. No specific enumeration of what will be lost (documents, insurance, payroll records, etc.).
+2. **No relationship-aware warnings**: Same dialog for minimal-data employee (41% profile, 1 draft doc) as for Bayzlander (94% profile, extensive documents, insurance, payroll history). System doesn't check or report linked data before deletion.
+3. **No admin self-deletion protection**: The currently logged-in admin user (Bayzlander) can be selected and the delete dialog appears with no additional safeguards.
+4. **No soft-delete/archive option**: Only hard Delete or Cancel - no deactivation, archiving, or retention period. Deletion is permanent and immediate.
+5. **Single-step confirmation**: No additional verification for high-risk deletions (e.g., employees with active insurance, extensive payroll history).
+6. **Stale UI after deletion**: Employee row persists in the list table after deletion despite "1 employee has been deleted" success toast. Requires manual page refresh to see updated list.
+7. **Silent cascade deletion**: Linked draft documents are removed without specific warning. Insurance cancellation note appears as static boilerplate text regardless of actual insurance status.
+- **Screenshots:** `36-delete-confirmation-dialog.png`, `63-search-playwright-user-for-deletion.png`, `64-employee-selected-delete-option.png`, `65-delete-confirmation-dialog-with-document.png`, `66-delete-dialog-established-employee.png`, `67-deletion-success-toast.png`, `68-employee-deleted-confirmed-empty.png`
 
 ### WOF-005: Email & User Registration Validation Constraints - NOT_REPRODUCED
 Work email field present in profile Contact section with edit capability. Email change workflow not tested to avoid modifying production user data.
@@ -219,6 +226,12 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 | 60 | `60-passport-type-no-ocr.png` | Passport type selected - all OCR fields empty |
 | 61 | `61-real-passport-uploaded-draft.png` | Real Indonesian passport uploaded as draft |
 | 62 | `62-real-passport-misclassified-no-ocr.png` | Indonesian passport misclassified as Emirates ID, zero OCR |
+| 63 | `63-search-playwright-user-for-deletion.png` | Search for Playwright TestUser before deletion |
+| 64 | `64-employee-selected-delete-option.png` | Employee selected with Delete Selected 1 button |
+| 65 | `65-delete-confirmation-dialog-with-document.png` | Delete dialog for employee with linked draft document |
+| 66 | `66-delete-dialog-established-employee.png` | Same generic delete dialog for Bayzlander (94% profile) |
+| 67 | `67-deletion-success-toast.png` | Deletion success toast (employee row still visible - stale UI) |
+| 68 | `68-employee-deleted-confirmed-empty.png` | Page refresh confirms deletion (0 results) |
 
 ---
 
@@ -235,3 +248,4 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 - **Bulk Import Validation:** Excel bulk import is accessible from Add Employee dropdown. Re-importing unmodified template fails with 'Invalid residency visa location' errors on 14 records, confirming pre-existing data validation inconsistencies (WOF-001).
 - **Sidebar Visibility:** At 1280x800 and below, the sidebar navigation cuts off bottom items (Settings, Apps). Only at 1920x1080 are all sidebar menu items fully visible, partially confirming WOF-002 responsive layout issues.
 - **OCR/Document Classification Broken:** WOF-003 fully reproduced. Both a real Indonesian passport and a synthetic test passport were misclassified as "Back of Emirates ID" with zero OCR data extraction. The document upload and categorization UI works correctly, but the automated classification and OCR engine is non-functional.
+- **Deletion Relationship Management Gaps:** WOF-004 partially reproduced. Deletion of employee with linked data (draft document) showed generic warning with no relationship enumeration. Same dialog for minimal-data vs heavily-linked employees. No admin self-deletion protection, no soft-delete option, stale UI after deletion (requires page refresh), and silent cascade deletion of linked documents.
