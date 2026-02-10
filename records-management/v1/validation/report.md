@@ -12,15 +12,15 @@
 
 | Category | Result |
 |----------|--------|
-| Total Screenshots | 41 |
+| Total Screenshots | 49 |
 | CRUD Passed | 4/4 |
 | CRUD Not Validated | 0 |
 | What To Do Passed | 11/12 |
 | What To Do Not Tested | 1 (mobile-only) |
-| Watch Out For Not Reproduced | 6/12 |
+| Watch Out For Not Reproduced | 5/12 |
 | Watch Out For Partially Reproduced | 5/12 |
 | Watch Out For Not Tested | 1/12 |
-| Watch Out For Reproduced | 0/12 |
+| Watch Out For Reproduced | 1/12 |
 
 ---
 
@@ -109,8 +109,15 @@ Excel bulk import accessible via Add Employee split button dropdown > 'Excel bul
 Responsive layout issues confirmed at multiple viewports. At 1024px: tab bar text truncates (e.g., 'Times...' for Timesheet), document cards render correctly but are cramped. At 768px: profile layout stacks vertically, sidebar items remain visible but tab truncation worsens. At 1280x800: sidebar navigation cuts off the 'Settings' menu item at the bottom - requires scrolling or is completely hidden. Only at 1920x1080 does the full sidebar display all items including Settings and Apps. Nationality dropdown search/filter works correctly with 250+ options. Document card layouts render properly across all tested viewports. Health Insurance tab renders cleanly with policy benefits table.
 - **Screenshots:** `47-documents-tab-1024px.png`, `48-document-cards-1024px.png`, `49-document-cards-expanded-1024px.png`, `50-profile-768px-layout.png`, `51-health-insurance-tab.png`, `52-nationality-dropdown-search.png`, `53-create-employee-form-filled.png`, `54-playwright-user-created-success.png`
 
-### WOF-003: Document Management & OCR Processing Gaps - NOT_REPRODUCED
-Upload dropzone present and functional. Document management observed with proper categorization (Missing, e-Visa, Emirates ID, Other, Passport, Passport Photo, Residency Visa). OCR processing could not be tested without actual document upload.
+### WOF-003: Document Management & OCR Processing Gaps - REPRODUCED
+Document upload and OCR processing gaps fully confirmed with two test uploads:
+1. **Incorrect auto-classification**: Uploaded an Indonesian passport specimen image (clearly showing "REPUBLIK INDONESIA", "PASPOR/PASSPORT", MRZ code). System auto-classified it as "Back of Emirates ID" instead of "Passport".
+2. **Zero OCR extraction**: All form fields (Emirates ID No., Expiry Date, First Name, Last Name, Nationality, Gender, Date of Birth) were completely empty despite clearly readable text in the image.
+3. **Dynamic form fields work**: Manually changing Document Type from "Back of Emirates ID" to "Passport" correctly updates the form fields (adds Passport No., changes required fields), but still no OCR data populated.
+4. **Same results with synthetic image**: A generated test passport PNG also misclassified as "Back of Emirates ID" with zero extraction.
+5. **Document types available**: Back of Emirates ID, e-Visa, Emirates Id - Form, ENglisH, Front of Emirates ID, Iqama, No-expiry-docType, Other, Passport, Passport Photo, Residency Visa + "Add new" option.
+6. **Accepted formats**: gif, bmp, heic, jpeg, jpg, jp2, svg, tiff, tif, webp, png, pdf (max 5MB).
+- **Screenshots:** `55-playwright-user-documents-tab.png`, `56-accepted-formats-tooltip.png`, `57-document-uploaded-draft.png`, `58-document-fill-details-form.png`, `59-document-type-dropdown.png`, `60-passport-type-no-ocr.png`, `61-real-passport-uploaded-draft.png`, `62-real-passport-misclassified-no-ocr.png`
 
 ### WOF-004: Employee Record Deletion & Relationship Management - NOT_REPRODUCED
 Employee deletion tested successfully on demo account. Created and deleted test employee 'TestDelete ValidationDemo'. Deletion confirmation dialog warns about data loss and insurance plan implications. No errors or relationship conflicts encountered during deletion of a newly created employee without dependents or linked records.
@@ -204,6 +211,14 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 | 52 | `52-nationality-dropdown-search.png` | Nationality dropdown filtered by 'uni' |
 | 53 | `53-create-employee-form-filled.png` | Create Employee form filled with test data |
 | 54 | `54-playwright-user-created-success.png` | Playwright TestUser created successfully |
+| 55 | `55-playwright-user-documents-tab.png` | Documents tab for Playwright TestUser |
+| 56 | `56-accepted-formats-tooltip.png` | Accepted formats tooltip (gif, bmp, heic, jpeg, etc.) |
+| 57 | `57-document-uploaded-draft.png` | Test document uploaded as draft |
+| 58 | `58-document-fill-details-form.png` | Fill details form - misclassified as Back of Emirates ID |
+| 59 | `59-document-type-dropdown.png` | Document type dropdown showing all 11 types |
+| 60 | `60-passport-type-no-ocr.png` | Passport type selected - all OCR fields empty |
+| 61 | `61-real-passport-uploaded-draft.png` | Real Indonesian passport uploaded as draft |
+| 62 | `62-real-passport-misclassified-no-ocr.png` | Indonesian passport misclassified as Emirates ID, zero OCR |
 
 ---
 
@@ -219,3 +234,4 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 - **Document Permissions:** Insurance-linked documents are view-only (no Edit/Actions), while regular employee documents have full editing capabilities, partially confirming WOF-009.
 - **Bulk Import Validation:** Excel bulk import is accessible from Add Employee dropdown. Re-importing unmodified template fails with 'Invalid residency visa location' errors on 14 records, confirming pre-existing data validation inconsistencies (WOF-001).
 - **Sidebar Visibility:** At 1280x800 and below, the sidebar navigation cuts off bottom items (Settings, Apps). Only at 1920x1080 are all sidebar menu items fully visible, partially confirming WOF-002 responsive layout issues.
+- **OCR/Document Classification Broken:** WOF-003 fully reproduced. Both a real Indonesian passport and a synthetic test passport were misclassified as "Back of Emirates ID" with zero OCR data extraction. The document upload and categorization UI works correctly, but the automated classification and OCR engine is non-functional.
