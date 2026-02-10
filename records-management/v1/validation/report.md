@@ -12,13 +12,13 @@
 
 | Category | Result |
 |----------|--------|
-| Total Screenshots | 33 |
+| Total Screenshots | 41 |
 | CRUD Passed | 4/4 |
 | CRUD Not Validated | 0 |
 | What To Do Passed | 11/12 |
 | What To Do Not Tested | 1 (mobile-only) |
-| Watch Out For Not Reproduced | 7/12 |
-| Watch Out For Partially Reproduced | 4/12 |
+| Watch Out For Not Reproduced | 6/12 |
+| Watch Out For Partially Reproduced | 5/12 |
 | Watch Out For Not Tested | 1/12 |
 | Watch Out For Reproduced | 0/12 |
 
@@ -105,8 +105,9 @@ Clicked 'Invite Employees' button on Invitations page. Invite form has: Section 
 Excel bulk import accessible via Add Employee split button dropdown > 'Excel bulk import' on employee list page (URL: /enterprise/dashboard/import-users/excel). Two-step flow: Step 1 downloads Excel template (.xlsx containing all current employees), Step 2 uploads modified template. Upload triggers overwrite confirmation dialog: 'This Excel's content will overwrite your employees data list on the system'. Re-uploading the unmodified template triggered validation: 'Possible conflicting data. Excel was not imported.' with 'Document is invalid' status. Error report showed: 'Invalid residency visa location value since country of residence is not UAE' across 14 cells. This confirms the system has data validation but existing employee data contains pre-existing validation inconsistencies that block re-import.
 - **Screenshots:** `42-excel-bulk-import-page.png`, `43-excel-template-download-dialog.png`, `44-import-processing.png`, `45-import-validation-errors.png`
 
-### WOF-002: Frontend UI/UX Rendering & Interaction Issues - NOT_REPRODUCED
-Document card layouts in employee Documents tab render correctly with proper thumbnail previews, file names, and action buttons (View, Edit, Actions). No layout distortion observed at current resolution. Health insurance dropdown and option selection worked correctly during testing.
+### WOF-002: Frontend UI/UX Rendering & Interaction Issues - PARTIALLY_REPRODUCED
+Responsive layout issues confirmed at multiple viewports. At 1024px: tab bar text truncates (e.g., 'Times...' for Timesheet), document cards render correctly but are cramped. At 768px: profile layout stacks vertically, sidebar items remain visible but tab truncation worsens. At 1280x800: sidebar navigation cuts off the 'Settings' menu item at the bottom - requires scrolling or is completely hidden. Only at 1920x1080 does the full sidebar display all items including Settings and Apps. Nationality dropdown search/filter works correctly with 250+ options. Document card layouts render properly across all tested viewports. Health Insurance tab renders cleanly with policy benefits table.
+- **Screenshots:** `47-documents-tab-1024px.png`, `48-document-cards-1024px.png`, `49-document-cards-expanded-1024px.png`, `50-profile-768px-layout.png`, `51-health-insurance-tab.png`, `52-nationality-dropdown-search.png`, `53-create-employee-form-filled.png`, `54-playwright-user-created-success.png`
 
 ### WOF-003: Document Management & OCR Processing Gaps - NOT_REPRODUCED
 Upload dropzone present and functional. Document management observed with proper categorization (Missing, e-Visa, Emirates ID, Other, Passport, Passport Photo, Residency Visa). OCR processing could not be tested without actual document upload.
@@ -195,6 +196,14 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 | 43 | `43-excel-template-download-dialog.png` | Excel template download/save dialog |
 | 44 | `44-import-processing.png` | Import overwrite confirmation dialog |
 | 45 | `45-import-validation-errors.png` | Import validation error - Document is invalid |
+| 47 | `47-documents-tab-1024px.png` | Documents tab at 1024px viewport - tab truncation |
+| 48 | `48-document-cards-1024px.png` | Document cards at 1024px viewport |
+| 49 | `49-document-cards-expanded-1024px.png` | Expanded document cards at 1024px |
+| 50 | `50-profile-768px-layout.png` | Profile at 768px - vertical stacking layout |
+| 51 | `51-health-insurance-tab.png` | Health Insurance tab with policy benefits |
+| 52 | `52-nationality-dropdown-search.png` | Nationality dropdown filtered by 'uni' |
+| 53 | `53-create-employee-form-filled.png` | Create Employee form filled with test data |
+| 54 | `54-playwright-user-created-success.png` | Playwright TestUser created successfully |
 
 ---
 
@@ -209,3 +218,4 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 - **Data Export:** Export functionality works (generates .xlsx file), but regional formatting issues (WOF-011) could not be tested.
 - **Document Permissions:** Insurance-linked documents are view-only (no Edit/Actions), while regular employee documents have full editing capabilities, partially confirming WOF-009.
 - **Bulk Import Validation:** Excel bulk import is accessible from Add Employee dropdown. Re-importing unmodified template fails with 'Invalid residency visa location' errors on 14 records, confirming pre-existing data validation inconsistencies (WOF-001).
+- **Sidebar Visibility:** At 1280x800 and below, the sidebar navigation cuts off bottom items (Settings, Apps). Only at 1920x1080 are all sidebar menu items fully visible, partially confirming WOF-002 responsive layout issues.
