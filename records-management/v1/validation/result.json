@@ -17,8 +17,8 @@
     "read": {
       "status": "PASSED",
       "path": "/enterprise/dashboard/employees/list",
-      "notes": "Employee list shows 407 active employees with columns: Name, Employee ID, Hired At, Job Title, Department, Full Profile Completion percentage. Pagination (24/page, 17 pages). 12-tab profile view: About Me, Work, Documents, Dependents, Leaves, Health Insurance, Payroll, Attendance, Timesheet, Assets, Air tickets, Performance. Personal section shows Preferred Name, First Name, Last Name, DOB, Nationality, Gender, Marital Status. Contact section shows Mobile, Personal Email, Work No, Work Email, Address. Additional Data and Emergency Contact sections also present.",
-      "screenshots": ["14-employees-list-clean.png", "21-employee-profile-about-me.png", "25-employee-work-tab.png"]
+      "notes": "Employee list shows 407 active employees with columns: Name, Employee ID, Hired At, Job Title, Department, Full Profile Completion percentage. Pagination (24/page, 17 pages). Three view modes available via toggle buttons: List view (default table), Grid view (colorful avatar cards showing name, job title, department, profile completion), and Org Chart view (hierarchical tree showing company name, total employees, role/department/direct reports per node). 12-tab profile view: About Me, Work, Documents, Dependents, Leaves, Health Insurance, Payroll, Attendance, Timesheet, Assets, Air tickets, Performance. Personal section shows Preferred Name, First Name, Last Name, DOB, Nationality, Gender, Marital Status. Contact section shows Mobile, Personal Email, Work No, Work Email, Address. Additional Data and Emergency Contact sections also present.",
+      "screenshots": ["14-employees-list-clean.png", "21-employee-profile-about-me.png", "25-employee-work-tab.png", "69-employee-grid-view.png", "70-employee-org-chart-view.png", "71-employee-list-view.png"]
     },
     "update": {
       "status": "PASSED",
@@ -108,15 +108,15 @@
       "task_id": "WTD-011",
       "task": "Manage employee invitations",
       "status": "PASSED",
-      "evidence": "Navigated to Company > Invitations page. Table shows pending invitations with Employee, Email, Sent columns. Each row has Resend (purple button) and Delete (trash icon) actions. 'Invite Employees' and 'Resend All' buttons at top. Search bar available for searching by employee name or invitation email. 18 pages of invitations (10/page).",
-      "screenshots": ["32-invitations-page.png"]
+      "evidence": "Navigated to Company > Invitations page. Table shows pending invitations with Employee, Email, Sent columns. Each row has Resend (purple button) and Delete (trash icon) actions. 'Invite Employees' and 'Resend All' buttons at top. Search bar available for searching by employee name or invitation email. 18 pages of invitations (10/page). Send Invite button also available per-employee row in the All Employees list for uninvited employees. Selecting employees via checkboxes reveals bulk 'Send Invite N' button. Both single and bulk invite open a 'Please confirm employee emails' dialog requiring work email entry before sending.",
+      "screenshots": ["32-invitations-page.png", "72-send-invite-dialog.png", "73-bulk-select-send-invite-2.png", "74-bulk-invite-dialog-2-employees.png", "76-invitations-page.png"]
     },
     {
       "task_id": "WTD-012",
       "task": "Invite employees to Bayzat platform",
       "status": "PASSED",
-      "evidence": "Clicked 'Invite Employees' button on Invitations page. Invite form has: Section 1 'Create and invite new employees' with fields for First Name, Last Name, Nationality, Work Email per employee row. 'Invite another colleague' button to add more rows. Delete icon per row. Section 2 'Add a message' with Content textarea for custom invitation message. 'Invite' button (disabled until form filled). Also confirmed 'Send Invite' buttons on individual employee rows in the All Employees list.",
-      "screenshots": ["33-invite-employees-form.png"]
+      "evidence": "Two invitation paths confirmed: (1) Invitations page > 'Invite Employees' button opens form with First Name, Last Name, Nationality, Work Email per row, 'Invite another colleague' button, custom message textarea, and Invite button. (2) Employee list > per-row 'Send Invite' button or bulk 'Send Invite N' after checkbox selection. Both open 'Please confirm employee emails' dialog listing selected employees with email textbox per employee. CRITICAL: Email is required but there is NO frontend validation - clicking Invite without entering emails results in silent server errors (401/400 on invitations/update-work-email API) and a JavaScript TypeError. Dialog closes with no user-visible error feedback. Invitations are NOT sent without valid emails (confirmed on Invitations page).",
+      "screenshots": ["33-invite-employees-form.png", "72-send-invite-dialog.png", "74-bulk-invite-dialog-2-employees.png", "75-invite-without-email-errors.png"]
     }
   ],
   "what_to_watch_out_for_results": [
@@ -164,8 +164,8 @@
       "issue_id": "WOF-007",
       "theme": "Form Validation & Error Messaging Gaps",
       "status": "PARTIALLY_REPRODUCED",
-      "notes": "Add Employee form shows simple 'Required' error messages for First Name, Last Name, and Nationality - no descriptive guidance. Profile edit form saved successfully even without changes. Error messages lack actionable guidance as described in the issue.",
-      "screenshots": ["20-add-employee-form-validation-errors.png"]
+      "notes": "Multiple validation gaps confirmed: (1) Add Employee form shows simple 'Required' error messages for First Name, Last Name, and Nationality - no descriptive guidance. (2) Profile edit form saved successfully even without changes. (3) Send Invite dialog has NO frontend email validation - clicking 'Invite' with empty email fields submits to server, resulting in 401/400 API errors and TypeError: Cannot read properties of undefined (reading 'genericErrors'). Dialog closes silently with no user-visible error. Email is required for invitations to work but the UI does not enforce or communicate this requirement.",
+      "screenshots": ["20-add-employee-form-validation-errors.png", "74-bulk-invite-dialog-2-employees.png", "75-invite-without-email-errors.png"]
     },
     {
       "issue_id": "WOF-008",
@@ -265,10 +265,18 @@
     "65-delete-confirmation-dialog-with-document.png",
     "66-delete-dialog-established-employee.png",
     "67-deletion-success-toast.png",
-    "68-employee-deleted-confirmed-empty.png"
+    "68-employee-deleted-confirmed-empty.png",
+    "69-employee-grid-view.png",
+    "70-employee-org-chart-view.png",
+    "71-employee-list-view.png",
+    "72-send-invite-dialog.png",
+    "73-bulk-select-send-invite-2.png",
+    "74-bulk-invite-dialog-2-employees.png",
+    "75-invite-without-email-errors.png",
+    "76-invitations-page.png"
   ],
   "summary": {
-    "total_screenshots": 55,
+    "total_screenshots": 63,
     "crud_pass": 4,
     "crud_not_validated": 0,
     "wtd_passed": 11,

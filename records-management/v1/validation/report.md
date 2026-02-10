@@ -12,7 +12,7 @@
 
 | Category | Result |
 |----------|--------|
-| Total Screenshots | 55 |
+| Total Screenshots | 63 |
 | CRUD Passed | 4/4 |
 | CRUD Not Validated | 0 |
 | What To Do Passed | 11/12 |
@@ -33,8 +33,8 @@
 
 ### Read - PASSED
 - **Path:** `/enterprise/dashboard/employees/list`
-- **Evidence:** Employee list shows 407 active employees with columns: Name, Employee ID, Hired At, Job Title, Department, Full Profile Completion percentage. Pagination (24/page, 17 pages). 12-tab profile view: About Me, Work, Documents, Dependents, Leaves, Health Insurance, Payroll, Attendance, Timesheet, Assets, Air tickets, Performance. Personal section shows Preferred Name, First Name, Last Name, DOB, Nationality, Gender, Marital Status. Contact section shows Mobile, Personal Email, Work No, Work Email, Address. Additional Data and Emergency Contact sections also present.
-- **Screenshots:** `14-employees-list-clean.png`, `21-employee-profile-about-me.png`, `25-employee-work-tab.png`
+- **Evidence:** Employee list shows 407 active employees with columns: Name, Employee ID, Hired At, Job Title, Department, Full Profile Completion percentage. Pagination (24/page, 17 pages). **Three view modes** available via toggle buttons: List view (default table), Grid view (colorful avatar cards showing name, job title, department, profile completion), and Org Chart view (hierarchical tree showing company name, total employees, role/department/direct reports per node). 12-tab profile view: About Me, Work, Documents, Dependents, Leaves, Health Insurance, Payroll, Attendance, Timesheet, Assets, Air tickets, Performance. Personal section shows Preferred Name, First Name, Last Name, DOB, Nationality, Gender, Marital Status. Contact section shows Mobile, Personal Email, Work No, Work Email, Address. Additional Data and Emergency Contact sections also present.
+- **Screenshots:** `14-employees-list-clean.png`, `21-employee-profile-about-me.png`, `25-employee-work-tab.png`, `69-employee-grid-view.png`, `70-employee-org-chart-view.png`, `71-employee-list-view.png`
 
 ### Update - PASSED
 - **Path:** `/enterprise/dashboard/employees/{id}/profile/about-me/personal`
@@ -90,12 +90,15 @@ Navigated to Employee Profile > Payroll tab > End of Service sub-tab. End of Ser
 - **Screenshots:** `29-end-of-service-calculator.png`, `30-eos-departure-reasons-dropdown.png`
 
 ### WTD-011: Manage employee invitations - PASSED
-Navigated to Company > Invitations page. Table shows pending invitations with Employee, Email, Sent columns. Each row has Resend (purple button) and Delete (trash icon) actions. 'Invite Employees' and 'Resend All' buttons at top. Search bar available for searching by employee name or invitation email. 18 pages of invitations (10/page).
-- **Screenshots:** `32-invitations-page.png`
+Navigated to Company > Invitations page. Table shows pending invitations with Employee, Email, Sent columns. Each row has Resend (purple button) and Delete (trash icon) actions. 'Invite Employees' and 'Resend All' buttons at top. Search bar available for searching by employee name or invitation email. 18 pages of invitations (10/page). Additionally, Send Invite button available per-employee row in the All Employees list for uninvited employees. Selecting employees via checkboxes reveals bulk 'Send Invite N' button. Both single and bulk invite open a 'Please confirm employee emails' dialog requiring work email entry per employee before sending.
+- **Screenshots:** `32-invitations-page.png`, `72-send-invite-dialog.png`, `73-bulk-select-send-invite-2.png`, `74-bulk-invite-dialog-2-employees.png`, `76-invitations-page.png`
 
 ### WTD-012: Invite employees to Bayzat platform - PASSED
-Clicked 'Invite Employees' button on Invitations page. Invite form has: Section 1 'Create and invite new employees' with fields for First Name, Last Name, Nationality, Work Email per employee row. 'Invite another colleague' button to add more rows. Delete icon per row. Section 2 'Add a message' with Content textarea for custom invitation message. 'Invite' button (disabled until form filled). Also confirmed 'Send Invite' buttons on individual employee rows in the All Employees list.
-- **Screenshots:** `33-invite-employees-form.png`
+Two invitation paths confirmed:
+1. **Invitations page path**: 'Invite Employees' button opens form with First Name, Last Name, Nationality, Work Email per row, 'Invite another colleague' button, custom message textarea, and Invite button.
+2. **Employee list path**: Per-row 'Send Invite' button or bulk 'Send Invite N' after checkbox selection. Opens 'Please confirm employee emails' dialog listing selected employees with email textbox per employee, close (X) button per row, Cancel and Invite buttons.
+3. **CRITICAL - Email validation gap**: Email is required for invitations but there is NO frontend validation. Clicking Invite without entering emails results in silent server errors (401/400 on `invitations/update-work-email` API) and JavaScript TypeError (`Cannot read properties of undefined (reading 'genericErrors')`). Dialog closes with no user-visible error feedback. Invitations are NOT actually sent without valid emails (confirmed on Invitations page), but the user receives no indication of failure.
+- **Screenshots:** `33-invite-employees-form.png`, `72-send-invite-dialog.png`, `74-bulk-invite-dialog-2-employees.png`, `75-invite-without-email-errors.png`
 
 ---
 
@@ -137,8 +140,11 @@ Work email field present in profile Contact section with edit capability. Email 
 Hire date displayed in Work section (2013-09-10). Edit form available but hire date modification not tested to preserve data integrity.
 
 ### WOF-007: Form Validation & Error Messaging Gaps - PARTIALLY_REPRODUCED
-Add Employee form shows simple 'Required' error messages for First Name, Last Name, and Nationality - no descriptive guidance. Profile edit form saved successfully even without changes. Error messages lack actionable guidance as described in the issue.
-- **Screenshots:** `20-add-employee-form-validation-errors.png`
+Multiple validation gaps confirmed:
+1. **Add Employee form**: Shows simple 'Required' error messages for First Name, Last Name, and Nationality - no descriptive guidance or field-specific instructions.
+2. **Profile edit form**: Saved successfully even without changes - no dirty-check validation.
+3. **Send Invite email validation**: CRITICAL gap - 'Please confirm employee emails' dialog has NO frontend email validation. Clicking 'Invite' with empty email fields submits to server, resulting in 401/400 API errors on `invitations/update-work-email` endpoint and JavaScript TypeError (`Cannot read properties of undefined (reading 'genericErrors')`). Dialog closes silently with no user-visible error. Email is required for invitations to function but the UI does not enforce or communicate this requirement.
+- **Screenshots:** `20-add-employee-form-validation-errors.png`, `74-bulk-invite-dialog-2-employees.png`, `75-invite-without-email-errors.png`
 
 ### WOF-008: Employee Search & Dropdown Functionality Limitations - NOT_REPRODUCED
 Employee search in list view works with real-time filtering by name/ID. Dropdown selects in forms (Nationality, Gender, Department, etc.) appear functional.
@@ -232,6 +238,14 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 | 66 | `66-delete-dialog-established-employee.png` | Same generic delete dialog for Bayzlander (94% profile) |
 | 67 | `67-deletion-success-toast.png` | Deletion success toast (employee row still visible - stale UI) |
 | 68 | `68-employee-deleted-confirmed-empty.png` | Page refresh confirms deletion (0 results) |
+| 69 | `69-employee-grid-view.png` | Employee list - Grid view with colorful avatar cards |
+| 70 | `70-employee-org-chart-view.png` | Employee list - Org Chart view with hierarchical tree |
+| 71 | `71-employee-list-view.png` | Employee list - List/table view (default) |
+| 72 | `72-send-invite-dialog.png` | Send Invite dialog for single employee (Trest 4) |
+| 73 | `73-bulk-select-send-invite-2.png` | Bulk selection with Send Invite 2 and Delete Selected 2 |
+| 74 | `74-bulk-invite-dialog-2-employees.png` | Bulk invite dialog with 2 employees and empty email fields |
+| 75 | `75-invite-without-email-errors.png` | After clicking Invite without emails - silent failure |
+| 76 | `76-invitations-page.png` | Invitations management page with existing invites |
 
 ---
 
@@ -249,3 +263,5 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 - **Sidebar Visibility:** At 1280x800 and below, the sidebar navigation cuts off bottom items (Settings, Apps). Only at 1920x1080 are all sidebar menu items fully visible, partially confirming WOF-002 responsive layout issues.
 - **OCR/Document Classification Broken:** WOF-003 fully reproduced. Both a real Indonesian passport and a synthetic test passport were misclassified as "Back of Emirates ID" with zero OCR data extraction. The document upload and categorization UI works correctly, but the automated classification and OCR engine is non-functional.
 - **Deletion Relationship Management Gaps:** WOF-004 partially reproduced. Deletion of employee with linked data (draft document) showed generic warning with no relationship enumeration. Same dialog for minimal-data vs heavily-linked employees. No admin self-deletion protection, no soft-delete option, stale UI after deletion (requires page refresh), and silent cascade deletion of linked documents.
+- **Employee List View Modes:** Three view modes confirmed via toggle buttons: List (default table), Grid (colorful avatar cards), Org Chart (hierarchical tree with company name, employee count, roles, departments, direct reports). All three views functional and rendering correctly.
+- **Send Invite Email Validation Gap:** CRITICAL finding - the 'Please confirm employee emails' dialog (both single and bulk invite) has NO frontend email validation. Clicking 'Invite' with empty email fields submits empty strings to the server API (`invitations/update-work-email`), resulting in 401/400 errors and a JavaScript TypeError. The dialog closes silently with no user-visible error. Users must enter valid work emails for invitations to succeed, but the UI does not enforce or communicate this requirement. This strengthens WOF-007 (Form Validation Gaps).
