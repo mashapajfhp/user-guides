@@ -12,13 +12,13 @@
 
 | Category | Result |
 |----------|--------|
-| Total Screenshots | 63 |
+| Total Screenshots | 73 |
 | CRUD Passed | 4/4 |
 | CRUD Not Validated | 0 |
 | What To Do Passed | 11/12 |
 | What To Do Not Tested | 1 (mobile-only) |
-| Watch Out For Not Reproduced | 4/12 |
-| Watch Out For Partially Reproduced | 6/12 |
+| Watch Out For Not Reproduced | 1/12 |
+| Watch Out For Partially Reproduced | 9/12 |
 | Watch Out For Not Tested | 1/12 |
 | Watch Out For Reproduced | 1/12 |
 
@@ -133,11 +133,18 @@ Deep deletion testing performed on employee with linked data (Playwright TestUse
 7. **Silent cascade deletion**: Linked draft documents are removed without specific warning. Insurance cancellation note appears as static boilerplate text regardless of actual insurance status.
 - **Screenshots:** `36-delete-confirmation-dialog.png`, `63-search-playwright-user-for-deletion.png`, `64-employee-selected-delete-option.png`, `65-delete-confirmation-dialog-with-document.png`, `66-delete-dialog-established-employee.png`, `67-deletion-success-toast.png`, `68-employee-deleted-confirmed-empty.png`
 
-### WOF-005: Email & User Registration Validation Constraints - NOT_REPRODUCED
-Work email field present in profile Contact section with edit capability. Email change workflow not tested to avoid modifying production user data.
+### WOF-005: Email & User Registration Validation Constraints - PARTIALLY_REPRODUCED
+Tested email validation on Trest 4's Contact section Work Email field:
+1. **Invalid format** ('not-an-email') - Inline 'Invalid email' error with red-highlighted field
+2. **Duplicate email** ('bayzlander@bayzat.com') - Detailed toast error: "An active employee or an inactive employee with future hire date who will be activated with the same work email already exists in Bayzat."
+3. **Valid unique email** - Saves successfully with 'Profile saved successfully' toast
 
-### WOF-006: Hire Date Change Management & Validation - NOT_REPRODUCED
-Hire date displayed in Work section (2013-09-10). Edit form available but hire date modification not tested to preserve data integrity.
+Email validation is robust at profile level but completely absent in Send Invite dialog (see WOF-007).
+- **Screenshots:** `77-work-email-invalid-validation.png`, `78-duplicate-email-error.png`
+
+### WOF-006: Hire Date Change Management & Validation - PARTIALLY_REPRODUCED
+**MISLEADING UI DISCOVERED:** Trest 4's Work edit form displays tooltip "Hire date can not be changed due to selected individual leave cycle type" but the Hiring Date field IS fully editable and saves successfully. Changed from 16/01/2020 to 01/01/2019 and got 'Work profile updated successfully' toast. Reverted back to original. The tooltip warning is inaccurate - it states the field cannot be changed but it can be. This is a UX inconsistency that could confuse admins.
+- **Screenshots:** `79-hire-date-locked-leave-cycle.png`
 
 ### WOF-007: Form Validation & Error Messaging Gaps - PARTIALLY_REPRODUCED
 Multiple validation gaps confirmed:
@@ -153,8 +160,12 @@ Employee search in list view works with real-time filtering by name/ID. Dropdown
 Insurance-linked documents (Insurance Card Front/Back) have restricted permissions - only a View button is available with no Edit or Actions options. The View modal shows the document image and a download link but no editing capability. In contrast, regular employee documents (Passport Photo, Other, etc.) have full View, Edit, and Actions buttons. The Edit form for regular documents provides Replace file, Download, Document information (Owner Type, Select Owner, Document Type - all disabled/locked fields), primary document checkbox, and Cancel/Save buttons. This confirms that document editing permissions ARE controlled differently based on document category, with insurance documents being view-only.
 - **Screenshots:** `39-insurance-card-view-only.png`, `40-regular-docs-have-edit-actions.png`, `41-regular-doc-edit-form.png`
 
-### WOF-010: Employee Status & Inactive Record Management - NOT_REPRODUCED
-Employee list defaults to Status: Active filter. Did not test mentioning inactive employees in comments/workflows.
+### WOF-010: Employee Status & Inactive Record Management - PARTIALLY_REPRODUCED
+Comprehensive inactive employee management tested:
+1. **Employee list filtering**: Defaults to 'Status: Active' filter chip (407 employees). Removing filter shows all 473 employees including inactive ones marked with 'INACTIVE' badge (Mohammed Ali, Yolo Line Manager, Kalinga Dissanayake, Ramzi Saliba, Marko Biskupic, Bhuvan Rathin).
+2. **Active employee offboarding**: Offboard button on Work tab opens dialog requiring Departure date + Reason for departure (8 options: Resignation with/without notice, Termination with/without notice, 'Termination' disabled with info icon, End of contract, Death, Absconding). Yellow warning alert shows consequences: "will not be able to use Bayzat after [date] and will be removed from [month] payroll onward. All future leave requests will be deleted. All unprocessed time and pay adjustments will be deleted." Both fields validate as 'Required' when empty.
+3. **Inactive employee profile**: Shows 'Inactive' badge next to name, Health Insurance tab has warning dot ('offboarded but still marked as insured'). Work tab shows Status: Inactive, Departure date, Reason for departure, and **'Rehire' button** instead of Offboard.
+- **Screenshots:** `80-offboard-dialog.png`, `81-offboard-reasons-dropdown.png`, `82-offboard-validation-required.png`, `83-offboard-filled-with-warning.png`, `84-all-employees-with-inactive.png`, `85-inactive-employee-profile.png`, `86-inactive-employee-work-rehire.png`
 
 ### WOF-011: Data Export & Reporting Functionality Issues - PARTIALLY_REPRODUCED
 Download/Export button clicked on employee list. Save dialog appeared for .xlsx file (All_Employees_Active.xlsx). Export mechanism is present and triggered successfully. Could not test Turkish regional date formatting issues.
@@ -246,6 +257,16 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 | 74 | `74-bulk-invite-dialog-2-employees.png` | Bulk invite dialog with 2 employees and empty email fields |
 | 75 | `75-invite-without-email-errors.png` | After clicking Invite without emails - silent failure |
 | 76 | `76-invitations-page.png` | Invitations management page with existing invites |
+| 77 | `77-work-email-invalid-validation.png` | Work Email 'Invalid email' inline validation error |
+| 78 | `78-duplicate-email-error.png` | Duplicate email toast error with detailed message |
+| 79 | `79-hire-date-locked-leave-cycle.png` | Hire date tooltip says locked but field is editable |
+| 80 | `80-offboard-dialog.png` | Offboarding dialog with Departure date and Reason fields |
+| 81 | `81-offboard-reasons-dropdown.png` | Offboard reasons dropdown (8 options, Termination disabled) |
+| 82 | `82-offboard-validation-required.png` | Offboard dialog validation - both fields Required |
+| 83 | `83-offboard-filled-with-warning.png` | Offboard filled with warning about payroll/leave consequences |
+| 84 | `84-all-employees-with-inactive.png` | Employee list showing active and inactive employees |
+| 85 | `85-inactive-employee-profile.png` | Inactive employee profile (Mohammed Ali) with Inactive badge |
+| 86 | `86-inactive-employee-work-rehire.png` | Inactive employee Work tab with Rehire button |
 
 ---
 
@@ -265,3 +286,6 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 - **Deletion Relationship Management Gaps:** WOF-004 partially reproduced. Deletion of employee with linked data (draft document) showed generic warning with no relationship enumeration. Same dialog for minimal-data vs heavily-linked employees. No admin self-deletion protection, no soft-delete option, stale UI after deletion (requires page refresh), and silent cascade deletion of linked documents.
 - **Employee List View Modes:** Three view modes confirmed via toggle buttons: List (default table), Grid (colorful avatar cards), Org Chart (hierarchical tree with company name, employee count, roles, departments, direct reports). All three views functional and rendering correctly.
 - **Send Invite Email Validation Gap:** CRITICAL finding - the 'Please confirm employee emails' dialog (both single and bulk invite) has NO frontend email validation. Clicking 'Invite' with empty email fields submits empty strings to the server API (`invitations/update-work-email`), resulting in 401/400 errors and a JavaScript TypeError. The dialog closes silently with no user-visible error. Users must enter valid work emails for invitations to succeed, but the UI does not enforce or communicate this requirement. This strengthens WOF-007 (Form Validation Gaps).
+- **Email Validation at Profile Level:** WOF-005 partially reproduced. Work Email field in Contact section has robust validation: invalid format triggers 'Invalid email' inline error, duplicate email triggers detailed toast explaining existing employee conflict. Valid unique emails save successfully. However, this validation is absent in the Send Invite dialog.
+- **Hire Date Misleading Tooltip:** WOF-006 partially reproduced. Work edit form displays tooltip "Hire date can not be changed due to selected individual leave cycle type" but the field IS fully editable and saves. This misleading UI message could confuse admins about what they can/cannot modify.
+- **Inactive Employee Lifecycle:** WOF-010 partially reproduced. Full lifecycle tested: Active employees have Offboard button (with departure date, reason, consequences warning), inactive employees show 'Inactive' badge, departure details, and Rehire button. Health Insurance tab warns about offboarded employees still marked as insured. Employee list filter toggles between active (407) and all (473) employees.

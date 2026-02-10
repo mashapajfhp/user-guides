@@ -151,14 +151,16 @@
     {
       "issue_id": "WOF-005",
       "theme": "Email & User Registration Validation Constraints",
-      "status": "NOT_REPRODUCED",
-      "notes": "Work email field present in profile Contact section with edit capability. Email change workflow not tested to avoid modifying production user data."
+      "status": "PARTIALLY_REPRODUCED",
+      "notes": "Tested email validation on Trest 4's Contact section Work Email field. Three scenarios: (1) Invalid format 'not-an-email' triggers inline 'Invalid email' error with red-highlighted field. (2) Duplicate email 'bayzlander@bayzat.com' triggers detailed toast error: 'An active employee or an inactive employee with future hire date who will be activated with the same work email already exists in Bayzat.' (3) Valid unique email saves successfully. Email validation is robust at profile level but completely absent in Send Invite dialog (see WOF-007).",
+      "screenshots": ["77-work-email-invalid-validation.png", "78-duplicate-email-error.png"]
     },
     {
       "issue_id": "WOF-006",
       "theme": "Hire Date Change Management & Validation",
-      "status": "NOT_REPRODUCED",
-      "notes": "Hire date displayed in Work section (2013-09-10). Edit form available but hire date modification not tested to preserve data integrity."
+      "status": "PARTIALLY_REPRODUCED",
+      "notes": "MISLEADING UI DISCOVERED: Trest 4's Work edit form displays tooltip 'Hire date can not be changed due to selected individual leave cycle type' but the Hiring Date field IS fully editable and saves successfully. Changed from 16/01/2020 to 01/01/2019, got 'Work profile updated successfully' toast. Reverted back to original. The tooltip warning is inaccurate - it states the field cannot be changed but it can be. This is a UX inconsistency that could confuse admins.",
+      "screenshots": ["79-hire-date-locked-leave-cycle.png"]
     },
     {
       "issue_id": "WOF-007",
@@ -183,8 +185,9 @@
     {
       "issue_id": "WOF-010",
       "theme": "Employee Status & Inactive Record Management",
-      "status": "NOT_REPRODUCED",
-      "notes": "Employee list defaults to Status: Active filter. Did not test mentioning inactive employees in comments/workflows."
+      "status": "PARTIALLY_REPRODUCED",
+      "notes": "Comprehensive inactive employee management tested. (1) Employee list defaults to 'Status: Active' filter chip (407 employees). Removing filter shows all 473 employees including inactive ones marked with 'INACTIVE' badge (Mohammed Ali, Yolo Line Manager, Kalinga Dissanayake, Ramzi Saliba, Marko Biskupic, Bhuvan Rathin). (2) Active employee offboarding: Offboard button on Work tab opens dialog requiring Departure date + Reason for departure (8 options: Resignation with/without notice, Termination with/without notice, 'Termination' disabled, End of contract, Death, Absconding). Warning alert shows consequences: payroll removal, future leave deletion, unprocessed time/pay adjustment deletion. Both fields validate as 'Required'. (3) Inactive employee profile: Shows 'Inactive' badge, Health Insurance tab has warning dot 'offboarded but still marked as insured'. Work tab shows Status: Inactive, Departure date, Reason for departure, and 'Rehire' button instead of Offboard.",
+      "screenshots": ["80-offboard-dialog.png", "81-offboard-reasons-dropdown.png", "82-offboard-validation-required.png", "83-offboard-filled-with-warning.png", "84-all-employees-with-inactive.png", "85-inactive-employee-profile.png", "86-inactive-employee-work-rehire.png"]
     },
     {
       "issue_id": "WOF-011",
@@ -273,17 +276,27 @@
     "73-bulk-select-send-invite-2.png",
     "74-bulk-invite-dialog-2-employees.png",
     "75-invite-without-email-errors.png",
-    "76-invitations-page.png"
+    "76-invitations-page.png",
+    "77-work-email-invalid-validation.png",
+    "78-duplicate-email-error.png",
+    "79-hire-date-locked-leave-cycle.png",
+    "80-offboard-dialog.png",
+    "81-offboard-reasons-dropdown.png",
+    "82-offboard-validation-required.png",
+    "83-offboard-filled-with-warning.png",
+    "84-all-employees-with-inactive.png",
+    "85-inactive-employee-profile.png",
+    "86-inactive-employee-work-rehire.png"
   ],
   "summary": {
-    "total_screenshots": 63,
+    "total_screenshots": 73,
     "crud_pass": 4,
     "crud_not_validated": 0,
     "wtd_passed": 11,
     "wtd_not_tested": 1,
     "wtd_not_validated": 0,
-    "wof_not_reproduced": 4,
-    "wof_partially_reproduced": 6,
+    "wof_not_reproduced": 1,
+    "wof_partially_reproduced": 9,
     "wof_not_tested": 1,
     "wof_reproduced": 1
   }
