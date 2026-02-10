@@ -12,13 +12,13 @@
 
 | Category | Result |
 |----------|--------|
-| Total Screenshots | 29 |
+| Total Screenshots | 33 |
 | CRUD Passed | 4/4 |
 | CRUD Not Validated | 0 |
 | What To Do Passed | 11/12 |
 | What To Do Not Tested | 1 (mobile-only) |
-| Watch Out For Not Reproduced | 8/12 |
-| Watch Out For Partially Reproduced | 3/12 |
+| Watch Out For Not Reproduced | 7/12 |
+| Watch Out For Partially Reproduced | 4/12 |
 | Watch Out For Not Tested | 1/12 |
 | Watch Out For Reproduced | 0/12 |
 
@@ -101,8 +101,9 @@ Clicked 'Invite Employees' button on Invitations page. Invite form has: Section 
 
 ## What To Watch Out For - Issue Results
 
-### WOF-001: Employee Data Import & Validation Issues - NOT_REPRODUCED
-Import functionality not directly accessible from the validated UI paths. Bulk import validation issues require specific import file testing which was out of scope.
+### WOF-001: Employee Data Import & Validation Issues - PARTIALLY_REPRODUCED
+Excel bulk import accessible via Add Employee split button dropdown > 'Excel bulk import' on employee list page (URL: /enterprise/dashboard/import-users/excel). Two-step flow: Step 1 downloads Excel template (.xlsx containing all current employees), Step 2 uploads modified template. Upload triggers overwrite confirmation dialog: 'This Excel's content will overwrite your employees data list on the system'. Re-uploading the unmodified template triggered validation: 'Possible conflicting data. Excel was not imported.' with 'Document is invalid' status. Error report showed: 'Invalid residency visa location value since country of residence is not UAE' across 14 cells. This confirms the system has data validation but existing employee data contains pre-existing validation inconsistencies that block re-import.
+- **Screenshots:** `42-excel-bulk-import-page.png`, `43-excel-template-download-dialog.png`, `44-import-processing.png`, `45-import-validation-errors.png`
 
 ### WOF-002: Frontend UI/UX Rendering & Interaction Issues - NOT_REPRODUCED
 Document card layouts in employee Documents tab render correctly with proper thumbnail previews, file names, and action buttons (View, Edit, Actions). No layout distortion observed at current resolution. Health insurance dropdown and option selection worked correctly during testing.
@@ -190,6 +191,10 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 | 39 | `39-insurance-card-view-only.png` | Insurance Card Front - View only, no Edit/Actions |
 | 40 | `40-regular-docs-have-edit-actions.png` | Regular docs (Passport Photo) with View/Edit/Actions |
 | 41 | `41-regular-doc-edit-form.png` | Regular document edit form with Replace/Download/Save |
+| 42 | `42-excel-bulk-import-page.png` | Excel bulk import page (2-step flow) |
+| 43 | `43-excel-template-download-dialog.png` | Excel template download/save dialog |
+| 44 | `44-import-processing.png` | Import overwrite confirmation dialog |
+| 45 | `45-import-validation-errors.png` | Import validation error - Document is invalid |
 
 ---
 
@@ -203,3 +208,4 @@ Backend architecture and logging issues cannot be validated through UI testing. 
 - **Form Validation:** Error messages are minimal ('Required' only) without descriptive guidance, partially confirming WOF-007.
 - **Data Export:** Export functionality works (generates .xlsx file), but regional formatting issues (WOF-011) could not be tested.
 - **Document Permissions:** Insurance-linked documents are view-only (no Edit/Actions), while regular employee documents have full editing capabilities, partially confirming WOF-009.
+- **Bulk Import Validation:** Excel bulk import is accessible from Add Employee dropdown. Re-importing unmodified template fails with 'Invalid residency visa location' errors on 14 records, confirming pre-existing data validation inconsistencies (WOF-001).
