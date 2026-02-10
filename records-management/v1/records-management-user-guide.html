@@ -236,7 +236,7 @@ hr {
 
 .strategic-card p {
   font-size: 0.95rem;
-  color: #334155;
+  color: #000000;
   margin: 0 0 12px 0;
   line-height: 1.5;
 }
@@ -248,7 +248,7 @@ hr {
 
 .strategic-card li {
   font-size: 0.9rem;
-  color: #334155;
+  color: #000000;
   margin-bottom: 6px;
 }
 
@@ -1105,37 +1105,47 @@ footer {
       <div class="section-body">
         <div class="subsection">
   <h3>How Records Management Fits</h3>
-  <p>Records Management is the transactional layer where employee data lives throughout the employment lifecycle. Employee records are individual profiles containing personal, work, document, payroll, and compliance information.</p>
+  <p>Records Management is the organizational data layer that manages all company and employee information across the platform. It covers five core areas:</p>
+  <ul>
+    <li><strong>Employee Register</strong> &mdash; Individual employee profiles containing personal, work, payroll, and compliance data across 12 profile tabs</li>
+    <li><strong>Employee Documents</strong> &mdash; Passports, visas, contracts, and other employee-specific documents with expiry tracking and OCR extraction</li>
+    <li><strong>Company Documents</strong> &mdash; Trade licenses, establishment cards, insurance policies, and other company-level documents with expiry reminders</li>
+    <li><strong>Company Assets</strong> &mdash; Laptops, vehicles, equipment, and other company property with assignment tracking and audit trails</li>
+    <li><strong>Knowledge Hub</strong> &mdash; Collaborative spaces for organizing and sharing documents, pages, and files across teams</li>
+  </ul>
   <div class="info-box">
-    <p><strong>Mental model:</strong> Employee Record (profile) → Contains all employee data → Referenced by all modules → Drives payroll, attendance, leave, insurance, and compliance</p>
+    <p><strong>Mental model:</strong> Records Management = Employee Data (profiles + documents) + Company Data (documents + assets) + Knowledge Hub (collaborative content) &rarr; All referenced by payroll, attendance, leave, insurance, and compliance modules</p>
   </div>
-  <p>One employee record affects multiple downstream processes. Changes to work information, documents, or personal data immediately impact payroll calculations, leave balances, attendance tracking, and insurance eligibility.</p>
+  <p>Changes across any of these areas can impact downstream processes. Employee record updates affect payroll and leave calculations. Company document expiry affects compliance status. Asset assignments track accountability across the organization.</p>
 </div>
 
 <div class="subsection">
   <h3>Key Decisions Before Setup</h3>
-  <p>Answer these questions before creating employee records:</p>
+  <p>Answer these questions before configuring Records Management:</p>
   <ul>
-    <li><strong>What document types are mandatory for compliance?</strong> — Configure employee document types with expiry tracking before onboarding</li>
-    <li><strong>Which fields require approval workflows?</strong> — Decide if employees can edit personal/work info or if changes require admin approval</li>
-    <li><strong>How will you structure reporting hierarchies?</strong> — Define departments, offices, and reporting managers to enable org chart generation</li>
-    <li><strong>What custom data points do you need to track?</strong> — Identify additional employee attributes beyond standard fields (custom employee data)</li>
+    <li><strong>What employee document types are mandatory for compliance?</strong> &mdash; Configure employee document types with expiry tracking before onboarding</li>
+    <li><strong>What company document types do you need to track?</strong> &mdash; Set up company document types (trade licenses, establishment cards, insurance policies) under Settings &rarr; Company &rarr; Company Document Types</li>
+    <li><strong>Which fields require approval workflows?</strong> &mdash; Decide if employees can edit personal/work info or if changes require admin approval</li>
+    <li><strong>How will you structure reporting hierarchies?</strong> &mdash; Define departments, offices, and reporting managers to enable org chart generation</li>
+    <li><strong>What company assets need tracking?</strong> &mdash; Identify asset categories (IT equipment, vehicles, office equipment) and assignment workflows</li>
+    <li><strong>How will you organize Knowledge Hub spaces?</strong> &mdash; Plan team-based or topic-based spaces and determine access permissions (Private, Editor)</li>
   </ul>
 </div>
 
 <div class="subsection">
   <h3>Related Features</h3>
   <ul>
-    <li><strong>Payroll Module</strong> — Pulls employee salary, bank details, and work information for monthly payroll processing and end of service calculations</li>
-    <li><strong>Time Off</strong> — Uses hire date, work profile, and leave cycle type to calculate leave balances and encashments</li>
-    <li><strong>Attendance</strong> — References work timings, office locations, and employee status for check-in/check-out tracking</li>
-    <li><strong>Health Insurance</strong> — Links employee records to insurance policies, tracks dependent documents, and manages endorsements</li>
-    <li><strong>Document Management</strong> — Stores and tracks employee documents with expiry reminders sent to admins and managers</li>
+    <li><strong>Payroll Module</strong> &mdash; Pulls employee salary, bank details, and work information for monthly payroll processing and end of service calculations</li>
+    <li><strong>Time Off</strong> &mdash; Uses hire date, work profile, and leave cycle type to calculate leave balances and encashments</li>
+    <li><strong>Attendance</strong> &mdash; References work timings, office locations, and employee status for check-in/check-out tracking</li>
+    <li><strong>Health Insurance</strong> &mdash; Links employee records to insurance policies, tracks dependent documents, and manages endorsements</li>
+    <li><strong>Document Management</strong> &mdash; Stores and tracks both employee and company documents with automated expiry reminders</li>
+    <li><strong>Bayzat AI</strong> &mdash; Integrated into Knowledge Hub for intelligent content interaction and document assistance</li>
   </ul>
 </div>
 
 <div class="subsection">
-  <h3>Prerequisites & Requirements</h3>
+  <h3>Prerequisites &amp; Requirements</h3>
   <table class="requirements-table">
     <thead>
       <tr>
@@ -1147,7 +1157,7 @@ footer {
     <tbody>
       <tr>
         <td>Work Email Address</td>
-        <td>Required for sending employee invitations and platform access. Personal email can be used in work email field if official email unavailable.</td>
+        <td>Required for sending employee invitations and platform access. Personal email can be used if official email unavailable.</td>
         <td>Required</td>
       </tr>
       <tr>
@@ -1156,19 +1166,29 @@ footer {
         <td>Required</td>
       </tr>
       <tr>
-        <td>Department & Office Configuration</td>
+        <td>Department &amp; Office Configuration</td>
         <td>Must be configured in Company settings before assigning to employees. Enables filtering and org chart generation.</td>
         <td>Required</td>
       </tr>
       <tr>
-        <td>Work Timing Configuration</td>
-        <td>Must be set up before assigning to employees. Drives attendance tracking and overtime calculations.</td>
-        <td>Required</td>
+        <td>Employee Document Type Configuration</td>
+        <td>Configure mandatory employee document types and expiry reminders before bulk uploads. Supports custom types beyond defaults.</td>
+        <td>Recommended</td>
       </tr>
       <tr>
-        <td>Document Type Configuration</td>
-        <td>Configure mandatory document types and expiry reminders before bulk document uploads. Supports custom types beyond defaults.</td>
+        <td>Company Document Type Configuration</td>
+        <td>Set up company document types under Settings &rarr; Company &rarr; Company Document Types for trade licenses, establishment cards, and other organizational records.</td>
         <td>Recommended</td>
+      </tr>
+      <tr>
+        <td>Asset Categories</td>
+        <td>Define company asset types and categories before creating asset records. Enables consistent tracking and reporting.</td>
+        <td>Recommended</td>
+      </tr>
+      <tr>
+        <td>Knowledge Hub Spaces</td>
+        <td>Plan and create Knowledge Hub spaces with appropriate access levels before inviting team members to collaborate.</td>
+        <td>Optional</td>
       </tr>
       <tr>
         <td>Reporting Structure</td>
