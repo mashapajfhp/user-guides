@@ -1344,6 +1344,50 @@ footer {
   </div>
 
   <div class="subsection">
+    <h3>Configuring the Loan Approval Flow</h3>
+    <p>Before loan requests can be processed, you should review and configure the approval flow that determines who must approve each loan request. Navigate to <strong>Automations → Approval flows</strong> and select <strong>Loan</strong> from the left-hand category list.</p>
+
+    <div class="nav-path">Automations → Approval flows → Loan</div>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/loans/v1/validation/screenshots/42-loan-approval-flow-full.png" alt="Loan approval flow configuration" class="screenshot" loading="lazy">
+      <figcaption>Loan approval flow configuration showing Advanced and Default flow sections</figcaption>
+    </figure>
+
+    <p>The Loan approval flow page is divided into two sections:</p>
+
+    <h4>Advanced Approval Flow (If Conditions)</h4>
+    <p>The advanced approval flow allows you to create conditional routing rules that direct loan requests to different approvers based on defined criteria. For example, you could route loans above a certain amount to a finance director while smaller loans go through a standard approval chain. Click <strong>+ Add advance flow</strong> to create a new conditional rule. Each advanced flow acts as an "if" condition — if the loan request matches the criteria, it follows that specific approval chain instead of the default flow.</p>
+
+    <h4>Default Approval Flow (Else)</h4>
+    <p>The default approval flow is used when no matching advanced flow condition is found. This is the fallback approval chain that applies to all loan requests that do not match any advanced flow criteria. By default, the Loan approval flow includes two steps:</p>
+
+    <ul>
+      <li><strong>Step 1 — Super Admin:</strong> The loan request must first be approved by a user with the Super Admin role. You can click <strong>Add approver</strong> to include additional approvers at this step, or use the dropdown to change the approver role.</li>
+      <li><strong>Step 2 — Line Manager (2 levels):</strong> After Super Admin approval, the request is routed to the employee's Line Manager. The "2 levels" setting means it escalates up to two levels in the management hierarchy if the direct line manager is unavailable or does not act.</li>
+    </ul>
+
+    <p>You can customize this flow by clicking <strong>Add step</strong> to insert additional approval stages, <strong>Add approver</strong> to add parallel approvers within a step, or <strong>Add block</strong> to group approval conditions. After making changes, click <strong>Update approval flows</strong> at the bottom of the page to save your configuration.</p>
+
+    <div class="info-box">
+      <p><strong>Note:</strong> Changes to the approval flow apply to all new loan requests going forward. Existing pending requests continue through the approval chain that was active when they were submitted.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Workflows (Automations)</h3>
+    <p>The Workflows module under <strong>Automations → Workflows</strong> allows you to create automated processes triggered by events across the platform. However, Employee Loans does not currently have dedicated loan-specific workflow triggers or actions available. You cannot create workflows that automatically trigger when a loan request is submitted, approved, rejected, or disbursed.</p>
+
+    <div class="nav-path">Automations → Workflows</div>
+
+    <p>If you need automated actions related to loans (such as sending notifications or updating external systems when a loan status changes), you will need to rely on the built-in approval flow described above or use general-purpose workflow triggers like employee updates combined with manual checks.</p>
+
+    <div class="warning-box">
+      <p><strong>Limitation:</strong> No loan-specific triggers or actions are available in the Workflows module. Loan request automation is limited to the approval flow configuration described above.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
     <h3>Known Setup Limitations</h3>
     <div class="warning-box">
       <p><strong>⚠️ Non-Assigned Loan Policy Restriction</strong></p>
@@ -1364,63 +1408,6 @@ footer {
       </header>
       <div class="section-body">
         <div class="subsection">
-    <h3>Task: Set Up Loan Policies</h3>
-    <p>Create and configure loan policies that define eligibility, amounts, and repayment terms for employees.</p>
-
-    <h4>Subtask: Create New Loan Policy</h4>
-    
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/loans/v1/validation/screenshots/07-exploration-loan-policies.png" alt="Employee Loan Policies configuration" class="screenshot" loading="lazy">
-      <figcaption>Employee Loan Policies configuration screen showing policy creation form</figcaption>
-    </figure>
-
-    <p><strong>Steps:</strong></p>
-    <ul>
-      <li>Navigate to Settings → Payroll → Employee Loan Policies</li>
-      <li>Click "Create New Loan Policy"</li>
-      <li>Enter policy name (mandatory in system's primary language), description, and select currency</li>
-      <li>Define loan amounts: choose fixed amount or salary percentage method</li>
-      <li>Set minimum loan amount (must be >0) and maximum limits</li>
-      <li>Configure repayment terms: static (fixed period) or flexible (monthly deduction amount)</li>
-      <li>Add or exclude specific employees; toggle probation employee exclusion if needed</li>
-      <li>Save and activate policy</li>
-    </ul>
-
-    <h4>Subtask: Modify Existing Policy</h4>
-    
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/loans/v1/validation/screenshots/05-loan-policies-list.png" alt="Loan policy list" class="screenshot" loading="lazy">
-      <figcaption>Loan policy list with edit and deactivate options</figcaption>
-    </figure>
-
-    <p><strong>Steps:</strong></p>
-    <ul>
-      <li>Locate policy in Employee Loan Policies list</li>
-      <li>Click edit icon to modify policy details</li>
-      <li>Update loan amounts, repayment terms, or employee eligibility as needed</li>
-      <li>Save changes</li>
-    </ul>
-
-    <h4>Subtask: Deactivate Loan Policy</h4>
-    
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/loans/v1/validation/screenshots/06-exploration-payroll-settings.png" alt="Payroll settings" class="screenshot" loading="lazy">
-      <figcaption>Policy activation toggle in loan policy settings</figcaption>
-    </figure>
-
-    <p><strong>Steps:</strong></p>
-    <ul>
-      <li>Open policy settings</li>
-      <li>Toggle activation status to "Inactive"</li>
-      <li>Confirm deactivation (only Super Admins can perform this action)</li>
-    </ul>
-
-    <div class="info-box">
-      <p><strong>Note:</strong> Employees without an assigned loan policy cannot create loan requests. Ensure employees are added to appropriate policies before they submit requests.</p>
-    </div>
-  </div>
-
-  <div class="subsection">
     <h3>Task: Process Employee Loan Requests</h3>
     <p>Review, approve, or reject loan requests submitted by employees through the platform.</p>
 
@@ -1693,19 +1680,29 @@ footer {
       </header>
       <div class="section-body">
         <div class="subsection">
-    <h3>Navigation</h3>
-    <div class="nav-path">Automations → Workflows → + Create workflow</div>
-  </div>
+    <h3>Approval Flows</h3>
+    <div class="nav-path">Automations → Approval flows → Loan</div>
+    <p>Employee Loans has a dedicated approval flow that controls how loan requests are reviewed and authorized. The approval flow is configured under <strong>Automations → Approval flows → Loan</strong> and consists of two sections:</p>
 
-  <div class="info-box">
-    <p><strong>Not Available:</strong> Employee Loans does not currently support workflow automation.</p>
+    <ul>
+      <li><strong>Advanced approval flow:</strong> Conditional routing that directs loan requests to specific approvers based on defined criteria (e.g., loan amount thresholds, department). Create rules using <strong>+ Add advance flow</strong>.</li>
+      <li><strong>Default approval flow:</strong> The fallback chain used when no advanced flow conditions match. By default, this includes Step 1 (Super Admin) and Step 2 (Line Manager, 2 levels).</li>
+    </ul>
+
+    <p>See the <a href="#initial-setup">Initial Setup</a> section for detailed configuration instructions and screenshots.</p>
   </div>
 
   <div class="subsection">
-    <h3>Current Limitations</h3>
-    <p>The Employee Loans feature does not integrate with the Workflows module. Loan approval processes follow a fixed approval flow and cannot be customized through workflow triggers or actions.</p>
-    
-    <p>For loan request management, use the built-in approval flow available at Payroll → Employee Loans.</p>
+    <h3>Workflows</h3>
+    <div class="nav-path">Automations → Workflows</div>
+
+    <div class="warning-box">
+      <p><strong>Not Available:</strong> Employee Loans does not currently have dedicated loan-specific triggers or actions in the Workflows module. You cannot create automated workflows that trigger on loan submission, approval, rejection, or disbursement events.</p>
+    </div>
+
+    <p>The Workflows module supports automation for other modules such as HR (employee create/update/delete), Payroll (salary updates, pay adjustments), Time Off (leave requests), and third-party integrations. However, loan-related events are not available as workflow triggers or actions.</p>
+
+    <p>For loan request automation, use the built-in approval flow described above. For advanced automation needs involving loans, consider using general-purpose triggers (e.g., incoming webhooks) combined with external tools.</p>
   </div>
       </div>
     </section>
