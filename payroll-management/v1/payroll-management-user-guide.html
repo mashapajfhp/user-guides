@@ -2207,9 +2207,9 @@ footer {
       <thead><tr><th>Metric</th><th>What It Shows</th></tr></thead>
       <tbody>
         <tr><td><strong>Total net pay</strong></td><td>The sum of all employees' net salary for the month (e.g., AED 2,897,554.16)</td></tr>
-        <tr><td><strong>Processed till date</strong></td><td>Amount already submitted and approved via transactions (shown in green). Click <em>"View paid amount"</em> to see approved transactions.</td></tr>
-        <tr><td><strong>Unpaid amount pending approval</strong></td><td>Transactions submitted but still waiting for approver action (shown in red when non-zero). Click <em>"View unpaid amount"</em> to see pending transactions.</td></tr>
-        <tr><td><strong>Total unpaid</strong></td><td>Remaining amount not yet submitted for payment (shown in red), with employee count (e.g., "124 employees")</td></tr>
+        <tr><td><strong>Processed till date</strong></td><td>Amount already submitted and approved via transactions (shown in green). Click <em>"View paid amount"</em> to navigate directly to the <strong>Transactions → Approved</strong> tab showing all approved transaction records with submission dates, employee counts, net pay, approver details, and status.</td></tr>
+        <tr><td><strong>Unpaid amount pending approval</strong></td><td>Transactions submitted but still waiting for approver action (shown in red when non-zero). Click <em>"View unpaid amount"</em> to navigate to the <strong>Transactions → Pending</strong> tab. If no transactions are pending, you will see "No data to show".</td></tr>
+        <tr><td><strong>Total unpaid</strong></td><td>Remaining amount not yet submitted for payment (shown in red), with employee count (e.g., "124 employees"). When you select/deselect employee checkboxes, this value updates dynamically to show only the selected employees' totals (e.g., "3/124 employees").</td></tr>
       </tbody>
     </table>
 
@@ -2325,25 +2325,37 @@ footer {
     <p>Creates a payment transaction for selected employees. This is how you initiate salary payment — it is <strong>not</strong> the same as closing the payroll month.</p>
 
     <h5>When Disabled</h5>
-    <p>The button appears greyed out when:</p>
+    <p>The button appears greyed out and shows the tooltip <em>"You can not run payroll if any critical information for selected employees is missing"</em> when:</p>
     <ul>
-      <li><strong>No employees are selected</strong> — Use the row checkboxes to select employees to pay</li>
-      <li><strong>No unpaid amount exists</strong> — All selected employees have already been paid for this cycle</li>
+      <li><strong>Critical employee information is missing</strong> — If any selected employee has critical missing data (most commonly <strong>Missing Bank Account Detail</strong>), the button is disabled. You cannot process a bank payment without bank account details. Click <em>"Filter 3 critical employees"</em> (the count varies) in the red banner to identify who is affected, then either fix their data or deselect them.</li>
+      <li><strong>No employees are selected</strong> — Use the row checkboxes to select employees to pay. The summary shows "0/124 employees" when none are selected.</li>
       <li><strong>Negative net pay detected</strong> — One or more selected employees has a negative net pay (total deductions exceed total pay). Use Filters → Unpaid Netpay Total → Negative to identify these employees and resolve the discrepancy before submitting. <em>(Ref: TSSD-1964)</em></li>
       <li><strong>Closed payroll cycle</strong> — Viewing a historical (closed) cycle disables all actions</li>
     </ul>
 
+    <div class="info-box">
+      <p><strong>Submitting for individual employees:</strong> You do not have to submit transactions for all employees at once. Use the row checkboxes to select specific employees or groups — for example, submit first for employees whose data is complete, then submit again later after resolving missing information for the remaining employees. The summary row updates dynamically to reflect only selected employees.</p>
+    </div>
+
     <h5>Steps</h5>
     <ol>
       <li>Select the correct <strong>currency tab</strong> — transactions are submitted per currency</li>
-      <li>Use <strong>checkboxes</strong> to select the employees you want to pay (or use the header checkbox to select all on the current page)</li>
-      <li>Optionally <strong>uncheck specific pay item columns</strong> to exclude them from this transaction</li>
+      <li>Use <strong>checkboxes</strong> to select the employees you want to pay (or use the header checkbox to select all visible employees)</li>
+      <li>If the button is disabled, deselect employees with critical missing information (red banner shows who they are)</li>
       <li>Click <strong>"Submit Transaction"</strong></li>
-      <li>Review the confirmation dialog: total amount, trade license grouping, and payment method</li>
-      <li>Click <strong>"Confirm"</strong> to submit</li>
+      <li>The <strong>"Review and Submit Transaction"</strong> dialog appears showing:
+        <ul>
+          <li><strong>Employee count</strong> — how many employees are included (e.g. "3 / 124")</li>
+          <li><strong>Total Net Pay</strong> — the total amount to be submitted</li>
+          <li><strong>Approvers</strong> — avatars of the configured approvers who will review</li>
+          <li><strong>Payment breakdown table</strong> — grouped by Trade License and Payment Method (e.g. Bank or Cash), showing the number of employees and net payout per group</li>
+          <li><strong>Remarks field</strong> — optional text to include a note for approvers</li>
+        </ul>
+      </li>
+      <li>Review the breakdown, optionally add remarks, then click <strong>"Submit Transaction"</strong></li>
     </ol>
 
-    <p><strong>Expected Outcome:</strong> The transaction moves to pending approval status on the Transactions page. The "Unpaid amount pending approval" in the summary row updates to reflect the submitted amount. Configured approvers receive a notification to review.</p>
+    <p><strong>Expected Outcome:</strong> The transaction is submitted for approval. The "Processed till date" amount in the summary row increases by the submitted amount. Configured approvers receive a notification to review. On the Transactions page, the submission appears under the <strong>Pending</strong> tab until approved.</p>
 
     <div class="info-box">
       <p><strong>Submit Transaction vs Close Payroll Month:</strong> Submitting a transaction sends salary payments for processing. Closing the payroll month finalizes the entire cycle and carries unpaid amounts to next month as arrears. You can submit multiple transactions before closing the month — for example, paying different employee groups or trade licenses separately.</p>
