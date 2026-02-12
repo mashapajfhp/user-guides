@@ -1748,18 +1748,74 @@ footer {
       </header>
       <div class="section-body">
         <div class="subsection">
-    <h3>Loan Policy Requirements</h3>
-    <div class="info-box">
-      <p><strong>Policy Assignment Required:</strong> Employees cannot submit loan requests without an assigned loan policy. Ensure all eligible employees are included in at least one active policy before enabling loan requests.</p>
+    <h3>Loan Lifecycle Rules</h3>
+    <p>A loan request progresses through a defined lifecycle. Each status transition restricts the actions available to both employees and administrators.</p>
+
+    <table class="limitations-table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Transition</th>
+          <th>Modification Allowed</th>
+          <th>Deletion Allowed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Pending</strong></td>
+          <td>Submitted &rarr; awaiting approval chain</td>
+          <td>Yes &mdash; employees and admins can edit</td>
+          <td>Yes &mdash; employees and admins can delete</td>
+        </tr>
+        <tr>
+          <td><strong>Approved</strong></td>
+          <td>All approval steps completed</td>
+          <td>No</td>
+          <td>No &mdash; requires support intervention</td>
+        </tr>
+        <tr>
+          <td><strong>At Payroll</strong></td>
+          <td>Admin clicked "Add to payroll table"</td>
+          <td>No</td>
+          <td>No &mdash; but admin can "Remove from payroll table" to revert to Approved</td>
+        </tr>
+        <tr>
+          <td><strong>Rejected</strong></td>
+          <td>Rejected by approver</td>
+          <td>No</td>
+          <td>Yes &mdash; admin can delete via three-dot menu</td>
+        </tr>
+        <tr>
+          <td><strong>Disbursed</strong></td>
+          <td>Funds released via payroll</td>
+          <td>No</td>
+          <td>No &mdash; requires support intervention</td>
+        </tr>
+        <tr>
+          <td><strong>Completed</strong></td>
+          <td>All installments fully repaid</td>
+          <td>No</td>
+          <td>No &mdash; retained for audit</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="warning-box">
+      <p><strong>Important:</strong> Once a loan moves past Pending status, the window for self-service changes closes. Only rejected loans can be deleted through the UI. All other post-approval changes require Bayzat support intervention.</p>
     </div>
   </div>
 
   <div class="subsection">
-    <h3>Loan Disbursement Rules</h3>
+    <h3>Loan Policy Requirements</h3>
+    <div class="info-box">
+      <p><strong>Policy Assignment Required:</strong> Employees cannot submit loan requests without an assigned loan policy. Ensure all eligible employees are included in at least one active policy before enabling loan requests.</p>
+    </div>
+
     <ul>
       <li><strong>Automatic Payroll Integration:</strong> Approved loans automatically create disbursement additions and recurring repayment deductions in payroll</li>
-      <li><strong>Non-Editable Transactions:</strong> Loan disbursement and repayment entries cannot be modified or deleted once created</li>
-      <li><strong>Rejection Window:</strong> Loans can only be rejected while in pending status; approved loans require backend intervention to modify</li>
+      <li><strong>Non-Editable Transactions:</strong> Loan disbursement and repayment entries cannot be modified or deleted once created through the UI</li>
+      <li><strong>Rejection Window:</strong> Loans can only be rejected while in Pending status; approved loans require backend intervention to reverse</li>
+      <li><strong>Employee Self-Service:</strong> Employees can edit or delete their own loan requests only while in Pending status via the My Loans page</li>
     </ul>
   </div>
 
@@ -1810,6 +1866,11 @@ footer {
           <td>No UI mechanism for bulk deleting loan requests; requires backend SQL intervention</td>
           <td>Medium</td>
         </tr>
+        <tr>
+          <td><strong>Limited Reporting</strong></td>
+          <td>Loan status mapping in Looker reports lacks flexible configuration; custom repayment timeline columns cannot be added through the UI</td>
+          <td>Low</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -1826,13 +1887,6 @@ footer {
       <li><strong>Historical Data Retention:</strong> Loan disbursement and repayment records are immutable once processed through payroll</li>
       <li><strong>Deletion Workflow:</strong> To delete loan-associated deductions, users must manually open closed payroll months and sequentially delete transactions before removing loan records</li>
     </ul>
-  </div>
-
-  <div class="subsection">
-    <h3>Reporting Limitations</h3>
-    <div class="info-box">
-      <p><strong>Looker Report Configuration:</strong> Loan status mapping in Looker reports lacks flexible configuration. Custom columns for repayment timeline details cannot be easily added through the UI.</p>
-    </div>
   </div>
 
   <div class="subsection">
@@ -1951,25 +2005,11 @@ footer {
 
   <div class="subsection">
     <h3>Data Integrity Scenarios</h3>
-    
-    <div class="warning-box">
-      <p><strong>⚠️ Leave Request Deletion:</strong> If a leave request linked to payroll deductions is deleted after processing, the deduction details may not be retained in payroll records. Verify all leave-related deductions before deleting requests.</p>
-    </div>
 
     <ul>
-      <li><strong>Deleted Employees in Payroll Table:</strong> Platform lacks automatic synchronization; deleted employees may remain in payroll table requiring manual cleanup</li>
-      <li><strong>Manual Deduction Conflicts:</strong> Manual payroll adjustments cannot override automatic loan repayment deductions; coordinate adjustments carefully</li>
-      <li><strong>Salary Arrears with Loans:</strong> Salary arrears cannot be deleted even for inactive employees; may create reconciliation challenges with active loans</li>
-    </ul>
-  </div>
-
-  <div class="subsection">
-    <h3>Approval Flow Edge Cases</h3>
-    
-    <ul>
-      <li><strong>Custom Approval Roles:</strong> Platform does not support multiple custom roles for sequential loan approval workflows</li>
-      <li><strong>Approval Hierarchy Limitations:</strong> Loan approval requires Super Admin role; cannot delegate to department managers or custom roles</li>
-      <li><strong>Notification Management:</strong> Bulk loan deletions trigger automatic employee notifications; no option to suppress notifications</li>
+      <li><strong>Manual Deduction Conflicts:</strong> Manual payroll adjustments cannot override automatic loan repayment deductions; coordinate any manual payroll changes carefully around existing loan deductions</li>
+      <li><strong>Closed Payroll Cycles:</strong> Loan records in closed payroll cycles are immutable. To delete loan-associated deductions, you must reopen the closed payroll month and sequentially delete transactions before removing the loan record</li>
+      <li><strong>Employee Termination Settlement:</strong> If an employee leaves the organization before the loan is settled, the remaining balance is automatically deducted from their end-of-service settlement</li>
     </ul>
   </div>
 
@@ -2047,6 +2087,26 @@ footer {
       <summary>Can I change loan status manually if an employee is not added to payroll?</summary>
       <p>No. The system does not support manual status transitions for disbursed loans. Loans remain in disbursed status even after the due date if the employee is not in payroll.</p>
     </details>
+
+    <details class="faq-item">
+      <summary>Can employees edit or delete their own loan requests?</summary>
+      <p>Yes, but only while the request is still in <strong>Pending</strong> status. Employees can click the three-dot menu on a pending loan in <strong>My Loans</strong> to access <strong>Edit</strong> and <strong>Delete</strong> options. Once the loan is approved, these options are no longer available.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Can administrators submit loan requests on behalf of employees?</summary>
+      <p>Yes. Navigate to <strong>Payroll &rarr; Loans &rarr; Employee loans</strong> and click <strong>Submit a new loan request</strong>. The admin form includes an employee selection step before the standard loan request form. The submitted request follows the same approval flow as employee-submitted requests.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Why don't I see the "At Payroll" tab in My Loans?</summary>
+      <p>The "At Payroll" tab is only visible to administrators on the <strong>Employee Loans</strong> page. The employee <strong>My Loans</strong> view has five tabs: Pending, Approved, Rejected, Disbursed, and Completed. The "At Payroll" stage is an internal admin step between approval and disbursement.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>What does "Remove Approve" do on a pending loan request?</summary>
+      <p>The <strong>Remove Approve</strong> option in the three-dot menu on a pending loan revokes a previous approval step. This is useful if a loan received partial approvals (e.g., Step 1 approved but Step 2 pending) and you need to reset the approval progress.</p>
+    </details>
   </div></div>
 
   <div class="subsection">
@@ -2079,6 +2139,10 @@ footer {
         <td>The workflow process that routes loan requests to designated approvers for review and authorization.</td>
       </tr>
       <tr>
+        <td><strong>At Payroll</strong></td>
+        <td>An intermediate loan status indicating the loan has been added to the payroll table by an administrator but has not yet been disbursed. This status is only visible to administrators, not employees.</td>
+      </tr>
+      <tr>
         <td><strong>Disbursed Loan</strong></td>
         <td>A loan that has been approved and the funds have been released to the employee, triggering automatic repayment deductions.</td>
       </tr>
@@ -2087,12 +2151,20 @@ footer {
         <td>A payroll addition automatically created when a loan is approved, representing the loan amount paid to the employee.</td>
       </tr>
       <tr>
+        <td><strong>Loan Guarantor</strong></td>
+        <td>A person named in the loan request form who guarantees the loan on behalf of the employee. This is a text field entered during loan submission.</td>
+      </tr>
+      <tr>
         <td><strong>Loan Policy</strong></td>
         <td>A configuration template that defines loan eligibility criteria, amount limits, repayment terms, and employee assignment rules.</td>
       </tr>
       <tr>
         <td><strong>Loan Repayment Deduction</strong></td>
         <td>A recurring payroll deduction automatically created to recover loan amounts from employee salaries over the defined repayment period.</td>
+      </tr>
+      <tr>
+        <td><strong>Outstanding Balance</strong></td>
+        <td>The remaining loan amount yet to be repaid, displayed in the Outstanding column on the Disbursed tab of the Employee Loans page.</td>
       </tr>
       <tr>
         <td><strong>Payroll Cycle</strong></td>
@@ -2113,6 +2185,10 @@ footer {
       <tr>
         <td><strong>Super Admin</strong></td>
         <td>The highest-level user role with full system access, including the ability to approve Employee Loans, manage policies, and configure payroll settings.</td>
+      </tr>
+      <tr>
+        <td><strong>Tenure</strong></td>
+        <td>The loan repayment period measured in months, entered by the employee when submitting a loan request. Determines how many monthly installments the repayment is spread across.</td>
       </tr>
     </tbody>
   </table>
