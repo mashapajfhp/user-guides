@@ -1449,7 +1449,7 @@ footer {
   </div>
 
   <div class="subsection">
-    <h3>5. Payroll Templates</h3>
+    <h3 id="payroll-templates">5. Payroll Templates</h3>
     <p>Create, view, and customize file templates for bank submissions and government reporting. Templates define how payroll data is formatted when exported.</p>
     <div class="nav-path">Settings → Payroll → Payroll Templates (expand)</div>
 
@@ -1586,7 +1586,7 @@ footer {
   </div>
 
   <div class="subsection">
-    <h3>8. Leave Salary Policy</h3>
+    <h3 id="leave-salary-policy">8. Leave Salary Policy</h3>
     <p>Define the criteria for employees to apply for leave salary (payment in lieu of leave). Each policy is linked to specific leave types and uses a configurable formula.</p>
     <div class="nav-path">Settings → Payroll → Leave salary policy (expand)</div>
 
@@ -1858,8 +1858,8 @@ footer {
       <li>The currency setting is saved</li>
     </ol>
 
-    <div class="warning-box">
-      <p><strong>Currency Change Restrictions:</strong> Cannot update currency if any pay items have been paid, any unpaid items exist (net-pay must be 0), unpaid variable pay exists, unpaid adjustments exist, or unpaid recurring deductions exist for active/future months.</p>
+    <div class="info-box">
+      <p><strong>Currency Change Restrictions:</strong> Changing an employee's base currency has strict prerequisites — all outstanding pay items, variable pay, adjustments, and recurring deductions must be cleared first. See the full list of conditions in <a href="#business-rules-limitations">Business Rules &amp; Limitations</a>.</p>
     </div>
   </div>
 
@@ -1981,6 +1981,10 @@ footer {
       <li>Test a payroll cycle with a small group before full-company processing</li>
     </ul>
   </div>
+
+    <div class="info-box">
+      <p><strong>Next step: Configure individual employees.</strong> Company-wide settings are now in place. Before running your first payroll, each employee needs a salary configuration, payment method, and bank account. See <a href="#employee-payroll-config">Employee Payroll Configuration</a> for per-employee setup — this is also where you manage ongoing salary revisions and variable pay throughout the year.</p>
+    </div>
       </div>
     </section>
 
@@ -2270,12 +2274,7 @@ footer {
     <p>Use the <strong>"Search by employee name, ID"</strong> field to find a specific employee in real-time.</p>
 
     <h5>Download</h5>
-    <p>Exports the payroll table as an Excel file. Includes all visible columns and the current cycle's data. Use this for:</p>
-    <ul>
-      <li>Record-keeping and audit documentation</li>
-      <li>Sharing payroll summaries with finance teams</li>
-      <li>Verifying calculations against external systems</li>
-    </ul>
+    <p>Exports the payroll table data. For detailed download steps including file templates and multi-currency handling, see the <strong>Download Payroll Data</strong> task below.</p>
 
     <h5>More Options Menu (&#x22EE;)</h5>
     <p>Located next to the Download button in the top-right corner. Click the three-dot icon to open the dropdown. Available options:</p>
@@ -2410,7 +2409,7 @@ footer {
   </div>
 
   <div class="subsection">
-    <h3>Task: Manage Payroll Adjustments</h3>
+    <h3 id="manage-adjustments">Task: Manage Payroll Adjustments</h3>
     <p>Adjustments are one-time or recurring salary additions and deductions that modify an employee's net pay for a given payroll cycle. They are managed from two places: the <strong>Adjustments page</strong> (bulk view across all employees) and the <strong>employee's Active Payroll Cycle</strong> (individual view).</p>
 
     <h4>Subtask: View Adjustments Page</h4>
@@ -2982,7 +2981,7 @@ footer {
     </div>
 
     <div class="warning-box">
-      <p><strong>Currency is locked after creation:</strong> When you edit an existing salary configuration, the Base currency dropdown is disabled (greyed out). To change an employee's currency, you must clear all outstanding items first — paid or unpaid pay items, unpaid variable pay, unpaid adjustments, and approved but unpaid expense requests — then create a new salary configuration with the desired currency.</p>
+      <p><strong>Currency is locked after creation:</strong> When you edit an existing salary configuration, the Base currency dropdown is disabled (greyed out). To change an employee's currency, you must clear all outstanding items first. See the full list of prerequisites in <a href="#business-rules-limitations">Business Rules &amp; Limitations</a>.</p>
     </div>
 
     <p>The screenshot below shows the <strong>Configure Fixed Pay</strong> dialog opened via the <strong>"+ Add Salary Configuration"</strong> button. The <strong>Base currency</strong> dropdown is active and expanded, showing the full list of available currencies (AED, USD, AFN, ALL, etc.). This is the only point where the currency can be freely selected — once saved, editing this configuration will show the Base currency field as disabled. The <strong>"Salary comes into effect from"</strong> dropdown (visible below the currency field) lets you choose the payroll cycle when this configuration takes effect.</p>
@@ -3017,7 +3016,7 @@ footer {
     </div>
 
     <div class="warning-box">
-      <p><strong>SIF files are currency-specific:</strong> SIF files for bank submission (WPS) are only applicable for AED transactions. Non-AED currencies use different payment methods (e.g., Transfermate for international payments). See the <a href="#payment-processing">Payment Processing</a> section for details.</p>
+      <p><strong>SIF files are currency-specific:</strong> SIF files for bank submission (WPS) are only applicable for AED transactions. Non-AED currencies use different payment methods (e.g., Transfermate for international payments). See the <a href="#payroll-processing">Payroll Processing</a> section for details.</p>
     </div>
   </div>
 
@@ -4298,14 +4297,13 @@ footer {
     <h4>UI Interaction Quirks</h4>
     <ul>
       <li><strong>Horizontal scrolling on Payroll Table:</strong> With all salary components enabled, the payroll table displays up to 27 columns (3,951px wide), requiring significant horizontal scrolling on standard screens (1,440px viewport). The <strong>Name</strong> column is frozen (sticky) so you can always identify the employee, but the checkbox and ID columns scroll out of view. <strong>Tip:</strong> Use the pay component checkboxes at the top to deselect unneeded components and reduce horizontal scrolling. Click <strong>Unselect all</strong> then re-enable only the columns you need. <strong>Caution:</strong> Remember that unchecking columns also excludes those components from the Total unpaid amount — re-check all components before submitting if you intend to pay the full salary</li>
-      <li><strong>Pay component checkboxes affect payment totals, not just display:</strong> The "Selected columns on the payroll table" checkboxes are <strong>not just a display setting</strong>. Unchecking a component (e.g. Commission) removes its column from the table <em>and</em> subtracts its total from the "Total unpaid" figure. Clicking "Unselect all" drops Total unpaid to AED 0.00. Always verify that all intended pay components are checked before clicking Submit Transaction</li>
-      <li><strong>Social Security Contribution checkbox is locked:</strong> The Social Security Contribution checkbox is <strong>disabled and permanently checked</strong> (greyed out). It cannot be unchecked because it is a legally mandatory deduction. This is the only pay component that cannot be excluded from a transaction</li>
+      <li><strong>Pay component checkboxes affect payment totals:</strong> Unchecking columns excludes those pay components from the Total unpaid figure and from transaction submission — see the <a href="#core-tasks">Selected Columns on the Payroll Table</a> section for full details. Social Security Contribution is locked (always checked, cannot be excluded)</li>
       <li><strong>Sorting restriction:</strong> Cannot sort by the Unpaid Net Pay column. Other columns support sorting via column header buttons</li>
       <li><strong>Payroll cycle not shared across sub-pages:</strong> Selecting a specific payroll cycle (e.g. November 2025) on the Payroll Table does not carry over when you navigate to Transactions, Adjustments, or other sub-pages. Each sub-page defaults to the current open cycle. To view transactions or adjustments for a specific closed month, you must re-select the cycle on that page separately</li>
       <li><strong>Transaction detail rows can exceed employee count:</strong> On the Transaction Details page, the summary header may show "2 Employees" while the breakdown table displays 4 rows. This occurs because the table groups payments by trade license <em>and</em> payment method — a single employee can appear in multiple rows if they have split payments or multiple pay components routed differently. The summary count reflects unique employees, not table rows</li>
       <li><strong>Cash transactions have no in-line Transaction Report:</strong> The <strong>eye icon</strong> (Transaction Report dialog) is only available for bank-based transactions. Cash transactions show a text prompt: "Please download the Excel file to view details of payments." To see per-employee pay breakdowns for cash payments, you must download the Excel file — there is no on-screen viewer</li>
       <li><strong>Status column shows "-" on transaction detail rows:</strong> In the Transaction Details breakdown table, the <strong>Status</strong> column consistently displays a dash ("-") for all rows. The actual approval status is shown only at the transaction header level (e.g. the green "Approved" badge). This is expected behaviour — individual trade license rows do not have separate approval statuses</li>
-      <li><strong>Transaction Summary cards change layout between open and closed months:</strong> For an <strong>open</strong> month, the Summary section shows three cards: <em>Total Amount</em>, <em>Approved</em>, and <em>Rejected</em>. For a <strong>closed</strong> month, it shows two cards: <em>Total Amount</em> and <em>Number of employees</em> (with trade license breakdown). The dashes ("-") shown below card amounts in both views represent pending/processed subtotals that may not yet be populated</li>
+      <li><strong>Transaction Summary cards change between open and closed months:</strong> Open months show 3 cards (Total, Approved, Rejected); closed months show 2 cards (Total Amount, Number of employees). The dashes ("-") below card amounts are pending/processed subtotals that may not yet be populated</li>
     </ul>
   </div>
 
