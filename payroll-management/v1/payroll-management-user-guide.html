@@ -2489,12 +2489,23 @@ footer {
     <p>Navigate to <strong>Payroll → Transactions</strong>. Select the payroll cycle from the dropdown — for a closed month the badge shows <strong>"Closed"</strong> (grey), while an open month shows <strong>"Open"</strong> (green). The page has three main areas:</p>
 
     <h5>Summary Cards</h5>
-    <p>Two cards at the top show aggregate figures for the selected payroll cycle:</p>
+    <p>The Summary cards at the top change depending on the cycle status:</p>
     <ul>
-      <li><strong>Total Amount</strong> (purple money bag icon) — Combined value of all submitted transactions for the cycle (e.g. AED 238,083.33)</li>
-      <li><strong>Number of employees</strong> (purple group icon) — Total employees paid, broken down by trade license (e.g. "Trade License Sample – 3 Employees", "Missing Assignment – 2 Employees")</li>
+      <li><strong>Open month (3 cards):</strong>
+        <ul>
+          <li><strong>Total Amount</strong> (purple money bag icon) — Combined value of all submitted transactions</li>
+          <li><strong>Approved</strong> (green checkmark icon) — Total value of approved transactions</li>
+          <li><strong>Rejected</strong> (red X icon) — Total value of rejected transactions</li>
+        </ul>
+      </li>
+      <li><strong>Closed month (2 cards):</strong>
+        <ul>
+          <li><strong>Total Amount</strong> (purple money bag icon) — Final total for the cycle (e.g. AED 238,083.33)</li>
+          <li><strong>Number of employees</strong> (purple group icon) — Total employees paid, broken down by trade license (e.g. "Trade License Sample – 3 Employees", "Missing Assignment – 2 Employees")</li>
+        </ul>
+      </li>
     </ul>
-    <p>For a closed month, the top-right corner also shows a <strong>"Download Payslips"</strong> button and a <strong>"Sync data to QuickBooks Online"</strong> button. These options are only available after the payroll cycle has been closed.</p>
+    <p>The top-right action buttons also change: open months show <strong>"Close payroll cycle"</strong>, while closed months show <strong>"Download Payslips"</strong> and <strong>"Sync data to QuickBooks Online"</strong>.</p>
 
     <h5>Status Tabs</h5>
     <p>Three tabs filter transactions by status, each showing a count badge:</p>
@@ -2894,6 +2905,32 @@ footer {
     </figure>
 
     <p><strong>Expected Outcome:</strong> Downloaded files are ready for bank submission, audit documentation, or integration with external accounting systems.</p>
+
+    <h4>Subtask: Sync Payroll to Accounting System</h4>
+
+    <p>After a payroll cycle is closed, you can push transaction data to your connected accounting software directly from the Transactions page.</p>
+
+    <ol>
+      <li>Navigate to <strong>Payroll → Transactions</strong></li>
+      <li>Select a <strong>closed</strong> payroll cycle from the dropdown (must show the "Closed" badge)</li>
+      <li>Click the <strong>"Sync data to QuickBooks Online"</strong> button in the top-right corner (next to "Download Payslips")</li>
+    </ol>
+
+    <p>This button only appears for closed months. For open months, the same position shows the <strong>"Close payroll cycle"</strong> button instead. The sync pushes approved transaction data — including salary breakdowns, trade license groupings, and payment amounts — to the QuickBooks chart of accounts based on the mappings configured in <strong>Settings → Payroll → Accounting Integrations</strong>.</p>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/payroll-management/v1/validation/screenshots/val-summary-card-expanded.png" alt="Transactions page for closed month showing Download Payslips and Sync data to QuickBooks Online buttons in the top-right" class="screenshot" loading="lazy">
+    </figure>
+
+    <div class="warning-box">
+      <p><strong>Two requirements must be met before syncing:</strong></p>
+      <ul>
+        <li><strong>Closed payroll cycle:</strong> The "Sync data to QuickBooks Online" button only appears after a payroll cycle has been closed. You will not see this option on an open month — close the cycle first from the Payroll Table or Transactions page.</li>
+        <li><strong>Connected accounting system:</strong> QuickBooks Online must already be connected and data mappings configured via <strong>Settings → Payroll → Accounting Integrations</strong>. Map your payroll categories (basic salary, allowances, deductions) to the corresponding QuickBooks chart of accounts. Without this connection, the button will not function.</li>
+      </ul>
+    </div>
+
+    <p><strong>Expected Outcome:</strong> Payroll journal entries are created in QuickBooks Online for the selected closed month. This eliminates manual data entry between Bayzat and your accounting system.</p>
   </div>
 
   <div class="subsection">
@@ -4178,6 +4215,11 @@ footer {
           <td>Future hire date or employee not active</td>
           <td>Verify hire date is current or past. Check employee status is active</td>
         </tr>
+        <tr>
+          <td>Payroll table requires excessive horizontal scrolling</td>
+          <td>All salary component columns enabled (up to 27 columns)</td>
+          <td>Click <strong>Unselect all</strong> in the column visibility section, then re-enable only the columns you need. The employee Name column stays frozen (sticky) when scrolling horizontally</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -4228,7 +4270,13 @@ footer {
 
     <h4>UI Interaction Quirks</h4>
     <ul>
+      <li><strong>Horizontal scrolling on Payroll Table:</strong> With all salary components enabled, the payroll table displays up to 27 columns (3,951px wide), requiring significant horizontal scrolling on standard screens (1,440px viewport). The <strong>Name</strong> column is frozen (sticky) so you can always identify the employee, but the checkbox and ID columns scroll out of view. <strong>Tip:</strong> Use the column visibility checkboxes at the top to deselect unneeded salary components and reduce horizontal scrolling. Click <strong>Unselect all</strong> then re-enable only the columns you need</li>
       <li><strong>Sorting restriction:</strong> Cannot sort by the Unpaid Net Pay column. Other columns support sorting via column header buttons</li>
+      <li><strong>Payroll cycle not shared across sub-pages:</strong> Selecting a specific payroll cycle (e.g. November 2025) on the Payroll Table does not carry over when you navigate to Transactions, Adjustments, or other sub-pages. Each sub-page defaults to the current open cycle. To view transactions or adjustments for a specific closed month, you must re-select the cycle on that page separately</li>
+      <li><strong>Transaction detail rows can exceed employee count:</strong> On the Transaction Details page, the summary header may show "2 Employees" while the breakdown table displays 4 rows. This occurs because the table groups payments by trade license <em>and</em> payment method — a single employee can appear in multiple rows if they have split payments or multiple pay components routed differently. The summary count reflects unique employees, not table rows</li>
+      <li><strong>Cash transactions have no in-line Transaction Report:</strong> The <strong>eye icon</strong> (Transaction Report dialog) is only available for bank-based transactions. Cash transactions show a text prompt: "Please download the Excel file to view details of payments." To see per-employee pay breakdowns for cash payments, you must download the Excel file — there is no on-screen viewer</li>
+      <li><strong>Status column shows "-" on transaction detail rows:</strong> In the Transaction Details breakdown table, the <strong>Status</strong> column consistently displays a dash ("-") for all rows. The actual approval status is shown only at the transaction header level (e.g. the green "Approved" badge). This is expected behaviour — individual trade license rows do not have separate approval statuses</li>
+      <li><strong>Transaction Summary cards change layout between open and closed months:</strong> For an <strong>open</strong> month, the Summary section shows three cards: <em>Total Amount</em>, <em>Approved</em>, and <em>Rejected</em>. For a <strong>closed</strong> month, it shows two cards: <em>Total Amount</em> and <em>Number of employees</em> (with trade license breakdown). The dashes ("-") shown below card amounts in both views represent pending/processed subtotals that may not yet be populated</li>
     </ul>
   </div>
 
