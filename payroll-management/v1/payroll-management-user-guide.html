@@ -2294,9 +2294,35 @@ footer {
       <figcaption>Payroll table columns showing salary breakdown and pay items</figcaption>
     </figure>
 
-    <h5>Column Visibility</h5>
-    <p>Checkboxes for every salary component, each displaying its aggregate total across all employees. Toggle to show or hide columns. Click <strong>"Unselect all"</strong> to clear all, then select only the ones you need.</p>
-    <p>Common columns include:</p>
+    <h5>Selected Columns on the Payroll Table (Pay Component Selection)</h5>
+
+    <p>The <strong>"Selected columns on the payroll table"</strong> checkboxes serve a <strong>dual purpose</strong>: they control both which columns are visible in the table <em>and</em> which pay components are included when you submit a transaction. Each checkbox displays the component name and its aggregate total across all employees (e.g., "Basic Salary (AED 1,019,092.00)").</p>
+
+    <div class="warning-box">
+      <p><strong>These checkboxes are not just a display setting — they directly affect payment amounts.</strong></p>
+      <ul>
+        <li><strong>Checking</strong> a component includes it in the <strong>Total unpaid</strong> summary and in any transaction you submit</li>
+        <li><strong>Unchecking</strong> a component removes it from the <strong>Total unpaid</strong> calculation and excludes it from the next transaction submission. The component's amounts drop to 0.00 for every employee in the table</li>
+        <li>Clicking <strong>"Unselect all"</strong> sets Total unpaid to AED 0.00 — no components are queued for payment</li>
+        <li>The <strong>"Total net pay"</strong> figure (top-left) always shows the full calculated pay regardless of checkbox state — only <strong>"Total unpaid"</strong> changes</li>
+      </ul>
+    </div>
+
+    <p><strong>Use case:</strong> An admin can pay salaries in stages — for example, submit Basic Salary and Allowances first, then submit Commissions and Bonuses in a separate transaction later in the month. Each submission only includes the checked components.</p>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/payroll-management/v1/validation/screenshots/val-column-checkboxes-all-selected.png" alt="Selected columns on the payroll table with all components checked, showing aggregate totals per component and Total unpaid AED 3,934,705.78" class="screenshot" loading="lazy">
+      <figcaption>All pay components selected — Total unpaid reflects the full amount across all employees</figcaption>
+    </figure>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/payroll-management/v1/validation/screenshots/val-column-unselect-all.png" alt="All columns unselected — Total unpaid shows AED 0.00 and all employee rows show 0.00" class="screenshot" loading="lazy">
+      <figcaption>After clicking "Unselect all" — Total unpaid drops to AED 0.00; the table shows only summary columns (Total Net Pay, Processed Net Pay, Unpaid Pending Approval, Unpaid Net Pay, Paid Via)</figcaption>
+    </figure>
+
+    <p><strong>Mandatory components:</strong> <strong>Social Security Contribution</strong> is a legally mandated deduction — its checkbox is <strong>disabled and always checked</strong>. You cannot exclude it from any transaction. It appears greyed out in the checkbox list to indicate this locked state.</p>
+
+    <p>Common pay components include:</p>
     <ul>
       <li><strong>Basic Salary</strong> — Fixed monthly base salary</li>
       <li><strong>Allowances</strong> — Housing, transport, and other configured allowances</li>
@@ -2304,9 +2330,9 @@ footer {
       <li><strong>COLA</strong> — Cost of Living Adjustment</li>
       <li><strong>Commission</strong> — Sales or performance commissions</li>
       <li><strong>Work Expenses</strong> — Approved expense reimbursements</li>
-      <li><strong>Net Additions</strong> — Sum of all addition items (always visible, cannot be unchecked)</li>
+      <li><strong>Net Additions</strong> — Sum of all addition items</li>
       <li><strong>Net Deductions</strong> — Sum of all deduction items</li>
-      <li><strong>Social Security Contribution</strong> — GOSI/SSC deductions (shows as negative value)</li>
+      <li><strong>Social Security Contribution</strong> — GOSI/SSC deductions (shows as negative value; <strong>always locked on</strong>)</li>
       <li><strong>Arrears from Previous Month</strong> — Unpaid amounts carried forward from closed months</li>
       <li><strong>Unpaid Net Pay</strong> — Amount remaining to be paid for this employee</li>
     </ul>
@@ -2344,13 +2370,14 @@ footer {
     </figure>
 
     <div class="info-box">
-      <p><strong>Submitting for individual employees:</strong> You do not have to submit transactions for all employees at once. Use the row checkboxes to select specific employees or groups — for example, submit first for employees whose data is complete, then submit again later after resolving missing information for the remaining employees. The summary row updates dynamically to reflect only selected employees.</p>
+      <p><strong>Submitting partial payments:</strong> You do not have to submit all pay components for all employees at once. Use the <strong>pay component checkboxes</strong> ("Selected columns on the payroll table") to choose which salary components to include, and the <strong>row checkboxes</strong> to select specific employees. For example, submit Basic Salary and Allowances for all employees first, then submit Commissions and Bonuses in a separate transaction later. The Total unpaid and summary row update dynamically to reflect your selections.</p>
     </div>
 
     <h5>Steps</h5>
     <ol>
       <li>Select the correct <strong>currency tab</strong> — transactions are submitted per currency</li>
-      <li>Use <strong>checkboxes</strong> to select the employees you want to pay (or use the header checkbox to select all visible employees)</li>
+      <li>Verify the <strong>pay component checkboxes</strong> are set correctly — only checked components will be included in this transaction (check all for a full salary run)</li>
+      <li>Use <strong>row checkboxes</strong> to select the employees you want to pay (or use the header checkbox to select all visible employees)</li>
       <li>If the button is disabled, deselect employees with critical missing information (red banner shows who they are)</li>
       <li>Click <strong>"Submit Transaction"</strong></li>
       <li>The <strong>"Review and Submit Transaction"</strong> dialog appears showing:
@@ -4098,7 +4125,7 @@ footer {
         </tr>
         <tr>
           <td>Column customization (GS-14)</td>
-          <td>Column visibility checkboxes available to show/hide columns. Advanced reordering or saving custom views is not supported</td>
+          <td>Column checkboxes control both visibility and payment inclusion. Advanced reordering, saving custom column presets, or persisting selections across sessions is not supported — selections reset on page reload</td>
           <td>Partially Resolved</td>
         </tr>
         <tr>
@@ -4218,7 +4245,7 @@ footer {
         <tr>
           <td>Payroll table requires excessive horizontal scrolling</td>
           <td>All salary component columns enabled (up to 27 columns)</td>
-          <td>Click <strong>Unselect all</strong> in the column visibility section, then re-enable only the columns you need. The employee Name column stays frozen (sticky) when scrolling horizontally</td>
+          <td>Click <strong>Unselect all</strong> in the column selection section, then re-enable only the columns you need. <strong>Note:</strong> unchecking columns also excludes those pay components from the Total unpaid amount, so re-check all components before submitting a transaction if you intend to pay the full salary. The employee Name column stays frozen (sticky) when scrolling horizontally</td>
         </tr>
       </tbody>
     </table>
@@ -4270,7 +4297,9 @@ footer {
 
     <h4>UI Interaction Quirks</h4>
     <ul>
-      <li><strong>Horizontal scrolling on Payroll Table:</strong> With all salary components enabled, the payroll table displays up to 27 columns (3,951px wide), requiring significant horizontal scrolling on standard screens (1,440px viewport). The <strong>Name</strong> column is frozen (sticky) so you can always identify the employee, but the checkbox and ID columns scroll out of view. <strong>Tip:</strong> Use the column visibility checkboxes at the top to deselect unneeded salary components and reduce horizontal scrolling. Click <strong>Unselect all</strong> then re-enable only the columns you need</li>
+      <li><strong>Horizontal scrolling on Payroll Table:</strong> With all salary components enabled, the payroll table displays up to 27 columns (3,951px wide), requiring significant horizontal scrolling on standard screens (1,440px viewport). The <strong>Name</strong> column is frozen (sticky) so you can always identify the employee, but the checkbox and ID columns scroll out of view. <strong>Tip:</strong> Use the pay component checkboxes at the top to deselect unneeded components and reduce horizontal scrolling. Click <strong>Unselect all</strong> then re-enable only the columns you need. <strong>Caution:</strong> Remember that unchecking columns also excludes those components from the Total unpaid amount — re-check all components before submitting if you intend to pay the full salary</li>
+      <li><strong>Pay component checkboxes affect payment totals, not just display:</strong> The "Selected columns on the payroll table" checkboxes are <strong>not just a display setting</strong>. Unchecking a component (e.g. Commission) removes its column from the table <em>and</em> subtracts its total from the "Total unpaid" figure. Clicking "Unselect all" drops Total unpaid to AED 0.00. Always verify that all intended pay components are checked before clicking Submit Transaction</li>
+      <li><strong>Social Security Contribution checkbox is locked:</strong> The Social Security Contribution checkbox is <strong>disabled and permanently checked</strong> (greyed out). It cannot be unchecked because it is a legally mandatory deduction. This is the only pay component that cannot be excluded from a transaction</li>
       <li><strong>Sorting restriction:</strong> Cannot sort by the Unpaid Net Pay column. Other columns support sorting via column header buttons</li>
       <li><strong>Payroll cycle not shared across sub-pages:</strong> Selecting a specific payroll cycle (e.g. November 2025) on the Payroll Table does not carry over when you navigate to Transactions, Adjustments, or other sub-pages. Each sub-page defaults to the current open cycle. To view transactions or adjustments for a specific closed month, you must re-select the cycle on that page separately</li>
       <li><strong>Transaction detail rows can exceed employee count:</strong> On the Transaction Details page, the summary header may show "2 Employees" while the breakdown table displays 4 rows. This occurs because the table groups payments by trade license <em>and</em> payment method — a single employee can appear in multiple rows if they have split payments or multiple pay components routed differently. The summary count reflects unique employees, not table rows</li>
@@ -4333,7 +4362,7 @@ footer {
 
   <details class="faq-item">
     <summary>Why can't I see all columns in the payroll table?</summary>
-    <p>The payroll table uses customizable column visibility. Use the column visibility checkboxes to show or hide specific columns such as salary components, deductions, and other pay items. Toggle the checkboxes to control which columns appear in your view.</p>
+    <p>The "Selected columns on the payroll table" checkboxes control which pay components appear as columns. If a component is unchecked, its column is hidden <em>and</em> its amounts are excluded from the Total unpaid calculation. Click <strong>"Select all"</strong> (top-right of the checkbox area) to restore all columns and include all components in the payment total.</p>
   </details>
 
   <details class="faq-item">
@@ -4353,7 +4382,7 @@ footer {
 
   <details class="faq-item">
     <summary>Can partial salary payments be processed?</summary>
-    <p>Yes. Specific pay items or employees can be unchecked before submitting a transaction. Multiple transactions can be submitted within the same month to pay different components at different times.</p>
+    <p>Yes, in two ways. <strong>(1) By pay component:</strong> Use the "Selected columns on the payroll table" checkboxes to uncheck components you don't want to pay yet — for example, uncheck Commission and Bonuses to submit only Basic Salary and Allowances first. The Total unpaid recalculates to reflect only checked components. <strong>(2) By employee:</strong> Use the row checkboxes to select specific employees. You can combine both methods — select certain components and certain employees — then click Submit Transaction. Submit additional transactions later for the remaining components or employees. Note: Social Security Contribution cannot be unchecked (mandatory deduction).</p>
   </details>
 
   <details class="faq-item">
