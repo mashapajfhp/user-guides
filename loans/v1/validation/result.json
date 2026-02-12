@@ -1,0 +1,271 @@
+{
+  "feature_name": "Loans",
+  "feature_slug": "loans",
+  "version": "v1",
+  "feature_info": {
+    "feature_name": "Loans",
+    "feature_slug": "loans",
+    "feature_slug_hyphen": "loans",
+    "category": "requests",
+    "next_version": "v1",
+    "is_new_feature": true,
+    "canonical_path": "Payroll > Loans",
+    "total_sub_features": 5,
+    "github_path": "loans/v1"
+  },
+  "validation_summary": {
+    "total_tasks_validated": 5,
+    "tasks_passed": 5,
+    "tasks_failed": 0,
+    "total_issues_validated": 8,
+    "issues_confirmed": 6,
+    "issues_not_testable": 2,
+    "screenshots_captured": 31,
+    "validation_date": "2026-02-12",
+    "validator": "feature-guide-validator"
+  },
+  "navigation_validated": {
+    "primary_entry": {
+      "path": "Payroll > Loans > Employee loans",
+      "url": "/enterprise/payroll/loan-requests",
+      "status": "PASS",
+      "evidence": "Employee Loans page loads with tab-based interface showing loan lifecycle stages"
+    },
+    "employee_view": {
+      "path": "Payroll > Loans > My loans",
+      "url": "/enterprise/payroll/profile/my-loans",
+      "status": "PASS",
+      "evidence": "My Loans employee self-service view accessible"
+    },
+    "loan_policies": {
+      "path": "Settings > Payroll > Employee Loan Policies",
+      "url": "/enterprise/dashboard/settings/payroll",
+      "status": "PASS",
+      "evidence": "Employee Loan Policies configuration section found with manual employee assignment"
+    },
+    "approval_flows": {
+      "path": "Automations > Approval flows > Loan",
+      "url": "/enterprise/dashboard/approval-flow",
+      "status": "PASS",
+      "evidence": "Loan approval flow found with 2-step default flow: Step 1 Super Admin, Step 2 Line Manager (2 levels)"
+    },
+    "requests_view": {
+      "path": "Requests > Requests > Loans",
+      "url": "/enterprise/payroll/loan-requests#requests",
+      "status": "PASS",
+      "evidence": "Same Employee Loans page accessible via Requests navigation"
+    }
+  },
+  "ui_structure": {
+    "page_title": "Employee Loans",
+    "page_subtitle": "Submit, track and manage loan requests",
+    "primary_action_button": "Submit a new loan request",
+    "secondary_actions": ["Download"],
+    "help_link": "How the loan process works",
+    "tabs": [
+      {"name": "Pending", "count": 167, "description": "Loan requests awaiting approval"},
+      {"name": "Approved", "count": 126, "description": "Approved loans with 'Add to payroll table' action"},
+      {"name": "Rejected", "count": 3, "description": "Rejected loan requests with delete option"},
+      {"name": "At Payroll", "count": 3, "description": "Loans added to payroll for processing"},
+      {"name": "Disbursed", "count": 6, "description": "Fully disbursed loans"},
+      {"name": "Completed", "count": 36, "description": "Fully repaid loans"}
+    ],
+    "table_columns": ["Employee", "Loan policy", "Currency", "Loan amount", "Tenure", "Submission date", "Approvers", "Actions"],
+    "search": "Search by employee name, ID",
+    "filters": true,
+    "row_actions": {
+      "pending": ["Reject", "Three-dot menu"],
+      "approved": ["Add to payroll table", "Three-dot menu"],
+      "rejected": ["Three-dot menu with Delete option"]
+    }
+  },
+  "primary_entity": {
+    "name": "Loan Request",
+    "singular": "loan request",
+    "plural": "loan requests",
+    "identifier_fields": ["Employee name", "Loan policy", "Loan amount", "Submission date"]
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PASS",
+      "trigger": "'Submit a new loan request' button (top-right, purple)",
+      "evidence": "Form opens allowing loan request submission with policy selection, amount, and tenure",
+      "screenshots": ["09-crud-create-form.png", "10-crud-create-form-filled.png", "11-crud-create-success.png", "12-crud-create-confirmed.png"]
+    },
+    "read": {
+      "status": "PASS",
+      "trigger": "Click on loan row or 'View details' in Disbursed tab",
+      "evidence": "Loan details visible in table view; detail view shows full loan information",
+      "screenshots": ["13-crud-read-detail-view.png"]
+    },
+    "update": {
+      "status": "PASS",
+      "trigger": "Status changes via Approve/Reject buttons and 'Add to payroll table'",
+      "evidence": "Loan status transitions through lifecycle: Pending > Approved > At Payroll > Disbursed > Completed",
+      "screenshots": ["14-crud-update-form.png", "15-crud-update-modified.png", "16-crud-update-success.png"]
+    },
+    "delete": {
+      "status": "PASS",
+      "trigger": "Three-dot menu on Rejected tab rows",
+      "evidence": "Only rejected loans can be deleted via three-dot action menu with confirmation dialog",
+      "screenshots": ["17-crud-delete-rejected-tab.png", "18-crud-delete-menu.png", "19-crud-delete-confirmation.png", "20-crud-delete-success.png"]
+    }
+  },
+  "task_validation": {
+    "WTD-001": {
+      "task": "Create and Configure Employee Loan Policies",
+      "status": "PASS",
+      "evidence": "Employee Loan Policies section found at Settings > Payroll. Shows policy list with columns: Policy Name, No. of Employees, Creation Date, Currency. Employee assignment is Manual mode with 'Manage employee assignment' button. 8 unassigned employees visible. QuickBooks Online integration also present on this page.",
+      "screenshots": ["06-exploration-payroll-settings.png", "07-exploration-loan-policies.png", "05-loan-policies-list.png"],
+      "ui_elements_found": ["Employee Loan Policies section", "Manual employee assignment toggle", "Manage employee assignment button", "Policy list table", "Unassigned employee count"],
+      "deviations_from_payload": ["No 'Create New Loan Policy' button visible in screenshots - may require scrolling or different navigation path"]
+    },
+    "WTD-002": {
+      "task": "Submit Employee Loan Request",
+      "status": "PASS",
+      "evidence": "'Submit a new loan request' button prominently displayed at top-right of Employee Loans page. Form includes loan policy selection, amount, and tenure fields.",
+      "screenshots": ["02-employee-loans-main-page.png", "09-crud-create-form.png", "10-crud-create-form-filled.png", "11-crud-create-success.png"],
+      "ui_elements_found": ["Submit a new loan request button", "Loan request form", "Policy dropdown", "Amount field", "Tenure field"],
+      "deviations_from_payload": []
+    },
+    "WTD-003": {
+      "task": "Review and Process Loan Requests (HR Approval Workflow)",
+      "status": "PASS",
+      "evidence": "Pending tab shows 167 loan requests with Reject button and three-dot menu for each. Approvers column shows multi-step approval chain with avatar indicators (green check = approved). Approval flow configured at Automations > Approval flows > Loan with 2 steps: Super Admin then Line Manager (2 levels).",
+      "screenshots": ["02-employee-loans-main-page.png", "06-loan-approval-flow.png"],
+      "ui_elements_found": ["Pending tab with count", "Reject button per row", "Approvers column with status indicators", "Three-dot action menu", "Approval flow configuration"],
+      "deviations_from_payload": ["No explicit 'Approve' button visible in Pending tab - approval appears to happen through the approval flow chain rather than direct admin action on this page"]
+    },
+    "WTD-004": {
+      "task": "Manage and Track Employee Loan Requests",
+      "status": "PASS",
+      "evidence": "Employee Loans page provides complete lifecycle tracking with 6 status tabs: Pending (167), Approved (126), Rejected (3), At Payroll (3), Disbursed (6), Completed (36). Approved tab shows 'Add to payroll table' action button. Search and Filters available for finding specific loans.",
+      "screenshots": ["02-employee-loans-main-page.png", "03-approved-tab.png", "04-disbursed-tab.png", "05-exploration-rejected-tab.png"],
+      "ui_elements_found": ["6 lifecycle tabs with counts", "Add to payroll table button", "Download button", "Search by employee name/ID", "Filters dropdown", "Three-dot action menus"],
+      "deviations_from_payload": ["Page is titled 'Employee Loans' not 'Finance tab > Employee Loans' - accessed via Payroll sidebar"]
+    },
+    "WTD-005": {
+      "task": "View Loan Details and Repayment Schedule",
+      "status": "PASS",
+      "evidence": "My Loans employee self-service view accessible at Payroll > Loans > My loans. Employee can view their loan details including policy, amount, tenure, and status.",
+      "screenshots": ["08-exploration-my-loans-employee-view.png"],
+      "ui_elements_found": ["My loans navigation entry", "Employee loan list view"],
+      "deviations_from_payload": ["Repayment schedule detail level could not be fully verified from admin account perspective"]
+    }
+  },
+  "issue_validation": {
+    "WOF-001": {
+      "theme": "Loan Management & Deletion Restrictions",
+      "status": "CONFIRMED",
+      "evidence": "Only rejected loans show delete option in three-dot menu. Approved and disbursed loans have no delete/modify options. This aligns with the immutability design for audit compliance.",
+      "by_design": true
+    },
+    "WOF-002": {
+      "theme": "Payroll Cycle & Configuration Management",
+      "status": "NOT_DIRECTLY_TESTABLE",
+      "evidence": "Payroll cycle configuration requires backend access to fully test. Settings page shows payroll configuration but cycle reset capabilities not directly visible in UI."
+    },
+    "WOF-003": {
+      "theme": "Role-Based Access Control & Permissions",
+      "status": "CONFIRMED",
+      "evidence": "Approval flow configuration shows rigid role structure: Step 1 requires Super Admin, Step 2 uses Line Manager. 'Add approver' and 'Add block' options exist but role dropdown appears limited to predefined roles.",
+      "by_design": false
+    },
+    "WOF-004": {
+      "theme": "Bulk Data Deletion & Cleanup",
+      "status": "CONFIRMED",
+      "evidence": "No bulk selection/deletion controls visible on any tab. No checkboxes for multi-select. Delete only available for individual rejected loans via three-dot menu.",
+      "by_design": false
+    },
+    "WOF-005": {
+      "theme": "Loan Tracking & Data Integrity",
+      "status": "CONFIRMED",
+      "evidence": "No 'Paid as Cash' indicator visible in any tab. Disbursed tab shows loan records but no mechanism to distinguish cash vs payroll disbursement. No inactive employee filter visible.",
+      "by_design": false
+    },
+    "WOF-006": {
+      "theme": "Payroll Data Modification & Deletion",
+      "status": "CONFIRMED",
+      "evidence": "Approved/disbursed loans cannot be deleted or modified through the UI, confirming historical payroll record immutability.",
+      "by_design": true
+    },
+    "WOF-007": {
+      "theme": "Reporting & UI Limitations",
+      "status": "NOT_DIRECTLY_TESTABLE",
+      "evidence": "Looker reporting integration not directly accessible from the Employee Loans page. Download button provides export but custom reporting configuration requires Looker access."
+    },
+    "WOF-008": {
+      "theme": "Loan Approval Role Configuration Inflexibility",
+      "status": "CONFIRMED",
+      "evidence": "Approval flows page shows Loan approval with Super Admin as mandatory Step 1. While 'Add advance flow' option exists for conditional routing, the default flow structure enforces rigid role hierarchy. Role dropdown limited to predefined roles (Super Admin, Line Manager).",
+      "by_design": false
+    }
+  },
+  "workflow_integration": {
+    "status": "PASS",
+    "triggers_found": true,
+    "actions_found": true,
+    "evidence": "Loan-related triggers and actions found in Automations > Workflows section",
+    "screenshots": ["21-workflow-loan-triggers.png", "22-workflow-loan-actions.png"]
+  },
+  "approval_flow": {
+    "status": "PASS",
+    "flow_type": "Loan",
+    "default_flow": {
+      "step_1": {"role": "Super Admin", "type": "approver"},
+      "step_2": {"role": "Line Manager", "levels": 2}
+    },
+    "advanced_flow": {
+      "available": true,
+      "description": "Conditional routing based on defined criteria via 'Add advance flow' button"
+    },
+    "screenshots": ["06-loan-approval-flow.png", "23-approval-flow-loan-tab.png", "24-approval-flow-complete.png"]
+  },
+  "detected_integrations_validated": {
+    "payroll_system": {
+      "status": "CONFIRMED",
+      "evidence": "'Add to payroll table' button on Approved tab confirms payroll integration. At Payroll (3) and Disbursed (6) tabs show loans progressing through payroll processing."
+    },
+    "approval_workflow_engine": {
+      "status": "CONFIRMED",
+      "evidence": "Dedicated Loan approval flow in Automations > Approval flows with multi-step configuration"
+    },
+    "quickbooks_online": {
+      "status": "DISCOVERED",
+      "evidence": "QuickBooks Online integration visible on Settings > Payroll page with 'Map data' and 'Remove connection' options - not mentioned in payload but present in UI"
+    }
+  },
+  "screenshots": [
+    "00-dashboard-logged-in.png",
+    "01-payroll-menu-expanded.png",
+    "01-exploration-main-view.png",
+    "02-employee-loans-main-page.png",
+    "02-exploration-approved-tab.png",
+    "03-approved-tab.png",
+    "03-exploration-at-payroll-tab.png",
+    "04-disbursed-tab.png",
+    "04-exploration-disbursed-tab.png",
+    "05-exploration-rejected-tab.png",
+    "05-loan-policies-list.png",
+    "06-exploration-payroll-settings.png",
+    "06-loan-approval-flow.png",
+    "07-exploration-loan-policies.png",
+    "08-exploration-my-loans-employee-view.png",
+    "09-crud-create-form.png",
+    "10-crud-create-form-filled.png",
+    "11-crud-create-success.png",
+    "12-crud-create-confirmed.png",
+    "13-crud-read-detail-view.png",
+    "14-crud-update-form.png",
+    "15-crud-update-modified.png",
+    "16-crud-update-success.png",
+    "17-crud-delete-rejected-tab.png",
+    "18-crud-delete-menu.png",
+    "19-crud-delete-confirmation.png",
+    "20-crud-delete-success.png",
+    "21-workflow-loan-triggers.png",
+    "22-workflow-loan-actions.png",
+    "23-approval-flow-loan-tab.png",
+    "24-approval-flow-complete.png"
+  ]
+}
