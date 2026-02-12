@@ -2207,9 +2207,9 @@ footer {
       <thead><tr><th>Metric</th><th>What It Shows</th></tr></thead>
       <tbody>
         <tr><td><strong>Total net pay</strong></td><td>The sum of all employees' net salary for the month (e.g., AED 2,897,554.16)</td></tr>
-        <tr><td><strong>Processed till date</strong></td><td>Amount already submitted and approved via transactions. Click <em>"View paid amount"</em> to see approved transactions.</td></tr>
-        <tr><td><strong>Unpaid amount pending approval</strong></td><td>Transactions submitted but still waiting for approver action. Click <em>"View unpaid amount"</em> to see pending transactions.</td></tr>
-        <tr><td><strong>Total unpaid</strong></td><td>Remaining amount not yet submitted for payment, with employee count (e.g., "124 employees")</td></tr>
+        <tr><td><strong>Processed till date</strong></td><td>Amount already submitted and approved via transactions (shown in green). Click <em>"View paid amount"</em> to see approved transactions.</td></tr>
+        <tr><td><strong>Unpaid amount pending approval</strong></td><td>Transactions submitted but still waiting for approver action (shown in red when non-zero). Click <em>"View unpaid amount"</em> to see pending transactions.</td></tr>
+        <tr><td><strong>Total unpaid</strong></td><td>Remaining amount not yet submitted for payment (shown in red), with employee count (e.g., "124 employees")</td></tr>
       </tbody>
     </table>
 
@@ -2274,10 +2274,13 @@ footer {
     </ul>
 
     <h5>More Options Menu (&#x22EE;)</h5>
-    <p>Located next to the Download button. <strong>Disabled by default</strong> — enables when you select one or more employees via the row checkboxes. Available options:</p>
+    <p>Located next to the Download button in the top-right corner. Click the three-dot icon to open the dropdown. Available options:</p>
     <ul>
-      <li><strong>Close payroll cycle</strong> — Finalize the current month (see <a href="#close-payroll-month">Close Payroll Month</a>)</li>
-      <li><strong>Remove employees from payroll</strong> — Remove selected employees from the payroll table (requires clearing all adjustments and arrears first)</li>
+      <li><strong>Download Gratuity File</strong> — Export a gratuity report for all employees</li>
+      <li><strong>Close Payroll Cycle</strong> — Finalize the current month and carry unpaid items forward as arrears (see <a href="#close-payroll-month">Close Payroll Month</a>)</li>
+      <li><strong>Mass Upload Variable Pays</strong> — Bulk-upload variable pay items via spreadsheet</li>
+      <li><strong>Mass Upload Additions</strong> — Bulk-upload addition items via spreadsheet</li>
+      <li><strong>Mass Upload Deductions</strong> — Bulk-upload deduction items via spreadsheet</li>
     </ul>
 
     <h4>Subtask: Review Salary Components</h4>
@@ -2604,12 +2607,38 @@ footer {
       <li><strong>From Transactions:</strong> Click the <strong>"Close payroll cycle"</strong> button in the top-right corner</li>
     </ul>
 
+    <p><strong>Step 1 — Summary dialog.</strong> A warning dialog titled <em>"Warning! You are about to close the month"</em> appears with:</p>
+    <ul>
+      <li>A magenta warning: <em>"Closing [Month Year] ([start] – [end]) with unpaid items will create arrears and carry these items forward to [Next Month Year] ([start] – [end])"</em></li>
+      <li>A <strong>currency summary table</strong> listing each currency (e.g. AED, USD, AUD) with three columns:
+        <ul>
+          <li><strong>Total net pay</strong> — the full payroll amount for the cycle</li>
+          <li><strong>Amount Processed</strong> — what has already been paid via approved transactions</li>
+          <li><strong>Amount Unpaid</strong> — the remaining balance (shown in red) that will become arrears</li>
+        </ul>
+      </li>
+      <li>A yellow tip: <em>"Submit Transaction from Payroll Table to avoid carrying forward these items"</em></li>
+    </ul>
+    <p>Two buttons appear at the bottom:</p>
+    <ul>
+      <li><strong>"Cancel carry forward"</strong> — closes the dialog without making any changes</li>
+      <li><strong>"Review breakdown"</strong> — shows the detailed per-employee breakdown (Step 2)</li>
+    </ul>
+
+    <p><strong>Step 2 — Review breakdown.</strong> After clicking <strong>"Review breakdown"</strong>, the dialog expands to show a scrollable table with columns:</p>
+    <ul>
+      <li><strong>Employee Name</strong> — the employee with unpaid items</li>
+      <li><strong>Type</strong> — the salary component (e.g. Basic Salary, House, Arrear 10/2025, Work Expense Addition, Deduction)</li>
+      <li><strong>Unpaid</strong> — the amount that will carry forward (negative values for deductions)</li>
+    </ul>
+    <p>A highlighted row at the top shows the <strong>Total Unpaid Amount</strong> for the cycle. This table can be very long — scroll through it to review all affected employees and items.</p>
+
+    <p><strong>Step 3 — Confirm and close.</strong> At the bottom of the breakdown:</p>
     <ol>
-      <li>The closure dialog shows a summary of paid and unpaid amounts per currency</li>
-      <li>Review the list of employees with unpaid amounts that will carry forward</li>
-      <li>Check the confirmation checkbox(es) to acknowledge the closure</li>
-      <li>Click <strong>"Close Month"</strong></li>
+      <li>Tick the checkbox: <em>"I confirm and understand carry forwards and arrears will be created when I close the month"</em></li>
+      <li>Click <strong>"Close month and carry forward"</strong> (this button remains greyed out until the checkbox is ticked)</li>
     </ol>
+    <p>Alternatively, click <strong>"Back"</strong> to return to the summary dialog (Step 1).</p>
 
     <p><strong>Expected Outcome:</strong> The current month's status changes from "Open" (green) to "Closed" (grey) in the Payroll Cycle dropdown. A new payroll cycle opens automatically for the next month. Any unpaid amounts appear in the <strong>"Arrears from Previous Month"</strong> column in the new cycle's Payroll Table.</p>
 
@@ -2618,7 +2647,11 @@ footer {
     </div>
 
     <div class="info-box">
-      <p><strong>Arrears behavior:</strong> Unpaid amounts carried forward include the full salary breakdown (basic salary, allowances, etc.). You can view the arrears breakdown by clicking the arrears amount in the employee's Pay History — this opens a dialog showing each arrear item, its pay period, amount, salary components, and payment status.</p>
+      <p><strong>Arrears behavior:</strong> Unpaid amounts carried forward include the full salary breakdown (basic salary, allowances, deductions, arrears from earlier months, etc.). Each item retains its type label (e.g. "Arrear 09/2025") so you can trace which period and component generated the arrear. You can view the arrears breakdown by clicking the arrears amount in the employee's Pay History — this opens a dialog showing each arrear item, its pay period, amount, salary components, and payment status.</p>
+    </div>
+
+    <div class="info-box">
+      <p><strong>Best practice before closing:</strong> If the Amount Unpaid shown in the summary is higher than expected, click <strong>"Cancel carry forward"</strong>, return to the Payroll Table, submit any outstanding transactions, and wait for approvals before re-attempting the close. This reduces the volume of arrears carried to the next cycle.</p>
     </div>
   </div>
 
