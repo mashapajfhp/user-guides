@@ -3222,6 +3222,70 @@ footer {
     <div class="warning-box">
       <p><strong>Closed months cannot be retroactively changed:</strong> If a payroll cycle has been closed and transactions processed, salary changes cannot be back-dated to that month. The effective date dropdown only shows open and future cycles. If a correction is needed for a closed month, use <strong>Payroll Adjustments</strong> instead (see <a href="#manage-adjustments">Manage Payroll Adjustments</a>).</p>
     </div>
+
+    <h4>Subtask: Salary Change Approval Flow</h4>
+    <p>Bayzat includes a dedicated <strong>Salary Changes</strong> approval flow that routes salary modifications through designated approvers before they take effect. This ensures that salary adjustments are reviewed and authorized by the appropriate stakeholders.</p>
+
+    <div class="nav-path">Automations → Approval flows → Salary Changes</div>
+
+    <ol>
+      <li>Navigate to <strong>Automations → Approval flows</strong> in the sidebar</li>
+      <li>In the left panel, scroll down and click <strong>"Salary Changes"</strong></li>
+      <li>The <strong>Default approval flow</strong> shows the current approver configuration — by default, salary changes require approval from a <strong>Super Admin</strong></li>
+      <li>To add conditional routing, click <strong>"+ Add advance flow"</strong> to create rules that route approvals based on criteria (e.g., department, salary band, or change amount)</li>
+      <li>To add additional approval steps, click <strong>"+ Add step"</strong> to create a multi-step approval chain</li>
+      <li>To add alternative approvers within a step, click <strong>"+ Add approver"</strong> (approvers within a step use "OR" logic — any one can approve)</li>
+      <li>Click <strong>"Update approval flows"</strong> to save changes</li>
+    </ol>
+
+    <p>The screenshot below shows the Salary Changes approval flow configuration. The default flow has a single step requiring approval from a <strong>Super Admin</strong>. No advanced conditional flows are configured — all salary change requests follow this default path.</p>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/payroll-management/v1/validation/screenshots/val-108-salary-changes-approval-flow.png" alt="Salary Changes approval flow configuration showing default flow with Super Admin as the single approver" class="screenshot" loading="lazy">
+    </figure>
+
+    <h4>Subtask: Request a Salary Change via Employee Tickets</h4>
+    <p>Employees can formally request a salary change by raising a <strong>Salary Changes</strong> ticket under the Payroll category. This provides a structured, trackable process for salary revision requests that feeds into the approval workflow.</p>
+
+    <p><strong>For employees:</strong></p>
+    <ol>
+      <li>Navigate to <strong>Requests</strong> in the sidebar</li>
+      <li>Click <strong>"Raise a ticket"</strong></li>
+      <li>Select the <strong>Payroll</strong> category, then choose <strong>"Salary Changes"</strong></li>
+      <li>Fill in the <strong>Basic Salary</strong> field with the requested amount</li>
+      <li>Add any supporting documents if needed (attachments are optional)</li>
+      <li>Submit the ticket</li>
+    </ol>
+
+    <p><strong>For admins:</strong></p>
+    <p>Admins with the appropriate role (e.g., Accounts Payable Invoice Manager) can also create salary change tickets on behalf of employees. The ticket configuration is managed under <strong>Settings → Tickets → Payroll</strong> category.</p>
+
+    <p>The screenshot below shows the Payroll ticket category in Settings, listing all 8 payroll-related ticket types including <strong>Salary Changes</strong> ("Salary change request"), <strong>Salary Discrepancy Request</strong>, <strong>Bank Account Update</strong>, and others — all active and available for employees to raise.</p>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/payroll-management/v1/validation/screenshots/val-109-payroll-ticket-types.png" alt="Settings Tickets page showing Payroll category with 8 ticket types including Salary Changes, Salary Discrepancy Request, and Bank Account Update" class="screenshot" loading="lazy">
+    </figure>
+
+    <div class="info-box">
+      <p><strong>Related payroll ticket types:</strong> In addition to Salary Changes, the Payroll category includes <strong>Salary Discrepancy Request</strong> (for resolving salary mismatches or missing payments) and <strong>Bank Account Update</strong> (for changing registered bank details). These ticket types work alongside the salary change workflow to cover the full range of payroll-related employee requests.</p>
+    </div>
+
+    <h4>Subtask: Automate Salary Change Notifications</h4>
+    <p>Use <strong>Automations → Workflows</strong> to trigger automatic actions when salary changes occur. Two payroll-specific triggers are available for salary events:</p>
+
+    <table class="reference-table">
+      <thead><tr><th>Trigger</th><th>When It Fires</th><th>Example Use Case</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Employee salary is created</strong></td><td>A new salary configuration is added for an employee</td><td>Send a welcome email to new hires confirming their compensation package</td></tr>
+        <tr><td><strong>Employee salary is updated</strong></td><td>An existing salary configuration is modified or a new revision is created</td><td>Send a notification email to the employee confirming their salary raise</td></tr>
+      </tbody>
+    </table>
+
+    <p>These triggers can be paired with actions such as <strong>Send email</strong>, <strong>Create one time pay item</strong>, <strong>Create pay adjustment request</strong>, or <strong>Call webhook</strong> to integrate with external systems.</p>
+
+    <div class="info-box">
+      <p><strong>Example workflow already configured:</strong> The "Salary Increase (AED)" workflow uses the "Employee salary is updated" trigger to automatically send an email notification when a salary change is made. You can create similar workflows under <strong>Automations → Workflows → Create new workflow</strong>.</p>
+    </div>
   </div>
       </div>
     </section>
