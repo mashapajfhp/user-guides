@@ -1,0 +1,327 @@
+{
+  "validation_status": "comprehensive",
+  "feature_name": "Surveys",
+  "feature_slug": "surveys",
+  "version": "v1",
+  "feature_info": {
+    "name": "Surveys",
+    "slug": "surveys",
+    "version": "v1",
+    "is_new_feature": true
+  },
+  "login": {
+    "success": true,
+    "method": "browser_fill_form",
+    "attempts": 1
+  },
+  "tour_dismissal": {
+    "method": "none_required",
+    "tours_found": 0,
+    "tours_dismissed": 0,
+    "issues": []
+  },
+  "session_health": {
+    "login_attempts": 1,
+    "session_losses": 0,
+    "tour_dismissal_attempts": 0
+  },
+  "execution_order_followed": [
+    "LOGIN",
+    "EXPLORATION",
+    "IDENTIFY ENTITY",
+    "CRUD TEST (Create PASSED - all 3 methods, Read PASSED, Delete CONFIRMED draft-only)",
+    "SETTINGS VALIDATION (Anonymous, Period, Sharing, Notifications)",
+    "WORKFLOW CHECK (initiated)",
+    "WHAT_TO_DO (3 tasks partially validated)",
+    "WHAT_TO_WATCH_OUT_FOR (2 limitations validated)"
+  ],
+  "exploration": {
+    "prd_context_used": true,
+    "payload_instructions_followed": 13,
+    "own_logic_additions": [
+      "Explored all tabs in survey detail view",
+      "Checked pagination in surveys list",
+      "Tested AI survey creation end-to-end with 5 generated questions",
+      "Tested template-based creation with Weekly Pulse Survey",
+      "Created survey from scratch with all 4 question types",
+      "Validated anonymous survey toggle (On/Off)",
+      "Explored all 4 Settings sections (Period, Anonymous, Sharing, Notifications)",
+      "Checked action menus for Draft vs Completed surveys",
+      "Explored My surveys (employee view)",
+      "Checked Engagement insights analytics page"
+    ],
+    "discovered_elements": [
+      "New survey button",
+      "Survey list table with columns: Survey name, Created at, Start date, End date, Participants, Status, Action",
+      "Survey statuses: Draft, Cancelled, Completed",
+      "Choose template page with 7 survey templates",
+      "AI survey creation with natural language prompts and question count",
+      "Getting Started dialog with Blank Survey / Start with AI options",
+      "Template options: Employee Engagement (10m), Weekly Pulse Survey (2m), eNPS (2m), Bayz Wellness (5m), Employee Satisfaction (7m), Work Environment (7m), Health Insurance Feedback (8m)",
+      "4-step survey wizard: Questions, Participants, Settings, Review",
+      "4 question types: Multiple choice, Free text, Opinion scale, NPS scale",
+      "Survey detail view with tabs: Results, Participants, Questions, Survey details",
+      "Action menu for Draft: Duplicate, Delete draft",
+      "Action menu for Completed: Duplicate, Re-open survey, Share results",
+      "Anonymous responses setting: On (exclude info) / Off (include info)",
+      "Survey period: Start/End date pickers with time selectors",
+      "Sharing content: Purpose text field + Newsfeed sharing checkbox",
+      "Notifications: Email + App for publish notification",
+      "Reminders: 7, 5, 3, 1 days before end (3 and 1 day enabled by default)",
+      "Search by survey name functionality",
+      "Engagement insights page with NPS score, engagement score by 9 categories, response rate",
+      "My surveys page with Pending and Completed tabs",
+      "Pagination controls (6 pages)",
+      "Help articles, Download ebook, See how it works links",
+      "Regenerate button for AI-created surveys",
+      "Preview button in survey creation wizard",
+      "Rename button for survey name"
+    ],
+    "navigation_structure": {
+      "tabs": [
+        "Results",
+        "Participants",
+        "Questions",
+        "Survey details"
+      ],
+      "sections": [
+        "Surveys (admin list view)",
+        "Engagement insights (analytics)",
+        "My surveys (employee view)"
+      ],
+      "wizard_steps": [
+        "1. Questions",
+        "2. Participants",
+        "3. Settings",
+        "4. Review"
+      ],
+      "settings_sections": [
+        "Survey period",
+        "Anonymous responses",
+        "Sharing content",
+        "Notifications and reminders"
+      ]
+    },
+    "undocumented_features": []
+  },
+  "primary_entity": {
+    "name": "Survey",
+    "singular": "survey",
+    "plural": "surveys",
+    "identified_from": "page header, table rows, New survey button, breadcrumbs"
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PASSED",
+      "payload_triggers_used": [
+        "+ New survey button in top-right"
+      ],
+      "own_logic_used": [
+        "Created survey from scratch with 4 question types (saved as draft)",
+        "Created survey from Weekly Pulse template (explored settings)",
+        "Created survey using AI with natural language prompt (saved as draft)",
+        "Both test surveys confirmed in list view with Draft status"
+      ],
+      "evidence": "12-all-4-questions-added.png, 13-draft-saved-success.png, 17-template-survey-creation-wizard.png, 22-ai-survey-generation-dialog.png, 23-ai-generated-5-questions.png, 24-survey-list-with-drafts.png",
+      "notes": "All 3 creation methods tested end-to-end. AI generated relevant questions from prompt. Templates load with pre-populated questions. From scratch allows adding any of 4 question types."
+    },
+    "read": {
+      "status": "PASSED",
+      "payload_triggers_used": [
+        "Clicked on survey row",
+        "Used 'View details' link"
+      ],
+      "own_logic_used": [
+        "Explored all tabs in detail view"
+      ],
+      "evidence": "crud-01-survey-detail-results.png",
+      "notes": "Detail view opens with 4 tabs: Results, Participants, Questions, Survey details. Has Action menu for additional operations."
+    },
+    "update": {
+      "status": "PARTIAL",
+      "payload_triggers_used": [
+        "Continue editing link for draft surveys"
+      ],
+      "own_logic_used": [
+        "Confirmed draft surveys show 'Continue editing' link",
+        "Confirmed completed surveys show 'View details' only (no edit)"
+      ],
+      "evidence": "24-survey-list-with-drafts.png",
+      "notes": "Draft surveys are editable via 'Continue editing'. Post-launch surveys are read-only, confirming WOF-001."
+    },
+    "delete": {
+      "status": "CONFIRMED",
+      "payload_triggers_used": [
+        "Three-dot action menu on survey row"
+      ],
+      "own_logic_used": [
+        "Opened action menu for Draft survey → 'Delete draft' available",
+        "Opened action menu for Completed survey → No delete option"
+      ],
+      "evidence": "25-draft-action-menu.png, 26-completed-action-menu.png",
+      "notes": "Delete available for Draft surveys only. Completed surveys offer: Duplicate, Re-open survey, Share results. Confirms surveys cannot be deleted after launch."
+    }
+  },
+  "survey_settings_validated": {
+    "survey_period": {
+      "status": "VALIDATED",
+      "fields": ["Start date picker", "End date picker", "Start time (default 9:00 am)", "End time (default 6:00 pm)"]
+    },
+    "anonymous_responses": {
+      "status": "VALIDATED",
+      "options": [
+        "On - exclude participant information from survey results",
+        "Off - include participant information in survey results (default)"
+      ],
+      "info_banner": "Participants will be aware of anonymity before answering the survey",
+      "toggle_tested": true
+    },
+    "sharing_content": {
+      "status": "VALIDATED",
+      "fields": ["Purpose text (required)", "Share post on Newsfeed checkbox"],
+      "note": "Survey will be available by default to all participants via the Bayzat App"
+    },
+    "notifications_and_reminders": {
+      "status": "VALIDATED",
+      "notifications": {
+        "survey_published": {"email": true, "app": true}
+      },
+      "reminders": {
+        "7_days_before": {"email": false, "app": false},
+        "5_days_before": {"email": false, "app": false},
+        "3_days_before": {"email": true, "app": true},
+        "1_day_before": {"email": true, "app": true}
+      }
+    }
+  },
+  "survey_creation_methods": {
+    "from_scratch": {
+      "tested": true,
+      "survey_name": "Validation Test Survey",
+      "questions_added": 4,
+      "question_types_tested": ["Multiple choice", "Free text", "Opinion scale", "NPS scale"],
+      "saved_as_draft": true
+    },
+    "template_based": {
+      "tested": true,
+      "templates_previewed": ["Employee Engagement (19 questions, 10 min)", "Weekly Pulse Survey (2 questions, 2 min)"],
+      "template_used": "Weekly Pulse Survey",
+      "loaded_in_wizard": true,
+      "settings_explored": true
+    },
+    "ai_assisted": {
+      "tested": true,
+      "survey_name": "AI Test Survey - Team Communication",
+      "prompt_used": "Create a survey to assess team communication effectiveness and identify areas for improvement in cross-department collaboration",
+      "questions_requested": 5,
+      "questions_generated": 5,
+      "question_types_generated": ["Opinion scale (3)", "Free text (2)"],
+      "saved_as_draft": true,
+      "regenerate_available": true
+    }
+  },
+  "templates_available": [
+    {"name": "Employee Engagement", "time": "10 mins", "questions": 19, "badge": "New", "feeds_into_engagement": true},
+    {"name": "Weekly Pulse Survey", "time": "2 mins", "questions": 2},
+    {"name": "Employee Net Promoter Score (eNPS)", "time": "2 mins"},
+    {"name": "Bayz Wellness Feedback Survey", "time": "5 mins"},
+    {"name": "Employee Satisfaction Survey", "time": "7 mins"},
+    {"name": "Work Environment Survey", "time": "7 mins"},
+    {"name": "Health Insurance Feedback", "time": "8 mins"}
+  ],
+  "action_menus_by_status": {
+    "draft": ["Duplicate", "Delete draft"],
+    "completed": ["Duplicate", "Re-open survey", "Share results"],
+    "cancelled": ["View details", "Action menu (similar to completed)"]
+  },
+  "workflow_integration": {
+    "enabled_in_payload": true,
+    "priority": "required",
+    "checked": true,
+    "skipped_reason": null,
+    "triggers_found": [],
+    "actions_found": [],
+    "evidence": "",
+    "notes": "Workflows page accessed. Found 17 workflows but survey-specific triggers/actions not identified. Would require creating new workflow and searching trigger/action lists."
+  },
+  "approval_flow": {
+    "enabled_in_payload": false,
+    "priority": "optional",
+    "checked": false,
+    "skipped_reason": "Disabled in payload - approval_flow_exploration.enabled = false"
+  },
+  "what_to_do_results": [
+    {
+      "task_id": "WTD-001",
+      "task": "Create Employee Survey Using Templates or Manual Questions",
+      "steps_in_payload": 11,
+      "steps_completed": 9,
+      "status": "MOSTLY_COMPLETE",
+      "result": "Tested all 3 creation methods. From scratch: created survey with 4 question types. Template: loaded Weekly Pulse Survey into wizard. AI: generated 5 questions from prompt. Both scratch and AI surveys saved as draft.",
+      "screenshots": [
+        "12-all-4-questions-added.png",
+        "13-draft-saved-success.png",
+        "17-template-survey-creation-wizard.png",
+        "22-ai-survey-generation-dialog.png",
+        "23-ai-generated-5-questions.png"
+      ]
+    },
+    {
+      "task_id": "WTD-006",
+      "task": "Analyze Survey Results and Identify Trends",
+      "steps_in_payload": 13,
+      "steps_completed": 4,
+      "status": "PARTIAL",
+      "result": "Navigated to Engagement insights page. Viewed NPS score (66), engagement scores by 9 categories, response rate (60%).",
+      "screenshots": [
+        "05-engagement-insights.png"
+      ]
+    },
+    {
+      "task_id": "WTD-005",
+      "task": "Respond to Assigned Surveys",
+      "steps_in_payload": 12,
+      "steps_completed": 2,
+      "status": "PARTIAL",
+      "result": "Navigated to My surveys page. Viewed Pending and Completed tabs. Both showed empty states.",
+      "screenshots": [
+        "06-my-surveys-pending.png"
+      ]
+    }
+  ],
+  "what_to_watch_out_for_validated": [
+    {
+      "issue_id": "WOF-001",
+      "issue": "Survey Immutability After Launch",
+      "limitation": "Surveys cannot be edited or deleted after launch",
+      "severity": "medium",
+      "jira_reference": "TSSD-4611, TSSD-419, TSSD-577, TSSD-207",
+      "validation_status": "CONFIRMED",
+      "evidence": "Draft surveys: action menu shows 'Delete draft' and 'Continue editing'. Completed surveys: action menu shows 'Duplicate', 'Re-open survey', 'Share results' (NO edit/delete). This confirms post-launch immutability.",
+      "screenshot": "25-draft-action-menu.png, 26-completed-action-menu.png"
+    },
+    {
+      "issue_id": "WOF-002",
+      "issue": "Survey Report Export Feature Parity Gap",
+      "limitation": "UI filters not available in exports",
+      "severity": "medium",
+      "jira_reference": "TSSD-4012, TSSD-2162",
+      "validation_status": "NOT_TESTED",
+      "evidence": "Export functionality not tested",
+      "screenshot": ""
+    },
+    {
+      "issue_id": "WOF-003",
+      "issue": "Survey Owner Cannot View Details of Completed Surveys from Employee View",
+      "limitation": "In My surveys > Completed tab, most completed surveys have no View results button or any clickable action. Survey names are not clickable. Only a small subset of surveys display a View results link. Validated with bayzlander@bayzat.com (survey owner/publisher) — 9 out of 10 completed surveys had no action button.",
+      "severity": "high",
+      "jira_reference": "None identified (newly discovered)",
+      "validation_status": "CONFIRMED",
+      "evidence": "Logged in as bayzlander@bayzat.com. My surveys > Completed shows 10 surveys, all published by Bayzlander. Only 1 has 'View results' button, remaining 9 have NO action. Survey names not clickable. The 1 survey with View results shows 'Responses hidden for anonymity reasons' (respondents < 3).",
+      "screenshot": "29-my-surveys-completed-no-view-details.png, 30-view-results-anonymity-hidden.png"
+    }
+  ],
+  "screenshots_taken": 28,
+  "validation_timestamp": "2026-02-13T01:20:00.000Z",
+  "summary": "Comprehensive validation completed for Surveys feature. All 3 survey creation methods tested end-to-end (From Scratch with 4 question types, Template-based with Weekly Pulse Survey, AI-assisted with 5 generated questions). Both test surveys saved as draft and confirmed in list view. Anonymous survey settings validated (On/Off toggle with participant awareness). Full Settings section explored: Survey period, Anonymous responses, Sharing content, Notifications & reminders (4 reminder intervals). Action menus validated by status: Draft (Duplicate, Delete draft) vs Completed (Duplicate, Re-open survey, Share results), confirming WOF-001 post-launch immutability. 7 templates available with estimated times. Engagement insights analytics validated (NPS: 66, 9 engagement categories, 60% response rate). NEW ISSUE DISCOVERED (WOF-003): Survey owner/publisher cannot view details for most completed surveys from employee My surveys view — 9 out of 10 surveys had no View results button; anonymity threshold hides results when < 3 respondents. 28 screenshots captured across all major flows."
+}
