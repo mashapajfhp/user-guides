@@ -1,54 +1,33 @@
 # Letters
 
-Employee letter request and generation feature in Bayzat HR.
+| Property | Value |
+|----------|-------|
+| **Feature** | Letters |
+| **Slug** | `letters` |
+| **Latest Version** | v1 |
+| **Status** | completed |
 
-## Overview
+## Links
 
-The Letters feature allows employees to request official company letters (salary certificates, employment verification, etc.) and enables HR administrators to manage letter templates, approvals, and digital signatures.
+- [Live User Guide](https://mashapajfhp.github.io/user-guides/letters/v1/letters-user-guide.html)
+- [HTML Source (GitHub)](https://github.com/mashapajfhp/user-guides/blob/main/letters/v1/letters-user-guide.html)
+- [Markdown Version](./v1/letters-user-guide.md)
 
-## Key Capabilities
+## Versions
 
-- **Letter Request Submission**: Employees can request letters using predefined templates
-- **Multi-Level Approval**: Two-stage workflow (Approver → Authorized Signatory)
-- **Template Management**: WYSIWYG editor with 80+ dynamic variables
-- **Digital Signatures**: Upload and embed authorized signatory signatures
-- **PDF Generation**: Automatic letter generation with variable substitution
+- `v1`
 
-## Navigation
-
-Access via: **Requests → Letters**
-
-## Primary Entity
-
-Letter Requests (with statuses: Pending Review, Pending Signature, Signed, Rejected)
-
-## Version History
-
-| Version | Status | Date | Notes |
-|---------|--------|------|-------|
-| v1 | Validated | 2026-01-14 | Initial validation complete |
-
-## Known Limitations
-
-- No workflow automation integration (triggers/actions not available)
-- Letter template cannot be changed after request creation
-- Delete only available on rejected letters
-- Deleted letters cannot be recovered
-
-## Folder Structure
+## Files
 
 ```
 letters/
-├── README.md                 (this file)
-├── v1/
-│   ├── screenshots/          (user guide screenshots)
-│   ├── validation/
-│   │   ├── screenshots/      (30 validation screenshots)
-│   │   ├── result.json       (validation results)
-│   │   └── report.md         (validation report)
-│   └── letters-user-guide.html (generated guide)
-├── v2/
-│   └── ...
-└── v3/
-    └── ...
+├── README.md
+└── v1/
+    ├── letters-user-guide.html
+    ├── letters-user-guide.md
+    ├── screenshots/
+    └── validation/
 ```
+
+---
+*Auto-generated from Supabase user_guides table*
