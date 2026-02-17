@@ -425,7 +425,7 @@ Settings → Company → Company Logo
 
 ### Step 2: Define Employee Structures
 
-Employee Structures allow you to organise employees into logical groups for managing roles, permissions, and policies. This is useful for applying different rules to different segments of your workforce.
+Employee Structures allow you to organise employees into logical groups for managing roles, permissions, and visibility. This is essential for controlling which employees can see each other's profiles when the **Restrict company-wide employee visibility** toggle is enabled under Employee Permissions.
 
 <div class="nav-path">
 
@@ -438,10 +438,24 @@ Settings → Company → Employee Structures
 <figcaption>Employee Structures configuration with structure name, description, grouping type, and last updated columns</figcaption>
 </figure>
 
-- Click **Add new** to create a structure
-- Define a name and description for the structure
-- Choose a grouping type to determine how employees are organised within the structure
-- Structures can be used to apply different permissions, policies, or workflows to specific employee groups
+To create a new structure, click **Add New** and follow the 3-step wizard:
+
+**Step 1 — Define Structure:** Enter a name and description, then choose the grouping type:
+
+| Grouping Type | Description |
+|----|----|
+| **Automatic grouping** | Group employees by defining criteria (e.g., department, office, nationality, position) and perform automatic matching. Available data points include: Department, Office, Nationality, Position, Status, Gender, Work Location, Company Name, Age, Hire Date, and any custom fields. |
+| **Manual grouping** | Group employees by selecting them individually. Useful when groupings do not align with standard employee attributes. |
+
+**Step 2 — Employee Grouping:** Create one or more groups within the structure. For automatic grouping, define criteria using data points and operators (e.g., "Department equals Engineering"). For manual grouping, select employees to add to each group.
+
+**Step 3 — Review:** Review the structure configuration and group assignments before saving.
+
+<div class="info-box">
+
+**Important:** Employee Structures are a prerequisite for the **Restrict company-wide employee visibility** feature. When that toggle is enabled (Settings → Company → Employee Permissions), employees will only see people within their assigned group and will not have visibility into other groups. You must create at least one structure with groups and assign employees before enabling the visibility restriction.
+
+</div>
 
 </div>
 
@@ -562,11 +576,11 @@ The following permission toggles are available:
 | **Restrict personal info editing** | Prevents employees from editing their personal and work information |
 | **Restrict dependents editing** | Prevents employees from editing their dependents’ documents and information |
 | **Restrict profile picture** | Prevents employees from uploading or updating their profile picture |
-| **Restrict employee visibility** | Restricts company-wide employee visibility so employees cannot see other employees’ profiles |
+| **Restrict company-wide employee visibility** | When enabled, employees will only see people within their assigned group (configured via Employee Structures) and will not have visibility into other groups or organisational structures. For example, if employees are grouped by department, a member of the "Engineering" group will not be able to see profiles of employees in the "Finance" group. This toggle works in conjunction with **Employee Structures** (Settings → Company → Employee Structures), where you define groups either manually or automatically using criteria such as department, office, nationality, or position. |
 
 <div class="info-box">
 
-**Note:** These permissions work together with Role Management. Roles determine what managers and admins can access, while Employee Permissions control what individual employees can do with their own data. For sensitive documents like payslips and contracts, restricting document management ensures that only authorised personnel can modify records.
+**Note:** These permissions work together with Role Management and Employee Structures. Roles determine what managers and admins can access (e.g., manage attendance, edit employees), while Employee Permissions control what individual employees can do with their own data. The **Restrict company-wide employee visibility** toggle specifically relies on **Employee Structures** — you must first create a structure with groups and assign employees to those groups before enabling this restriction. Without configured groups, the restriction has no effect. For sensitive documents like payslips and contracts, restricting document management ensures that only authorised personnel can modify records.
 
 </div>
 
