@@ -1595,17 +1595,25 @@ Regional settings (e.g., Turkish locale) may cause date formatting issues in Exc
 | **Document Expiry Reminder** | Automated email notifications sent to stakeholders (1-12 months before document expiration) to prompt renewal actions. |
 | **Draft Document** | An uploaded document that has not yet been assigned to an employee or completed with required metadata (owner, type, expiry date). |
 | **Employee Profile Completion** | A percentage indicator showing how much of an employee's required information (personal, work, documents, dependents) has been filled in. |
-| **End of Service (EOS)** | The final settlement calculation for departing employees including gratuity, leave encashment, prorated salary, and deductions. |
+| **Departure Reason** | The reason selected during offboarding (Resignation with notice, Termination with notice, Termination without notice, Resignation without notice, End of contract, Death, or Absconding). |
+| **End of Service (EOS)** | The final settlement calculation for departing employees including gratuity, leave encashment, prorated salary, and deductions. Once processed, rehire is blocked unless resolved by support. |
+| **Final Settlement** | The detailed financial breakdown generated during End of Service processing, showing additions (gratuity, pro-rated pay, arrears) and deductions, with a total amount in AED. Can be printed for records. |
+| **Google SSO** | Single Sign-On authentication method allowing employees to log in to Bayzat using their existing Google account credentials. Does not create or sync user accounts. |
 | **Inactive Employee** | An offboarded employee with a departure date and reason who no longer has platform access but whose records are retained for historical purposes. |
 | **Invitation Status** | The state of an employee's platform registration invite (pending, accepted, expired) tracked in the Invitations page. |
+| **Magic Link** | A passwordless authentication method that sends a unique, time-sensitive login link to the employee's registered email address. Activated by toggling "Log in without password" on the login page. |
 | **Mandatory Document** | A document type marked as required during configuration that must be uploaded for employee profile completion. |
+| **Microsoft SSO** | Single Sign-On authentication method allowing employees to log in to Bayzat using their existing Microsoft account credentials. Ideal for organizations using Microsoft 365 or Azure AD. Does not create or sync user accounts. |
 | **OCR (Optical Character Recognition)** | Technology that automatically extracts text data from uploaded document images to populate form fields (passport numbers, names, dates). |
 | **Offboarding** | The process of marking an employee as inactive with a departure date and reason while preserving their records, as opposed to permanent deletion. |
 | **Organization Chart** | A hierarchical visual representation of company structure showing reporting relationships, departments, and employee positions. |
 | **Primary Document** | The main version of a document when multiple copies exist, used for tracking expiry and compliance in reports. |
 | **Profile Completion Filter** | A search filter that identifies employees with incomplete profiles based on missing information categories (email, personal info, documents, dependents). |
-| **Rehire** | The action of reactivating an inactive employee's profile to restore their active status and platform access. |
+| **Password Reset** | The process of resetting a forgotten password via the "Forgot password?" link on the login page, which sends a reset link to the registered email. |
+| **Rehire** | The action of reactivating an inactive employee's profile to restore their active status and platform access. Only available if End of Service has not been processed. |
 | **Reporting Manager** | The employee designated as another employee's direct supervisor, used for approval flows and organizational hierarchy. |
+| **Review Final Settlement** | A purple button that appears on the Work tab of offboarded employees whose EOS has been processed. Links to the EOS Entitlement page showing the full settlement breakdown. |
+| **SSO (Single Sign-On)** | Authentication method allowing employees to log in to Bayzat using their existing Google or Microsoft account credentials instead of a separate Bayzat password. Does not provision accounts or sync permissions. |
 | **Trade License** | A company's legal business registration document required for payroll processing and stored in Company Documents. |
 | **Work Email** | The official company email address assigned to an employee, required for platform invitations and locked after registration. |
 | **Workflow** | An automated business process triggered by specific events (document upload, status change) that executes predefined actions. |
