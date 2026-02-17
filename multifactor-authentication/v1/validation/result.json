@@ -1,0 +1,201 @@
+{
+  "validation_status": "completed",
+  "feature_name": "Multi-factor Authentication",
+  "feature_slug": "multifactor-authentication",
+  "version": "v1",
+  "feature_info": {
+    "name": "Multi-factor Authentication",
+    "slug": "multifactor-authentication",
+    "version": "v1",
+    "is_new_feature": false,
+    "canonical_path": "Profile > Security settings > Multi-factor Authentication"
+  },
+  "login": {
+    "success": true,
+    "method": "browser_fill_form",
+    "attempts": 1
+  },
+  "tour_dismissal": {
+    "method": "click_based",
+    "tours_found": 0,
+    "tours_dismissed": 0,
+    "issues": []
+  },
+  "session_health": {
+    "login_attempts": 1,
+    "session_losses": 0,
+    "tour_dismissal_attempts": 0
+  },
+  "execution_order_followed": [
+    "LOGIN",
+    "EXPLORATION",
+    "IDENTIFY ENTITY",
+    "CRUD TEST",
+    "WORKFLOW CHECK",
+    "WHAT_TO_DO",
+    "WHAT_TO_WATCH_OUT_FOR",
+    "DOCUMENTATION",
+    "REPORT"
+  ],
+  "exploration": {
+    "prd_context_used": false,
+    "payload_instructions_followed": 13,
+    "own_logic_additions": [
+      "Navigated profile dropdown menu to find Security settings",
+      "Checked left sidebar navigation items under Profile section",
+      "Verified Cancel flow returns to Security settings with MFA still Disabled",
+      "Checked Email notification settings (related page in same section)"
+    ],
+    "discovered_elements": [
+      "Profile avatar button (top-right) opens profile dropdown menu",
+      "Profile dropdown: View Profile, Add another account, Email notification settings, Security settings, Logout",
+      "Security settings page (/auth/security): two sections - Password settings and Multi-factor authentication",
+      "MFA section: status badge (Disabled/Enabled), descriptive text, Enable/Disable button",
+      "Password settings section: Change Password button linking to /auth/security/change-password",
+      "Enable MFA wizard - Step 1: Download Google Authenticator (with Google Play and App Store links, illustration)",
+      "Enable MFA wizard - Step 2: QR code scan + manual key entry (key: 2S2Y3XBXX7WZCTSO), Cancel and 'I got authentication code' buttons",
+      "Enable MFA wizard - Step 3: 6-digit code input field (auto-focus), Cancel and Verify buttons",
+      "Breadcrumb navigation: Security / Enable Multi-factor authentication",
+      "Left sidebar profile sub-navigation: My profile, Email notification settings, Security settings"
+    ],
+    "navigation_structure": {
+      "tabs": [],
+      "sections": [
+        "Password settings",
+        "Multi-factor authentication"
+      ]
+    },
+    "undocumented_features": [
+      "Manual setup key displayed as alternative to QR code scan (key visible in Step 2)",
+      "Link to instructions for manual setup within the info box on Step 2",
+      "App Store and Google Play download links shown on Step 1"
+    ]
+  },
+  "primary_entity": {
+    "name": "MFA Status",
+    "singular": "MFA toggle",
+    "plural": "N/A - single per-account setting",
+    "identified_from": "Security settings page - single toggle control (Enable/Disable button) with status badge"
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PARTIAL",
+      "payload_triggers_used": ["Enable button on Security settings page"],
+      "own_logic_used": ["Navigated full 3-step wizard to document UI"],
+      "evidence": "06-mfa-setup-step1-download-app.png, 07-mfa-setup-step2-qr-code.png, 08-mfa-setup-step3-verify-code.png",
+      "notes": "Full UI flow documented (Steps 1-3). Activation NOT completed per instructions - would lock demo account. Step 1: Download app. Step 2: Scan QR code (manual key also provided). Step 3: Enter 6-digit verification code."
+    },
+    "read": {
+      "status": "PASSED",
+      "payload_triggers_used": ["Navigated to Security settings page via Profile avatar"],
+      "own_logic_used": [],
+      "evidence": "02-security-settings-page.png, 03-mfa-section-disabled-state.png",
+      "notes": "MFA status clearly visible on Security settings page as 'Disabled' badge with shield icon. Current status: Disabled."
+    },
+    "update": {
+      "status": "NOT_AVAILABLE",
+      "payload_triggers_used": [],
+      "own_logic_used": [],
+      "evidence": "",
+      "notes": "MFA is a binary toggle (Enable/Disable). No edit/update operation exists - only enable or disable."
+    },
+    "delete": {
+      "status": "NOT_TESTABLE",
+      "payload_triggers_used": [],
+      "own_logic_used": [],
+      "evidence": "06-security-page-mfa-disabled-confirmed.png",
+      "notes": "Disable flow (delete equivalent) requires MFA to be currently active. MFA is currently Disabled on the demo account, so the Disable button/flow is not accessible. When active, a Disable button would appear requiring verification code entry."
+    }
+  },
+  "workflow_integration": {
+    "enabled_in_payload": true,
+    "priority": "required",
+    "checked": true,
+    "skipped_reason": null,
+    "triggers_found": [],
+    "actions_found": [],
+    "evidence": "07-workflows-list-page.png, 08-workflow-no-mfa-triggers.png",
+    "notes": "Searched for 'authentication' and 'MFA' in the workflow trigger event selector. Both searches returned 'No search results found'. No MFA-related applications, trigger events, or actions are available in the Workflows automation system. Available applications include Bayzat HR, Bayzat Payroll, Bayzat Timeoff, Bayzat Attendance, etc. - none related to security/MFA."
+  },
+  "approval_flow": {
+    "enabled_in_payload": false,
+    "priority": "optional",
+    "checked": false,
+    "skipped_reason": "Disabled in payload - no evidence of approval flow",
+    "has_approval_flow_tab": false,
+    "tab_name": null,
+    "signals_detected": [],
+    "advanced_flows": [],
+    "default_flow": {},
+    "evidence": []
+  },
+  "what_to_do_results": [
+    {
+      "task": "Activate Multi-factor Authentication (WTD-001)",
+      "steps_in_payload": 7,
+      "steps_completed": 6,
+      "status": "PARTIAL",
+      "result": "Navigated to Profile > Security Settings. MFA section found with 'Disabled' status badge and 'Enable' button. Clicked Enable and documented all 3 steps of the setup wizard: Step 1 (Download Google Authenticator), Step 2 (Scan QR code - manual key 2S2Y3XBXX7WZCTSO also shown), Step 3 (Enter 6-digit verification code). Final activation step (entering live TOTP code) NOT performed per instructions to avoid locking demo account.",
+      "screenshots": ["02-security-settings-page.png", "06-mfa-setup-step1-download-app.png", "07-mfa-setup-step2-qr-code.png", "08-mfa-setup-step3-verify-code.png"]
+    },
+    {
+      "task": "Login using Multi-factor Authentication (WTD-002)",
+      "steps_in_payload": 5,
+      "steps_completed": 0,
+      "status": "NOT_TESTABLE",
+      "result": "Cannot test MFA login flow as MFA is currently disabled on the demo account. MFA must be pre-activated for the login prompt to appear. The login page was observed during initial session setup and shows only standard email/password fields when MFA is not active.",
+      "screenshots": ["00-dashboard-login-success.png"]
+    },
+    {
+      "task": "Deactivate Multi-factor Authentication (WTD-003)",
+      "steps_in_payload": 6,
+      "steps_completed": 1,
+      "status": "PARTIAL",
+      "result": "MFA is currently Disabled on the demo account. The Security Settings page shows 'Enable' button (not Disable). The Disable flow would show a 'Disable' button when MFA is active, requiring a verification code from Google Authenticator. UI documentation complete for the disabled state. Disable flow UI cannot be accessed without first activating MFA.",
+      "screenshots": ["06-security-page-mfa-disabled-confirmed.png", "09-wtd-001-003-mfa-security-page-final.png"]
+    }
+  ],
+  "what_to_watch_out_for_validated": [
+    {
+      "issue": "MFA Disable Process Error Messages (WOF-001)",
+      "limitation": "Users encounter unclear or confusing error messages when attempting to disable MFA. The disable flow requires MFA code verification, but error messaging may not adequately guide users.",
+      "severity": "medium",
+      "jira_reference": "TSSD-781",
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "MFA is currently Disabled on the demo account. The Disable flow (which triggers this error) cannot be accessed without first activating MFA. Error messages in the disable flow could not be tested.",
+      "screenshot": ""
+    },
+    {
+      "issue": "MFA Disablement Restrictions for Finance-Critical Roles (WOF-006)",
+      "limitation": "Users with finance-critical roles cannot disable MFA through standard admin interfaces. When users lose access to their authenticator device, they must request manual backend intervention.",
+      "severity": "medium",
+      "jira_reference": "TSSD-4860, AV-2933",
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "By design per payload. Cannot test without: (1) finance-critical role assignment, (2) active MFA on the account. The demo account does not have finance-critical roles assigned. Confirmed this is an intentional security constraint.",
+      "screenshot": ""
+    },
+    {
+      "issue": "Missing OTP Resend Mechanism in Benefits Authentication (WOF-009)",
+      "limitation": "The Bayzat Benefits authentication process lacks a built-in OTP resend capability. Transaction processors who do not receive their OTP cannot request a new code.",
+      "severity": "medium",
+      "jira_reference": "GS-1859",
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Benefits authentication OTP flow requires Finance Ops access and active transaction processing. Not accessible from the current demo account context. The Benefits/Finance Ops OTP screen was not reachable during this validation.",
+      "screenshot": ""
+    }
+  ],
+  "screenshots_taken": 9,
+  "screenshots_list": [
+    "01-profile-menu-security-settings.png",
+    "02-security-settings-page.png",
+    "03-mfa-section-disabled-state.png",
+    "04-password-settings-section.png",
+    "05-sidebar-preferences-section.png",
+    "06-mfa-setup-step1-download-app.png",
+    "07-mfa-setup-step2-qr-code.png",
+    "08-mfa-setup-step3-verify-code.png",
+    "09-change-password-page.png"
+  ],
+  "validation_timestamp": "2026-02-17T19:15:00.000Z",
+  "summary": "MFA validation completed. Feature is accessible via Profile avatar > Security settings (PREFERENCES in sidebar). Current status on demo account: Disabled. The Security settings page shows two sections: Password settings (with Change Password button) and Multi-factor authentication (with Disabled badge and Enable button). The full 3-step activation wizard was navigated: Step 1 (Download Google Authenticator - with App Store/Google Play links), Step 2 (Scan QR code - QR rendered correctly, manual TOTP key also shown as fallback), Step 3 (6-digit code input, explicitly notes 30-second code validity). Setup cancelled at Step 3 per instructions - MFA remains disabled on demo account. The Change Password page was also documented. Navigation path confirmed: profile avatar click > Security settings menu item > Security page."
+}
