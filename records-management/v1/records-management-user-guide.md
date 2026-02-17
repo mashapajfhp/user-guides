@@ -1557,9 +1557,11 @@ Why does the employee list export show incorrect date formats?
 
 Regional settings (e.g., Turkish locale) may cause date formatting issues in Excel exports. The platform has localization constraints that affect date rendering in some regional configurations.
 
-Does Bayzat support Okta SSO?
+What SSO methods does Bayzat support?
 
-No. Bayzat does not support Okta SSO.
+Bayzat supports **Google SSO** and **Microsoft SSO** only. No other SSO or identity providers are supported.
+
+**Not supported:** Okta, Active Directory Federation Services (ADFS), SAML-based providers, LDAP, OneLogin, Ping Identity, Auth0, JumpCloud, Duo, or any custom identity provider. If your organization relies on a provider other than Google or Microsoft for Single Sign-On, employees must use email/password or Magic Link to log in to Bayzat.
 
 </div>
 
