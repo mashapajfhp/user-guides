@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Management - User Guide</title>
+    <style>
+        /* CSS Reset and Base */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background-color: #ffffff;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+            color: #ffffff;
+            padding: 60px 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            color: #ffffff;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E2E8F0;
+        }
+
+        h3 {
+            font-size: 1.35rem;
+        }
+
+        p {
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        /* Sections */
+        section, .section {
+            margin-bottom: 3rem;
+            padding: 24px;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+        }
+
+        /* Info Boxes */
+        .info-box, .note-box, .tip-box {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            background: #FAF5FF;
+            border-left: 4px solid #6B46C1;
+        }
+
+        .info-box p, .note-box p, .tip-box p {
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .warning-box, .important-box, .caution-box {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            background: #FFFBEB;
+            border-left: 4px solid #D97706;
+        }
+
+        .warning-box p, .important-box p, .caution-box p {
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+            color: #1a1a1a;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #ffffff;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border: 1px solid #E2E8F0;
+            color: #1a1a1a;
+        }
+
+        th {
+            background: #F7FAFC;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        tr:hover {
+            background: #F7FAFC;
+        }
+
+        /* Screenshots */
+        .screenshot-container, figure {
+            margin: 24px auto;
+            text-align: center;
+        }
+
+        .screenshot, figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #E2E8F0;
+            display: block;
+            margin: 0 auto;
+        }
+
+        figcaption {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+            font-style: italic;
+        }
+
+        /* Feature Grid and Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .feature-card, .card {
+            background: #ffffff;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .feature-card h4, .card h4 {
+            color: #1a1a1a;
+            margin-top: 0;
+        }
+
+        .feature-card p, .card p {
+            color: #1a1a1a;
+        }
+
+        /* Journey Grid */
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .journey-step {
+            background: #F7FAFC;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .journey-step .step-number {
+            background: #6B46C1;
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .journey-step h4 {
+            margin: 0 0 8px 0;
+            color: #1a1a1a;
+        }
+
+        .journey-step p {
+            margin: 0;
+            color: #1a1a1a;
+        }
+
+        /* Steps */
+        .step, .step-item {
+            display: flex;
+            gap: 16px;
+            margin: 20px 0;
+            padding: 16px;
+            background: #F7FAFC;
+            border-radius: 8px;
+        }
+
+        .step-number {
+            background: #6B46C1;
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            margin: 0 0 8px 0;
+            color: #1a1a1a;
+        }
+
+        .step-content p {
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        /* Navigation Path */
+        .nav-path, .breadcrumb {
+            background: #F7FAFC;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-family: monospace;
+            color: #1a1a1a;
+            margin: 16px 0;
+        }
+
+        /* Code blocks */
+        code {
+            background: #F7FAFC;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9em;
+            color: #1a1a1a;
+        }
+
+        pre {
+            background: #F7FAFC;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            color: #1a1a1a;
+        }
+
+        /* Links */
+        a {
+            color: #6B46C1;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer, .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #E2E8F0;
+            text-align: center;
+            color: #1a1a1a;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body { padding: 16px; }
+            .hero-banner { padding: 40px 24px; }
+            .hero-banner h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            section, .section { padding: 16px; }
+            table { font-size: 0.9rem; }
+            th, td { padding: 8px 12px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-banner h1 { font-size: 1.5rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .step { flex-direction: column; gap: 12px; }
+        }
+
+        /* Print Styles */
+        @media print {
+            body { max-width: 100%; padding: 0; }
+            .hero-banner { background: #6B46C1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            section, .section { break-inside: avoid; }
+        }
+
+        /* Quick Navigation */
+        .guide-nav { background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%); border-radius: 16px; padding: 24px; margin-bottom: 40px; border: 1px solid #e2e8f0; }
+        .nav-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #e2e8f0; }
+        .nav-icon { font-size: 1.5rem; }
+        .nav-title { font-size: 1.1rem; font-weight: 600; color: #1e293b; }
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+        .nav-card { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #ffffff; border-radius: 12px; text-decoration: none; color: #334155; font-size: 0.9rem; font-weight: 500; border: 1px solid #e2e8f0; transition: all 0.2s ease; }
+        .nav-card:hover { border-color: #6B46C1; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15); transform: translateY(-2px); }
+        .card-icon { font-size: 1.2rem; }
+        .card-label { flex: 1; }
+
+        /* Journey Phases */
+        .journey-roadmap { padding: 24px 0; }
+        .journey-roadmap h3 { margin-top: 0; margin-bottom: 8px; }
+        .journey-roadmap > p { color: #64748b; margin-bottom: 24px; }
+        .journey-phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+        .journey-phase { background: #ffffff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; transition: all 0.2s ease; }
+        .journey-phase:hover { border-color: #6B46C1; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1); }
+        .phase-marker { width: 36px; height: 36px; background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%); color: #ffffff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; margin-bottom: 12px; }
+        .phase-content h4 { margin: 0 0 8px 0; font-size: 1rem; color: #1e293b; }
+        .phase-content .nav-path { font-size: 0.85rem; color: #64748b; margin: 0 0 12px 0; padding: 8px 12px; background: #f8fafc; border-radius: 6px; }
+        .phase-link { display: inline-flex; align-items: center; gap: 4px; font-size: 0.85rem; color: #6B46C1; text-decoration: none; font-weight: 500; }
+        .phase-link:hover { text-decoration: underline; }
+        /* FAQ Accordion */
+        .faq-accordion { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+        .faq-item { border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; background: #ffffff; transition: all 0.2s ease; }
+        .faq-item:hover { border-color: #6B46C1; box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); }
+        .faq-item[open] { border-color: #6B46C1; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15); }
+        .faq-question { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; font-weight: 600; font-size: 1rem; color: #1a1a2e; cursor: pointer; background: #f8f9ff; list-style: none; transition: all 0.2s ease; }
+        .faq-question::-webkit-details-marker { display: none; }
+        .faq-question::after { content: ''; width: 10px; height: 10px; border-right: 2px solid #6B46C1; border-bottom: 2px solid #6B46C1; transform: rotate(-45deg); transition: transform 0.3s ease; flex-shrink: 0; margin-left: 16px; }
+        .faq-item[open] .faq-question::after { transform: rotate(45deg); }
+        .faq-question:hover { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); color: #6B46C1; }
+        .faq-item[open] .faq-question { background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%); border-bottom: 1px solid #e2e8f0; color: #1a1a2e; }
+        .faq-item[open] .faq-question::after { border-color: #1a1a2e; }
+        .faq-answer { padding: 20px; background: #ffffff; color: #334155; line-height: 1.7; border-top: 1px solid #E2E8F0; animation: fadeIn 0.3s ease; }
+        .faq-answer p { margin: 0; color: #334155; }
+        .faq-answer ul, .faq-answer ol { margin: 12px 0; padding-left: 24px; }
+        .faq-answer li { margin-bottom: 8px; color: #334155; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="hero-banner">
+        <h1>Performance Management</h1>
+        <p class="hero-subtitle">Drive employee growth and align individual performance with organizational success</p>
+    </div>
+
+    <nav class="guide-nav" aria-label="Guide navigation">
+      <div class="nav-header">
+        <span class="nav-icon">📖</span>
+        <span class="nav-title">Quick Navigation</span>
+      </div>
+      <div class="nav-grid">
+        <a class="nav-card" href="#feature-overview"><span class="card-icon">✨</span><span class="card-label">Feature Overview</span></a>
+        <a class="nav-card" href="#product-foundation"><span class="card-icon">🏗️</span><span class="card-label">Product Foundation</span></a>
+        <a class="nav-card" href="#user-journey"><span class="card-icon">🗺️</span><span class="card-label">User Journey</span></a>
+        <a class="nav-card" href="#feature-discovery"><span class="card-icon">🔍</span><span class="card-label">Feature Discovery</span></a>
+        <a class="nav-card" href="#setup-process"><span class="card-icon">⚙️</span><span class="card-label">Setup Process</span></a>
+        <a class="nav-card" href="#feature-usage"><span class="card-icon">📋</span><span class="card-label">Feature Usage</span></a>
+        <a class="nav-card" href="#troubleshooting"><span class="card-icon">🔧</span><span class="card-label">Troubleshooting</span></a>
+        <a class="nav-card" href="#support-resources"><span class="card-icon">💬</span><span class="card-label">Support Resources</span></a>
+      </div>
+    </nav>
+
+    <figure class="screenshot-container">
+        <img src="validation/screenshots/08-performance-cycles-list.png" alt="Performance Management cycles list interface" class="screenshot">
+        <figcaption>Performance Management cycles overview in Bayzat HR</figcaption>
+    </figure>
+
+    <section id="feature-overview">
+        <h2>What is Performance Management?</h2>
+
+        <h3>Overview</h3>
+        <p>Bayzat Performance Management offers <strong>two distinct approaches</strong> to evaluating and developing employees, each designed for different organizational needs:</p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>1. Goals-Based Performance</h4>
+                <p>A structured, cycle-based system for setting, tracking, and reviewing employee goals. Performance Cycles define specific periods for goal setting, tracking, reviews, and calibration.</p>
+                <p><strong>Navigation:</strong> Performance → Goals | Reviews | My Performance</p>
+                <p><strong>Best for:</strong> Structured annual/quarterly reviews tied to measurable objectives</p>
+            </div>
+            <div class="feature-card">
+                <h4>2. 360° Reviews (Beta)</h4>
+                <p>A standalone feedback system for gathering multi-directional input. Collect feedback from managers, peers, and direct reports independently of performance cycles.</p>
+                <p><strong>Navigation:</strong> Performance → 360° Reviews | My 360° Reviews</p>
+                <p><strong>Best for:</strong> Comprehensive feedback on competencies and behaviors from multiple perspectives</p>
+            </div>
+        </div>
+
+        <h3>Key Differences</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Goals-Based Performance</th>
+                    <th>360° Reviews</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Structure</strong></td>
+                    <td>Tied to Performance Cycles with defined phases</td>
+                    <td>Independent review cycles, can run anytime</td>
+                </tr>
+                <tr>
+                    <td><strong>Primary Focus</strong></td>
+                    <td>Goal achievement and tracking</td>
+                    <td>Multi-directional feedback collection</td>
+                </tr>
+                <tr>
+                    <td><strong>Workflow</strong></td>
+                    <td>Goal Setting → Tracking → Review → Calibration</td>
+                    <td>Create Review → Peer Nominations → Collect Feedback → Reports</td>
+                </tr>
+                <tr>
+                    <td><strong>Feedback Sources</strong></td>
+                    <td>Self-assessment + Manager review</td>
+                    <td>Self + Manager + Peers + Direct Reports</td>
+                </tr>
+                <tr>
+                    <td><strong>Statuses</strong></td>
+                    <td>Draft → Pending Approval → Approved</td>
+                    <td>Draft → Pending Peer Nominations → Ongoing → Completed</td>
+                </tr>
+                <tr>
+                    <td><strong>Feature Status</strong></td>
+                    <td>Full release</td>
+                    <td>Beta</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Key Benefits</h3>
+        <ul>
+            <li>Create and manage comprehensive performance review cycles with structured phases</li>
+            <li>Set and track employee goals with approval workflows and weight balancing</li>
+            <li>Conduct 360° feedback reviews for holistic performance insights from multiple perspectives</li>
+            <li>Configure custom rating scales and goal types to match your organization's methodology</li>
+            <li>Record catch-ups to document one-on-one meetings and ongoing feedback</li>
+        </ul>
+
+        <h3>Who Uses This Feature?</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>User Role</th>
+              <th>What They Do</th>
+              <th>Value Proposition</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>HR Administrators</strong></td>
+              <td>Configure performance cycles, rating scales, and goal types. Manage organization-wide performance settings and monitor cycle progress across the company.</td>
+              <td>Run structured performance cycles that complete on time with full participation—eliminating manual tracking and last-minute review scrambles</td>
+            </tr>
+            <tr>
+              <td><strong>Managers</strong></td>
+              <td>Conduct performance reviews, provide feedback on employee goals, and participate in calibration sessions. Write evaluations and track team member development.</td>
+              <td>Give meaningful feedback with full context on goals and achievements—rather than scrambling to recall a year's worth of performance at review time</td>
+            </tr>
+            <tr>
+              <td><strong>Employees</strong></td>
+              <td>Set personal goals, complete self-assessments, view performance feedback, and participate in 360° reviews as nominees or reviewers.</td>
+              <td>Own your career development with clear goals and regular feedback—understanding exactly where you stand and what growth looks like</td>
+            </tr>
+          </tbody>
+        </table>
+    </section>
+
+    <section class="section section-product-foundation" id="product-foundation">
+        <header class="section-header">
+            <h2 class="section-title">Product Foundation Overview</h2>
+        </header>
+        <div class="section-body">
+            <div class="subsection">
+                <h3>How Performance Management Fits</h3>
+                <p>Performance Management provides <strong>two complementary evaluation systems</strong> that can be used independently or together based on your organization's needs.</p>
+
+                <div class="info-box">
+                    <p><strong>Goals-Based Mental Model:</strong> HR creates cycle → Employees set goals → Manager approves goals → Goal tracking period → Self-assessment → Manager review → Calibration session → Cycle completes with documented outcomes.</p>
+                </div>
+
+                <div class="info-box">
+                    <p><strong>360° Reviews Mental Model:</strong> HR starts review → Select employees → Peer nominations → Feedback collection from all directions (self, manager, peers, reports) → Generate comprehensive feedback reports.</p>
+                </div>
+
+                <p>Organizations often use Goals-Based Performance for structured quarterly or annual reviews tied to objectives, while 360° Reviews provide additional behavioral and competency feedback from multiple perspectives.</p>
+            </div>
+
+            <div class="subsection">
+                <h3>Key Decisions Before Setup</h3>
+                <p>Answer these questions before creating a performance cycle:</p>
+                <ul>
+                    <li><strong>What is the cycle frequency?</strong> — Annual, semi-annual, or quarterly cycles based on your organization's needs</li>
+                    <li><strong>What rating scale will you use?</strong> — Configure rating levels with labels and descriptions</li>
+                    <li><strong>Will you include goal tracking?</strong> — Enable goal management with approval workflows</li>
+                    <li><strong>Will you use 360° feedback?</strong> — Add peer feedback for comprehensive insights</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>Related Features</h3>
+                <ul>
+                    <li><strong>Employee Profiles</strong> — View employee details and reporting relationships used in review assignments</li>
+                    <li><strong>People Directory</strong> — Organizational structure that defines manager-employee relationships</li>
+                    <li><strong>Org Chart</strong> — Visual hierarchy used to determine review chains and calibration groups</li>
+                    <li><strong>Notifications</strong> — Alerts employees and managers about review deadlines and goal approvals</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>Prerequisites & Requirements</h3>
+                <table class="requirements-table">
+                    <thead>
+                        <tr>
+                            <th>Requirement</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Active Bayzat HR Account</td>
+                            <td>Performance Management is a module within Bayzat HR platform</td>
+                            <td>Required</td>
+                        </tr>
+                        <tr>
+                            <td>Employee Records</td>
+                            <td>Employees must exist in the system before inclusion in cycles</td>
+                            <td>Required</td>
+                        </tr>
+                        <tr>
+                            <td>Organizational Structure</td>
+                            <td>Manager-employee relationships must be defined for review workflows</td>
+                            <td>Required</td>
+                        </tr>
+                        <tr>
+                            <td>Rating Scales</td>
+                            <td>Define the rating system for evaluations before creating cycles</td>
+                            <td>Required</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <figure>
+                <img src="validation/screenshots/08-performance-cycles-list.png" alt="Performance Management cycles overview" />
+                <figcaption>Performance Management cycles overview showing active and past cycles</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section id="user-journey">
+        <h2>Complete User Journey Guide</h2>
+
+        <div class="journey-roadmap">
+          <h3>End-to-End Journey: Performance Management</h3>
+          <p>From cycle setup through completion and results sharing.</p>
+
+          <div class="journey-phases">
+            <div class="journey-phase">
+              <div class="phase-marker">1</div>
+              <div class="phase-content">
+                <h4>Configure Settings</h4>
+                <div class="nav-path">Settings → Performance → Rating scales, goal types</div>
+                <a href="#setup-process" class="phase-link">See setup →</a>
+              </div>
+            </div>
+            <div class="journey-phase">
+              <div class="phase-marker">2</div>
+              <div class="phase-content">
+                <h4>Goal Setting</h4>
+                <div class="nav-path">My Performance → Goals → Set & submit</div>
+                <a href="#feature-usage" class="phase-link">See goals →</a>
+              </div>
+            </div>
+            <div class="journey-phase">
+              <div class="phase-marker">3</div>
+              <div class="phase-content">
+                <h4>Self-Assessment</h4>
+                <div class="nav-path">Complete self-reviews against goals</div>
+                <a href="#feature-usage" class="phase-link">See assessment →</a>
+              </div>
+            </div>
+            <div class="journey-phase">
+              <div class="phase-marker">4</div>
+              <div class="phase-content">
+                <h4>Manager Review</h4>
+                <div class="nav-path">Reviews → Evaluate performance</div>
+                <a href="#feature-usage" class="phase-link">See reviews →</a>
+              </div>
+            </div>
+            <div class="journey-phase">
+              <div class="phase-marker">5</div>
+              <div class="phase-content">
+                <h4>Calibration</h4>
+                <div class="nav-path">Review ratings for consistency</div>
+                <a href="#feature-usage" class="phase-link">See calibration →</a>
+              </div>
+            </div>
+            <div class="journey-phase">
+              <div class="phase-marker">6</div>
+              <div class="phase-content">
+                <h4>Completion</h4>
+                <div class="nav-path">Share results → Past status</div>
+                <a href="#feature-usage" class="phase-link">See completion →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="journey-roadmap" style="margin-top: 40px;">
+          <h3>End-to-End Journey: 360 Feedback</h3>
+          <p>From review setup through feedback collection and report generation.</p>
+
+          <div class="journey-phases">
+            <div class="journey-phase">
+              <div class="phase-marker">1</div>
+              <div class="phase-content">
+                <h4>Review Setup</h4>
+                <div class="nav-path">Performance → 360° reviews → Start 360° review</div>
+                <a href="#feature-usage" class="phase-link">See setup →</a>
+              </div>
+            </div>
+            <div class="journey-phase">
+              <div class="phase-marker">2</div>
+              <div class="phase-content">
+                <h4>Peer Nomination</h4>
+                <div class="nav-path">Employees/managers nominate peers → AI suggestions available</div>
+                <a href="#feature-usage" class="phase-link">See nominations →</a>
+              </div>
+            </div>
+            <div class="journey-phase">
+              <div class="phase-marker">3</div>
+              <div class="phase-content">
+                <h4>Feedback Submission</h4>
+                <div class="nav-path">Surveys sent → Self, manager, peer responses</div>
+                <a href="#feature-usage" class="phase-link">See surveys →</a>
+              </div>
+            </div>
+            <div class="journey-phase">
+              <div class="phase-marker">4</div>
+              <div class="phase-content">
+                <h4>Report Finalization</h4>
+                <div class="nav-path">Consolidated feedback → Share reports</div>
+                <a href="#feature-usage" class="phase-link">See reports →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <section id="feature-discovery">
+        <h2>Feature Discovery</h2>
+
+        <h3>How to Access</h3>
+        <p>Performance Management features are accessed through the Performance menu in the left sidebar. The menu is organized into two distinct sections reflecting the two approaches to performance management.</p>
+
+        <h3>Navigation Paths</h3>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/03-performance-menu-expanded.png" alt="Performance menu showing all options" class="screenshot">
+            <figcaption>Accessing Performance Management through the left sidebar menu</figcaption>
+        </figure>
+
+        <h4>Goals-Based Performance Navigation</h4>
+        <div class="nav-path">
+            <strong>Goals (HR/Manager View)</strong><br>
+            Performance → Goals → View and manage employee goals by cycle
+        </div>
+
+        <div class="nav-path">
+            <strong>Reviews (Manager View)</strong><br>
+            Performance → Reviews → Conduct performance reviews for team members
+        </div>
+
+        <div class="nav-path">
+            <strong>My Performance (Employee View)</strong><br>
+            Performance → My performance → View personal goals, reviews, and catch-ups
+        </div>
+
+        <div class="nav-path">
+            <strong>Cycle Configuration (HR Admin)</strong><br>
+            Settings → Performance → Cycles → Create and configure performance cycles
+        </div>
+
+        <h4>360° Reviews Navigation</h4>
+        <div class="nav-path">
+            <strong>360° Reviews (HR/Manager View)</strong><br>
+            Performance → 360° reviews Beta → Create and manage multi-rater feedback cycles
+        </div>
+
+        <div class="nav-path">
+            <strong>My 360° Reviews (Employee View)</strong><br>
+            Performance → My 360° reviews Beta → View your received feedback and pending reviews
+        </div>
+
+        <div class="info-box">
+            <p><strong>Note:</strong> 360° Reviews is currently a Beta feature. The navigation shows "Beta" labels next to these menu items to indicate the feature is still being refined.</p>
+        </div>
+    </section>
+
+    <section id="setup-process">
+        <h2>Setup Process</h2>
+
+        <h3>Configuring Rating Scales (Admin)</h3>
+        <p>Before creating performance cycles, HR administrators must configure rating scales. This defines how employees will be evaluated.</p>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/87-performance-settings-page.png" alt="Performance Management settings page" class="screenshot">
+            <figcaption>Performance Management settings accessed via Settings → Performance</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4>Navigate to Rating Scales</h4>
+                <p>Go to Settings → Performance → Rating scales. This opens the rating scale configuration page.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/88-rating-scales-expanded.png" alt="Rating scales section expanded" class="screenshot">
+            <figcaption>Rating scales section showing configured rating levels</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4>Create a New Rating Scale</h4>
+                <p>Click 'Edit rating scale' to modify the existing scale or configure a new one. Select the scale type (e.g., "5 point scale") and optionally enable "Include N/A in rating".</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4>Define Rating Levels</h4>
+                <p>For each rating level, enter a Label (short code like K, S, A, M, W) and a Description explaining what that rating means. Click "Save changes" when done.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/89-rating-scale-edit-form.png" alt="Rating scale edit form" class="screenshot">
+            <figcaption>Editing rating scale with labels and descriptions for each level</figcaption>
+        </figure>
+
+        <h3>Creating a Performance Cycle</h3>
+        <p>Performance Cycles are the foundation of your performance management process. The cycle creation wizard guides you through 5 steps to configure your cycle.</p>
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4>Cycle Details</h4>
+                <p>Navigate to Settings → Performance → Cycles and click "Add new". Enter the cycle name, select start and end dates for the cycle period, and manage which employees are included in this cycle.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/94-cycle-wizard-step1-complete.png" alt="Step 1: Cycle details configuration" class="screenshot">
+            <figcaption>Step 1: Setting cycle name, period dates, and reviewing employees included</figcaption>
+        </figure>
+
+        <h4>Managing Employees in the Cycle</h4>
+        <p>Click "Manage List" to control which employees are included in the performance cycle. You can search for specific employees, filter by office, department, or probation status.</p>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/96-manage-employees-list.png" alt="Manage employees in cycle dialog" class="screenshot">
+            <figcaption>Employee management dialog showing included employees with probation information</figcaption>
+        </figure>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/97-manage-employees-filters-probation.png" alt="Employee filters with probation options" class="screenshot">
+            <figcaption>Filter options including office, department, and probation date settings</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4>Goal Setting Permissions</h4>
+                <p>Configure who can set goals for employees: HR/Performance managers (always enabled), Line managers, and/or Employees themselves.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/95-cycle-wizard-step2-goal-setting.png" alt="Step 2: Goal setting permissions" class="screenshot">
+            <figcaption>Step 2: Selecting who can create and approve goals</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4>Performance Review Configuration</h4>
+                <p>Set up review types (Self review, Line manager to employee), calibration permissions, and scoring settings like rounding options.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/98-cycle-wizard-step3-performance-review.png" alt="Step 3: Performance review settings" class="screenshot">
+            <figcaption>Step 3: Configuring review types, calibration permissions, and scoring settings</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h4>Timeline Configuration</h4>
+                <p>Set specific date ranges for each cycle activity: Goal setting, Goal approval, Tracking, and Line manager review periods. Enable reminders for each phase.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/100-cycle-wizard-step4-timeline-valid.png" alt="Step 4: Timeline configuration" class="screenshot">
+            <figcaption>Step 4: Setting activity dates with reminders for each phase</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+                <h4>Review and Create</h4>
+                <p>Review all cycle configuration including employees, review types, rating scale, and activity timeline. Click "Create cycle" to launch the cycle.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/101-cycle-wizard-step5-summary.png" alt="Step 5: Summary and create" class="screenshot">
+            <figcaption>Step 5: Summary of all cycle settings before creation</figcaption>
+        </figure>
+
+        <div class="warning-box">
+            <p><strong>Important:</strong> Plan your cycle dates carefully. Cycle dates cannot overlap with existing cycles. Once a cycle is created and active, date modifications require backend support intervention (see limitations section).</p>
+        </div>
+
+        <h3>Managing Goal Types</h3>
+        <p>Configure goal categories for your organization to help organize and classify employee objectives.</p>
+
+        <ol>
+            <li>Navigate to Settings → Performance → Goal types</li>
+            <li>Click "Add new" to create a new goal type</li>
+            <li>Enter goal type name (e.g., "Competency", "Outcome", "Personal Development")</li>
+            <li>Save the goal type</li>
+        </ol>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/90-goal-types-expanded.png" alt="Goal types configuration" class="screenshot">
+            <figcaption>Goal types section showing existing types with edit and delete options</figcaption>
+        </figure>
+
+        <div class="tip-box">
+            <p><strong>Tip:</strong> Create goal types that align with your organization's objective-setting methodology, such as OKRs or KPIs.</p>
+        </div>
+    </section>
+
+    <section id="feature-usage">
+        <h2>Feature Usage</h2>
+
+        <h3>Common Workflows</h3>
+
+        <h4>Goal Setting (Employee)</h4>
+        <p>Employees create and submit goals for manager approval during the goal-setting phase of a performance cycle.</p>
+
+        <h4>Self-Assessment (Employee)</h4>
+        <p>Employees evaluate their own performance against goals and provide self-ratings during the review period.</p>
+
+        <h4>Manager Review (Manager)</h4>
+        <p>Managers evaluate team members' performance, provide ratings, and write feedback.</p>
+
+        <h3>Setting Goals (Employee Flow)</h3>
+        <p>Employees set goals through the Performance menu. Goals progress through Draft, Pending, and Approved statuses.</p>
+
+        <h4>Creating Goals via My Performance</h4>
+        <p>Employees can create their own goals directly from the "My Performance" section. This is the self-service view for managing your individual performance.</p>
+
+        <div class="nav-path">
+            <strong>Employee Goal Creation Path</strong><br>
+            Performance (left sidebar) → My performance → Goals and reviews tab → Create goal
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/81-my-performance-page.png" alt="My Performance page showing Goals section" class="screenshot">
+            <figcaption>My Performance page - Employee view for creating and managing goals</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4>Access My Performance</h4>
+                <p>Click Performance in the left sidebar, then select "My performance" to access your personal performance view.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4>Click Create Goal</h4>
+                <p>In the Goals section, click the "Create goal" button to open the goal creation form.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/82-create-goal-form.png" alt="Create goal form showing all fields" class="screenshot">
+            <figcaption>Goal creation form with name, description, type, dates, and weight fields</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4>Fill in Goal Details</h4>
+                <p>Complete the goal form with:</p>
+                <ul>
+                    <li><strong>Goal name:</strong> A clear, descriptive title for your goal</li>
+                    <li><strong>Goal description (Optional):</strong> Additional details about the goal</li>
+                    <li><strong>Goal type (Optional):</strong> Select from configured types (e.g., Competency, Outcome, Personal Development)</li>
+                    <li><strong>Start date and End date:</strong> The timeframe for achieving the goal</li>
+                    <li><strong>Weight:</strong> The importance of this goal relative to others (see weightage section below)</li>
+                </ul>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/83-goal-type-options.png" alt="Goal type dropdown showing available options" class="screenshot">
+            <figcaption>Goal type options configured by your organization</figcaption>
+        </figure>
+
+        <h4>Understanding Goal Weightages</h4>
+        <p>Goal weights communicate the relative importance of each goal. The system enforces that <strong>the total weight of all goals assigned to an employee must equal 100%</strong>.</p>
+
+        <div class="warning-box">
+            <p><strong>Important - Goal Weight Balancing:</strong> When creating multiple goals, ensure that the weights add up to exactly 100%. For example:</p>
+            <ul>
+                <li>Goal 1: 40%</li>
+                <li>Goal 2: 35%</li>
+                <li>Goal 3: 25%</li>
+                <li><strong>Total: 100%</strong></li>
+            </ul>
+            <p>Goals cannot be finalized if the total weight does not equal 100%.</p>
+        </div>
+
+        <div class="info-box">
+            <p><strong>Quick Filter for Weight Issues:</strong> HR and managers can use the "Employees with goals weight needs review" quick filter on the Goals page to identify employees whose goal weights don't balance to 100%.</p>
+        </div>
+
+        <h4>HR/Manager Goal Management View</h4>
+        <p>HR administrators and managers can view and manage employee goals through the Performance → Goals page.</p>
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4>Navigate to Goals</h4>
+                <p>Click Performance in the left sidebar, then select Goals.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/10-goals-list-page.png" alt="Goals page showing draft goals" class="screenshot">
+            <figcaption>Goals page with Draft, Pending approval, and Approved tabs</figcaption>
+        </figure>
+
+        <h4>Goals Page Quick Filters</h4>
+        <p>The Goals page provides quick filters to help HR and managers identify employees needing attention:</p>
+        <ul>
+            <li><strong>Employees without goals:</strong> Employees who haven't created any goals yet</li>
+            <li><strong>Employees with goals weight needs review:</strong> Goals don't add up to 100%</li>
+            <li><strong>Pending employee confirmation on goals:</strong> Goals awaiting employee acknowledgment</li>
+        </ul>
+
+        <div class="info-box">
+            <p><strong>Pending Employee Confirmation:</strong> When goals are created by HR or managers, employees must confirm them. Use the "Send reminder" button to notify employees who haven't confirmed their goals.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4>Create New Goal</h4>
+                <p>Click "Add goal" to create a new goal. Enter the goal title, description, and select the goal type.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4>Set Target Dates</h4>
+                <p>Define start and end dates for the goal, along with any milestones.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h4>Submit for Approval</h4>
+                <p>Save as Draft to continue editing later, or submit the goal to move it to Pending status for manager approval.</p>
+            </div>
+        </div>
+
+        <h4>Bulk Create Goals</h4>
+        <p>HR administrators can create goals in bulk and assign them to multiple employees at once using the Bulk create goals feature. This is especially useful when setting up company-wide or department-wide objectives.</p>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/102-goals-page-bulk-create-button.png" alt="Goals page showing Bulk create goals button" class="screenshot">
+            <figcaption>Goals page with the Bulk create goals button in the top right corner</figcaption>
+        </figure>
+
+        <p>The Bulk create goals wizard guides you through a 3-step process:</p>
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4>Add Goals</h4>
+                <p>Click "Create goals" to add goals that will be assigned in bulk. For each goal, specify the name, description (optional), goal type, start/end dates, and weight.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/103-bulk-create-goals-step1-empty.png" alt="Bulk create goals Step 1 empty state" class="screenshot">
+            <figcaption>Step 1: Add goals - Initial view of the bulk create goals wizard</figcaption>
+        </figure>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/104-bulk-create-goals-dialog.png" alt="Create goal dialog" class="screenshot">
+            <figcaption>Goal creation dialog with fields for name, description, type, dates, and weight</figcaption>
+        </figure>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/105-bulk-create-goal-type-dropdown.png" alt="Goal type dropdown options" class="screenshot">
+            <figcaption>Goal type dropdown showing available goal types (Competency, Outcome, Personal Development, etc.)</figcaption>
+        </figure>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/107-bulk-create-goals-step1-with-goal.png" alt="Step 1 with goal added" class="screenshot">
+            <figcaption>Step 1 completed with a goal added, showing goal details and total weight</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4>Assign to Employees</h4>
+                <p>Select which employees should receive the goals. Use the search and filter options to find specific employees, or use "Add all" to include everyone.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/108-bulk-create-goals-step2-assign-employees.png" alt="Step 2 assign employees initial view" class="screenshot">
+            <figcaption>Step 2: Assign to employees - Select employees from the left panel to include them</figcaption>
+        </figure>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/109-bulk-create-goals-step2-with-employees.png" alt="Step 2 with employees selected" class="screenshot">
+            <figcaption>Employees moved to the "Employees included in cycle" panel for goal assignment</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4>Summary</h4>
+                <p>Review the goals and assigned employees before finalizing. Click "Create goals" to complete the bulk assignment.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/110-bulk-create-goals-step3-summary.png" alt="Step 3 summary before creation" class="screenshot">
+            <figcaption>Step 3: Summary showing goals to be assigned and total weight</figcaption>
+        </figure>
+
+        <h3>Understanding Goal Statuses</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Meaning</th>
+                    <th>Next Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Draft</td>
+                    <td>Goal being created or edited</td>
+                    <td>Complete details and submit</td>
+                </tr>
+                <tr>
+                    <td>Pending</td>
+                    <td>Awaiting manager approval</td>
+                    <td>Wait for manager review</td>
+                </tr>
+                <tr>
+                    <td>Approved</td>
+                    <td>Finalized and active</td>
+                    <td>Track progress</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Conducting Reviews (Manager Flow)</h3>
+        <ol>
+            <li>Navigate to Performance → Reviews</li>
+            <li>Select the active performance cycle</li>
+            <li>Click on a team member to open their review</li>
+            <li>Review their self-assessment and goals</li>
+            <li>Provide ratings and written feedback</li>
+            <li>Submit the review</li>
+        </ol>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/04-reviews-main-page.png" alt="Reviews tab showing team reviews" class="screenshot">
+            <figcaption>Reviews tab for managers to evaluate team member performance</figcaption>
+        </figure>
+
+        <h3>360° Reviews (Beta)</h3>
+        <p>The 360° Reviews feature enables comprehensive multi-rater feedback collection from multiple perspectives including self, managers, peers, and direct reports.</p>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/20-360-reviews-overview.png" alt="360° Reviews Beta page" class="screenshot">
+            <figcaption>360° Reviews Beta overview showing active reviews and metrics</figcaption>
+        </figure>
+
+        <h4>360° Review Lifecycle (4 Phases)</h4>
+        <p>Each 360° review follows a structured timeline with four distinct phases:</p>
+
+        <div class="journey-phases">
+            <div class="journey-phase">
+                <div class="phase-marker">1</div>
+                <div class="phase-content">
+                    <h4>Review Setup</h4>
+                    <p>HR creates the review, selects participants, and configures timeline dates for each phase.</p>
+                </div>
+            </div>
+            <div class="journey-phase">
+                <div class="phase-marker">2</div>
+                <div class="phase-content">
+                    <h4>Peer Nomination Period</h4>
+                    <p>Employees and/or managers nominate peers who will provide feedback. AI-suggested peers are available to help identify collaborators.</p>
+                </div>
+            </div>
+            <div class="journey-phase">
+                <div class="phase-marker">3</div>
+                <div class="phase-content">
+                    <h4>Feedback Submission Period</h4>
+                    <p>Surveys are sent to all reviewers (self, managers, peers). Responses are collected and tracked.</p>
+                </div>
+            </div>
+            <div class="journey-phase">
+                <div class="phase-marker">4</div>
+                <div class="phase-content">
+                    <h4>Review and Report Finalization</h4>
+                    <p>Consolidated feedback reports are generated for each participant, combining all reviewer input.</p>
+                </div>
+            </div>
+        </div>
+
+        <h4>Creating a 360° Review</h4>
+        <ol>
+            <li>Navigate to Performance → 360° reviews Beta</li>
+            <li>Click "Start 360° review"</li>
+            <li>Complete the 4-step wizard:
+                <ul>
+                    <li><strong>Step 1 - Basic info:</strong> Enter review name, optional description, and configure three timeline periods:
+                        <ul>
+                            <li>Peer nomination period (start and end dates)</li>
+                            <li>Feedback submission period (start and end dates)</li>
+                            <li>Review and report finalization period (start and end dates)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Step 2 - Select participants:</strong> Choose employees to be reviewed. Line managers are automatically added for each participant.</li>
+                    <li><strong>Step 3 - Setup nominations:</strong> Configure peer nomination settings:
+                        <ul>
+                            <li>Minimum and maximum number of peers per employee</li>
+                            <li>Who can nominate: Employee only, Line manager only, or Both</li>
+                        </ul>
+                    </li>
+                    <li><strong>Step 4 - Review and send:</strong> Review all settings including participant count, nomination settings, and timeline dates</li>
+                </ul>
+            </li>
+            <li>Click "Create 360° review" to launch the review</li>
+        </ol>
+
+        <h4>Managing 360° Reviews (5 Tabs)</h4>
+        <p>Once a 360° review is created, it can be managed through five tabs:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tab</th>
+                    <th>Purpose</th>
+                    <th>Key Features</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Overview</strong></td>
+                    <td>Dashboard view of review progress</td>
+                    <td>Metrics cards (Employees Involved, Peer Nominations Progress, Survey Questions, Launch Readiness), Timeline/Milestones, Actions & Reminders, Participation Breakdown, Activity History</td>
+                </tr>
+                <tr>
+                    <td><strong>Peer Nominations</strong></td>
+                    <td>Manage peer reviewer selections</td>
+                    <td>Employee list with nomination status, "Manage" button for peer selection, AI-suggested peers, Send reminders</td>
+                </tr>
+                <tr>
+                    <td><strong>Surveys</strong></td>
+                    <td>Configure feedback surveys</td>
+                    <td>Four survey types (Self Review, Manager Review, Direct Reports Review, Peer Review), Question bank with 8 feedback categories, Preview surveys option</td>
+                </tr>
+                <tr>
+                    <td><strong>Responses</strong></td>
+                    <td>Track feedback collection</td>
+                    <td>Response status per employee, Quick filters (Not started, In progress, Completed), Response tracking table</td>
+                </tr>
+                <tr>
+                    <td><strong>Reports</strong></td>
+                    <td>View consolidated feedback</td>
+                    <td>Individual reports per participant combining all reviewer feedback (available after responses are collected)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Four Survey Types</h4>
+        <p>360° Reviews use four distinct survey types, each designed for a specific reviewer perspective:</p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Self Review</h4>
+                <p>Sent to the employee to reflect on their own contributions and development. Enables self-awareness and comparison with external feedback.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Manager Review</h4>
+                <p>Sent to the employee's direct manager to provide performance feedback and development insights from a supervisory perspective.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Direct Reports Review</h4>
+                <p>Sent to employees who report directly to the person being reviewed. Provides upward feedback on management and leadership behaviors.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Peer Review</h4>
+                <p>Sent to nominated peers who work closely with the employee. Helps capture collaboration dynamics and team impact.</p>
+            </div>
+        </div>
+
+        <h4>Question Bank & Feedback Categories</h4>
+        <p>360° Reviews include a pre-built question bank organized into 8 feedback categories:</p>
+        <ul>
+            <li><strong>Problem Solving</strong> - Questions about analytical thinking and solution-finding</li>
+            <li><strong>Technical Expertise</strong> - Questions about job-specific skills and knowledge</li>
+            <li><strong>Leadership & Influence</strong> - Questions about guiding and motivating others</li>
+            <li><strong>Values & Culture Fit</strong> - Questions about alignment with company values</li>
+            <li><strong>Flexibility and Adaptability</strong> - Questions about handling change</li>
+            <li><strong>Reliability and Dependability</strong> - Questions about consistency and trust</li>
+            <li><strong>Communication Skills</strong> - Questions about clarity and effectiveness in communication</li>
+            <li><strong>Teamwork and Collaboration</strong> - Questions about working with others</li>
+        </ul>
+
+        <p>Each question in the bank has variants tailored for different perspectives (Employee self-review, Manager, Direct Reports, and Peer), ensuring appropriate phrasing for each reviewer type.</p>
+
+        <h4>Survey Question Types</h4>
+        <p>Survey questions can use three different response formats:</p>
+        <ul>
+            <li><strong>Opinion Scale</strong> - Rating scale questions (e.g., 1-5 or Strongly Disagree to Strongly Agree)</li>
+            <li><strong>Multiple Choice</strong> - Select one or more options from predefined answers</li>
+            <li><strong>Free Text</strong> - Open-ended questions for detailed written feedback</li>
+        </ul>
+
+        <div class="tip-box">
+            <p><strong>Bulk Survey Creation:</strong> Use the "Create all surveys" button to generate standardized surveys for all four participant types at once. Individual surveys can be customized later if needed.</p>
+        </div>
+
+        <h4>Responses Tab Tracking</h4>
+        <p>The Responses tab provides comprehensive tracking of feedback collection progress:</p>
+        <ul>
+            <li><strong>Quick filters:</strong> All, Not started, In progress, Completed</li>
+            <li><strong>Employee list:</strong> Shows each participant with their response count (e.g., "0/4" meaning 0 of 4 expected responses received)</li>
+            <li><strong>Status indicators:</strong> Not started, In progress, or Completed for each employee</li>
+            <li><strong>Actions:</strong> View detailed breakdown by reviewer type, Send reminders to pending reviewers</li>
+        </ul>
+
+        <p>Click "View" for any employee to see their feedback broken down by reviewer type (Employee, Line Manager, Direct Reports, Peer) with individual response status for each.</p>
+
+        <h4>Managing Peer Nominations</h4>
+        <p>HR administrators and managers can manage peer nominations through a dedicated interface. Click "Manage" for any employee in the Peer Nominations tab to access:</p>
+        <ul>
+            <li><strong>Employee and Line Manager Info:</strong> Shows the employee being reviewed and their assigned line manager</li>
+            <li><strong>AI-Suggested Peers:</strong> The system displays "[Employee name] works together with following peers" with recommendations based on collaboration patterns</li>
+            <li><strong>Dual-List Picker:</strong> Move employees between "Not included in cycle" and "Employees included in cycle" lists using arrow buttons</li>
+            <li><strong>Add All / Remove All:</strong> Bulk actions for quickly including or excluding employees</li>
+            <li><strong>Save peer selection:</strong> Confirm your changes by clicking this button</li>
+        </ul>
+
+        <div class="info-box">
+            <p><strong>Direct Report Restriction:</strong> Direct reports cannot be selected as peer reviewers. The system automatically disables this option with the message: "Direct reportees cannot be selected as peer reviewers."</p>
+        </div>
+
+        <h4>Peer Nomination Quick Filters</h4>
+        <p>The Peer Nominations tab provides quick filters to track nomination progress:</p>
+        <ul>
+            <li><strong>All:</strong> Shows all employees in the review</li>
+            <li><strong>No Peers:</strong> Employees who have no peers assigned yet</li>
+            <li><strong>Pending Peers:</strong> Employees with nominations in progress</li>
+            <li><strong>Completed:</strong> Employees with finalized peer nominations</li>
+        </ul>
+
+        <h4>AI-Suggested Peers</h4>
+        <p>When managing peer nominations, the system offers AI-suggested peers based on collaboration patterns. This feature helps identify relevant reviewers who work closely with the employee.</p>
+
+        <div class="info-box">
+            <p><strong>How to Use AI Suggestions:</strong> In the Peer Nominations tab, click "Manage" for any employee. Look for the "Add AI suggested peers" button which appears alongside suggested colleague names. Click it to automatically include these recommendations in the peer list.</p>
+        </div>
+
+        <h4>360° Review Statuses</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Meaning</th>
+                    <th>Next Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Draft</strong></td>
+                    <td>Review created but not yet published</td>
+                    <td>Complete setup and publish</td>
+                </tr>
+                <tr>
+                    <td><strong>Pending Peer Nominations</strong></td>
+                    <td>Awaiting peer selections from employees/managers</td>
+                    <td>Send reminders, finalize peer lists</td>
+                </tr>
+                <tr>
+                    <td><strong>Ongoing</strong></td>
+                    <td>Feedback collection in progress</td>
+                    <td>Monitor response rates, send reminders</td>
+                </tr>
+                <tr>
+                    <td><strong>Completed</strong></td>
+                    <td>All responses collected, reports available</td>
+                    <td>Generate and share reports</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Employee View: My 360° Reviews</h4>
+        <p>Employees access their 360° reviews through Performance → My 360° reviews. This view shows:</p>
+        <ul>
+            <li><strong>Overview cards:</strong> Active reviews count, Pending peer nominations, Upcoming deadlines</li>
+            <li><strong>List of Reviews:</strong> All reviews the employee is participating in with status and dates</li>
+            <li><strong>Quick filters:</strong> Filter by All, Draft, Ongoing, Completed, Pending</li>
+            <li><strong>Actions:</strong> View progress, complete surveys, nominate peers</li>
+        </ul>
+
+        <h3>Recording Catch-ups</h3>
+        <p>Catch-ups enable you to record meaningful discussions with anyone in the organisation. This feature helps maintain documentation of one-on-one meetings, feedback sessions, and performance conversations.</p>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/111-my-performance-catchups-tab.png" alt="My Performance page showing Catch-ups tab" class="screenshot">
+            <figcaption>My Performance page with the Catch-ups tab showing the empty state</figcaption>
+        </figure>
+
+        <h4>How to Record a Catch-up</h4>
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4>Access Catch-ups</h4>
+                <p>Navigate to Performance → My performance → Catch-ups tab, then click "Record a catch-up".</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/112-record-catchup-dialog.png" alt="Record a Catch-up dialog form" class="screenshot">
+            <figcaption>The Record a Catch-up form with fields for employee, date, topic, and notes</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4>Select Employee</h4>
+                <p>Choose the employee you had the catch-up meeting with from the dropdown list.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/115-catchup-employee-dropdown.png" alt="Employee selection dropdown" class="screenshot">
+            <figcaption>Employee dropdown showing all organisation members you can record catch-ups with</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4>Select a Meeting Template (Optional)</h4>
+                <p>Choose from pre-built templates to structure your meeting notes. Available templates include:</p>
+                <ul>
+                    <li><strong>Weekly 1-on-1s:</strong> For regular check-ins covering progress, blockers, and work-life balance</li>
+                    <li><strong>Goal Setting:</strong> For discussions focused on setting and reviewing goals</li>
+                    <li><strong>Performance Review:</strong> For formal performance evaluation conversations</li>
+                </ul>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/113-catchup-templates-dropdown.png" alt="Template selection dropdown" class="screenshot">
+            <figcaption>Template dropdown showing available meeting note structures</figcaption>
+        </figure>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/114-catchup-weekly-template-selected.png" alt="Weekly 1-on-1s template selected" class="screenshot">
+            <figcaption>Weekly 1-on-1s template with structured agenda including progress updates, blockers, and action items</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h4>Link to Performance Cycles (Optional)</h4>
+                <p>Once an employee is selected, you can optionally link the catch-up to related performance cycles for both participants.</p>
+            </div>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/117-catchup-cycles-goals-expanded.png" alt="Cycles and Goals section expanded" class="screenshot">
+            <figcaption>Cycles and Goals section allowing you to link the catch-up to performance cycles</figcaption>
+        </figure>
+
+        <div class="step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+                <h4>Save the Catch-up</h4>
+                <p>Add your notes, optionally attach files (max 15mb), and toggle "Make this a private catch-up" if needed. Click "Save" to record the catch-up.</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <p><strong>Tip:</strong> Use catch-ups to document important discussions, feedback given, and action items agreed upon. This creates a valuable record for future reference during performance reviews.</p>
+        </div>
+
+        <h3>Viewing Performance Cycle Details</h3>
+        <p>To view comprehensive information about a performance cycle:</p>
+
+        <ol>
+            <li>Go to Settings → Performance → Cycles</li>
+            <li>Browse the cycles list showing Current and Past cycles</li>
+            <li>Click on any cycle name to view its detail page</li>
+        </ol>
+
+        <p>The cycle detail view displays:</p>
+        <ul>
+            <li>Cycle overview with status (Current/Past)</li>
+            <li>Activity timeline showing all review stages</li>
+            <li>Employees included and excluded from the cycle</li>
+            <li>Rating scale configuration</li>
+            <li>Review types enabled (Self-review, Manager review, etc.)</li>
+        </ul>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/86-cycle-summary-details.png" alt="Performance cycle summary showing activity timeline" class="screenshot">
+            <figcaption>Cycle detail view showing activity timeline and configuration</figcaption>
+        </figure>
+
+        <h3>Understanding Performance Cycle Statuses (Current vs Past)</h3>
+        <p>Performance cycles in Bayzat have two distinct statuses that determine what actions can be performed on them: <strong>Current</strong> (open/active) and <strong>Past</strong> (closed/completed).</p>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/85-performance-cycles-settings.png" alt="Performance cycles list showing Current and Past status" class="screenshot">
+            <figcaption>Performance cycles settings page showing Current and Past cycle statuses</figcaption>
+        </figure>
+
+        <h4>Current Cycles (Open)</h4>
+        <p>A <strong>Current</strong> cycle is an active performance cycle that is either ongoing or scheduled to start. Current cycles have the following characteristics:</p>
+        <ul>
+            <li><strong>Editable:</strong> Cycle settings, employee inclusion/exclusion, and configurations can be modified</li>
+            <li><strong>Deletable:</strong> The cycle can be completely removed from the system</li>
+            <li><strong>Active:</strong> Employees can participate in goal setting, self-reviews, and receive manager reviews</li>
+            <li><strong>Progress Tracking:</strong> Real-time tracking of completion rates across all review stages</li>
+        </ul>
+
+        <div class="info-box">
+            <p><strong>When is a cycle "Current"?</strong> A cycle remains in Current status as long as any of its activity stages (goal setting, self-review, manager review, calibration) are scheduled to occur or are in progress.</p>
+        </div>
+
+        <h4>Past Cycles (Closed)</h4>
+        <p>A <strong>Past</strong> cycle is a completed performance cycle where all review stages have concluded. Past cycles have the following characteristics:</p>
+        <ul>
+            <li><strong>Read-only:</strong> Cycle settings and configurations cannot be modified</li>
+            <li><strong>Cannot be deleted:</strong> The cycle is permanently retained for historical records</li>
+            <li><strong>Archived data:</strong> All reviews, ratings, and feedback are preserved</li>
+            <li><strong>Reopenable:</strong> A "Reopen cycle" option is available to convert it back to Current status</li>
+        </ul>
+
+        <div class="warning-box">
+            <p><strong>Important - Data Preservation:</strong> Past cycles cannot be deleted to ensure historical performance data is retained for compliance, auditing, and employee records. If you need to remove a Past cycle, you must first reopen it to convert it to Current status.</p>
+        </div>
+
+        <h4>Impact of Cycle Status on Available Actions</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Current Cycle</th>
+                    <th>Past Cycle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>View cycle details</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>Edit cycle settings</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>Delete cycle</td>
+                    <td>Yes</td>
+                    <td>No (must reopen first)</td>
+                </tr>
+                <tr>
+                    <td>Add/remove employees</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>Employees submit goals</td>
+                    <td>Yes (during goal setting phase)</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>Complete self-reviews</td>
+                    <td>Yes (during self-review phase)</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>Manager reviews</td>
+                    <td>Yes (during manager review phase)</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>View historical data</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>Reopen cycle</td>
+                    <td>N/A (already open)</td>
+                    <td>Yes</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Reopening a Past Cycle</h4>
+        <p>If you need to make changes to a completed cycle or allow additional reviews to be submitted, you can reopen a Past cycle:</p>
+        <ol>
+            <li>Navigate to Settings → Performance → Cycles</li>
+            <li>Filter by "Past" status to view closed cycles</li>
+            <li>Click on the cycle you wish to reopen</li>
+            <li>Click the "Reopen cycle" button</li>
+            <li>Confirm the action when prompted</li>
+        </ol>
+
+        <div class="warning-box">
+            <p><strong>Caution:</strong> Reopening a cycle makes it active again and allows modifications. This may affect employees who have already completed their reviews. Consider the impact on your team before reopening a cycle.</p>
+        </div>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/84-performance-cycle-dropdown.png" alt="Performance cycle dropdown showing Current and Past filter options" class="screenshot">
+            <figcaption>Performance cycle dropdown with Current and Past filter options</figcaption>
+        </figure>
+    </section>
+
+    <section id="workflow-integration">
+        <h2>Workflow Integration</h2>
+
+        <div class="warning-box">
+            <p><strong>Important:</strong> Performance Management does not currently integrate with Bayzat Workflows. Automated triggers and actions are not available for performance-related events. All cycle progression and notifications are managed within the Performance module itself.</p>
+        </div>
+
+        <p>During validation, we searched through all 13 available workflow applications in the Bayzat platform (Timesheet, Employee Ticket, Accounts Payable, Knowledge Hub, HR, Recurring Events, Timeoff, Newsfeed, Payroll, Custom Fields, Insurance, Incoming Integration, and Attendance). Performance Management was not found in the workflow applications list.</p>
+
+        <figure class="screenshot-container">
+            <img src="validation/screenshots/16-workflow-applications-list.png" alt="Available workflow applications list" class="screenshot">
+            <figcaption>Available workflow applications - Performance Management not included</figcaption>
+        </figure>
+
+        <h3>Current Workarounds</h3>
+        <p>Until workflow integration is available, consider these manual alternatives:</p>
+
+        <div class="tip-box">
+            <p><strong>Email Reminders:</strong> Use calendar reminders or email scheduling tools to send review deadline notifications manually.</p>
+        </div>
+
+        <div class="tip-box">
+            <p><strong>Status Tracking:</strong> Maintain a spreadsheet or project management tool to track review completion status across the organization.</p>
+        </div>
+
+        <h3>Potential Future Automation Scenarios</h3>
+        <p>While not currently available, workflow automation could add value in these scenarios:</p>
+        <ul>
+            <li><strong>Automated Review Reminders:</strong> Send notifications when review deadlines approach</li>
+            <li><strong>Goal Approval Notifications:</strong> Alert managers when employees submit goals for approval</li>
+            <li><strong>Cycle Completion Workflows:</strong> Trigger follow-up actions when cycles complete</li>
+            <li><strong>360° Review Coordination:</strong> Automate nomination requests and feedback collection</li>
+        </ul>
+    </section>
+
+    <section id="business-rules">
+        <h2>Business Rules & Limitations</h2>
+
+        <h3>Core Business Rules</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rule</th>
+                    <th>Description</th>
+                    <th>Impact</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Cycle Status</td>
+                    <td>Cycles can be Current or Past. Only Current cycles can be edited/deleted through UI</td>
+                    <td>Plan configurations before creating cycles</td>
+                </tr>
+                <tr>
+                    <td>Past Cycle Protection</td>
+                    <td>Past cycles cannot be deleted but can be reopened</td>
+                    <td>Historical data is preserved</td>
+                </tr>
+                <tr>
+                    <td>Goal Workflow</td>
+                    <td>Goals progress through Draft → Pending → Approved states</td>
+                    <td>Goals must be approved before inclusion in reviews</td>
+                </tr>
+                <tr>
+                    <td>Rating Scale Required</td>
+                    <td>Cycles cannot be created without an assigned rating scale</td>
+                    <td>Configure rating scales first</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Known Limitations</h3>
+
+        <div class="warning-box">
+            <p><strong>Performance Cycle Date Modification Requires Backend Support</strong></p>
+            <p>Administrators cannot modify active performance cycle dates (such as self-review deadlines or manager review end dates) through the user interface. Changes to cycle dates require manual backend configuration by Bayzat support staff.</p>
+            <p><strong>Workaround:</strong> Contact Bayzat support with the specific cycle and date changes required.</p>
+        </div>
+
+        <h3>System Constraints</h3>
+        <ul>
+            <li>Rating scales must be configured before creating performance cycles</li>
+            <li>Goal types must be defined in Settings before employees can create goals</li>
+            <li>Performance Management does not integrate with Bayzat Workflows</li>
+            <li>The module does not have built-in approval flow automation</li>
+            <li>360° Reviews is in Beta status and may have additional limitations</li>
+        </ul>
+    </section>
+
+    <section id="troubleshooting">
+        <h2>Troubleshooting & Edge Cases</h2>
+
+        <h3>Common Issues</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Issue</th>
+                    <th>Cause</th>
+                    <th>Resolution</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Cannot delete a cycle</td>
+                    <td>Cycle is in Past status</td>
+                    <td>Reopen the cycle first, then delete</td>
+                </tr>
+                <tr>
+                    <td>Goals not in review</td>
+                    <td>Goals not in Approved status</td>
+                    <td>Ensure goals are approved before review period</td>
+                </tr>
+                <tr>
+                    <td>Cannot change cycle dates</td>
+                    <td>UI limitation for active cycles</td>
+                    <td>Contact Bayzat support</td>
+                </tr>
+                <tr>
+                    <td>Employee missing from cycle</td>
+                    <td>Not included in cycle settings</td>
+                    <td>Use employee inclusion management</td>
+                </tr>
+                <tr>
+                    <td>Rating scale required error</td>
+                    <td>No rating scale configured</td>
+                    <td>Create rating scale in Settings first</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Edge Cases</h3>
+
+        <h4>Employee Leaves During Active Cycle</h4>
+        <p>The employee remains in the cycle even after termination. Managers should complete the review based on performance during employment, or exclude the employee using the inclusion/exclusion management feature.</p>
+
+        <h4>Manager Changes Mid-Cycle</h4>
+        <p>Update the employee's reporting structure in HR → Employees. The new manager will inherit review responsibilities. Previous manager's draft reviews are not automatically transferred.</p>
+
+        <h4>Multiple Active Cycles</h4>
+        <p>Multiple Current cycles can exist simultaneously. Use employee inclusion/exclusion to assign different employee groups to different cycles.</p>
+    </section>
+
+    <section id="support-resources">
+        <h2>Support Resources</h2>
+
+        <h3>Frequently Asked Questions</h3>
+
+        <div class="faq-accordion">
+          <details class="faq-item">
+            <summary class="faq-question">What's the difference between Goals-Based Performance and 360° Reviews?</summary>
+            <div class="faq-answer">
+              <p>Bayzat offers two distinct performance management approaches:</p>
+              <ul>
+                <li><strong>Goals-Based Performance (Performance Cycles)</strong>: A structured system tied to defined time periods. Includes goal setting with weights, goal tracking, self-assessments, manager reviews, and calibration. Best for measuring achievement against specific objectives. <em>Navigation: Performance → Goals | Reviews | My Performance</em></li>
+                <li><strong>360° Reviews (Beta)</strong>: A standalone feedback system that can run independently of cycles. Collects multi-directional feedback from self, managers, peers, and direct reports. Includes a peer nomination process. Best for comprehensive behavioral and competency feedback. <em>Navigation: Performance → 360° Reviews | My 360° Reviews</em></li>
+              </ul>
+              <p>Many organizations use both: Goals-Based for structured quarterly/annual reviews and 360° Reviews for additional developmental feedback.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">Can I run multiple performance cycles at the same time?</summary>
+            <div class="faq-answer">
+              <p>Yes, you can have multiple Current cycles running simultaneously. Use the employee inclusion/exclusion feature to assign different employee groups to different cycles.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">Can I edit a submitted goal?</summary>
+            <div class="faq-answer">
+              <p>Goals in Draft status can be freely edited. Once submitted to Pending status, editing may require the goal to go through approval again. Contact your manager or HR for guidance on modifying approved goals.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">How do I extend review deadlines?</summary>
+            <div class="faq-answer">
+              <p>Cycle dates cannot be modified through the UI. Contact Bayzat support with the cycle name and desired new dates for each review stage.</p>
+            </div>
+          </details>
+        </div>
+
+        <h3>Getting Help</h3>
+        <ul>
+            <li>Contact your HR Administrator for policy questions and configuration support</li>
+            <li>Bayzat Support Team - Available for technical issues and feature questions</li>
+            <li>Knowledge Base - Access additional articles at <a href="https://bayzathelp.zendesk.com" target="_blank">bayzathelp.zendesk.com</a></li>
+            <li>In-app Help - Contextual help available within the Bayzat platform</li>
+        </ul>
+    </section>
+
+    <section id="glossary">
+        <h2>Glossary of Terms</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Term</th>
+                    <th>Definition</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Goals-Based Performance</strong></td>
+                    <td>One of two performance management approaches in Bayzat. A structured system centered on Performance Cycles with phases for goal setting, tracking, reviews, and calibration. Accessed via Performance → Goals, Reviews, My Performance.</td>
+                </tr>
+                <tr>
+                    <td><strong>Performance Cycle</strong></td>
+                    <td>A structured, time-bound process within Goals-Based Performance for evaluating employees. Includes stages for goal setting, goal tracking, self-assessment, manager review, and calibration.</td>
+                </tr>
+                <tr>
+                    <td><strong>360° Reviews</strong></td>
+                    <td>One of two performance management approaches in Bayzat (currently in Beta). A standalone multi-directional feedback system where employees receive input from self, managers, peers, and direct reports. Runs independently of Performance Cycles. Accessed via Performance → 360° Reviews, My 360° Reviews.</td>
+                </tr>
+                <tr>
+                    <td><strong>Peer Nominations</strong></td>
+                    <td>A phase in 360° Reviews where employees or managers select which peers should provide feedback on an employee's performance.</td>
+                </tr>
+                <tr>
+                    <td><strong>Rating Scale</strong></td>
+                    <td>A standardized system for evaluating performance, defining possible ratings and their meanings.</td>
+                </tr>
+                <tr>
+                    <td><strong>Goal Type</strong></td>
+                    <td>A category for goals (e.g., Individual Development, Team Objective) configured in Performance Settings.</td>
+                </tr>
+                <tr>
+                    <td><strong>Calibration</strong></td>
+                    <td>The final stage where senior leaders review ratings across teams to ensure consistency and fairness.</td>
+                </tr>
+                <tr>
+                    <td><strong>Self-Assessment</strong></td>
+                    <td>The stage where employees evaluate their own performance against goals and provide self-ratings.</td>
+                </tr>
+                <tr>
+                    <td><strong>Catch-ups</strong></td>
+                    <td>Informal one-on-one meetings between employees and managers for ongoing feedback and development.</td>
+                </tr>
+                <tr>
+                    <td><strong>Current Cycle</strong></td>
+                    <td>An active performance cycle that can be edited and deleted through the user interface.</td>
+                </tr>
+                <tr>
+                    <td><strong>Past Cycle</strong></td>
+                    <td>A completed performance cycle that cannot be deleted but can be reopened.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <footer>
+        <p>Generated by Bayzat Documentation System</p>
+        <p>Last updated: 2026-02-03</p>
+        <p><em>Validated with live Playwright UI testing</em></p>
+    </footer>
+</body>
+</html>

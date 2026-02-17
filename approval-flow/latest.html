@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Approval Flows - User Guide</title>
+
+  <style>
+    /* CSS Reset and Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background-color: #ffffff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+      color: #ffffff;
+      padding: 60px 40px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .hero-banner h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      color: #ffffff;
+    }
+
+    /* Typography - ALL BLACK */
+    h1, h2, h3, h4, h5, h6 {
+      color: #1a1a1a;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #E2E8F0;
+    }
+
+    h3 {
+      font-size: 1.35rem;
+    }
+
+    p {
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+
+    /* Sections */
+    section, .section {
+      margin-bottom: 3rem;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+    }
+
+    /* Info Boxes - Only 2 Types Allowed */
+    .info-box, .note-box, .tip-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FAF5FF;
+      border-left: 4px solid #6B46C1;
+    }
+
+    .info-box p, .note-box p, .tip-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    .warning-box, .important-box, .caution-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background: #FFFBEB;
+      border-left: 4px solid #D97706;
+    }
+
+    .warning-box p, .important-box p, .caution-box p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Lists - Black text, standard bullets */
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+      color: #1a1a1a;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: #ffffff;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid #E2E8F0;
+      color: #1a1a1a;
+    }
+
+    th {
+      background: #F7FAFC;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    tr:hover {
+      background: #F7FAFC;
+    }
+
+    /* Screenshots - Centered */
+    .screenshot-container, figure {
+      margin: 24px auto;
+      text-align: center;
+    }
+
+    .screenshot, figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #E2E8F0;
+      display: block;
+      margin: 0 auto;
+    }
+
+    figcaption {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #1a1a1a;
+      font-style: italic;
+    }
+
+    /* Feature Grid and Cards */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .feature-card, .card {
+      background: #ffffff;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .feature-card h4, .card h4 {
+      color: #1a1a1a;
+      margin-top: 0;
+    }
+
+    .feature-card p, .card p {
+      color: #1a1a1a;
+    }
+
+    /* Journey Grid */
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .journey-step {
+      background: #F7FAFC;
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .journey-step .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .journey-step h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .journey-step p {
+      margin: 0;
+      color: #1a1a1a;
+    }
+
+    /* Steps */
+    .step, .step-item {
+      display: flex;
+      gap: 16px;
+      margin: 20px 0;
+      padding: 16px;
+      background: #F7FAFC;
+      border-radius: 8px;
+    }
+
+    .step-number {
+      background: #6B46C1;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-content h4 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+    }
+
+    .step-content p {
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    /* Navigation Path */
+    .nav-path, .breadcrumb {
+      background: #F7FAFC;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: monospace;
+      color: #1a1a1a;
+      margin: 16px 0;
+    }
+
+    /* Code blocks */
+    code {
+      background: #F7FAFC;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.9em;
+      color: #1a1a1a;
+    }
+
+    pre {
+      background: #F7FAFC;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      color: #1a1a1a;
+    }
+
+    /* Links */
+    a {
+      color: #6B46C1;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Citations */
+    .citation {
+      font-size: 0.85rem;
+      color: #1a1a1a;
+      background: #F7FAFC;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* Footer */
+    footer, .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #E2E8F0;
+      text-align: center;
+      color: #1a1a1a;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 16px;
+      }
+
+      .hero-banner {
+        padding: 40px 24px;
+      }
+
+      .hero-banner h1 {
+        font-size: 1.75rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      section, .section {
+        padding: 16px;
+      }
+
+      table {
+        font-size: 0.9rem;
+      }
+
+      th, td {
+        padding: 8px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-banner h1 {
+        font-size: 1.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+
+      .step {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        max-width: 100%;
+        padding: 0;
+      }
+
+      .hero-banner {
+        background: #6B46C1 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      section, .section {
+        break-inside: avoid;
+      }
+    }
+
+    /* Quick Navigation */
+    .guide-nav { background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%); border-radius: 16px; padding: 24px; margin-bottom: 40px; border: 1px solid #e2e8f0; }
+    .nav-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #e2e8f0; }
+    .nav-icon { font-size: 1.5rem; }
+    .nav-title { font-size: 1.1rem; font-weight: 600; color: #1e293b; }
+    .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .nav-card { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #ffffff; border-radius: 12px; text-decoration: none; color: #334155; font-size: 0.9rem; font-weight: 500; border: 1px solid #e2e8f0; transition: all 0.2s ease; }
+    .nav-card:hover { border-color: #6B46C1; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15); transform: translateY(-2px); }
+    .card-icon { font-size: 1.2rem; }
+    .card-label { flex: 1; }
+
+    /* Journey Phases */
+    .journey-roadmap { padding: 24px 0; }
+    .journey-roadmap h3 { margin-top: 0; margin-bottom: 8px; }
+    .journey-roadmap > p { color: #64748b; margin-bottom: 24px; }
+    .journey-phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .journey-phase { background: #ffffff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; transition: all 0.2s ease; }
+    .journey-phase:hover { border-color: #6B46C1; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1); }
+    .phase-marker { width: 36px; height: 36px; background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%); color: #ffffff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; margin-bottom: 12px; }
+    .phase-content h4 { margin: 0 0 8px 0; font-size: 1rem; color: #1e293b; }
+    .phase-content .nav-path { font-size: 0.85rem; color: #64748b; margin: 0 0 12px 0; padding: 8px 12px; background: #f8fafc; border-radius: 6px; }
+    .phase-link { display: inline-flex; align-items: center; gap: 4px; font-size: 0.85rem; color: #6B46C1; text-decoration: none; font-weight: 500; }
+    .phase-link:hover { text-decoration: underline; }
+
+    /* FAQ Accordion */
+    .faq-accordion { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+    .faq-item { border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; background: #ffffff; transition: all 0.2s ease; }
+    .faq-item:hover { border-color: #6B46C1; box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1); }
+    .faq-item[open] { border-color: #6B46C1; box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15); }
+    .faq-question { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; font-weight: 600; font-size: 1rem; color: #1a1a2e; cursor: pointer; background: #f8f9ff; list-style: none; transition: all 0.2s ease; }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-question::after { content: ''; width: 10px; height: 10px; border-right: 2px solid #6B46C1; border-bottom: 2px solid #6B46C1; transform: rotate(-45deg); transition: transform 0.3s ease; flex-shrink: 0; margin-left: 16px; }
+    .faq-item[open] .faq-question::after { transform: rotate(45deg); }
+    .faq-question:hover { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); color: #6B46C1; }
+    .faq-item[open] .faq-question { background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%); border-bottom: 1px solid #e2e8f0; color: #1a1a2e; }
+    .faq-item[open] .faq-question::after { border-color: #1a1a2e; }
+    .faq-answer { padding: 20px; background: #ffffff; color: #334155; line-height: 1.7; border-top: 1px solid #E2E8F0; animation: fadeIn 0.3s ease; }
+    .faq-answer p { margin: 0; color: #334155; }
+    .faq-answer ul, .faq-answer ol { margin: 12px 0; padding-left: 24px; }
+    .faq-answer li { margin-bottom: 8px; color: #334155; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+
+</head>
+<body>
+<div class="hero-banner">
+  <h1>Approval Flows</h1>
+  <p class="hero-subtitle">Configure intelligent approval routing for employee requests across 40+ request types</p>
+</div>
+
+<nav class="guide-nav" aria-label="Guide navigation">
+  <div class="nav-header">
+    <span class="nav-icon">📖</span>
+    <span class="nav-title">Quick Navigation</span>
+  </div>
+  <div class="nav-grid">
+    <a class="nav-card" href="#feature-overview"><span class="card-icon">✨</span><span class="card-label">Feature Overview</span></a>
+    <a class="nav-card" href="#product-foundation"><span class="card-icon">🏗️</span><span class="card-label">Product Foundation</span></a>
+    <a class="nav-card" href="#user-journey"><span class="card-icon">🗺️</span><span class="card-label">User Journey</span></a>
+    <a class="nav-card" href="#feature-discovery"><span class="card-icon">🔍</span><span class="card-label">Feature Discovery</span></a>
+    <a class="nav-card" href="#setup-process"><span class="card-icon">⚙️</span><span class="card-label">Setup Process</span></a>
+    <a class="nav-card" href="#feature-usage"><span class="card-icon">📋</span><span class="card-label">Feature Usage</span></a>
+    <a class="nav-card" href="#troubleshooting"><span class="card-icon">🔧</span><span class="card-label">Troubleshooting</span></a>
+    <a class="nav-card" href="#support-resources"><span class="card-icon">💬</span><span class="card-label">Support Resources</span></a>
+  </div>
+</nav>
+
+<figure>
+  <img src="validation/screenshots/03-approval-flows-page.png" alt="Approval Flows interface showing request type tabs" />
+  <figcaption>Approval Flows configuration interface in Bayzat HR</figcaption>
+</figure>
+
+<section class="section" id="feature-overview">
+  <h2>What are Approval Flows?</h2>
+
+  <h3>Overview</h3>
+  <p>Approval Flows is a routing configuration system that automatically directs employee requests to the appropriate approvers based on defined criteria. Instead of manually assigning approvers to each request, you configure intelligent approval paths that automatically route requests based on employee attributes, request amounts, departments, or custom conditions.</p>
+
+  <h3>Key Benefits</h3>
+  <ul>
+    <li>Automate request routing to eliminate manual assignment and routing errors</li>
+    <li>Configure conditional logic to route requests differently based on criteria</li>
+    <li>Build multi-step approval hierarchies for proper governance</li>
+    <li>Set up parallel approvers to reduce bottlenecks when key people are unavailable</li>
+    <li>Manage all approval flows from a single centralized interface</li>
+  </ul>
+
+  <h3>Who Uses This Feature?</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>User Role</th>
+        <th>What They Do</th>
+        <th>Value Proposition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Super Admin</strong></td>
+        <td>Configure approval flows for all request types, define conditional routing criteria, assign approver roles</td>
+        <td>Reduce approval configuration time from hours to minutes while ensuring consistent governance across all request types—eliminating manual routing and scattered email approvals</td>
+      </tr>
+      <tr>
+        <td><strong>HR Administrator</strong></td>
+        <td>Monitor approval flow effectiveness, identify bottlenecks, recommend flow optimizations</td>
+        <td>Make data-driven decisions about approval process improvements backed by actual routing patterns rather than relying on anecdotal feedback</td>
+      </tr>
+      <tr>
+        <td><strong>Line Managers</strong></td>
+        <td>Receive requests routed by approval flows, approve or reject within their assigned steps</td>
+        <td>Receive only relevant requests that require their approval—eliminating confusion about which requests need their attention</td>
+      </tr>
+      <tr>
+        <td><strong>Finance Team</strong></td>
+        <td>Act as approvers for expense, loan, and payroll requests, enforce budget compliance</td>
+        <td>Ensure all monetary requests pass through appropriate approval gates based on amount or category—reducing financial risk</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section section-product-foundation" id="product-foundation">
+  <header class="section-header">
+    <h2 class="section-title">Product Foundation Overview</h2>
+  </header>
+  <div class="section-body">
+    <div class="subsection">
+      <h3>How Approval Flows Fits</h3>
+      <p>Approval Flows is a <strong>routing configuration module</strong> that automatically directs employee requests to the appropriate approvers based on defined criteria. Over 40 request types are supported with dedicated configuration tabs for Leave, Expenses, Loans, Air Ticket, Attendance Regularization, and more.</p>
+      <div class="info-box">
+        <p><strong>Mental model:</strong> Employee submits request → System evaluates advanced flow conditions in priority order → First matching flow routes request → If no match, default flow applies → Approvers receive notification at each step → Approval/rejection flows through all steps.</p>
+      </div>
+      <p>Properly configured approval flows eliminate manual routing, ensure consistent governance, and reduce approval bottlenecks across all request types.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Key Decisions Before Setup</h3>
+      <p>Answer these questions before configuring approval flows:</p>
+      <ul>
+        <li><strong>Which request types need conditional routing?</strong> — Use advanced flows for exception-based routing (high-value expenses, specific departments, senior employees)</li>
+        <li><strong>What criteria should trigger different routing?</strong> — Consider amount thresholds, department, employee grade, or custom fields</li>
+        <li><strong>Who are the approvers at each step?</strong> — Map out line managers, department heads, HR, and finance involvement</li>
+        <li><strong>Should approvers be parallel or sequential?</strong> — Parallel reduces bottlenecks when key approvers are unavailable</li>
+      </ul>
+    </div>
+
+    <div class="subsection">
+      <h3>Related Features</h3>
+      <ul>
+        <li><strong>Role Management</strong> — Approver roles must be configured before use in approval flows</li>
+        <li><strong>Employee Profiles</strong> — Approval criteria pull data from employee profiles (department, grade, location)</li>
+        <li><strong>Leave Management</strong> — Leave requests are routed through configured approval flows</li>
+        <li><strong>Expense Management</strong> — Expense claims follow approval flows for financial controls</li>
+        <li><strong>Employee Tickets</strong> — Custom ticket types have dedicated approval flow configurations</li>
+      </ul>
+    </div>
+
+    <div class="subsection">
+      <h3>Prerequisites & Requirements</h3>
+      <table class="requirements-table">
+        <thead>
+          <tr>
+            <th>Requirement</th>
+            <th>Description</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Super Admin Access</td>
+            <td>Only Super Admins can configure approval flows</td>
+            <td>Required</td>
+          </tr>
+          <tr>
+            <td>Role Management</td>
+            <td>Approver roles must be defined and assigned before use</td>
+            <td>Required</td>
+          </tr>
+          <tr>
+            <td>Employee Data</td>
+            <td>Employee profiles must have accurate attributes for criteria matching</td>
+            <td>Required</td>
+          </tr>
+          <tr>
+            <td>Request Type Activation</td>
+            <td>Request types must be activated in your Bayzat instance</td>
+            <td>Required</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/10-air-ticket-tab.png" alt="Air Ticket tab showing advanced and default flows" />
+    <figcaption>Air Ticket tab displaying advanced flows with priority ordering and default flow</figcaption>
+  </figure>
+
+  <h3>Key Differences: Advanced vs Default Approval Flows</h3>
+  <p>Understanding when to use each flow type is essential for effective approval routing configuration.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Aspect</th>
+        <th>Advanced Approval Flow</th>
+        <th>Default Approval Flow</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Label</strong></td>
+        <td>"If conditions" badge</td>
+        <td>"Else" badge</td>
+      </tr>
+      <tr>
+        <td><strong>Purpose</strong></td>
+        <td>Route approvals based on defined criteria</td>
+        <td>Used if no matching advanced flow found</td>
+      </tr>
+      <tr>
+        <td><strong>Criteria Required</strong></td>
+        <td>Yes - must define conditions (data points + operations)</td>
+        <td>No - applies automatically as fallback</td>
+      </tr>
+      <tr>
+        <td><strong>Flow Name/Description</strong></td>
+        <td>Required for identification</td>
+        <td>Not applicable - single default per request type</td>
+      </tr>
+      <tr>
+        <td><strong>Multiple Flows</strong></td>
+        <td>Yes - can create multiple with priority ordering</td>
+        <td>No - only one default flow per request type</td>
+      </tr>
+      <tr>
+        <td><strong>Evaluation Order</strong></td>
+        <td>Evaluated in priority order until first match</td>
+        <td>Evaluated last if no advanced flow matches</td>
+      </tr>
+      <tr>
+        <td><strong>Approval Steps</strong></td>
+        <td>Configurable steps with multiple approvers</td>
+        <td>Configurable steps with multiple approvers</td>
+      </tr>
+      <tr>
+        <td><strong>When to Use</strong></td>
+        <td>Complex routing based on amount, department, grade, location, or other employee attributes</td>
+        <td>Standard routing for requests that don't need conditional logic</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Available Criteria Data Points for Advanced Flows</h4>
+  <p>When creating advanced flows, you can filter requests based on these data point categories:</p>
+  <ul>
+    <li><strong>Request-Specific:</strong> Number of Days, Leave Type, Amount, Policy, Currency</li>
+    <li><strong>Employee Demographics:</strong> Department, Office, Nationality, Position, Age, Gender</li>
+    <li><strong>Employee Identifiers:</strong> Employee Name, Employee ID, Work Email</li>
+    <li><strong>Management Structure:</strong> Direct Reports To, Roles, Employee Grade</li>
+    <li><strong>Employment Details:</strong> Hire Date, Probation End Date, Status, Work Location</li>
+    <li><strong>Custom Fields:</strong> GL Code, Subsidiary, Cost Center, and organization-specific fields</li>
+  </ul>
+
+  <h4>Available Criteria Operations</h4>
+  <p>For numeric data points (like Number of Days or Amount), the following operations are available:</p>
+  <ul>
+    <li><strong>is between</strong> / <strong>is not between</strong> - Range comparisons</li>
+    <li><strong>is equal to</strong> / <strong>is not equal to</strong> - Exact match</li>
+    <li><strong>is greater than</strong> / <strong>is greater than or equals</strong> - Above threshold</li>
+    <li><strong>is less than</strong> / <strong>is less than or equals to</strong> - Below threshold</li>
+  </ul>
+
+  <div class="info-box">
+    <p><strong>Best Practice:</strong> Use advanced flows for exception-based routing (e.g., high-value expenses, specific departments, senior employees) and keep the default flow simple for standard cases.</p>
+  </div>
+</section>
+
+<section class="section" id="user-journey">
+  <h2>Complete User Journey Guide</h2>
+
+  <div class="journey-roadmap">
+    <h3>End-to-End Journey: Approval Flows</h3>
+    <p>From configuration through automatic request routing.</p>
+
+    <div class="journey-phases">
+      <div class="journey-phase">
+        <div class="phase-marker">1</div>
+        <div class="phase-content">
+          <h4>Access Approval Flows</h4>
+          <div class="nav-path">Automations → Approval flows</div>
+          <a href="#feature-discovery" class="phase-link">See navigation →</a>
+        </div>
+      </div>
+      <div class="journey-phase">
+        <div class="phase-marker">2</div>
+        <div class="phase-content">
+          <h4>Select Request Type</h4>
+          <div class="nav-path">Choose tab: Leave, Expense, etc.</div>
+          <a href="#setup-process" class="phase-link">See types →</a>
+        </div>
+      </div>
+      <div class="journey-phase">
+        <div class="phase-marker">3</div>
+        <div class="phase-content">
+          <h4>Create Advanced Flow</h4>
+          <div class="nav-path">Add advance flow → Define criteria</div>
+          <a href="#setup-process" class="phase-link">See setup →</a>
+        </div>
+      </div>
+      <div class="journey-phase">
+        <div class="phase-marker">4</div>
+        <div class="phase-content">
+          <h4>Configure Default Flow</h4>
+          <div class="nav-path">Set fallback approval path</div>
+          <a href="#setup-process" class="phase-link">See defaults →</a>
+        </div>
+      </div>
+      <div class="journey-phase">
+        <div class="phase-marker">5</div>
+        <div class="phase-content">
+          <h4>Update and Activate</h4>
+          <div class="nav-path">Update Approval Flows button</div>
+          <a href="#setup-process" class="phase-link">See activation →</a>
+        </div>
+      </div>
+      <div class="journey-phase">
+        <div class="phase-marker">6</div>
+        <div class="phase-content">
+          <h4>Requests Auto-Route</h4>
+          <div class="nav-path">Automatic routing applied</div>
+          <a href="#feature-usage" class="phase-link">See routing →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="feature-discovery">
+  <h2>Feature Discovery</h2>
+
+  <h3>How to Access</h3>
+  <p>Approval Flows is accessed through the Automations menu in the left sidebar. Only users with Super Admin permissions can view and configure approval flows.</p>
+
+  <h3>Navigation Paths</h3>
+
+  <div class="step">
+    <div class="step-number">S</div>
+    <div class="step-content">
+      <h4>Super Admin Configuration</h4>
+      <p>Automations (left sidebar) → Approval flows → Select request type tab → Configure flows → Update Approval Flows</p>
+    </div>
+  </div>
+
+  <div class="nav-path">Access: Automations → Approval flows</div>
+
+  <figure>
+    <img src="validation/screenshots/03-approval-flows-page.png" alt="Approval Flows main page" />
+    <figcaption>Approval Flows configuration page with request type tabs</figcaption>
+  </figure>
+</section>
+
+<section class="section" id="setup-process">
+  <h2>Setup Process</h2>
+
+  <h3>Creating an Advanced Approval Flow</h3>
+  <p>Advanced flows route requests based on specific criteria. Follow these steps to create a new conditional approval path.</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Navigate to Approval Flows</h4>
+      <p>Go to Automations → Approval flows. Select the request type tab you want to configure (e.g., Air Ticket, Expense, Leave).</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Click Add Advance Flow</h4>
+      <p>In the "Advanced approval flow (If conditions)" section, click the "+ Add advance flow" button. A dialog opens for flow configuration.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/advanced-flow-01-add-dialog-initial.png" alt="Define advanced approval flow dialog" />
+    <figcaption>Advanced flow creation dialog with Flow name, Description, Criteria, and Approval flow sections</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Enter Flow Details</h4>
+      <p>Provide a clear Flow name (e.g., "High Value Expenses - Finance Approval") and Description to identify when this flow applies.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Add Criteria</h4>
+      <p>Click "Add criteria" to define conditions. Select a data point, choose an operator, and enter the value. Multiple criteria use AND logic by default.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/advanced-flow-03-data-points-dropdown.png" alt="Criteria data points dropdown" />
+    <figcaption>Available data points include Policy, Amount, Currency, and 50+ employee attributes</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">5</div>
+    <div class="step-content">
+      <h4>Configure Approval Steps</h4>
+      <p>Click "Add step" to create approval stages. Within each step, click "Add approver" and select roles from the dropdown (Line Manager, People Manager, Super Admin, or custom roles).</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/advanced-flow-06-approver-roles-dropdown.png" alt="Approver roles dropdown" />
+    <figcaption>Available approver roles including Line Manager, People Manager, Super Admin, and custom roles</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">6</div>
+    <div class="step-content">
+      <h4>Save the Flow</h4>
+      <p>Click "Done" to save the flow in an unsaved state. The flow appears in your list but is not yet active.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">7</div>
+    <div class="step-content">
+      <h4>Activate Changes</h4>
+      <p>Click "Update Approval Flows" at the bottom of the page to activate all changes. Only after this step will new requests use the updated flows.</p>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Important:</strong> Changes are not active until you click "Update Approval Flows". This allows you to configure multiple flows before activating them all at once.</p>
+  </div>
+
+  <h3>Understanding Criteria Options</h3>
+  <p>When building criteria, you can use various data points and operators:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Data Point Category</th>
+        <th>Examples</th>
+        <th>Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Request-Specific</strong></td>
+        <td>Policy, Amount, Currency</td>
+        <td>Route based on request value or type</td>
+      </tr>
+      <tr>
+        <td><strong>Employee Demographics</strong></td>
+        <td>Department, Grade, Location, Position</td>
+        <td>Route based on who is making the request</td>
+      </tr>
+      <tr>
+        <td><strong>Management Structure</strong></td>
+        <td>Direct Reports To, Roles, Line Manager</td>
+        <td>Route based on organizational hierarchy</td>
+      </tr>
+      <tr>
+        <td><strong>Custom Fields</strong></td>
+        <td>Cost Center, GL Code, Subsidiary</td>
+        <td>Route based on organization-specific attributes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <img src="validation/screenshots/advanced-flow-04-operation-options.png" alt="Operation options for amount field" />
+    <figcaption>Numeric operators: is between, is equal to, is greater than, is less than, and more</figcaption>
+  </figure>
+
+  <h3>Configuring Default Approval Flows</h3>
+  <p>The default flow acts as a fallback when no advanced flow criteria match. Every request type should have a default flow configured.</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Locate Default Flow Section</h4>
+      <p>Scroll to the "Default approval flow (Else)" section below the advanced flows.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Add Approval Steps</h4>
+      <p>Click "Add step" and configure approvers. A simple default flow might just route to Line Manager (1 level).</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Save Changes</h4>
+      <p>Click "Update Approval Flows" to activate the default flow configuration.</p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <p><strong>Tip:</strong> Keep default flows simple. Use advanced flows for complex routing and let the default handle standard cases.</p>
+  </div>
+</section>
+
+<section class="section" id="feature-usage">
+  <h2>Feature Usage</h2>
+
+  <h3>Common Workflows</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Create Advanced Flow</h4>
+      <p>Define conditional routing based on employee attributes, request amounts, or custom criteria.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Edit Existing Flow</h4>
+      <p>Modify criteria, add/remove approval steps, or change approver roles in existing flows.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Manage Flow Priority</h4>
+      <p>Reorder advanced flows to control which conditions are evaluated first.</p>
+    </div>
+  </div>
+
+  <h3>Editing an Existing Approval Flow</h3>
+  <p>Modify approval flows to adjust criteria or change approver assignments.</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Locate the Flow</h4>
+      <p>Navigate to Automations → Approval flows and select the request type tab. Find the flow you want to edit.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Click Edit</h4>
+      <p>Click the edit icon (pencil) next to the flow name. The edit dialog opens with all current settings.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/advanced-flow-07-edit-dialog-with-existing-flow.png" alt="Edit dialog with existing flow" />
+    <figcaption>Edit dialog showing pre-populated flow with existing criteria and approval steps</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Make Changes</h4>
+      <p>Modify the flow name, description, criteria conditions, or approval steps as needed. You can add or remove criteria and approvers.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Save and Activate</h4>
+      <p>Click "Done" to save changes, then click "Update Approval Flows" to activate.</p>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Note:</strong> Changes only affect future requests. Requests already in progress continue through their originally assigned approval flow.</p>
+  </div>
+
+  <h3>Deleting an Approval Flow</h3>
+  <p>Remove flows that are no longer needed.</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Find the Flow</h4>
+      <p>Locate the advanced flow you want to delete in the list.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Click Delete</h4>
+      <p>Click the trash icon next to the flow. A confirmation dialog appears.</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/advanced-flow-09-delete-confirmation-dialog.png" alt="Delete confirmation dialog" />
+    <figcaption>Delete confirmation warning that the action is permanent and cannot be undone</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Confirm Deletion</h4>
+      <p>Click "Confirm" to permanently delete the flow, or "Cancel" to keep it.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Update Flows</h4>
+      <p>Click "Update Approval Flows" to apply the deletion.</p>
+    </div>
+  </div>
+
+  <h3>Managing Flow Priority</h3>
+  <p>When multiple advanced flows exist, they are evaluated in priority order. The first matching flow is applied.</p>
+
+  <figure>
+    <img src="validation/screenshots/advanced-flow-08-ellipsis-menu-move-down-priority.png" alt="Ellipsis menu with priority option" />
+    <figcaption>Ellipsis menu showing "Move down in priority" option for reordering flows</figcaption>
+  </figure>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Click Ellipsis Menu</h4>
+      <p>Click the three-dot menu icon next to a flow to see priority options.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Move Priority</h4>
+      <p>Select "Move down in priority" or "Move up in priority" to change the evaluation order.</p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <p><strong>Best Practice:</strong> Order flows from most specific to most general. Put narrow criteria (e.g., "Amount > 10000 AND Department = Sales") before broad criteria (e.g., "Amount > 5000").</p>
+  </div>
+
+  <h3>Using Parallel Approvers (OR Logic)</h3>
+  <p>Configure multiple approvers within a single step where approval from any one approver is sufficient to proceed.</p>
+
+  <ol>
+    <li>When editing a flow, add a step</li>
+    <li>Click "Add approver" multiple times within the same step</li>
+    <li>Select different roles for each approver</li>
+    <li>The system routes to all approvers simultaneously</li>
+    <li>Approval from any one approver advances the request</li>
+  </ol>
+
+  <div class="info-box">
+    <p><strong>Note:</strong> If any approver in a step rejects the request, the entire approval process stops immediately, regardless of whether other approvers have approved.</p>
+  </div>
+</section>
+
+<section class="section" id="workflow-integration">
+  <h2>Workflow Integration</h2>
+
+  <h3>How Approval Flows Work</h3>
+  <p>Approval flows are internal routing mechanisms that apply automatically when requests are submitted. They operate independently of Bayzat Workflows.</p>
+
+  <div class="info-box">
+    <p><strong>Note:</strong> Approval Flows do not currently integrate with Bayzat Workflows as triggers or actions. The routing happens automatically within the request submission process.</p>
+  </div>
+
+  <h3>Automatic Routing Process</h3>
+  <p>When an employee submits a request, the system automatically:</p>
+
+  <ol>
+    <li><strong>Evaluates advanced flows</strong> in priority order for that request type</li>
+    <li><strong>Applies the first matching flow</strong> based on employee attributes and request data</li>
+    <li><strong>Falls back to default flow</strong> if no advanced flow criteria match</li>
+    <li><strong>Routes to configured approvers</strong> in sequence</li>
+    <li><strong>Sends notifications</strong> to approvers at each step</li>
+    <li><strong>Advances through steps</strong> as approvals are granted</li>
+    <li><strong>Stops immediately</strong> if any approver rejects</li>
+  </ol>
+
+  <h3>Request Types with Approval Flows</h3>
+  <p>Approval flows can be configured for these request categories:</p>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>Leave Requests</h4>
+      <p>Annual leave, sick leave, unpaid leave, and custom leave types</p>
+    </div>
+    <div class="feature-card">
+      <h4>Financial Requests</h4>
+      <p>Expenses, loans, leave salary requests, leave encashment</p>
+    </div>
+    <div class="feature-card">
+      <h4>Time & Attendance</h4>
+      <p>Attendance regularization, shift changes, overtime requests</p>
+    </div>
+    <div class="feature-card">
+      <h4>Travel & Benefits</h4>
+      <p>Air tickets, business trips, work from home requests</p>
+    </div>
+  </div>
+
+  <figure>
+    <img src="validation/screenshots/07-expense-tab.png" alt="Expense tab configuration" />
+    <figcaption>Expense tab showing advanced flow configuration for expense requests</figcaption>
+  </figure>
+</section>
+
+<section class="section" id="business-rules">
+  <h2>Business Rules & Limitations</h2>
+
+  <h3>Core Business Rules</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>Description</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Super Admin only</td>
+        <td>Only Super Admins can configure approval flows</td>
+        <td>Contact Super Admin for flow changes</td>
+      </tr>
+      <tr>
+        <td>Immediate rejection</td>
+        <td>Any rejection stops the entire approval process</td>
+        <td>Rejected requests don't continue to next approvers</td>
+      </tr>
+      <tr>
+        <td>Priority ordering</td>
+        <td>Advanced flows evaluated in order until match found</td>
+        <td>First matching flow is applied</td>
+      </tr>
+      <tr>
+        <td>Default fallback</td>
+        <td>Default flow applies when no advanced flow matches</td>
+        <td>Always configure a default flow</td>
+      </tr>
+      <tr>
+        <td>Role assignment required</td>
+        <td>Approver roles must be assigned in Role Management first</td>
+        <td>Missing roles won't appear in approver dropdown</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>System Constraints</h3>
+  <ul>
+    <li>Changes only affect future requests—in-progress requests continue with original flow</li>
+    <li>Employee attributes must be accurate in profiles for criteria matching</li>
+    <li>All approvers in a step receive the request simultaneously (for parallel approval)</li>
+    <li>Unsaved flows must be activated by clicking "Update Approval Flows"</li>
+  </ul>
+
+  <h3>Known Limitations</h3>
+  <div class="info-box">
+    <p><strong>No copy function:</strong> Approval flows cannot be copied between request types. Each type must be configured individually.</p>
+  </div>
+</section>
+
+<section class="section" id="troubleshooting">
+  <h2>Troubleshooting & Edge Cases</h2>
+
+  <h3>Common Issues</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Issue</th>
+        <th>Cause</th>
+        <th>Resolution</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Cannot access Approval Flows</td>
+        <td>User lacks Super Admin permissions</td>
+        <td>Contact Super Admin for access or changes</td>
+      </tr>
+      <tr>
+        <td>Line Manager not in dropdown</td>
+        <td>Role not assigned in Role Management</td>
+        <td>Assign Line Manager role in Settings → Role Management</td>
+      </tr>
+      <tr>
+        <td>Request not routing correctly</td>
+        <td>Criteria not matching employee data</td>
+        <td>Verify employee profile data matches criteria conditions</td>
+      </tr>
+      <tr>
+        <td>Changes not taking effect</td>
+        <td>Forgot to click Update Approval Flows</td>
+        <td>Click "Update Approval Flows" button to activate changes</td>
+      </tr>
+      <tr>
+        <td>Request stuck in approval</td>
+        <td>Approver hasn't taken action</td>
+        <td>Contact approver directly or check approval status</td>
+      </tr>
+      <tr>
+        <td>Wrong flow applied</td>
+        <td>Priority order issue or overlapping criteria</td>
+        <td>Review flow priorities and make specific criteria higher priority</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Edge Cases</h3>
+  <ul>
+    <li><strong>Approver role removed:</strong> If an approver's role is removed after request submission, the request may become stuck. Super Admin intervention required.</li>
+    <li><strong>Employee attribute changes:</strong> If employee data changes after submission (e.g., department transfer), the request continues through the originally assigned flow.</li>
+    <li><strong>No default flow:</strong> If no default flow is configured and no advanced flows match, requests may fail to route. Always configure a default.</li>
+    <li><strong>Multiple matching flows:</strong> Only the first matching flow (by priority) is applied. Review priority ordering for overlapping criteria.</li>
+  </ul>
+</section>
+
+<section class="section" id="support-resources">
+  <h2>Support Resources</h2>
+
+  <h3>Frequently Asked Questions</h3>
+
+  <div class="faq-accordion">
+    <details class="faq-item">
+      <summary class="faq-question">Can employees see which approval flow is applied to their request?</summary>
+      <div class="faq-answer">
+        <p>No, employees see the approvers assigned to their request but not the flow name. The routing is applied automatically based on their profile attributes.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">What happens if an approver is on leave?</summary>
+      <div class="faq-answer">
+        <p>The request remains pending until the approver returns. Consider using parallel approvers (OR logic) to prevent bottlenecks when key people are unavailable.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">Can I set up automatic approval for certain requests?</summary>
+      <div class="faq-answer">
+        <p>Not directly through Approval Flows. You would need to configure a single-step flow and potentially use Bayzat Workflows to trigger automatic approvals based on conditions.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">How many advanced flows can I create per request type?</summary>
+      <div class="faq-answer">
+        <p>There is no documented limit. For maintainability, keep the number manageable (typically under 10) with clear naming conventions.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">What's the difference between parallel approvers and sequential steps?</summary>
+      <div class="faq-answer">
+        <p>Parallel approvers (within one step) = any one can approve. Sequential steps = all must approve in order. Use parallel for flexibility, sequential for governance.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-question">Can I require ALL approvers in a step to approve?</summary>
+      <div class="faq-answer">
+        <p>Add each approver as a separate sequential step rather than multiple approvers in one step. This ensures all must approve before the request proceeds.</p>
+      </div>
+    </details>
+  </div>
+
+  <h3>Getting Help</h3>
+  <ul>
+    <li>Contact your HR Administrator for policy questions and configuration support</li>
+    <li>Bayzat Support Team - Available for technical issues and feature questions</li>
+    <li>Knowledge Base - Access additional articles and guides at <a href="https://bayzathelp.zendesk.com">bayzathelp.zendesk.com</a></li>
+    <li>In-app Help - Click the help icon (?) for contextual assistance</li>
+  </ul>
+</section>
+
+<section class="section" id="glossary">
+  <h2>Glossary of Terms</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Advanced Flow</strong></td>
+        <td>A conditional approval routing configuration using "If" criteria to match employee attributes and route requests to specific approvers.</td>
+      </tr>
+      <tr>
+        <td><strong>Approval Flow</strong></td>
+        <td>The sequence of approvers that a request must pass through before being fully approved.</td>
+      </tr>
+      <tr>
+        <td><strong>Approver</strong></td>
+        <td>A user with authority to approve or reject a request, typically assigned by role (e.g., Line Manager).</td>
+      </tr>
+      <tr>
+        <td><strong>Criteria</strong></td>
+        <td>Conditions used in advanced flows to match employee attributes (e.g., department, grade, location).</td>
+      </tr>
+      <tr>
+        <td><strong>Data Point</strong></td>
+        <td>An employee attribute or profile field that can be used as criteria in advanced flows.</td>
+      </tr>
+      <tr>
+        <td><strong>Default Flow</strong></td>
+        <td>The "Else" fallback approval routing that applies when no advanced flow criteria match.</td>
+      </tr>
+      <tr>
+        <td><strong>Line Manager</strong></td>
+        <td>The direct supervisor of an employee, commonly used as the first approver in approval flows.</td>
+      </tr>
+      <tr>
+        <td><strong>OR Logic</strong></td>
+        <td>Parallel approval configuration where approval by any one of multiple approvers in a step is sufficient.</td>
+      </tr>
+      <tr>
+        <td><strong>Priority Order</strong></td>
+        <td>The sequence in which advanced flows are evaluated. First matching flow is applied.</td>
+      </tr>
+      <tr>
+        <td><strong>Request Type</strong></td>
+        <td>A category of employee request (Leave, Expense, Loan, etc.) with its own approval flow configuration.</td>
+      </tr>
+      <tr>
+        <td><strong>Step</strong></td>
+        <td>A single stage in an approval flow containing one or more approvers. Requests proceed sequentially through steps.</td>
+      </tr>
+      <tr>
+        <td><strong>Super Admin</strong></td>
+        <td>The highest permission level in Bayzat with full access to configure approval flows.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <p>Generated by Bayzat Documentation System</p>
+  <p>Last updated: 2026-01-23</p>
+</footer>
+
+</body>
+</html>
