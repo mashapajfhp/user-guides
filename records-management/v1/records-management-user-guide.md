@@ -425,7 +425,7 @@ Settings → Company → Company Logo
 
 ### Step 2: Define Employee Structures
 
-Employee Structures allow you to organise employees into logical groups for managing roles, permissions, and policies. This is useful for applying different rules to different segments of your workforce.
+Employee Structures allow you to organise employees into logical groups for managing roles, permissions, and visibility. This is essential for controlling which employees can see each other's profiles when the **Restrict company-wide employee visibility** toggle is enabled under Employee Permissions.
 
 <div class="nav-path">
 
@@ -438,10 +438,24 @@ Settings → Company → Employee Structures
 <figcaption>Employee Structures configuration with structure name, description, grouping type, and last updated columns</figcaption>
 </figure>
 
-- Click **Add new** to create a structure
-- Define a name and description for the structure
-- Choose a grouping type to determine how employees are organised within the structure
-- Structures can be used to apply different permissions, policies, or workflows to specific employee groups
+To create a new structure, click **Add New** and follow the 3-step wizard:
+
+**Step 1 — Define Structure:** Enter a name and description, then choose the grouping type:
+
+| Grouping Type | Description |
+|----|----|
+| **Automatic grouping** | Group employees by defining criteria (e.g., department, office, nationality, position) and perform automatic matching. Available data points include: Department, Office, Nationality, Position, Status, Gender, Work Location, Company Name, Age, Hire Date, and any custom fields. |
+| **Manual grouping** | Group employees by selecting them individually. Useful when groupings do not align with standard employee attributes. |
+
+**Step 2 — Employee Grouping:** Create one or more groups within the structure. For automatic grouping, define criteria using data points and operators (e.g., "Department equals Engineering"). For manual grouping, select employees to add to each group.
+
+**Step 3 — Review:** Review the structure configuration and group assignments before saving.
+
+<div class="info-box">
+
+**Important:** Employee Structures are a prerequisite for the **Restrict company-wide employee visibility** feature. When that toggle is enabled (Settings → Company → Employee Permissions), employees will only see people within their assigned group and will not have visibility into other groups. You must create at least one structure with groups and assign employees before enabling the visibility restriction.
+
+</div>
 
 </div>
 
@@ -562,11 +576,11 @@ The following permission toggles are available:
 | **Restrict personal info editing** | Prevents employees from editing their personal and work information |
 | **Restrict dependents editing** | Prevents employees from editing their dependents’ documents and information |
 | **Restrict profile picture** | Prevents employees from uploading or updating their profile picture |
-| **Restrict employee visibility** | Restricts company-wide employee visibility so employees cannot see other employees’ profiles |
+| **Restrict company-wide employee visibility** | When enabled, employees will only see people within their assigned group (configured via Employee Structures) and will not have visibility into other groups or organisational structures. For example, if employees are grouped by department, a member of the "Engineering" group will not be able to see profiles of employees in the "Finance" group. This toggle works in conjunction with **Employee Structures** (Settings → Company → Employee Structures), where you define groups either manually or automatically using criteria such as department, office, nationality, or position. |
 
 <div class="info-box">
 
-**Note:** These permissions work together with Role Management. Roles determine what managers and admins can access, while Employee Permissions control what individual employees can do with their own data. For sensitive documents like payslips and contracts, restricting document management ensures that only authorised personnel can modify records.
+**Note:** These permissions work together with Role Management and Employee Structures. Roles determine what managers and admins can access (e.g., manage attendance, edit employees), while Employee Permissions control what individual employees can do with their own data. The **Restrict company-wide employee visibility** toggle specifically relies on **Employee Structures** — you must first create a structure with groups and assign employees to those groups before enabling this restriction. Without configured groups, the restriction has no effect. For sensitive documents like payslips and contracts, restricting document management ensures that only authorised personnel can modify records.
 
 </div>
 
@@ -839,11 +853,67 @@ To export employee data, click the **Download/Export** button from the All Emplo
 <figcaption>Offboard dialog with departure date, reason, and impact warnings</figcaption>
 </figure>
 
-To offboard an employee, navigate to their **Work** tab and click **Offboard**. Select a departure date, choose the reason for departure, and confirm. The system will warn you about impacts to payroll, leave balances, and pending adjustments before finalising. Offboarded employees display an "INACTIVE" badge and can be found by removing the Active status filter. A **Rehire** button becomes available on their Work tab if needed.
+To offboard an employee, navigate to their profile's **Work** tab and click the **Offboard** button in the status card. A dialog titled **"Offboarding [Employee Name]"** appears with two required fields:
+
+1. **Departure date** — Enter in DD/MM/YYYY format or use the calendar date picker
+2. **Reason for departure** — Select from the dropdown:
+   - Resignation with notice
+   - Termination with notice
+   - Termination without notice
+   - Resignation without notice
+   - End of contract
+   - Death
+   - Absconding
+
+After entering the departure date, the system displays a warning banner: *"[Employee Name] will not be able to use Bayzat after [departure date] and will be removed from the [next month] payroll onward. All future leave requests of this employee will be deleted. All unprocessed time and pay adjustments of this employee will be deleted."*
+
+Click **Offboard** to confirm. The employee's status changes to **Inactive** with the departure date and reason recorded in the status card. Offboarded employees display an **INACTIVE** badge and can be found by filtering the employee list to show inactive employees.
 
 <div class="warning-box">
 
-**Offboarding vs. Deletion:** Offboarding preserves employee records while removing access. Deletion is permanent and removes all related data including documents, insurance, and payroll records. Prefer offboarding to maintain historical records.
+**Offboarding vs. Deletion:** Offboarding preserves employee records while removing access. Deletion is permanent and removes all related data including documents, insurance, and payroll records. Prefer offboarding to maintain historical records. The platform allows editing the offboarding date for up to one month in the past only.
+
+</div>
+
+### Rehiring an Employee
+
+If an employee was previously offboarded, you can rehire them directly from their profile — provided their End of Service (EOS) has **not** been processed.
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/records-management/v1/validation/screenshots/inactive-employee-work-tab.png" class="screenshot" loading="lazy" alt="inactive-employee-work-tab.png" />
+<figcaption>Inactive employee Work tab showing status card with enabled Rehire button (no EOS processed)</figcaption>
+</figure>
+
+**Step 1: Find inactive employees.** Go to **Company > All Employees** and click the **Filters** button. Uncheck **Active** and check **Inactive**, then apply. The list displays only offboarded employees, each with an **INACTIVE** badge.
+
+**Step 2: Open the employee's Work tab.** Click the employee's name to open their profile, then select the **Work** tab. The status card on the right displays the employee's current **Status** (Inactive), **Departure date**, and **Reason for departure**.
+
+**Step 3: Check rehire eligibility.** The **Rehire** button appears in the status card. There are two possible states:
+
+- **Rehire enabled (clickable)** — The employee's End of Service has **not** been processed. You can proceed with rehiring.
+- **Rehire disabled (greyed out)** — A purple **Review Final Settlement** button appears above the Rehire button. Hovering over the disabled button shows: *"You can not rehire an employee if their end of service has been processed. Please contact support@bayzat.com for further assistance."*
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/records-management/v1/validation/screenshots/kalinga-eos-blocked-rehire.png" class="screenshot" loading="lazy" alt="kalinga-eos-blocked-rehire.png" />
+<figcaption>Inactive employee with processed EOS: Rehire button is disabled, "Review Final Settlement" button appears</figcaption>
+</figure>
+
+**Step 4: Confirm rehire.** If the Rehire button is enabled, click it. A confirmation dialog asks: *"Are you sure you want to rehire [Employee Name]?"* Click **Rehire** to confirm. The employee's status changes to **Active** and the Rehire button is replaced with an **Offboard** button.
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/records-management/v1/validation/screenshots/rehire-confirmation-dialog.png" class="screenshot" loading="lazy" alt="rehire-confirmation-dialog.png" />
+<figcaption>Rehire confirmation dialog</figcaption>
+</figure>
+
+<div class="warning-box">
+
+**EOS Restriction:** You **cannot** rehire an employee if their End of Service has been processed. When EOS has been processed, the status card shows a purple **Review Final Settlement** button linking to the EOS Entitlement page with the full settlement breakdown. To rehire an employee with a processed EOS, contact **support@bayzat.com** for assistance.
+
+</div>
+
+<div class="info-box">
+
+**After Rehiring:** Review and reassign the employee's roles in **Settings > Role Management**. Previous role assignments may no longer be active and should be reconfigured based on the employee's new responsibilities.
 
 </div>
 
@@ -877,11 +947,32 @@ To permanently delete an employee, select the checkbox next to their name in the
 <figcaption>End of Service settlement calculator with gratuity breakdown and deductions</figcaption>
 </figure>
 
-To process an end of service settlement, navigate to **Employee Profile → Payroll → End of Service**. Select the departure date, choose the reason for departure, and specify the contract type (Unlimited or Limited). The system auto-calculates gratuity per the MOL formula based on service duration and contract type. Review leave encashments, pay proration, deductions, and outstanding loans before clicking **Submit** to process the settlement. The final settlement document can be printed for employee records.
+To process an end of service settlement, navigate to **Employee Profile > Payroll > EOS Entitlement**. The EOS page contains two sections:
 
-<div class="info-box">
+**Section 1: Service Information**
+- **Hire Date** and **Departure Date** — Used to calculate total service duration
+- **Basic Salary for departure month** — The base salary used for gratuity calculation
+- **Total Service Duration** — Automatically calculated (e.g., "11 years 1 months 25 days")
+- **Reason for departure** — Dropdown matching the offboarding reason (Resignation with notice, Termination, End of contract, etc.)
+- **Contract Type** — Select Unlimited or Limited, which affects the gratuity formula
 
-**Note:** EOS can only be submitted when the departure date is in the past or current month. Rehire is only available if EOS has not been submitted.
+**Section 2: Final Settlement Amount**
+The system auto-calculates the settlement based on UAE labour law (MOHRE):
+
+- **Additions:** Gratuity (calculated per MOHRE formula excluding unpaid leave days), pro-rated monthly pay for the departure month, and any outstanding salary arrears
+- **Deductions:** EOS deductions and any outstanding amounts owed
+- **Total Amount:** The net final settlement in AED
+
+Click **Submit** to process the settlement. Once processed, the EOS Entitlement tab displays a **"Processed"** badge, and a banner shows the off-boarding date and the date/administrator who processed the settlement. A **Print Final Settlement** button is available for generating a printable record.
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/records-management/v1/validation/screenshots/eos-final-settlement-top.png" class="screenshot" loading="lazy" alt="eos-final-settlement-top.png" />
+<figcaption>Processed EOS showing service information and final settlement breakdown</figcaption>
+</figure>
+
+<div class="warning-box">
+
+**Important:** EOS can only be submitted when the departure date is in the past or current month. Once EOS is processed, the employee **cannot be rehired** through the standard Rehire button — contact support@bayzat.com for assistance. The employee's Work tab will show a purple **Review Final Settlement** button instead of an active Rehire button.
 
 </div>
 
