@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>multifactor-authentication - User Guide | Bayzat</title>
+  <style>
+/* ===============================
+   GLOBAL RESET
+================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===============================
+   BASE TYPOGRAPHY
+================================ */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  line-height: 1.6;
+  color: #000000;
+  background-color: #ffffff;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #000000;
+  font-weight: 600;
+}
+
+p, span, li, td, th, dt, dd {
+  color: #000000;
+}
+
+a {
+  color: #6B46C1;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 2px solid #E2E8F0;
+  margin: 2rem 0;
+}
+
+/* ===============================
+   HERO SECTION
+================================ */
+.hero-banner {
+  background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+  color: #ffffff;
+  padding: 60px 40px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.hero-banner h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  opacity: 0.95;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.hero-image {
+  margin-top: 24px;
+}
+
+.hero-image img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+/* ===============================
+   MODERN GUIDE NAVIGATION
+================================ */
+.guide-nav {
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 40px;
+  border: 1px solid #e2e8f0;
+}
+
+.nav-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.nav-icon {
+  font-size: 1.5rem;
+}
+
+.nav-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  letter-spacing: -0.02em;
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.nav-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #000000;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.nav-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15);
+  border-color: #6B46C1;
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+  color: #6B46C1;
+  text-decoration: none;
+}
+
+.nav-card:active {
+  transform: translateY(0);
+}
+
+.card-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.card-label {
+  line-height: 1.3;
+}
+
+/* ===============================
+   SECTIONS
+================================ */
+.section {
+  margin-bottom: 3rem;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+}
+
+.section h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #E2E8F0;
+  margin-bottom: 1rem;
+}
+
+.subsection {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid #E2E8F0;
+}
+
+.subsection h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 1rem;
+}
+
+/* ===============================
+   STRATEGIC CONTEXT
+================================ */
+.strategic-context {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid #E2E8F0;
+}
+
+.strategic-header {
+  margin-bottom: 1rem;
+}
+
+.strategic-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #000000;
+  margin: 0;
+}
+
+.strategic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.strategic-card {
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.strategic-card h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 12px 0;
+}
+
+.strategic-card p {
+  font-size: 0.95rem;
+  color: #000000;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.strategic-card ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.strategic-card li {
+  font-size: 0.9rem;
+  color: #000000;
+  margin-bottom: 6px;
+}
+
+.strategic-card li:last-child {
+  margin-bottom: 0;
+}
+
+/* ===============================
+   JOURNEY ROADMAP
+================================ */
+.journey-roadmap {
+  margin: 1rem 0;
+}
+
+.journey-roadmap > .subsection {
+  border-left: none;
+  padding-left: 0;
+  margin-bottom: 1.5rem;
+}
+
+.journey-roadmap > .subsection h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.journey-roadmap > .subsection > p {
+  color: #000000;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.journey-phases {
+  position: relative;
+  padding-left: 24px;
+}
+
+/* Vertical timeline line */
+.journey-phases::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background: linear-gradient(to bottom, #6B46C1 0%, #805AD5 100%);
+  border-radius: 2px;
+}
+
+.journey-phase {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 16px 0;
+  position: relative;
+}
+
+.journey-phase:first-child {
+  padding-top: 0;
+}
+
+.journey-phase:last-child {
+  padding-bottom: 0;
+}
+
+.phase-marker {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.3);
+}
+
+.phase-content {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  transition: all 0.2s ease;
+}
+
+.phase-content:hover {
+  border-color: #6B46C1;
+  box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1);
+}
+
+.phase-content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 8px 0;
+}
+
+.phase-content p {
+  font-size: 0.9rem;
+  color: #000000;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.phase-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6B46C1;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.phase-link:hover {
+  color: #805AD5;
+  text-decoration: none;
+}
+
+.phase-link::after {
+  content: '\2192';
+  transition: transform 0.2s ease;
+}
+
+.phase-link:hover::after {
+  transform: translateX(4px);
+}
+
+/* ===============================
+   WHO USES TABLE
+================================ */
+.who-uses-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.who-uses-table th,
+.who-uses-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #E2E8F0;
+}
+
+.who-uses-table th {
+  background: #F7FAFC;
+  font-weight: 600;
+}
+
+/* ===============================
+   FAQ ACCORDION
+================================ */
+.faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.faq-item {
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.faq-item:hover {
+  border-color: #6B46C1;
+  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1);
+}
+
+.faq-item[open] {
+  border-color: #6B46C1;
+  box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15);
+}
+
+.faq-question,
+.faq-item > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #1a1a2e;
+  cursor: pointer;
+  background: #f8f9ff;
+  list-style: none;
+  transition: all 0.2s ease;
+}
+
+.faq-question::-webkit-details-marker,
+.faq-item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-question::after,
+.faq-item > summary::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #6B46C1;
+  border-bottom: 2px solid #6B46C1;
+  transform: rotate(-45deg);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.faq-item[open] .faq-question::after,
+.faq-item[open] > summary::after {
+  transform: rotate(45deg);
+}
+
+.faq-question:hover,
+.faq-item > summary:hover {
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+  color: #6B46C1;
+}
+
+.faq-item[open] .faq-question,
+.faq-item[open] > summary {
+  background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+  color: #ffffff;
+}
+
+.faq-item[open] .faq-question::after,
+.faq-item[open] > summary::after {
+  border-color: #ffffff;
+}
+
+.faq-answer {
+  padding: 20px;
+  background: #ffffff;
+  color: #000000;
+  line-height: 1.7;
+  border-top: 1px solid #E2E8F0;
+  animation: fadeIn 0.3s ease;
+}
+
+.faq-answer p {
+  margin: 0;
+  color: #000000;
+}
+
+.faq-answer ul, .faq-answer ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.faq-answer li {
+  margin-bottom: 8px;
+  color: #000000;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===============================
+   INFO & WARNING BOXES
+================================ */
+.info-box {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  background: #FAF5FF;
+  border-left: 4px solid #6B46C1;
+  color: #000000;
+}
+
+.warning-box {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  background: #FFFBEB;
+  border-left: 4px solid #D97706;
+  color: #000000;
+}
+
+.warning-box p,
+.info-box p {
+  margin: 0 0 8px 0;
+}
+
+.warning-box p:last-child,
+.info-box p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===============================
+   LISTS
+================================ */
+ul, ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+/* ===============================
+   TABLES
+================================ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #E2E8F0;
+  color: #000000;
+}
+
+th {
+  background: #F7FAFC;
+  font-weight: 600;
+}
+
+tr:hover {
+  background: #F7FAFC;
+}
+
+/* ===============================
+   SCREENSHOTS
+================================ */
+figure {
+  margin: 24px auto;
+  text-align: center;
+}
+
+figure img,
+.screenshot {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #E2E8F0;
+  display: block;
+  margin: 0 auto;
+}
+
+figcaption {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #000000;
+  opacity: 0.8;
+}
+
+/* Screenshot container with consistent spacing */
+.screenshot-container {
+  margin: 24px auto;
+  text-align: center;
+}
+
+.screenshot-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #E2E8F0;
+  display: block;
+  margin: 0 auto;
+}
+
+.screenshot-container figcaption {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #000000;
+  opacity: 0.8;
+}
+
+/* ===============================
+   FEATURE CARDS & GRIDS
+================================ */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.feature-card {
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 20px;
+  color: #000000;
+}
+
+.feature-card h4 {
+  margin-top: 0;
+  color: #000000;
+}
+
+/* ===============================
+   REQUIREMENTS TABLE
+================================ */
+.requirements-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.requirements-table th,
+.requirements-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #E2E8F0;
+}
+
+.requirements-table th {
+  background: #F7FAFC;
+  font-weight: 600;
+}
+
+/* ===============================
+   LIMITATIONS TABLE
+================================ */
+.limitations-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.limitations-table th,
+.limitations-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #E2E8F0;
+}
+
+.limitations-table th {
+  background: #F7FAFC;
+  font-weight: 600;
+}
+
+/* ===============================
+   GLOSSARY TABLE
+================================ */
+.glossary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.glossary-table th,
+.glossary-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #E2E8F0;
+}
+
+.glossary-table th {
+  background: #F7FAFC;
+  font-weight: 600;
+}
+
+.glossary-table td:first-child {
+  width: 25%;
+  white-space: nowrap;
+}
+
+/* ===============================
+   LEGACY JOURNEY & STEPS (backwards compatibility)
+================================ */
+.journey-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.journey-step {
+  background: #F7FAFC;
+  border-radius: 8px;
+  padding: 20px;
+  color: #000000;
+}
+
+.journey-step .step-number,
+.step-number {
+  background: #6B46C1;
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.step {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0;
+  padding: 16px;
+  background: #F7FAFC;
+  border-radius: 8px;
+}
+
+/* ===============================
+   NAVIGATION PATH
+================================ */
+.nav-path {
+  background: #F7FAFC;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-family: 'SF Mono', Monaco, monospace;
+  margin: 16px 0;
+  color: #000000;
+}
+
+/* ===============================
+   CODE & BLOCKQUOTES
+================================ */
+code {
+  background: #F7FAFC;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', Monaco, monospace;
+  font-size: 0.9em;
+  color: #000000;
+}
+
+pre {
+  background: #F7FAFC;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  color: #000000;
+}
+
+blockquote {
+  border-left: 4px solid #E2E8F0;
+  padding-left: 16px;
+  margin: 16px 0;
+  font-style: italic;
+  color: #000000;
+}
+
+blockquote p {
+  margin: 0 0 8px 0;
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #E2E8F0;
+  text-align: center;
+  color: #000000;
+  font-size: 0.9rem;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  body { padding: 16px; }
+  .hero-banner { padding: 40px 24px; }
+  .hero-banner h1 { font-size: 1.75rem; }
+  .section { padding: 16px; }
+  th, td { padding: 8px 12px; }
+  .nav-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .nav-card {
+    padding: 12px;
+    font-size: 0.85rem;
+  }
+  .card-icon {
+    font-size: 1rem;
+  }
+  .faq-question,
+  .faq-item > summary {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+  .faq-answer {
+    padding: 16px;
+  }
+  .strategic-grid {
+    grid-template-columns: 1fr;
+  }
+  .journey-phases {
+    padding-left: 20px;
+  }
+  .journey-phases::before {
+    left: 11px;
+  }
+  .phase-marker {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    font-size: 0.8rem;
+  }
+  .phase-content {
+    padding: 14px 16px;
+  }
+  .glossary-table td:first-child {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-banner h1 { font-size: 1.5rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .step { flex-direction: column; gap: 12px; }
+  .nav-grid {
+    grid-template-columns: 1fr;
+  }
+  .guide-nav {
+    padding: 16px;
+  }
+  .journey-phase {
+    gap: 12px;
+  }
+}
+
+/* ===============================
+   PRINT
+================================ */
+@media print {
+  body { max-width: 100%; padding: 0; }
+  .hero-banner {
+    background: #6B46C1 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .section { break-inside: avoid; }
+  .guide-nav { display: none; }
+  .faq-item { break-inside: avoid; }
+  .faq-item[open] .faq-answer { display: block; }
+  .journey-phases::before {
+    background: #6B46C1 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero-banner">
+      <h1>multifactor-authentication</h1>
+      <p class="hero-subtitle">Eliminate unauthorized account access by requiring a time-based verification code alongside password authentication</p>
+      
+    </div>
+
+    
+    <nav class="guide-nav" aria-label="Guide navigation">
+      <div class="nav-header">
+        <span class="nav-icon">&#128214;</span>
+        <span class="nav-title">Quick Navigation</span>
+      </div>
+      <div class="nav-grid">
+        <a class="nav-card" href="#feature-overview">
+          <span class="card-icon">&#10024;</span>
+          <span class="card-label">What is multifactor-authentication?</span>
+        </a>
+        <a class="nav-card" href="#product-foundation">
+          <span class="card-icon">&#127959;&#65039;</span>
+          <span class="card-label">Product Foundation Overview</span>
+        </a>
+        <a class="nav-card" href="#user-journey">
+          <span class="card-icon">&#128506;&#65039;</span>
+          <span class="card-label">Complete User Journey Guide</span>
+        </a>
+        <a class="nav-card" href="#feature-entry-points">
+          <span class="card-icon">&#128640;</span>
+          <span class="card-label">Feature Discovery</span>
+        </a>
+        <a class="nav-card" href="#initial-setup">
+          <span class="card-icon">&#9881;&#65039;</span>
+          <span class="card-label">Initial Setup</span>
+        </a>
+        <a class="nav-card" href="#core-tasks">
+          <span class="card-icon">&#128203;</span>
+          <span class="card-label">Key Tasks</span>
+        </a>
+        <a class="nav-card" href="#workflow-integration">
+          <span class="card-icon">&#128260;</span>
+          <span class="card-label">Workflow Integration</span>
+        </a>
+        <a class="nav-card" href="#business-rules-limitations">
+          <span class="card-icon">&#128207;</span>
+          <span class="card-label">Business Rules &amp; Limitations</span>
+        </a>
+        <a class="nav-card" href="#troubleshooting-edge-cases">
+          <span class="card-icon">&#128295;</span>
+          <span class="card-label">Troubleshooting &amp; Edge Cases</span>
+        </a>
+        <a class="nav-card" href="#support-resources">
+          <span class="card-icon">&#128172;</span>
+          <span class="card-label">FAQs &amp; Support</span>
+        </a>
+        <a class="nav-card" href="#glossary">
+          <span class="card-icon">&#128218;</span>
+          <span class="card-label">Glossary</span>
+        </a>
+      </div>
+    </nav>
+  
+
+    <main class="content-area" aria-label="User guide content">
+      
+    <section class="section section-feature-overview" id="feature-overview">
+      <header class="section-header">
+        <h2 class="section-title">What is multifactor-authentication?</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection"><h3>Overview</h3><p>Multi-factor Authentication (MFA) adds a second security layer to your Bayzat login by requiring a time-based verification code from Google Authenticator. Access this feature through Profile > Security Settings to enable or disable MFA for your account.</p><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/multifactor-authentication/v1/validation/screenshots/missing.png" alt="missing.png" class="screenshot" loading="lazy"><figcaption>Screenshot not available</figcaption></figure><p>Users can enable MFA through a 3-step setup wizard, scan a QR code (or enter a manual setup key), and verify with a 6-digit code that changes every 30 seconds.</p></div><div class="subsection"><h3>Key Benefits</h3><ul><li>Protects against unauthorized access even if passwords are compromised</li><li>Required for payment-critical roles (Accounts Payable, Finance) to secure financial operations</li><li>Integrates with Finance module actions including card requests, expense approvals, and balance views</li><li>Email notifications confirm when MFA is disabled, alerting you to potential security changes</li></ul></div><div class="strategic-context"><div class="strategic-header"><h3>Strategic Context</h3></div><div class="strategic-grid"><div class="strategic-card"><h4>🎯 What multifactor-authentication Solves</h4><p>Prevents account takeover attacks where stolen passwords grant full system access.</p><ul><li>Replaces single-factor password-only authentication</li><li>Standardizes security posture across all user accounts</li><li>Enables role-based security enforcement for finance operations</li></ul></div><div class="strategic-card"><h4>💰 Why It Matters</h4><p>MFA is mandatory for users with payment authority, protecting financial transactions and company funds.</p><ul><li>Prerequisite for accessing Corporate Cards, Expense Approvals, and Balance views</li><li>Controls authorization for payment processing and fund transfers</li><li>Enforces compliance requirements for financial system access</li></ul></div><div class="strategic-card"><h4>🏗️ How It Connects</h4><p>MFA operates as a user-level security control applied at authentication and transaction authorization points.</p><ul><li>Enabled per user account through Profile settings</li><li>Referenced by Finance module endpoints requiring elevated permissions</li><li>Impacts all login sessions and payment-critical actions for enabled users</li></ul></div></div></div><div class="subsection"><h3>Who Uses This Feature?</h3><table class="who-uses-table"><thead><tr><th>User Role</th><th>What They Do</th><th>Value Proposition</th></tr></thead><tbody><tr><td><strong>All Users</strong></td><td>Enable MFA on their personal accounts through Security Settings</td><td>Secures individual account access, replacing reliance on password-only authentication</td></tr><tr><td><strong>Finance/Accounts Payable Users</strong></td><td>Must maintain active MFA to access payment functions, card management, and expense approvals</td><td>Prevents unauthorized financial transactions, replacing manual approval workflows with cryptographic verification</td></tr><tr><td><strong>HR Administrators</strong></td><td>Cannot disable MFA for finance-critical roles through standard admin interfaces</td><td>Enforces security policy compliance, replacing discretionary security controls with mandatory protection</td></tr></tbody></table></div>
+      </div>
+    </section>
+  
+
+    <section class="section section-product-foundation" id="product-foundation">
+      <header class="section-header">
+        <h2 class="section-title">Product Foundation Overview</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection"><h3>How Multi-factor Authentication Fits</h3><p>Multi-factor Authentication is a user-level security control that adds a second verification layer to login processes. Each user manages their own MFA status independently through Profile settings.</p><div class="info-box"><p><strong>Mental model:</strong> User enables MFA → Google Authenticator generates codes → User enters code at login → Access granted</p></div><p>MFA affects individual user accounts only. Enabling or disabling MFA does not impact other users or system-wide settings.</p></div><div class="subsection"><h3>Key Decisions Before Setup</h3><p>Answer these questions before enabling Multi-factor Authentication:</p><ul><li><strong>Do you have a compatible mobile device?</strong> — iOS or Android required for Google Authenticator app</li><li><strong>Will you need MFA for payment-critical roles?</strong> — Finance roles (Accounts Payable) have restricted MFA disablement</li><li><strong>Can you access your device during login?</strong> — You'll need the authenticator app every time you log in</li><li><strong>Do you understand the recovery process?</strong> — Lost device access requires backend intervention for finance roles</li></ul></div><div class="subsection"><h3>Related Features</h3><ul><li><strong>Profile Settings</strong> — MFA is configured through individual user security settings</li><li><strong>Corporate Cards</strong> — MFA integration protects card creation, editing, and unfreezing actions</li><li><strong>Expense Management</strong> — MFA secures expense overview and payment processing</li><li><strong>Direct Payments</strong> — MFA required for authorizing and processing payments</li><li><strong>Bank Integrations</strong> — MFA protects balance views and transaction processing</li></ul></div><div class="subsection"><h3>Prerequisites & Requirements</h3><table class="requirements-table"><thead><tr><th>Requirement</th><th>Description</th><th>Status</th></tr></thead><tbody><tr><td>Mobile Device</td><td>iOS or Android smartphone or tablet</td><td>Required</td></tr><tr><td>Google Authenticator App</td><td>Download from App Store or Google Play</td><td>Required</td></tr><tr><td>Active Bayzat Account</td><td>Valid user credentials with profile access</td><td>Required</td></tr><tr><td>Device Access During Login</td><td>Authenticator app must be accessible when logging in</td><td>Required</td></tr></tbody></table></div>
+      </div>
+    </section>
+  
+
+    <section class="section section-user-journey" id="user-journey">
+      <header class="section-header">
+        <h2 class="section-title">Complete User Journey Guide</h2>
+      </header>
+      <div class="section-body">
+        <div class="journey-roadmap">
+  <div class="subsection">
+    <h3>End-to-End Journey: Securing Your Account</h3>
+    <p>Enable, use, and manage multi-factor authentication to protect sensitive account access.</p>
+  </div>
+
+  <div class="journey-phases">
+    <div class="journey-phase">
+      <div class="phase-marker">1</div>
+      <div class="phase-content">
+        <h4>Prepare</h4>
+        <p>Install Google Authenticator app on your mobile device.</p>
+        <a href="#product-foundation" class="phase-link">See details →</a>
+      </div>
+    </div>
+
+    <div class="journey-phase">
+      <div class="phase-marker">2</div>
+      <div class="phase-content">
+        <h4>Navigate</h4>
+        <p>Access Profile → Security Settings to find MFA controls.</p>
+        <a href="#feature-entry-points" class="phase-link">See details →</a>
+      </div>
+    </div>
+
+    <div class="journey-phase">
+      <div class="phase-marker">3</div>
+      <div class="phase-content">
+        <h4>Activate</h4>
+        <p>Enable MFA by scanning QR code and verifying with authentication code.</p>
+        <a href="#core-tasks" class="phase-link">See details →</a>
+      </div>
+    </div>
+
+    <div class="journey-phase">
+      <div class="phase-marker">4</div>
+      <div class="phase-content">
+        <h4>Use Daily</h4>
+        <p>Enter 6-digit code from Google Authenticator each time you log in.</p>
+        <a href="#core-tasks" class="phase-link">See details →</a>
+      </div>
+    </div>
+
+    <div class="journey-phase">
+      <div class="phase-marker">5</div>
+      <div class="phase-content">
+        <h4>Manage</h4>
+        <p>Disable MFA when needed by entering verification code.</p>
+        <a href="#core-tasks" class="phase-link">See details →</a>
+      </div>
+    </div>
+
+    <div class="journey-phase">
+      <div class="phase-marker">6</div>
+      <div class="phase-content">
+        <h4>Troubleshoot</h4>
+        <p>Resolve code rejection issues or lost device scenarios.</p>
+        <a href="#troubleshooting-edge-cases" class="phase-link">See details →</a>
+      </div>
+    </div>
+  </div>
+</div>
+      </div>
+    </section>
+  
+
+    <section class="section section-feature-entry-points" id="feature-entry-points">
+      <header class="section-header">
+        <h2 class="section-title">Feature Discovery</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+  <h3>How to Access Multi-factor Authentication</h3>
+  <p>MFA settings are located in your personal profile security controls.</p>
+  
+  <h4>Navigation Path</h4>
+  <div class="nav-path">Profile → Security Settings → Multi-factor Authentication</div>
+  
+  <figure class="screenshot-container">
+    <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/multifactor-authentication/v1/validation/screenshots/missing.png" alt="missing.png" class="screenshot" loading="lazy">
+    <figcaption>Security Settings page showing Multi-factor Authentication enable/disable controls</figcaption>
+  </figure>
+  
+  <p>From this screen you can enable MFA, view current status, or disable MFA if already activated.</p>
+</div>
+
+<div class="subsection">
+  <h3>Access Points by User Role</h3>
+  <ul>
+    <li><strong>All Users:</strong> Access via Profile icon (top right) → Security Settings</li>
+    <li><strong>Mobile App Users:</strong> Access via app menu → Profile → Security Settings</li>
+    <li><strong>Desktop Users:</strong> Access via app.bayzat.com → Profile dropdown → Security Settings</li>
+  </ul>
+</div>
+
+<div class="subsection">
+  <h3>MFA Integration Points</h3>
+  <p>Once enabled, MFA verification is required for:</p>
+  <ul>
+    <li><strong>Login:</strong> After entering email and password on both mobile and desktop</li>
+    <li><strong>Finance Actions:</strong> Corporate card creation, expense approvals, payment processing</li>
+    <li><strong>Sensitive Operations:</strong> Balance views, card unfreezing, transaction processing</li>
+  </ul>
+</div>
+      </div>
+    </section>
+  
+
+    <section class="section section-initial-setup" id="initial-setup">
+      <header class="section-header">
+        <h2 class="section-title">Initial Setup</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+    <h3>Prerequisites</h3>
+    <p>Before enabling MFA, ensure you have:</p>
+    <ul>
+      <li>A mobile device running iOS or Android</li>
+      <li>Google Authenticator app installed (download from App Store or Google Play)</li>
+      <li>Access to your Bayzat account profile settings</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <h3>First-Time Activation</h3>
+    <p>Navigate to Profile → Security Settings to begin MFA setup.</p>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/multifactor-authentication/v1/validation/screenshots/missing.png" alt="missing.png" class="screenshot" loading="lazy">
+      <figcaption>Security Settings page showing Multi-factor Authentication enable option</figcaption>
+    </figure>
+
+    <h4>Step 1: Enable MFA</h4>
+    <ul>
+      <li>Click <strong>Enable</strong> next to Multi-factor Authentication</li>
+      <li>Setup wizard dialog opens with 3-step process</li>
+    </ul>
+
+    <h4>Step 2: Link Authenticator App</h4>
+    <ul>
+      <li>Open Google Authenticator on your mobile device</li>
+      <li>Scan the QR code displayed on screen</li>
+      <li>If scanning fails, use the manual setup key provided</li>
+    </ul>
+
+    <h4>Step 3: Verify Setup</h4>
+    <ul>
+      <li>Enter the 6-digit code from Google Authenticator</li>
+      <li>Click <strong>Verify</strong> to complete activation</li>
+      <li>Confirmation message appears and status changes to <strong>Enabled</strong> with green indicator</li>
+    </ul>
+
+    <div class="info-box">
+      <p><strong>Note:</strong> The authentication code changes every 30 seconds. Enter the current code displayed in your app.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Post-Setup Verification</h3>
+    <p>After activation, verify MFA is working:</p>
+    <ul>
+      <li>Log out of your Bayzat account</li>
+      <li>Log back in using your credentials</li>
+      <li>Enter the MFA code when prompted on the second authentication screen</li>
+      <li>Successful login confirms MFA is active</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <h3>Integration with Finance Modules</h3>
+    <p>MFA automatically protects payment-critical actions once enabled:</p>
+    <ul>
+      <li><strong>Corporate Cards:</strong> Card creation, editing, and unfreezing require MFA verification</li>
+      <li><strong>Expense Management:</strong> Expense approvals and payment processing require MFA codes</li>
+      <li><strong>Direct Payments:</strong> All payment authorization endpoints require MFA validation</li>
+      <li><strong>Balance Access:</strong> Viewing sensitive financial balances requires MFA confirmation</li>
+    </ul>
+
+    <div class="warning-box">
+      <p><strong>⚠️ Critical Security Restriction:</strong> Users with finance-critical roles (e.g., Accounts Payable) cannot disable MFA through standard admin interfaces. Contact Bayzat support if MFA reset is required.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Configuration Considerations</h3>
+    <table class="requirements-table">
+      <thead>
+        <tr>
+          <th>Setting</th>
+          <th>Description</th>
+          <th>Impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>MFA Validity Duration</strong></td>
+          <td>Time window before re-authentication required</td>
+          <td>Configured at platform level (varies by environment)</td>
+        </tr>
+        <tr>
+          <td><strong>Role-Based Enforcement</strong></td>
+          <td>Certain roles require MFA and cannot disable it</td>
+          <td>Applies to payment processors and financial approvers</td>
+        </tr>
+        <tr>
+          <td><strong>Device Registration</strong></td>
+          <td>One Google Authenticator account per user</td>
+          <td>Losing device access requires support intervention</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>Troubleshooting Initial Setup</h3>
+    <table class="limitations-table">
+      <thead>
+        <tr>
+          <th>Issue</th>
+          <th>Cause</th>
+          <th>Resolution</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>QR code won't scan</td>
+          <td>Camera permissions or poor lighting</td>
+          <td>Use manual setup key instead of scanning</td>
+        </tr>
+        <tr>
+          <td>Verification code rejected</td>
+          <td>Time sync issue between device and server</td>
+          <td>Wait for next code (30 seconds) and try again</td>
+        </tr>
+        <tr>
+          <td>Cannot find Security Settings</td>
+          <td>Insufficient permissions</td>
+          <td>Verify you have access to Profile settings</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+      </div>
+    </section>
+  
+
+    <section class="section section-core-tasks" id="core-tasks">
+      <header class="section-header">
+        <h2 class="section-title">Key Tasks</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+    <h3>Task: Enable Multi-factor Authentication</h3>
+    <p>Add a second layer of security to your account by requiring a time-based verification code at login.</p>
+
+    <h4>Subtask: Access Security Settings</h4>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/multifactor-authentication/v1/validation/screenshots/missing.png" alt="missing.png" class="screenshot" loading="lazy">
+      <figcaption>Screenshot not available</figcaption>
+    </figure>
+    <ul>
+      <li>Navigate to Profile → Security Settings</li>
+      <li>Locate Multi-factor Authentication section</li>
+    </ul>
+
+    <h4>Subtask: Configure Google Authenticator</h4>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/multifactor-authentication/v1/validation/screenshots/missing.png" alt="missing.png" class="screenshot" loading="lazy">
+      <figcaption>Screenshot not available</figcaption>
+    </figure>
+    <ul>
+      <li>Click Enable next to Multi-factor Authentication</li>
+      <li>Download Google Authenticator app (iOS or Android)</li>
+      <li>Scan QR code displayed in setup wizard (or enter manual setup key if camera unavailable)</li>
+      <li>Enter 6-digit verification code from app</li>
+      <li>Click Verify to complete activation</li>
+    </ul>
+
+    <div class="info-box">
+      <p><strong>Expected Outcome:</strong> Security Settings page displays MFA status as Enabled with green indicator. Authentication codes now required at each login.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Task: Login with Multi-factor Authentication</h3>
+    <p>Complete the two-step login process using your credentials and time-based verification code.</p>
+
+    <h4>Subtask: Enter Credentials</h4>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/multifactor-authentication/v1/validation/screenshots/missing.png" alt="missing.png" class="screenshot" loading="lazy">
+      <figcaption>Screenshot not available</figcaption>
+    </figure>
+    <ul>
+      <li>Navigate to app.bayzat.com (desktop) or open Bayzat mobile app</li>
+      <li>Enter email and password</li>
+      <li>Optionally select Remember me (desktop only)</li>
+    </ul>
+
+    <h4>Subtask: Verify with Authentication Code</h4>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/multifactor-authentication/v1/validation/screenshots/missing.png" alt="missing.png" class="screenshot" loading="lazy">
+      <figcaption>Screenshot not available</figcaption>
+    </figure>
+    <ul>
+      <li>Open Google Authenticator app on mobile device</li>
+      <li>Retrieve current 6-digit code (refreshes every 30 seconds)</li>
+      <li>Enter code on verification screen</li>
+      <li>Complete login</li>
+    </ul>
+
+    <div class="info-box">
+      <p><strong>Troubleshooting:</strong> If code is rejected, wait for next 30-second refresh cycle and try new code. Ensure device time is synchronized correctly.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Task: Disable Multi-factor Authentication</h3>
+    <p>Remove MFA requirement from your account (requires current authenticator access).</p>
+
+    <h4>Subtask: Initiate Deactivation</h4>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/multifactor-authentication/v1/validation/screenshots/missing.png" alt="missing.png" class="screenshot" loading="lazy">
+      <figcaption>Screenshot not available</figcaption>
+    </figure>
+    <ul>
+      <li>Navigate to Profile → Security Settings</li>
+      <li>Click Disable next to Multi-factor Authentication</li>
+    </ul>
+
+    <h4>Subtask: Confirm with Verification Code</h4>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/multifactor-authentication/v1/validation/screenshots/missing.png" alt="missing.png" class="screenshot" loading="lazy">
+      <figcaption>Screenshot not available</figcaption>
+    </figure>
+    <ul>
+      <li>Open Google Authenticator app</li>
+      <li>Enter current 6-digit verification code in confirmation dialog</li>
+      <li>Confirm deactivation</li>
+    </ul>
+
+    <div class="info-box">
+      <p><strong>Expected Outcome:</strong> MFA status changes to Disabled. You receive confirmation email recommending re-enablement for security. Future logins no longer require verification codes.</p>
+    </div>
+
+    <div class="warning-box">
+      <p><strong>⚠️ Critical Limitation:</strong> Users with finance-critical roles (e.g., Accounts Payable) cannot disable MFA through standard interface. Contact Bayzat support for manual backend intervention if device is lost.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Task: Manage MFA for Finance Module Actions</h3>
+    <p>Complete MFA verification for payment-critical operations in Corporate Cards and Expense modules.</p>
+
+    <h4>Subtask: Verify for Card Operations</h4>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/multifactor-authentication/v1/validation/screenshots/missing.png" alt="missing.png" class="screenshot" loading="lazy">
+      <figcaption>Screenshot not available</figcaption>
+    </figure>
+    <ul>
+      <li>Navigate to Finance → Corporate Cards</li>
+      <li>Initiate card creation, edit, or unfreeze request</li>
+      <li>Enter MFA code when prompted</li>
+      <li>Complete transaction</li>
+    </ul>
+
+    <h4>Subtask: Verify for Expense and Balance Access</h4>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/multifactor-authentication/v1/validation/screenshots/missing.png" alt="missing.png" class="screenshot" loading="lazy">
+      <figcaption>Screenshot not available</figcaption>
+    </figure>
+    <ul>
+      <li>Access Expense Overview or Balances section</li>
+      <li>Enter MFA code when prompted for sensitive financial data</li>
+      <li>View or process financial records</li>
+    </ul>
+
+    <div class="info-box">
+      <p><strong>Note:</strong> MFA verification remains valid for limited duration (session-based). Subsequent actions within same session may not require re-verification.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>CRUD Operations: MFA Configuration</h3>
+    <p>No CRUD operations available for MFA records. Configuration is user-level enable/disable only.</p>
+
+    <div class="info-box">
+      <p><strong>Status:</strong> MFA is a security setting, not a data entity. Users manage their own MFA status through Profile → Security Settings.</p>
+    </div>
+  </div>
+      </div>
+    </section>
+  
+
+    <section class="section section-workflow-integration" id="workflow-integration">
+      <header class="section-header">
+        <h2 class="section-title">Workflow Integration</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+    <div class="info-box">
+      <p><strong>Not Available:</strong> Multi-factor Authentication does not currently support workflow automation.</p>
+    </div>
+
+    <p>MFA operates as a security layer that applies to user authentication and critical actions across the platform. It integrates directly with:</p>
+    <ul>
+      <li><strong>Finance/Cards Module</strong> — MFA verification required for card creation, editing, unfreezing, and payment processing</li>
+      <li><strong>Expense Management</strong> — MFA protection on expense overview and approval actions</li>
+      <li><strong>Corporate Cards</strong> — MFA enforcement on all card-related transactions and balance views</li>
+      <li><strong>Claims Processing</strong> — MFA verification integrated into claims approval workflows</li>
+    </ul>
+
+    <div class="info-box">
+      <p><strong>Note:</strong> MFA enforcement is configured at the feature level by Bayzat administrators. Users with payment-critical roles (e.g., Accounts Payable) may have MFA permanently enabled and cannot disable it through standard interfaces.</p>
+    </div>
+  </div>
+      </div>
+    </section>
+  
+
+    <section class="section section-business-rules-limitations" id="business-rules-limitations">
+      <header class="section-header">
+        <h2 class="section-title">Business Rules &amp; Limitations</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+    <h3>Authentication Requirements</h3>
+    <div class="info-box">
+      <p><strong>Google Authenticator Required:</strong> MFA setup and deactivation both require the Google Authenticator app on iOS or Android. Users must have access to their authenticator app to disable MFA.</p>
+    </div>
+    <ul>
+      <li>Verification codes expire every 30 seconds</li>
+      <li>Manual setup key available as fallback if QR code scanning fails</li>
+      <li>Email confirmation sent when MFA is disabled</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <h3>Finance Role Restrictions</h3>
+    <div class="warning-box">
+      <p><strong>⚠️ Critical Limitation:</strong> Users with finance-critical roles (e.g., Accounts Payable) cannot disable MFA through standard admin interfaces. This security restriction requires backend intervention by Bayzat support.</p>
+    </div>
+    <p><strong>Affected roles:</strong> Payment processors, accounts payable managers, corporate card administrators.</p>
+  </div>
+
+  <div class="subsection">
+    <h3>MFA Integration Scope</h3>
+    <table class="limitations-table">
+      <thead>
+        <tr>
+          <th>Module</th>
+          <th>MFA Protection</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Corporate Cards</td>
+          <td>Create, edit, unfreeze operations</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td>Expense Overview</td>
+          <td>Payment approvals and processing</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td>Direct Payments</td>
+          <td>All payment endpoints</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td>Claims App</td>
+          <td>Claim submissions and approvals</td>
+          <td>Active</td>
+        </tr>
+        <tr>
+          <td>Balances</td>
+          <td>Balance view and modifications</td>
+          <td>Active</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>Known Limitations</h3>
+    <table class="limitations-table">
+      <thead>
+        <tr>
+          <th>Issue</th>
+          <th>Impact</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>MFA disable popup not centralized</td>
+          <td>Inconsistent user experience when disabling MFA from individual profile</td>
+          <td>Known Issue</td>
+        </tr>
+        <tr>
+          <td>Lost device recovery</td>
+          <td>Users who lose their phone cannot disable MFA without support intervention</td>
+          <td>By Design</td>
+        </tr>
+        <tr>
+          <td>Payment Advice download</td>
+          <td>MFA restriction removed from this endpoint for usability</td>
+          <td>Resolved</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>Session Management</h3>
+    <ul>
+      <li>MFA verification required at login for both mobile app and desktop web</li>
+      <li>"Remember me" option available on desktop to reduce frequency of MFA prompts</li>
+      <li>MFA session validity configurable per environment (staging vs production)</li>
+      <li>Elevated role access may require re-authentication even within active session</li>
+    </ul>
+  </div>
+      </div>
+    </section>
+  
+
+    <section class="section section-troubleshooting-edge-cases" id="troubleshooting-edge-cases">
+      <header class="section-header">
+        <h2 class="section-title">Troubleshooting &amp; Edge Cases</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+    <h3>Common Issues</h3>
+    <table class="limitations-table">
+      <thead>
+        <tr>
+          <th>Issue</th>
+          <th>Cause</th>
+          <th>Resolution</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Authentication code rejected</td>
+          <td>Code expired (30-second window) or time sync issue</td>
+          <td>Wait for next code generation. Ensure device time is synced automatically.</td>
+        </tr>
+        <tr>
+          <td>Cannot disable MFA</td>
+          <td>User has finance-critical role with restricted permissions</td>
+          <td>Contact Bayzat support for manual MFA reset. Security restriction cannot be bypassed.</td>
+        </tr>
+        <tr>
+          <td>QR code won't scan</td>
+          <td>Camera permissions or lighting issues</td>
+          <td>Use manual setup key provided below QR code. Enter key directly in Google Authenticator.</td>
+        </tr>
+        <tr>
+          <td>Lost phone with authenticator</td>
+          <td>No access to verification codes</td>
+          <td>Contact Bayzat support immediately. Provide identity verification for account recovery.</td>
+        </tr>
+        <tr>
+          <td>Error when adding authentication code</td>
+          <td>Invalid code format or expired token</td>
+          <td>Verify 6-digit code is current. Re-scan QR code if setup is incomplete.</td>
+        </tr>
+        <tr>
+          <td>MFA prompt on every login</td>
+          <td>"Remember me" option not enabled</td>
+          <td>Check "Remember me" on desktop login screen to reduce MFA frequency.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>Edge Cases</h3>
+    <ul>
+      <li><strong>Multiple devices:</strong> Google Authenticator codes work on any device where account is configured. Setup on multiple devices for redundancy.</li>
+      <li><strong>Device replacement:</strong> Disable MFA before switching phones, then re-enable on new device. Otherwise requires support intervention.</li>
+      <li><strong>Corporate card operations:</strong> MFA required for sensitive actions (create, edit, unfreeze) but not for viewing card details or balances.</li>
+      <li><strong>Expense approvals:</strong> Approvers must complete MFA verification before processing payment-related expenses.</li>
+      <li><strong>Session timeout:</strong> MFA session validity varies by environment. Elevated actions may require re-authentication within same session.</li>
+      <li><strong>Role changes:</strong> If promoted to finance-critical role, MFA becomes mandatory and cannot be disabled without backend intervention.</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <h3>Security Considerations</h3>
+    <div class="warning-box">
+      <p><strong>⚠️ Important:</strong> Disabling MFA removes the second layer of account protection. Re-enable immediately if disabled temporarily.</p>
+    </div>
+    <ul>
+      <li>Email notification sent when MFA is disabled to alert account owner</li>
+      <li>Finance roles cannot self-disable MFA to prevent unauthorized access to payment systems</li>
+      <li>MFA codes are time-based and cannot be reused</li>
+      <li>Backup codes not currently supported — secure access to authenticator app is critical</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <h3>Module-Specific Behaviors</h3>
+    <table class="limitations-table">
+      <thead>
+        <tr>
+          <th>Module</th>
+          <th>MFA Trigger</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Corporate Cards</td>
+          <td>Create/edit card requests, unfreeze operations</td>
+          <td>View-only actions do not require MFA</td>
+        </tr>
+        <tr>
+          <td>Direct Payments</td>
+          <td>All payment processing endpoints</td>
+          <td>Payment Advice downloads excluded from MFA requirement</td>
+        </tr>
+        <tr>
+          <td>Claims</td>
+          <td>Claim submission and approval actions</td>
+          <td>MFA integration active in claims app</td>
+        </tr>
+        <tr>
+          <td>Login</td>
+          <td>Every login attempt when MFA enabled</td>
+          <td>"Remember me" reduces frequency on desktop</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+      </div>
+    </section>
+  
+
+    <section class="section section-support-resources" id="support-resources">
+      <header class="section-header">
+        <h2 class="section-title">FAQs &amp; Support</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+    <h3>Frequently Asked Questions</h3>
+
+    <div class="faq-accordion"><details class="faq-item">
+      <summary>How do I enable Multi-factor Authentication on my account?</summary>
+      <p>Navigate to Profile → Security Settings, click Enable for Multi-factor Authentication, download Google Authenticator app, scan the QR code (or enter the setup key manually), and enter the 6-digit verification code to confirm activation.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>What happens if I lose access to my Google Authenticator app?</summary>
+      <p>You must have access to Google Authenticator to disable MFA. If you've lost your device, contact Bayzat support immediately for manual backend assistance, especially if you have finance-critical roles like Accounts Payable.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>How do I disable Multi-factor Authentication?</summary>
+      <p>Go to Profile → Security Settings, click Disable next to Multi-factor Authentication, then enter a verification code from Google Authenticator to confirm. You'll receive an email notification recommending re-enablement.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>What should I do if my MFA code is rejected during login?</summary>
+      <p>Wait for the next 6-digit code to generate (codes refresh every 30 seconds) and try again. Ensure your device time is synchronized correctly with network time.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Can I use MFA on both mobile app and desktop web?</summary>
+      <p>Yes. Once enabled, MFA applies to all login methods. On mobile, enter the code after your credentials. On desktop (app.bayzat.com), enter the code on the second authentication screen.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Why can't I disable MFA for users with Accounts Payable roles?</summary>
+      <p>The platform restricts MFA disablement for finance-critical roles to maintain payment security. Standard admin interfaces cannot override this setting—contact Bayzat support for manual intervention.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Does MFA work with Corporate Cards and Expense modules?</summary>
+      <p>Yes. MFA is integrated with Finance modules including Corporate Cards, Expense Overview, card creation/editing, card unfreezing, and balance viewing for enhanced payment security.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>What if I can't scan the QR code during setup?</summary>
+      <p>Use the manual setup key provided during the activation process. Enter this key directly into Google Authenticator instead of scanning the QR code.</p>
+    </details>
+  </div></div>
+
+  <div class="subsection">
+    <h3>Getting Help</h3>
+    <ul>
+      <li><strong>Bayzat Support:</strong> Contact support through the platform for MFA setup assistance, device recovery, or role-based restriction issues</li>
+      <li><strong>Help Center:</strong> Visit <a href="https://bayzathelp.zendesk.com">Bayzat Help Center</a> for detailed guides on activating, deactivating, and logging in with MFA</li>
+      <li><strong>Technical Issues:</strong> Report authentication errors, code rejection problems, or integration issues to Bayzat technical support</li>
+    </ul>
+  </div>
+      </div>
+    </section>
+  
+
+    <section class="section section-glossary" id="glossary">
+      <header class="section-header">
+        <h2 class="section-title">Glossary</h2>
+      </header>
+      <div class="section-body">
+        <table class="glossary-table">
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Authentication Code</strong></td>
+        <td>A 6-digit time-based code generated by Google Authenticator that changes every 30 seconds, used to verify user identity during login.</td>
+      </tr>
+      <tr>
+        <td><strong>Google Authenticator</strong></td>
+        <td>A mobile app (iOS or Android) that generates time-based verification codes for multi-factor authentication.</td>
+      </tr>
+      <tr>
+        <td><strong>MFA (Multi-factor Authentication)</strong></td>
+        <td>A security feature that requires two verification steps during login: your password plus a timed code from an authenticator app.</td>
+      </tr>
+      <tr>
+        <td><strong>QR Code</strong></td>
+        <td>A scannable code displayed during MFA setup that links your Bayzat account to Google Authenticator.</td>
+      </tr>
+      <tr>
+        <td><strong>Security Settings</strong></td>
+        <td>The section within your Profile where you enable, disable, and manage Multi-factor Authentication settings.</td>
+      </tr>
+      <tr>
+        <td><strong>Setup Key</strong></td>
+        <td>A manual alphanumeric code provided as an alternative to QR code scanning during MFA activation.</td>
+      </tr>
+      <tr>
+        <td><strong>Verification Code</strong></td>
+        <td>The 6-digit code from Google Authenticator required to complete MFA-protected actions like login, enable, or disable MFA.</td>
+      </tr>
+    </tbody>
+  </table>
+      </div>
+    </section>
+  
+    </main>
+
+    <footer>
+      <div>Generated by Bayzat Documentation System</div>
+      <div>Last updated: 2026-02-17</div>
+    </footer>
+  </div>
+</body>
+</html>
