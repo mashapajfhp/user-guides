@@ -810,6 +810,75 @@ Alternatively, navigate to **Company → Invitations** to view all pending invit
 
 <div class="subsection">
 
+### Login & Authentication Methods
+
+Once employees are invited and registered, they can access Bayzat through multiple authentication methods on both web and mobile.
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/records-management/v1/validation/screenshots/login-page-default.png" class="screenshot" loading="lazy" alt="login-page-default.png" />
+<figcaption>Bayzat login page showing all authentication methods</figcaption>
+</figure>
+
+Bayzat supports five ways to log in:
+
+| Method | Description | Best For |
+|----|----|----|
+| **Email & Password** | Standard login with registered email and password | Daily use for all employees |
+| **Magic Link** | Passwordless login via a time-sensitive link sent to email | Employees who forget passwords frequently |
+| **Google SSO** | Single Sign-On using a Google account | Organizations using Google Workspace |
+| **Microsoft SSO** | Single Sign-On using a Microsoft account | Organizations using Microsoft 365 |
+| **Mobile App** | Login via the Bayzat app on Android or iOS | Employees on the go |
+
+#### Email & Password Login
+
+Go to [app.bayzat.com](https://app.bayzat.com/auth/login). Enter the registered work email address and password. Optionally check **Keep me logged in** to stay signed in across sessions. Click **Log in** to access the platform.
+
+#### Magic Link (Passwordless Login)
+
+On the login page, toggle the **Log in without password** switch. The description reads "Send me a magic link to log in." Enter your registered email address and click **Send me a link**. A unique, time-sensitive login link is sent to your inbox. Click the link in the email to log in instantly without a password.
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/records-management/v1/validation/screenshots/login-magic-link-enabled.png" class="screenshot" loading="lazy" alt="login-magic-link-enabled.png" />
+<figcaption>Login page with Magic Link toggle enabled — password field is hidden, "Send me a link" button appears</figcaption>
+</figure>
+
+#### Google SSO
+
+Click the **Log in with Google** button on the login page. You will be redirected to Google's authentication page where you can select your Google account. After authenticating, you are automatically logged into Bayzat. This method is ideal for organizations using Google Workspace.
+
+#### Microsoft SSO
+
+Click the **Log in with Microsoft** button on the login page. You will be redirected to Microsoft's authentication page where you can sign in with your Microsoft account. After authenticating, you are automatically logged into Bayzat. This method is ideal for organizations using Microsoft 365 or Azure Active Directory.
+
+<div class="warning-box">
+
+**Important SSO Clarification:** Google SSO and Microsoft SSO are **authentication methods only** — they provide a convenient way for existing employees to log in using their Google or Microsoft credentials. SSO does **not** create new user accounts on Bayzat, nor does it sync or manage user permissions, roles, or access levels from external identity providers. Employee profiles must still be created manually on Bayzat (via Add Employee, Excel import, document upload, or invitation), and roles must be assigned separately through **Settings > Role Management**. SSO simply replaces the need to remember a separate Bayzat password.
+
+</div>
+
+#### Password Reset
+
+If you have forgotten your password, click the **Forgot password?** link on the login page. Enter your registered email address and click **Send me a reset link**. A password reset email is sent to your inbox. Click the link in the email to set a new password.
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/records-management/v1/validation/screenshots/login-forgot-password.png" class="screenshot" loading="lazy" alt="login-forgot-password.png" />
+<figcaption>Forgot password page with email input and reset link button</figcaption>
+</figure>
+
+#### Mobile App Access
+
+Download the Bayzat app from the [Google Play Store](https://play.google.com/store/apps/details?id=com.bayzat.benefits) or [Apple App Store](https://apps.apple.com/us/app/bayzat-benefits/id1057593226). All login methods (email/password, Magic Link, Google SSO, Microsoft SSO) are available on the mobile app as well.
+
+<div class="info-box">
+
+**Admin Tip:** When onboarding new employees, inform them of all available login methods. Employees using Google Workspace or Microsoft 365 can use SSO for a seamless experience without managing a separate Bayzat password.
+
+</div>
+
+</div>
+
+<div class="subsection">
+
 ### Viewing Employee Profile
 
 From the employee list, click any employee name to open their full profile. Employees can also view their own profile via **My Profile**. Each profile is organised into tabs that cover the entire employee lifecycle: About Me (personal and contact details), Work (employment details, department, office), Documents (uploaded files with view, edit, and delete actions), Dependents, Leaves, Health Insurance, Payroll (salary, bank details, end of service), Attendance, Timesheet, Assets, Air Tickets, and Performance.
