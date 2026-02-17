@@ -1557,6 +1557,10 @@ Why does the employee list export show incorrect date formats?
 
 Regional settings (e.g., Turkish locale) may cause date formatting issues in Excel exports. The platform has localization constraints that affect date rendering in some regional configurations.
 
+Does Bayzat support Okta SSO?
+
+No. Bayzat does not support Okta SSO.
+
 </div>
 
 </div>
