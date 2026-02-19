@@ -31,13 +31,14 @@ Split Shifts enables HR teams and managers to schedule employees across non-cont
 Creating a split shift is simply assigning two separate shifts to one employee on the same day:
 
 1.  **Navigate to Shift Scheduler:** Time → Shifts → Shift scheduler
-2.  **Create first shift:** Click a calendar cell, select the employee, configure timing (e.g., 6:00 AM - 12:00 PM)
-3.  **Create second shift:** Click the same day for the same employee, configure second timing (e.g., 4:00 PM - 8:00 PM)
-4.  **Publish both shifts:** Select work center and click "Publish shifts"
+2.  **Select a work center** with non-overlapping work timings configured
+3.  **Create first shift:** Click a calendar cell, select the employee, configure timing (e.g., Office 07:00 AM - 01:00 PM)
+4.  **Create second shift:** Click the empty space below the first shift card for the same employee and date, configure second timing (e.g., 2PM - 6PM 02:00 PM - 06:00 PM)
+5.  **Publish both shifts:** Select work center and click "Publish shifts"
 
 <div class="warning-box">
 
-**Example Scenario:** A retail employee needs to work the morning rush (6AM-12PM), take a 4-hour break, then return for the evening rush (4PM-8PM). Create two separate shifts on the same day - this IS the split shift.
+**Example Scenario:** A retail employee needs to work the morning rush (7AM-1PM), take a 1-hour break, then return for the afternoon shift (2PM-6PM). Create two separate shifts on the same day using non-overlapping work timings - this IS the split shift.
 
 </div>
 
@@ -47,13 +48,14 @@ Creating a split shift is simply assigning two separate shifts to one employee o
 - Each shift tracks its own attendance (late arrival, early departure, breaks)
 - Fixed deductions are **halved** when an employee has 2 shifts (to avoid duplicate penalties)
 - Cannot add a second shift if the day is marked as "Day Off"
+- The system prevents overlapping shifts — if the selected work timing overlaps with the existing shift, a warning appears and Save buttons are disabled
 
 <figure class="screenshot-container">
-<img src="validation/screenshots/exploration-01-shift-scheduler-main.png" class="screenshot" alt="exploration-01-shift-scheduler-main.png" />
-<figcaption>Split Shifts calendar interface showing employee schedules with shift cards, work center filters, and weekly/monthly views</figcaption>
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/85-split-shift-both-shifts-saved.png" class="screenshot" loading="lazy" alt="Both split shifts visible in the calendar grid" />
+<figcaption>Split shift example — two shifts (Office 07:00 AM - 01:00 PM and 2PM - 6PM 02:00 PM - 06:00 PM) assigned to the same employee on the same date, with combined metrics showing "9.75 hrs - 2 shifts"</figcaption>
 </figure>
 
-Create shifts by clicking calendar cells, manage existing shifts through context menus, and track employee hours and shift counts in real-time. Use filters to view schedules by work center, employee, or time period.
+Create shifts by clicking calendar cells, manage existing shifts through context menus, and track employee hours and shift counts in real-time. Use filters to view schedules by work center, employee, or time period. For the full shift scheduling interface guide, see **[Shift Scheduling](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html)**.
 
 </div>
 
@@ -181,11 +183,11 @@ Answer these questions before creating Split Shifts:
 
 ### Related Features
 
-- **Work Timings** — Defines the start and end times assigned to each shift period in the split schedule
+- **[Work Timings](https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html)** — Defines the start and end times assigned to each shift period. You need at least two non-overlapping work timing templates to create split shifts.
+- **[Shift Scheduling](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html)** — Provides the calendar interface for creating and managing all shift types including split shifts. The Shift Scheduler is where you actually create split shifts.
 - **Work Centers** — Organizes employees into operational units for shift scheduling and capacity planning
 - **Attendance Tracking** — Records check-in/check-out data against published shift schedules for payroll processing
 - **Workflow Automation** — Triggers notifications or actions when shifts are created, updated, or deleted
-- **Shift Scheduler** — Provides the calendar interface for creating and managing all shift types including split shifts
 
 </div>
 
@@ -195,8 +197,8 @@ Answer these questions before creating Split Shifts:
 
 | Requirement | Description | Status |
 |----|----|----|
-| Work Timings | At least one work timing configuration must exist to assign to shifts | Required |
-| Work Centers | Work center must be configured to enable shift publishing and assignment features | Required |
+| Non-Overlapping Work Timings | At least **two** [work timing](https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html) configurations with non-overlapping time ranges must exist (e.g., "Office 07:00 AM - 01:00 PM" and "2PM - 6PM 02:00 PM - 06:00 PM") | Required |
+| Work Centers | Work center must be configured with both work timings available to enable split shift creation | Required |
 | Office Locations | Office records must exist to link shifts to physical work locations | Required |
 | Employee Records | Active employees must be assigned to work centers before scheduling shifts | Required |
 | Workflow Configuration | Optional automation triggers for shift lifecycle events | Optional |
@@ -362,8 +364,8 @@ Time → Shifts → Shift scheduler
 **To learn about the feature:** Click the "Learn about split shifts" button (marked with "New" badge) in the Shift scheduler header. This opens a modal explaining split shift rules and behaviors.
 
 <figure class="screenshot-container">
-<img src="validation/screenshots/exploration-01-shift-scheduler-main.png" class="screenshot" alt="exploration-01-shift-scheduler-main.png" />
-<figcaption>Split Shifts calendar interface showing weekly view with employee rows and shift cards</figcaption>
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/80-split-shift-work-center-selected.png" class="screenshot" loading="lazy" alt="Shift Scheduler with work center selected" />
+<figcaption>Shift Scheduler calendar interface — select a work center with non-overlapping work timings to enable split shift creation</figcaption>
 </figure>
 
 Key actions available from this screen:
@@ -376,6 +378,8 @@ Key actions available from this screen:
 - Click existing shift cards to edit or delete
 - Use "Copy Schedule" to duplicate shift patterns
 - Click "Publish shifts" to make schedules visible to employees
+
+For the full Shift Scheduler interface guide, see **[Shift Scheduling](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html)**.
 
 </div>
 
@@ -492,40 +496,77 @@ Shifts must be published to become visible to employees and enable attendance tr
 
 ### Task: Create a Split Shift (Two Shifts for One Employee)
 
-**A split shift means assigning two separate shifts to the same employee on the same day.** This is how you schedule employees with non-continuous work periods (e.g., morning and evening shifts with a break in between).
+**A split shift means assigning two separate shifts to the same employee on the same day.** This is how you schedule employees with non-continuous work periods (e.g., morning and afternoon shifts with a break in between).
+
+#### Prerequisites
+
+Before creating a split shift, ensure:
+- You have at least two [work timing](https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html) templates with **non-overlapping time ranges** (e.g., "Office 07:00 AM - 01:00 PM" and "2PM - 6PM 02:00 PM - 06:00 PM")
+- Both work timings are available in the target work center
+- The target date has no existing day off, day off with check-in allowed, or approved leave
 
 #### Step-by-Step: Create Split Shift
 
 1.  **Navigate to Shift Scheduler:** Time → Shifts → Shift scheduler
-2.  **Locate employee:** Find the employee in the calendar grid (use search if needed)
-3.  **Create first shift:**
-    - Click the calendar cell for the target date
-    - Select Work Timing for first period (e.g., "Morning Shift 6AM-12PM")
+2.  **Select a work center** that has non-overlapping work timings configured:
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/80-split-shift-work-center-selected.png" class="screenshot" loading="lazy" alt="Work center selected for split shift creation" />
+<figcaption>Select a work center with multiple non-overlapping work timings available</figcaption>
+</figure>
+
+3.  **Create the first shift:**
+    - Click the calendar cell for the target date and employee
+    - Select Work Timing for first period (e.g., "Office 07:00 AM - 01:00 PM")
     - Select Office location
-    - Click Save or Save & Publish
-4.  **Create second shift (same employee, same day):**
+    - Click **Save as draft** or **Save & Publish**
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/82-split-shift-first-shift-dialog.png" class="screenshot" loading="lazy" alt="First shift creation dialog" />
+<figcaption>Schedule shift dialog for the first shift — selecting "Office" work timing (07:00 AM - 01:00 PM) at Bayzat DIFC</figcaption>
+</figure>
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/83-split-shift-first-shift-saved.png" class="screenshot" loading="lazy" alt="First shift saved in the schedule grid" />
+<figcaption>First shift saved — the morning shift appears in the employee's calendar row</figcaption>
+</figure>
+
+4.  **Create the second shift (same employee, same day):**
     - **Important:** Click in the empty space **below** the existing shift card (not on the card itself)
     - The "Schedule shift" dialog opens with the same employee and date pre-selected
-    - Select Work Timing for second period (e.g., "Evening Shift 4PM-8PM")
+    - Select Work Timing for second period (e.g., "2PM - 6PM 02:00 PM - 06:00 PM")
     - Select Office location (can be same or different)
-    - Click Save & Publish
+    - Click **Save as draft** or **Save & Publish**
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/84-split-shift-second-shift-dialog.png" class="screenshot" loading="lazy" alt="Second shift creation dialog" />
+<figcaption>Schedule shift dialog for the second shift — selecting "2PM - 6PM" work timing (02:00 PM - 06:00 PM) for the same employee and date</figcaption>
+</figure>
+
 5.  **Verify:** Both shift cards now appear stacked in the same cell. Employee metrics show combined hours.
 
-<div class="warning-box">
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/85-split-shift-both-shifts-saved.png" class="screenshot" loading="lazy" alt="Both split shifts visible in the calendar grid" />
+<figcaption>Split shift complete — both shifts visible in the grid, employee metrics show "9.75 hrs - 2 shifts", and the Publish button updates to "Publish shifts (2)"</figcaption>
+</figure>
 
-**Maximum 2 shifts per employee per day.** You cannot add a third shift. If the day is marked as "Day Off," you cannot add any shifts.
+#### Split Shift Constraints
 
-</div>
+| Constraint | Description |
+|----|----|
+| **Maximum 2 shifts per day** | You cannot add a third shift for the same employee on the same date |
+| **Non-overlapping times required** | If the selected work timing overlaps with the existing shift, the system displays *"There is an overlapping shift on the same day"* and disables Save buttons |
+| **No day off conflicts** | Cannot create a split shift on a date that is marked as Day Off or Day Off with check-in allowed |
+| **No leave conflicts** | Cannot schedule during half-day leave or approved leave |
+| **No overlap with adjacent days** | Shifts cannot overlap with previous day or next day shifts (relevant for overnight shifts) |
+| **No overtime with multiple shifts** | Cannot add extra hours (T&P adjustments) if an employee has multiple published shifts on the same day |
+| **Independent attendance tracking** | Each shift tracks late arrival, early departure, and absence separately |
+| **Deduction halving** | When 2 shifts exist on the same day, fixed deduction amounts are automatically divided by 2 (e.g., 5% late deduction becomes 2.5% per shift) |
+| **No "All" in Schedule Planner** | The "All" option is not available when creating split shifts in Schedule Planner; you must select specific employees |
 
 <div class="info-box">
 
-**Important - Clicking on Shift Cards:** When you click directly on an existing shift card, a context menu appears with options to **Edit shift**, **Reassign shift**, or **Delete shift**. There is no "Add shift" option in this menu. To add a second shift, you must click in the empty space below the shift card within the calendar cell.
-
-</div>
-
-<div class="warning-box">
-
-**Non-Overlapping Shifts Required:** When creating a second shift, if the selected work timing overlaps with the existing shift, the system displays a warning: *"There is an overlapping shift on the same day"* and the Save buttons are disabled. For a valid split shift, the two shifts must have **non-overlapping time periods** (e.g., 6AM-12PM and 2PM-8PM, not 6AM-2PM and 7AM-1PM).
+**Clicking on shift cards:** When you click directly on an existing shift card, a context menu appears with options to **Edit shift**, **Reassign shift**, or **Delete shift**. There is no "Add shift" option in this menu. To add a second shift, you must click in the empty space below the shift card within the calendar cell.
 
 </div>
 
@@ -540,8 +581,8 @@ Create and publish work schedules for employees across different work centers an
 #### Subtask: Access Shift Scheduler
 
 <figure class="screenshot-container">
-<img src="validation/screenshots/exploration-01-shift-scheduler-main.png" class="screenshot" alt="exploration-01-shift-scheduler-main.png" />
-<figcaption>Split Shifts scheduler showing calendar grid with employee rows and shift cards</figcaption>
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/81-split-shift-week-view.png" class="screenshot" loading="lazy" alt="Shift Scheduler weekly view" />
+<figcaption>Shift Scheduler weekly view — select a work center and navigate to the target week before creating shifts</figcaption>
 </figure>
 
 - Navigate to Time → Shifts → Shift scheduler
@@ -825,7 +866,7 @@ To learn about split shift capabilities, click the **"Learn about split shifts"*
 
 <div class="info-box">
 
-**Development Note:** The current Shift Scheduler lacks native split shift configuration capabilities. Organizations requiring non-continuous work schedules must create separate shift entries with manual coordination. *(OS-154)*
+**Note:** Split shift creation from the Shift cell context menu is not yet supported — you must click in empty calendar space below existing shift cards to add a second shift. *(OS-299)*
 
 </div>
 
@@ -923,7 +964,7 @@ Can I schedule split shifts with breaks between work periods?
 
 <div class="faq-answer">
 
-Not natively. The current system requires creating separate shift entries for each work period. Coordinate manually to ensure employees understand the schedule structure.
+Yes. Create two separate shifts for the same employee on the same day using non-overlapping [work timings](https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html) (e.g., "Office 07:00 AM - 01:00 PM" and "2PM - 6PM 02:00 PM - 06:00 PM"). The break between shifts is the gap between the end of the first shift and the start of the second. See the [Create a Split Shift](#core-tasks) task for step-by-step instructions.
 
 </div>
 
@@ -989,9 +1030,9 @@ This rule determines when an employee is automatically marked absent if they hav
 
 ### Getting Help
 
-- **In-App Guidance:** Click "Learn about split shifts" in the Schedule Planner header for feature overview and quick tips.
+- **In-App Guidance:** Click "Learn about split shifts" in the Shift Scheduler header for feature overview and quick tips.
+- **Related Guides:** See [Shift Scheduling](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html) for the full scheduler interface and [Work Timings](https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html) for configuring the time templates used in split shifts.
 - **Support Portal:** Submit tickets for technical issues, data discrepancies, or feature requests through the Bayzat support portal.
-- **HR Admin Community:** Connect with other administrators to share scheduling strategies and workarounds for complex scenarios.
 - **Training Resources:** Access video tutorials and best practices guides in the Bayzat Help Center under Attendance → Shift Scheduling.
 
 </div>

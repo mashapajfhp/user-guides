@@ -545,18 +545,23 @@ To edit a work timing, click the edit icon on its row. The edit form includes:
 
 #### Step 3: Configure Split Shift Settings (Optional)
 
-If employees work multiple shifts per day (e.g., morning and evening with break in between):
+If employees work multiple shifts per day (e.g., morning and evening with break in between), you need **non-overlapping work timings** configured before creating split shifts. For detailed work timing setup, see the [Work Timings guide](https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html).
 
-<figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/39-split-shifts-learn-more.png" class="screenshot" loading="lazy" alt="Split shifts Learn More dialog" />
-<figcaption>Split shifts information dialog explaining rules and deduction behavior for multi-shift days</figcaption>
-</figure>
+**Prerequisites for split shifts:**
+
+- Create at least two work timing templates with non-overlapping time ranges (e.g., "Office 07:00 AM - 01:00 PM" and "2PM - 6PM 02:00 PM - 06:00 PM")
+- Ensure both work timings are available in the target work center
+- Verify no day off or leave exists on the target date
+
+**Split shift rules:**
 
 - Maximum 2 shifts per employee per day
 - Shifts cannot overlap with same day, previous day, or next day shifts
 - Cannot schedule shifts on days marked as Day Off or Day Off with check-in allowed
 - Each shift tracks attendance independently with regular attendance actions (late arrival, early departure, absence)
 - **Deduction halving:** When an employee has 2 shifts on the same day, deduction amounts are automatically divided by 2. For example, if a late arrival deduction is 5% of salary, each shift's late deduction becomes 2.5%
+
+For the complete split shift guide including all constraints, see **[Split Shifts](https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html)**.
 
 <div class="warning-box">
 
@@ -729,23 +734,54 @@ Schedule specific work shifts for employees on designated dates with defined wor
 
 #### Subtask: Create Split Shifts (Multiple Shifts Per Day)
 
+To create a split shift, assign two separate shifts to the same employee on the same day using non-overlapping work timings.
+
+1. **Select a work center** with non-overlapping work timings available:
+
 <figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/41-wtd006-split-info.png" class="screenshot" loading="lazy" alt="Split shift information" />
-<figcaption>Split shift information modal explaining rules for assigning multiple shifts per day</figcaption>
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/80-split-shift-work-center-selected.png" class="screenshot" loading="lazy" alt="Work center selected for split shift creation" />
+<figcaption>Select a work center that has multiple non-overlapping work timings configured</figcaption>
 </figure>
 
-- Create first shift following standard process
-- Click on same employee's cell for same date
-- Select different work timing for second shift
-- System validates no overlap with existing shift
-- System validates no day off exists on that date
-- Save second shift (maximum 2 shifts per day)
+2. **Create the first shift** — click the employee's cell for the target date and select the first work timing:
 
-**Expected Outcome:** Two non-overlapping shifts created for same employee on same day, each tracked independently for attendance.
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/82-split-shift-first-shift-dialog.png" class="screenshot" loading="lazy" alt="First shift creation dialog showing Office work timing 07:00 AM to 01:00 PM" />
+<figcaption>Schedule shift dialog — first shift using "Office" work timing (07:00 AM - 01:00 PM)</figcaption>
+</figure>
+
+3. **Save the first shift** as draft or publish it:
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/83-split-shift-first-shift-saved.png" class="screenshot" loading="lazy" alt="First shift saved in the schedule grid" />
+<figcaption>First shift saved — the employee's row shows the morning shift in the calendar grid</figcaption>
+</figure>
+
+4. **Create the second shift** — click on the **empty space below** the existing shift card (not on the card itself) for the same employee and same date. Select a different, non-overlapping work timing:
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/84-split-shift-second-shift-dialog.png" class="screenshot" loading="lazy" alt="Second shift creation dialog showing 2PM-6PM work timing" />
+<figcaption>Schedule shift dialog — second shift using "2PM - 6PM" work timing (02:00 PM - 06:00 PM) for the same employee and date</figcaption>
+</figure>
+
+5. **Verify both shifts** appear in the calendar grid with combined hours:
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/85-split-shift-both-shifts-saved.png" class="screenshot" loading="lazy" alt="Both split shifts visible in the calendar grid showing combined 9.75 hours and 2 shifts" />
+<figcaption>Split shift complete — both shifts visible in the grid, employee metrics show "9.75 hrs - 2 shifts", and the Publish button updates to "Publish shifts (2)"</figcaption>
+</figure>
+
+**Expected Outcome:** Two non-overlapping shifts created for same employee on same day, each tracked independently for attendance. Employee metrics display combined hours across both shifts.
 
 <div class="warning-box">
 
-**⚠️ Split Shift Constraints:** Maximum 2 shifts per employee per day. Cannot schedule on days with existing day off. Cannot schedule during half-day leave. No overlapping shift times allowed.
+**⚠️ Split Shift Constraints:** Maximum 2 shifts per employee per day. Cannot schedule on days with existing day off. Cannot schedule during half-day leave. No overlapping shift times allowed. If the selected work timing overlaps with the existing shift, the system displays a warning and disables the Save buttons.
+
+</div>
+
+<div class="info-box">
+
+**Clicking on shift cards:** Clicking directly on an existing shift card opens a context menu with Edit/Reassign/Delete options. To add a second shift, you must click in the empty space below the existing shift card. For the complete split shift reference, see **[Split Shifts guide](https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html)**.
 
 </div>
 
@@ -1174,9 +1210,11 @@ When your scheduler assigns you two separate shifts in a single day (a split shi
 </div>
 
 <figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/39-split-shifts-learn-more.png" class="screenshot" loading="lazy" alt="Split shifts information" />
-<figcaption>Split shift configuration — when enabled, employees can be assigned two shifts in a single day with independent attendance tracking per shift</figcaption>
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/85-split-shift-both-shifts-saved.png" class="screenshot" loading="lazy" alt="Two split shifts displayed in the schedule grid" />
+<figcaption>Example of a split shift day — two shifts (Office 07:00 AM - 01:00 PM and 2PM - 6PM 02:00 PM - 06:00 PM) assigned to the same employee on the same date, with combined hours of 9.75 hrs</figcaption>
 </figure>
+
+For more details on split shift rules and constraints, see the **[Split Shifts guide](https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html)**.
 
 </div>
 

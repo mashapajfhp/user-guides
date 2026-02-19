@@ -196,6 +196,8 @@ A configuration option that defines reduced work hours for half-day schedules, c
 
 Work Timings integrates with and supports several other Attendance and HR features:
 
+- **[Shift Scheduling](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html):** Work timings are selected when creating shifts in the Shift Scheduler. Each shift references a work timing template for its start/end times and attendance rules.
+- **[Split Shifts](https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html):** To create split shifts (two shifts per employee per day), you need at least two work timing templates with non-overlapping time ranges configured in the same work center.
 - **Employee Profiles:** Work timing schedules are assigned to individual employees or employee groups within their profile settings
 - **Attendance Daily Reports:** Daily check-in/check-out records are validated against assigned work timing schedules to determine late arrivals, early departures, and absences
 - **Overtime Policies:** Extra hours calculated based on work timing schedules feed into overtime policy calculations for payroll
@@ -482,6 +484,34 @@ To delete a configuration, locate it in the work timings table and click the Del
 
 If you click "Delete", the system permanently removes the work timing configuration from the platform. The configuration immediately disappears from the work timings table and is no longer available for assignment to employees. Critically, any employees who were assigned to this timing for future dates will lose their work timing assignment, preventing them from checking in until a new timing is assigned. Historical attendance records for employees who previously used this timing remain intact and unchanged. The deletion cannot be undone; if the configuration is needed again, it must be recreated manually with all parameters re-entered. Before deleting, administrators should verify that no active employees are currently assigned to the timing or reassign them to alternative configurations.
 
+#### Subtask: Configure Work Timings for Split Shifts
+
+To schedule [split shifts](https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html) (two work periods in one day for the same employee), you need at least two work timing templates with **non-overlapping time ranges**. The [Shift Scheduler](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html) validates that shift times do not overlap when creating a second shift on the same day.
+
+**Example configuration for split shifts:**
+
+| Work Timing Name | Start Time | End Time | Purpose |
+|----|----|----|----|
+| Office | 07:00 AM | 01:00 PM | Morning shift for split shift employees |
+| 2PM - 6PM | 02:00 PM | 06:00 PM | Afternoon shift for split shift employees |
+
+**Steps to configure:**
+
+1. Navigate to Settings → Attendance → Work Timings
+2. Click **Add new** to create the first work timing (e.g., morning period)
+3. Set the start time and end time for the first period
+4. Configure attendance rules (late arrival, early departure, absent day threshold) as needed
+5. Click **Save**
+6. Repeat steps 2-5 to create the second work timing (e.g., afternoon period)
+7. Ensure time ranges do not overlap — the gap between the end of the first timing and the start of the second timing becomes the employee's break
+8. Both work timings must be available in the same work center for schedulers to create split shifts
+
+<div class="info-box">
+
+**Split Shift Deduction Halving:** When an employee has 2 shifts on the same day, fixed deduction amounts (e.g., late arrival percentage) are automatically divided by 2 to prevent duplicate penalties. This is handled by the [Shift Scheduler](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html), not by the work timing configuration itself.
+
+</div>
+
 </div>
 
 </div>
@@ -688,11 +718,16 @@ Work timings are configuration settings, not operational events. Bayzat Workflow
 
 </div>
 
-How do I handle employees who work split shifts?
+How do I configure work timings for split shifts?
 
 <div class="faq-answer">
 
-Split shifts (working two separate periods in one day with a long break in between) are not directly supported by a single work timing configuration. Workarounds include: (1) Create a work timing with 'Allow breaks' enabled and configure break duration to match the split; (2) Use Multiple Visits settings in Attendance module to allow multiple check-in/check-out pairs per day; (3) Assign two separate shifts per day using shift scheduling. Consult with support to determine best approach for your use case.
+To schedule [split shifts](https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html) (two separate work periods in one day), you need at least **two work timing templates with non-overlapping time ranges**. For example:
+
+- **Morning work timing:** "Office" with Start 07:00 AM, End 01:00 PM
+- **Afternoon work timing:** "2PM - 6PM" with Start 02:00 PM, End 06:00 PM
+
+Create each work timing using the standard creation process (Settings → Attendance → Work Timings → Add new). Ensure the time ranges do not overlap — the [Shift Scheduler](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html) will reject overlapping shifts. Both work timings must be available in the same work center. Once configured, schedulers can assign two shifts to the same employee on the same day in the Shift Scheduler.
 
 </div>
 
