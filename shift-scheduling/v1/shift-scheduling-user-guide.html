@@ -976,961 +976,2235 @@ footer {
       </div>
     </nav>
   
-
     <main class="content-area" aria-label="User guide content">
-      
-    <section class="section section-feature-overview" id="feature-overview">
-      <header class="section-header">
-        <h2 class="section-title">What is Shift Scheduling?</h2>
-      </header>
-      <div class="section-body">
-        <div class="subsection"><h3>Overview</h3><p>Shift Scheduling enables admins and schedulers to create, assign, and publish work shifts for employees across different work timings and office locations. Access it from the Attendance module in the Bayzat platform.</p><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/01-shift-scheduler-main-view.png" alt="Shift Scheduler main view" class="screenshot" loading="lazy"><figcaption>Shift Scheduler interface showing weekly employee schedules across work centers</figcaption></figure><p>Create shifts individually or in bulk, save as drafts for review, publish to notify employees, and manage schedules up to 6 months in advance.</p></div><div class="subsection"><h3>Key Benefits</h3><ul><li>Assign different work timings to employees based on operational needs</li><li>Organize employees into work centers by location, team, or scheduler</li><li>Copy and repeat shift patterns across weeks to reduce manual entry</li><li>Schedule split shifts for employees working multiple segments per day</li><li>Track attendance automatically based on published shift timings</li><li>Notify employees instantly via mobile app when shifts are published</li></ul></div><div class="strategic-context"><div class="strategic-header"><h3>Strategic Context</h3></div><div class="strategic-grid"><div class="strategic-card"><h4>🎯 What Shift Scheduling Solves</h4><p>Eliminates manual spreadsheet-based shift planning for businesses with variable work hours across locations.</p><ul><li>Replaces Excel rosters and email-based schedule distribution</li><li>Standardizes shift assignment across multiple offices and work centers</li><li>Enables real-time schedule visibility for both managers and employees</li></ul></div><div class="strategic-card"><h4>💰 Why It Matters</h4><p>Shift schedules are the foundation for attendance tracking and payroll calculations in shift-based organizations.</p><ul><li>Prerequisite for accurate check-in/check-out validation</li><li>Drives late arrival, early departure, and absence calculations</li><li>Controls overtime eligibility and time-based deductions</li></ul></div><div class="strategic-card"><h4>🏗️ How It Connects</h4><p>Shift schedules are transactional assignments that reference configuration templates (work timings, offices).</p><ul><li>Assigned to individual employees for specific dates</li><li>Referenced by attendance records and timesheet entries</li><li>Affects individual employees on scheduled days only</li></ul></div></div></div><div class="subsection"><h3>Who Uses This Feature?</h3><table class="who-uses-table"><thead><tr><th>User Role</th><th>What They Do</th><th>Value Proposition</th></tr></thead><tbody><tr><td><strong>Super Admin</strong></td><td>Create work centers, assign schedulers, and configure shift scheduling permissions</td><td>Centralize shift management structure and delegate scheduling responsibilities across the organization</td></tr><tr><td><strong>Shift Scheduler</strong></td><td>Create, publish, and manage employee shifts within assigned work centers</td><td>Replace manual scheduling with automated shift assignment and instant employee notification</td></tr><tr><td><strong>Line Manager</strong></td><td>View team schedules and coordinate coverage within their work center</td><td>Access real-time visibility into team availability without manual status checks</td></tr><tr><td><strong>Employee</strong></td><td>View assigned shifts and receive notifications for schedule changes</td><td>Know work schedule in advance without waiting for manual communication</td></tr></tbody></table></div>
-      </div>
-    </section>
-  
-
-    <section class="section section-product-foundation" id="product-foundation">
-      <header class="section-header">
-        <h2 class="section-title">Product Foundation Overview</h2>
-      </header>
-      <div class="section-body">
-        <div class="subsection">
-    <h3>How Shift Scheduling Fits</h3>
-    <p>Shift Scheduling is a transactional feature that creates time-bound work assignments for employees. Unlike configuration templates (like Work Timings), each shift is a discrete record tied to a specific employee, date, location, and timing.</p>
-    <div class="info-box">
-      <p><strong>Mental model:</strong> Work Center (grouping) → Scheduler creates Shift → Assigned to Employee for specific Date → Employee checks in/out → Attendance recorded</p>
-    </div>
-    <p>One shift affects one employee on one day. Changes to shifts only affect the specific assignments modified, not future schedules.</p>
-  </div>
-
-  <div class="subsection">
-    <h3>Key Decisions Before Setup</h3>
-    <p>Answer these questions before creating shifts:</p>
-    <ul>
-      <li><strong>How will you group employees for scheduling?</strong> — Work Centers organize employees by location, department, or manager responsibility</li>
-      <li><strong>What shift patterns do you need?</strong> — Standard hours, rotating shifts, split shifts (2 per day max), or flexible schedules</li>
-      <li><strong>Who will manage schedules?</strong> — Assign Shift Scheduler role to managers who will create and publish shifts</li>
-      <li><strong>How far in advance will you schedule?</strong> — System supports up to 6 months advance scheduling</li>
-    </ul>
-  </div>
-
-  <div class="subsection">
-    <h3>Related Features</h3>
-    <ul>
-      <li><strong>Work Timings</strong> — Defines the schedule templates (start/end times, rules) that shifts reference</li>
-      <li><strong>Work Centers</strong> — Groups employees, locations, and schedulers for shift management</li>
-      <li><strong>Attendance Records</strong> — Captures check-in/check-out against published shifts</li>
-      <li><strong>Day Off Management</strong> — Blocks shift creation when employee has scheduled day off</li>
-      <li><strong>Leave Requests</strong> — Automatically removes attendance records when leave is approved</li>
-    </ul>
-  </div>
-
-  <div class="subsection">
-    <h3>Prerequisites & Requirements</h3>
-    <table class="requirements-table">
-      <thead>
-        <tr>
-          <th>Requirement</th>
-          <th>Description</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Work Timings configured</td>
-          <td>At least one work timing template must exist to assign to shifts</td>
-          <td>Required</td>
-        </tr>
-        <tr>
-          <td>Work Centers created</td>
-          <td>Employees must be assigned to work centers before scheduling</td>
-          <td>Required</td>
-        </tr>
-        <tr>
-          <td>Office locations defined</td>
-          <td>Shifts must be assigned to specific office/branch locations</td>
-          <td>Required</td>
-        </tr>
-        <tr>
-          <td>Shift Scheduler role assigned</td>
-          <td>Users need Shift Scheduler permissions to create and publish shifts</td>
-          <td>Required</td>
-        </tr>
-        <tr>
-          <td>Employee shift type</td>
-          <td>Employees must be configured as shift employees (not fixed hours)</td>
-          <td>Required</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-      </div>
-    </section>
-  
-
-    <section class="section section-user-journey" id="user-journey">
-      <header class="section-header">
-        <h2 class="section-title">Complete User Journey Guide</h2>
-      </header>
-      <div class="section-body">
-        <div class="journey-roadmap">
-  <div class="subsection">
-    <h3>End-to-End Journey: From Planning to Publishing Shifts</h3>
-    <p>This journey covers the complete process of setting up work centers, creating shift schedules, and managing employee assignments.</p>
-  </div>
-
-  <div class="journey-phases">
-    <div class="journey-phase">
-      <div class="phase-marker">1</div>
-      <div class="phase-content">
-        <h4>Plan</h4>
-        <p>Identify shift types, work timings, and staffing requirements across different locations.</p>
-        <a href="#product-foundation" class="phase-link">See details →</a>
-      </div>
-    </div>
-
-    <div class="journey-phase">
-      <div class="phase-marker">2</div>
-      <div class="phase-content">
-        <h4>Configure Work Centers</h4>
-        <p>Set up work centers with schedulers, office locations, and work timings.</p>
-        <a href="#initial-setup" class="phase-link">See details →</a>
-      </div>
-    </div>
-
-    <div class="journey-phase">
-      <div class="phase-marker">3</div>
-      <div class="phase-content">
-        <h4>Navigate</h4>
-        <p>Access the Shift Scheduler interface to begin creating employee schedules.</p>
-        <a href="#feature-entry-points" class="phase-link">See details →</a>
-      </div>
-    </div>
-
-    <div class="journey-phase">
-      <div class="phase-marker">4</div>
-      <div class="phase-content">
-        <h4>Create Shifts</h4>
-        <p>Assign shifts to employees using individual scheduling, schedule planner, or copy functions.</p>
-        <a href="#core-tasks" class="phase-link">See details →</a>
-      </div>
-    </div>
-
-    <div class="journey-phase">
-      <div class="phase-marker">5</div>
-      <div class="phase-content">
-        <h4>Review & Publish</h4>
-        <p>Save shifts as drafts for review, then publish to notify employees via mobile app.</p>
-        <a href="#core-tasks" class="phase-link">See details →</a>
-      </div>
-    </div>
-
-    <div class="journey-phase">
-      <div class="phase-marker">6</div>
-      <div class="phase-content">
-        <h4>Manage & Maintain</h4>
-        <p>Edit, delete, reassign shifts, and handle split shifts or bulk operations as needed.</p>
-        <a href="#core-tasks" class="phase-link">See details →</a>
-      </div>
-    </div>
-  </div>
+<section id="feature-overview" class="section-feature-overview">
+<section id="what-is-shift-scheduling" class="section-header">
+<h2>What is Shift Scheduling?</h2>
+</section>
+<div class="section-body">
+<section id="overview" class="subsection">
+<h3>Overview</h3>
+<p>Shift Scheduling enables admins and schedulers to create, assign, and
+publish work shifts for employees across different work timings and
+office locations. Access it from the Attendance module in the Bayzat
+platform.</p>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/01-shift-scheduler-main-view.png" class="screenshot" loading="lazy" alt="Shift Scheduler main view" />
+<figcaption>
+Shift Scheduler interface showing weekly employee schedules across work
+centers
+</figcaption>
+</figure>
+<p>Create shifts individually or in bulk, save as drafts for review,
+publish to notify employees, and manage schedules up to 6 months in
+advance.</p>
+</section>
+<section id="key-benefits" class="subsection">
+<h3>Key Benefits</h3>
+<ul>
+<li>Assign different work timings to employees based on operational
+needs</li>
+<li>Organize employees into work centers by location, team, or
+scheduler</li>
+<li>Copy and repeat shift patterns across weeks to reduce manual
+entry</li>
+<li>Schedule split shifts for employees working multiple segments per
+day</li>
+<li>Track attendance automatically based on published shift timings</li>
+<li>Notify employees instantly via mobile app when shifts are
+published</li>
+</ul>
+</section>
+<div class="strategic-context">
+<section id="strategic-context" class="strategic-header">
+<h3>Strategic Context</h3>
+</section>
+<div class="strategic-grid">
+<section id="what-shift-scheduling-solves" class="strategic-card">
+<h4>🎯 What Shift Scheduling Solves</h4>
+<p>Eliminates manual spreadsheet-based shift planning for businesses
+with variable work hours across locations.</p>
+<ul>
+<li>Replaces Excel rosters and email-based schedule distribution</li>
+<li>Standardizes shift assignment across multiple offices and work
+centers</li>
+<li>Enables real-time schedule visibility for both managers and
+employees</li>
+</ul>
+</section>
+<section id="why-it-matters" class="strategic-card">
+<h4>💰 Why It Matters</h4>
+<p>Shift schedules are the foundation for attendance tracking and
+payroll calculations in shift-based organizations.</p>
+<ul>
+<li>Prerequisite for accurate <a
+href="https://mashapajfhp.github.io/user-guides/attendance/v1/attendance-user-guide.html">attendance</a>
+check-in/check-out validation</li>
+<li>Drives late arrival, early departure, and absence calculations</li>
+<li>Controls <a
+href="https://mashapajfhp.github.io/user-guides/overtime/v2/overtime-user-guide.html">overtime</a>
+eligibility and time-based deductions</li>
+</ul>
+</section>
+<section id="how-it-connects" class="strategic-card">
+<h4>🏗️ How It Connects</h4>
+<p>Shift schedules are transactional assignments that reference
+configuration templates (work timings, offices).</p>
+<ul>
+<li>Assigned to individual employees for specific dates</li>
+<li>Referenced by attendance records and <a
+href="https://mashapajfhp.github.io/user-guides/timesheets/v1/timesheets-user-guide.html">timesheet</a>
+entries</li>
+<li>Affects individual employees on scheduled days only</li>
+</ul>
+</section>
 </div>
-      </div>
-    </section>
-  
-
-    <section class="section section-feature-entry-points" id="feature-entry-points">
-      <header class="section-header">
-        <h2 class="section-title">Feature Discovery</h2>
-      </header>
-      <div class="section-body">
-        <div class="subsection">
-  <h3>Navigation Path</h3>
-  <div class="nav-path">Attendance → Shift Scheduler</div>
-  <p>Access the Shift Scheduler from the Attendance module to view, create, and manage employee shift schedules.</p>
-
-  <div class="info-box">
-    <p><strong>Alternative Access:</strong> Use Schedule Planner for bulk shift creation across multiple employees and date ranges.</p>
-  </div>
-
-  <h4>Available Views</h4>
-  <ul>
-    <li><strong>Time View</strong> — Calendar-based view showing shifts by date and employee</li>
-    <li><strong>Work Center View</strong> — Organized by work center groups for targeted scheduling</li>
-    <li><strong>Employee View</strong> — Individual employee schedule management</li>
-  </ul>
-
-  <h4>Key Entry Points</h4>
-  <ul>
-    <li><strong>Create Shift</strong> — Click on employee cell or empty date cell to assign new shift</li>
-    <li><strong>Schedule Planner</strong> — Bulk shift creation tool for multiple employees</li>
-    <li><strong>Copy Schedule</strong> — Duplicate existing shift patterns to other periods</li>
-    <li><strong>Delete Shifts</strong> — Bulk deletion interface for removing multiple shifts</li>
-  </ul>
 </div>
-      </div>
-    </section>
-  
-
-    <section class="section section-initial-setup" id="initial-setup">
-      <header class="section-header">
-        <h2 class="section-title">Initial Setup</h2>
-      </header>
-      <div class="section-body">
-        <div class="subsection">
-    <h3>Prerequisites</h3>
-    <p>Before creating shifts, ensure these configurations are in place:</p>
-    <ul>
-      <li><strong>Work Timings:</strong> Define shift start/end times, late arrival thresholds, and break allowances under Settings → Attendance → Work Timings</li>
-      <li><strong>Office Locations:</strong> Set up branch/office locations where shifts will be assigned under Settings → Company → Offices</li>
-      <li><strong>Shift Scheduler Role:</strong> Assign the Shift Scheduler role to managers who will create and publish shifts under Settings → Roles & Permissions</li>
-      <li><strong>Employee Classification:</strong> Ensure employees are classified as "Shift" type in their profiles to enable shift assignment</li>
-    </ul>
-  </div>
-
-  <div class="subsection">
-    <h3>First-Time Configuration Steps</h3>
-    
-    <h4>Step 1: Create Work Centers</h4>
-    <p>Work centers group employees by scheduler, office, and shift timing.</p>
-    <div class="nav-path">Time → Shift Scheduler → Work Centers → + Create Work Center</div>
-    
-    <ol>
-      <li>Navigate to Time → Shift Scheduler → Work Centers</li>
-      <li>Click "+ Create Work Center"</li>
-      <li>Enter work center name (e.g., "Retail Floor Staff", "Night Shift Security")</li>
-      <li>Select the Shift Scheduler (manager responsible for this group)</li>
-      <li>Add applicable office locations where these employees work</li>
-      <li>Select work timings (shift schedules) available for this group</li>
-      <li>Add employees to the work center</li>
-      <li>Click "Save"</li>
-    </ol>
-
-    <div class="info-box">
-      <p><strong>Note:</strong> Each employee can only belong to one work center. If all employees share the same scheduler and locations, create a single work center with all shift employees.</p>
-    </div>
-
-    <h4>Step 2: Configure Split Shift Settings (Optional)</h4>
-    <p>If employees work multiple shifts per day (e.g., morning and evening with break in between):</p>
-    <ul>
-      <li>Maximum 2 shifts per employee per day</li>
-      <li>Shifts cannot overlap with same day, previous day, or next day shifts</li>
-      <li>Cannot schedule shifts on days marked as Day Off or during half-day leave</li>
-      <li>Each shift tracks attendance independently (separate check-in/check-out)</li>
-    </ul>
-
-    <div class="warning-box">
-      <p><strong>⚠️ Split Shift Limitation:</strong> Cannot add extra hours (T&P adjustments) if employee has multiple published shifts on the same day. Schedule overtime as a separate shift instead.</p>
-    </div>
-
-    <h4>Step 3: Set Scheduling Permissions</h4>
-    <p>Define who can create, edit, and publish shifts:</p>
-    <ul>
-      <li><strong>Super Admin:</strong> Full access to all work centers and shift management</li>
-      <li><strong>Shift Scheduler:</strong> Can create and publish shifts only for assigned work centers</li>
-      <li><strong>Line Manager:</strong> Can view shifts for reporting employees but cannot edit (by default)</li>
-    </ul>
-
-    <div class="info-box">
-      <p><strong>Audit Logging:</strong> Shift creation, editing, and publishing actions are logged with user details and timestamps for shifts created after October 9, 2023.</p>
-    </div>
-  </div>
-
-  <div class="subsection">
-    <h3>Initial Shift Creation Methods</h3>
-    <p>Choose the method that fits your scheduling workflow:</p>
-    
-    <table class="requirements-table">
-      <thead>
-        <tr>
-          <th>Method</th>
-          <th>Best For</th>
-          <th>Access Path</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Individual Shift Creation</strong></td>
-          <td>One-off shifts, specific employee assignments</td>
-          <td>Time → Shift Scheduler → Click employee cell → Create shift</td>
-        </tr>
-        <tr>
-          <td><strong>Schedule Planner</strong></td>
-          <td>Bulk shift creation for multiple employees at once</td>
-          <td>Time → Shift Scheduler → Schedule Planner</td>
-        </tr>
-        <tr>
-          <td><strong>Copy Schedule</strong></td>
-          <td>Repeating weekly patterns, copying previous week</td>
-          <td>Time → Shift Scheduler → Copy icon → Select date range</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="subsection">
-    <h3>Draft vs. Published Shifts</h3>
-    <p>Shifts can be saved as drafts for review before publishing:</p>
-    <ul>
-      <li><strong>Draft:</strong> Visible only to schedulers, not sent to employees, can be edited freely</li>
-      <li><strong>Published:</strong> Sent to employees via push notification on Bayzat mobile app, visible in employee schedule</li>
-    </ul>
-    <div class="warning-box">
-      <p><strong>⚠️ Publishing Constraint:</strong> Cannot publish shifts for past dates or current day if employee has already checked in.</p>
-    </div>
-  </div>
-
-  <div class="subsection">
-    <h3>Key Configuration Decisions</h3>
-    <p>Answer these questions before creating your first shifts:</p>
-    <ul>
-      <li><strong>How many work centers do you need?</strong> — One per manager/scheduler or group employees by location/department</li>
-      <li><strong>Do employees work split shifts?</strong> — Configure maximum 2 shifts per day with no overlap rules</li>
-      <li><strong>How far in advance will you schedule?</strong> — Shifts can be created up to 6 months ahead</li>
-      <li><strong>Will you use repeating patterns?</strong> — Set up copy schedule workflow for weekly recurring shifts</li>
-      <li><strong>Who needs to approve shifts?</strong> — No built-in approval workflow; shifts are published directly by schedulers</li>
-    </ul>
-  </div>
-
-  <div class="subsection">
-    <h3>Common Setup Issues</h3>
-    <table class="limitations-table">
-      <thead>
-        <tr>
-          <th>Issue</th>
-          <th>Cause</th>
-          <th>Resolution</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Cannot assign employee to work center</td>
-          <td>Employee not classified as "Shift" type</td>
-          <td>Update employee profile → Employment Type → Shift</td>
-        </tr>
-        <tr>
-          <td>Shift Scheduler role missing</td>
-          <td>Role not assigned to manager</td>
-          <td>Settings → Roles & Permissions → Assign Shift Scheduler role</td>
-        </tr>
-        <tr>
-          <td>Cannot create split shifts</td>
-          <td>Day off or leave exists on that day</td>
-          <td>Remove day off or reschedule shift to different date</td>
-        </tr>
-        <tr>
-          <td>Work center owner leaving company</td>
-          <td>No replacement scheduler assigned</td>
-          <td>Assign new work center owner before offboarding current scheduler</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-      </div>
-    </section>
-  
-
-    <section class="section section-core-tasks" id="core-tasks">
-      <header class="section-header">
-        <h2 class="section-title">Key Tasks</h2>
-      </header>
-      <div class="section-body">
-        <div class="subsection">
-    <h3>Task: Create Work Centers for Shift Organization</h3>
-    <p>Group employees by scheduler, location, and work timings to enable efficient shift assignment.</p>
-
-    <h4>Subtask: Set Up Work Center Configuration</h4>
-
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/02-work-center-dropdown.png" alt="Work center configuration" class="screenshot" loading="lazy">
-      <figcaption>Work center configuration screen showing scheduler assignment, office locations, and employee selection</figcaption>
-    </figure>
-
-    <ul>
-      <li>Navigate to Time → Shift Scheduler → Work Centers</li>
-      <li>Click "Create Work Center"</li>
-      <li>Assign a shift scheduler (must have shift scheduler role)</li>
-      <li>Select office locations where shifts will occur</li>
-      <li>Add work timings that will be used for scheduling</li>
-      <li>Select employees who belong to this work center</li>
-      <li>Save the work center</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Work center created with employees grouped by common scheduler and locations, ready for shift assignment.</p>
-  </div>
-
-  <div class="subsection">
-    <h3>Task: Create and Assign Individual Shifts</h3>
-    <p>Schedule specific work shifts for employees on designated dates with defined work timings and locations.</p>
-
-    <h4>Subtask: Create Single Shift</h4>
-
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/02-work-center-selected.png" alt="Shift scheduler calendar view" class="screenshot" loading="lazy">
-      <figcaption>Shift scheduler calendar view showing employee rows and date columns for shift creation</figcaption>
-    </figure>
-
-    <ul>
-      <li>Navigate to Time → Shift Scheduler</li>
-      <li>Select work center from dropdown</li>
-      <li>Choose date range to display</li>
-      <li>Click on empty cell for specific employee and date</li>
-      <li>Select work timing from dropdown</li>
-      <li>Select office location</li>
-      <li>Save as draft or publish immediately</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Shift created for employee on specified date with assigned work timing and location.</p>
-
-    <h4>Subtask: Create Split Shifts (Multiple Shifts Per Day)</h4>
-
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/41-wtd006-split-info.png" alt="Split shift information" class="screenshot" loading="lazy">
-      <figcaption>Split shift information modal explaining rules for assigning multiple shifts per day</figcaption>
-    </figure>
-
-    <ul>
-      <li>Create first shift following standard process</li>
-      <li>Click on same employee's cell for same date</li>
-      <li>Select different work timing for second shift</li>
-      <li>System validates no overlap with existing shift</li>
-      <li>System validates no day off exists on that date</li>
-      <li>Save second shift (maximum 2 shifts per day)</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Two non-overlapping shifts created for same employee on same day, each tracked independently for attendance.</p>
-
-    <div class="warning-box">
-      <p><strong>⚠️ Split Shift Constraints:</strong> Maximum 2 shifts per employee per day. Cannot schedule on days with existing day off. Cannot schedule during half-day leave. No overlapping shift times allowed.</p>
-    </div>
-  </div>
-
-  <div class="subsection">
-    <h3>Task: Copy and Repeat Shifts Across Multiple Employees</h3>
-    <p>Duplicate existing shift patterns to multiple employees over specified date ranges to standardize schedules.</p>
-
-    <h4>Subtask: Copy Shifts to Multiple Employees</h4>
-
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/12-wtd003-copy-dialog.png" alt="Copy shift dialog" class="screenshot" loading="lazy">
-      <figcaption>Copy shift dialog showing source employee, date range selector, and target employee list</figcaption>
-    </figure>
-
-    <ul>
-      <li>Hover over copy icon next to employee name with existing shifts</li>
-      <li>Click copy icon to select source shifts</li>
-      <li>Select date range for pasting (1 to 90 days)</li>
-      <li>Select target employees from list</li>
-      <li>Choose whether to overwrite existing draft shifts</li>
-      <li>Click "Apply" to paste shifts</li>
-      <li>Use undo option within 60 seconds if needed</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Source employee's shift pattern replicated to selected employees across specified date range, excluding dates with day offs, public holidays, published shifts, or approved leave.</p>
-
-    <div class="info-box">
-      <p><strong>Copy Limitations:</strong> Cannot paste shifts into past dates. Cannot overwrite published shifts, day offs, public holidays, or approved leave. Undo option available for 60 seconds only.</p>
-    </div>
-  </div>
-
-  <div class="subsection">
-    <h3>Task: Publish Draft Shifts to Employees</h3>
-    <p>Finalize and communicate shift schedules to employees, making them visible in mobile app and enabling check-in.</p>
-
-    <h4>Subtask: Publish Shifts</h4>
-
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/11-wtd002-draft-saved.png" alt="Draft shifts with publish button" class="screenshot" loading="lazy">
-      <figcaption>Shift scheduler showing draft shift created with publish button indicating 1 unpublished shift</figcaption>
-    </figure>
-
-    <ul>
-      <li>Review draft shifts in shift scheduler view</li>
-      <li>Select shifts to publish (by date range or individual selection)</li>
-      <li>Click "Publish" button</li>
-      <li>Confirm publication</li>
-      <li>System sends push notification to employees via Bayzat mobile app</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Shifts published and visible to employees in mobile app under "My Schedule." Employees can now check in and out for published shifts.</p>
-
-    <div class="warning-box">
-      <p><strong>⚠️ Publishing Constraint:</strong> Shifts must be published before employees can check in. Check-ins received before shift publication are automatically rejected.</p>
-    </div>
-  </div>
-
-  <div class="subsection">
-    <h3>Task: Edit Existing Shifts</h3>
-    <p>Modify shift details including work timing, office location, or date for draft or published shifts.</p>
-
-    <h4>Subtask: Edit Shift Details</h4>
-
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/10-wtd002-shift-creation-dialog.png" alt="Shift creation dialog" class="screenshot" loading="lazy">
-      <figcaption>Shift creation/edit dialog showing work timing, office location, and date fields</figcaption>
-    </figure>
-
-    <ul>
-      <li>Click on existing shift cell in shift scheduler</li>
-      <li>Select "Edit" from options menu</li>
-      <li>Modify work timing, office location, or date as needed</li>
-      <li>Save changes</li>
-      <li>If shift is published, employees receive notification of change</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Shift updated with new details. If published, employees notified of schedule change.</p>
-
-    <div class="info-box">
-      <p><strong>Edit Restrictions:</strong> Cannot edit shifts for past dates. Cannot edit current day shift if employee has already checked in (must use attendance record override instead).</p>
-    </div>
-  </div>
-
-  <div class="subsection">
-    <h3>Task: Delete Shifts in Bulk</h3>
-    <p>Remove multiple shifts simultaneously across employees and date ranges to correct scheduling errors or accommodate changes.</p>
-
-    <h4>Subtask: Bulk Delete Shifts</h4>
-
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/01-shift-scheduler-main-view.png" alt="Shift scheduler toolbar" class="screenshot" loading="lazy">
-      <figcaption>Shift scheduler toolbar with access to delete, copy, and schedule planner functions</figcaption>
-    </figure>
-
-    <ul>
-      <li>Navigate to Shift Scheduler</li>
-      <li>Click "Delete" icon in toolbar</li>
-      <li>Select work center</li>
-      <li>Choose date range (up to 6 months in advance)</li>
-      <li>Select employees whose shifts should be deleted</li>
-      <li>Select shift status (draft, published, or both)</li>
-      <li>Click "Delete" to confirm</li>
-      <li>Use undo option within 30 seconds if needed</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Selected shifts deleted for specified employees and date range. Employees marked as absent for deleted published shifts unless new shifts are created.</p>
-
-    <div class="warning-box">
-      <p><strong>⚠️ Deletion Constraints:</strong> Cannot delete shifts for past dates. Cannot delete current day shifts if employee has already checked in. Undo available for 30 seconds only.</p>
-    </div>
-  </div>
-
-  <div class="subsection">
-    <h3>Task: View and Track Employee Shifts (Employee Perspective)</h3>
-    <p>Employees view their assigned shifts and check in/out for scheduled work periods.</p>
-
-    <h4>Subtask: View Shift Schedule in Mobile App</h4>
-
-
-    <ul>
-      <li>Open Bayzat mobile app</li>
-      <li>Navigate to "My Schedule" section</li>
-      <li>View weekly schedule with shift details (date, time, office location)</li>
-      <li>See current shift highlighted as "Happening now"</li>
-      <li>For split shifts, see next shift details displayed</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Employee sees complete shift schedule with all assigned work periods, locations, and timings.</p>
-
-    <h4>Subtask: Check In and Out for Shifts</h4>
-
-
-    <ul>
-      <li>At shift start time, click attendance widget on mobile app home page</li>
-      <li>Select "Check in" to record shift start</li>
-      <li>At shift end time, click attendance widget</li>
-      <li>Select "Check out" to record shift end</li>
-      <li>For split shifts, repeat check-in/out for each shift segment</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Attendance recorded for shift. System calculates late/early/absent status independently per shift for split shift scenarios.</p>
-  </div>
-
-  <div class="subsection">
-    <h3>Task: Override Attendance Records for Published Shifts</h3>
-    <p>Manually adjust check-in/out times or attendance status when employees cannot use standard check-in process.</p>
-
-    <h4>Subtask: Edit Attendance Times</h4>
-
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/05-attendance-daily-report.png" alt="Attendance daily report" class="screenshot" loading="lazy">
-      <figcaption>Attendance daily report showing employee check-in and check-out records</figcaption>
-    </figure>
-
-    <ul>
-      <li>Navigate to Time → Attendance → Employee Attendance → Daily Report</li>
-      <li>Locate employee attendance record for specific date</li>
-      <li>Click on attendance record to open edit options</li>
-      <li>Select "Edit check-in time" or "Edit check-out time"</li>
-      <li>Enter corrected time</li>
-      <li>Save changes (creates time and pay adjustment entry)</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Attendance record updated with manual override. Time and pay adjustment entry created for payroll processing.</p>
-
-    <h4>Subtask: Clear or Delete Attendance Record</h4>
-
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/05-attendance-daily-report.png" alt="Attendance record options" class="screenshot" loading="lazy">
-      <figcaption>Attendance daily report with options to edit, clear, or delete attendance records</figcaption>
-    </figure>
-
-    <ul>
-      <li>Navigate to employee attendance record in Daily Report</li>
-      <li>Click on attendance record</li>
-      <li>Select "Clear attendance" to remove check-in/out times (keeps shift)</li>
-      <li>Or select "Delete attendance record" to mark employee as absent</li>
-      <li>Confirm action</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Attendance cleared or deleted. Employee marked as absent if record deleted. Cannot check in again after deletion.</p>
-  </div>
-
-  <div class="subsection">
-    <h3>Task: Use Schedule Planner for Bulk Shift Creation</h3>
-    <p>Create shifts for multiple employees across multiple dates using grid-based planning interface.</p>
-
-    <h4>Subtask: Plan Shifts in Grid View</h4>
-
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/30-wtd005-schedule-planner.png" alt="Schedule planner" class="screenshot" loading="lazy">
-      <figcaption>Schedule planner grid showing employees in rows and dates in columns with work timing dropdowns</figcaption>
-    </figure>
-
-    <ul>
-      <li>Navigate to Time → Shift Scheduler → Schedule Planner</li>
-      <li>Select work center and date range</li>
-      <li>Use grid to assign work timings to employees across dates</li>
-      <li>Select work timing from dropdown for each employee-date cell</li>
-      <li>Apply patterns across multiple cells using drag or copy functions</li>
-      <li>Save as draft or publish all shifts at once</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Multiple shifts created efficiently using grid interface, reducing time compared to individual shift creation.</p>
-
-    <div class="info-box">
-      <p><strong>Schedule Planner Note:</strong> "All" option not available when creating split shifts. Copy functionality disabled when "all" work center is selected.</p>
-    </div>
-  </div>
-
-  <div class="subsection">
-    <h3>Task: Move Employees Between Work Centers</h3>
-    <p>Reassign employees to different work centers when reporting structure or scheduling ownership changes.</p>
-
-    <h4>Subtask: Transfer Employee to New Work Center</h4>
-
-    <figure class="screenshot-container">
-      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/03-specific-work-center-selected.png" alt="Work center with employees" class="screenshot" loading="lazy">
-      <figcaption>Work center view showing employee list within a selected work center</figcaption>
-    </figure>
-
-    <ul>
-      <li>Navigate to Time → Shift Scheduler → Work Centers</li>
-      <li>Open source work center and remove employee from list</li>
-      <li>Open target work center and add employee to list</li>
-      <li>Save changes to both work centers</li>
-      <li>Employee's future shifts now managed by new work center's scheduler</li>
-    </ul>
-
-    <p><strong>Expected Outcome:</strong> Employee moved to new work center. New scheduler can create and manage future shifts. Historical shifts remain unchanged.</p>
-
-    <div class="info-box">
-      <p><strong>Work Center Constraint:</strong> Each employee can belong to only one work center at a time. Moving employees does not affect historical shift assignments or attendance records.</p>
-    </div>
-  </div>
-      </div>
-    </section>
-  
-
-    <section class="section section-workflow-integration" id="workflow-integration">
-      <header class="section-header">
-        <h2 class="section-title">Workflow Integration</h2>
-      </header>
-      <div class="section-body">
-        <div class="subsection">
-    <h3>Automation Status</h3>
-    <div class="info-box">
-      <p><strong>Not Available:</strong> Shift Scheduling does not currently support workflow automation through the Automations → Workflows interface.</p>
-    </div>
-  </div>
-
-  <div class="subsection">
-    <h3>Alternative Notification Methods</h3>
-    <p>While automated workflows are not available, shift notifications are handled through:</p>
-    <ul>
-      <li><strong>Push Notifications</strong> — Employees receive automatic alerts when shifts are published via the Bayzat mobile app</li>
-      <li><strong>Manual Publishing</strong> — Admins must manually publish draft shifts to trigger employee notifications</li>
-    </ul>
-  </div>
-
-  <div class="subsection">
-    <h3>Integration Points</h3>
-    <p>Shift Scheduling connects with other modules but does not trigger automated workflows:</p>
-    <ul>
-      <li><strong>Attendance Tracking</strong> — Published shifts determine valid check-in/check-out windows</li>
-      <li><strong>Leave Management</strong> — Shift schedules are blocked when leave requests are approved</li>
-      <li><strong>Timesheets</strong> — Shift hours feed into time tracking records</li>
-      <li><strong>Payroll</strong> — Shift data influences attendance-based deductions and overtime calculations</li>
-    </ul>
-  </div>
-
-  <div class="subsection">
-    <h3>Known Limitations</h3>
-    <table class="limitations-table">
-      <thead>
-        <tr>
-          <th>Limitation</th>
-          <th>Impact</th>
-          <th>Workaround</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>No bulk shift publishing workflow</td>
-          <td>Admins must manually publish draft schedules</td>
-          <td>Use Schedule Planner to create multiple shifts at once before publishing</td>
-        </tr>
-        <tr>
-          <td>No automated shift reminders</td>
-          <td>Employees only notified once at publication time</td>
-          <td>Communicate shift schedules through external channels if needed</td>
-        </tr>
-        <tr>
-          <td>No approval workflow for shift changes</td>
-          <td>Shift edits take effect immediately without manager review</td>
-          <td>Use draft mode to review changes before publishing</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-      </div>
-    </section>
-  
-
-    <section class="section section-business-rules-limitations" id="business-rules-limitations">
-      <header class="section-header">
-        <h2 class="section-title">Business Rules &amp; Limitations</h2>
-      </header>
-      <div class="section-body">
-        <div class="subsection"><h3>Split Shift Rules</h3><ul><li><strong>Maximum 2 shifts per day:</strong> Employees can be scheduled for up to two shifts in a single day (expandable based on customer feedback).</li><li><strong>No overlap allowed:</strong> Shifts cannot overlap with other shifts on the same day, day before, or day after.</li><li><strong>Day off restrictions:</strong> Cannot schedule a second shift if a day off already exists on that day, including day off with check-in allowed.</li><li><strong>No minimum gap required:</strong> System does not enforce a minimum break period between multiple shifts.</li><li><strong>Independent tracking:</strong> Each shift is treated independently for late/early/absent calculations and occurrence tracking.</li></ul></div><div class="subsection"><h3>Scheduling Constraints</h3><table class="limitations-table"><thead><tr><th>Constraint</th><th>Impact</th><th>Status</th></tr></thead><tbody><tr><td>Cannot schedule shifts for past dates</td><td>Shifts can only be created for current and future dates</td><td>System Enforced</td></tr><tr><td>Cannot delete current day shift if employee checked in</td><td>Prevents deletion of active attendance records</td><td>System Enforced</td></tr><tr><td>Shifts can be scheduled up to 6 months in advance</td><td>Maximum forward planning window</td><td>System Enforced</td></tr><tr><td>30-second undo window for bulk deletion</td><td>Limited time to reverse accidental deletions</td><td>System Enforced</td></tr></tbody></table></div><div class="subsection"><h3>Known Limitations from Jira Tickets</h3><div class="warning-box"><p><strong>⚠️ Audit Logs Not Displaying</strong></p><p>Admin panel cannot display complete audit logs for shift scheduler and hrcore entities, limiting ability to track historical shift modifications within the 90-day retention period. (TSSD-4634)</p></div><div class="warning-box"><p><strong>⚠️ Scheduled Overtime Not Supported with Multiple Shifts</strong></p><p>Cannot schedule overtime (T&P adjustments) when an employee has multiple published shifts in a day. This restriction was implemented during split shifts launch. (TSSD-4078)</p></div><div class="warning-box"><p><strong>⚠️ Leave Calculation Does Not Consider Shift Days-Off</strong></p><p>Working days leave policy cannot automatically account for scheduled shift days-off, preventing accurate leave tracking for employees with complex shift schedules. (TSSD-2858)</p></div><div class="warning-box"><p><strong>⚠️ Timesheets Cannot Handle Midnight-Spanning Shifts</strong></p><p>Time entries that span across midnight must be manually split into separate entries, creating administrative overhead. (TSSD-4285)</p></div><div class="warning-box"><p><strong>⚠️ Single Check-in/Check-out Per Shift</strong></p><p>System only supports one check-in and check-out per shift, preventing accurate tracking in dynamic environments requiring multiple attendance points. (TSSD-2957)</p></div><table class="limitations-table"><thead><tr><th>Limitation</th><th>Impact</th><th>Severity</th></tr></thead><tbody><tr><td>No bulk shift copying functionality</td><td>Must manually create individual employee schedules</td><td>Medium (AV-8632)</td></tr><tr><td>Manager override issues with consecutive shifts</td><td>Cannot adjust times that appear to overlap with previous shift end times</td><td>Medium (OS-739)</td></tr><tr><td>Check-out restricted outside time windows</td><td>Prevents accurate logging for non-standard shift scenarios</td><td>Medium (AV-8693)</td></tr><tr><td>No native shift publication mechanism</td><td>Manual communication required to distribute draft schedules to employees</td><td>Medium (AV-9243)</td></tr><tr><td>No bulk import from Excel</td><td>Restricted to manual individual shift entry</td><td>Medium (TSSD-1085)</td></tr><tr><td>Filters not working for shift visualizations</td><td>Cannot get accurate filtered views of employee shift data</td><td>Medium (AV-1994)</td></tr><tr><td>No overlapping shift validation</td><td>System permits overlapping work timings without warnings</td><td>Medium (OS-641)</td></tr><tr><td>View filter uses OR logic instead of AND</td><td>Cannot precisely filter out day-off shifts with office parameters</td><td>Medium (OS-716)</td></tr><tr><td>Wrong shift details after first shift checkout</td><td>Cannot dynamically display shift information based on current attendance status</td><td>Medium (OS-800)</td></tr><tr><td>Historical shift assignments persist</td><td>Past assignments override current work week configurations in attendance records</td><td>Medium (TSSD-4831)</td></tr><tr><td>No center-wide shift view for employees</td><td>Employees cannot see colleague shifts within same location</td><td>Medium (TSSD-3918)</td></tr><tr><td>Line manager permissions not configurable</td><td>Cannot restrict edit access for attendance records</td><td>Medium (TSSD-3317)</td></tr><tr><td>Shifts require publication before check-in</td><td>Check-ins rejected if received before shift publication or after status changes</td><td>Medium (TSSD-3555)</td></tr><tr><td>No work timing export functionality</td><td>Must rely on manual workarounds or support team intervention</td><td>Medium (TSSD-3642)</td></tr><tr><td>No flexible filtering within work center</td><td>Line managers cannot view only their reporting employees while referencing other shifts</td><td>Medium (TSSD-3848)</td></tr><tr><td>24-hour shift configuration complexity</td><td>Day boundary reset at midnight complicates 24-hour shift setup</td><td>Medium (TSSD-2623)</td></tr></tbody></table><div class="info-box"><p><strong>Attendance Record Auto-Removal:</strong> System automatically removes attendance records when employee is on leave, which may not be transparent for complex shift schedules. (OS-721)</p></div><div class="info-box"><p><strong>Browser Compatibility:</strong> Safari 10.1 has inconsistent URLSearchParams behavior, limiting reliable query parameter parsing. (AV-2173)</p></div><div class="info-box"><p><strong>Date Display in Edit Dialog:</strong> Edit dialog has intermittent rendering issue where date information fails to display consistently. (AV-1915)</p></div><div class="info-box"><p><strong>Split Shift Creation from Cell:</strong> Cannot create split shifts directly from Shift cell interface. (OS-299)</p></div><div class="info-box"><p><strong>Active Shifts Display Inconsistency:</strong> Active shifts (today/yesterday) not displayed as consolidated blocks, creating visual inconsistency. (OS-605)</p></div><div class="info-box"><p><strong>Shift Copying Constraint:</strong> Modified shifts are intentionally not transferred during copy operations to maintain schedule integrity. (OS-597)</p></div><div class="info-box"><p><strong>Excel Export Visual Consistency:</strong> Excel export lacks visual consistency with platform's native table view. (AV-2657)</p></div><div class="info-box"><p><strong>Mobile Shift Editing:</strong> Mobile shift scheduler has functional constraint preventing successful shift editing. (OS-98)</p></div></div><div class="subsection"><h3>Back-to-Back Shift Handling (Phase 2)</h3><p>Configurable window between shift end and next start determines checkout behavior:</p><table><thead><tr><th>Scenario</th><th>System Behavior</th></tr></thead><tbody><tr><td>Within configured window</td><td>Checkout allowed normally</td></tr><tr><td>At next shift start time</td><td>Check-in triggers automatic checkout for previous shift</td></tr><tr><td>Beyond configured window</td><td>Normal checkout process applies</td></tr></tbody></table></div><div class="subsection"><h3>Deduction Policy Considerations</h3><p>Absenteeism calculations across multiple shifts require consideration of hourly rate versus daily wage structures.</p></div>
-      </div>
-    </section>
-  
-
-    <section class="section section-troubleshooting-edge-cases" id="troubleshooting-edge-cases">
-      <header class="section-header">
-        <h2 class="section-title">Troubleshooting &amp; Edge Cases</h2>
-      </header>
-      <div class="section-body">
-        <div class="subsection"><h3>Common Issues</h3><table class="limitations-table"><thead><tr><th>Issue</th><th>Cause</th><th>Resolution</th></tr></thead><tbody><tr><td>Cannot create second shift on same day</td><td>Day off exists on that day or shift overlap detected</td><td>Remove day off assignment or adjust shift times to eliminate overlap with adjacent days</td></tr><tr><td>Employee marked absent despite checking in</td><td>Shift not published as working day before check-in received</td><td>Ensure shifts are published before employees attempt check-in; check-ins before publication are rejected</td></tr><tr><td>Cannot edit time for consecutive shifts</td><td>System validation prevents times that appear to overlap with previous shift</td><td>Ensure clear time separation between shifts; contact support if legitimate consecutive shifts are blocked</td></tr><tr><td>Bulk deletion cannot be undone</td><td>30-second undo window expired</td><td>Recreate shifts using Schedule Planner or copy from previous week; no recovery after undo window</td></tr><tr><td>Overtime not available for multiple shifts</td><td>System restriction when multiple shifts exist in same day</td><td>Schedule overtime as separate shift or use Time & Pay adjustments after attendance recorded</td></tr><tr><td>Leave calculation incorrect for shift workers</td><td>Working days policy does not integrate with shift schedule</td><td>Manually adjust leave calculations or use calendar days policy instead of working days</td></tr><tr><td>Cannot check out after midnight</td><td>Shift spans day boundary and system resets at midnight</td><td>Configure shift to end at 11:59 PM and create second shift starting at 12:00 AM for overnight coverage</td></tr><tr><td>Historical attendance shows wrong shift</td><td>Past shift assignments persist after work week configuration change</td><td>Historical records are not automatically recalculated; manually adjust attendance records if needed</td></tr><tr><td>Shift scheduler filters not updating</td><td>Statistical visualizations do not refresh when filters applied</td><td>Refresh page or clear filters and reapply; known limitation with filter functionality</td></tr><tr><td>Audit logs missing for shift changes</td><td>Admin panel bug prevents display of shift scheduler logs</td><td>Contact support for database-level audit trail; UI logs unavailable for affected entities</td></tr></tbody></table></div><div class="subsection"><h3>Edge Cases</h3><ul><li><strong>Shift publication timing:</strong> Overtime policy eligibility evaluated at check-in time, not shift publication time; order of operations does not matter.</li><li><strong>Modified shift copying:</strong> System intentionally prevents copying of modified shifts to maintain schedule integrity; only original published shifts can be duplicated.</li><li><strong>Multiple check-ins per shift:</strong> System supports only one check-in and one check-out per shift; employees requiring multiple attendance points must use workarounds.</li><li><strong>Timesheet midnight boundary:</strong> Time entries spanning midnight must be manually split into separate entries for each day.</li><li><strong>Day off with check-in allowed:</strong> Blocks second shift creation even though check-in is permitted; system treats as day off for scheduling purposes.</li><li><strong>Biometric integration:</strong> Works with existing threshold logic; no special handling required for multiple shifts per day.</li><li><strong>Occurrence tracking:</strong> Late/absent/early departure occurrences calculated independently per shift, not aggregated across day.</li><li><strong>Schedule planner limitations:</strong> 'All' option not available when scheduling split shifts; must select specific work centers.</li><li><strong>Copy functionality restrictions:</strong> Disabled when 'all' work center selected; shifts may be skipped due to conflicts or restrictions.</li><li><strong>Leave request impact:</strong> Creating leave request automatically removes attendance records for that day, affecting shift-based tracking.</li></ul></div><div class="subsection"><h3>Workarounds for Known Gaps</h3><ul><li><strong>No bulk import:</strong> Use Schedule Planner to create shifts for multiple employees simultaneously, or use Copy Schedule feature to duplicate weekly patterns.</li><li><strong>No shift publication notification:</strong> Manually communicate schedule changes via email or team messaging until native notification feature available.</li><li><strong>Cannot export work timings:</strong> Request Excel export from support team or document configurations in external spreadsheet.</li><li><strong>Line manager permission control:</strong> Use role-based access at company level; granular attendance permissions not configurable per manager.</li><li><strong>No center-wide view:</strong> Share shift schedules via exported reports or external calendar system for team visibility.</li><li><strong>Midnight-spanning shifts:</strong> Configure as two consecutive shifts (11:59 PM end, 12:00 AM start) or use 24-hour work timing with manual timesheet adjustments.</li></ul></div>
-      </div>
-    </section>
-  
-
-    <section class="section section-support-resources" id="support-resources">
-      <header class="section-header">
-        <h2 class="section-title">FAQs &amp; Support</h2>
-      </header>
-      <div class="section-body">
-        <div class="subsection">
-  <h3>Frequently Asked Questions</h3>
-
-  <div class="faq-accordion"><details class="faq-item">
-    <summary>Can I schedule more than 2 shifts per employee per day?</summary>
-    <p>No. The system currently limits employees to a maximum of 2 shifts per day. This restriction was implemented during the split shifts feature launch.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Can I bulk upload shifts from Excel?</summary>
-    <p>No. The platform does not support direct Excel import for shift scheduling. Use the Schedule Planner or copy functionality to manage multiple shifts efficiently.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Why can't I schedule overtime (T&P adjustments) when an employee has multiple shifts?</summary>
-    <p>The system does not support scheduling overtime when multiple published shifts exist for the same day. This is a known limitation from the split shifts implementation.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Can I schedule shifts on an employee's day off?</summary>
-    <p>No. The system prevents scheduling shifts on days marked as day off, including days with check-in allowed status.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>How do I handle 24-hour shifts that cross midnight?</summary>
-    <p>The system resets at midnight, so you cannot use a simple 12am-11:59pm timeframe. Configure the shift to end at 11:59pm and create a second shift starting at 12:00am for the next day.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Why can't I edit shifts for back-to-back schedules?</summary>
-    <p>The system has strict validation that prevents time entries appearing to overlap with previous shift end times, even for consecutive shifts. This affects manager override capabilities.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Can employees check in before their shift is published?</summary>
-    <p>No. Shifts must be published as working days before check-ins are accepted. Check-ins received before publication are automatically rejected.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Does the system track audit logs for shift changes?</summary>
-    <p>Audit logging for shift scheduler was limited before October 9, 2023. Current logs may not show user-level details for who published or modified shifts during earlier periods.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Can I copy shifts to multiple employees at once?</summary>
-    <p>Yes, but the 'All' option is not available when scheduling split shifts. You must select specific employees when copying shifts with multiple segments per day.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Why don't leave calculations consider my scheduled days off?</summary>
-    <p>The leave calculation system does not integrate with shift scheduling data. It calculates deductions based on the work week profile configuration, not actual scheduled shifts or days off.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Can line managers edit attendance records?</summary>
-    <p>Yes. Line managers have default edit access for attendance records that cannot be restricted by super admins. This is the current system behavior.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>How long can I undo a bulk shift deletion?</summary>
-    <p>You have 30 seconds to undo a bulk deletion after confirming the action. After this window, the deletion is permanent.</p>
-  </details>
-
-</div></div>
-
-<div class="subsection">
-  <h3>Getting Help</h3>
-  <ul>
-    <li><strong>Bayzat Support:</strong> Contact your Customer Success Manager or submit a ticket through the Help Center for shift scheduling assistance</li>
-    <li><strong>Knowledge Base:</strong> Access detailed guides at <a href="https://bayzathelp.zendesk.com">bayzathelp.zendesk.com</a> for step-by-step instructions</li>
-    <li><strong>Training Resources:</strong> Request training sessions for shift scheduler setup and best practices from your account team</li>
-  </ul>
-</div>
-      </div>
-    </section>
-  
-
-    <section class="section section-glossary" id="glossary">
-      <header class="section-header">
-        <h2 class="section-title">Glossary</h2>
-      </header>
-      <div class="section-body">
-        <table class="glossary-table">
-  <thead>
-    <tr>
-      <th>Term</th>
-      <th>Definition</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>Absent After</strong></td>
-      <td>The time threshold after which an employee who has not checked in is automatically marked absent for their shift.</td>
-    </tr>
-    <tr>
-      <td><strong>Attendance Record</strong></td>
-      <td>A system entry that captures an employee's check-in and check-out times, along with calculated attendance status for a specific shift.</td>
-    </tr>
-    <tr>
-      <td><strong>Back-to-Back Shifts</strong></td>
-      <td>Consecutive work shifts where the end time of one shift immediately precedes the start time of the next shift with minimal or no gap.</td>
-    </tr>
-    <tr>
-      <td><strong>Biometric Integration</strong></td>
-      <td>System connection that enables employees to check in and out using fingerprint or facial recognition devices linked to their shift schedule.</td>
-    </tr>
-    <tr>
-      <td><strong>Check-in</strong></td>
-      <td>The action of recording an employee's arrival at the start of their scheduled shift, either manually or through automated systems.</td>
-    </tr>
-    <tr>
-      <td><strong>Check-out</strong></td>
-      <td>The action of recording an employee's departure at the end of their scheduled shift, used to calculate total work hours.</td>
-    </tr>
-    <tr>
-      <td><strong>Day Off</strong></td>
-      <td>A scheduled non-working day for an employee where no shift can be assigned, distinct from leave or public holidays.</td>
-    </tr>
-    <tr>
-      <td><strong>Deduction Policy</strong></td>
-      <td>Rules that define how salary deductions are calculated and applied based on attendance violations such as late arrivals or absences.</td>
-    </tr>
-    <tr>
-      <td><strong>Draft Shift</strong></td>
-      <td>A shift that has been created but not yet published, allowing schedulers to review and modify before making it visible to employees.</td>
-    </tr>
-    <tr>
-      <td><strong>Early Departure</strong></td>
-      <td>When an employee checks out before their scheduled shift end time, potentially triggering attendance policy violations.</td>
-    </tr>
-    <tr>
-      <td><strong>Late Arrival</strong></td>
-      <td>When an employee checks in after their scheduled shift start time, tracked against configured threshold levels for policy enforcement.</td>
-    </tr>
-    <tr>
-      <td><strong>Manager Override</strong></td>
-      <td>The ability for managers to manually edit or correct attendance records, including check-in and check-out times, after they have been recorded.</td>
-    </tr>
-    <tr>
-      <td><strong>Occurrence Tracking</strong></td>
-      <td>System that counts and monitors attendance violations (late, absent, early departure) for each shift independently to enforce policies.</td>
-    </tr>
-    <tr>
-      <td><strong>Office Location</strong></td>
-      <td>The physical workplace or branch where an employee is scheduled to work during their shift, used for attendance validation.</td>
-    </tr>
-    <tr>
-      <td><strong>Overtime (T&P Adjustment)</strong></td>
-      <td>Additional work hours beyond standard shift times that require special scheduling and compensation through Time and Pay adjustments.</td>
-    </tr>
-    <tr>
-      <td><strong>Published Shift</strong></td>
-      <td>A finalized shift schedule that has been made visible to employees and is active for check-in tracking and attendance recording.</td>
-    </tr>
-    <tr>
-      <td><strong>Schedule Planner</strong></td>
-      <td>Tool that enables schedulers to create and assign shifts for multiple employees across date ranges without individual entry.</td>
-    </tr>
-    <tr>
-      <td><strong>Shift</strong></td>
-      <td>A defined work period with specific start and end times, assigned to an employee for a particular date and office location.</td>
-    </tr>
-    <tr>
-      <td><strong>Shift Scheduler</strong></td>
-      <td>The user role and interface responsible for creating, publishing, and managing employee work shifts within assigned work centers.</td>
-    </tr>
-    <tr>
-      <td><strong>Split Shift</strong></td>
-      <td>A work schedule where an employee has two separate shifts on the same day with a break period between them.</td>
-    </tr>
-    <tr>
-      <td><strong>Threshold</strong></td>
-      <td>The configured time allowance (in minutes) before an employee is marked late or absent after their scheduled shift start time.</td>
-    </tr>
-    <tr>
-      <td><strong>Timesheet</strong></td>
-      <td>A record of all work hours logged by an employee across their shifts, used for payroll calculation and attendance reporting.</td>
-    </tr>
-    <tr>
-      <td><strong>Work Center</strong></td>
-      <td>A grouping of employees managed by the same scheduler, sharing common office locations and work timing configurations for shift assignment.</td>
-    </tr>
-    <tr>
-      <td><strong>Work Timing</strong></td>
-      <td>A predefined schedule template that specifies shift start time, end time, and attendance rules applied when creating employee shifts.</td>
-    </tr>
-    <tr>
-      <td><strong>Work Week Profile</strong></td>
-      <td>Configuration that defines an employee's standard working days and rest days, used for leave calculations independent of shift schedules.</td>
-    </tr>
-  </tbody>
+<section id="who-uses-this-feature" class="subsection">
+<h3>Who Uses This Feature?</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>User Role</th>
+<th>What They Do</th>
+<th>Value Proposition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Super Admin</strong></td>
+<td>Create and manage work centers, assign schedulers,
+create/publish/edit shifts across all work centers, and configure shift
+scheduling permissions</td>
+<td>Centralize shift management structure and delegate scheduling
+responsibilities across the organization</td>
+</tr>
+<tr>
+<td><strong>Shift Scheduler</strong></td>
+<td>Create, publish, edit, reassign, and delete employee shifts within
+assigned work centers</td>
+<td>Replace manual scheduling with automated shift assignment and
+instant employee notification</td>
+</tr>
+<tr>
+<td><strong>Attendance Manager</strong></td>
+<td>Manage attendance records (edit check-in/check-out times,
+clear/delete records) for shift employees. Cannot create or manage
+shifts directly</td>
+<td>Ensure accurate attendance tracking and corrections for shift-based
+employees</td>
+</tr>
+<tr>
+<td><strong>Line Manager</strong></td>
+<td>View team schedules and manage attendance records for reporting
+employees. Cannot create or edit shifts</td>
+<td>Access real-time visibility into team availability and correct
+attendance discrepancies</td>
+</tr>
+<tr>
+<td><strong>Employee</strong></td>
+<td>View assigned shifts in mobile app and check in/out for published
+shifts</td>
+<td>Know work schedule in advance without waiting for manual
+communication</td>
+</tr>
+</tbody>
 </table>
-      </div>
-    </section>
-  
+</section>
+</div>
+</section>
+<section id="product-foundation" class="section-product-foundation">
+<section id="product-foundation-overview" class="section-header">
+<h2>Product Foundation Overview</h2>
+</section>
+<div class="section-body">
+<section id="how-shift-scheduling-fits" class="subsection">
+<h3>How Shift Scheduling Fits</h3>
+<p>Shift Scheduling is a transactional feature that creates time-bound
+work assignments for employees. Unlike configuration templates (like
+Work Timings), each shift is a discrete record tied to a specific
+employee, date, location, and timing.</p>
+<div class="info-box">
+<p><strong>Mental model:</strong> Work Center (grouping) → Scheduler
+creates Shift → Assigned to Employee for specific Date → Employee checks
+in/out → Attendance recorded</p>
+</div>
+<p>One shift affects one employee on one day. Changes to shifts only
+affect the specific assignments modified, not future schedules. Shift
+Scheduling assigns work timings and office locations to employees but
+does not configure pay rates — salary structures and per-shift pay rates
+are managed through <a
+href="https://mashapajfhp.github.io/user-guides/payroll-management/v1/payroll-management-user-guide.html">payroll</a>
+configuration.</p>
+</section>
+<section id="key-decisions-before-setup" class="subsection">
+<h3>Key Decisions Before Setup</h3>
+<p>Answer these questions before creating shifts:</p>
+<ul>
+<li><strong>How will you group employees for scheduling?</strong> — Work
+Centers organize employees by location, department, or manager
+responsibility</li>
+<li><strong>What shift patterns do you need?</strong> — Standard hours,
+rotating shifts, split shifts (2 per day max), or flexible
+schedules</li>
+<li><strong>Who will manage schedules?</strong> — Assign Shift Scheduler
+role to managers who will create and publish shifts</li>
+<li><strong>How far in advance will you schedule?</strong> — System
+supports up to 6 months advance scheduling</li>
+</ul>
+</section>
+<section id="related-features" class="subsection">
+<h3>Related Features</h3>
+<ul>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html">Work
+Timings</a></strong> — Defines the schedule templates (start/end times,
+rules) that shifts reference</li>
+<li><strong>Work Centers</strong> — Groups employees, locations, and
+schedulers for shift management</li>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/attendance/v1/attendance-user-guide.html">Attendance</a></strong>
+— Captures check-in/check-out against published shifts</li>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/leave-management/v1/leave-management-user-guide.html">Leave
+Management</a></strong> — Automatically removes attendance records when
+leave is approved; blocks shift creation on leave days</li>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html">Split
+Shifts</a></strong> — Detailed rules for scheduling 2 shifts per
+employee per day with deduction halving</li>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/timesheets/v1/timesheets-user-guide.html">Timesheets</a></strong>
+— Shift hours feed into time tracking records for payroll
+processing</li>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role
+Management</a></strong> — Assign Shift Scheduler, Super Admin, and other
+roles that control access to shift features</li>
+</ul>
+</section>
+<section id="prerequisites-requirements" class="subsection">
+<h3>Prerequisites &amp; Requirements</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html">Work
+Timings</a> configured</td>
+<td>At least one work timing template must exist to assign to
+shifts</td>
+<td>Required</td>
+</tr>
+<tr>
+<td>Work Centers created</td>
+<td>Employees must be assigned to work centers before scheduling</td>
+<td>Required</td>
+</tr>
+<tr>
+<td>Office locations defined</td>
+<td>Shifts must be assigned to specific office/branch locations</td>
+<td>Required</td>
+</tr>
+<tr>
+<td><a
+href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Shift
+Scheduler role</a> assigned</td>
+<td>Users need Shift Scheduler permissions to create and publish
+shifts</td>
+<td>Required</td>
+</tr>
+<tr>
+<td>Employee shift type</td>
+<td>Employees must be configured as shift employees (not fixed
+hours)</td>
+<td>Required</td>
+</tr>
+</tbody>
+</table>
+</section>
+</div>
+</section>
+<section id="user-journey" class="section-user-journey">
+<section id="complete-user-journey-guide" class="section-header">
+<h2>Complete User Journey Guide</h2>
+</section>
+<div class="section-body">
+<div class="journey-roadmap">
+<section id="end-to-end-journey-from-planning-to-publishing-shifts"
+class="subsection">
+<h3>End-to-End Journey: From Planning to Publishing Shifts</h3>
+<p>This journey covers the complete process of setting up work centers,
+creating shift schedules, and managing employee assignments.</p>
+</section>
+<div class="journey-phases">
+<div class="journey-phase">
+<div class="phase-marker">
+<p>1</p>
+</div>
+<section id="plan" class="phase-content">
+<h4>Plan</h4>
+<p>Identify shift types, work timings, and staffing requirements across
+different locations.</p>
+<p><a href="#product-foundation" class="phase-link">See details
+→</a></p>
+</section>
+</div>
+<div class="journey-phase">
+<div class="phase-marker">
+<p>2</p>
+</div>
+<section id="configure-work-centers" class="phase-content">
+<h4>Configure Work Centers</h4>
+<p>Set up work centers with schedulers, office locations, and work
+timings.</p>
+<p><a href="#initial-setup" class="phase-link">See details →</a></p>
+</section>
+</div>
+<div class="journey-phase">
+<div class="phase-marker">
+<p>3</p>
+</div>
+<section id="navigate" class="phase-content">
+<h4>Navigate</h4>
+<p>Access the Shift Scheduler interface to begin creating employee
+schedules.</p>
+<p><a href="#feature-entry-points" class="phase-link">See details
+→</a></p>
+</section>
+</div>
+<div class="journey-phase">
+<div class="phase-marker">
+<p>4</p>
+</div>
+<section id="create-shifts" class="phase-content">
+<h4>Create Shifts</h4>
+<p>Assign shifts to employees using individual scheduling, schedule
+planner, or copy functions.</p>
+<p><a href="#core-tasks" class="phase-link">See details →</a></p>
+</section>
+</div>
+<div class="journey-phase">
+<div class="phase-marker">
+<p>5</p>
+</div>
+<section id="review-publish" class="phase-content">
+<h4>Review &amp; Publish</h4>
+<p>Save shifts as drafts for review, then publish to notify employees
+via mobile app.</p>
+<p><a href="#core-tasks" class="phase-link">See details →</a></p>
+</section>
+</div>
+<div class="journey-phase">
+<div class="phase-marker">
+<p>6</p>
+</div>
+<section id="manage-maintain" class="phase-content">
+<h4>Manage &amp; Maintain</h4>
+<p>Edit, delete, reassign shifts, and handle split shifts or bulk
+operations as needed.</p>
+<p><a href="#core-tasks" class="phase-link">See details →</a></p>
+</section>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="feature-entry-points" class="section-feature-entry-points">
+<section id="feature-discovery" class="section-header">
+<h2>Feature Discovery</h2>
+</section>
+<div class="section-body">
+<section id="navigation-path" class="subsection">
+<h3>Navigation Path</h3>
+<div class="nav-path">
+<p>Attendance → Shift Scheduler</p>
+</div>
+<p>Access the Shift Scheduler from the Attendance module in the left
+sidebar to view, create, and manage employee shift schedules.</p>
+<div class="info-box">
+<p><strong>Configuration Access:</strong> Work Centers and Work Timings
+are configured separately under Settings → Attendance (not from the
+Shift Scheduler interface).</p>
+</div>
+<h4 id="available-views">Available Views</h4>
+<p>The Shift Scheduler offers two main view modes, accessible via a
+toggle in the toolbar:</p>
+<ul>
+<li><strong>Week View</strong> — Default view showing a 7-day grid with
+employee rows and date columns. Each cell displays assigned shifts with
+work timing name, time range, and office. Supports all scheduling
+actions including shift creation, copy schedule, and bulk
+operations.</li>
+<li><strong>Month View</strong> — Horizontal timeline showing an entire
+calendar month (e.g., all 28/30/31 days as columns). Displays total
+scheduled hours and shift count per employee. Copy Schedule and
+per-employee copy buttons are disabled in this view.</li>
+</ul>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/42-month-view.png" class="screenshot" loading="lazy" alt="Month view showing full calendar month" />
+<figcaption>
+Month view displaying employee shifts across the entire month with total
+hours and shift counts
+</figcaption>
+</figure>
+<h4 id="views-panel-filtering-overlays">Views Panel (Filtering
+Overlays)</h4>
+<p>Click the <strong>Views</strong> button in the toolbar to open a side
+panel with four accordion sections that control visual overlays on the
+schedule grid:</p>
+<ul>
+<li><strong>Shift status</strong> — Filter by Draft or Published
+shifts</li>
+<li><strong>Shifts / work timings</strong> — Filter by specific work
+timing names (e.g., Default, Chauffeurs, Half Day)</li>
+<li><strong>Schedule cell types</strong> — Toggle visibility of Day off,
+Day off with check-in allowed, and Leave overlays</li>
+<li><strong>Offices</strong> — Filter by office location</li>
+</ul>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/25-views-panel-expanded.png" class="screenshot" loading="lazy" alt="Views panel with filter accordions" />
+<figcaption>
+Views panel showing shift status, work timings, schedule cell types, and
+office filter sections
+</figcaption>
+</figure>
+<h4 id="schedule-grid-visual-indicators">Schedule Grid Visual
+Indicators</h4>
+<p>The schedule grid uses consistent visual cues to distinguish
+different cell types:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Visual Indicator</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dashed purple border</strong></td>
+<td>Draft shift (not yet published)</td>
+</tr>
+<tr>
+<td><strong>Solid purple fill</strong></td>
+<td>Published shift</td>
+</tr>
+<tr>
+<td><strong>Moon icon</strong></td>
+<td>Overnight shift (spans past midnight)</td>
+</tr>
+<tr>
+<td><strong>“On Leave” overlay</strong></td>
+<td>Employee has approved leave on that date (e.g., “On Leave -
+Vacation”)</td>
+</tr>
+<tr>
+<td><strong>“Weekend” overlay</strong></td>
+<td>Day falls on a weekend per the employee’s work week profile</td>
+</tr>
+<tr>
+<td><strong>“Day Off” label</strong></td>
+<td>Scheduled day off for the employee</td>
+</tr>
+</tbody>
+</table>
+<h4 id="key-entry-points">Key Entry Points</h4>
+<ul>
+<li><strong>Create Shift</strong> — Click on an empty cell in the
+employee’s row for a specific date to open the schedule shift
+dialog</li>
+<li><strong>Schedule Planner</strong> — Bulk shift creation tool
+accessed from the toolbar for assigning shifts to multiple employees
+across dates</li>
+<li><strong>Copy Schedule</strong> — Duplicate an entire work center’s
+shift pattern from one week to another (Week view only)</li>
+<li><strong>Copy (per employee)</strong> — Hover over an employee’s row
+to reveal a copy icon that duplicates that individual’s shifts to other
+employees and date ranges</li>
+<li><strong>Delete Shifts</strong> — Bulk deletion interface for
+removing multiple shifts across employees and dates</li>
+</ul>
+</section>
+</div>
+</section>
+<section id="initial-setup" class="section-initial-setup">
+<section id="initial-setup" class="section-header">
+<h2>Initial Setup</h2>
+</section>
+<div class="section-body">
+<section id="prerequisites" class="subsection">
+<h3>Prerequisites</h3>
+<p>Before creating shifts, ensure these configurations are in place:</p>
+<ul>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html">Work
+Timings</a>:</strong> Define shift start/end times, late arrival
+thresholds, and break allowances under Settings → Attendance → Work
+Timings. Each work timing includes configurable fields for: flexible
+timing, half-day timing, late arrival threshold, early departure
+threshold, absent-after threshold, break allowances, out-of-office
+check-ins, pre-start check-in restriction, and extra hours calculation
+method (Total hours, After work end time, or All hours worked).
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/38-edit-work-timing-dialog.png" class="screenshot" loading="lazy" alt="Edit Work Timing dialog" />
+<figcaption>
+Edit Work Timing dialog showing all configurable fields including timing
+rules, thresholds, and extra hours calculation method
+</figcaption>
+</figure></li>
+</ul>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/37-work-timings-table.png" class="screenshot" loading="lazy" alt="Work Timings table" />
+<figcaption>
+Work Timings table showing configured timings with working hours,
+thresholds, and rule columns
+</figcaption>
+</figure>
+<ul>
+<li><strong>Office Locations:</strong> Set up branch/office locations
+where shifts will be assigned under Settings → Company → Offices. Each
+office can be configured with a physical address, GPS coordinates
+(latitude/longitude), and a geofencing radius in meters to validate
+employee check-in locations.</li>
+</ul>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/46-office-edit-geofencing.png" class="screenshot" loading="lazy" alt="Edit Office dialog with geofencing" />
+<figcaption>
+Edit Office dialog showing name, location search, GPS coordinates,
+geofencing radius, and interactive map
+</figcaption>
+</figure>
+<ul>
+<li><strong>Shift Scheduler Role:</strong> Assign the Shift Scheduler
+role to managers who will create and publish shifts under Settings → <a
+href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role
+management</a></li>
+<li><strong>Employee Classification:</strong> Ensure employees are
+classified as “Shift” type in their profiles to enable shift
+assignment</li>
+</ul>
+</section>
+<section id="first-time-configuration-steps" class="subsection">
+<h3>First-Time Configuration Steps</h3>
+<h4 id="step-1-create-work-centers">Step 1: Create Work Centers</h4>
+<p>Work centers group employees by scheduler, office, and shift timing.
+They are configured in the Attendance settings, not from the Shift
+Scheduler interface.</p>
+<div class="nav-path">
+<p>Settings → Attendance → Work Centers for Shift Scheduling → + Create
+Work Center</p>
+</div>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/36-work-centers-table-full.png" class="screenshot" loading="lazy" alt="Work Centers table in Attendance settings" />
+<figcaption>
+Work Centers table showing configured centers with schedulers, work
+timings, offices, and employee counts
+</figcaption>
+</figure>
+<ol type="1">
+<li>Navigate to Settings → Attendance → scroll to “Work Centers for
+Shift Scheduling” section</li>
+<li>Click “+ Create Work Center”</li>
+<li>Enter work center name (e.g., “Retail Floor Staff”, “Night Shift
+Security”)</li>
+<li>Select the Shift Scheduler (manager responsible for this group)</li>
+<li>Add applicable office locations where these employees work</li>
+<li>Select work timings (shift schedules) available for this group</li>
+<li>Add employees to the work center</li>
+<li>Click “Save”</li>
+</ol>
+<p>The Work Centers table displays the following columns: <strong>Work
+center</strong> (name), <strong>Schedulers</strong> (assigned managers),
+<strong>Work timings</strong> (available shift templates),
+<strong>Offices</strong> (assigned locations), and
+<strong>Employees</strong> (count of assigned employees).</p>
+<div class="info-box">
+<p><strong>Note:</strong> Each employee can only belong to one work
+center. If all employees share the same scheduler and locations, create
+a single work center with all shift employees.</p>
+</div>
+<div class="warning-box">
+<p><strong>⚠️ Scheduler Access:</strong> Schedulers must be added as
+employees within the work center to manage it. A user with the Shift
+Scheduler role cannot see or manage a work center unless they are
+explicitly assigned as the scheduler for that work center.</p>
+</div>
+<h4 id="step-2-verify-work-timings-configuration">Step 2: Verify Work
+Timings Configuration</h4>
+<p>Before creating shifts, ensure work timings are configured with the
+correct rules. Navigate to Settings → Attendance → Work Timings to
+review existing timings.</p>
+<p>The Work Timings table displays the following columns:
+<strong>Name</strong>, <strong>Working hours</strong>, <strong>Late
+arrival</strong> threshold, <strong>Early departure</strong> threshold,
+<strong>Absent after</strong> threshold, <strong>Breaks</strong>
+allowance, <strong>Outside office</strong> (out-of-office check-ins),
+and <strong>Extra hours</strong> calculation method.</p>
+<p>To edit a work timing, click the edit icon on its row. The edit form
+includes: - <strong>Name</strong> — Display name for the work timing -
+<strong>Flexible work timing</strong> — Toggle to allow variable
+start/end times - <strong>Starts at / Ends at</strong> — Shift start and
+end times - <strong>Half-day timing</strong> — Toggle to enable half-day
+configuration - <strong>Late arrival</strong> — Toggle and configure the
+threshold before an employee is marked late - <strong>Early
+departure</strong> — Toggle and configure the threshold before an
+employee is marked as departing early - <strong>Absent day</strong> —
+Toggle and configure when an employee is marked absent - <strong>Allow
+breaks</strong> — Toggle to permit break periods during the shift -
+<strong>Allow out of office check-ins</strong> — Toggle to allow
+check-ins from outside the office location - <strong>Disallow check-in
+before work start time</strong> — Toggle to prevent early check-ins -
+<strong>Extra Hours</strong> — Radio group with three options:
+<strong>Total hours</strong> (default), <strong>After work end
+time</strong>, or <strong>All hours worked</strong></p>
+<div class="info-box">
+<p><strong>Note:</strong> The “Default” work timing cannot be deleted.
+You can create additional work timings and assign them to specific work
+centers.</p>
+</div>
+<h4 id="step-3-configure-split-shift-settings-optional">Step 3:
+Configure Split Shift Settings (Optional)</h4>
+<p>If employees work multiple shifts per day (e.g., morning and evening
+with break in between):</p>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/39-split-shifts-learn-more.png" class="screenshot" loading="lazy" alt="Split shifts Learn More dialog" />
+<figcaption>
+Split shifts information dialog explaining rules and deduction behavior
+for multi-shift days
+</figcaption>
+</figure>
+<ul>
+<li>Maximum 2 shifts per employee per day</li>
+<li>Shifts cannot overlap with same day, previous day, or next day
+shifts</li>
+<li>Cannot schedule shifts on days marked as Day Off or Day Off with
+check-in allowed</li>
+<li>Each shift tracks attendance independently with regular attendance
+actions (late arrival, early departure, absence)</li>
+<li><strong>Deduction halving:</strong> When an employee has 2 shifts on
+the same day, deduction amounts are automatically divided by 2. For
+example, if a late arrival deduction is 5% of salary, each shift’s late
+deduction becomes 2.5%</li>
+</ul>
+<div class="warning-box">
+<p><strong>⚠️ Split Shift Limitation:</strong> Cannot add extra hours
+(T&amp;P adjustments) if employee has multiple published shifts on the
+same day. Schedule overtime as a separate shift instead.</p>
+</div>
+<h4 id="step-4-set-scheduling-permissions">Step 4: Set Scheduling
+Permissions</h4>
+<p>Roles are assigned under Settings → <a
+href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role
+management</a>. The following roles are relevant to shift
+scheduling:</p>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/45-shift-scheduler-role-policies.png" class="screenshot" loading="lazy" alt="Shift Scheduler role with sub-policies" />
+<figcaption>
+Role management dialog showing the Shift Scheduler role and its three
+sub-policies
+</figcaption>
+</figure>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Role</th>
+<th>Shift-Related Policy</th>
+<th>What They Can Do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Super Admin</strong></td>
+<td>Shift manager policy</td>
+<td>Can manage shift schedules of all employees <strong>and manage work
+centers</strong> (create, edit, delete work centers). Covers all other
+roles except Transaction Processor.</td>
+</tr>
+<tr>
+<td><strong>Shift Scheduler</strong></td>
+<td>Shift scheduler policy</td>
+<td>Can manage shift schedules of all employees within their assigned
+work centers. Cannot create or edit work centers — must be assigned as
+the scheduler for a work center by a Super Admin. This role is
+<strong>non-restrictable</strong> (cannot be limited by restriction
+groups).</td>
+</tr>
+<tr>
+<td><strong>Attendance Manager</strong></td>
+<td>Attendance manager policy</td>
+<td>Can manage attendance records of all employees (edit
+check-in/check-out times, clear/delete records). <strong>Cannot</strong>
+create, edit, or publish shifts. This role is
+<strong>restrictable</strong> (can be limited by restriction
+groups).</td>
+</tr>
+<tr>
+<td><strong>Line Manager</strong></td>
+<td>Attendance line manager policy</td>
+<td>Can manage attendance records of reporting employees only.
+<strong>Cannot</strong> create, edit, or publish shifts. Can view shift
+schedules for their reporting employees.</td>
+</tr>
+<tr>
+<td><strong>Employee</strong></td>
+<td>None</td>
+<td>Can view own published shift schedule in mobile app and check in/out
+for assigned shifts. Cannot create, edit, or view other employees’
+shifts.</td>
+</tr>
+</tbody>
+</table>
+<div class="info-box">
+<p><strong>Key distinction:</strong> The Super Admin has the “Shift
+manager policy” which includes <strong>both</strong> shift scheduling
+and work center management. The Shift Scheduler role has the “Shift
+scheduler policy” which only covers shift scheduling — work center
+access is granted by being assigned as the scheduler for a specific work
+center.</p>
+</div>
+<div class="info-box">
+<p><strong>Audit Logging:</strong> Shift creation, editing, and
+publishing actions are logged with user details and timestamps for
+shifts created after October 9, 2023.</p>
+</div>
+</section>
+<section id="initial-shift-creation-methods" class="subsection">
+<h3>Initial Shift Creation Methods</h3>
+<p>Choose the method that fits your scheduling workflow:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method</th>
+<th>Best For</th>
+<th>Access Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Individual Shift Creation</strong></td>
+<td>One-off shifts, specific employee assignments</td>
+<td>Attendance → Shift Scheduler → Click empty cell for employee and
+date</td>
+</tr>
+<tr>
+<td><strong>Schedule Planner</strong></td>
+<td>Bulk shift creation for multiple employees at once</td>
+<td>Attendance → Shift Scheduler → Schedule Planner button in
+toolbar</td>
+</tr>
+<tr>
+<td><strong>Copy Schedule</strong></td>
+<td>Repeating weekly patterns for entire work center</td>
+<td>Attendance → Shift Scheduler → Copy Schedule button in toolbar (Week
+view only)</td>
+</tr>
+<tr>
+<td><strong>Copy (Per Employee)</strong></td>
+<td>Duplicating one employee’s pattern to others</td>
+<td>Attendance → Shift Scheduler → Hover over employee row → Copy
+icon</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="draft-vs.-published-shifts" class="subsection">
+<h3>Draft vs. Published Shifts</h3>
+<p>Shifts can be saved as drafts for review before publishing:</p>
+<ul>
+<li><strong>Draft:</strong> Visible only to schedulers, not sent to
+employees, can be edited freely. Displayed with a <strong>dashed purple
+border</strong> in the schedule grid. Context menu options: Publish
+shift, Edit shift, Delete shift.</li>
+<li><strong>Published:</strong> Sent to employees via push notification
+on Bayzat mobile app, visible in employee schedule. Displayed with a
+<strong>solid purple fill</strong> in the schedule grid. Context menu
+options: Edit shift, Reassign shift, Delete shift.</li>
+</ul>
+<div class="warning-box">
+<p><strong>⚠️ Publishing Constraint:</strong> Cannot publish shifts for
+past dates or current day if employee has already checked in.</p>
+</div>
+</section>
+<section id="key-configuration-decisions" class="subsection">
+<h3>Key Configuration Decisions</h3>
+<p>Answer these questions before creating your first shifts:</p>
+<ul>
+<li><strong>How many work centers do you need?</strong> — One per
+manager/scheduler or group employees by location/department</li>
+<li><strong>Do employees work split shifts?</strong> — Configure maximum
+2 shifts per day with no overlap rules</li>
+<li><strong>How far in advance will you schedule?</strong> — Shifts can
+be created up to 6 months ahead</li>
+<li><strong>Will you use repeating patterns?</strong> — Set up copy
+schedule workflow for weekly recurring shifts</li>
+<li><strong>Who needs to approve shifts?</strong> — No built-in approval
+workflow; shifts are published directly by schedulers</li>
+</ul>
+</section>
+<section id="common-setup-issues" class="subsection">
+<h3>Common Setup Issues</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cannot assign employee to work center</td>
+<td>Employee not classified as “Shift” type</td>
+<td>Update employee profile → Employment Type → Shift</td>
+</tr>
+<tr>
+<td>Shift Scheduler role missing</td>
+<td>Role not assigned to manager</td>
+<td>Settings → <a
+href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role
+management</a> → Assign Shift Scheduler role</td>
+</tr>
+<tr>
+<td>Cannot create split shifts</td>
+<td>Day off or leave exists on that day</td>
+<td>Remove day off or reschedule shift to different date</td>
+</tr>
+<tr>
+<td>Work center owner leaving company</td>
+<td>No replacement scheduler assigned</td>
+<td>Assign new work center owner before offboarding current
+scheduler</td>
+</tr>
+<tr>
+<td>Scheduler has role but cannot access work center</td>
+<td>Scheduler not assigned to specific work center</td>
+<td>Edit the work center in Settings → Attendance → Work Centers and
+assign the user as the scheduler</td>
+</tr>
+</tbody>
+</table>
+</section>
+</div>
+</section>
+<section id="core-tasks" class="section-core-tasks">
+<section id="key-tasks" class="section-header">
+<h2>Key Tasks</h2>
+</section>
+<div class="section-body">
+<section id="task-create-work-centers-for-shift-organization"
+class="subsection">
+<h3>Task: Create Work Centers for Shift Organization</h3>
+<p>Group employees by scheduler, location, and work timings to enable
+efficient shift assignment.</p>
+<h4 id="subtask-set-up-work-center-configuration">Subtask: Set Up Work
+Center Configuration</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/02-work-center-dropdown.png" class="screenshot" loading="lazy" alt="Work center configuration" />
+<figcaption>
+Work center configuration screen showing scheduler assignment, office
+locations, and employee selection
+</figcaption>
+</figure>
+<ul>
+<li>Navigate to Settings → Attendance → Work Centers for Shift
+Scheduling</li>
+<li>Click “+ Create Work Center”</li>
+<li>Assign a shift scheduler (must have shift scheduler role)</li>
+<li>Select office locations where shifts will occur</li>
+<li>Add work timings that will be used for scheduling</li>
+<li>Select employees who belong to this work center</li>
+<li>Save the work center</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Work center created with employees
+grouped by common scheduler and locations, ready for shift
+assignment.</p>
+</section>
+<section id="task-create-and-assign-individual-shifts"
+class="subsection">
+<h3>Task: Create and Assign Individual Shifts</h3>
+<p>Schedule specific work shifts for employees on designated dates with
+defined work timings and locations.</p>
+<h4 id="subtask-create-single-shift">Subtask: Create Single Shift</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/26-schedule-shift-dialog.png" class="screenshot" loading="lazy" alt="Schedule shift dialog" />
+<figcaption>
+Schedule shift dialog showing all fields: work center, date, employee,
+day-off toggle, work timing, office, and notes
+</figcaption>
+</figure>
+<ol type="1">
+<li>Navigate to Attendance → Shift Scheduler</li>
+<li>Select a work center from the dropdown (or select “All” to see all
+employees)</li>
+<li>Click on an empty cell in the employee’s row for the desired
+date</li>
+<li>The <strong>Schedule shift</strong> dialog opens with these fields:
+<ul>
+<li><strong>Work center</strong> — Pre-filled and read-only based on the
+selected employee’s work center</li>
+<li><strong>Date</strong> — Pre-filled based on the cell clicked (not
+editable)</li>
+<li><strong>Employee</strong> — Pre-filled based on the row clicked (not
+editable)</li>
+<li><strong>Mark as day-off</strong> — Toggle to mark this date as a day
+off instead of assigning a shift</li>
+<li><strong>Work timing</strong> — Dropdown to select from available
+work timings configured for this work center (with a Clear button to
+reset selection)</li>
+<li><strong>Office</strong> — Dropdown to select the office location for
+this shift</li>
+<li><strong>Notes</strong> — Optional free-text field for additional
+information</li>
+</ul></li>
+<li>Click <strong>Save as draft</strong> to save for later review, or
+<strong>Save &amp; Publish</strong> to publish immediately and notify
+the employee</li>
+</ol>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/28-draft-shift-created.png" class="screenshot" loading="lazy" alt="Draft shift in schedule grid" />
+<figcaption>
+Draft shift displayed with dashed purple border in the schedule grid,
+indicating it has not been published yet
+</figcaption>
+</figure>
+<p><strong>Expected Outcome:</strong> Shift created for employee on
+specified date with assigned work timing and location. Draft shifts
+appear with a dashed purple border; published shifts appear with a solid
+purple fill.</p>
+<h4 id="subtask-create-split-shifts-multiple-shifts-per-day">Subtask:
+Create Split Shifts (Multiple Shifts Per Day)</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/41-wtd006-split-info.png" class="screenshot" loading="lazy" alt="Split shift information" />
+<figcaption>
+Split shift information modal explaining rules for assigning multiple
+shifts per day
+</figcaption>
+</figure>
+<ul>
+<li>Create first shift following standard process</li>
+<li>Click on same employee’s cell for same date</li>
+<li>Select different work timing for second shift</li>
+<li>System validates no overlap with existing shift</li>
+<li>System validates no day off exists on that date</li>
+<li>Save second shift (maximum 2 shifts per day)</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Two non-overlapping shifts created
+for same employee on same day, each tracked independently for
+attendance.</p>
+<div class="warning-box">
+<p><strong>⚠️ Split Shift Constraints:</strong> Maximum 2 shifts per
+employee per day. Cannot schedule on days with existing day off. Cannot
+schedule during half-day leave. No overlapping shift times allowed.</p>
+</div>
+</section>
+<section id="task-copy-and-repeat-shifts" class="subsection">
+<h3>Task: Copy and Repeat Shifts</h3>
+<p>Duplicate existing shift patterns to reduce manual scheduling effort.
+Two copy methods are available: per-employee copy and bulk Copy
+Schedule.</p>
+<h4 id="subtask-copy-individual-employee-shifts">Subtask: Copy
+Individual Employee Shifts</h4>
+<ul>
+<li>Hover over an employee’s row in the schedule grid to reveal the copy
+icon next to their name (only visible when employee has existing shifts
+in the displayed week)</li>
+<li>Click the copy icon to open the copy dialog</li>
+<li>Select date range for pasting (1 to 90 days)</li>
+<li>Select target employees from list</li>
+<li>Choose whether to overwrite existing draft shifts</li>
+<li>Click “Apply” to paste shifts</li>
+<li>Use undo option within 60 seconds if needed</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Source employee’s shift pattern
+replicated to selected employees across specified date range, excluding
+dates with day offs, public holidays, published shifts, or approved
+leave.</p>
+<div class="info-box">
+<p><strong>Copy Limitations:</strong> Cannot paste shifts into past
+dates. Cannot overwrite published shifts, day offs, public holidays, or
+approved leave. Undo option available for 60 seconds only. Per-employee
+copy is disabled in Month view.</p>
+</div>
+<h4 id="subtask-copy-schedule-bulk-copy-across-work-center">Subtask:
+Copy Schedule (Bulk Copy Across Work Center)</h4>
+<p>Use the <strong>Copy Schedule</strong> button in the toolbar to
+duplicate an entire work center’s shift pattern from one week to
+another.</p>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/41-copy-schedule-dialog.png" class="screenshot" loading="lazy" alt="Copy Schedule dialog with advanced options" />
+<figcaption>
+Copy Schedule dialog showing source and target date ranges with advanced
+pasting options
+</figcaption>
+</figure>
+<ol type="1">
+<li>Navigate to the Shift Scheduler in <strong>Week view</strong> (Copy
+Schedule is disabled in Month view)</li>
+<li>Select a specific work center (Copy Schedule is disabled when “All”
+is selected)</li>
+<li>Click <strong>Copy Schedule</strong> in the toolbar</li>
+<li>The dialog shows:
+<ul>
+<li><strong>Within Work Center</strong> — Displays the selected work
+center name and employee count</li>
+<li><strong>Copy Schedule from</strong> — Source date range (defaults to
+the currently displayed week)</li>
+<li><strong>Paste to</strong> — Target date range (auto-suggested as the
+following week)</li>
+</ul></li>
+<li>The system matches each day to its corresponding day in the target
+range. It automatically <strong>skips published shifts, published day(s)
+off, and approved leaves</strong></li>
+<li>Configure <strong>Advanced pasting options</strong>:
+<ul>
+<li><strong>Overwrite options:</strong> Choose whether to overwrite
+existing draft shifts, draft day(s) off, or draft day(s) off with
+check-in allowed in the target range</li>
+<li><strong>Selective paste options:</strong> Choose whether to paste on
+weekends or paste on public holidays</li>
+</ul></li>
+<li>Add optional <strong>Notes</strong> for the pasted shifts</li>
+<li>Click <strong>Paste shifts as draft</strong> — all copied shifts are
+created as drafts in the target range</li>
+</ol>
+<p><strong>Expected Outcome:</strong> Entire work center’s weekly shift
+pattern duplicated to the target date range as draft shifts, ready for
+review and publishing.</p>
+</section>
+<section id="task-publish-draft-shifts-to-employees" class="subsection">
+<h3>Task: Publish Draft Shifts to Employees</h3>
+<p>Finalize and communicate shift schedules to employees, making them
+visible in mobile app and enabling check-in.</p>
+<h4 id="subtask-publish-individual-shift">Subtask: Publish Individual
+Shift</h4>
+<p>Right-click (or click) on a draft shift cell to open the context
+menu, then select <strong>Publish shift</strong>. The shift is
+immediately published and the employee is notified.</p>
+<h4 id="subtask-bulk-publish-shifts">Subtask: Bulk Publish Shifts</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/31-publish-shifts-dialog.png" class="screenshot" loading="lazy" alt="Bulk publish shifts dialog" />
+<figcaption>
+Publish shifts dialog showing date range, work center, office selection,
+and notification options
+</figcaption>
+</figure>
+<ol type="1">
+<li>Click the <strong>Publish shifts</strong> button in the toolbar (the
+badge shows the number of unpublished drafts, e.g., “Publish shifts
+(3)”)</li>
+<li>The publish dialog allows you to configure:
+<ul>
+<li><strong>Date range</strong> — Select the start and end dates for
+shifts to publish</li>
+<li><strong>Work center</strong> — Choose which work center’s shifts to
+publish</li>
+<li><strong>Office</strong> — Optionally filter by office location</li>
+<li><strong>Include days off</strong> — Toggle to also publish day-off
+assignments</li>
+</ul></li>
+<li>A warning note reminds you: publishing shifts will notify employees
+via the Bayzat app</li>
+<li>Click <strong>Publish</strong> to finalize</li>
+</ol>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/32-all-shifts-published.png" class="screenshot" loading="lazy" alt="Published shifts in schedule grid" />
+<figcaption>
+Published shifts displayed with solid purple fill in the schedule grid
+</figcaption>
+</figure>
+<p><strong>Expected Outcome:</strong> Shifts published and visible to
+employees in mobile app under “My Schedule.” Published shifts appear
+with a solid purple fill (replacing the dashed border of drafts).
+Employees can now check in and out for published shifts.</p>
+<div class="warning-box">
+<p><strong>⚠️ Publishing Constraint:</strong> Shifts must be published
+before employees can check in. Check-ins received before shift
+publication are automatically rejected.</p>
+</div>
+</section>
+<section id="task-edit-reassign-or-delete-individual-shifts"
+class="subsection">
+<h3>Task: Edit, Reassign, or Delete Individual Shifts</h3>
+<p>Manage existing shifts through the context menu that appears when
+clicking on a shift cell. The available actions differ depending on the
+shift’s status.</p>
+<h4 id="context-menu-options">Context Menu Options</h4>
+<p>Click on any shift cell in the schedule grid to see the context
+menu:</p>
+<ul>
+<li><strong>Draft shift context menu:</strong> Publish shift, Edit
+shift, Delete shift</li>
+<li><strong>Published shift context menu:</strong> Edit shift, Reassign
+shift, Delete shift</li>
+</ul>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/29-shift-context-menu.png" class="screenshot" loading="lazy" alt="Draft shift context menu" />
+<figcaption>
+Draft shift context menu showing Publish shift, Edit shift, and Delete
+shift options
+</figcaption>
+</figure>
+<h4 id="subtask-edit-shift-details">Subtask: Edit Shift Details</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/40-edit-shift-dialog.png" class="screenshot" loading="lazy" alt="Edit published shift dialog" />
+<figcaption>
+Edit scheduled shift dialog for a published shift, showing editable
+fields and the “Edit &amp; Publish” button
+</figcaption>
+</figure>
+<ol type="1">
+<li>Click on the shift cell and select <strong>Edit shift</strong> from
+the context menu</li>
+<li>The <strong>Edit scheduled shift</strong> dialog opens with:
+<ul>
+<li><strong>Work center</strong> — Read-only (cannot be changed)</li>
+<li><strong>Date</strong> — Disabled (cannot be changed)</li>
+<li><strong>Employee</strong> — Disabled (cannot be changed)</li>
+<li><strong>Mark as day-off</strong> — Toggle to convert shift to a day
+off</li>
+<li><strong>Work timing</strong> — Dropdown with Clear button to change
+the assigned work timing</li>
+<li><strong>Office</strong> — Dropdown to change the office
+location</li>
+<li><strong>Notes</strong> — Optional field to add or modify notes</li>
+</ul></li>
+<li>For draft shifts: Click <strong>Save</strong> to update the
+draft</li>
+<li>For published shifts: Click <strong>Edit &amp; Publish</strong> to
+save changes and immediately re-publish (employees are notified of the
+change)</li>
+</ol>
+<p><strong>Expected Outcome:</strong> Shift updated with new details.
+For published shifts, the “Edit &amp; Publish” button ensures the
+updated shift is immediately re-published and employees are
+notified.</p>
+<h4 id="subtask-reassign-shift-to-another-employee">Subtask: Reassign
+Shift to Another Employee</h4>
+<p>The <strong>Reassign shift</strong> option is available only for
+published shifts:</p>
+<ol type="1">
+<li>Click on a published shift cell and select <strong>Reassign
+shift</strong> from the context menu</li>
+<li>Select the new employee to assign this shift to</li>
+<li>Confirm the reassignment</li>
+</ol>
+<p><strong>Expected Outcome:</strong> Shift reassigned to the new
+employee while maintaining the same date, work timing, and office
+location.</p>
+<div class="info-box">
+<p><strong>Edit Restrictions:</strong> Cannot edit shifts for past
+dates. Cannot edit current day shift if employee has already checked in
+(must use attendance record override instead).</p>
+</div>
+</section>
+<section id="task-delete-shifts-in-bulk" class="subsection">
+<h3>Task: Delete Shifts in Bulk</h3>
+<p>Remove multiple shifts simultaneously across employees and date
+ranges to correct scheduling errors or accommodate changes.</p>
+<h4 id="subtask-bulk-delete-shifts">Subtask: Bulk Delete Shifts</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/01-shift-scheduler-main-view.png" class="screenshot" loading="lazy" alt="Shift scheduler toolbar" />
+<figcaption>
+Shift scheduler toolbar with access to delete, copy, and schedule
+planner functions
+</figcaption>
+</figure>
+<ul>
+<li>Navigate to Shift Scheduler</li>
+<li>Click “Delete” icon in toolbar</li>
+<li>Select work center</li>
+<li>Choose date range (up to 6 months in advance)</li>
+<li>Select employees whose shifts should be deleted</li>
+<li>Select shift status (draft, published, or both)</li>
+<li>Click “Delete” to confirm</li>
+<li>Use undo option within 30 seconds if needed</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Selected shifts deleted for
+specified employees and date range. Employees marked as absent for
+deleted published shifts unless new shifts are created.</p>
+<div class="warning-box">
+<p><strong>⚠️ Deletion Constraints:</strong> Cannot delete shifts for
+past dates. Cannot delete current day shifts if employee has already
+checked in. Undo available for 30 seconds only.</p>
+</div>
+</section>
+<section id="task-view-and-track-employee-shifts-employee-perspective"
+class="subsection">
+<h3>Task: View and Track Employee Shifts (Employee Perspective)</h3>
+<p>Employees view their assigned shifts and check in/out for scheduled
+work periods.</p>
+<h4 id="subtask-view-shift-schedule-in-mobile-app">Subtask: View Shift
+Schedule in Mobile App</h4>
+<ul>
+<li>Open Bayzat mobile app</li>
+<li>Navigate to “My Schedule” section</li>
+<li>View weekly schedule with shift details (date, time, office
+location)</li>
+<li>See current shift highlighted as “Happening now”</li>
+<li>For split shifts, see next shift details displayed</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Employee sees complete shift
+schedule with all assigned work periods, locations, and timings.</p>
+<div class="info-box">
+<p><strong>Top-Down Scheduling Only:</strong> Shift scheduling is
+managed exclusively by admins and shift schedulers. Employees cannot
+create, modify, or request shifts through the system — they can only
+view their assigned published shifts and check in/out for scheduled work
+periods.</p>
+</div>
+<h4 id="subtask-check-in-and-out-for-shifts">Subtask: Check In and Out
+for Shifts</h4>
+<ul>
+<li>At shift start time, click attendance widget on mobile app home
+page</li>
+<li>Select “Check in” to record shift start</li>
+<li>At shift end time, click attendance widget</li>
+<li>Select “Check out” to record shift end</li>
+<li>For split shifts, repeat check-in/out for each shift segment</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Attendance recorded for shift.
+System calculates late/early/absent status independently per shift for
+split shift scenarios.</p>
+</section>
+<section id="task-override-attendance-records-for-published-shifts"
+class="subsection">
+<h3>Task: Override <a
+href="https://mashapajfhp.github.io/user-guides/attendance/v1/attendance-user-guide.html">Attendance</a>
+Records for Published Shifts</h3>
+<p>Manually adjust check-in/out times or attendance status when
+employees cannot use standard check-in process.</p>
+<p>Attendance records for shift employees are visible in the
+<strong>Daily Report</strong> under Time → Attendance → Employee
+Attendance. The Daily Report shows columns for ID, Name, Reports to,
+<strong>Schedule</strong> (shift times), Date, Status, Check In, Check
+Out, Confidence, Hours Worked, Extra Hours, and <strong>Locations
+Visited</strong>. For employees with split shifts, each shift generates
+a <strong>separate row</strong> in the Daily Report — so a split-shift
+employee will have two attendance records for the same date, one per
+shift.</p>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/47-attendance-daily-report-columns.png" class="screenshot" loading="lazy" alt="Attendance Daily Report with schedule and location columns" />
+<figcaption>
+Attendance Daily Report showing Schedule column with shift times,
+Locations Visited, and other attendance tracking columns
+</figcaption>
+</figure>
+<h4 id="subtask-edit-attendance-times">Subtask: Edit Attendance
+Times</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/05-attendance-daily-report.png" class="screenshot" loading="lazy" alt="Attendance daily report" />
+<figcaption>
+Attendance daily report showing employee check-in and check-out records
+</figcaption>
+</figure>
+<ul>
+<li>Navigate to Time → Attendance → Employee Attendance → Daily
+Report</li>
+<li>Locate employee attendance record for specific date</li>
+<li>Click on attendance record to open edit options</li>
+<li>Select “Edit check-in time” or “Edit check-out time”</li>
+<li>Enter corrected time</li>
+<li>Save changes (creates time and pay adjustment entry)</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Attendance record updated with
+manual override. Time and pay adjustment entry created for payroll
+processing.</p>
+<h4 id="subtask-clear-or-delete-attendance-record">Subtask: Clear or
+Delete Attendance Record</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/05-attendance-daily-report.png" class="screenshot" loading="lazy" alt="Attendance record options" />
+<figcaption>
+Attendance daily report with options to edit, clear, or delete
+attendance records
+</figcaption>
+</figure>
+<ul>
+<li>Navigate to employee attendance record in Daily Report</li>
+<li>Click on attendance record</li>
+<li>Select “Clear attendance” to remove check-in/out times (keeps
+shift)</li>
+<li>Or select “Delete attendance record” to mark employee as absent</li>
+<li>Confirm action</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Attendance cleared or deleted.
+Employee marked as absent if record deleted. Cannot check in again after
+deletion.</p>
+</section>
+<section id="task-use-schedule-planner-for-bulk-shift-creation"
+class="subsection">
+<h3>Task: Use Schedule Planner for Bulk Shift Creation</h3>
+<p>Create shifts for multiple employees across multiple dates using
+grid-based planning interface.</p>
+<h4 id="subtask-plan-shifts-in-grid-view">Subtask: Plan Shifts in Grid
+View</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/33-schedule-planner.png" class="screenshot" loading="lazy" alt="Schedule planner grid" />
+<figcaption>
+Schedule planner grid showing employees in rows and dates in columns
+with work timing dropdowns and “All” buttons for bulk assignment
+</figcaption>
+</figure>
+<ol type="1">
+<li>Click the <strong>Schedule Planner</strong> button in the Shift
+Scheduler toolbar</li>
+<li>Select work center and date range</li>
+<li>The grid displays employees in rows and dates in columns, with a
+dropdown in each cell to select a work timing</li>
+<li>Use the <strong>“All” button</strong> next to each employee name to
+apply the same work timing across all dates in the selected range for
+that employee</li>
+<li>Select individual work timing from the dropdown for each
+employee-date cell to customize specific days</li>
+<li>Click <strong>Save as draft</strong> to review before publishing, or
+<strong>Save &amp; Publish</strong> to publish immediately</li>
+</ol>
+<p><strong>Expected Outcome:</strong> Multiple shifts created
+efficiently using grid interface, reducing time compared to individual
+shift creation.</p>
+<div class="info-box">
+<p><strong>Schedule Planner Note:</strong> “All” option is not available
+when creating split shifts. Copy functionality is disabled when “All”
+work center is selected. The Schedule Planner is particularly useful for
+initial schedule setup when many employees need the same shift
+pattern.</p>
+</div>
+</section>
+<section id="task-move-employees-between-work-centers"
+class="subsection">
+<h3>Task: Move Employees Between Work Centers</h3>
+<p>Reassign employees to different work centers when reporting structure
+or scheduling ownership changes.</p>
+<h4 id="subtask-transfer-employee-to-new-work-center">Subtask: Transfer
+Employee to New Work Center</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/03-specific-work-center-selected.png" class="screenshot" loading="lazy" alt="Work center with employees" />
+<figcaption>
+Work center view showing employee list within a selected work center
+</figcaption>
+</figure>
+<ul>
+<li>Navigate to Settings → Attendance → Work Centers for Shift
+Scheduling</li>
+<li>Open source work center and remove employee from list</li>
+<li>Open target work center and add employee to list</li>
+<li>Save changes to both work centers</li>
+<li>Employee’s future shifts now managed by new work center’s
+scheduler</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Employee moved to new work center.
+New scheduler can create and manage future shifts. Historical shifts
+remain unchanged.</p>
+<div class="info-box">
+<p><strong>Work Center Constraint:</strong> Each employee can belong to
+only one work center at a time. Moving employees does not affect
+historical shift assignments or attendance records.</p>
+</div>
+</section>
+</div>
+</section>
+<section id="workflow-integration" class="section-workflow-integration">
+<section id="workflow-integration" class="section-header">
+<h2>Workflow Integration</h2>
+</section>
+<div class="section-body">
+<section id="automation-status" class="subsection">
+<h3>Automation Status</h3>
+<div class="info-box">
+<p><strong>Not Available:</strong> Shift Scheduling does not currently
+support workflow automation through the Automations → Workflows
+interface.</p>
+</div>
+</section>
+<section id="alternative-notification-methods" class="subsection">
+<h3>Alternative Notification Methods</h3>
+<p>While automated workflows are not available, shift notifications are
+handled through:</p>
+<ul>
+<li><strong>Push Notifications</strong> — Employees receive automatic
+alerts when shifts are published via the Bayzat mobile app</li>
+<li><strong>Manual Publishing</strong> — Admins must manually publish
+draft shifts to trigger employee notifications</li>
+</ul>
+</section>
+<section id="integration-points" class="subsection">
+<h3>Integration Points</h3>
+<p>Shift Scheduling connects with other Bayzat modules but does not
+trigger automated workflows:</p>
+<ul>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/attendance/v1/attendance-user-guide.html">Attendance</a></strong>
+— Published shifts determine valid check-in/check-out windows.
+Attendance is validated using GPS coordinates and geofencing radius
+configured per office location (Settings → Company → Offices). Each
+office can have a location address, latitude/longitude coordinates, and
+a radius in meters for geofencing validation.</li>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/leave-management/v1/leave-management-user-guide.html">Leave
+Management</a></strong> — Shift schedules are blocked when leave
+requests are approved. Leave overlays (e.g., “On Leave - Vacation”)
+appear directly in the schedule grid.</li>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/timesheets/v1/timesheets-user-guide.html">Timesheets</a></strong>
+— Shift hours feed into time tracking records</li>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/payroll-management/v1/payroll-management-user-guide.html">Payroll</a></strong>
+— Shift data influences attendance-based deductions and overtime
+calculations. Pay rates per shift type are not configured within Shift
+Scheduling — salary structures and pay rates are managed through <a
+href="https://mashapajfhp.github.io/user-guides/payroll-management/v1/payroll-management-user-guide.html">payroll</a>
+configuration.</li>
+</ul>
+<div class="info-box">
+<p><strong>No External Integrations:</strong> Shift Scheduling is an
+internal Bayzat workforce management feature. It does not integrate with
+external systems such as EMR (electronic medical records), third-party
+scheduling tools, or external APIs. All shift data is managed within the
+Bayzat platform.</p>
+</div>
+</section>
+<section id="known-limitations" class="subsection">
+<h3>Known Limitations</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Impact</th>
+<th>Workaround</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No bulk shift publishing workflow</td>
+<td>Admins must manually publish draft schedules</td>
+<td>Use Schedule Planner to create multiple shifts at once before
+publishing</td>
+</tr>
+<tr>
+<td>No automated shift reminders</td>
+<td>Employees only notified once at publication time</td>
+<td>Communicate shift schedules through external channels if needed</td>
+</tr>
+<tr>
+<td>No approval workflow for shift changes</td>
+<td>Shift edits take effect immediately without manager review</td>
+<td>Use draft mode to review changes before publishing</td>
+</tr>
+</tbody>
+</table>
+</section>
+</div>
+</section>
+<section id="business-rules-limitations"
+class="section-business-rules-limitations">
+<section id="business-rules-limitations" class="section-header">
+<h2>Business Rules &amp; Limitations</h2>
+</section>
+<div class="section-body">
+<section id="split-shift-rules" class="subsection">
+<h3>Split Shift Rules</h3>
+<ul>
+<li><strong>Maximum 2 shifts per day:</strong> Employees can be
+scheduled for up to two shifts in a single day (expandable based on
+customer feedback).</li>
+<li><strong>No overlap allowed:</strong> Shifts cannot overlap with
+other shifts on the same day, day before, or day after.</li>
+<li><strong>Day off restrictions:</strong> Cannot schedule a second
+shift if a day off already exists on that day, including day off with
+check-in allowed.</li>
+<li><strong>No minimum gap required:</strong> System does not enforce a
+minimum break period between multiple shifts.</li>
+<li><strong>Independent tracking:</strong> Each shift is treated
+independently for late/early/absent calculations and occurrence
+tracking.</li>
+<li><strong>Deduction halving for dual-shift days:</strong> When an
+employee has 2 shifts on the same day, attendance deduction amounts are
+automatically divided by 2. For example, if a late arrival deduction is
+configured as 5% of salary, each shift’s late arrival deduction is
+calculated as 2.5% (5% ÷ 2).</li>
+</ul>
+</section>
+<section id="scheduling-constraints" class="subsection">
+<h3>Scheduling Constraints</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Impact</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cannot schedule shifts for past dates</td>
+<td>Shifts can only be created for current and future dates</td>
+<td>System Enforced</td>
+</tr>
+<tr>
+<td>Cannot delete current day shift if employee checked in</td>
+<td>Prevents deletion of active attendance records</td>
+<td>System Enforced</td>
+</tr>
+<tr>
+<td>Shifts can be scheduled up to 6 months in advance</td>
+<td>Maximum forward planning window</td>
+<td>System Enforced</td>
+</tr>
+<tr>
+<td>30-second undo window for bulk deletion</td>
+<td>Limited time to reverse accidental deletions</td>
+<td>System Enforced</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="known-limitations-from-jira-tickets" class="subsection">
+<h3>Known Limitations from Jira Tickets</h3>
+<div class="warning-box">
+<p><strong>⚠️ Audit Logs Not Displaying</strong></p>
+<p>Admin panel cannot display complete audit logs for shift scheduler
+and hrcore entities, limiting ability to track historical shift
+modifications within the 90-day retention period. (TSSD-4634)</p>
+</div>
+<div class="warning-box">
+<p><strong>⚠️ Scheduled Overtime Not Supported with Multiple
+Shifts</strong></p>
+<p>Cannot schedule <a
+href="https://mashapajfhp.github.io/user-guides/overtime/v2/overtime-user-guide.html">overtime</a>
+(T&amp;P adjustments) when an employee has multiple published shifts in
+a day. This restriction was implemented during <a
+href="https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html">split
+shifts</a> launch. (TSSD-4078)</p>
+</div>
+<div class="warning-box">
+<p><strong>⚠️ Leave Calculation Does Not Consider Shift
+Days-Off</strong></p>
+<p>Working days <a
+href="https://mashapajfhp.github.io/user-guides/leave-management/v1/leave-management-user-guide.html">leave</a>
+policy cannot automatically account for scheduled shift days-off,
+preventing accurate leave tracking for employees with complex shift
+schedules. (TSSD-2858)</p>
+</div>
+<div class="warning-box">
+<p><strong>⚠️ Timesheets Cannot Handle Midnight-Spanning
+Shifts</strong></p>
+<p>Time entries that span across midnight must be manually split into
+separate entries, creating administrative overhead. (TSSD-4285)</p>
+</div>
+<div class="warning-box">
+<p><strong>⚠️ Single Check-in/Check-out Per Shift</strong></p>
+<p>System only supports one check-in and check-out per shift, preventing
+accurate tracking in dynamic environments requiring multiple attendance
+points. (TSSD-2957)</p>
+</div>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Impact</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No bulk shift copying functionality</td>
+<td>Must manually create individual employee schedules</td>
+<td>Medium (AV-8632)</td>
+</tr>
+<tr>
+<td>Manager override issues with consecutive shifts</td>
+<td>Cannot adjust times that appear to overlap with previous shift end
+times</td>
+<td>Medium (OS-739)</td>
+</tr>
+<tr>
+<td>Check-out restricted outside time windows</td>
+<td>Prevents accurate logging for non-standard shift scenarios</td>
+<td>Medium (AV-8693)</td>
+</tr>
+<tr>
+<td>No native shift publication mechanism</td>
+<td>Manual communication required to distribute draft schedules to
+employees</td>
+<td>Medium (AV-9243)</td>
+</tr>
+<tr>
+<td>No bulk import from Excel</td>
+<td>Restricted to manual individual shift entry</td>
+<td>Medium (TSSD-1085)</td>
+</tr>
+<tr>
+<td>Filters not working for shift visualizations</td>
+<td>Cannot get accurate filtered views of employee shift data</td>
+<td>Medium (AV-1994)</td>
+</tr>
+<tr>
+<td>No overlapping shift validation</td>
+<td>System permits overlapping work timings without warnings</td>
+<td>Medium (OS-641)</td>
+</tr>
+<tr>
+<td>View filter uses OR logic instead of AND</td>
+<td>Cannot precisely filter out day-off shifts with office
+parameters</td>
+<td>Medium (OS-716)</td>
+</tr>
+<tr>
+<td>Wrong shift details after first shift checkout</td>
+<td>Cannot dynamically display shift information based on current
+attendance status</td>
+<td>Medium (OS-800)</td>
+</tr>
+<tr>
+<td>Historical shift assignments persist</td>
+<td>Past assignments override current work week configurations in
+attendance records</td>
+<td>Medium (TSSD-4831)</td>
+</tr>
+<tr>
+<td>No center-wide shift view for employees</td>
+<td>Employees cannot see colleague shifts within same location</td>
+<td>Medium (TSSD-3918)</td>
+</tr>
+<tr>
+<td>Line manager permissions not configurable</td>
+<td>Cannot restrict edit access for attendance records</td>
+<td>Medium (TSSD-3317)</td>
+</tr>
+<tr>
+<td>Shifts require publication before check-in</td>
+<td>Check-ins rejected if received before shift publication or after
+status changes</td>
+<td>Medium (TSSD-3555)</td>
+</tr>
+<tr>
+<td>No work timing export functionality</td>
+<td>Must rely on manual workarounds or support team intervention</td>
+<td>Medium (TSSD-3642)</td>
+</tr>
+<tr>
+<td>No flexible filtering within work center</td>
+<td>Line managers cannot view only their reporting employees while
+referencing other shifts</td>
+<td>Medium (TSSD-3848)</td>
+</tr>
+<tr>
+<td>24-hour shift configuration complexity</td>
+<td>Day boundary reset at midnight complicates 24-hour shift setup</td>
+<td>Medium (TSSD-2623)</td>
+</tr>
+</tbody>
+</table>
+<div class="info-box">
+<p><strong>Attendance Record Auto-Removal:</strong> System automatically
+removes attendance records when employee is on leave, which may not be
+transparent for complex shift schedules. (OS-721)</p>
+</div>
+<div class="info-box">
+<p><strong>Browser Compatibility:</strong> Safari 10.1 has inconsistent
+URLSearchParams behavior, limiting reliable query parameter parsing.
+(AV-2173)</p>
+</div>
+<div class="info-box">
+<p><strong>Date Display in Edit Dialog:</strong> Edit dialog has
+intermittent rendering issue where date information fails to display
+consistently. (AV-1915)</p>
+</div>
+<div class="info-box">
+<p><strong>Split Shift Creation from Cell:</strong> Cannot create split
+shifts directly from Shift cell interface. (OS-299)</p>
+</div>
+<div class="info-box">
+<p><strong>Active Shifts Display Inconsistency:</strong> Active shifts
+(today/yesterday) not displayed as consolidated blocks, creating visual
+inconsistency. (OS-605)</p>
+</div>
+<div class="info-box">
+<p><strong>Shift Copying Constraint:</strong> Modified shifts are
+intentionally not transferred during copy operations to maintain
+schedule integrity. (OS-597)</p>
+</div>
+<div class="info-box">
+<p><strong>Excel Export Visual Consistency:</strong> Excel export lacks
+visual consistency with platform’s native table view. (AV-2657)</p>
+</div>
+<div class="info-box">
+<p><strong>Mobile Shift Editing:</strong> Mobile shift scheduler has
+functional constraint preventing successful shift editing. (OS-98)</p>
+</div>
+</section>
+<section id="back-to-back-shift-handling-phase-2" class="subsection">
+<h3>Back-to-Back Shift Handling (Phase 2)</h3>
+<p>Configurable window between shift end and next start determines
+checkout behavior:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>System Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Within configured window</td>
+<td>Checkout allowed normally</td>
+</tr>
+<tr>
+<td>At next shift start time</td>
+<td>Check-in triggers automatic checkout for previous shift</td>
+</tr>
+<tr>
+<td>Beyond configured window</td>
+<td>Normal checkout process applies</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="deduction-policy-considerations" class="subsection">
+<h3>Deduction Policy Considerations</h3>
+<p>Absenteeism calculations across multiple shifts require consideration
+of hourly rate versus daily wage structures:</p>
+<ul>
+<li>For employees with <strong>2 shifts per day</strong>, all attendance
+deduction amounts (late arrival, early departure, absence) are
+automatically <strong>halved per shift</strong>. This prevents
+double-penalizing employees who work split shifts.</li>
+<li>Each shift generates its own independent attendance record with its
+own late/early/absent status.</li>
+<li><a
+href="https://mashapajfhp.github.io/user-guides/overtime/v2/overtime-user-guide.html">Overtime</a>
+(T&amp;P adjustments) cannot be added when an employee has multiple
+published shifts on the same day.</li>
+</ul>
+</section>
+</div>
+</section>
+<section id="troubleshooting-edge-cases"
+class="section-troubleshooting-edge-cases">
+<section id="troubleshooting-edge-cases" class="section-header">
+<h2>Troubleshooting &amp; Edge Cases</h2>
+</section>
+<div class="section-body">
+<section id="common-issues" class="subsection">
+<h3>Common Issues</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cannot create second shift on same day</td>
+<td>Day off exists on that day or shift overlap detected</td>
+<td>Remove day off assignment or adjust shift times to eliminate overlap
+with adjacent days</td>
+</tr>
+<tr>
+<td>Employee marked absent despite checking in</td>
+<td>Shift not published as working day before check-in received</td>
+<td>Ensure shifts are published before employees attempt check-in;
+check-ins before publication are rejected</td>
+</tr>
+<tr>
+<td>Cannot edit time for consecutive shifts</td>
+<td>System validation prevents times that appear to overlap with
+previous shift</td>
+<td>Ensure clear time separation between shifts; contact support if
+legitimate consecutive shifts are blocked</td>
+</tr>
+<tr>
+<td>Bulk deletion cannot be undone</td>
+<td>30-second undo window expired</td>
+<td>Recreate shifts using Schedule Planner or copy from previous week;
+no recovery after undo window</td>
+</tr>
+<tr>
+<td>Overtime not available for multiple shifts</td>
+<td>System restriction when multiple shifts exist in same day</td>
+<td>Schedule overtime as separate shift or use Time &amp; Pay
+adjustments after attendance recorded</td>
+</tr>
+<tr>
+<td>Leave calculation incorrect for shift workers</td>
+<td>Working days policy does not integrate with shift schedule</td>
+<td>Manually adjust leave calculations or use calendar days policy
+instead of working days</td>
+</tr>
+<tr>
+<td>Cannot check out after midnight</td>
+<td>Shift spans day boundary and system resets at midnight</td>
+<td>Configure shift to end at 11:59 PM and create second shift starting
+at 12:00 AM for overnight coverage</td>
+</tr>
+<tr>
+<td>Historical attendance shows wrong shift</td>
+<td>Past shift assignments persist after work week configuration
+change</td>
+<td>Historical records are not automatically recalculated; manually
+adjust attendance records if needed</td>
+</tr>
+<tr>
+<td>Shift scheduler filters not updating</td>
+<td>Statistical visualizations do not refresh when filters applied</td>
+<td>Refresh page or clear filters and reapply; known limitation with
+filter functionality</td>
+</tr>
+<tr>
+<td>Audit logs missing for shift changes</td>
+<td>Admin panel bug prevents display of shift scheduler logs</td>
+<td>Contact support for database-level audit trail; UI logs unavailable
+for affected entities</td>
+</tr>
+<tr>
+<td>Scheduler cannot see work center</td>
+<td>Scheduler not assigned to the work center</td>
+<td>Go to Settings → Attendance → Work Centers for Shift Scheduling →
+Edit the work center → Add the scheduler as the assigned scheduler</td>
+</tr>
+<tr>
+<td>Scheduler can see employees but cannot manage shifts</td>
+<td>Scheduler role assigned but not linked to work center</td>
+<td>Ensure the scheduler is explicitly set as the work center’s
+scheduler, not just given the Shift Scheduler role</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="edge-cases" class="subsection">
+<h3>Edge Cases</h3>
+<ul>
+<li><strong>Shift publication timing:</strong> Overtime policy
+eligibility evaluated at check-in time, not shift publication time;
+order of operations does not matter.</li>
+<li><strong>Modified shift copying:</strong> System intentionally
+prevents copying of modified shifts to maintain schedule integrity; only
+original published shifts can be duplicated.</li>
+<li><strong>Multiple check-ins per shift:</strong> System supports only
+one check-in and one check-out per shift; employees requiring multiple
+attendance points must use workarounds.</li>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/timesheets/v1/timesheets-user-guide.html">Timesheet</a>
+midnight boundary:</strong> Time entries spanning midnight must be
+manually split into separate entries for each day.</li>
+<li><strong>Day off with check-in allowed:</strong> Blocks second shift
+creation even though check-in is permitted; system treats as day off for
+scheduling purposes.</li>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/biometric-attendance/v2/biometric-attendance-user-guide.html">Biometric</a>
+integration:</strong> Works with existing threshold logic; no special
+handling required for multiple shifts per day.</li>
+<li><strong>Occurrence tracking:</strong> Late/absent/early departure
+occurrences calculated independently per shift, not aggregated across
+day.</li>
+<li><strong>Schedule planner limitations:</strong> ‘All’ option not
+available when scheduling split shifts; must select specific work
+centers.</li>
+<li><strong>Copy functionality restrictions:</strong> Disabled when
+‘all’ work center selected; shifts may be skipped due to conflicts or
+restrictions.</li>
+<li><strong><a
+href="https://mashapajfhp.github.io/user-guides/leave-management/v1/leave-management-user-guide.html">Leave</a>
+request impact:</strong> Creating leave request automatically removes
+attendance records for that day, affecting shift-based tracking.</li>
+</ul>
+</section>
+<section id="workarounds-for-known-gaps" class="subsection">
+<h3>Workarounds for Known Gaps</h3>
+<ul>
+<li><strong>No bulk import:</strong> Use Schedule Planner to create
+shifts for multiple employees simultaneously, or use Copy Schedule
+feature to duplicate weekly patterns.</li>
+<li><strong>No shift publication notification:</strong> Manually
+communicate schedule changes via email or team messaging until native
+notification feature available.</li>
+<li><strong>Cannot export work timings:</strong> Request Excel export
+from support team or document configurations in external
+spreadsheet.</li>
+<li><strong>Line manager permission control:</strong> Use role-based
+access at company level; granular attendance permissions not
+configurable per manager.</li>
+<li><strong>No center-wide view:</strong> Share shift schedules via
+exported reports or external calendar system for team visibility.</li>
+<li><strong>Midnight-spanning shifts:</strong> Configure as two
+consecutive shifts (11:59 PM end, 12:00 AM start) or use 24-hour work
+timing with manual <a
+href="https://mashapajfhp.github.io/user-guides/timesheets/v1/timesheets-user-guide.html">timesheet</a>
+adjustments.</li>
+</ul>
+</section>
+</div>
+</section>
+<section id="support-resources" class="section-support-resources">
+<section id="faqs-support" class="section-header">
+<h2>FAQs &amp; Support</h2>
+</section>
+<div class="section-body">
+<section id="frequently-asked-questions" class="subsection">
+<h3>Frequently Asked Questions</h3>
+<div class="faq-accordion">
+<p>Can I schedule more than 2 shifts per employee per day?</p>
+<p>No. The system currently limits employees to a maximum of 2 shifts
+per day. This restriction was implemented during the split shifts
+feature launch.</p>
+<p>Can I bulk upload shifts from Excel?</p>
+<p>No. The platform does not support direct Excel import for shift
+scheduling. Use the Schedule Planner or copy functionality to manage
+multiple shifts efficiently.</p>
+<p>Why can’t I schedule overtime (T&amp;P adjustments) when an employee
+has multiple shifts?</p>
+<p>The system does not support scheduling <a
+href="https://mashapajfhp.github.io/user-guides/overtime/v2/overtime-user-guide.html">overtime</a>
+when multiple published shifts exist for the same day. This is a known
+limitation from the <a
+href="https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html">split
+shifts</a> implementation.</p>
+<p>Can I schedule shifts on an employee’s day off?</p>
+<p>No. The system prevents scheduling shifts on days marked as day off,
+including days with check-in allowed status.</p>
+<p>How do I handle 24-hour shifts that cross midnight?</p>
+<p>The system resets at midnight, so you cannot use a simple
+12am-11:59pm timeframe. Configure the shift to end at 11:59pm and create
+a second shift starting at 12:00am for the next day.</p>
+<p>Why can’t I edit shifts for back-to-back schedules?</p>
+<p>The system has strict validation that prevents time entries appearing
+to overlap with previous shift end times, even for consecutive shifts.
+This affects manager override capabilities.</p>
+<p>Can employees check in before their shift is published?</p>
+<p>No. Shifts must be published as working days before check-ins are
+accepted. Check-ins received before publication are automatically
+rejected.</p>
+<p>Does the system track audit logs for shift changes?</p>
+<p>Audit logging for shift scheduler was limited before October 9, 2023.
+Current logs may not show user-level details for who published or
+modified shifts during earlier periods.</p>
+<p>Can I copy shifts to multiple employees at once?</p>
+<p>Yes, but the ‘All’ option is not available when scheduling split
+shifts. You must select specific employees when copying shifts with
+multiple segments per day.</p>
+<p>Why don’t leave calculations consider my scheduled days off?</p>
+<p>The <a
+href="https://mashapajfhp.github.io/user-guides/leave-management/v1/leave-management-user-guide.html">leave</a>
+calculation system does not integrate with shift scheduling data. It
+calculates deductions based on the work week profile configuration, not
+actual scheduled shifts or days off.</p>
+<p>Can line managers edit attendance records?</p>
+<p>Yes. Line managers have default edit access for attendance records
+that cannot be restricted by super admins. This is the current system
+behavior.</p>
+<p>How long can I undo a bulk shift deletion?</p>
+<p>You have 30 seconds to undo a bulk deletion after confirming the
+action. After this window, the deletion is permanent.</p>
+<p>Can I schedule shifts for an entire year in advance?</p>
+<p>Shifts can be scheduled up to 6 months in advance. To cover a full
+year, you would need to plan in two 6-month cycles. Use the Copy
+Schedule feature to duplicate weekly patterns and reduce manual effort
+when extending schedules.</p>
+<p>How do shifts that span past midnight work?</p>
+<p>The system resets at midnight, so shifts cannot natively span across
+the day boundary. Configure the shift to end at 11:59 PM and create a
+second shift starting at 12:00 AM the next day. Overnight shifts are
+indicated with a moon icon in the schedule grid.</p>
+<p>Can I set up different pay rates for different shift types?</p>
+<p>Shift scheduling assigns work timings and tracks attendance, but does
+not directly configure pay rates per shift type. Pay rates are managed
+through <a
+href="https://mashapajfhp.github.io/user-guides/payroll-management/v1/payroll-management-user-guide.html">payroll</a>
+configuration. Attendance-based deductions (late arrival, early
+departure, absence) are calculated based on the work timing’s configured
+rules and the employee’s salary structure.</p>
+<p>Does the shift scheduler integrate with EMR (electronic medical
+records) systems?</p>
+<p>No. Shift scheduling is an internal workforce management feature
+within Bayzat. It does not integrate with external EMR or third-party
+systems.</p>
+<p>Can employees use the shift scheduler for self-scheduling?</p>
+<p>No. Shift scheduling is a top-down process managed by admins and
+shift schedulers. Employees cannot create, modify, or request shifts
+through the system. Schedulers assign shifts and employees receive
+notifications when schedules are published.</p>
+<p>Is there a report specifically for split shift attendance?</p>
+<p>Split shift attendance is tracked within the standard <a
+href="https://mashapajfhp.github.io/user-guides/attendance/v1/attendance-user-guide.html">attendance</a>
+reports. Each shift generates its own attendance record, so split shift
+employees will have two separate entries per day visible in the Daily
+Report under Attendance.</p>
+<p>Can I track attendance with GPS location for shift workers?</p>
+<p><a
+href="https://mashapajfhp.github.io/user-guides/attendance/v1/attendance-user-guide.html">Attendance</a>
+tracking supports geofencing and GPS-based check-in for office
+locations. When creating a shift, you assign an office location, and the
+check-in validation is based on the location settings configured for
+that office. For <a
+href="https://mashapajfhp.github.io/user-guides/biometric-attendance/v2/biometric-attendance-user-guide.html">biometric
+attendance</a> device configuration, refer to the biometric attendance
+guide.</p>
+<p>Can I use the shift scheduler for employees who don’t have fixed work
+hours?</p>
+<p>Yes. Configure a “Flexible work timing” by enabling the flexible
+toggle in the Work Timing settings. Flexible work timings allow variable
+start and end times while still tracking total hours worked.</p>
+<p>How do I set up a shift scheduler who can only manage specific
+employees?</p>
+<p>Assign the Shift Scheduler role to the user, then add them as the
+scheduler for a specific work center under Settings → Attendance → Work
+Centers for Shift Scheduling. The scheduler can only see and manage
+employees within their assigned work center(s). The scheduler must be
+added to the work center to have access.</p>
+</div>
+</section>
+<section id="getting-help" class="subsection">
+<h3>Getting Help</h3>
+<ul>
+<li><strong>Bayzat Support:</strong> Contact your Customer Success
+Manager or submit a ticket through the Help Center for shift scheduling
+assistance</li>
+<li><strong>Knowledge Base:</strong> Access detailed guides at <a
+href="https://bayzathelp.zendesk.com">bayzathelp.zendesk.com</a> for
+step-by-step instructions</li>
+<li><strong>Training Resources:</strong> Request training sessions for
+shift scheduler setup and best practices from your account team</li>
+</ul>
+</section>
+</div>
+</section>
+<section id="glossary" class="section-glossary">
+<section id="glossary" class="section-header">
+<h2>Glossary</h2>
+</section>
+<div class="section-body">
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Absent After</strong></td>
+<td>The time threshold after which an employee who has not checked in is
+automatically marked absent for their shift.</td>
+</tr>
+<tr>
+<td><strong>Attendance Record</strong></td>
+<td>A system entry that captures an employee’s check-in and check-out
+times, along with calculated attendance status for a specific
+shift.</td>
+</tr>
+<tr>
+<td><strong>Back-to-Back Shifts</strong></td>
+<td>Consecutive work shifts where the end time of one shift immediately
+precedes the start time of the next shift with minimal or no gap.</td>
+</tr>
+<tr>
+<td><strong><a
+href="https://mashapajfhp.github.io/user-guides/biometric-attendance/v2/biometric-attendance-user-guide.html">Biometric</a>
+Integration</strong></td>
+<td>System connection that enables employees to check in and out using
+fingerprint or facial recognition devices linked to their shift
+schedule.</td>
+</tr>
+<tr>
+<td><strong>Check-in</strong></td>
+<td>The action of recording an employee’s arrival at the start of their
+scheduled shift, either manually or through automated systems.</td>
+</tr>
+<tr>
+<td><strong>Check-out</strong></td>
+<td>The action of recording an employee’s departure at the end of their
+scheduled shift, used to calculate total work hours.</td>
+</tr>
+<tr>
+<td><strong>Day Off</strong></td>
+<td>A scheduled non-working day for an employee where no shift can be
+assigned, distinct from leave or public holidays.</td>
+</tr>
+<tr>
+<td><strong>Deduction Policy</strong></td>
+<td>Rules that define how salary deductions are calculated and applied
+based on attendance violations such as late arrivals or absences.</td>
+</tr>
+<tr>
+<td><strong>Draft Shift</strong></td>
+<td>A shift that has been created but not yet published, allowing
+schedulers to review and modify before making it visible to
+employees.</td>
+</tr>
+<tr>
+<td><strong>Early Departure</strong></td>
+<td>When an employee checks out before their scheduled shift end time,
+potentially triggering attendance policy violations.</td>
+</tr>
+<tr>
+<td><strong>Late Arrival</strong></td>
+<td>When an employee checks in after their scheduled shift start time,
+tracked against configured threshold levels for policy enforcement.</td>
+</tr>
+<tr>
+<td><strong>Manager Override</strong></td>
+<td>The ability for managers to manually edit or correct attendance
+records, including check-in and check-out times, after they have been
+recorded.</td>
+</tr>
+<tr>
+<td><strong>Occurrence Tracking</strong></td>
+<td>System that counts and monitors attendance violations (late, absent,
+early departure) for each shift independently to enforce policies.</td>
+</tr>
+<tr>
+<td><strong>Office Location</strong></td>
+<td>The physical workplace or branch where an employee is scheduled to
+work during their shift, used for attendance validation.</td>
+</tr>
+<tr>
+<td><strong>Overnight Shift</strong></td>
+<td>A shift where the end time is earlier than the start time (e.g.,
+10:00 PM to 6:00 AM), spanning across midnight. Displayed with a moon
+icon in the schedule grid.</td>
+</tr>
+<tr>
+<td><strong><a
+href="https://mashapajfhp.github.io/user-guides/overtime/v2/overtime-user-guide.html">Overtime</a>
+(T&amp;P Adjustment)</strong></td>
+<td>Additional work hours beyond standard shift times that require
+special scheduling and compensation through Time and Pay
+adjustments.</td>
+</tr>
+<tr>
+<td><strong>Published Shift</strong></td>
+<td>A finalized shift schedule that has been made visible to employees
+and is active for check-in tracking and attendance recording.</td>
+</tr>
+<tr>
+<td><strong>Schedule Planner</strong></td>
+<td>Tool that enables schedulers to create and assign shifts for
+multiple employees across date ranges without individual entry.</td>
+</tr>
+<tr>
+<td><strong>Shift</strong></td>
+<td>A defined work period with specific start and end times, assigned to
+an employee for a particular date and office location.</td>
+</tr>
+<tr>
+<td><strong>Shift Scheduler</strong></td>
+<td>The user role and interface responsible for creating, publishing,
+and managing employee work shifts within assigned work centers.</td>
+</tr>
+<tr>
+<td><strong>Split Shift</strong></td>
+<td>A work schedule where an employee has two separate shifts on the
+same day with a break period between them.</td>
+</tr>
+<tr>
+<td><strong>Threshold</strong></td>
+<td>The configured time allowance (in minutes) before an employee is
+marked late or absent after their scheduled shift start time.</td>
+</tr>
+<tr>
+<td><strong><a
+href="https://mashapajfhp.github.io/user-guides/timesheets/v1/timesheets-user-guide.html">Timesheet</a></strong></td>
+<td>A record of all work hours logged by an employee across their
+shifts, used for <a
+href="https://mashapajfhp.github.io/user-guides/payroll-management/v1/payroll-management-user-guide.html">payroll</a>
+calculation and attendance reporting.</td>
+</tr>
+<tr>
+<td><strong>Work Center</strong></td>
+<td>A grouping of employees managed by the same scheduler, sharing
+common office locations and work timing configurations for shift
+assignment.</td>
+</tr>
+<tr>
+<td><strong>Work Timing</strong></td>
+<td>A predefined schedule template that specifies shift start time, end
+time, and attendance rules applied when creating employee shifts.</td>
+</tr>
+<tr>
+<td><strong>Reassign Shift</strong></td>
+<td>The action of transferring a published shift from one employee to
+another while keeping the same date, work timing, and office location.
+Only available for published shifts.</td>
+</tr>
+<tr>
+<td><strong>Work Week Profile</strong></td>
+<td>Configuration that defines an employee’s standard working days and
+rest days, used for leave calculations independent of shift
+schedules.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
     </main>
 
     <footer>
       <div>Generated by Bayzat Documentation System</div>
-      <div>Last updated: 2026-02-12</div>
+      <div>Last updated: 2026-02-19</div>
     </footer>
   </div>
 </body>
