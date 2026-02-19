@@ -191,9 +191,9 @@ Answer these questions before creating shifts:
 
 <div class="subsection">
 
-### End-to-End Journey: From Planning to Publishing Shifts
+### End-to-End Journey: From Configuration to Attendance Tracking
 
-This journey covers the complete process of setting up work centers, creating shift schedules, and managing employee assignments.
+This journey covers the complete shift scheduling lifecycle — from setting up the foundational configuration through daily attendance management.
 
 </div>
 
@@ -209,11 +209,11 @@ This journey covers the complete process of setting up work centers, creating sh
 
 <div class="phase-content">
 
-#### Plan
+#### Configure Prerequisites
 
-Identify shift types, work timings, and staffing requirements across different locations.
+Set up work timings, office locations with GPS/geofencing, assign Shift Scheduler roles, and classify employees as shift workers.
 
-<a href="#product-foundation" class="phase-link">See details →</a>
+<a href="#initial-setup" class="phase-link">See details →</a>
 
 </div>
 
@@ -229,9 +229,9 @@ Identify shift types, work timings, and staffing requirements across different l
 
 <div class="phase-content">
 
-#### Configure Work Centers
+#### Organize Work Centers
 
-Set up work centers with schedulers, office locations, and work timings.
+Group employees by scheduler, office location, and available work timings to define your scheduling structure.
 
 <a href="#initial-setup" class="phase-link">See details →</a>
 
@@ -249,11 +249,11 @@ Set up work centers with schedulers, office locations, and work timings.
 
 <div class="phase-content">
 
-#### Navigate
+#### Build Shift Schedules
 
-Access the Shift Scheduler interface to begin creating employee schedules.
+Create shifts individually per cell, use Schedule Planner for bulk assignment, or Copy Schedule to repeat weekly patterns.
 
-<a href="#feature-entry-points" class="phase-link">See details →</a>
+<a href="#core-tasks" class="phase-link">See details →</a>
 
 </div>
 
@@ -269,9 +269,9 @@ Access the Shift Scheduler interface to begin creating employee schedules.
 
 <div class="phase-content">
 
-#### Create Shifts
+#### Review & Publish Shifts
 
-Assign shifts to employees using individual scheduling, schedule planner, or copy functions.
+Preview draft shifts in the schedule grid, verify coverage across employees and dates, then publish to notify employees via mobile app.
 
 <a href="#core-tasks" class="phase-link">See details →</a>
 
@@ -289,9 +289,9 @@ Assign shifts to employees using individual scheduling, schedule planner, or cop
 
 <div class="phase-content">
 
-#### Review & Publish
+#### Adjust & Reassign
 
-Save shifts as drafts for review, then publish to notify employees via mobile app.
+Edit shift details, reassign published shifts to different employees, delete shifts in bulk, or schedule split shifts for multi-segment days.
 
 <a href="#core-tasks" class="phase-link">See details →</a>
 
@@ -309,9 +309,9 @@ Save shifts as drafts for review, then publish to notify employees via mobile ap
 
 <div class="phase-content">
 
-#### Manage & Maintain
+#### Track Attendance
 
-Edit, delete, reassign shifts, and handle split shifts or bulk operations as needed.
+Monitor employee check-ins against published shifts, review the Daily Report for schedule vs. actual times, and override attendance records when needed.
 
 <a href="#core-tasks" class="phase-link">See details →</a>
 
