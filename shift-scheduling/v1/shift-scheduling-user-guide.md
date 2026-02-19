@@ -102,6 +102,36 @@ Shift schedules are transactional assignments that reference configuration templ
 
 </div>
 
+<div class="subsection">
+
+### What Can Employees Do?
+
+Employees interact with Shift Scheduling through the **Bayzat mobile app only** — they do not have access to the web-based Shift Scheduler interface. Here is what employees can and cannot do:
+
+**Employees CAN:**
+- View their published shift schedule in the **"My Schedule"** section of the mobile app
+- See shift details including date, start/end time, and office location
+- See the current shift highlighted as **"Happening now"**
+- View next shift details when working split shifts (2 shifts in one day)
+- **Check in** at shift start time using the attendance widget on the mobile app home page
+- **Check out** at shift end time using the same attendance widget
+- Receive **push notifications** when new shifts are published or existing shifts are changed
+
+**Employees CANNOT:**
+- Create, edit, or delete shifts — scheduling is managed exclusively by admins and Shift Schedulers
+- Swap shifts directly with other employees — there is no self-service shift swap feature
+- View other employees' shift schedules
+- Access the Shift Scheduler web interface
+- Check in before a shift is published — check-ins are rejected for unpublished shifts
+
+<div class="info-box">
+
+**Shift change requests via Employee Tickets:** While employees cannot modify shifts directly, your organization can configure a **Shift Change Request** ticket type under **Settings → Employee Tickets**. When configured, employees assigned to this ticket type can submit formal shift change requests through the ticketing system. This requires an admin to: (1) create and activate the "Shift Change Request" ticket type in the Attendance category, and (2) assign eligible employees to the ticket. See [Employee Tickets](https://mashapajfhp.github.io/user-guides/employee-tickets/v1/employee-tickets-user-guide.html) for setup instructions.
+
+</div>
+
+</div>
+
 </div>
 
 </div>
@@ -902,37 +932,340 @@ Remove multiple shifts simultaneously across employees and date ranges to correc
 
 </div>
 
-<div class="subsection">
+<div class="subsection employee-tasks-header">
 
-### Task: View and Track Employee Shifts (Employee Perspective)
+### Employee Key Tasks
 
-Employees view their assigned shifts and check in/out for scheduled work periods.
+The following tasks cover what employees can do within the Shift Scheduling system. Shift scheduling on Bayzat follows a **top-down model** — all shift creation, editing, and deletion is managed exclusively by admins and Shift Schedulers. Employees interact with the system through the **Bayzat mobile app only**.
 
-#### Subtask: View Shift Schedule in Mobile App
+<div class="warning-box">
 
-- Open Bayzat mobile app
-- Navigate to "My Schedule" section
-- View weekly schedule with shift details (date, time, office location)
-- See current shift highlighted as "Happening now"
-- For split shifts, see next shift details displayed
-
-**Expected Outcome:** Employee sees complete shift schedule with all assigned work periods, locations, and timings.
-
-<div class="info-box">
-
-**Top-Down Scheduling Only:** Shift scheduling is managed exclusively by admins and shift schedulers. Employees cannot create, modify, or request shifts through the system — they can only view their assigned published shifts and check in/out for scheduled work periods.
+**Web App Limitation:** Employees **cannot** view their shift schedule from the Bayzat web app. The employee web portal does not include a Shifts section under the Time menu, and direct navigation to the Shift Scheduler page returns an "unauthorized" error. All shift-related employee tasks require the **Bayzat mobile app**.
 
 </div>
 
-#### Subtask: Check In and Out for Shifts
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/51-employee-time-menu.png" class="screenshot" loading="lazy" alt="Employee Time menu showing no Shifts section" />
+<figcaption>Employee web portal Time menu — shows Leaves, Attendance, and Timesheets only. No Shifts section is available for employees on the web app.</figcaption>
+</figure>
 
-- At shift start time, click attendance widget on mobile app home page
-- Select "Check in" to record shift start
-- At shift end time, click attendance widget
-- Select "Check out" to record shift end
-- For split shifts, repeat check-in/out for each shift segment
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/53-employee-shift-scheduler-blocked.png" class="screenshot" loading="lazy" alt="Employee blocked from accessing Shift Scheduler" />
+<figcaption>Employees who navigate directly to the Shift Scheduler URL see "You are not authorized to view this content"</figcaption>
+</figure>
 
-**Expected Outcome:** Attendance recorded for shift. System calculates late/early/absent status independently per shift for split shift scenarios.
+</div>
+
+<div class="subsection">
+
+### Task: View Published Shift Schedule
+
+View your assigned shift schedule to know when and where you are expected to work.
+
+#### Subtask: Access My Schedule in the Mobile App
+
+- Open the **Bayzat mobile app** on your smartphone
+- Tap the **"Work"** tab at the bottom of the screen, then select **"My Schedule"**
+  - Alternatively, go to the **menu tab** and select **"My Schedule"**
+- View your weekly schedule showing all published shifts
+
+**Expected Outcome:** You see a weekly calendar view displaying all your assigned shifts.
+
+#### Subtask: Read Shift Details
+
+Each shift entry in My Schedule displays the following information:
+
+| Detail | Description |
+|--------|-------------|
+| **Day and date** | The calendar day the shift falls on |
+| **Shift timing** | Start and end time of the shift (e.g., 09:00 AM – 06:00 PM) |
+| **Branch/office location** | The office or branch where the shift is assigned |
+| **Current shift indicator** | Active shift highlighted as "Happening now" |
+| **Split shift details** | If you have two shifts in one day, both are shown with their respective timings |
+
+The schedule also clearly marks:
+- **Days off** — scheduled rest days
+- **Leave days** — approved leave overlays
+- **Public holidays** — national/company holidays
+- **Weekends** — based on your work week profile
+
+<div class="info-box">
+
+**Only Published Shifts Are Visible:** You can only see shifts that your scheduler has published. Draft shifts (still being planned) are not visible to employees. If you do not see upcoming shifts, your scheduler may not have published them yet.
+
+</div>
+
+</div>
+
+<div class="subsection">
+
+### Task: Check In and Check Out for Shifts
+
+Record your attendance at the start and end of each shift using the mobile app attendance widget.
+
+#### Subtask: Check In for a Shift
+
+- Open the **Bayzat mobile app** on your smartphone
+- On the **home screen**, tap the **Attendance check-in widget**
+- Tap **"Check in"** when you arrive at your work location at the start of your shift
+  - If your company requires it, you may need to **take a live photo** for verification
+  - If **geofencing** is enabled, you must be within the allowed location radius to check in successfully
+
+#### Subtask: Check Out from a Shift
+
+- At the end of your shift, open the **Attendance widget** again on the home screen
+- Tap **"Check out"** as you leave your work location
+
+**Expected Outcome:** Your attendance is recorded for the shift. The system tracks your check-in and check-out times against the scheduled shift timing to calculate your attendance status.
+
+<div class="info-box">
+
+**Add Comments to Check-In/Out:** You can leave comments with your check-in or check-out (for example, explaining a late arrival). These comments are visible to your admin or line manager and can help provide context for any attendance discrepancies.
+
+</div>
+
+#### Subtask: Handle Late Arrival or Missed Check-In
+
+The system applies attendance rules automatically based on the thresholds configured by your admin in the [Work Timings](https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html) settings:
+
+| Scenario | What Happens |
+|----------|-------------|
+| **Late check-in** | You receive a warning that you have exceeded the allowed late check-in time. You can still check in, but your status may be marked as **Late Arrival** or **Absent** depending on company policy thresholds |
+| **Missed check-out** | Your working hours for that day will not be counted in full, but you will still be marked as **Present**. Contact your admin to manually correct your check-out time |
+| **No check-in at all** | You will be marked as **Absent** for the shift. If the shift was not published, you will not receive attendance reminders |
+| **On leave or day off** | You are **not required** to check in or out and will not receive check-in reminders |
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/38-edit-work-timing-dialog.png" class="screenshot" loading="lazy" alt="Work Timing thresholds" />
+<figcaption>Work Timing configuration showing late arrival threshold, early departure threshold, and absent-after threshold — these settings determine when an employee is marked Late, Early Departure, or Absent</figcaption>
+</figure>
+
+</div>
+
+<div class="subsection">
+
+### Task: Handle Split Shifts (Two Shifts Per Day)
+
+When your scheduler assigns you two separate shifts in a single day (a split shift), you need to check in and out for each shift independently.
+
+#### Subtask: View Split Shift Schedule
+
+- Open **My Schedule** in the Bayzat mobile app
+- On a split-shift day, you will see **two separate shift entries** for the same date — each with its own timing and location
+- The app shows the next shift details after you complete the first shift
+
+#### Subtask: Check In/Out for Each Shift Segment
+
+- **First shift:** Check in at the start time → Check out at the end time
+- **Break between shifts:** You are off-duty during the gap between shifts
+- **Second shift:** Check in again at the second shift start time → Check out at the second shift end time
+
+**Expected Outcome:** Two separate attendance records are created for the day — one per shift. Each shift is tracked independently for lateness, absence, and hours worked.
+
+<div class="info-box">
+
+**Split Shift Deduction Rules:** If you are absent for one shift of a split-shift day, the absence deduction is calculated based on **half a day**, not a full day. Each shift segment is treated as an independent attendance event with its own status calculation. This means you could be marked "Present" for the morning shift and "Late" for the evening shift on the same day.
+
+</div>
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/39-split-shifts-learn-more.png" class="screenshot" loading="lazy" alt="Split shifts information" />
+<figcaption>Split shift configuration — when enabled, employees can be assigned two shifts in a single day with independent attendance tracking per shift</figcaption>
+</figure>
+
+</div>
+
+<div class="subsection">
+
+### Task: Understand Attendance Status and Deductions
+
+Learn how the system calculates your attendance status for each shift and what triggers deductions.
+
+#### Subtask: Attendance Status Reference
+
+After you check in and out, the system compares your actual times against the configured shift thresholds to assign one of these statuses:
+
+| Status | Meaning | Trigger |
+|--------|---------|---------|
+| **Present** | You checked in and out within the acceptable timeframes | Check-in before late threshold; check-out after early departure threshold |
+| **Late Arrival** | You checked in after the grace period | Check-in time exceeds the late arrival threshold configured for the work timing |
+| **Early Departure** | You checked out before the shift end minus the grace period | Check-out time is earlier than shift end minus the early departure threshold |
+| **Absent** | You did not check in at all, or checked in extremely late | No check-in recorded, or check-in time exceeds the absent-after threshold |
+| **On Leave** | You have an approved leave for this date | Leave request approved covering this shift date |
+| **Day Off** | This is a scheduled rest day | Scheduler assigned a day off or the date falls on your weekend |
+
+#### Subtask: View Your Attendance Records on the Web
+
+While you cannot view shifts on the web app, you **can** view your attendance history:
+
+- Log in to the **Bayzat web app** at app.bayzat.com
+- Navigate to **Time → Attendance → My Attendance**
+- View your attendance report showing: Date, Schedule (shift times), Status, Check In, Breaks, Check Out, Hours Worked, Extra Hours, Number of Visits, and Total Visits Time
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/52-employee-my-attendance.png" class="screenshot" loading="lazy" alt="Employee My Attendance report" />
+<figcaption>Employee's My Attendance report on the web app — shows attendance records with schedule times, status, check-in/out times, and hours worked</figcaption>
+</figure>
+
+<div class="info-box">
+
+**Attendance Corrections:** If you believe your attendance status is incorrect (for example, you were marked absent but did check in), contact your admin or line manager. They can manually override attendance records through Time → Attendance → Employee Attendance → Daily Report.
+
+</div>
+
+</div>
+
+<div class="subsection">
+
+### Task: Receive Shift Notifications
+
+Stay informed about your schedule through automatic push notifications.
+
+#### Subtask: Notification Triggers
+
+You receive **push notifications** on your mobile device in the following situations:
+
+| Event | Notification |
+|-------|-------------|
+| **New shifts published** | When your scheduler publishes new shifts that include you, you are notified of your upcoming schedule |
+| **Shift changes** | When a published shift is modified (time, location, or work timing changed), you receive an update notification |
+| **Shift deleted** | When a published shift assigned to you is removed from the schedule |
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/31-publish-shifts-dialog.png" class="screenshot" loading="lazy" alt="Publish shifts dialog with notification warning" />
+<figcaption>When schedulers publish shifts, the system displays a notification warning — employees included in the published shifts receive push notifications on their mobile devices</figcaption>
+</figure>
+
+<div class="info-box">
+
+**Ensure Notifications Are Enabled:** To receive shift notifications, make sure push notifications are enabled for the Bayzat app in your phone's notification settings. If you are not receiving notifications, check that you have not disabled them at the device level.
+
+</div>
+
+</div>
+
+<div class="subsection">
+
+### Task: Handle Overnight Shifts
+
+Overnight shifts span across two calendar days (for example, 10:00 PM to 6:00 AM the next day). These shifts require attention to the check-in/out timing.
+
+#### Subtask: Check In/Out for Overnight Shifts
+
+- **Check in** on **Day 1** at the shift start time (e.g., 10:00 PM)
+- Continue working through midnight
+- **Check out** on **Day 2** at the shift end time (e.g., 6:00 AM)
+
+**Expected Outcome:** The system records the entire shift as a single attendance entry linked to Day 1 (the shift start date). Your hours worked span across midnight but are counted as one continuous shift.
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/01-shift-scheduler-main-view.png" class="screenshot" loading="lazy" alt="Shift scheduler showing overnight shifts with moon icon" />
+<figcaption>Overnight shifts are indicated with a moon icon in the scheduler grid (admin view). Employees see these as regular shifts in their mobile schedule with start time on Day 1 and end time on Day 2.</figcaption>
+</figure>
+
+<div class="info-box">
+
+**Overnight Shift Identification:** In the admin's scheduler grid, overnight shifts display a **moon icon** to indicate they span past midnight. As an employee, you will see the full shift timing in your My Schedule view (e.g., "10:00 PM – 6:00 AM") so you know the shift crosses into the next day.
+
+</div>
+
+</div>
+
+<div class="subsection">
+
+### Task: Request Leave When Shifts Are Assigned
+
+Understand how leave requests interact with your shift schedule.
+
+#### Subtask: Submit a Leave Request
+
+- Open the **Bayzat mobile app** or **web app**
+- Navigate to **Time → Leaves → My Leaves**
+- Click **"New Leave Request"**
+- Select the leave type, dates, and provide a reason
+- Submit the request for approval
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/54-employee-my-leaves.png" class="screenshot" loading="lazy" alt="Employee leave request page" />
+<figcaption>Employee leave request page showing leave balances and the "New Leave Request" button</figcaption>
+</figure>
+
+#### Subtask: Understand Leave and Shift Interaction
+
+When you have approved leave on a day where shifts are assigned:
+
+- Your scheduler will see an **"On Leave"** overlay on your shift cell in the scheduler grid, showing the leave type (e.g., "On Leave - Vacation")
+- You are **not required** to check in or out on leave days
+- You will **not** receive attendance reminders for leave days
+- The shift remains on the schedule but your attendance status shows as **On Leave** instead of Absent
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/22-specific-work-center-with-leave.png" class="screenshot" loading="lazy" alt="Scheduler grid showing leave overlay on shift" />
+<figcaption>Admin view of the scheduler grid showing "On Leave" overlay on a shift cell — this is how your scheduler sees your leave days</figcaption>
+</figure>
+
+<div class="warning-box">
+
+**Leave Does Not Auto-Delete Shifts:** Submitting a leave request does not automatically remove or modify your assigned shifts. Your scheduler must manually manage the schedule if shifts need to be reassigned. If you are unsure whether your shift has been adjusted after a leave approval, check your My Schedule in the mobile app or contact your scheduler.
+
+</div>
+
+</div>
+
+<div class="subsection">
+
+### Employee Limitations and Troubleshooting
+
+#### What Employees Cannot Do
+
+Shift scheduling on Bayzat is a **top-down system**. The following actions are **not available** to employees:
+
+- **Cannot view shifts on the web app** — shift schedules are accessible only through the Bayzat mobile app
+- **Cannot create, edit, or delete shifts** — all scheduling is managed by admins and Shift Schedulers
+- **Cannot swap shifts** with other employees through the system — there is no self-service shift swap feature
+- **Cannot self-schedule** — there is no option for employees to pick or bid on available shifts
+- **Cannot view other employees' schedules** — you can only see your own assigned shifts
+- **Cannot check in for unpublished shifts** — check-ins are only accepted for published shifts
+- **Cannot download attendance records** from the web portal
+
+#### Requesting Shift Changes via Employee Tickets
+
+While employees cannot modify shifts directly, Bayzat supports a **Shift Change Request** ticket type that allows employees to formally request schedule changes through the [Employee Tickets](https://mashapajfhp.github.io/user-guides/employee-tickets/v1/employee-tickets-user-guide.html) system.
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/63-employee-tickets-shift-change-request.png" class="screenshot" loading="lazy" alt="Shift Change Request ticket type in Employee Tickets settings" />
+<figcaption>Shift Change Request ticket type available under the Attendance category in Employee Tickets settings</figcaption>
+</figure>
+
+**Prerequisites for employees to use this feature:**
+
+1. **Admin must create the ticket type** — Navigate to Settings → Employee Tickets and create a "Shift Change Request" ticket type in the Attendance category
+2. **Ticket type must be Active** — Ensure the ticket type status is set to Active
+3. **Employees must be assigned** — Only employees assigned to the ticket type can submit requests; assignment is managed by the admin in the ticket type configuration
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/64-shift-change-request-config.png" class="screenshot" loading="lazy" alt="Shift Change Request ticket configuration showing fields and approval settings" />
+<figcaption>Configuration of the Shift Change Request ticket type with custom fields and approval workflow</figcaption>
+</figure>
+
+<div class="warning-box">
+
+**This is not automatic.** The Shift Change Request ticket type must be explicitly configured by an admin. Submitting a ticket does not automatically change the shift — the request goes through the configured approval workflow, and an admin or Shift Scheduler must manually update the shift schedule after approval.
+
+</div>
+
+#### Troubleshooting Common Issues
+
+| Issue | Likely Cause | Resolution |
+|-------|-------------|------------|
+| "I don't see any shifts in My Schedule" | Shifts have not been published yet, or you are not assigned to a work center | Contact your scheduler to confirm your shifts have been published |
+| "I was marked Absent but I checked in" | Your check-in may have been after the absent-after threshold, or the shift was changed after you checked in | Contact your admin to review and override the attendance record |
+| "I can't check in — the widget doesn't work" | The shift may not be published yet, or you are outside the geofencing radius | Verify the shift is published in My Schedule; ensure you are at the correct work location |
+| "My shift shows the wrong office location" | The scheduler assigned the shift to a different office | Contact your scheduler to update the shift with the correct office location |
+| "I'm not receiving shift notifications" | Push notifications may be disabled for the Bayzat app | Check your device notification settings and ensure Bayzat notifications are enabled |
+| "I see two shifts on the same day" | You are assigned a split shift (two separate work periods in one day) | This is expected — check in and out separately for each shift segment |
+| "Overtime is showing unexpectedly" | Weekend or holiday shifts may trigger extra hours calculation | This depends on your company's overtime and Days in Lieu policy; contact HR for clarification |
+| "I want to change my shift but can't" | Employees cannot modify shifts directly | Ask your admin if a Shift Change Request ticket type is configured; if so, submit a request through Employee Tickets. Otherwise, contact your scheduler directly |
 
 </div>
 
@@ -1439,7 +1772,7 @@ No. Shift scheduling is an internal workforce management feature within Bayzat. 
 
 Can employees use the shift scheduler for self-scheduling?
 
-No. Shift scheduling is a top-down process managed by admins and shift schedulers. Employees cannot create, modify, or request shifts through the system. Schedulers assign shifts and employees receive notifications when schedules are published.
+No. Shift scheduling is a top-down process managed by admins and shift schedulers. Employees cannot create or modify shifts directly. However, organizations can configure a **Shift Change Request** ticket type under Settings → Employee Tickets to allow employees to formally request shift changes. The request goes through an approval workflow, and a scheduler must manually update the schedule after approval. See [Employee Tickets](https://mashapajfhp.github.io/user-guides/employee-tickets/v1/employee-tickets-user-guide.html) for setup details.
 
 Is there a report specifically for split shift attendance?
 
