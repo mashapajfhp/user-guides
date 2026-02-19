@@ -199,12 +199,12 @@ Work Timings integrates with and supports several other Attendance and HR featur
 - **[Shift Scheduling](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html):** Work timings are selected when creating shifts in the Shift Scheduler. Each shift references a work timing template for its start/end times and attendance rules.
 - **[Split Shifts](https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html):** To create split shifts (two shifts per employee per day), you need at least two work timing templates with non-overlapping time ranges configured in the same work center.
 - **Employee Profiles:** Work timing schedules are assigned to individual employees or employee groups within their profile settings
-- **Attendance Daily Reports:** Daily check-in/check-out records are validated against assigned work timing schedules to determine late arrivals, early departures, and absences
+- **[Attendance Management](https://mashapajfhp.github.io/user-guides/attendance/v1/attendance-user-guide.html):** Work Timings is a required prerequisite for Attendance — employees cannot check in or check out unless they are assigned a work timing. Daily check-in/check-out records are validated against assigned work timing schedules to determine late arrivals, early departures, and absences.
 - **Overtime Policies:** Extra hours calculated based on work timing schedules feed into overtime policy calculations for payroll
 - **Days In Lieu Policies:** Work timing configurations determine when compensatory time off is earned for working beyond scheduled hours
 - **Deductions Policies for Payroll:** Late arrival and early departure thresholds from work timings trigger payroll deductions when policies are configured
 - **Work Centers for Shift Scheduling:** Work timings can be associated with specific work centers to support location-based shift management
-- **Biometric Data Integration:** Biometric device check-ins are validated against work timing schedules to automate attendance tracking
+- **[Biometric Attendance](https://mashapajfhp.github.io/user-guides/biometric-attendance/v2/biometric-attendance-user-guide.html):** Biometric device check-ins are validated against work timing schedules to automate attendance tracking
 
 </div>
 

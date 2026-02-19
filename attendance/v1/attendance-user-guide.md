@@ -94,7 +94,7 @@ Answer these questions before configuring attendance:
 
 ### Related Features
 
-- **Work Timings** — Define schedules, thresholds, and overtime rules that validate check-ins
+- **[Work Timings](https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html)** — Define schedules, thresholds, and overtime rules that validate check-ins
 - **Work Centers** — Physical locations with their own shift schedulers
 - **Biometric Integration** — Physical devices for attendance tracking via API/CAMS
 - **Payroll** — Attendance data feeds into salary calculations
@@ -110,7 +110,7 @@ Answer these questions before configuring attendance:
 |----|----|----|
 | Bayzat Mobile App | Required for employee check-in/check-out | Required |
 | Location Services | Must be enabled on mobile devices for geo-fencing | Required |
-| Work Timings | At least one work timing configuration | Required |
+| [Work Timings](https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html) | At least one work timing configuration | Required |
 | Offices | Office locations configured with coordinates | Required |
 | Biometric Devices | Optional integration for physical attendance tracking | Optional |
 
@@ -353,7 +353,7 @@ Navigate to Settings → Attendance → General Settings. Configure check-in/out
 
 #### Set Up Work Timings
 
-Go to Settings → Attendance → Work Timings. Create timing schedules defining start/end times, break duration, and overtime thresholds.
+Go to Settings → Attendance → [Work Timings](https://mashapajfhp.github.io/user-guides/work-timings/v1/work-timings-user-guide.html). Create timing schedules defining start/end times, break duration, and overtime thresholds.
 
 </div>
 
