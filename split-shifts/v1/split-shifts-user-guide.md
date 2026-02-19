@@ -703,6 +703,48 @@ Copy and publish schedules across work centers or time periods.
 
 <div class="subsection">
 
+### Task: Review Split Shift Attendance in Reports
+
+Understand how split shift attendance appears in the Daily Report and what data is available for reporting purposes.
+
+#### Subtask: Read Split Shift Entries in the Daily Report
+
+In the **Daily Report** (Time → Attendance → Employee Attendance), each shift generates a **separate attendance row**. An employee working split shifts produces **two rows per day**:
+
+| Row | Schedule | Status | Check In | Check Out | Hours Worked | Extra Hours |
+|-----|----------|--------|----------|-----------|-------------|-------------|
+| 1 | 07:00 AM - 01:00 PM | Present | 06:58 AM | 01:02 PM | 6.07 | 0.00 |
+| 2 | 02:00 PM - 06:00 PM | Present | 01:58 PM | 06:05 PM | 4.12 | 0.00 |
+
+For a team of 5 employees working split shifts across a full month (22 working days), the Daily Report generates approximately **220 rows** (5 employees x 22 days x 2 shifts). Each row independently tracks:
+
+- Check-in and check-out times against the specific shift timing
+- Late arrival or early departure status per shift
+- Hours worked per shift segment
+- Extra hours per shift
+- Locations visited per check-in
+
+**Filtering tips:** Use the date range filter and employee search to manage large datasets. Export to Excel for custom analysis, pivot tables, or formatting beyond the standard report layout.
+
+#### Subtask: Understand Reporting Limitations
+
+| Capability | Status |
+|-----------|--------|
+| Dedicated "Split Shift Report" | Not available — split shift data is in the standard Daily Report as 2 rows per day |
+| Consolidated daily total per employee | Not in the Daily Report view — each shift is a separate row. Export to Excel and sum per employee per day |
+| Leave type breakdown per shift | Not available — attendance reports show "On Leave" status but not the leave type. Use the Leave Report (Time → Leaves) for type details |
+| Custom attendance report columns | Not available — export the standard report and add custom fields in Excel |
+
+<div class="info-box">
+
+**Identifying split shift days in reports:** Look for employees with **two entries on the same date**. The Schedule column will show different time ranges for each row (e.g., "07:00 AM - 01:00 PM" and "02:00 PM - 06:00 PM"), confirming that the employee worked a split shift that day.
+
+</div>
+
+</div>
+
+<div class="subsection">
+
 ### Task: Monitor Schedule Metrics
 
 Track employee scheduling coverage and hours allocation.

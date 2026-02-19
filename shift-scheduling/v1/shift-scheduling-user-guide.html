@@ -2282,6 +2282,156 @@ shift)</li>
 Employee marked as absent if record deleted. Cannot check in again after
 deletion.</p>
 </section>
+<section id="task-review-shift-attendance-reports" class="subsection">
+<h3>Task: Review Shift Attendance Reports</h3>
+<p>Understand what shift-related data is available in attendance reports,
+how to read split shift records, and what reporting limitations exist.</p>
+<h4 id="subtask-read-the-daily-report-for-shift-workers">Subtask: Read
+the Daily Report for Shift Workers</h4>
+<p>The <strong>Daily Report</strong> (Time → Attendance → Employee
+Attendance → Daily Report) is the primary report for reviewing shift
+attendance. Each row represents one shift on one day for one employee.
+The report includes these columns:</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr>
+<th>Column</th>
+<th>What It Shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ID</td>
+<td>Employee ID</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>Employee name</td>
+</tr>
+<tr>
+<td>Reports to</td>
+<td>Line manager</td>
+</tr>
+<tr>
+<td>Schedule</td>
+<td>Shift start and end times (e.g., "09:00 AM - 06:00 PM")</td>
+</tr>
+<tr>
+<td>Date</td>
+<td>The calendar date of the shift</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Attendance status: Present, Late Arrival, Early Departure, Absent,
+On Leave</td>
+</tr>
+<tr>
+<td>Check In</td>
+<td>Actual check-in time recorded</td>
+</tr>
+<tr>
+<td>Check Out</td>
+<td>Actual check-out time recorded</td>
+</tr>
+<tr>
+<td>Confidence</td>
+<td>Check-in confidence level</td>
+</tr>
+<tr>
+<td>Hours Worked</td>
+<td>Total hours between check-in and check-out</td>
+</tr>
+<tr>
+<td>Extra Hours</td>
+<td>Hours worked beyond the scheduled shift end time</td>
+</tr>
+<tr>
+<td>Locations Visited</td>
+<td>GPS-verified office locations where the employee checked in/out</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Split shift employees generate two rows per day</strong> — one
+per shift. For example, an employee with a morning shift (07:00 AM -
+01:00 PM) and an afternoon shift (02:00 PM - 06:00 PM) produces two
+separate attendance entries for the same date, each with its own
+check-in/out times, status, and hours worked.</p>
+<div class="info-box">
+<p><strong>Location tracking:</strong> The "Locations Visited" column
+confirms which office location the employee checked in from. This relies
+on GPS coordinates and geofencing radius configured per office (Settings
+→ Company → Offices). For biometric attendance devices, location is
+determined by the device's configured office.</p>
+</div>
+<h4 id="subtask-understand-report-limitations">Subtask: Understand
+Report Limitations</h4>
+<p>The attendance Daily Report provides standardized columns. The
+following customizations are <strong>not available</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 20%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr>
+<th>Requested Capability</th>
+<th>Status</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Custom fields (e.g., department as "project code", subcontractor
+names as shift activity names)</td>
+<td>Not supported</td>
+<td>Export the standard Daily Report to Excel and add custom columns
+manually</td>
+</tr>
+<tr>
+<td>Leave type breakdown in attendance report</td>
+<td>Not supported</td>
+<td>Use the Leave Report (Time → Leaves → Leave Report) for leave type
+details. The attendance Daily Report shows "On Leave" status but does
+not break it down by type (annual, sick, unpaid, etc.)</td>
+</tr>
+<tr>
+<td>Offline attendance recording</td>
+<td>Not supported</td>
+<td>All check-ins require an active internet connection and real-time
+server validation. Employees without connectivity cannot check in —
+their attendance must be manually corrected by an admin through the
+Daily Report</td>
+</tr>
+<tr>
+<td>Per-shift pay rate in reports</td>
+<td>Not supported</td>
+<td>Attendance reports track hours and status, not pay rates. Pay rate
+calculations are managed through payroll configuration</td>
+</tr>
+<tr>
+<td>Dedicated split shift report</td>
+<td>Not supported</td>
+<td>Split shift data appears in the standard Daily Report as two rows
+per day per employee. Filter by employee and date range to isolate split
+shift records</td>
+</tr>
+</tbody>
+</table>
+<div class="warning-box">
+<p><strong>⚠️ Connectivity Requirement:</strong> Bayzat does not support
+offline check-in. All attendance actions require an active internet
+connection for real-time validation against published shift data,
+geofencing rules, and GPS coordinates. Check-ins are not queued or
+cached for later submission. If an employee has no internet at check-in
+time, an admin must manually correct the attendance record
+afterwards.</p>
+</div>
+</section>
 <section id="task-move-employees-between-work-centers"
 class="subsection">
 <h3>Task: Move Employees Between Work Centers</h3>
@@ -2785,6 +2935,148 @@ calculated as 2.5% (5% ÷ 2).</li>
 </tbody>
 </table>
 </section>
+<section id="public-holidays-and-shift-scheduling" class="subsection">
+<h3>Public Holidays and Shift Scheduling</h3>
+<p>Public holidays are configured system-wide under Settings → Company →
+Public Holidays. They interact with shift scheduling as follows:</p>
+<ul>
+<li>Public holidays appear as overlays in the shift schedule grid,
+similar to leave and weekend overlays</li>
+<li>Schedulers can create shifts on public holidays — the system does
+not block shift creation on these dates</li>
+<li>The Copy Schedule dialog includes a "Paste on public holidays"
+toggle under Advanced pasting options. By default, copied shifts are not
+pasted on public holidays unless this option is enabled</li>
+<li>There is no separate "public holiday" category within the Shift
+Scheduler. Public holidays, day offs, weekends, and leave are distinct
+system concepts:</li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 30%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Configured In</th>
+<th>Blocks Shift Creation?</th>
+<th>Visible in Scheduler?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public Holiday</td>
+<td>Settings → Company → Public Holidays</td>
+<td>No</td>
+<td>Yes (overlay)</td>
+</tr>
+<tr>
+<td>Day Off</td>
+<td>Shift Scheduler (Mark as day-off toggle)</td>
+<td>Yes — blocks second shift</td>
+<td>Yes (cell label)</td>
+</tr>
+<tr>
+<td>Weekend</td>
+<td>Employee work week profile</td>
+<td>No</td>
+<td>Yes (overlay)</td>
+</tr>
+<tr>
+<td>Leave</td>
+<td>Leave Management (approved leave)</td>
+<td>Yes — blocks shift creation</td>
+<td>Yes ("On Leave - [type]" overlay)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="mobile-app-constraints-for-schedulers" class="subsection">
+<h3>Mobile App Constraints for Schedulers</h3>
+<p>Shift Schedulers primarily manage shifts through the web app
+(app.bayzat.com). Mobile app limitations for scheduling include:</p>
+<ul>
+<li>Publishing from mobile: Mobile shift editing has a known functional
+constraint that may prevent successful shift publishing from phones. Use
+the web app for reliable shift publishing and editing. (OS-98)</li>
+<li>Schedule Planner: Not available on mobile — bulk shift creation
+requires the web interface</li>
+<li>Copy Schedule: Not available on mobile — weekly pattern duplication
+requires the web interface</li>
+<li>Shift creation dialog: Available on mobile but may experience
+rendering issues — web app is the recommended interface for all
+scheduling actions</li>
+</ul>
+<p>Employees view and interact with their published shifts exclusively
+through the Bayzat mobile app.</p>
+</section>
+<section id="connectivity-requirements" class="subsection">
+<h3>Connectivity Requirements</h3>
+<p>All attendance actions require an active internet connection:</p>
+<ul>
+<li>No offline check-in: Employees cannot record attendance without
+network connectivity. Check-ins are validated in real-time against
+published shift data, geofencing rules, and GPS coordinates</li>
+<li>No queued check-ins: The system does not queue or cache check-in
+attempts for later submission. If an employee has no internet at
+check-in time, their attendance must be manually corrected by an admin
+through the Daily Report</li>
+<li>Biometric devices: Biometric attendance devices require a network
+connection to sync attendance data with the Bayzat platform</li>
+</ul>
+<div class="info-box">
+<p>Workaround for connectivity gaps: When employees work in areas with
+unreliable internet (construction sites, remote locations, basement
+areas), admins can manually record attendance via Time → Attendance →
+Employee Attendance → Daily Report after the fact.</p>
+</div>
+</section>
+<section id="shift-scheduler-self-scheduling" class="subsection">
+<h3>Shift Scheduler Self-Scheduling</h3>
+<p>Shift Schedulers can create and manage their own shifts, provided
+both conditions are met:</p>
+<ol>
+<li>They have the Shift Scheduler role assigned under Settings → Role
+Management</li>
+<li>They are listed as an employee within the work center they
+manage</li>
+</ol>
+<p>If a scheduler is assigned to manage a work center but is not added
+as an employee in that same work center, they will not appear in the
+employee list for shift assignment. To enable self-scheduling, the Super
+Admin must add the scheduler as both the designated scheduler and an
+employee member of the work center under Settings → Attendance → Work
+Centers for Shift Scheduling.</p>
+</section>
+<section id="employees-without-fixed-shift-patterns" class="subsection">
+<h3>Employees Without Fixed Shift Patterns</h3>
+<p>For employees who do not follow a fixed schedule but still need
+attendance and overtime tracking:</p>
+<ol>
+<li>Create a flexible work timing — Enable the "Flexible timing" toggle
+when creating the work timing template (Settings → Attendance → Work
+Timings). Flexible timings allow variable start and end times while
+still tracking total hours worked</li>
+<li>Configure Extra Hours calculation — Set the appropriate method:
+"Total hours" (counts all hours beyond schedule), "After work end time"
+(counts only hours after the scheduled end), or "All hours worked"
+(counts every hour as extra)</li>
+<li>Schedule shifts as needed — Even with flexible timings, shifts must
+be created and published for employees to check in. The flexible toggle
+adjusts how late arrival and overtime are evaluated, not whether a shift
+is required</li>
+</ol>
+<div class="info-box">
+<p>Overtime for unscheduled work: If an employee works on a day without
+a published shift, the system has no reference point for overtime
+calculation. Overtime can only be calculated when a shift exists and the
+employee's actual hours exceed the scheduled hours. For ad-hoc overtime,
+use Time &amp; Pay adjustments in payroll.</p>
+</div>
+</section>
 <section id="known-limitations-from-jira-tickets" class="subsection">
 <h3>Known Limitations from Jira Tickets</h3>
 <div class="warning-box">
@@ -3098,6 +3390,47 @@ scheduler, not just given the Shift Scheduler role</td>
 <td>Employee wants to change their shift but cannot</td>
 <td>Employees cannot modify shifts directly in the system</td>
 <td>Ask your admin if a Shift Change Request ticket type is configured under Settings → Employee Tickets; if so, submit a request through Employee Tickets. Otherwise, contact your scheduler directly</td>
+</tr>
+<tr>
+<td>Cannot publish shifts from mobile phone</td>
+<td>Mobile shift editing has known functional constraints (OS-98)</td>
+<td>Use the web app at app.bayzat.com for all shift publishing, editing,
+and bulk operations</td>
+</tr>
+<tr>
+<td>Shift scheduler cannot schedule their own shifts</td>
+<td>Scheduler not listed as an employee in the work center</td>
+<td>Add the scheduler as both the designated scheduler AND an employee
+member of the work center in Settings → Attendance → Work Centers</td>
+</tr>
+<tr>
+<td>Employee cannot check in — no internet connection</td>
+<td>Offline check-in is not supported; all check-ins require real-time
+server validation</td>
+<td>Employee must wait for network connectivity. Admin can manually add
+attendance via the Daily Report after the fact</td>
+</tr>
+<tr>
+<td>Public holiday shown but employer still needs shift coverage</td>
+<td>Public holidays do not block shift creation — they are informational
+overlays</td>
+<td>Create shifts on public holidays as normal. The public holiday
+overlay in the schedule grid is informational only</td>
+</tr>
+<tr>
+<td>Cannot find leave type breakdown in attendance report</td>
+<td>Attendance Daily Report shows "On Leave" status but not the leave
+type</td>
+<td>Use the Leave Report (Time → Leaves → Leave Report) for leave type
+details (annual, sick, unpaid, etc.)</td>
+</tr>
+<tr>
+<td>Need custom fields in attendance report (project codes, subcontractor
+names)</td>
+<td>Custom report columns are not supported in the standard Daily
+Report</td>
+<td>Export the standard report to Excel and add custom columns
+manually</td>
 </tr>
 </tbody>
 </table>
