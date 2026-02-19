@@ -1214,6 +1214,89 @@ When you have approved leave on a day where shifts are assigned:
 
 <div class="subsection">
 
+### Task: Request a Shift Change (via Employee Tickets)
+
+Submit a formal request to change your assigned shift through the Employee Tickets system. This requires your organization to have the **Shift Change Request** ticket type configured and your account assigned to it.
+
+#### Subtask: Navigate to My Tickets
+
+- Log in to the **Bayzat web app** at app.bayzat.com
+- Click **Requests** in the left sidebar
+- Under **My requests**, click **"My tickets"**
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/65-employee-my-tickets-page.png" class="screenshot" loading="lazy" alt="My Tickets page showing pending and approved tickets" />
+<figcaption>My Tickets page — employees can view pending, approved, and rejected tickets, and create new requests</figcaption>
+</figure>
+
+#### Subtask: Create a Shift Change Request Ticket
+
+- Click **"Create ticket"** in the top-right corner
+- In the **Select ticket type** dialog, choose the **Attendance** category on the left
+- Select **"Shift Change Request"** from the ticket types on the right — described as "Request to change assigned work shift or schedule"
+- Click **"Select"**
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/68-shift-change-request-selected.png" class="screenshot" loading="lazy" alt="Select ticket type dialog with Shift Change Request highlighted" />
+<figcaption>Select ticket type dialog — choose Attendance category, then select "Shift Change Request"</figcaption>
+</figure>
+
+#### Subtask: Fill In Shift Change Details
+
+The form presents the following fields:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| **Employees** | Auto-filled | Your name (cannot be changed) |
+| **Category > Ticket type** | Auto-filled | "Shift Change Request" |
+| **Priority** | Yes | Default is Medium; change to High or Low based on urgency |
+| **Shift/duty date** | Yes | The date of the shift you want to change (DD/MM/YYYY format) |
+| **Current shift** | Yes | Your currently assigned shift timing (e.g., "Morning shift 09:00 AM – 06:00 PM") |
+| **Requested shift** | Yes | The shift timing you want to change to (e.g., "Evening shift 02:00 PM – 11:00 PM") |
+| **Remarks** | Optional | Reason for the shift change request |
+| **Attachments** | Optional | Upload supporting documents if needed |
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/69-shift-change-request-form.png" class="screenshot" loading="lazy" alt="Shift Change Request form with fields for date, current shift, requested shift, and remarks" />
+<figcaption>Shift Change Request form showing all required fields — priority, shift date, current shift, requested shift, and optional remarks</figcaption>
+</figure>
+
+- Fill in all required fields
+- Click **"Submit"**
+
+**Expected Outcome:** The ticket is created and appears in your My Tickets list under the **Pending** tab. The configured approver receives the request for review.
+
+#### Subtask: Track Your Request
+
+After submission, track the ticket status from **Requests → My tickets**:
+
+- **Pending** — Awaiting approver review
+- **Approved** — Request approved (scheduler must still manually update the shift)
+- **Rejected** — Request denied; check comments for reason
+
+Click on the ticket ID to view full details including the shift information you submitted, approver, and activity log.
+
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/73-ticket-detail-shift-info.png" class="screenshot" loading="lazy" alt="Shift Change Request ticket detail page showing ticket info and approval status" />
+<figcaption>Ticket detail page — shows Ticket info (shift date, current shift, requested shift, remarks) alongside Details (status, approver, line manager)</figcaption>
+</figure>
+
+<div class="warning-box">
+
+**Approval does not auto-update the schedule.** Even after your ticket is approved, the shift is not automatically changed. Your admin or Shift Scheduler must manually update the shift in the Shift Scheduler. If your shift has not changed after approval, follow up with your scheduler.
+
+</div>
+
+<div class="info-box">
+
+**Don't see the Shift Change Request ticket type?** If "Shift Change Request" does not appear when creating a ticket, your organization has not configured this ticket type, or you have not been assigned to it. Contact your HR admin to set it up under Settings → Employee Tickets.
+
+</div>
+
+</div>
+
+<div class="subsection">
+
 ### Employee Limitations and Troubleshooting
 
 #### What Employees Cannot Do
