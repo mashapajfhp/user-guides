@@ -1138,7 +1138,7 @@ communication</td>
 <li>Check in before a shift is published — check-ins are rejected for unpublished shifts</li>
 </ul>
 <div class="info-box">
-<p><strong>Shift change requests via Employee Tickets:</strong> While employees cannot modify shifts directly, your organization can configure a <strong>Shift Change Request</strong> ticket type under <strong>Settings → Employee Tickets</strong>. When configured, employees assigned to this ticket type can submit formal shift change requests through the ticketing system. This requires an admin to: (1) create and activate the "Shift Change Request" ticket type in the Attendance category, and (2) assign eligible employees to the ticket. See <a href="https://mashapajfhp.github.io/user-guides/employee-tickets/v1/employee-tickets-user-guide.html">Employee Tickets</a> for setup instructions.</p>
+<p><strong>Shift change requests via Employee Tickets:</strong> Organizations can configure a <strong>Shift Change Request</strong> ticket type to allow employees to formally request schedule changes. See the <a href="#task-request-a-shift-change-via-employee-tickets">Request a Shift Change</a> task below for the complete end-to-end flow and prerequisites.</p>
 </div>
 </section>
 </div>
@@ -1849,13 +1849,6 @@ class="subsection">
 efficient shift assignment.</p>
 <h4 id="subtask-set-up-work-center-configuration">Subtask: Set Up Work
 Center Configuration</h4>
-<figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/02-work-center-dropdown.png" class="screenshot" loading="lazy" alt="Work center configuration" />
-<figcaption>
-Work center configuration screen showing scheduler assignment, office
-locations, and employee selection
-</figcaption>
-</figure>
 <ul>
 <li>Navigate to Settings → Attendance → Work Centers for Shift
 Scheduling</li>
@@ -1868,7 +1861,11 @@ Scheduling</li>
 </ul>
 <p><strong>Expected Outcome:</strong> Work center created with employees
 grouped by common scheduler and locations, ready for shift
-assignment.</p>
+assignment. Once created, work centers appear in the Shift Scheduler dropdown for selection.</p>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/02-work-center-dropdown.png" class="screenshot" loading="lazy" alt="Work Center dropdown in the Shift Scheduler" />
+<figcaption>Work Center dropdown in the Shift Scheduler — select a work center to view and manage shifts for its assigned employees</figcaption>
+</figure>
 </section>
 <section id="task-create-and-assign-individual-shifts"
 class="subsection">
@@ -2179,8 +2176,142 @@ past dates. Cannot delete current day shifts if employee has already
 checked in. Undo available for 30 seconds only.</p>
 </div>
 </section>
-<section id="employee-key-tasks" class="subsection employee-tasks-header">
-<h3>Employee Key Tasks</h3>
+<section id="task-use-schedule-planner-for-bulk-shift-creation"
+class="subsection">
+<h3>Task: Use Schedule Planner for Bulk Shift Creation</h3>
+<p>Create shifts for multiple employees across multiple dates using
+grid-based planning interface.</p>
+<h4 id="subtask-plan-shifts-in-grid-view">Subtask: Plan Shifts in Grid
+View</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/33-schedule-planner.png" class="screenshot" loading="lazy" alt="Schedule planner grid" />
+<figcaption>
+Schedule planner grid showing employees in rows and dates in columns
+with work timing dropdowns and "All" buttons for bulk assignment
+</figcaption>
+</figure>
+<ol type="1">
+<li>Click the <strong>Schedule Planner</strong> button in the Shift
+Scheduler toolbar</li>
+<li>Select work center and date range</li>
+<li>The grid displays employees in rows and dates in columns, with a
+dropdown in each cell to select a work timing</li>
+<li>Use the <strong>"All" button</strong> next to each employee name to
+apply the same work timing across all dates in the selected range for
+that employee</li>
+<li>Select individual work timing from the dropdown for each
+employee-date cell to customize specific days</li>
+<li>Click <strong>Save as draft</strong> to review before publishing, or
+<strong>Save &amp; Publish</strong> to publish immediately</li>
+</ol>
+<p><strong>Expected Outcome:</strong> Multiple shifts created
+efficiently using grid interface, reducing time compared to individual
+shift creation.</p>
+<div class="info-box">
+<p><strong>Schedule Planner Note:</strong> "All" option is not available
+when creating split shifts. Copy functionality is disabled when "All"
+work center is selected. The Schedule Planner is particularly useful for
+initial schedule setup when many employees need the same shift
+pattern.</p>
+</div>
+</section>
+<section id="task-override-attendance-records-for-published-shifts"
+class="subsection">
+<h3>Task: Override <a
+href="https://mashapajfhp.github.io/user-guides/attendance/v1/attendance-user-guide.html">Attendance</a>
+Records for Published Shifts</h3>
+<p>Manually adjust check-in/out times or attendance status when
+employees cannot use standard check-in process.</p>
+<p>Attendance records for shift employees are visible in the
+<strong>Daily Report</strong> under Time → Attendance → Employee
+Attendance. The Daily Report shows columns for ID, Name, Reports to,
+<strong>Schedule</strong> (shift times), Date, Status, Check In, Check
+Out, Confidence, Hours Worked, Extra Hours, and <strong>Locations
+Visited</strong>. For employees with split shifts, each shift generates
+a <strong>separate row</strong> in the Daily Report — so a split-shift
+employee will have two attendance records for the same date, one per
+shift.</p>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/47-attendance-daily-report-columns.png" class="screenshot" loading="lazy" alt="Attendance Daily Report with schedule and location columns" />
+<figcaption>
+Attendance Daily Report showing Schedule column with shift times,
+Locations Visited, and other attendance tracking columns
+</figcaption>
+</figure>
+<h4 id="subtask-edit-attendance-times">Subtask: Edit Attendance
+Times</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/05-attendance-daily-report.png" class="screenshot" loading="lazy" alt="Attendance daily report" />
+<figcaption>
+Attendance daily report showing employee check-in and check-out records
+</figcaption>
+</figure>
+<ul>
+<li>Navigate to Time → Attendance → Employee Attendance → Daily
+Report</li>
+<li>Locate employee attendance record for specific date</li>
+<li>Click on attendance record to open edit options</li>
+<li>Select "Edit check-in time" or "Edit check-out time"</li>
+<li>Enter corrected time</li>
+<li>Save changes (creates time and pay adjustment entry)</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Attendance record updated with
+manual override. Time and pay adjustment entry created for payroll
+processing.</p>
+<h4 id="subtask-clear-or-delete-attendance-record">Subtask: Clear or
+Delete Attendance Record</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/05-attendance-daily-report.png" class="screenshot" loading="lazy" alt="Attendance record options" />
+<figcaption>
+Attendance daily report with options to edit, clear, or delete
+attendance records
+</figcaption>
+</figure>
+<ul>
+<li>Navigate to employee attendance record in Daily Report</li>
+<li>Click on attendance record</li>
+<li>Select "Clear attendance" to remove check-in/out times (keeps
+shift)</li>
+<li>Or select "Delete attendance record" to mark employee as absent</li>
+<li>Confirm action</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Attendance cleared or deleted.
+Employee marked as absent if record deleted. Cannot check in again after
+deletion.</p>
+</section>
+<section id="task-move-employees-between-work-centers"
+class="subsection">
+<h3>Task: Move Employees Between Work Centers</h3>
+<p>Reassign employees to different work centers when reporting structure
+or scheduling ownership changes.</p>
+<h4 id="subtask-transfer-employee-to-new-work-center">Subtask: Transfer
+Employee to New Work Center</h4>
+<figure class="screenshot-container">
+<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/03-specific-work-center-selected.png" class="screenshot" loading="lazy" alt="Work center with employees" />
+<figcaption>
+Work center view showing employee list within a selected work center
+</figcaption>
+</figure>
+<ul>
+<li>Navigate to Settings → Attendance → Work Centers for Shift
+Scheduling</li>
+<li>Open source work center and remove employee from list</li>
+<li>Open target work center and add employee to list</li>
+<li>Save changes to both work centers</li>
+<li>Employee's future shifts now managed by new work center's
+scheduler</li>
+</ul>
+<p><strong>Expected Outcome:</strong> Employee moved to new work center.
+New scheduler can create and manage future shifts. Historical shifts
+remain unchanged.</p>
+<div class="info-box">
+<p><strong>Work Center Constraint:</strong> Each employee can belong to
+only one work center at a time. Moving employees does not affect
+historical shift assignments or attendance records.</p>
+</div>
+</section>
+<section id="employee-tasks" class="subsection employee-tasks-header">
+<h3>Employee Tasks</h3>
 <p>The following tasks cover what employees can do within the Shift Scheduling system. Shift scheduling on Bayzat follows a <strong>top-down model</strong> — all shift creation, editing, and deletion is managed exclusively by admins and Shift Schedulers. Employees interact with the system through the <strong>Bayzat mobile app only</strong>.</p>
 <div class="warning-box">
 <p><strong>Web App Limitation:</strong> Employees <strong>cannot</strong> view their shift schedule from the Bayzat web app. The employee web portal does not include a Shifts section under the Time menu, and direct navigation to the Shift Scheduler page returns an "unauthorized" error. All shift-related employee tasks require the <strong>Bayzat mobile app</strong>.</p>
@@ -2467,39 +2598,8 @@ checked in. Undo available for 30 seconds only.</p>
 </div>
 </section>
 
-<section id="employee-limitations-and-troubleshooting" class="subsection">
-<h3>Employee Limitations and Troubleshooting</h3>
-<h4>What Employees Cannot Do</h4>
-<p>Shift scheduling on Bayzat is a <strong>top-down system</strong>. The following actions are <strong>not available</strong> to employees:</p>
-<ul>
-<li><strong>Cannot view shifts on the web app</strong> — shift schedules are accessible only through the Bayzat mobile app</li>
-<li><strong>Cannot create, edit, or delete shifts</strong> — all scheduling is managed by admins and Shift Schedulers</li>
-<li><strong>Cannot swap shifts</strong> with other employees through the system — there is no self-service shift swap feature</li>
-<li><strong>Cannot self-schedule</strong> — there is no option for employees to pick or bid on available shifts</li>
-<li><strong>Cannot view other employees' schedules</strong> — you can only see your own assigned shifts</li>
-<li><strong>Cannot check in for unpublished shifts</strong> — check-ins are only accepted for published shifts</li>
-<li><strong>Cannot download attendance records</strong> from the web portal</li>
-</ul>
-<h4>Requesting Shift Changes via Employee Tickets</h4>
-<p>While employees cannot modify shifts directly, Bayzat supports a <strong>Shift Change Request</strong> ticket type that allows employees to formally request schedule changes through the <a href="https://mashapajfhp.github.io/user-guides/employee-tickets/v1/employee-tickets-user-guide.html">Employee Tickets</a> system.</p>
-<figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/63-employee-tickets-shift-change-request.png" class="screenshot" loading="lazy" alt="Shift Change Request ticket type in Employee Tickets settings" />
-<figcaption>Shift Change Request ticket type available under the Attendance category in Employee Tickets settings</figcaption>
-</figure>
-<p><strong>Prerequisites for employees to use this feature:</strong></p>
-<ol>
-<li><strong>Admin must create the ticket type</strong> — Navigate to Settings → Employee Tickets and create a "Shift Change Request" ticket type in the Attendance category</li>
-<li><strong>Ticket type must be Active</strong> — Ensure the ticket type status is set to Active</li>
-<li><strong>Employees must be assigned</strong> — Only employees assigned to the ticket type can submit requests; assignment is managed by the admin in the ticket type configuration</li>
-</ol>
-<figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/64-shift-change-request-config.png" class="screenshot" loading="lazy" alt="Shift Change Request ticket configuration showing fields and approval settings" />
-<figcaption>Configuration of the Shift Change Request ticket type with custom fields and approval workflow</figcaption>
-</figure>
-<div class="warning-box">
-<p><strong>This is not automatic.</strong> The Shift Change Request ticket type must be explicitly configured by an admin. Submitting a ticket does not automatically change the shift — the request goes through the configured approval workflow, and an admin or Shift Scheduler must manually update the shift schedule after approval.</p>
-</div>
-<h4>Troubleshooting Common Issues</h4>
+<section id="employee-troubleshooting" class="subsection">
+<h3>Employee Troubleshooting</h3>
 <table>
 <thead><tr><th>Issue</th><th>Likely Cause</th><th>Resolution</th></tr></thead>
 <tbody>
@@ -2513,140 +2613,6 @@ checked in. Undo available for 30 seconds only.</p>
 <tr><td>"I want to change my shift but can't"</td><td>Employees cannot modify shifts directly</td><td>Ask your admin if a Shift Change Request ticket type is configured; if so, submit a request through Employee Tickets. Otherwise, contact your scheduler directly</td></tr>
 </tbody>
 </table>
-</section>
-<section id="task-override-attendance-records-for-published-shifts"
-class="subsection">
-<h3>Task: Override <a
-href="https://mashapajfhp.github.io/user-guides/attendance/v1/attendance-user-guide.html">Attendance</a>
-Records for Published Shifts</h3>
-<p>Manually adjust check-in/out times or attendance status when
-employees cannot use standard check-in process.</p>
-<p>Attendance records for shift employees are visible in the
-<strong>Daily Report</strong> under Time → Attendance → Employee
-Attendance. The Daily Report shows columns for ID, Name, Reports to,
-<strong>Schedule</strong> (shift times), Date, Status, Check In, Check
-Out, Confidence, Hours Worked, Extra Hours, and <strong>Locations
-Visited</strong>. For employees with split shifts, each shift generates
-a <strong>separate row</strong> in the Daily Report — so a split-shift
-employee will have two attendance records for the same date, one per
-shift.</p>
-<figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/47-attendance-daily-report-columns.png" class="screenshot" loading="lazy" alt="Attendance Daily Report with schedule and location columns" />
-<figcaption>
-Attendance Daily Report showing Schedule column with shift times,
-Locations Visited, and other attendance tracking columns
-</figcaption>
-</figure>
-<h4 id="subtask-edit-attendance-times">Subtask: Edit Attendance
-Times</h4>
-<figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/05-attendance-daily-report.png" class="screenshot" loading="lazy" alt="Attendance daily report" />
-<figcaption>
-Attendance daily report showing employee check-in and check-out records
-</figcaption>
-</figure>
-<ul>
-<li>Navigate to Time → Attendance → Employee Attendance → Daily
-Report</li>
-<li>Locate employee attendance record for specific date</li>
-<li>Click on attendance record to open edit options</li>
-<li>Select “Edit check-in time” or “Edit check-out time”</li>
-<li>Enter corrected time</li>
-<li>Save changes (creates time and pay adjustment entry)</li>
-</ul>
-<p><strong>Expected Outcome:</strong> Attendance record updated with
-manual override. Time and pay adjustment entry created for payroll
-processing.</p>
-<h4 id="subtask-clear-or-delete-attendance-record">Subtask: Clear or
-Delete Attendance Record</h4>
-<figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/05-attendance-daily-report.png" class="screenshot" loading="lazy" alt="Attendance record options" />
-<figcaption>
-Attendance daily report with options to edit, clear, or delete
-attendance records
-</figcaption>
-</figure>
-<ul>
-<li>Navigate to employee attendance record in Daily Report</li>
-<li>Click on attendance record</li>
-<li>Select “Clear attendance” to remove check-in/out times (keeps
-shift)</li>
-<li>Or select “Delete attendance record” to mark employee as absent</li>
-<li>Confirm action</li>
-</ul>
-<p><strong>Expected Outcome:</strong> Attendance cleared or deleted.
-Employee marked as absent if record deleted. Cannot check in again after
-deletion.</p>
-</section>
-<section id="task-use-schedule-planner-for-bulk-shift-creation"
-class="subsection">
-<h3>Task: Use Schedule Planner for Bulk Shift Creation</h3>
-<p>Create shifts for multiple employees across multiple dates using
-grid-based planning interface.</p>
-<h4 id="subtask-plan-shifts-in-grid-view">Subtask: Plan Shifts in Grid
-View</h4>
-<figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/33-schedule-planner.png" class="screenshot" loading="lazy" alt="Schedule planner grid" />
-<figcaption>
-Schedule planner grid showing employees in rows and dates in columns
-with work timing dropdowns and “All” buttons for bulk assignment
-</figcaption>
-</figure>
-<ol type="1">
-<li>Click the <strong>Schedule Planner</strong> button in the Shift
-Scheduler toolbar</li>
-<li>Select work center and date range</li>
-<li>The grid displays employees in rows and dates in columns, with a
-dropdown in each cell to select a work timing</li>
-<li>Use the <strong>“All” button</strong> next to each employee name to
-apply the same work timing across all dates in the selected range for
-that employee</li>
-<li>Select individual work timing from the dropdown for each
-employee-date cell to customize specific days</li>
-<li>Click <strong>Save as draft</strong> to review before publishing, or
-<strong>Save &amp; Publish</strong> to publish immediately</li>
-</ol>
-<p><strong>Expected Outcome:</strong> Multiple shifts created
-efficiently using grid interface, reducing time compared to individual
-shift creation.</p>
-<div class="info-box">
-<p><strong>Schedule Planner Note:</strong> “All” option is not available
-when creating split shifts. Copy functionality is disabled when “All”
-work center is selected. The Schedule Planner is particularly useful for
-initial schedule setup when many employees need the same shift
-pattern.</p>
-</div>
-</section>
-<section id="task-move-employees-between-work-centers"
-class="subsection">
-<h3>Task: Move Employees Between Work Centers</h3>
-<p>Reassign employees to different work centers when reporting structure
-or scheduling ownership changes.</p>
-<h4 id="subtask-transfer-employee-to-new-work-center">Subtask: Transfer
-Employee to New Work Center</h4>
-<figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/03-specific-work-center-selected.png" class="screenshot" loading="lazy" alt="Work center with employees" />
-<figcaption>
-Work center view showing employee list within a selected work center
-</figcaption>
-</figure>
-<ul>
-<li>Navigate to Settings → Attendance → Work Centers for Shift
-Scheduling</li>
-<li>Open source work center and remove employee from list</li>
-<li>Open target work center and add employee to list</li>
-<li>Save changes to both work centers</li>
-<li>Employee’s future shifts now managed by new work center’s
-scheduler</li>
-</ul>
-<p><strong>Expected Outcome:</strong> Employee moved to new work center.
-New scheduler can create and manage future shifts. Historical shifts
-remain unchanged.</p>
-<div class="info-box">
-<p><strong>Work Center Constraint:</strong> Each employee can belong to
-only one work center at a time. Moving employees does not affect
-historical shift assignments or attendance records.</p>
-</div>
 </section>
 </div>
 </section>
@@ -3026,23 +2992,6 @@ checkout behavior:</p>
 </tbody>
 </table>
 </section>
-<section id="deduction-policy-considerations" class="subsection">
-<h3>Deduction Policy Considerations</h3>
-<p>Absenteeism calculations across multiple shifts require consideration
-of hourly rate versus daily wage structures:</p>
-<ul>
-<li>For employees with <strong>2 shifts per day</strong>, all attendance
-deduction amounts (late arrival, early departure, absence) are
-automatically <strong>halved per shift</strong>. This prevents
-double-penalizing employees who work split shifts.</li>
-<li>Each shift generates its own independent attendance record with its
-own late/early/absent status.</li>
-<li><a
-href="https://mashapajfhp.github.io/user-guides/overtime/v2/overtime-user-guide.html">Overtime</a>
-(T&amp;P adjustments) cannot be added when an employee has multiple
-published shifts on the same day.</li>
-</ul>
-</section>
 </div>
 </section>
 <section id="troubleshooting-edge-cases"
@@ -3148,27 +3097,6 @@ scheduler, not just given the Shift Scheduler role</td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="employee-shift-change-requests" class="subsection">
-<h3>Requesting Shift Changes via Employee Tickets</h3>
-<p>While employees cannot modify shifts directly, Bayzat supports a <strong>Shift Change Request</strong> ticket type that allows employees to formally request schedule changes through the <a href="https://mashapajfhp.github.io/user-guides/employee-tickets/v1/employee-tickets-user-guide.html">Employee Tickets</a> system.</p>
-<figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/63-employee-tickets-shift-change-request.png" class="screenshot" loading="lazy" alt="Shift Change Request ticket type in Employee Tickets settings" />
-<figcaption>Shift Change Request ticket type available under the Attendance category in Employee Tickets settings</figcaption>
-</figure>
-<p><strong>Prerequisites for employees to use this feature:</strong></p>
-<ol>
-<li><strong>Admin must create the ticket type</strong> — Navigate to Settings → Employee Tickets and create a "Shift Change Request" ticket type in the Attendance category</li>
-<li><strong>Ticket type must be Active</strong> — Ensure the ticket type status is set to Active</li>
-<li><strong>Employees must be assigned</strong> — Only employees assigned to the ticket type can submit requests; assignment is managed by the admin in the ticket type configuration</li>
-</ol>
-<figure class="screenshot-container">
-<img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/shift-scheduling/v1/validation/screenshots/64-shift-change-request-config.png" class="screenshot" loading="lazy" alt="Shift Change Request ticket configuration showing fields and approval settings" />
-<figcaption>Configuration of the Shift Change Request ticket type with custom fields and approval workflow</figcaption>
-</figure>
-<div class="warning-box">
-<p><strong>This is not automatic.</strong> The Shift Change Request ticket type must be explicitly configured by an admin. Submitting a ticket does not automatically change the shift — the request goes through the configured approval workflow, and an admin or Shift Scheduler must manually update the shift schedule after approval.</p>
-</div>
 </section>
 <section id="edge-cases" class="subsection">
 <h3>Edge Cases</h3>
