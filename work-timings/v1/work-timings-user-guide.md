@@ -134,7 +134,7 @@ A named configuration that defines the expected start time, end time, and associ
 
 #### Flexible Timing
 
-A toggle that allows employees to check in and out within a variable time range rather than fixed start/end times. When enabled, the system displays a "Flexible timing" badge and adjusts validation rules to accommodate schedule variations.
+A toggle ("Flexible work timing") that allows employees to check in and out within a variable time range rather than fixed start/end times. When enabled: (1) the "Starts at" and "Ends at" fields become the **Office hours limit** — the window within which employees may work; (2) a new **"Hours employee need to work"** section appears where you specify the required hours and minutes; (3) **Late arrival, Early departure, and Extra Hours** configuration are all automatically disabled (greyed out with tooltip "Not applicable for the flexible work timing"); (4) Absent day threshold, breaks, out-of-office check-ins, and pre-start check-in control remain active. In the work timings table, flexible entries display a "Flexible" badge, show "N/A" for Late arrival and Early departure, and list the required hours alongside the office hours window.
 
 </div>
 
@@ -142,7 +142,7 @@ A toggle that allows employees to check in and out within a variable time range 
 
 #### Late Arrival Threshold
 
-The number of minutes after the scheduled start time that an employee can check in before being marked as late. Supports multi-level configurations (e.g., "1 level") to distinguish between minor delays and significant tardiness.
+A collapsible section with its own toggle in the work timing form. When expanded and enabled, you define violation delay time levels in minutes. **Level 1** sets the "Delayed more than X minutes" threshold — check-ins after this are flagged as late. Click **"+ Add more levels"** to add Level 2, Level 3, etc., for graduated consequences (e.g., Level 1 = 10 minutes warning, Level 2 = 30 minutes deduction). Late arrival is automatically disabled when flexible timing is enabled.
 
 </div>
 
@@ -166,7 +166,7 @@ The threshold (in minutes) that determines when a late check-in or missed check-
 
 #### Extra Hours Calculation
 
-The method used to calculate overtime or additional work hours. Three calculation methods are available: (1) "Total hours" — total hours worked more than the scheduled hours, (2) "After work end time" — total hours worked after the scheduled work end time, and (3) "All hours worked" — total hours worked by the employee regardless of schedule. The appropriate method depends on organizational overtime policy.
+The method used to calculate overtime or additional work hours. Three calculation methods are available: (1) "Total hours" — total hours worked more than the scheduled hours, (2) "After work end time" — total hours worked after the scheduled work end time, and (3) "All hours worked" — total hours worked by the employee regardless of schedule. The appropriate method depends on organizational overtime policy. **Important:** A global **Minimum extra hours threshold** (configured under Settings → Attendance → General, default: 30 minutes) acts as a filter — extra hours are only recorded when they exceed this threshold. Extra hours are disabled when flexible timing is enabled. In the Attendance Daily Report, extra hours appear as a dedicated column that can be shown or hidden via the "Columns" button.
 
 </div>
 
@@ -182,7 +182,7 @@ A schedule that spans midnight, indicated by a special icon in the interface. Th
 
 #### Half-Day Timing
 
-A configuration option that defines reduced work hours for half-day schedules, commonly used for Fridays, religious observances, or flexible work arrangements.
+A simple on/off toggle ("This is a half-day timing") that marks the entire work timing as a half-day schedule. When enabled, the start and end times already defined in the form represent the half-day work window — no additional fields or sub-sections appear. Commonly used for Fridays, Ramadan schedules, religious observances, or flexible work arrangements. To implement seasonal half-day changes (e.g., Ramadan), create a separate half-day work timing and reassign employees via the Shift Scheduler for the applicable period.
 
 </div>
 
@@ -202,7 +202,9 @@ Work Timings integrates with and supports several other Attendance and HR featur
 - **[Attendance Management](https://mashapajfhp.github.io/user-guides/attendance/v1/attendance-user-guide.html):** Work Timings is a required prerequisite for Attendance — employees cannot check in or check out unless they are assigned a work timing. Daily check-in/check-out records are validated against assigned work timing schedules to determine late arrivals, early departures, and absences.
 - **Overtime Policies:** Extra hours calculated based on work timing schedules feed into overtime policy calculations for payroll
 - **Days In Lieu Policies:** Work timing configurations determine when compensatory time off is earned for working beyond scheduled hours
-- **Deductions Policies for Payroll:** Late arrival and early departure thresholds from work timings trigger payroll deductions when policies are configured
+- **Deductions Policies for Payroll:** Configured under Settings → Attendance → "Deductions Policies for Payroll." The work timing thresholds define *when* a violation occurs (late arrival, early departure, absent day); the deduction policy defines *what happens* as a consequence (payroll deduction). Each policy specifies a tracking type (Standard or Advanced), a time-to-action window, and work disruption rules. Employees are manually assigned to deduction policies separately from work timing assignment
+- **Workweek:** Configured under Settings → Company → Workweek (not under Attendance). Defines which days are working days vs. non-working days for each employee group. Relevant to work timings because extra hours calculations, auto-absent marking, and attendance tracking only apply on scheduled working days. Multiple workweeks can be created (e.g., "Dubai Office" Mon-Fri, "Warehouse Staff" Sun-Fri). One default workweek cannot be deleted
+- **General Attendance Settings:** The General section at the top of Settings → Attendance contains global toggles that interact with work timings, including: **Minimum extra hours threshold** (default 30 minutes — extra hours below this are not recorded), **Auto-mark employees as absent on missed check-in** (marks absent for the past day if no check-in during scheduled hours), and **Line managers can decide compensation types for extra hours worked** (overtime pay vs. days in lieu)
 - **Work Centers for Shift Scheduling:** Work timings can be associated with specific work centers to support location-based shift management
 - **[Biometric Attendance](https://mashapajfhp.github.io/user-guides/biometric-attendance/v2/biometric-attendance-user-guide.html):** Biometric device check-ins are validated against work timing schedules to automate attendance tracking
 
@@ -585,15 +587,15 @@ Work Timings operate under specific configuration rules that govern how attendan
 
 - **Default Time Range:** New work timings default to 09:00 AM - 06:00 PM, representing a standard 9-hour workday including breaks
 - **Overnight Shifts:** The system supports overnight shift configurations that span across midnight, indicated by a special icon in the table view
-- **Half-Day Timing:** Optional half-day configuration allows organizations to define reduced working hours for specific scenarios
-- **Flexible Timing:** When enabled, flexible timing completely disables Late Arrival and Early Departure violations (shown as "N/A" in the work timings table). Only the Absent Day threshold remains active. Employees see a "Flexible timing" badge on their schedule
+- **Half-Day Timing:** A simple boolean toggle ("This is a half-day timing") that marks the entire work timing as a half-day schedule. The start/end times in the form represent the half-day work window — no additional sub-fields appear. To implement seasonal half-day schedules (e.g., Ramadan), create a separate half-day work timing and reassign employees via the Shift Scheduler for the applicable period. Different days of the week can have different timings by assigning different work timings per day through the Shift Scheduler
+- **Flexible Timing:** When enabled, the form reveals an "Office hours limit" header and a new "Hours employee need to work" section (Hours + Minutes inputs). Late Arrival, Early Departure, and Extra Hours are all automatically disabled (greyed out with tooltip "Not applicable for the flexible work timing"). Only Absent Day threshold, breaks, out-of-office check-ins, and pre-start check-in restrictions remain configurable. In the table, flexible entries show a "Flexible" badge and "N/A" for Late arrival and Early departure
 
 #### Attendance Calculation Rules
 
-- **Absent Day Threshold:** Default threshold is 300 minutes - employees who check in more than 300 minutes after start time are marked absent for the day
-- **Extra Hours Calculation:** Three methods available: Total hours (hours exceeding scheduled work time), After work end time (hours worked past scheduled end), and All hours worked (all hours the employee worked)
-- **Late Arrival Levels:** Multi-level late arrival system (e.g., '1 level') allows graduated consequences for tardiness
-- **Early Departure Tracking:** System tracks when employees leave before designated end time
+- **Absent Day Threshold:** Default threshold is 300 minutes — employees who check in more than 300 minutes after start time are marked absent for the day. This threshold is configurable per work timing. The separate "Auto-mark employees as absent on missed check-in" toggle in General settings (Settings → Attendance → General) automatically marks employees absent for the past day if they do not check in at all during scheduled hours
+- **Extra Hours Calculation:** Three methods available: Total hours (hours exceeding scheduled work time), After work end time (hours worked past scheduled end), and All hours worked (all hours the employee worked). A global **Minimum extra hours threshold** (Settings → Attendance → General, default: 30 minutes) filters out small overages — extra hours below this threshold are not recorded. Extra hours calculation is automatically disabled for flexible work timings
+- **Late Arrival Levels:** Multi-level late arrival system allows graduated consequences for tardiness. Level 1 sets the base threshold (e.g., "Delayed more than 10 minutes"). Click "+ Add more levels" to add Level 2, Level 3, etc. for increasing severity. Late arrival is automatically disabled for flexible work timings
+- **Early Departure Tracking:** System tracks when employees leave before designated end time. Like late arrival, early departure supports its own toggle and threshold configuration, and is automatically disabled for flexible work timings
 
 #### Check-In Rules
 
@@ -601,6 +603,15 @@ Work Timings operate under specific configuration rules that govern how attendan
 - **Out of Office Check-Ins:** Can be allowed or restricted based on organizational security and location policies
 - **Break Allowance:** Configurable setting determines whether breaks are tracked separately from total work hours
 - **Multiple Visits:** Related to Multiple Visits section in Attendance settings, affects how multiple check-ins per day are handled
+
+#### General Attendance Settings That Affect Work Timings
+
+Several global settings under Settings → Attendance → General interact directly with work timing configurations:
+
+- **Minimum extra hours threshold** (default: 30 minutes): Extra hours below this threshold are not recorded in attendance reports, regardless of the Extra Hours calculation method configured in the work timing
+- **Auto-mark employees as absent on missed check-in:** When enabled, the system automatically marks employees absent for the past day if they do not check in during their scheduled hours. This interacts with the Absent Day threshold in the work timing
+- **Line managers can decide compensation types for extra hours worked:** When enabled, line managers choose between overtime pay and days in lieu for extra hours tracked by work timings
+- **Allow check-in/out from multiple offices:** Applicable to non-shift employees only — they can check in/out from offices mapped to their work profiles
 
 </div>
 
@@ -615,7 +626,7 @@ Work Timings operate under specific configuration rules that govern how attendan
 #### Table View Constraints
 
 - **Pagination:** Work timings are displayed in paginated table format (5 items per page by default), requiring navigation across multiple pages for organizations with many configurations
-- **Column Information:** Table view shows summary information only - full configuration details require opening edit form
+- **Column Information:** Table columns are: Name (+ "Flexible" badge if applicable), Working hours (start-end times, "Overnight" icon for cross-midnight, required hours for flexible), Late arrival ("Disabled", "N/A" for flexible, or "X level(s)"), Early departure, Absent after (in minutes), Breaks, Outside office, Extra hours (method name), and Actions (Edit/Delete). Full configuration details require opening the edit form
 - **Search Functionality:** Search is limited to work timing name only, not configuration parameters
 - **Tooltip Information:** Info icons provide tooltips for Extra Hours and Absent After columns, but not all configuration fields have inline help
 
@@ -643,7 +654,9 @@ This section addresses frequently encountered issues when configuring and managi
 | Flexible timing badge not appearing | Flexible timing toggle was not saved, or page requires refresh | Open edit form and verify Flexible timing toggle is enabled. Click Update to save. Refresh the Work Timings table view to see badge |
 | Overnight shift not calculating correctly | End time is before start time but overnight shift indicator is not recognized | Verify end time is set to a time that would occur the next day (e.g., Start: 11:00 PM, End: 07:00 AM). System should automatically detect and display overnight shift icon |
 | Late arrival not being tracked | Late arrival configuration is not set, or absent day threshold is too lenient | Open work timing edit form. Configure late arrival levels and set appropriate absent day threshold (default 300 minutes). Ensure 'Absent day' toggle is enabled |
-| Extra hours not calculating as expected | Extra hours calculation method is set incorrectly | Review Extra Hours calculation method in edit form. Choose between 'Total hours' (hours exceeding schedule), 'After work end time' (hours past scheduled end), or 'All hours worked' (total hours the employee worked). Verify method aligns with organizational overtime policy |
+| Extra hours not calculating as expected | Extra hours calculation method is set incorrectly, or minimum threshold is filtering small overages | Review Extra Hours calculation method in edit form. Choose between 'Total hours' (hours exceeding schedule), 'After work end time' (hours past scheduled end), or 'All hours worked' (total hours the employee worked). Also check the **Minimum extra hours threshold** under Settings → Attendance → General (default: 30 minutes) — extra hours below this threshold are not recorded. For flexible work timings, extra hours are automatically disabled |
+| Extra hours column not visible in Attendance Report | Column has been hidden via the Columns customization panel | Go to Time → Attendance → Attendance Report → Daily Report. Click the "Columns" button (gear icon). In the "Select columns you want to see" panel, ensure "Extra Hours" is checked. ID, Name, and Actions columns are always visible and cannot be hidden |
+| Employees automatically marked absent even though they were on leave | "Auto-mark employees as absent on missed check-in" is enabled in General settings | This global toggle (Settings → Attendance → General) marks employees absent for the past day if no check-in is recorded during scheduled hours. Verify the employee had an approved leave for that day — attendance and leave systems may need reconciliation. This feature only applies on days the employee has a scheduled work timing via the Shift Scheduler |
 | Cannot find specific work timing in table | Work timing exists but is on different page, or search is case-sensitive | Use search by name textbox at top of table. Try different case variations. Check pagination - there may be 16+ pages depending on total configurations |
 | Half-day timing not available for selection | Half-day toggle was not enabled during work timing creation/update | Edit the work timing configuration and enable the Half-day toggle. Update and save changes |
 | Employees checking in before work start time | 'Disallow check-in before work start time' is not enabled | Edit work timing and enable 'Disallow check-in before work start time' option. This prevents early check-ins that could affect attendance calculations |
