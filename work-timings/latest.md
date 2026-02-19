@@ -196,6 +196,8 @@ A configuration option that defines reduced work hours for half-day schedules, c
 
 Work Timings integrates with and supports several other Attendance and HR features:
 
+- **[Shift Scheduling](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html):** Work timings are selected when creating shifts in the Shift Scheduler. Each shift references a work timing template for its start/end times and attendance rules.
+- **[Split Shifts](https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html):** To create split shifts (two shifts per employee per day), you need at least two work timing templates with non-overlapping time ranges configured in the same work center.
 - **Employee Profiles:** Work timing schedules are assigned to individual employees or employee groups within their profile settings
 - **Attendance Daily Reports:** Daily check-in/check-out records are validated against assigned work timing schedules to determine late arrivals, early departures, and absences
 - **Overtime Policies:** Extra hours calculated based on work timing schedules feed into overtime policy calculations for payroll
@@ -482,6 +484,34 @@ To delete a configuration, locate it in the work timings table and click the Del
 
 If you click "Delete", the system permanently removes the work timing configuration from the platform. The configuration immediately disappears from the work timings table and is no longer available for assignment to employees. Critically, any employees who were assigned to this timing for future dates will lose their work timing assignment, preventing them from checking in until a new timing is assigned. Historical attendance records for employees who previously used this timing remain intact and unchanged. The deletion cannot be undone; if the configuration is needed again, it must be recreated manually with all parameters re-entered. Before deleting, administrators should verify that no active employees are currently assigned to the timing or reassign them to alternative configurations.
 
+#### Subtask: Configure Work Timings for Split Shifts
+
+To schedule [split shifts](https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html) (two work periods in one day for the same employee), you need at least two work timing templates with **non-overlapping time ranges**. The [Shift Scheduler](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html) validates that shift times do not overlap when creating a second shift on the same day.
+
+**Example configuration for split shifts:**
+
+| Work Timing Name | Start Time | End Time | Purpose |
+|----|----|----|----|
+| Office | 07:00 AM | 01:00 PM | Morning shift for split shift employees |
+| 2PM - 6PM | 02:00 PM | 06:00 PM | Afternoon shift for split shift employees |
+
+**Steps to configure:**
+
+1. Navigate to Settings → Attendance → Work Timings
+2. Click **Add new** to create the first work timing (e.g., morning period)
+3. Set the start time and end time for the first period
+4. Configure attendance rules (late arrival, early departure, absent day threshold) as needed
+5. Click **Save**
+6. Repeat steps 2-5 to create the second work timing (e.g., afternoon period)
+7. Ensure time ranges do not overlap — the gap between the end of the first timing and the start of the second timing becomes the employee's break
+8. Both work timings must be available in the same work center for schedulers to create split shifts
+
+<div class="info-box">
+
+**Split Shift Deduction Halving:** When an employee has 2 shifts on the same day, fixed deduction amounts (e.g., late arrival percentage) are automatically divided by 2 to prevent duplicate penalties. This is handled by the [Shift Scheduler](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html), not by the work timing configuration itself.
+
+</div>
+
 </div>
 
 </div>
@@ -556,7 +586,7 @@ Work Timings operate under specific configuration rules that govern how attendan
 - **Default Time Range:** New work timings default to 09:00 AM - 06:00 PM, representing a standard 9-hour workday including breaks
 - **Overnight Shifts:** The system supports overnight shift configurations that span across midnight, indicated by a special icon in the table view
 - **Half-Day Timing:** Optional half-day configuration allows organizations to define reduced working hours for specific scenarios
-- **Flexible Timing:** When enabled, flexible timing creates a special badge display and modifies how late arrival and early departure are calculated
+- **Flexible Timing:** When enabled, flexible timing completely disables Late Arrival and Early Departure violations (shown as "N/A" in the work timings table). Only the Absent Day threshold remains active. Employees see a "Flexible timing" badge on their schedule
 
 #### Attendance Calculation Rules
 
@@ -576,7 +606,7 @@ Work Timings operate under specific configuration rules that govern how attendan
 
 #### Assignment Rules
 
-- **Future Date Assignments:** Work timings can be assigned to employees for future effective dates, supporting advance scheduling
+- **Future Date Assignments:** Work timings can be assigned to employees for future effective dates through the [Shift Scheduler](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html). Navigate to Time → Shift Scheduler to schedule shifts using different work timings for specific dates
 - **Assignment Validation:** System validates that assigned work timing exists and is active before allowing check-in
 - **Bulk Assignment:** Multiple employees can be assigned the same work timing configuration
 
@@ -613,7 +643,7 @@ This section addresses frequently encountered issues when configuring and managi
 | Flexible timing badge not appearing | Flexible timing toggle was not saved, or page requires refresh | Open edit form and verify Flexible timing toggle is enabled. Click Update to save. Refresh the Work Timings table view to see badge |
 | Overnight shift not calculating correctly | End time is before start time but overnight shift indicator is not recognized | Verify end time is set to a time that would occur the next day (e.g., Start: 11:00 PM, End: 07:00 AM). System should automatically detect and display overnight shift icon |
 | Late arrival not being tracked | Late arrival configuration is not set, or absent day threshold is too lenient | Open work timing edit form. Configure late arrival levels and set appropriate absent day threshold (default 300 minutes). Ensure 'Absent day' toggle is enabled |
-| Extra hours not calculating as expected | Extra hours calculation method is set incorrectly | Review Extra Hours calculation method in edit form. Choose between 'Total hours' (cumulative) or specific calculation rules. Verify method aligns with organizational policy |
+| Extra hours not calculating as expected | Extra hours calculation method is set incorrectly | Review Extra Hours calculation method in edit form. Choose between 'Total hours' (hours exceeding schedule), 'After work end time' (hours past scheduled end), or 'All hours worked' (total hours the employee worked). Verify method aligns with organizational overtime policy |
 | Cannot find specific work timing in table | Work timing exists but is on different page, or search is case-sensitive | Use search by name textbox at top of table. Try different case variations. Check pagination - there may be 16+ pages depending on total configurations |
 | Half-day timing not available for selection | Half-day toggle was not enabled during work timing creation/update | Edit the work timing configuration and enable the Half-day toggle. Update and save changes |
 | Employees checking in before work start time | 'Disallow check-in before work start time' is not enabled | Edit work timing and enable 'Disallow check-in before work start time' option. This prevents early check-ins that could affect attendance calculations |
@@ -688,11 +718,16 @@ Work timings are configuration settings, not operational events. Bayzat Workflow
 
 </div>
 
-How do I handle employees who work split shifts?
+How do I configure work timings for split shifts?
 
 <div class="faq-answer">
 
-Split shifts (working two separate periods in one day with a long break in between) are not directly supported by a single work timing configuration. Workarounds include: (1) Create a work timing with 'Allow breaks' enabled and configure break duration to match the split; (2) Use Multiple Visits settings in Attendance module to allow multiple check-in/check-out pairs per day; (3) Assign two separate shifts per day using shift scheduling. Consult with support to determine best approach for your use case.
+To schedule [split shifts](https://mashapajfhp.github.io/user-guides/split-shifts/v1/split-shifts-user-guide.html) (two separate work periods in one day), you need at least **two work timing templates with non-overlapping time ranges**. For example:
+
+- **Morning work timing:** "Office" with Start 07:00 AM, End 01:00 PM
+- **Afternoon work timing:** "2PM - 6PM" with Start 02:00 PM, End 06:00 PM
+
+Create each work timing using the standard creation process (Settings → Attendance → Work Timings → Add new). Ensure the time ranges do not overlap — the [Shift Scheduler](https://mashapajfhp.github.io/user-guides/shift-scheduling/v1/shift-scheduling-user-guide.html) will reject overlapping shifts. Both work timings must be available in the same work center. Once configured, schedulers can assign two shifts to the same employee on the same day in the Shift Scheduler.
 
 </div>
 
@@ -786,7 +821,7 @@ The selected method affects how overtime and extra hours appear in attendance re
 | **CRUD Operations** | Create, Read, Update, Delete - the four basic operations for managing data. Work Timings support all CRUD operations through the Settings → Attendance interface. |
 | **Early Departure** | When an employee checks out before the designated work end time. Work timing configuration can track early departures and apply policy rules or deductions. |
 | **Extra Hours** | Time worked beyond the standard work timing schedule. Three calculation methods are available: "Total hours" (hours exceeding scheduled work time), "After work end time" (hours worked past the scheduled end time), and "All hours worked" (all hours the employee worked). The method is selected per work timing configuration. Extra hours may qualify for overtime pay depending on policy configuration. |
-| **Flexible Timing** | A work timing configuration that allows employees variable start and end times within defined boundaries. When enabled, creates a special badge display and adjusts how late arrival and early departure violations are calculated. |
+| **Flexible Timing** | A work timing configuration that allows employees variable start and end times within defined boundaries. When enabled, creates a special badge display and completely disables Late Arrival and Early Departure violations (shown as "N/A" in the table). Only the Absent Day threshold remains active for flexible timing schedules. |
 | **Half-Day Timing** | A reduced work schedule option within a work timing configuration, typically representing approximately half the standard daily hours. Used for partial work days, religious observances, or special schedules. |
 | **Late Arrival** | When an employee checks in after the designated work start time but within the absent day threshold. Can be tracked in multiple levels (e.g., '1 level') to create graduated consequences for tardiness. |
 | **Overnight Shift** | A work timing where the end time occurs on the calendar day following the start time (e.g., 11:00 PM to 7:00 AM). System automatically detects overnight shifts when end time is before start time and displays a special indicator icon. |
