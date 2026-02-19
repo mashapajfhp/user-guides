@@ -2261,6 +2261,7 @@ A workflow that calculates the exact expiry date for each comp-off based on when
 | Hours not calculated | Missing check-out entry | Employee must check out; manager can edit record |
 | Cannot edit historical record | Work timing configuration changed after check-in | Records locked to original config; use regularization |
 | Overtime not showing | Employee not assigned to overtime policy | Assign employee to overtime policy before shift |
+| Check-in fails with internet error | Device has no internet connection or Bayzat system is temporarily unavailable | Ensure the device has a stable Wi-Fi or mobile data connection. Mobile app and kiosk mode require an active internet connection to record attendance. If the Bayzat system is down, wait for it to come back online and retry. Note: biometric devices are not affected and will sync data automatically once connectivity is restored. |
 
 ### Known Limitations
 
@@ -2354,6 +2355,18 @@ A workflow that calculates the exact expiry date for each comp-off based on when
 
 </div>
 
+<div class="warning-box">
+
+**Internet Connection Required for Mobile App & Kiosk Mode:** The Bayzat mobile app and kiosk mode require an active internet connection to record attendance check-in and check-out. If the device is offline or the connection is unstable, the app displays: "Your internet connection is unstable, please make sure your device connected to internet." Attendance will not be recorded until connectivity is restored. There is no offline mode or deferred sync for mobile or kiosk check-ins.
+
+</div>
+
+<div class="info-box">
+
+**Biometric Devices Are Not Affected by Connectivity Issues:** Biometric attendance devices operate using an asynchronous queue mechanism with the cloud service provider. If the Bayzat system is temporarily down, biometric devices continue to record punches locally. Once Bayzat is back online, the queued punch data is automatically consumed and synced to the system. The queue capacity is high, so employees using biometric devices can continue to punch in and out normally during Bayzat downtime without losing any attendance records.
+
+</div>
+
 ### Edge Cases
 
 | Scenario | Behavior | Recommended Action |
@@ -2430,6 +2443,17 @@ What if my visit location doesn't appear in the list?
 <div class="faq-answer">
 
 If the company allows it, employees can add their current location by selecting "Add current location" when starting a visit. The employee should be at the actual meeting spot first, as only locations within the configured radius will appear. Enter the location name and details, then save it for future use.
+
+</div>
+
+Can I check in when my device is offline or has no internet connection?
+
+<div class="faq-answer">
+
+It depends on how you check in:
+
+- **Mobile app or kiosk mode:** No. An active internet connection is required. If your device is offline or the connection is unstable, the app will display: "Your internet connection is unstable, please make sure your device connected to internet." You must restore connectivity before your attendance can be recorded. There is no offline mode or deferred sync for these methods.
+- **Biometric device (fingerprint/face scanner):** Yes. Biometric devices are not affected by Bayzat downtime or internet issues. They store attendance punches locally using an asynchronous queue mechanism and automatically sync the data to Bayzat once the system is back online. No attendance records are lost.
 
 </div>
 
