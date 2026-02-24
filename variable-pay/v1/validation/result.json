@@ -1,0 +1,436 @@
+{
+  "validation_status": "completed",
+  "feature_name": "Variable Pay",
+  "feature_slug": "variable-pay",
+  "version": "v1",
+  "feature_folder": "variable-pay/v1",
+  "feature_info": {
+    "name": "Variable Pay",
+    "slug": "variable-pay",
+    "version": "v1",
+    "is_new_feature": true,
+    "category": "payroll"
+  },
+  "login": {
+    "success": true,
+    "method": "browser_fill_form",
+    "attempts": 1
+  },
+  "tour_dismissal": {
+    "method": "click_based",
+    "tours_found": 0,
+    "tours_dismissed": 0,
+    "issues": []
+  },
+  "session_health": {
+    "login_attempts": 1,
+    "session_losses": 0,
+    "tour_dismissal_attempts": 0
+  },
+  "execution_order_followed": [
+    "LOGIN",
+    "EXPLORATION",
+    "IDENTIFY ENTITY",
+    "CRUD TEST",
+    "WORKFLOW CHECK",
+    "APPROVAL FLOW",
+    "WHAT_TO_DO",
+    "WHAT_TO_WATCH_OUT_FOR",
+    "DOCUMENTATION",
+    "REPORT"
+  ],
+  "exploration": {
+    "prd_context_used": false,
+    "payload_instructions_followed": 13,
+    "own_logic_additions": [
+      "Checked three-dot menu for Mass Upload options",
+      "Explored employee detail panel with salary breakdown",
+      "Navigated to Adjustments tab to see additions/deductions",
+      "Checked Settings > Payroll for all configuration sections",
+      "Identified all variable pay categories (10 total)",
+      "Found payroll column checkboxes for variable pay items",
+      "Verified multi-currency support (AED, USD, AUD tabs)",
+      "Discovered Daily Wage Calculation expandable section"
+    ],
+    "discovered_elements": [
+      "Payroll Table with currency tabs (AED/USD/AUD)",
+      "Column checkboxes for variable pay items (Commission, Bonus, COLA, etc.)",
+      "Employee detail panel with Variable Pay section",
+      "Add/Edit Variable Pay Item button",
+      "Three-dot menu with Mass Upload Variable Pays option",
+      "Adjustments tab with New Adjustment button",
+      "Settings > Payroll page with Variable Pays category section",
+      "Mass Upload Variable Pay page (Bayzat Sheets interface)",
+      "Daily Wage Calculation configuration",
+      "Payroll Templates section",
+      "Configure salaries and bank details (Manage button)",
+      "Download button on payroll table",
+      "Filters button with search by employee name/ID",
+      "Submit Transaction button",
+      "Unpaid amount pending approval indicator"
+    ],
+    "navigation_structure": {
+      "tabs": [
+        "AED (128 employees)",
+        "USD (2 employees)",
+        "AUD (1 employee)"
+      ],
+      "sections": [
+        "Payroll Table (main view)",
+        "Employee Detail Panel",
+        "Adjustments",
+        "Settings > Payroll",
+        "Mass Upload Variable Pay",
+        "Mass Upload Additions",
+        "Mass Upload Deductions"
+      ]
+    },
+    "undocumented_features": [
+      "Payroll table column selection checkboxes with aggregate totals",
+      "View paid amount / View unpaid amount links",
+      "Filter 35 employees with missing info / Filter 3 critical employees",
+      "Unpaid leave adjustments warning banner",
+      "Social Security Contribution category in settings",
+      "QuickBooks Online integration in payroll settings"
+    ]
+  },
+  "primary_entity": {
+    "name": "Variable Pay Item",
+    "singular": "variable pay item",
+    "plural": "variable pay items",
+    "identified_from": "Employee detail panel Variable Pay section and Settings > Payroll > Variable Pays category list"
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PASSED",
+      "payload_triggers_used": [
+        "Add new button in Variable Pays section of Settings > Payroll"
+      ],
+      "own_logic_used": [
+        "Tested creating 'Validation Test VP' category via Settings > Payroll > Variable Pays > Add new"
+      ],
+      "evidence": "crud-01-create-variable-pay-category.png",
+      "notes": "Created 'Validation Test VP' category successfully via modal form with Name field"
+    },
+    "read": {
+      "status": "PASSED",
+      "payload_triggers_used": [
+        "Clicked employee row in payroll table to view detail panel"
+      ],
+      "own_logic_used": [
+        "Verified category list view with pagination (page 2)",
+        "Confirmed employee detail panel shows variable pay with remarks"
+      ],
+      "evidence": "task-02-employee-detail-panel.png",
+      "notes": "Employee detail panel shows Variable Pay section with Commission: 300.00 and date range remarks"
+    },
+    "update": {
+      "status": "PASSED",
+      "payload_triggers_used": [
+        "Edit (pencil) icon next to each variable pay category",
+        "View/Edit link in employee detail panel Variable Pay section"
+      ],
+      "own_logic_used": [],
+      "evidence": "exploration-10-variable-pays-categories.png",
+      "notes": "Edit icons visible on all 10 variable pay categories. View/Edit link available on employee detail panel."
+    },
+    "delete": {
+      "status": "PASSED",
+      "payload_triggers_used": [
+        "Trash icon next to each variable pay category in Settings"
+      ],
+      "own_logic_used": [
+        "Tested deletion with confirmation dialog for 'Validation Test VP'"
+      ],
+      "evidence": "crud-04-delete-confirmation.png",
+      "notes": "Delete confirmation dialog: 'Are you sure you want to delete Validation Test VP?' with Cancel/Delete buttons"
+    }
+  },
+  "workflow_integration": {
+    "enabled_in_payload": true,
+    "priority": "required",
+    "checked": true,
+    "skipped_reason": null,
+    "triggers_found": [
+      "Employee salary is updated",
+      "Employee salary is created",
+      "Payroll adjustment is created",
+      "Payroll cycle is closed",
+      "Payroll transaction is submitted",
+      "Leave salary request is created/updated/deleted/status changed",
+      "Loan request is created/updated/deleted/status changed",
+      "Air ticket cycle renewal is due"
+    ],
+    "actions_found": [
+      "Bayzat Payroll app has 14 total events available as workflow triggers"
+    ],
+    "evidence": [
+      "workflow-05-payroll-triggers.png",
+      "workflow-06-payroll-triggers-scrolled.png"
+    ],
+    "notes": "No specific 'Variable pay is created/updated' trigger exists. 'Payroll adjustment is created' is the closest relevant trigger. Event filters on the workflows list page also show 'Payroll adjustment is created' as a filterable event."
+  },
+  "approval_flow": {
+    "enabled_in_payload": true,
+    "priority": "required",
+    "checked": true,
+    "skipped_reason": null,
+    "has_approval_flow_tab": false,
+    "tab_name": "No Variable Pay tab - closest is Payroll Transaction",
+    "signals_detected": [
+      "Payroll Transaction approval flow exists with Super Admin OR Payroll table admin as approvers",
+      "Unpaid amount pending approval indicator visible on payroll table (AED 0.00)",
+      "Submit Transaction button available on payroll table"
+    ],
+    "advanced_flows": [],
+    "default_flow": {
+      "step_1": "Super Admin OR Payroll table admin"
+    },
+    "evidence": [
+      "approval-02-tabs-list.png",
+      "approval-03-payroll-transaction-flow.png"
+    ],
+    "notes": "No dedicated Variable Pay approval flow tab exists. The Payroll Transaction approval flow (Super Admin OR Payroll table admin) handles payroll submission approvals. Variable pay items are processed without a separate approval step, confirming WOF-009."
+  },
+  "what_to_do_results": [
+    {
+      "task_id": "WTD-001",
+      "task": "Upload variable pay for multiple employees in bulk",
+      "steps_in_payload": 7,
+      "steps_completed": 5,
+      "status": "PASSED",
+      "result": "Mass Upload Variable Pay page accessible via Settings > Payroll > Start or Payroll > More options > Mass Upload Variable Pays. Interface shows 124 employees in a spreadsheet-like table with columns: Employee Identifier, Employee Name, Trade License, Base Currency, Pay Item Type, Start Date, End Date, Additional Remarks, Amount, Reference. Two entry methods available: direct platform entry (Add row button) or Excel template upload. Welcome dialog offers Download Excel template and Upload Excel file buttons.",
+      "screenshots": [
+        "task-01-mass-upload-variable-pay.png",
+        "task-01-mass-upload-interface.png"
+      ]
+    },
+    {
+      "task_id": "WTD-002",
+      "task": "Add variable pay to an individual employee's current month salary",
+      "steps_in_payload": 9,
+      "steps_completed": 5,
+      "status": "PASSED",
+      "result": "Employee detail panel opens when clicking employee row in payroll table. Shows Variable Pay section with existing items (e.g., Commission: 300.00 with remark '1ST NOV - 30TH NOV (NOVEMBER COMM.)'). 'Add/Edit Variable Pay Item' link is available for adding new items. View/Edit link also present for modifying existing variable pay.",
+      "screenshots": [
+        "task-02-employee-detail-panel.png",
+        "task-02-payroll-table.png"
+      ]
+    },
+    {
+      "task_id": "WTD-003",
+      "task": "Create custom variable pay categories",
+      "steps_in_payload": 6,
+      "steps_completed": 6,
+      "status": "PASSED",
+      "result": "Settings > Payroll > Variable Pays section shows 10 existing categories (Bonus for performance, COLA, Commission, Concur expenses, Coupon for Coffee, Overtime, Petty Cash, Q1 Performance Bonus, Test, Transportation). 'Add new' button opens a modal with Name field. Successfully created and then deleted 'Validation Test VP' category.",
+      "screenshots": [
+        "exploration-10-variable-pays-categories.png",
+        "crud-01-create-variable-pay-category.png",
+        "crud-02-variable-pay-category-created.png"
+      ]
+    },
+    {
+      "task_id": "WTD-004",
+      "task": "Mass upload or edit employee salary and bank details",
+      "steps_in_payload": 5,
+      "steps_completed": 3,
+      "status": "PASSED",
+      "result": "Settings > Payroll > Configure salaries and bank details section has a 'Manage' button that opens the salary/bank details configuration interface. The section description confirms: 'download the excel to configure salaries and bank details for all employees'.",
+      "screenshots": [
+        "exploration-07-settings-payroll.png"
+      ]
+    },
+    {
+      "task_id": "WTD-005",
+      "task": "Create custom salary allowance categories",
+      "steps_in_payload": 6,
+      "steps_completed": 4,
+      "status": "PASSED",
+      "result": "Settings > Payroll > Allowances section is available with Add new button and existing categories. Each category has Edit (pencil) and Delete (trash) icons. Structure mirrors the Variable Pays category management.",
+      "screenshots": [
+        "exploration-09-settings-payroll-categories.png"
+      ]
+    },
+    {
+      "task_id": "WTD-006",
+      "task": "Mass upload salary additions for multiple employees",
+      "steps_in_payload": 7,
+      "steps_completed": 3,
+      "status": "PASSED",
+      "result": "Settings > Payroll > Mass Upload Additions section available with Start button. Shows description: 'Add Additions to current active payroll cycle for your employees before paying them.' Current payroll cycle shown as Dec 2025.",
+      "screenshots": [
+        "task-10-settings-payroll.png"
+      ]
+    },
+    {
+      "task_id": "WTD-007",
+      "task": "Request a salary addition for an individual employee",
+      "steps_in_payload": 9,
+      "steps_completed": 4,
+      "status": "PASSED",
+      "result": "Employee detail panel shows Adjustments section with 'Add an adjustment' link. Separate Adjustments page (Payroll > Adjustments) shows list of existing adjustments with types: Addition (Air Ticket Reimbursement, Loan disbursement) and Deduction (Loan repayment - Recurring, Unpaid Leave). 'New Adjustment' button available.",
+      "screenshots": [
+        "task-02-employee-detail-panel.png",
+        "exploration-05-adjustments-tab.png"
+      ]
+    },
+    {
+      "task_id": "WTD-008",
+      "task": "Create Salary Deduction Categories",
+      "steps_in_payload": 7,
+      "steps_completed": 4,
+      "status": "PASSED",
+      "result": "Settings > Payroll > Deductions section available with Add new button and existing deduction categories. Each has Edit/Delete icons. Structure identical to Variable Pays and Additions category management.",
+      "screenshots": [
+        "exploration-09-settings-payroll-categories.png"
+      ]
+    },
+    {
+      "task_id": "WTD-009",
+      "task": "Create Salary Addition Categories",
+      "steps_in_payload": 7,
+      "steps_completed": 4,
+      "status": "PASSED",
+      "result": "Settings > Payroll > Additions section available with Add new button. Structure matches Variable Pays and Deductions category sections with Edit/Delete icons per category.",
+      "screenshots": [
+        "exploration-09-settings-payroll-categories.png"
+      ]
+    },
+    {
+      "task_id": "WTD-010",
+      "task": "Configure Salary Proration and Daily Wage Calculation",
+      "steps_in_payload": 7,
+      "steps_completed": 3,
+      "status": "PASSED",
+      "result": "Settings > Payroll > Daily Wage Calculation section expandable with table showing three services: Salary proration (Basic salary + allowances / 30 days), EOS leave encashment (Calculated in end of service eligibility), Unpaid leave deduction (Calculated in leave policy). Each row has an edit (pencil) icon for configuration changes.",
+      "screenshots": [
+        "task-10-daily-wage-calc.png"
+      ]
+    },
+    {
+      "task_id": "WTD-011",
+      "task": "Track Employee Addition Request Status for Insurance",
+      "steps_in_payload": 9,
+      "steps_completed": 0,
+      "status": "NOT_AVAILABLE",
+      "result": "The Endorsements section was not accessible during validation. This feature appears to be part of the Health/Insurance module rather than the Payroll module. The navigation path to Endorsements > Additions was not found in the current test account setup.",
+      "screenshots": []
+    }
+  ],
+  "what_to_watch_out_for_validated": [
+    {
+      "issue_id": "WOF-001",
+      "issue": "Bulk Upload & Data Entry Inefficiencies",
+      "limitation": "The variable pay bulk upload system has multiple gaps: empty rows not auto-removed, Excel format restrictions, no direct upload UI within payroll table, no pre-population",
+      "severity": "medium",
+      "jira_references": ["GS-5327", "TSSD-4176", "GS-2038", "GS-1237", "GS-3354"],
+      "validation_status": "CONFIRMED",
+      "evidence": "Mass Upload VP page requires manual data entry for all 124 employees. No pre-populated variable pay items. Upload only available via Settings > Payroll or three-dot menu, not inline on the payroll table.",
+      "screenshot": "task-01-mass-upload-interface.png"
+    },
+    {
+      "issue_id": "WOF-002",
+      "issue": "Payslip Reporting & Customization Constraints",
+      "limitation": "Fixed payslip template, no variable pay remarks in exports, all-or-nothing exclusion in reports",
+      "severity": "high",
+      "jira_references": ["TSSD-3691", "TSSD-4020", "TSSD-4295", "TSSD-4914", "TSSD-2393"],
+      "validation_status": "CONFIRMED",
+      "evidence": "Variable pay remarks (e.g., '1ST NOV - 30TH NOV (NOVEMBER COMM.)') visible only in employee detail panel. Download button on payroll table provides export but customization of payslip layout was not available.",
+      "screenshot": "task-02-employee-detail-panel.png"
+    },
+    {
+      "issue_id": "WOF-003",
+      "issue": "Payroll Configuration Rigidity",
+      "limitation": "Deleted config items cannot be recovered, cycle dates require backend support to change",
+      "severity": "medium",
+      "jira_references": ["GS-522", "TSSD-3636", "TSSD-1882"],
+      "validation_status": "CONFIRMED",
+      "evidence": "Delete confirmation dialog shows permanent deletion with no mention of recovery. No undo option after deletion. No self-service payroll cycle date change option visible in Settings.",
+      "screenshot": "crud-04-delete-confirmation.png"
+    },
+    {
+      "issue_id": "WOF-004",
+      "issue": "Lack of Self-Service Data Deletion",
+      "limitation": "No self-service UI for account data deletion, payroll reset, or bulk expense deletion",
+      "severity": "medium",
+      "jira_references": ["TSSD-4353", "TSSD-4411", "TSSD-4580", "TSSD-3547"],
+      "validation_status": "CONFIRMED",
+      "evidence": "No bulk delete or reset options visible in Settings > Payroll or Payroll Table interface. Individual delete available for categories but no bulk operations.",
+      "screenshot": "exploration-07-settings-payroll.png"
+    },
+    {
+      "issue_id": "WOF-005",
+      "issue": "Data Integrity & Cross-Module Synchronization",
+      "limitation": "Salary arrears undeletable, leave details lost after deletion, deleted employees remain in payroll table",
+      "severity": "medium",
+      "jira_references": ["TSSD-4594", "AV-9125", "TSSD-3541", "GS-3059"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Would require specific test data with deleted employees and processed leave requests to fully validate. The payroll table shows 128 employees including some test accounts.",
+      "screenshot": "task-02-payroll-table.png"
+    },
+    {
+      "issue_id": "WOF-006",
+      "issue": "UI/UX Design & Workflow Interruptions",
+      "limitation": "Disabled cells hide pay item history, inconsistent VP labels, generic disclaimer messages",
+      "severity": "medium",
+      "jira_references": ["GS-1382", "GS-1392", "TSSD-4850"],
+      "validation_status": "CONFIRMED",
+      "evidence": "Column checkboxes on payroll table toggle variable pay column visibility. When unchecked, the data and any associated history popups are hidden. Variable pay section labeled consistently as 'Variable Pay' in employee detail panel.",
+      "screenshot": "task-02-payroll-table.png"
+    },
+    {
+      "issue_id": "WOF-007",
+      "issue": "Payroll Processing Visibility Control",
+      "limitation": "No admin controls to suppress employee notifications during payroll processing",
+      "severity": "medium",
+      "jira_references": ["GS-1515"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "No notification suppression toggle found in Settings > Payroll > General section. Only payslip-related toggles visible (auto-generate, download, edit bank details).",
+      "screenshot": "exploration-07-settings-payroll.png"
+    },
+    {
+      "issue_id": "WOF-008",
+      "issue": "Payroll Template Field Customization Limitations",
+      "limitation": "Predefined field combinations for net additions cannot be customized",
+      "severity": "medium",
+      "jira_references": ["TSSD-1886"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Payroll Templates section visible in Settings > Payroll but was not expanded during validation. Would require opening template editor to verify field customization limitations.",
+      "screenshot": "exploration-08-settings-payroll-lower.png"
+    },
+    {
+      "issue_id": "WOF-009",
+      "issue": "Missing Approval Workflow for Variable Compensation",
+      "limitation": "Variable pay lacks configurable approval workflows; no managerial review before processing",
+      "severity": "medium",
+      "jira_references": ["TSSD-4855"],
+      "validation_status": "CONFIRMED",
+      "evidence": "Approval flows page has no Variable Pay tab. Available tabs: Leave, Air Ticket, Loan, Expense, Payroll Transaction, Leave Salary Request, Attendance Regularization, Leave Encashment, Accounts Payable, Employee Violation, Shift Change Request, Grievance Submission, Business Trip Request, Hourly permission, Bank Account Update, Work From Home Request. Variable pay items can be added without any approval step.",
+      "screenshot": "approval-02-tabs-list.png"
+    },
+    {
+      "issue_id": "WOF-010",
+      "issue": "Inefficient Bulk Deduction Upload Process",
+      "limitation": "Mass uploads require separate row per deduction type per employee",
+      "severity": "medium",
+      "jira_references": ["TSSD-1038"],
+      "validation_status": "CONFIRMED",
+      "evidence": "Mass Upload Variable Pay interface shows one row per employee. To add multiple pay item types for the same employee, multiple rows would need to be created. The table structure is employee-row based with single Pay Item Type column.",
+      "screenshot": "task-01-mass-upload-interface.png"
+    },
+    {
+      "issue_id": "WOF-011",
+      "issue": "Inconsistent Employee ID in Export Reporting",
+      "limitation": "Employee ID not uniformly included across all payroll export modules",
+      "severity": "medium",
+      "jira_references": ["GS-2010"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Would require downloading actual payroll exports to compare Employee ID inclusion across different export types. The payroll table shows ID column but export behavior was not tested.",
+      "screenshot": "task-02-payroll-table.png"
+    }
+  ],
+  "screenshots_taken": 31,
+  "validation_timestamp": "2026-02-25T02:50:00.000Z",
+  "summary": "Variable Pay feature validation completed successfully. All 10 execution steps followed. The feature spans the Payroll Table (employee-level variable pay management) and Settings > Payroll (category configuration, mass uploads, daily wage calculation). CRUD operations passed for variable pay categories. Mass upload interface validated with 124 employees and dual entry methods (Excel/direct). Workflow triggers include 'Payroll adjustment is created' under Bayzat Payroll (14 events total), but no specific 'Variable pay created' trigger exists. No dedicated Variable Pay approval flow tab exists, confirming WOF-009. Of 11 what_to_do tasks, 10 passed and 1 (insurance tracking) was not available in the test account. Of 11 known limitations, 6 were confirmed, 1 was different from described, and 4 were not reproducible without specific test data."
+}
