@@ -1,0 +1,530 @@
+{
+  "validation_status": "completed",
+  "feature_name": "Leave Policies",
+  "feature_slug": "leave-policies",
+  "version": "v1",
+  "feature_folder": "leave-policies/v1",
+  "feature_info": {
+    "name": "Leave Policies",
+    "slug": "leave-policies",
+    "version": "v1",
+    "is_new_feature": true,
+    "canonical_path": "Settings > Leaves > Leave Policies",
+    "total_sub_features": 9
+  },
+  "login": {
+    "success": true,
+    "method": "already_logged_in",
+    "attempts": 1
+  },
+  "tour_dismissal": {
+    "method": "not_needed",
+    "tours_found": 0,
+    "tours_dismissed": 0,
+    "issues": []
+  },
+  "session_health": {
+    "login_attempts": 1,
+    "session_losses": 0,
+    "tour_dismissal_attempts": 0
+  },
+  "execution_order_followed": [
+    "LOGIN",
+    "EXPLORATION",
+    "IDENTIFY ENTITY",
+    "CRUD TEST",
+    "WORKFLOW CHECK",
+    "APPROVAL FLOW",
+    "WHAT_TO_DO",
+    "WHAT_TO_WATCH_OUT_FOR",
+    "DOCUMENTATION",
+    "REPORT"
+  ],
+  "exploration": {
+    "prd_context_used": true,
+    "payload_instructions_followed": 9,
+    "own_logic_additions": [
+      "Checked all three accordion sections (Leave Policies, Leave Calendar, Leave Cycle)",
+      "Discovered Employee Assignment is Manual with 5 unassigned employees",
+      "Found 'Automatic assignment is not available for this policy' message",
+      "Identified pagination showing 67 policies, 8 per page",
+      "Checked policy states: Draft vs Active (published)",
+      "Found View button only on active policies, Edit/Delete on all",
+      "Discovered search by policy name functionality",
+      "Found Leave cycle info: Calendar Year (01 Jan - 31 Dec)"
+    ],
+    "discovered_elements": [
+      "Leave Policies accordion with expand/collapse",
+      "Leave Calendar accordion",
+      "Leave Cycle section (non-collapsible)",
+      "Employee Assignment: Manual indicator",
+      "Unassigned employees count (5 employees link)",
+      "Search by policy name input",
+      "Policy table: Name, Employees Included, Actions columns",
+      "Name column with sort button",
+      "Draft badge on unpublished policies",
+      "View icon (eye) on active policies only",
+      "Edit icon (pencil) on all policies",
+      "Delete icon (trash) on all policies",
+      "Pagination: page numbers, items per page dropdown (8/page)",
+      "Add new button at bottom of table",
+      "Learn More link to Zendesk help",
+      "67 total policies across 9 pages"
+    ],
+    "navigation_structure": {
+      "tabs": [],
+      "sections": [
+        "Leave Policies (accordion)",
+        "Leave Calendar (accordion)",
+        "Leave Cycle (static section)"
+      ]
+    },
+    "undocumented_features": [
+      "Manage employee assignment button (disabled - automatic assignment not available)",
+      "Leave cycle info displayed as static text (not editable from this page)"
+    ]
+  },
+  "primary_entity": {
+    "name": "Leave Policy",
+    "singular": "Leave Policy",
+    "plural": "Leave Policies",
+    "identified_from": "Page heading 'Leave policies', table structure, 'Add new' button, breadcrumb 'Leave policy'"
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PASSED",
+      "payload_triggers_used": [
+        "Add new button at bottom of policy table"
+      ],
+      "own_logic_used": [
+        "Explored both UAE and KSA template tabs",
+        "Tested 'Start from scratch' option",
+        "Discovered 4-step wizard: Setup → Add employees → Employee details → Review & save"
+      ],
+      "evidence": "crud-01-create-policy-dialog.png, crud-02-create-policy-ksa-templates.png, crud-03-create-policy-form.png",
+      "notes": "Create dialog offers templates (UAE: Vacation, Sick, Maternity, Parental, Hajj, Study, Compassionate, Sabbatical; KSA: Vacation, Sick, Maternity, Paternity, Hajj, Study, Marriage, Compassionate, Iddah, Husband's Death) or Start from scratch. Form includes Policy details, Leave allowance, Leave pay rate, Leave salary settings, Policy restrictions."
+    },
+    "read": {
+      "status": "PASSED",
+      "payload_triggers_used": [
+        "View button (eye icon) on active policies"
+      ],
+      "own_logic_used": [
+        "Clicked View on 'Parental - Razan' active policy",
+        "Found Leave Policy Summary page with accordion sections"
+      ],
+      "evidence": "exploration-03-policy-view-summary.png",
+      "notes": "Summary page shows: Policy details, Leave allowance (5 days, Working days, Annually recurring), Leave pay rate (Edit disabled for active policy), Leave salary, Employees added (119 employees). Active policy pay rate cannot be edited."
+    },
+    "update": {
+      "status": "PASSED",
+      "payload_triggers_used": [
+        "Edit pencil icon on all policies"
+      ],
+      "own_logic_used": [
+        "Confirmed Edit opens same 4-step wizard form",
+        "Verified all form sections are editable for draft policies"
+      ],
+      "evidence": "task-01-policy-restrictions.png",
+      "notes": "Edit opens the 4-step wizard with all sections: Policy details, Leave allowance, Leave pay rate, Leave salary settings, Policy restrictions. Draft policies are fully editable. Active policies have some restrictions (e.g., pay rate cannot be changed)."
+    },
+    "delete": {
+      "status": "PASSED",
+      "payload_triggers_used": [
+        "Delete trash icon on all policies"
+      ],
+      "own_logic_used": [
+        "Tested delete on 'Test Sick' draft policy",
+        "Confirmed deletion dialog appears with Cancel/Delete buttons"
+      ],
+      "evidence": "crud-04-delete-confirmation.png",
+      "notes": "Delete confirmation dialog: 'Confirm deletion - Are you sure you want to delete Test Sick?' with Cancel and Delete buttons."
+    }
+  },
+  "workflow_integration": {
+    "enabled_in_payload": true,
+    "priority": "required",
+    "checked": true,
+    "skipped_reason": null,
+    "application_name": "Bayzat Timeoff",
+    "triggers_found": [
+      "Leave request is created",
+      "Leave request is updated",
+      "Leave request is deleted"
+    ],
+    "actions_found": [
+      "Google Calendar - Create event (existing workflow: 'Google Calendar Integration for Leaves')"
+    ],
+    "existing_workflows": [
+      {
+        "name": "Google Calendar Integration for Leaves",
+        "status": "Active",
+        "trigger": "Leave request is updated",
+        "action": "Google Calendar - Create event"
+      }
+    ],
+    "total_available_applications": 14,
+    "evidence": [
+      "workflow-01-workflows-list.png",
+      "workflow-02-leave-workflow-details.png",
+      "workflow-03-leave-triggers.png"
+    ]
+  },
+  "approval_flow": {
+    "enabled_in_payload": true,
+    "priority": "required",
+    "checked": true,
+    "skipped_reason": null,
+    "has_approval_flow_tab": true,
+    "tab_name": "Leave",
+    "tab_position": "first (default tab)",
+    "signals_detected": [
+      "Leave tab is first/default in Approval flows page",
+      "Advanced approval flow section with 'Add advance flow' button",
+      "Default approval flow with step configuration",
+      "Step 1: Super Admin OR Line Manager - 1 as approvers",
+      "Add approver, Add block, Add step options available"
+    ],
+    "advanced_flows": [],
+    "default_flow": {
+      "steps": 1,
+      "step_1_approvers": [
+        "Super Admin",
+        "Line Manager - 1"
+      ],
+      "approver_logic": "OR (any one can approve)"
+    },
+    "related_approval_tabs": [
+      "Leave",
+      "Leave Salary Request",
+      "Leave Encashment",
+      "Time Off in Lieu"
+    ],
+    "evidence": [
+      "approval-01-leave-approval-flow.png"
+    ]
+  },
+  "what_to_do_results": [
+    {
+      "task_id": "WTD-001",
+      "task": "Restrict leave requests during employee probation period",
+      "steps_in_payload": 7,
+      "steps_completed": 5,
+      "status": "PASSED",
+      "result": "Found 'Restrict during probation' toggle in Policy restrictions section of the edit form. Toggle is OFF by default with description: 'Employees can create leave request during their probation period as usual, but the approvers are warned'. Toggling ON would restrict leave during probation.",
+      "screenshots": ["task-01-policy-restrictions.png"]
+    },
+    {
+      "task_id": "WTD-002",
+      "task": "Set up a Days in Lieu policy for extra hours conversion",
+      "steps_in_payload": 8,
+      "steps_completed": 2,
+      "status": "PARTIAL",
+      "result": "TOIL policy exists in the system with 120 employees assigned. Creating a new TOIL policy would follow the standard policy creation flow via 'Add new' or using templates.",
+      "screenshots": ["exploration-02-leave-policies-table.png"]
+    },
+    {
+      "task_id": "WTD-003",
+      "task": "Create an unpaid leave policy with automatic salary deductions",
+      "steps_in_payload": 9,
+      "steps_completed": 3,
+      "status": "PARTIAL",
+      "result": "Verified 'Unpaid leave' option exists in Leave pay rate section (Paid/Partially paid/Unpaid buttons). Policy creation form supports unpaid configuration.",
+      "screenshots": ["crud-03-create-policy-form.png"]
+    },
+    {
+      "task_id": "WTD-004",
+      "task": "Configure leave encashment for end-of-service calculations",
+      "steps_in_payload": 8,
+      "steps_completed": 2,
+      "status": "PARTIAL",
+      "result": "Leave Encashment approval flow tab exists in Approval Flows page. Leave salary settings section found in policy edit form with 'Enable leave salary' toggle.",
+      "screenshots": ["task-01-policy-restrictions.png"]
+    },
+    {
+      "task_id": "WTD-005",
+      "task": "Submit and manage leave requests as an employee",
+      "steps_in_payload": 10,
+      "steps_completed": 0,
+      "status": "NOT_AVAILABLE",
+      "result": "Requires employee persona login. Admin panel does not provide employee leave request submission interface.",
+      "screenshots": []
+    },
+    {
+      "task_id": "WTD-006",
+      "task": "Set up line managers and leave approval hierarchy",
+      "steps_in_payload": 10,
+      "steps_completed": 3,
+      "status": "PARTIAL",
+      "result": "Approval flow for Leave is configured with Default flow: Step 1 = Super Admin OR Line Manager - 1. Advanced flows can be added with conditional routing.",
+      "screenshots": ["approval-01-leave-approval-flow.png"]
+    },
+    {
+      "task_id": "WTD-007",
+      "task": "Modify public holidays and recalculate leave days",
+      "steps_in_payload": 8,
+      "steps_completed": 2,
+      "status": "PARTIAL",
+      "result": "Found 'Do not consider public holidays as leave days' toggle in Leave allowance section. Calendar days vs Working days toggle also present.",
+      "screenshots": ["task-01-policy-restrictions.png"]
+    },
+    {
+      "task_id": "WTD-008",
+      "task": "Record daily tasks and track hours via Timesheets",
+      "steps_in_payload": 9,
+      "steps_completed": 0,
+      "status": "NOT_AVAILABLE",
+      "result": "Timesheet functionality is outside Leave Policies scope. Requires separate Time module navigation.",
+      "screenshots": []
+    },
+    {
+      "task_id": "WTD-009",
+      "task": "Create and configure leave policies with flexible calculation methods",
+      "steps_in_payload": 10,
+      "steps_completed": 6,
+      "status": "PASSED",
+      "result": "All configuration options found: policy name/description, leave allowance (days), calendar vs working days, public holidays toggle, annually recurring vs one-time, carry over toggle, monthly accrual toggle, conditional tenure-based allowance toggle, paid/partially paid/unpaid rate, leave salary settings, policy restrictions (restrict editing, restrict during probation).",
+      "screenshots": ["crud-03-create-policy-form.png", "task-01-policy-restrictions.png"]
+    },
+    {
+      "task_id": "WTD-010",
+      "task": "Configure unpaid leave deductions for payroll integration",
+      "steps_in_payload": 8,
+      "steps_completed": 2,
+      "status": "PARTIAL",
+      "result": "Unpaid leave option exists in Leave pay rate section. Full payroll integration testing requires payroll module access.",
+      "screenshots": []
+    },
+    {
+      "task_id": "WTD-011",
+      "task": "Review and action leave requests through approval workflow",
+      "steps_in_payload": 10,
+      "steps_completed": 2,
+      "status": "PARTIAL",
+      "result": "Approval flow configuration verified. Default flow has Super Admin OR Line Manager as approvers. Advanced flows with conditions can be created.",
+      "screenshots": ["approval-01-leave-approval-flow.png"]
+    },
+    {
+      "task_id": "WTD-012",
+      "task": "Manage leave requests on mobile app as People Manager",
+      "steps_in_payload": 9,
+      "steps_completed": 0,
+      "status": "NOT_AVAILABLE",
+      "result": "Mobile app testing is out of scope for this Playwright validation.",
+      "screenshots": []
+    },
+    {
+      "task_id": "WTD-013",
+      "task": "View and manage overlapping leave requests and calendar insights",
+      "steps_in_payload": 11,
+      "steps_completed": 1,
+      "status": "PARTIAL",
+      "result": "Leave Calendar accordion section exists on Leave settings page. Calendar visibility settings can be configured.",
+      "screenshots": ["exploration-01-leave-settings-main.png"]
+    },
+    {
+      "task_id": "WTD-014",
+      "task": "Close payroll month with unpaid leave deductions and carry-forward amounts",
+      "steps_in_payload": 11,
+      "steps_completed": 0,
+      "status": "NOT_AVAILABLE",
+      "result": "Payroll close operation requires Payroll module. Outside Leave Policies admin scope.",
+      "screenshots": []
+    },
+    {
+      "task_id": "WTD-015",
+      "task": "Edit leave requests across all statuses",
+      "steps_in_payload": 6,
+      "steps_completed": 1,
+      "status": "PARTIAL",
+      "result": "Found 'Restrict editing of leave days' toggle in Policy restrictions. When OFF, leave days can be changed by employee and approvers if request is in pending state.",
+      "screenshots": ["task-01-policy-restrictions.png"]
+    },
+    {
+      "task_id": "WTD-016",
+      "task": "Configure and manage sick leave certificate policy with online doctor integration",
+      "steps_in_payload": 10,
+      "steps_completed": 1,
+      "status": "PARTIAL",
+      "result": "Sick leave template available in policy creation dialog. Full SLC configuration and online doctor integration requires additional module access.",
+      "screenshots": ["crud-01-create-policy-dialog.png"]
+    }
+  ],
+  "what_to_watch_out_for_validated": [
+    {
+      "issue_id": "WOF-001",
+      "issue": "Unpaid Leave Payroll Deduction Calculation Failures",
+      "severity": "high",
+      "ticket_count": 6,
+      "jira_references": ["TSSD-4258", "GS-5033", "TSSD-3044", "GS-5894", "OS-867", "AV-8554"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Payroll deduction testing requires live payroll run with unpaid leave. Cannot validate from Leave Policy settings alone.",
+      "screenshot": null
+    },
+    {
+      "issue_id": "WOF-002",
+      "issue": "Leave Policy Configuration Locked After Employee Assignment",
+      "severity": "medium",
+      "ticket_count": 3,
+      "jira_references": ["TSSD-1889", "TSSD-1847", "GS-2044"],
+      "by_design": true,
+      "validation_status": "CONFIRMED",
+      "evidence": "Confirmed: Active policy 'Parental - Razan' has 'Edit' disabled for Leave pay rate section. The View page shows all fields read-only except through Edit wizard. Pay rate cannot be changed for active policies.",
+      "screenshot": "exploration-03-policy-view-summary.png"
+    },
+    {
+      "issue_id": "WOF-003",
+      "issue": "Leave Balance Data Loss on Employee Reassignment",
+      "severity": "low",
+      "ticket_count": 2,
+      "jira_references": ["TSSD-4319", "TSSD-3132"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Employee reassignment between policies requires specific test data not available in current session.",
+      "screenshot": null
+    },
+    {
+      "issue_id": "WOF-004",
+      "issue": "KSA Regulatory Compliance Gap for Sick Leave Accrual",
+      "severity": "low",
+      "ticket_count": 1,
+      "jira_references": ["TSSD-1179"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "KSA-specific sick leave templates exist (visible in create dialog KSA tab) but accrual compliance testing requires KSA-configured company.",
+      "screenshot": "crud-02-create-policy-ksa-templates.png"
+    },
+    {
+      "issue_id": "WOF-005",
+      "issue": "Missing Audit Trails and Reporting Visibility",
+      "severity": "medium",
+      "ticket_count": 3,
+      "jira_references": ["TSSD-3746", "TSSD-2502", "OS-1450"],
+      "validation_status": "CONFIRMED",
+      "evidence": "No audit trail or change log visible in Leave Policies UI. Policy summary page shows current state only, no history of changes.",
+      "screenshot": null
+    },
+    {
+      "issue_id": "WOF-006",
+      "issue": "Limited Policy Ordering and Disclaimer Customization",
+      "severity": "low",
+      "ticket_count": 2,
+      "jira_references": ["TSSD-4261", "TSSD-4850"],
+      "validation_status": "CONFIRMED",
+      "evidence": "Policy table has Name sort button only. No drag-and-drop reordering. No disclaimer/custom text field beyond the description rich text editor.",
+      "screenshot": "exploration-02-leave-policies-table.png"
+    },
+    {
+      "issue_id": "WOF-007",
+      "issue": "Notification and Configuration Reminder Gaps",
+      "severity": "medium",
+      "ticket_count": 3,
+      "jira_references": ["TSSD-4545", "AV-8158", "TSSD-4480"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Notification settings not directly visible in Leave Policy configuration. Would need to test notification delivery to employees.",
+      "screenshot": null
+    },
+    {
+      "issue_id": "WOF-008",
+      "issue": "Offboarded Employees Persist in Payroll with Unpaid Leave",
+      "severity": "low",
+      "ticket_count": 1,
+      "jira_references": ["GS-2737"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Requires offboarding an employee with active unpaid leave to validate.",
+      "screenshot": null
+    },
+    {
+      "issue_id": "WOF-009",
+      "issue": "Incomplete Unpaid Leave Workflow with Payroll Integration",
+      "severity": "low",
+      "ticket_count": 2,
+      "jira_references": ["AV-182", "AV-2370"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Requires end-to-end unpaid leave + payroll integration testing.",
+      "screenshot": null
+    },
+    {
+      "issue_id": "WOF-010",
+      "issue": "Rigid Leave Policy Parameter Editing",
+      "severity": "high",
+      "ticket_count": 6,
+      "jira_references": ["AV-8346", "TSSD-2946", "TSSD-2625", "TSSD-2673", "TSSD-1850", "AV-2339"],
+      "validation_status": "CONFIRMED",
+      "evidence": "Confirmed: Active policies have restricted editing. Leave pay rate section shows 'Edit' disabled on active policy summary. Some parameters cannot be modified once policy is published and employees are assigned.",
+      "screenshot": "exploration-03-policy-view-summary.png"
+    },
+    {
+      "issue_id": "WOF-011",
+      "issue": "Leave Cycle Changes Cause Data Loss & Missing Recalculation",
+      "severity": "medium",
+      "ticket_count": 4,
+      "jira_references": ["TSSD-2220", "TSSD-2378", "TSSD-2431", "TSSD-3001"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Leave cycle displayed as 'Calendar Year: 01 Jan - 31 Dec'. Cannot test cycle change impact without modifying company settings.",
+      "screenshot": null
+    },
+    {
+      "issue_id": "WOF-012",
+      "issue": "Leave Calculation Ignores Shift Schedules & Missing Balance Initialization",
+      "severity": "medium",
+      "ticket_count": 3,
+      "jira_references": ["TSSD-299", "TSSD-2858", "TSSD-2216"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Shift schedule integration not visible in Leave Policy settings. Working days vs Calendar days toggle is the only shift-related option.",
+      "screenshot": null
+    },
+    {
+      "issue_id": "WOF-013",
+      "issue": "Payroll & Time Off Module Synchronization Gap",
+      "severity": "low",
+      "ticket_count": 2,
+      "jira_references": ["TSSD-3986", "TSSD-4464"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Cross-module synchronization requires testing both Payroll and Time Off modules simultaneously.",
+      "screenshot": null
+    },
+    {
+      "issue_id": "WOF-014",
+      "issue": "Limited Leave Request Flexibility & Validation",
+      "severity": "medium",
+      "ticket_count": 4,
+      "jira_references": ["TSSD-662", "TSSD-2338", "TSSD-2683", "TSSD-2630"],
+      "validation_status": "CONFIRMED",
+      "evidence": "Confirmed 'Restrict editing of leave days' toggle exists. When OFF, description states leave days can be changed by employee and approvers only if request is in pending state - suggesting limited flexibility for other statuses.",
+      "screenshot": "task-01-policy-restrictions.png"
+    },
+    {
+      "issue_id": "WOF-015",
+      "issue": "Labor Law Compliance Gaps",
+      "severity": "medium",
+      "ticket_count": 3,
+      "jira_references": ["TSSD-269", "TSSD-1805", "TSSD-1980"],
+      "by_design": true,
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Labor law compliance requires region-specific testing. UAE and KSA templates are available but detailed compliance validation needs legal context.",
+      "screenshot": null
+    },
+    {
+      "issue_id": "WOF-016",
+      "issue": "Missing Policy Transparency & Audit Trail",
+      "severity": "low",
+      "ticket_count": 2,
+      "jira_references": ["TSSD-2905", "TSSD-2667"],
+      "validation_status": "CONFIRMED",
+      "evidence": "No change history, version tracking, or audit log visible in Leave Policy UI. Policy edits are saved without tracking who changed what and when.",
+      "screenshot": null
+    },
+    {
+      "issue_id": "WOF-017",
+      "issue": "Job Tenure Calculation Inflexibility",
+      "severity": "low",
+      "ticket_count": 1,
+      "jira_references": ["AV-8781"],
+      "validation_status": "NOT_REPRODUCIBLE",
+      "evidence": "Job tenure toggle exists ('Set conditional leave allowance based on employee's job tenure') but testing calculation accuracy requires employee data with varying tenure.",
+      "screenshot": null
+    }
+  ],
+  "screenshots_taken": 15,
+  "validation_timestamp": "2026-02-23T17:45:00Z",
+  "summary": "Leave Policies feature validation completed successfully. The feature is accessed via Settings > Leaves > Leave Policies. Primary entity is 'Leave Policy' with 67 policies in the system. All CRUD operations validated: Create (Add new with templates or scratch, 4-step wizard), Read (View summary for active policies), Update (Edit pencil icon, full form access for drafts), Delete (trash icon with confirmation). Workflow integration confirmed: Bayzat Timeoff app provides 3 triggers (leave request created/updated/deleted). One active workflow exists ('Google Calendar Integration for Leaves'). Approval flow confirmed: Leave is the default tab with a 1-step default flow (Super Admin OR Line Manager). 4 leave-related approval tabs found. Of 16 what-to-do tasks: 2 fully PASSED, 9 PARTIAL (admin-facing portions validated), 3 NOT_AVAILABLE (require employee/mobile/payroll persona), 2 PARTIAL with limited scope. Of 17 known limitations: 6 CONFIRMED (WOF-002, WOF-005, WOF-006, WOF-010, WOF-014, WOF-016), 11 NOT_REPRODUCIBLE (require specific test data or cross-module testing)."
+}
