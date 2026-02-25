@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bayzat User Guides</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #1a1a2e;
+      background: #f8f9ff;
+      min-height: 100vh;
+    }
+    .header {
+      background: linear-gradient(135deg, #6B46C1 0%, #805AD5 50%, #9F7AEA 100%);
+      color: #fff;
+      padding: 60px 40px 50px;
+      text-align: center;
+    }
+    .header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 12px; }
+    .header p { font-size: 1.15rem; opacity: 0.92; max-width: 600px; margin: 0 auto; }
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 28px;
+    }
+    .stat { text-align: center; }
+    .stat-number { font-size: 2rem; font-weight: 700; }
+    .stat-label { font-size: 0.85rem; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.05em; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .search-bar {
+      margin: -28px auto 32px;
+      max-width: 560px;
+      position: relative;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 16px 20px 16px 48px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-bar input:focus { border-color: #6B46C1; }
+    .search-bar svg {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      width: 20px;
+      height: 20px;
+    }
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+    .cat-btn {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      color: #475569;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .cat-btn:hover, .cat-btn.active {
+      background: #6B46C1;
+      color: #fff;
+      border-color: #6B46C1;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      padding-bottom: 60px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(107,70,193,0.12);
+      border-color: #6B46C1;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .card-title { font-size: 1.1rem; font-weight: 600; color: #1a1a2e; }
+    .card-version {
+      font-size: 0.75rem;
+      color: #6B46C1;
+      background: #f3e8ff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 500;
+      margin-left: auto;
+    }
+    .card-desc {
+      font-size: 0.88rem;
+      color: #64748b;
+      flex: 1;
+      margin-bottom: 16px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-size: 0.72rem;
+      color: #6B46C1;
+      background: #faf5ff;
+      padding: 3px 10px;
+      border-radius: 12px;
+      border: 1px solid #e9d5ff;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #f1f5f9;
+    }
+    .card-audience {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+    .card-arrow {
+      color: #6B46C1;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .footer {
+      text-align: center;
+      padding: 32px;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      border-top: 1px solid #e2e8f0;
+      background: #fff;
+    }
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: #94a3b8;
+      font-size: 1.1rem;
+      grid-column: 1 / -1;
+    }
+    /* Category colors */
+    .bg-payroll { background: #ecfdf5; }
+    .bg-time { background: #eff6ff; }
+    .bg-people { background: #fef3c7; }
+    .bg-performance { background: #fce7f3; }
+    .bg-settings { background: #f3e8ff; }
+    .bg-security { background: #fee2e2; }
+    .bg-automation { background: #e0f2fe; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Bayzat User Guides</h1>
+    <p>Comprehensive guides for every feature on the Bayzat HR platform. Find step-by-step instructions, screenshots, and best practices.</p>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-number" id="guide-count">31</div>
+        <div class="stat-label">Guides</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">8</div>
+        <div class="stat-label">Categories</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="search-bar">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+      <input type="text" id="search" placeholder="Search guides by name or keyword..." autocomplete="off">
+    </div>
+
+    <div class="categories" id="categories">
+      <button class="cat-btn active" data-cat="all">All</button>
+      <button class="cat-btn" data-cat="payroll">Payroll</button>
+      <button class="cat-btn" data-cat="time">Time & Attendance</button>
+      <button class="cat-btn" data-cat="people">People</button>
+      <button class="cat-btn" data-cat="performance">Performance</button>
+      <button class="cat-btn" data-cat="requests">Requests</button>
+      <button class="cat-btn" data-cat="settings">Settings</button>
+      <button class="cat-btn" data-cat="security">Security</button>
+      <button class="cat-btn" data-cat="automation">Automation</button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="footer">
+    Auto-generated from Bayzat user guide documentation &middot; 31 features
+  </div>
+
+  <script>
+    const guides = [
+      { slug: "360-feedback", name: "360 Feedback", version: "v5", cat: "performance", icon: "🔄", bg: "bg-performance", desc: "Run multi-rater feedback cycles with peer, manager, and self reviews.", audience: "Admin & Employee", tags: ["peer review", "appraisal", "evaluation"] },
+      { slug: "air-ticket", name: "Air Ticket", version: "v27", cat: "payroll", icon: "✈️", bg: "bg-payroll", desc: "Manage annual flight ticket allowances, encashments, and policies.", audience: "Admin & Employee", tags: ["flight ticket", "travel", "encashment"] },
+      { slug: "approval-flow", name: "Approval Flow", version: "v1", cat: "automation", icon: "✅", bg: "bg-automation", desc: "Configure multi-level approval chains for leave, expenses, payroll, and more.", audience: "Admin", tags: ["workflow", "approvals", "routing"] },
+      { slug: "attendance", name: "Attendance", version: "v1", cat: "time", icon: "⏰", bg: "bg-time", desc: "Track employee check-ins, manage attendance policies, and generate reports.", audience: "Admin & Employee", tags: ["clock in", "geofence", "biometric"] },
+      { slug: "bayzat-ai", name: "Bayzat AI", version: "v2", cat: "settings", icon: "🤖", bg: "bg-settings", desc: "Use AI-powered insights, reports, and the knowledge base chatbot.", audience: "Admin & Employee", tags: ["AI assistant", "insights", "reports"] },
+      { slug: "biometric-attendance", name: "Biometric Attendance", version: "v2", cat: "time", icon: "👆", bg: "bg-time", desc: "Set up facial recognition and fingerprint devices for attendance tracking.", audience: "Admin", tags: ["facial recognition", "fingerprint", "ZKTeco"] },
+      { slug: "daily-wage-calculator", name: "Daily Wage Calculator", version: "v47", cat: "payroll", icon: "🧮", bg: "bg-payroll", desc: "Configure daily rate calculations for salary proration, leave deductions, and EOS.", audience: "Admin", tags: ["daily rate", "proration", "wage"] },
+      { slug: "employee-tickets", name: "Employee Tickets", version: "v1", cat: "requests", icon: "🎫", bg: "bg-people", desc: "Manage HR requests including letters, loans, and support tickets.", audience: "Admin", tags: ["HR tickets", "requests", "helpdesk"] },
+      { slug: "employee-violation", name: "Employee Violation", version: "v1", cat: "people", icon: "⚠️", bg: "bg-people", desc: "Track disciplinary actions, issue warnings, and manage violation records.", audience: "Admin", tags: ["discipline", "warning", "misconduct"] },
+      { slug: "end-of-service", name: "End of Service", version: "v3", cat: "payroll", icon: "📋", bg: "bg-payroll", desc: "Calculate gratuity, process final settlements, and manage employee exits.", audience: "Admin", tags: ["gratuity", "termination", "EOSB"] },
+      { slug: "knowledge-hub", name: "Knowledge Hub", version: "v1", cat: "people", icon: "📚", bg: "bg-people", desc: "Create and manage a company knowledge base with documents and FAQs.", audience: "Admin & Employee", tags: ["wiki", "documents", "FAQ"] },
+      { slug: "leave-encashment", name: "Leave Encashment", version: "v1", cat: "payroll", icon: "💰", bg: "bg-payroll", desc: "Process leave balance payouts and configure encashment policies.", audience: "Admin & Employee", tags: ["cash out", "leave balance", "payout"] },
+      { slug: "leave-management", name: "Leave Management", version: "v1", cat: "time", icon: "🏖️", bg: "bg-time", desc: "Handle leave requests, approvals, balances, and time-off reporting.", audience: "Admin & Employee", tags: ["time off", "PTO", "leave request"] },
+      { slug: "leave-policies", name: "Leave Policies", version: "v1", cat: "time", icon: "📜", bg: "bg-time", desc: "Configure leave types, accrual rules, carry-forward limits, and policy assignments.", audience: "Admin", tags: ["accrual", "policy", "leave types"] },
+      { slug: "leave-salary", name: "Leave Salary", version: "v6", cat: "payroll", icon: "💵", bg: "bg-payroll", desc: "Process annual leave salary requests with flight ticket integration.", audience: "Admin & Employee", tags: ["vacation salary", "annual leave", "flight"] },
+      { slug: "letters", name: "Letters", version: "v1", cat: "requests", icon: "📄", bg: "bg-people", desc: "Generate salary certificates, NOCs, offer letters, and other HR documents.", audience: "Admin", tags: ["salary certificate", "NOC", "templates"] },
+      { slug: "loans", name: "Loans", version: "v1", cat: "payroll", icon: "🏦", bg: "bg-payroll", desc: "Manage employee loan requests, repayment schedules, and salary deductions.", audience: "Admin & Employee", tags: ["advance", "deduction", "repayment"] },
+      { slug: "multifactor-authentication", name: "Multi-factor Authentication", version: "v1", cat: "security", icon: "🔐", bg: "bg-security", desc: "Enable MFA with authenticator apps for enhanced login security.", audience: "Admin & Employee", tags: ["2FA", "TOTP", "security"] },
+      { slug: "overtime", name: "Overtime", version: "v2", cat: "time", icon: "⏱️", bg: "bg-time", desc: "Track extra hours, configure overtime policies, and process OT payments.", audience: "Admin & Employee", tags: ["extra hours", "OT", "overtime pay"] },
+      { slug: "payroll-management", name: "Payroll Management", version: "v1", cat: "payroll", icon: "💳", bg: "bg-payroll", desc: "Run payroll cycles, generate payslips, and manage salary processing.", audience: "Admin", tags: ["payslips", "salary", "payroll cycle"] },
+      { slug: "performance", name: "Performance", version: "v1", cat: "performance", icon: "📊", bg: "bg-performance", desc: "Manage review cycles, goals, OKRs, calibration, and 1-on-1 meetings.", audience: "Admin & Employee", tags: ["goals", "OKR", "review cycle"] },
+      { slug: "records-management", name: "Records Management", version: "v1", cat: "people", icon: "🗂️", bg: "bg-people", desc: "Manage employee profiles, bulk updates, custom groups, and data exports.", audience: "Admin", tags: ["employee data", "profiles", "bulk update"] },
+      { slug: "role-management", name: "Role Management", version: "v1", cat: "settings", icon: "👥", bg: "bg-settings", desc: "Configure user roles, access permissions, and feature-level controls.", audience: "Admin", tags: ["permissions", "access control", "roles"] },
+      { slug: "shift-scheduling", name: "Shift Scheduling", version: "v1", cat: "time", icon: "📅", bg: "bg-time", desc: "Create, publish, and manage employee shift schedules and rosters.", audience: "Admin", tags: ["roster", "schedule", "planner"] },
+      { slug: "split-shifts", name: "Split Shifts", version: "v1", cat: "time", icon: "✂️", bg: "bg-time", desc: "Configure divided work periods with breaks for flexible scheduling.", audience: "Admin", tags: ["broken shifts", "divided shifts"] },
+      { slug: "surveys", name: "Surveys", version: "v1", cat: "performance", icon: "📝", bg: "bg-performance", desc: "Create engagement surveys, pulse checks, and analyze employee sentiment.", audience: "Admin", tags: ["engagement", "feedback", "pulse"] },
+      { slug: "timesheets", name: "Timesheets", version: "v1", cat: "time", icon: "📋", bg: "bg-time", desc: "Review daily attendance logs, hours tracking, and timesheet management.", audience: "Admin & Employee", tags: ["hours", "daily log", "time tracking"] },
+      { slug: "variable-pay", name: "Variable Pay", version: "v1", cat: "payroll", icon: "💎", bg: "bg-payroll", desc: "Manage commissions, bonuses, and other variable compensation items.", audience: "Admin", tags: ["bonus", "commission", "allowance"] },
+      { slug: "work-expenses", name: "Work Expenses", version: "v1", cat: "requests", icon: "🧾", bg: "bg-people", desc: "Submit, approve, and reimburse employee expense claims.", audience: "Admin & Employee", tags: ["reimbursement", "claims", "expenses"] },
+      { slug: "work-timings", name: "Work Timings", version: "v1", cat: "time", icon: "🕐", bg: "bg-time", desc: "Define work schedules, flexible timing, late arrival rules, and break policies.", audience: "Admin", tags: ["office hours", "schedule", "flexible"] },
+      { slug: "workflows", name: "Workflows", version: "v1", cat: "automation", icon: "⚡", bg: "bg-automation", desc: "Build automated workflows with triggers, conditions, and task assignments.", audience: "Admin", tags: ["automation", "triggers", "tasks"] }
+    ];
+
+    const BASE = "https://mashapajfhp.github.io/user-guides";
+    const grid = document.getElementById("grid");
+    const search = document.getElementById("search");
+    let activeCategory = "all";
+
+    function getUrl(g) {
+      if (g.slug === "leave-encashment") return `${BASE}/leave-encashment/v1/leave-encashment-user-guide.html`;
+      return `${BASE}/${g.slug}/${g.version}/${g.slug}-user-guide.html`;
+    }
+
+    function render(filter = "", cat = "all") {
+      const q = filter.toLowerCase();
+      const filtered = guides.filter(g => {
+        const matchCat = cat === "all" || g.cat === cat;
+        const matchSearch = !q || g.name.toLowerCase().includes(q) || g.desc.toLowerCase().includes(q) || g.tags.some(t => t.toLowerCase().includes(q));
+        return matchCat && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="no-results">No guides match your search.</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(g => `
+        <a class="card" href="${getUrl(g)}" data-cat="${g.cat}">
+          <div class="card-header">
+            <div class="card-icon ${g.bg}">${g.icon}</div>
+            <div class="card-title">${g.name}</div>
+            <span class="card-version">${g.version}</span>
+          </div>
+          <div class="card-desc">${g.desc}</div>
+          <div class="card-tags">${g.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+          <div class="card-footer">
+            <span class="card-audience">${g.audience}</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
+        </a>
+      `).join("");
+    }
+
+    search.addEventListener("input", () => render(search.value, activeCategory));
+
+    document.getElementById("categories").addEventListener("click", e => {
+      if (!e.target.classList.contains("cat-btn")) return;
+      document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+      e.target.classList.add("active");
+      activeCategory = e.target.dataset.cat;
+      render(search.value, activeCategory);
+    });
+
+    render();
+  </script>
+</body>
+</html>
