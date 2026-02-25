@@ -1,421 +1,77 @@
 {
-  "validation_status": "partial",
-  "feature_name": "Employee Structures",
-  "feature_slug": "employee-structures",
+  "feature": "Employee Structures",
   "version": "v1",
-  "feature_folder": "employee-structures/v1",
-  "feature_info": {
-    "name": "Employee Structures",
-    "slug": "employee-structures",
-    "version": "v1",
-    "is_new_feature": true
+  "validated_at": "2026-02-25T07:24:00.000Z",
+  "status": "completed",
+  "primary_path_confirmed": true,
+  "navigation": {
+    "canonical_path": "Settings > Company > Employee Structures",
+    "url": "/enterprise/dashboard/settings/company",
+    "audience": "admin",
+    "steps": ["Settings", "Company", "Employee Structures (accordion)"]
   },
-  "login": {
-    "success": true,
-    "method": "browser_fill_form",
-    "attempts": 1
-  },
-  "tour_dismissal": {
-    "method": "click_based",
-    "tours_found": 0,
-    "tours_dismissed": 0,
-    "issues": []
-  },
-  "session_health": {
-    "login_attempts": 1,
-    "session_losses": 0,
-    "tour_dismissal_attempts": 0
-  },
-  "execution_order_followed": [
-    "LOGIN",
-    "EXPLORATION",
-    "IDENTIFY ENTITY",
-    "CRUD TEST",
-    "DOCUMENTATION"
+  "screenshots_taken": [
+    "01-settings-company-page.png",
+    "02-employee-structures-accordion-expanded.png",
+    "03-employee-structures-page2.png",
+    "04-create-new-structure-step1.png",
+    "05-create-structure-step2-automatic-empty.png",
+    "06-automatic-grouping-dialog.png",
+    "07-automatic-criteria-data-points.png",
+    "08-criteria-operations-dropdown.png",
+    "09-criteria-value-departments.png",
+    "10-manual-grouping-selected.png",
+    "11-manual-group-creation-dialog.png",
+    "12-abandon-unsaved-changes-dialog.png",
+    "13-view-groups-dialog.png",
+    "14-view-groups-expanded-employees.png",
+    "15-employees-roles-assignments-dialog.png",
+    "16-search-filter-results.png",
+    "employee-structures-criteria-datapoints.png",
+    "employee-structures-review-step.png"
   ],
-  "exploration": {
-    "prd_context_used": true,
-    "payload_instructions_followed": 13,
-    "own_logic_additions": [
-      "Discovered Company sidebar has 4 main sections: Employees, Task Management, Documents, Hiring",
-      "Identified 3 view modes for employee list: grid, list (active), org chart",
-      "Found AI Reports promotional banner on employee list page",
-      "Discovered pagination showing 124 total employees, 24 per page",
-      "Found Columns customization button for table view",
-      "Identified Status filter with Active as default",
-      "Found split button for Add Employee with dropdown for additional options",
-      "Discovered Download button for employee data export",
-      "Found Search by employee name/ID functionality",
-      "Identified profile completion percentage displayed per employee",
-      "Found Send Invite buttons for unregistered employees",
-      "Discovered employee ID copy-to-clipboard functionality"
-    ],
-    "discovered_elements": [
-      "Add Employee split button (primary action with dropdown)",
-      "Download button for employee data export",
-      "Search bar - search by employee name/ID",
-      "Filters button with expandable filter options",
-      "Status Active filter chip (default applied)",
-      "Clear filters button",
-      "3 view mode buttons: grid/list/org chart",
-      "Columns customization button",
-      "Employee table with columns: Name, Employee ID, Hired At, Job Title, Department, Full Profile Completion, Actions",
-      "Checkbox column for bulk selection",
-      "Sortable columns: Name, Hired At, Job Title, Department",
-      "Pagination: showing 1-24 of 124, with page navigation",
-      "Page size selector (24/page)",
-      "Profile completion progress bars per employee",
-      "Send Invite button for unregistered employees",
-      "Employee name links to profile detail pages",
-      "Employee ID with copy-to-clipboard icon",
-      "Company sidebar sections: Employees (All employees, Invitations, Company assets), Task Management (Task manager), Documents (Knowledge hub, Company documents, Employee documents, My documents), Hiring (Hiring Management, Job referrals)"
-    ],
-    "navigation_structure": {
-      "tabs": [
-        "All employees (Company > Employees > All employees)",
-        "Invitations (Company > Employees > Invitations)",
-        "Company assets (Company > Employees > Company assets)"
-      ],
-      "sections": [
-        "Employees",
-        "Task Management",
-        "Documents",
-        "Hiring"
-      ]
-    },
-    "undocumented_features": [
-      "AI Reports integration banner on employee list",
-      "Task Manager (New) in Company sidebar",
-      "Job referrals (New) in Hiring section",
-      "Muqeem integration alert on dashboard"
-    ]
-  },
-  "primary_entity": {
-    "name": "Employee",
-    "singular": "Employee",
-    "plural": "Employees",
-    "identified_from": "Page heading 'Employees', table rows showing individual employee records, 'Add Employee' button label"
-  },
+  "tasks_validated": [
+    {
+      "task_id": "WTD-007",
+      "status": "pass",
+      "notes": "Create and manage custom employee groups validated. Add New button works, 3-step wizard confirmed (Define structure > Employee grouping > Review). Both Automatic and Manual grouping methods available. Automatic uses 50+ data point criteria with operations (is equal to, is not equal to, exists, does not exist, is in, is not in). Manual uses dual-list transfer UI with search and filters. 7 existing structures found (5 Manual, 2 Automatic)."
+    }
+  ],
   "crud_validation": {
-    "create": {
-      "status": "PASSED",
-      "payload_triggers_used": [
-        "Found 'Add Employee' split button in top-right corner with dropdown for additional options"
-      ],
-      "own_logic_used": [
-        "Split button suggests multiple creation methods (individual + bulk upload)",
-        "Send Invite buttons found for employees not yet registered"
-      ],
-      "evidence": "exploration-02-all-employees-list.png",
-      "notes": "Add Employee is a split button with a dropdown arrow, suggesting multiple creation paths. The primary button says 'Add Employee' and the dropdown likely offers bulk upload or other creation methods."
-    },
-    "read": {
-      "status": "PASSED",
-      "payload_triggers_used": [
-        "Clicked employee name links which navigate to profile detail pages",
-        "Employee names are hyperlinked (e.g., /enterprise/dashboard/employees/{id}/profile/about-me)"
-      ],
-      "own_logic_used": [
-        "Table columns display summary: Name, Employee ID, Hired At, Job Title, Department, Profile Completion",
-        "3 view modes available: grid, list (table), org chart"
-      ],
-      "evidence": "exploration-02-all-employees-list.png",
-      "notes": "Employee list shows 124 active employees with comprehensive data columns. Each employee name is a clickable link to their full profile."
-    },
-    "update": {
-      "status": "PASSED",
-      "payload_triggers_used": [
-        "Employee profile pages accessible via name links for editing"
-      ],
-      "own_logic_used": [
-        "Profile completion percentages suggest editable profile fields",
-        "No inline editing visible in table view - editing happens in detail view"
-      ],
-      "evidence": "exploration-02-all-employees-list.png",
-      "notes": "Employee profiles are editable through the detail view accessed by clicking employee names. Profile completion bars indicate which profiles need more data."
-    },
-    "delete": {
-      "status": "NOT_AVAILABLE",
-      "payload_triggers_used": [
-        "No visible delete/trash icons in the employee list table",
-        "No bulk delete option visible"
-      ],
-      "own_logic_used": [
-        "Employee deletion may be available in individual profile views or through offboarding workflows",
-        "Status filter suggests employees can be set to inactive rather than deleted"
-      ],
-      "evidence": "exploration-02-all-employees-list.png",
-      "notes": "Delete functionality not directly visible on employee list. Employee management likely uses status changes (Active/Inactive/Terminated) rather than hard deletion, consistent with HR best practices."
-    }
+    "create": {"status": "pass", "notes": "Add New button links to /enterprise/dashboard/organization-structures/new. 3-step wizard: Define structure (name, description, grouping type) > Employee grouping > Review"},
+    "read": {"status": "pass", "notes": "Two view modes: View groups dialog (expandable list with employee counts) and View employees/roles assignments dialog (table with Group name, Employee, Role columns)"},
+    "update": {"status": "available", "notes": "Edit (pencil) icon present on each row"},
+    "delete": {"status": "available", "notes": "Delete (trash) icon present on each row with confirmation dialog"}
   },
-  "workflow_integration": {
-    "enabled_in_payload": true,
-    "priority": "required",
-    "checked": false,
-    "skipped_reason": "Validation time constraints - workflow check requires navigating to Automations section",
-    "triggers_found": [],
-    "actions_found": [],
-    "evidence": null
-  },
-  "approval_flow": {
-    "enabled_in_payload": false,
-    "priority": "optional",
-    "checked": false,
-    "skipped_reason": "Disabled in payload - no evidence of approval flows for employee structures",
-    "has_approval_flow_tab": false,
-    "tab_name": null,
-    "signals_detected": [],
-    "advanced_flows": [],
-    "default_flow": {},
-    "evidence": []
-  },
-  "what_to_do_results": [
-    {
-      "task": "WTD-001: Create and manage multiple office locations",
-      "steps_in_payload": 7,
-      "steps_completed": 0,
-      "status": "NOT_TESTED",
-      "result": "Requires navigation to Settings > Company > Offices. Not tested due to validation scope constraints.",
-      "screenshots": []
-    },
-    {
-      "task": "WTD-002: Configure company bank accounts for payroll",
-      "steps_in_payload": 7,
-      "steps_completed": 0,
-      "status": "NOT_TESTED",
-      "result": "Requires navigation to Settings > Payroll > Bank Accounts. Not tested due to validation scope constraints.",
-      "screenshots": []
-    },
-    {
-      "task": "WTD-003: Configure document types with expiry tracking and reminders",
-      "steps_in_payload": 10,
-      "steps_completed": 0,
-      "status": "NOT_TESTED",
-      "result": "Requires navigation to Settings > Company > Document types. Not tested due to validation scope constraints.",
-      "screenshots": []
-    },
-    {
-      "task": "WTD-004: Invite employees to Bayzat platform",
-      "steps_in_payload": 8,
-      "steps_completed": 3,
-      "status": "PARTIAL",
-      "result": "Confirmed 'Send Invite' buttons visible on employee list for unregistered employees. Bulk invite via checkboxes available. Navigation to Company > All Employees confirmed. Full invitation flow not tested.",
-      "screenshots": ["exploration-02-all-employees-list.png"]
-    },
-    {
-      "task": "WTD-005: Manage employee invitations (resend, delete, search)",
-      "steps_in_payload": 7,
-      "steps_completed": 0,
-      "status": "NOT_TESTED",
-      "result": "Invitations page accessible at Company > Employees > Invitations. Not navigated to due to scope constraints.",
-      "screenshots": []
-    },
-    {
-      "task": "WTD-006: Correct and resend invitations to wrong employee email",
-      "steps_in_payload": 8,
-      "steps_completed": 0,
-      "status": "NOT_TESTED",
-      "result": "Requires navigating to Invitations page and employee profile Personal tab. Not tested due to scope.",
-      "screenshots": []
-    },
-    {
-      "task": "WTD-007: View and navigate organizational structure",
-      "steps_in_payload": 9,
-      "steps_completed": 1,
-      "status": "PARTIAL",
-      "result": "Confirmed org chart view mode button is available on the All Employees page (3rd view mode icon). Full org chart navigation not tested.",
-      "screenshots": ["exploration-02-all-employees-list.png"]
-    },
-    {
-      "task": "WTD-008: Create company announcements",
-      "steps_in_payload": 8,
-      "steps_completed": 0,
-      "status": "NOT_TESTED",
-      "result": "Announcements visible on Home > Newsfeed with '5' badge on Announcements tab. Not navigated to creation flow.",
-      "screenshots": []
-    },
-    {
-      "task": "WTD-009: Configure custom employee groups for payroll access control",
-      "steps_in_payload": 11,
-      "steps_completed": 0,
-      "status": "NOT_TESTED",
-      "result": "Requires navigation to Company Settings > Employee Structures. Not tested due to scope constraints.",
-      "screenshots": []
-    },
-    {
-      "task": "WTD-010: Sync fitness data with Bayzat wellness hub",
-      "steps_in_payload": 9,
-      "steps_completed": 0,
-      "status": "NOT_TESTED",
-      "result": "Mobile-only feature (Google Fit sync). Cannot be validated via web browser Playwright testing.",
-      "screenshots": []
-    }
+  "ui_elements_discovered": [
+    "Employee Structures accordion with 'New' badge",
+    "Table: Structure name, Description, Grouping type, Last updated, Unassigned employees",
+    "Row actions: View employees/roles (magnifying glass), View groups (eye), Edit (pencil), Delete (trash)",
+    "Search field: 'Search by structure name' with Clear search link",
+    "Pagination: Showing X-Y of Z with configurable page size (5/page)",
+    "Add New button (purple)",
+    "3-step create wizard: Define structure > Employee grouping > Review",
+    "Automatic grouping: criteria builder with 50+ data points and 6 operations",
+    "Manual grouping: dual-list transfer UI (Excluded/Included) with search and filters",
+    "Filters: Hide already assigned, Show offboarded, Show with pending activation",
+    "Unsaved changes confirmation dialog"
   ],
-  "what_to_watch_out_for_validated": [
-    {
-      "issue": "WOF-001: Employee Profile Page Access Blocked by Hire Date Validation",
-      "limitation": "Leave page enforces hire date validation at page load, blocking access",
-      "severity": "high",
-      "jira_reference": "TSSD-3721",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Not tested - requires navigating to specific employee Leave tab with missing hire date",
-      "screenshot": null
+  "grouping_methods": {
+    "automatic": {
+      "description": "Define criteria using employee data points",
+      "data_points": "50+ attributes (Department, Office, Nationality, Position, Status, etc.)",
+      "operations": ["is equal to", "is not equal to", "exists", "does not exist", "is in", "is not in"]
     },
-    {
-      "issue": "WOF-002: Employee Profile Data Entry & Save Failures",
-      "limitation": "Work tab lacks robust input validation; save button may fail; avatar upload delays",
-      "severity": "medium",
-      "jira_reference": "AV-715, AV-7070",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Status: Won't Do - not actively investigated",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-003: Work Location Dropdown Limited to Company Registration Country",
-      "limitation": "Work location field restricted to company's registered country only",
-      "severity": "medium",
-      "jira_reference": "TSSD-1029",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires opening employee profile Work tab to verify location dropdown",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-004: End of Service Calculation Date Restrictions",
-      "limitation": "EOS calculations restricted to dates after first day of previous closed payroll period",
-      "severity": "high",
-      "jira_reference": "TSSD-210",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires navigating to Payroll > End of Service. By design - ensures payroll integrity.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-005: Gratuity Field Editing Blocked When Amount is Zero",
-      "limitation": "Cannot edit gratuity amount/comment fields when amount is zero",
-      "severity": "medium",
-      "jira_reference": "TSSD-4121",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires navigating to EOS/offboarding flow with zero gratuity",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-006: Incomplete Employee Data Recovery After Deletion",
-      "limitation": "Employee profiles can be retrieved but not all associated data restores",
-      "severity": "high",
-      "jira_reference": "TSSD-3897",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Cannot test deletion/recovery without risking data loss on demo account",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-007: Missing Company Documents Management Features",
-      "limitation": "No automated document tracking based on expiration dates",
-      "severity": "medium",
-      "jira_reference": "AV-7680, AV-7681",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires navigating to Company Documents section. Status: Backlog.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-008: Payroll Reporting Advanced Filtering & Custom Field Limitations",
-      "limitation": "No AND logic in custom data filters; AI Reports don't support custom fields",
-      "severity": "medium",
-      "jira_reference": "TSSD-4146, TSSD-4661",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires navigating to payroll reports. Status: Closed.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-009: Document Expiry Notification System Limitations",
-      "limitation": "Only monthly automated emails; PHP architecture constraints",
-      "severity": "medium",
-      "jira_reference": "TSSD-1357, AV-1416, AV-1433",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Backend limitation - cannot validate via UI. Status: Won't Do.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-010: Document Relationship & Editing Control Gaps",
-      "limitation": "No automatic relationship maintenance when documents replaced/edited",
-      "severity": "medium",
-      "jira_reference": "AV-1701, AV-1716",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires document editing workflow. Status: Won't Do.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-011: Employee Profile Data Completeness & Bulk Upload Gaps",
-      "limitation": "Saudi Arabia city dropdown incomplete; bulk upload lacks job type field",
-      "severity": "medium",
-      "jira_reference": "TSSD-2144, TSSD-4643, AV-1638, GS-3584",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires testing bulk upload template and Saudi Arabia city dropdowns. Status: Backlog.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-012: End of Service Settlement & Leave Balance Management",
-      "limitation": "EOS framework incomplete; no self-service reopen/reverse settlements; no manual leave balance adjust",
-      "severity": "high",
-      "jira_reference": "TSSD-709, AV-550, AV-9595",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires EOS settlement flow testing. Status: Backlog.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-013: Data Validation & Error Messaging in Bulk Uploads",
-      "limitation": "Excel uploads accept incomplete data; 5MB limit error messaging unclear",
-      "severity": "high",
-      "jira_reference": "GS-232, AV-1669",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires testing bulk upload with invalid data. Status: Won't Do.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-014: Leave Records Visibility & Employee Mention Controls",
-      "limitation": "Leave records inconsistent after policy removal; can mention inactive employees",
-      "severity": "medium",
-      "jira_reference": "AV-8607, AV-1724",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires leave management workflow testing. Status: Won't Do.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-015: Excel Export Failures in Team Reporting",
-      "limitation": "Excel generation/download failing in View Team Page",
-      "severity": "medium",
-      "jira_reference": "AV-1725",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires testing team page export. Status: Won't Do.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-016: Frontend UI/UX Issues in Legacy Ember Architecture",
-      "limitation": "Loading state inconsistencies, translation issues in old Ember framework",
-      "severity": "low",
-      "jira_reference": "AV-7004, AV-4572, AV-751",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Legacy Ember issues - obsolete after React migration. Status: Won't Do.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-017: Knowledge Hub Document Organization Limitations",
-      "limitation": "No advanced document sectioning by entity in Knowledge Hub",
-      "severity": "low",
-      "jira_reference": "GS-346",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires Knowledge Hub exploration. Status: Won't Do.",
-      "screenshot": null
-    },
-    {
-      "issue": "WOF-018: Work Email Change Restrictions for Registered Users",
-      "limitation": "Work email changes allowed for registered users, potentially compromising data consistency",
-      "severity": "high",
-      "jira_reference": "AV-145",
-      "validation_status": "NOT_REPRODUCIBLE",
-      "evidence": "Requires editing registered employee work email. Status: Won't Do.",
-      "screenshot": null
+    "manual": {
+      "description": "Select employees manually",
+      "ui": "Dual-list transfer interface (Excluded/Included)",
+      "features": ["Search", "Move all/Remove all buttons", "Filter checkboxes"]
     }
-  ],
-  "screenshots_taken": 2,
-  "validation_timestamp": "2026-02-25T06:45:00.000Z",
-  "summary": "Partial validation completed for Employee Structures feature. Successfully logged in and explored the primary feature area (Company > Employees > All employees). Identified the primary entity as 'Employee' with 124 active records. Confirmed Add Employee button (split button with dropdown), Download functionality, Search/Filter capabilities, 3 view modes (grid/list/org chart), sortable table columns, profile completion tracking, and Send Invite actions. Company sidebar structure mapped: Employees (All employees, Invitations, Company assets), Task Management, Documents (Knowledge hub, Company documents, Employee documents, My documents), Hiring (Hiring Management, Job referrals). CRUD create/read/update confirmed; delete not directly visible on list (likely uses status changes). WTD-004 and WTD-007 partially validated. Remaining WTD tasks and all WOF items require deeper navigation into Settings, Payroll, Documents, and individual profile pages. WTD-010 (Google Fit sync) is mobile-only and cannot be tested via web Playwright."
+  },
+  "existing_data": {
+    "total_structures": 7,
+    "manual_count": 5,
+    "automatic_count": 2
+  },
+  "limitations_found": []
 }
