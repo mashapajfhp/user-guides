@@ -1,0 +1,329 @@
+{
+  "validation_status": "completed",
+  "feature_name": "Employee Tickets",
+  "feature_slug": "employee-tickets",
+  "version": "v2",
+  "feature_folder": "employee-tickets/v2",
+  "feature_info": {
+    "name": "Employee Tickets",
+    "slug": "employee-tickets",
+    "version": "v2",
+    "is_new_feature": false
+  },
+  "login": {
+    "success": true,
+    "method": "browser_fill_form",
+    "attempts": 1
+  },
+  "tour_dismissal": {
+    "method": "click_based",
+    "tours_found": 0,
+    "tours_dismissed": 0,
+    "issues": []
+  },
+  "session_health": {
+    "login_attempts": 1,
+    "session_losses": 0,
+    "tour_dismissal_attempts": 0
+  },
+  "execution_order_followed": [
+    "LOGIN",
+    "EXPLORATION",
+    "IDENTIFY ENTITY",
+    "CRUD TEST",
+    "WORKFLOW CHECK",
+    "APPROVAL FLOW",
+    "WHAT_TO_DO",
+    "WHAT_TO_WATCH_OUT_FOR",
+    "DOCUMENTATION",
+    "REPORT"
+  ],
+  "exploration": {
+    "prd_context_used": true,
+    "payload_instructions_followed": 15,
+    "own_logic_additions": [
+      "Explored all three status tabs (Pending/Approved/Rejected)",
+      "Discovered detail dialog with full ticket info and activity log",
+      "Tested three-dot actions menu revealing View/Edit/Delete options",
+      "Explored Filters panel with 8 filter types",
+      "Identified sortable columns (Employee, Ticket type, Created date)",
+      "Found Columns button for column customization",
+      "Discovered View reports and Download buttons",
+      "Found 'Pending approval on me' filter checkbox",
+      "Identified Reject/Approve inline action buttons on pending tickets",
+      "Discovered breadcrumb navigation on create page"
+    ],
+    "discovered_elements": [
+      "Employee Tickets heading with Beta feature badge",
+      "Create employee ticket button (top-right, purple)",
+      "Three tabs: Pending (7), Approved (75), Rejected (2)",
+      "Search bar: Search by ticket ID, employee ID, name",
+      "Filters button with expandable panel",
+      "View reports button",
+      "Download button",
+      "Columns button for column visibility",
+      "Table with columns: Checkbox, Ticket ID, Employee, Ticket type, Category name, Priority, Created date, Approvers, Actions",
+      "Row checkboxes for bulk selection",
+      "Select-all checkbox in header",
+      "Three-dot actions menu per row (View ticket, Edit, Delete)",
+      "Inline Reject/Approve buttons on pending tickets where user is approver",
+      "Pagination with page size selector (8/page)",
+      "Ticket detail dialog (slide-in panel) with sections: basic info, ticket info, calculation details, activities and comments",
+      "Ticket ID links that open in new tab",
+      "Comment input field in detail dialog",
+      "Activity timeline in detail dialog",
+      "Approver avatars with tooltip names",
+      "Priority badges (High=orange, Medium=gray)",
+      "Status badges (Pending=yellow, Approved=green, Rejected=red)"
+    ],
+    "navigation_structure": {
+      "tabs": ["Pending", "Approved", "Rejected"],
+      "sections": ["Requests > Employee tickets", "Settings > Tickets", "My requests > My tickets"]
+    },
+    "undocumented_features": [
+      "View reports button functionality",
+      "Column customization options",
+      "Bulk actions via checkbox selection"
+    ]
+  },
+  "primary_entity": {
+    "name": "Employee Ticket",
+    "singular": "ticket",
+    "plural": "tickets",
+    "identified_from": "Page header 'Employee Tickets', create button 'Create employee ticket', breadcrumb 'Create ticket', detail dialog 'T-63 details'"
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PASSED",
+      "payload_triggers_used": ["Create employee ticket button in top-right"],
+      "own_logic_used": ["Navigated to create page via button click"],
+      "evidence": "crud-01-create-form.png",
+      "notes": "Create form has: Employees dropdown, Category > Ticket type selector (disabled until employee selected), Cancel and Submit buttons. Navigates to /enterprise/dashboard/employee-tickets/create"
+    },
+    "read": {
+      "status": "PASSED",
+      "payload_triggers_used": ["Clicked on Ticket ID T-63"],
+      "own_logic_used": ["Verified detail dialog opens with full info including ticket info, calculation details, activities and comments"],
+      "evidence": "exploration-04-ticket-detail-dialog.png",
+      "notes": "Detail dialog shows: Ticket ID (link), Category, Status, Priority, Ticket type, Requested by, Created date, Attachments, Approvers, Employee, Line manager, ticket-specific fields (e.g. Leave type, Number of days, Encashable amount), calculation formula, and activity timeline with comments"
+    },
+    "update": {
+      "status": "PASSED",
+      "payload_triggers_used": ["Edit option in three-dot actions menu"],
+      "own_logic_used": ["Verified Edit appears in row action menu"],
+      "evidence": "exploration-05-actions-menu.png",
+      "notes": "Edit option available in three-dot menu on each row. Also Approve/Reject actions available inline for pending tickets"
+    },
+    "delete": {
+      "status": "PASSED",
+      "payload_triggers_used": ["Delete option in three-dot actions menu"],
+      "own_logic_used": ["Verified Delete appears in row action menu"],
+      "evidence": "exploration-05-actions-menu.png",
+      "notes": "Delete option available in three-dot menu on each row"
+    }
+  },
+  "workflow_integration": {
+    "enabled_in_payload": true,
+    "priority": "required",
+    "checked": true,
+    "skipped_reason": null,
+    "triggers_found": [
+      "Employee ticket is created",
+      "Employee ticket status is updated"
+    ],
+    "actions_found": [
+      "Send email",
+      "Create pay adjustment request",
+      "Call webhook"
+    ],
+    "existing_workflows": [
+      {
+        "name": "Travel certificate",
+        "status": "Inactive",
+        "application": "Bayzat Employee Ticket",
+        "trigger": "Employee ticket is created",
+        "action": "Send email"
+      },
+      {
+        "name": "Per Diem Addition",
+        "status": "Active",
+        "application": "Bayzat Employee Ticket",
+        "trigger": "Employee ticket status is updated",
+        "action": "Create pay adjustment request (x2)"
+      },
+      {
+        "name": "Insurance upgrade deduction workflow",
+        "status": "Active",
+        "application": "Bayzat Employee Ticket",
+        "trigger": "Employee ticket status is updated",
+        "action": "Create pay adjustment request + Send email"
+      }
+    ],
+    "evidence": "workflow-01-workflows-list.png"
+  },
+  "approval_flow": {
+    "enabled_in_payload": true,
+    "priority": "required",
+    "checked": true,
+    "skipped_reason": null,
+    "has_approval_flow_tab": true,
+    "tab_name": "Multiple ticket types listed as tabs",
+    "signals_detected": [
+      "Approve/Reject buttons on pending tickets",
+      "Approvers column in ticket list",
+      "Status transitions (Pending → Approved/Rejected)",
+      "Advanced approval flow with If conditions",
+      "Default approval flow with Else fallback",
+      "Step-based approval with Add step/Add block",
+      "Approver assignment (Super Admin, Line Manager)",
+      "Activity timeline showing approval actions"
+    ],
+    "approval_flow_ticket_types": [
+      "Leave", "Air Ticket", "Loan", "Expense", "Payroll Transaction",
+      "Leave Salary Request", "Attendance Regularization", "Leave Encashment",
+      "Shift Change Request", "Grievance Submission", "Business Trip Request",
+      "Hourly permission", "Bank Account Update", "Work From Home Request",
+      "Project Hours", "Employee Grade Change", "After-expiry Ticket",
+      "WFH - Remote work request", "Salary Changes", "VAT Filing",
+      "Employee Survey", "Corporate Tax Filing",
+      "Grade A- Travel Ticket Request", "Grade B - Travel Ticket Request",
+      "Cashier Checklist", "Insurance Upgrade", "TimeSheet for Demo",
+      "Hiring Requisition", "Travel Booking Request", "Travel Ticket",
+      "Testing Mandatory Attachment", "Timesheet Approval", "Per Diem",
+      "Time Off in Lieu", "Travel Request based Per Diem", "Mileage (Econ)",
+      "Expense Reimbursements", "Health Insurance Travel Certificate",
+      "Onboarding Form", "New Department Move"
+    ],
+    "advanced_flows": [],
+    "default_flow": {
+      "leave_example": {
+        "step_1": "Super Admin OR Line Manager - 1"
+      }
+    },
+    "evidence": ["approval-01-approval-flows-page.png"]
+  },
+  "what_to_do_results": [
+    {
+      "task": "WTD-001: Navigate to Employee Tickets and explore admin ticket management",
+      "steps_in_payload": 5,
+      "steps_completed": 5,
+      "status": "PASSED",
+      "result": "Successfully navigated to Employee Tickets via Requests sidebar. Found Pending (7), Approved (75), Rejected (2) tabs. Table displays Ticket ID, Employee, Ticket type, Category name, Priority, Created date, Approvers, and Actions columns.",
+      "screenshots": ["exploration-01-main-view.png"]
+    },
+    {
+      "task": "WTD-002: Test ticket creation flow",
+      "steps_in_payload": 4,
+      "steps_completed": 4,
+      "status": "PASSED",
+      "result": "Clicked Create employee ticket button. Form shows Employees dropdown and Category > Ticket type selector. Ticket type field disabled until employee selected.",
+      "screenshots": ["crud-01-create-form.png"]
+    },
+    {
+      "task": "WTD-003: View ticket detail and activity log",
+      "steps_in_payload": 3,
+      "steps_completed": 3,
+      "status": "PASSED",
+      "result": "Clicked T-63 to open detail dialog. Shows full ticket info including Leave Encashment details, calculation formula, and activity timeline with approval history.",
+      "screenshots": ["exploration-04-ticket-detail-dialog.png"]
+    },
+    {
+      "task": "WTD-004: Test approval/rejection actions",
+      "steps_in_payload": 3,
+      "steps_completed": 3,
+      "status": "PASSED",
+      "result": "Reject and Approve buttons visible on T-63 row (Leave Encashment, Payroll category). Buttons appear inline for tickets where current user is an approver. Detail dialog also shows Reject/Approve buttons at top.",
+      "screenshots": ["exploration-04-ticket-detail-dialog.png"]
+    },
+    {
+      "task": "WTD-005: Explore filters and search",
+      "steps_in_payload": 3,
+      "steps_completed": 3,
+      "status": "PASSED",
+      "result": "Filters panel includes: Category, Ticket type, Pending approval on me checkbox, Priority, Created date range, Departments, Offices, Reports to. Search supports ticket ID, employee ID, and name.",
+      "screenshots": ["exploration-06-filters-panel.png"]
+    },
+    {
+      "task": "WTD-006: Check workflow integration",
+      "steps_in_payload": 4,
+      "steps_completed": 4,
+      "status": "PASSED",
+      "result": "Found 3 workflows using Bayzat Employee Ticket application: Travel certificate (inactive), Per Diem Addition (active), Insurance upgrade deduction (active). Triggers: ticket created, ticket status updated. Actions: send email, create pay adjustment.",
+      "screenshots": ["workflow-01-workflows-list.png"]
+    },
+    {
+      "task": "WTD-007: Check approval flow configuration",
+      "steps_in_payload": 3,
+      "steps_completed": 3,
+      "status": "PASSED",
+      "result": "Approval flows page shows 40+ ticket types with configurable approval flows. Each type supports Advanced flows (If conditions) and Default flow (Else). Steps can be added with multiple approvers using AND/OR logic.",
+      "screenshots": ["approval-01-approval-flows-page.png"]
+    },
+    {
+      "task": "WTD-008: Verify ticket status tabs and data",
+      "steps_in_payload": 3,
+      "steps_completed": 3,
+      "status": "PASSED",
+      "result": "Pending: 7 tickets, Approved: 75 tickets (additional Approved date column), Rejected: 2 tickets (additional Rejected date column). Pagination present with 8/page default.",
+      "screenshots": ["exploration-02-approved-tab.png", "exploration-03-rejected-tab.png"]
+    },
+    {
+      "task": "WTD-009: Test three-dot actions menu",
+      "steps_in_payload": 2,
+      "steps_completed": 2,
+      "status": "PASSED",
+      "result": "Three-dot menu on each row offers: View ticket, Edit, Delete options.",
+      "screenshots": ["exploration-05-actions-menu.png"]
+    }
+  ],
+  "what_to_watch_out_for_validated": [
+    {
+      "issue": "WOF-001: Beta feature status",
+      "limitation": "Employee Tickets is marked as Beta feature in the UI",
+      "severity": "medium",
+      "jira_reference": "N/A",
+      "validation_status": "CONFIRMED",
+      "evidence": "Beta feature badge visible next to Employee Tickets heading on every page",
+      "screenshot": "exploration-01-main-view.png"
+    },
+    {
+      "issue": "WOF-002: Category > Ticket type field disabled until employee selected",
+      "limitation": "On create form, ticket type selector is disabled until an employee is chosen",
+      "severity": "low",
+      "jira_reference": "N/A",
+      "validation_status": "CONFIRMED",
+      "evidence": "Create form shows Category > Ticket type field greyed out with placeholder 'Select an item you need assistance with' when no employee selected",
+      "screenshot": "crud-01-create-form.png"
+    },
+    {
+      "issue": "WOF-003: Approve/Reject buttons only visible to assigned approvers",
+      "limitation": "Inline Approve/Reject buttons only appear on tickets where the current user is an assigned approver",
+      "severity": "low",
+      "jira_reference": "N/A",
+      "validation_status": "CONFIRMED",
+      "evidence": "T-63 shows Reject/Approve buttons (user is Super Admin approver), while T-78 only shows three-dot menu without inline approval buttons",
+      "screenshot": "exploration-01-main-view.png"
+    },
+    {
+      "issue": "WOF-004: Row click selects checkbox instead of opening detail",
+      "limitation": "Clicking on a table row toggles the checkbox selection rather than opening the ticket detail",
+      "severity": "low",
+      "jira_reference": "N/A",
+      "validation_status": "CONFIRMED",
+      "evidence": "Must click on Ticket ID link specifically to open detail dialog, not the row itself",
+      "screenshot": "exploration-04-ticket-detail-dialog.png"
+    },
+    {
+      "issue": "WOF-005: Approval flow complexity with 40+ ticket types",
+      "limitation": "Each ticket type has its own approval flow configuration, requiring separate setup",
+      "severity": "medium",
+      "jira_reference": "N/A",
+      "validation_status": "CONFIRMED",
+      "evidence": "Approval flows page lists 40+ ticket types, each requiring individual configuration of advanced and default flows",
+      "screenshot": "approval-01-approval-flows-page.png"
+    }
+  ],
+  "screenshots_taken": 8,
+  "validation_timestamp": "2026-02-25T12:00:00.000Z",
+  "summary": "Employee Tickets (Beta) feature validation completed successfully. All CRUD operations confirmed: Create via dedicated form page, Read via ticket detail dialog (click Ticket ID), Update via Edit in three-dot menu, Delete via Delete in three-dot menu. Three Bayzat Employee Ticket workflows found (triggers: ticket created, ticket status updated; actions: send email, create pay adjustment). Approval flows configured for 40+ ticket types with advanced conditional routing and default flows. Feature includes search, 8 filter types, sortable columns, bulk selection, View reports, and Download functionality. Pending tab shows inline Approve/Reject for assigned approvers. Detail dialog shows full ticket info, calculation details (for leave encashment type), and activity/comment timeline."
+}
