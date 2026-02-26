@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Structures - User Guide | Bayzat</title>
+  <style>
+/* ===============================
+   GLOBAL RESET
+================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===============================
+   BASE TYPOGRAPHY
+================================ */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  line-height: 1.6;
+  color: #000000;
+  background-color: #ffffff;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #000000;
+  font-weight: 600;
+}
+
+p, span, li, td, th, dt, dd {
+  color: #000000;
+}
+
+a {
+  color: #6B46C1;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+hr {
+  border: none;
+  border-top: 2px solid #E2E8F0;
+  margin: 2rem 0;
+}
+
+/* ===============================
+   HERO SECTION
+================================ */
+.hero-banner {
+  background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+  color: #ffffff;
+  padding: 60px 40px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.hero-banner h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  opacity: 0.95;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.hero-image {
+  margin-top: 24px;
+}
+
+.hero-image img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+/* ===============================
+   MODERN GUIDE NAVIGATION
+================================ */
+.guide-nav {
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 40px;
+  border: 1px solid #e2e8f0;
+}
+
+.nav-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.nav-icon {
+  font-size: 1.5rem;
+}
+
+.nav-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  letter-spacing: -0.02em;
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.nav-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.nav-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15);
+  border-color: #6B46C1;
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+  color: #6B46C1;
+  text-decoration: none;
+}
+
+.nav-card:active {
+  transform: translateY(0);
+}
+
+.card-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.card-label {
+  line-height: 1.3;
+}
+
+/* ===============================
+   SECTIONS
+================================ */
+.section {
+  margin-bottom: 3rem;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+}
+
+.section h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #E2E8F0;
+  margin-bottom: 1rem;
+}
+
+.subsection {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid #E2E8F0;
+}
+
+.subsection h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 1rem;
+}
+
+/* ===============================
+   STRATEGIC CONTEXT
+================================ */
+.strategic-context {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid #E2E8F0;
+}
+
+.strategic-header {
+  margin-bottom: 1rem;
+}
+
+.strategic-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #000000;
+  margin: 0;
+}
+
+.strategic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.strategic-card {
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.strategic-card h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 12px 0;
+}
+
+.strategic-card p {
+  font-size: 0.95rem;
+  color: #334155;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.strategic-card ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.strategic-card li {
+  font-size: 0.9rem;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.strategic-card li:last-child {
+  margin-bottom: 0;
+}
+
+/* ===============================
+   JOURNEY ROADMAP
+================================ */
+.journey-roadmap {
+  margin: 1rem 0;
+}
+
+.journey-roadmap > .subsection {
+  border-left: none;
+  padding-left: 0;
+  margin-bottom: 1.5rem;
+}
+
+.journey-roadmap > .subsection h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.journey-roadmap > .subsection > p {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.journey-phases {
+  position: relative;
+  padding-left: 24px;
+}
+
+/* Vertical timeline line */
+.journey-phases::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background: linear-gradient(to bottom, #6B46C1 0%, #805AD5 100%);
+  border-radius: 2px;
+}
+
+.journey-phase {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 16px 0;
+  position: relative;
+}
+
+.journey-phase:first-child {
+  padding-top: 0;
+}
+
+.journey-phase:last-child {
+  padding-bottom: 0;
+}
+
+.phase-marker {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.3);
+}
+
+.phase-content {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  transition: all 0.2s ease;
+}
+
+.phase-content:hover {
+  border-color: #6B46C1;
+  box-shadow: 0 4px 12px rgba(107, 70, 193, 0.1);
+}
+
+.phase-content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 8px 0;
+}
+
+.phase-content p {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.phase-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6B46C1;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.phase-link:hover {
+  color: #805AD5;
+  text-decoration: none;
+}
+
+.phase-link::after {
+  content: '\2192';
+  transition: transform 0.2s ease;
+}
+
+.phase-link:hover::after {
+  transform: translateX(4px);
+}
+
+/* ===============================
+   WHO USES TABLE
+================================ */
+.who-uses-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.who-uses-table th,
+.who-uses-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #E2E8F0;
+}
+
+.who-uses-table th {
+  background: #F7FAFC;
+  font-weight: 600;
+}
+
+/* ===============================
+   FAQ ACCORDION
+================================ */
+.faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.faq-item {
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.faq-item:hover {
+  border-color: #6B46C1;
+  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.1);
+}
+
+.faq-item[open] {
+  border-color: #6B46C1;
+  box-shadow: 0 4px 12px rgba(107, 70, 193, 0.15);
+}
+
+.faq-question,
+.faq-item > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #1a1a2e;
+  cursor: pointer;
+  background: #f8f9ff;
+  list-style: none;
+  transition: all 0.2s ease;
+}
+
+.faq-question::-webkit-details-marker,
+.faq-item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-question::after,
+.faq-item > summary::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #6B46C1;
+  border-bottom: 2px solid #6B46C1;
+  transform: rotate(-45deg);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.faq-item[open] .faq-question::after,
+.faq-item[open] > summary::after {
+  transform: rotate(45deg);
+}
+
+.faq-question:hover,
+.faq-item > summary:hover {
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+  color: #6B46C1;
+}
+
+.faq-item[open] .faq-question,
+.faq-item[open] > summary {
+  background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+  color: #ffffff;
+}
+
+.faq-item[open] .faq-question::after,
+.faq-item[open] > summary::after {
+  border-color: #ffffff;
+}
+
+.faq-answer {
+  padding: 20px;
+  background: #ffffff;
+  color: #334155;
+  line-height: 1.7;
+  border-top: 1px solid #E2E8F0;
+  animation: fadeIn 0.3s ease;
+}
+
+.faq-answer p {
+  margin: 0;
+  color: #334155;
+}
+
+.faq-answer ul, .faq-answer ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.faq-answer li {
+  margin-bottom: 8px;
+  color: #334155;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===============================
+   INFO & WARNING BOXES
+================================ */
+.info-box {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  background: #FAF5FF;
+  border-left: 4px solid #6B46C1;
+  color: #000000;
+}
+
+.warning-box {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  background: #FFFBEB;
+  border-left: 4px solid #D97706;
+  color: #000000;
+}
+
+.warning-box p,
+.info-box p {
+  margin: 0 0 8px 0;
+}
+
+.warning-box p:last-child,
+.info-box p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===============================
+   LISTS
+================================ */
+ul, ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+/* ===============================
+   TABLES
+================================ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #E2E8F0;
+  color: #000000;
+}
+
+th {
+  background: #F7FAFC;
+  font-weight: 600;
+}
+
+tr:hover {
+  background: #F7FAFC;
+}
+
+/* ===============================
+   SCREENSHOTS
+================================ */
+figure {
+  margin: 24px auto;
+  text-align: center;
+}
+
+figure img,
+.screenshot {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #E2E8F0;
+  display: block;
+  margin: 0 auto;
+}
+
+figcaption {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #000000;
+  opacity: 0.8;
+}
+
+/* Screenshot container with consistent spacing */
+.screenshot-container {
+  margin: 24px auto;
+  text-align: center;
+}
+
+.screenshot-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #E2E8F0;
+  display: block;
+  margin: 0 auto;
+}
+
+.screenshot-container figcaption {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #000000;
+  opacity: 0.8;
+}
+
+/* ===============================
+   FEATURE CARDS & GRIDS
+================================ */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.feature-card {
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 20px;
+  color: #000000;
+}
+
+.feature-card h4 {
+  margin-top: 0;
+  color: #000000;
+}
+
+/* ===============================
+   REQUIREMENTS TABLE
+================================ */
+.requirements-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.requirements-table th,
+.requirements-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #E2E8F0;
+}
+
+.requirements-table th {
+  background: #F7FAFC;
+  font-weight: 600;
+}
+
+/* ===============================
+   LIMITATIONS TABLE
+================================ */
+.limitations-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.limitations-table th,
+.limitations-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #E2E8F0;
+}
+
+.limitations-table th {
+  background: #F7FAFC;
+  font-weight: 600;
+}
+
+/* ===============================
+   GLOSSARY TABLE
+================================ */
+.glossary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.glossary-table th,
+.glossary-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #E2E8F0;
+}
+
+.glossary-table th {
+  background: #F7FAFC;
+  font-weight: 600;
+}
+
+.glossary-table td:first-child {
+  width: 25%;
+  white-space: nowrap;
+}
+
+/* ===============================
+   LEGACY JOURNEY & STEPS (backwards compatibility)
+================================ */
+.journey-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.journey-step {
+  background: #F7FAFC;
+  border-radius: 8px;
+  padding: 20px;
+  color: #000000;
+}
+
+.journey-step .step-number,
+.step-number {
+  background: #6B46C1;
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.step {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0;
+  padding: 16px;
+  background: #F7FAFC;
+  border-radius: 8px;
+}
+
+/* ===============================
+   NAVIGATION PATH
+================================ */
+.nav-path {
+  background: #F7FAFC;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-family: 'SF Mono', Monaco, monospace;
+  margin: 16px 0;
+  color: #000000;
+}
+
+/* ===============================
+   CODE & BLOCKQUOTES
+================================ */
+code {
+  background: #F7FAFC;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', Monaco, monospace;
+  font-size: 0.9em;
+  color: #000000;
+}
+
+pre {
+  background: #F7FAFC;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  color: #000000;
+}
+
+blockquote {
+  border-left: 4px solid #E2E8F0;
+  padding-left: 16px;
+  margin: 16px 0;
+  font-style: italic;
+  color: #000000;
+}
+
+blockquote p {
+  margin: 0 0 8px 0;
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #E2E8F0;
+  text-align: center;
+  color: #000000;
+  font-size: 0.9rem;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  body { padding: 16px; }
+  .hero-banner { padding: 40px 24px; }
+  .hero-banner h1 { font-size: 1.75rem; }
+  .section { padding: 16px; }
+  th, td { padding: 8px 12px; }
+  .nav-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .nav-card {
+    padding: 12px;
+    font-size: 0.85rem;
+  }
+  .card-icon {
+    font-size: 1rem;
+  }
+  .faq-question,
+  .faq-item > summary {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+  .faq-answer {
+    padding: 16px;
+  }
+  .strategic-grid {
+    grid-template-columns: 1fr;
+  }
+  .journey-phases {
+    padding-left: 20px;
+  }
+  .journey-phases::before {
+    left: 11px;
+  }
+  .phase-marker {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    font-size: 0.8rem;
+  }
+  .phase-content {
+    padding: 14px 16px;
+  }
+  .glossary-table td:first-child {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-banner h1 { font-size: 1.5rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .step { flex-direction: column; gap: 12px; }
+  .nav-grid {
+    grid-template-columns: 1fr;
+  }
+  .guide-nav {
+    padding: 16px;
+  }
+  .journey-phase {
+    gap: 12px;
+  }
+}
+
+/* ===============================
+   PRINT
+================================ */
+@media print {
+  body { max-width: 100%; padding: 0; }
+  .hero-banner {
+    background: #6B46C1 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .section { break-inside: avoid; }
+  .guide-nav { display: none; }
+  .faq-item { break-inside: avoid; }
+  .faq-item[open] .faq-answer { display: block; }
+  .journey-phases::before {
+    background: #6B46C1 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero-banner">
+      <h1>Employee Structures</h1>
+      <p class="hero-subtitle">Eliminate manual policy assignments by grouping employees automatically, ensuring consistent access control across payroll and HR operations</p>
+      
+    </div>
+
+    
+    <nav class="guide-nav" aria-label="Guide navigation">
+      <div class="nav-header">
+        <span class="nav-icon">&#128214;</span>
+        <span class="nav-title">Quick Navigation</span>
+      </div>
+      <div class="nav-grid">
+        <a class="nav-card" href="#feature-overview">
+          <span class="card-icon">&#10024;</span>
+          <span class="card-label">What is Employee Structures?</span>
+        </a>
+        <a class="nav-card" href="#product-foundation">
+          <span class="card-icon">&#127959;&#65039;</span>
+          <span class="card-label">Product Foundation Overview</span>
+        </a>
+        <a class="nav-card" href="#user-journey">
+          <span class="card-icon">&#128506;&#65039;</span>
+          <span class="card-label">Complete User Journey Guide</span>
+        </a>
+        <a class="nav-card" href="#feature-entry-points">
+          <span class="card-icon">&#128640;</span>
+          <span class="card-label">Feature Discovery</span>
+        </a>
+        <a class="nav-card" href="#initial-setup">
+          <span class="card-icon">&#9881;&#65039;</span>
+          <span class="card-label">Initial Setup</span>
+        </a>
+        <a class="nav-card" href="#core-tasks">
+          <span class="card-icon">&#128203;</span>
+          <span class="card-label">Key Tasks</span>
+        </a>
+        <a class="nav-card" href="#workflow-integration">
+          <span class="card-icon">&#128260;</span>
+          <span class="card-label">Workflow Integration</span>
+        </a>
+        <a class="nav-card" href="#approval-flow">
+          <span class="card-icon">&#9989;</span>
+          <span class="card-label">Approval Flow</span>
+        </a>
+        <a class="nav-card" href="#business-rules-limitations">
+          <span class="card-icon">&#128207;</span>
+          <span class="card-label">Business Rules &amp; Limitations</span>
+        </a>
+        <a class="nav-card" href="#troubleshooting-edge-cases">
+          <span class="card-icon">&#128295;</span>
+          <span class="card-label">Troubleshooting &amp; Edge Cases</span>
+        </a>
+        <a class="nav-card" href="#support-resources">
+          <span class="card-icon">&#128172;</span>
+          <span class="card-label">FAQs &amp; Support</span>
+        </a>
+        <a class="nav-card" href="#glossary">
+          <span class="card-icon">&#128218;</span>
+          <span class="card-label">Glossary</span>
+        </a>
+      </div>
+    </nav>
+  
+
+    <main class="content-area" aria-label="User guide content">
+      
+    <section class="section section-feature-overview" id="feature-overview">
+      <header class="section-header">
+        <h2 class="section-title">What is Employee Structures?</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection"><h3>Overview</h3><p>Employee Structures organize employees into groups for policy assignment and data access control. Navigate to Settings > Company > Employee Structures to create structures with automatic or manual grouping.</p><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/exploration-01-primary-view.png" alt="exploration-01-primary-view.png" class="screenshot" loading="lazy"><figcaption>Employee Structures list showing configured structures with group counts and assignment methods</figcaption></figure><p>Create structures, define groups using criteria or manual selection, and assign policies to groups instead of individual employees.</p></div><div class="subsection"><h3>Key Benefits</h3><ul><li>Automatic policy assignment based on employee attributes eliminates manual configuration</li><li>Consistent access control across leave policies, loan policies, and custom roles</li><li>Bulk management reduces administrative overhead when policies change</li><li>Audit trail shows which employees belong to which groups and why</li></ul></div><div class="strategic-context"><div class="strategic-header"><h3>Strategic Context</h3></div><div class="strategic-grid"><div class="strategic-card"><h4>🎯 What Employee Structures Solves</h4><p>Replaces manual policy assignment and scattered access control with centralized group-based configuration.</p><ul><li>Replaces individual employee policy assignments</li><li>Standardizes access control rules across features</li><li>Enables automatic policy updates when employee attributes change</li></ul></div><div class="strategic-card"><h4>💰 Why It Matters</h4><p>Foundational configuration that controls which employees see which policies and data across the platform.</p><ul><li>Prerequisite for group-based leave policy assignment</li><li>Drives custom role data visibility restrictions</li><li>Controls loan policy eligibility and access</li></ul></div><div class="strategic-card"><h4>🏗️ How It Connects</h4><p>Configuration template assigned to policies, which then automatically apply to employees in matching groups.</p><ul><li>Assigned to leave policies, loan policies, and custom roles</li><li>Referenced by <a href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role Management</a> for data restrictions</li><li>Impacts all employees matching group criteria</li></ul></div></div></div><div class="subsection"><h3>Who Uses This Feature?</h3><table class="who-uses-table"><thead><tr><th>User Role</th><th>What They Do</th><th>Value Proposition</th></tr></thead><tbody><tr><td><strong>Super Admin</strong></td><td>Create structures, define groups, assign policies to groups</td><td>Automate policy assignment and eliminate manual updates when employees change departments or locations</td></tr><tr><td><strong>HR Manager</strong></td><td>Review group membership, verify policy assignments</td><td>Audit which employees have access to which policies without checking individual profiles</td></tr><tr><td><strong>Payroll Admin</strong></td><td>Use structures to restrict payroll data visibility in custom roles</td><td>Ensure payroll admins only see data for their assigned employee groups</td></tr></tbody></table></div>
+      </div>
+    </section>
+  
+
+    <section class="section section-product-foundation" id="product-foundation">
+      <header class="section-header">
+        <h2 class="section-title">Product Foundation Overview</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+    <h3>How Employee Structures Fits</h3>
+    <p>Employee Structures is a configuration feature that creates custom groupings of employees based on organizational criteria. These groups serve as access control boundaries for role-based permissions and policy assignments.</p>
+    <div class="info-box">
+      <p><strong>Mental model:</strong> Employee Structure (container) → Groups employees by criteria → Assigned to Roles/Policies → Controls what admins see and what policies apply</p>
+    </div>
+    <p>Structures impact role visibility (which employees an admin can manage) and policy assignment (which employees receive specific leave, loan, or other policies).</p>
+  </div>
+
+  <div class="subsection">
+    <h3>Key Decisions Before Setup</h3>
+    <p>Answer these questions before creating Employee Structures:</p>
+    <ul>
+      <li><strong>What access boundaries do you need?</strong> — Determine which groups of employees should be visible to specific admin roles (e.g., by department, location, or seniority)</li>
+      <li><strong>Manual or automatic grouping?</strong> — Decide whether to manually select employees or use system fields (department, location, etc.) for automatic assignment</li>
+      <li><strong>Which policies will reference this structure?</strong> — Identify which leave policies, loan policies, or other settings need group-level assignment</li>
+      <li><strong>How many groups are needed?</strong> — Each structure requires at least two groups to function properly</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <h3>Related Features</h3>
+    <p>These Bayzat features work together with Employee Structures. Where available, links point to the published user guide.</p>
+    <ul>
+      <li><strong><a href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role Management</a></strong> — Assigns custom roles with restricted access to specific employee groups defined by structures</li>
+      <li><strong><a href="https://mashapajfhp.github.io/user-guides/leave-policies/v1/leave-policies-user-guide.html">Leave Policies</a></strong> — Uses employee structures to assign different leave policies to specific groups automatically</li>
+      <li><strong>Loan Policies</strong> — References employee structures for group-based loan policy assignment</li>
+      <li><strong>Employee Directory</strong> — Filters employee lists based on structure-defined groups for role-restricted views</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <h3>Prerequisites & Requirements</h3>
+    <table class="requirements-table">
+      <thead>
+        <tr>
+          <th>Requirement</th>
+          <th>Description</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Active employees in the system</td>
+          <td>At least one active employee must exist to create groups and assign structures</td>
+          <td>Required</td>
+        </tr>
+        <tr>
+          <td>Employee data fields populated</td>
+          <td>Required only for automatic grouping: System fields like department, location, or seniority must be filled for employees you want to group automatically</td>
+          <td>Conditional</td>
+        </tr>
+        <tr>
+          <td>Custom role configuration</td>
+          <td>Required only for role-based access control: Custom roles must be created to restrict admin visibility to specific employee groups</td>
+          <td>Conditional</td>
+        </tr>
+        <tr>
+          <td>Policy templates ready</td>
+          <td>Recommended for streamlined setup: Having leave or loan policies configured before structure creation allows immediate group-level assignment</td>
+          <td>Recommended</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+      </div>
+    </section>
+  
+
+    <section class="section section-user-journey" id="user-journey">
+      <header class="section-header">
+        <h2 class="section-title">Complete User Journey Guide</h2>
+      </header>
+      <div class="section-body">
+        <div class="journey-roadmap">
+  <div class="subsection">
+    <h3>End-to-End Journey: Setting Up Employee Structures</h3>
+    <p>This journey shows how admins organize employees into groups and apply those groups to policies and role restrictions.</p>
+  </div>
+
+  <div class="journey-phases">
+    <div class="journey-phase">
+      <div class="phase-marker">1</div>
+      <div class="phase-content">
+        <h4>Plan Your Grouping Strategy</h4>
+        <p>Decide whether to group employees automatically by criteria (department, location) or manually by selection.</p>
+        <a href="#product-foundation" class="phase-link">See details →</a>
+      </div>
+    </div>
+
+    <div class="journey-phase">
+      <div class="phase-marker">2</div>
+      <div class="phase-content">
+        <h4>Navigate to Employee Structures</h4>
+        <p>Access the feature through Settings > Company > Employee Structures.</p>
+        <a href="#feature-entry-points" class="phase-link">See details →</a>
+      </div>
+    </div>
+
+    <div class="journey-phase">
+      <div class="phase-marker">3</div>
+      <div class="phase-content">
+        <h4>Create Structure and Groups</h4>
+        <p>Build the structure by adding groups with automatic criteria or manual employee selection.</p>
+        <a href="#core-tasks" class="phase-link">See details →</a>
+      </div>
+    </div>
+
+    <div class="journey-phase">
+      <div class="phase-marker">4</div>
+      <div class="phase-content">
+        <h4>Apply to Policies</h4>
+        <p>Link the structure to leave policies, loan policies, or custom role restrictions.</p>
+        <a href="#core-tasks" class="phase-link">See details →</a>
+      </div>
+    </div>
+
+    <div class="journey-phase">
+      <div class="phase-marker">5</div>
+      <div class="phase-content">
+        <h4>Monitor and Adjust</h4>
+        <p>Review group assignments and update criteria or manual selections as your organization evolves.</p>
+        <a href="#core-tasks" class="phase-link">See details →</a>
+      </div>
+    </div>
+  </div>
+</div>
+      </div>
+    </section>
+  
+
+    <section class="section section-feature-entry-points" id="feature-entry-points">
+      <header class="section-header">
+        <h2 class="section-title">Feature Discovery</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+  <h3>Navigation Paths</h3>
+  <p>Employee Structures is accessed through the Company Settings module.</p>
+
+  <div class="nav-path">Settings > Company > Employee Structures</div>
+  <p>This path leads to the main Employee Structures management page where you can create, view, edit, and delete structures.</p>
+
+  <figure class="screenshot-container">
+    <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/company-settings-page.png" alt="company-settings-page.png" class="screenshot" loading="lazy">
+    <figcaption>Company Settings page showing Employee Structures entry point</figcaption>
+  </figure>
+
+  <p>From the Employee Structures list, you can:</p>
+  <ul>
+    <li>View all existing structures and their group counts</li>
+    <li>Create new structures using the "Add New" button</li>
+    <li>Edit or delete existing structures using the action icons</li>
+    <li>View detailed group membership by clicking "View Groups"</li>
+  </ul>
+
+  <figure class="screenshot-container">
+    <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/employee-structures-list.png" alt="employee-structures-list.png" class="screenshot" loading="lazy">
+    <figcaption>Employee Structures list showing available structures and management options</figcaption>
+  </figure>
+</div>
+      </div>
+    </section>
+  
+
+    <section class="section section-initial-setup" id="initial-setup">
+      <header class="section-header">
+        <h2 class="section-title">Initial Setup</h2>
+      </header>
+      <div class="section-body">
+        <p>Employee Structures must be configured before they can be used to organize employees or control data access. This section covers first-time setup for admins.</p>
+
+  <div class="subsection">
+    <h3>Before You Begin</h3>
+    <p>Ensure you have Super Admin access and have completed the <a href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role Management</a> setup if you plan to restrict data access by group.</p>
+  </div>
+
+  <div class="subsection">
+    <h3>Access the Configuration Page</h3>
+    <div class="nav-path">Settings → Company → Employee Structures</div>
+    <p>This page displays all existing structures and allows you to create new ones.</p>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/company-settings-page.png" alt="company-settings-page.png" class="screenshot" loading="lazy">
+      <figcaption>Employee Structures section in Company Settings</figcaption>
+    </figure>
+  </div>
+
+  <div class="subsection">
+    <h3>Create Your First Structure</h3>
+    <p>Click <strong>Add New</strong> to start the structure creation wizard.</p>
+
+    <h4>Step 1: Name and Describe the Structure</h4>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/create-structure-step1.png" alt="create-structure-step1.png" class="screenshot" loading="lazy">
+      <figcaption>Structure creation form - Step 1</figcaption>
+    </figure>
+    <ul>
+      <li>Enter a descriptive name (e.g., "Regional Teams", "Department Structure")</li>
+      <li>Add a description explaining the purpose of this structure</li>
+      <li>Click <strong>Next</strong></li>
+    </ul>
+
+    <h4>Step 2: Add Groups</h4>
+    <p>Define at least two groups within the structure. Each group represents a category of employees.</p>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/create-structure-step2-empty.png" alt="create-structure-step2-empty.png" class="screenshot" loading="lazy">
+      <figcaption>Empty groups page - minimum two groups required</figcaption>
+    </figure>
+
+    <p>Choose a grouping method:</p>
+
+    <h5>Option A: Manual Grouping</h5>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/crud-05-manual-group-dialog.png" alt="crud-05-manual-group-dialog.png" class="screenshot" loading="lazy">
+      <figcaption>Manual group creation dialog</figcaption>
+    </figure>
+    <ul>
+      <li>Click <strong>Add Group</strong></li>
+      <li>Enter group name and description</li>
+      <li>Select employees individually from the list</li>
+      <li>Click <strong>Save</strong></li>
+      <li>Repeat until you have at least two groups</li>
+    </ul>
+
+    <h5>Option B: Automatic Grouping</h5>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/crud-03-auto-group-dialog.png" alt="crud-03-auto-group-dialog.png" class="screenshot" loading="lazy">
+      <figcaption>Automatic grouping dialog with criteria selection</figcaption>
+    </figure>
+    <ul>
+      <li>Click <strong>Add Group</strong> and select <strong>Automatic</strong></li>
+      <li>Enter group name</li>
+      <li>Select criteria from available employee data points (Department, Location, Job Title, etc.)</li>
+      <li>Choose specific values for each criterion</li>
+      <li>The system automatically assigns employees matching all selected criteria</li>
+      <li>Click <strong>Save</strong></li>
+    </ul>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/automatic-criteria-datapoints.png" alt="automatic-criteria-datapoints.png" class="screenshot" loading="lazy">
+      <figcaption>Available data points for automatic grouping criteria</figcaption>
+    </figure>
+
+    <div class="warning-box">
+      <p><strong>Minimum Requirement:</strong> You must create at least two groups before proceeding. The system will display an error if you attempt to continue with fewer than two groups.</p>
+    </div>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/create-structure-step2-group-added.png" alt="create-structure-step2-group-added.png" class="screenshot" loading="lazy">
+      <figcaption>Groups page after adding groups</figcaption>
+    </figure>
+
+    <h4>Step 3: Review and Confirm</h4>
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/create-structure-step3-review.png" alt="create-structure-step3-review.png" class="screenshot" loading="lazy">
+      <figcaption>Review page showing structure summary and group assignments</figcaption>
+    </figure>
+    <ul>
+      <li>Review structure name, description, and all groups</li>
+      <li>Verify employee counts for each group</li>
+      <li>Click <strong>Create Structure</strong> to finalize</li>
+    </ul>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/structure-created-success.png" alt="structure-created-success.png" class="screenshot" loading="lazy">
+      <figcaption>Success confirmation after structure creation</figcaption>
+    </figure>
+  </div>
+
+  <div class="subsection">
+    <h3>Configure Data Access Restrictions (Optional)</h3>
+    <p>After creating a structure, you can restrict which admins see which employee groups in payroll and other sensitive modules.</p>
+
+    <div class="nav-path">Settings → Role Management → [Select Custom Role]</div>
+
+    <figure class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/role-restriction-groups-dropdown.png" alt="role-restriction-groups-dropdown.png" class="screenshot" loading="lazy">
+      <figcaption>Group restriction dropdown in custom role configuration</figcaption>
+    </figure>
+
+    <ul>
+      <li>Open the custom role you want to restrict</li>
+      <li>Scroll to <strong>Employee Structure Restrictions</strong></li>
+      <li>Select the structure from the dropdown</li>
+      <li>Choose which groups this role can view</li>
+      <li>Save the role</li>
+    </ul>
+
+    <p>Users assigned this role will only see employees in the selected groups when accessing payroll, reports, and other restricted data.</p>
+  </div>
+
+  <div class="subsection">
+    <h3>Next Steps</h3>
+    <ul>
+      <li>Assign the structure to <a href="https://mashapajfhp.github.io/user-guides/leave-policies/v1/leave-policies-user-guide.html">Leave Policies</a> for group-specific leave rules</li>
+      <li>Use the structure in custom roles to control data visibility</li>
+      <li>Review group assignments periodically as your organization changes</li>
+    </ul>
+  </div>
+      </div>
+    </section>
+  
+
+    <section class="section section-core-tasks" id="core-tasks">
+      <header class="section-header">
+        <h2 class="section-title">Key Tasks</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection"><h3>Task: Create Employee Structure</h3><p>Set up a custom organizational grouping to control data access and policy assignments.</p><h4>Subtask: Create Automatic Structure</h4><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/crud-01-create-form-step1.png" alt="crud-01-create-form-step1.png" class="screenshot" loading="lazy"><figcaption>Employee Structure creation form showing name, description, and grouping method selection</figcaption></figure><ol><li>Go to Settings > Company > Employee Structures</li><li>Click Add New</li><li>Enter structure name and description</li><li>Select Automatic grouping method</li><li>Click Next</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/crud-03-auto-group-dialog.png" alt="crud-03-auto-group-dialog.png" class="screenshot" loading="lazy"><figcaption>Automatic group configuration dialog with criteria selection</figcaption></figure><ol start="6"><li>Click Add Group to create first group</li><li>Enter group name</li><li>Click Add Criteria and select data point (Department, Location, Job Title, etc.)</li><li>Select matching values for the criteria</li><li>Save group</li><li>Repeat to create at least one more group (minimum two required)</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/crud-02-create-step2-grouping.png" alt="crud-02-create-step2-grouping.png" class="screenshot" loading="lazy"><figcaption>Structure configuration showing multiple groups with automatic criteria</figcaption></figure><ol start="12"><li>Review all groups</li><li>Click Next</li><li>Review structure summary</li><li>Click Create</li></ol><div class="info-box"><p><strong>Expected outcome:</strong> Structure appears in the Employee Structures list. Employees automatically assigned to groups based on criteria. Structure available for selection in <a href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role Management</a> and policy assignment screens.</p></div><h4>Subtask: Create Manual Structure</h4><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/create-structure-step1.png" alt="create-structure-step1.png" class="screenshot" loading="lazy"><figcaption>Structure creation form with Manual grouping method selected</figcaption></figure><ol><li>Go to Settings > Company > Employee Structures</li><li>Click Add New</li><li>Enter structure name and description</li><li>Select Manual grouping method</li><li>Click Next</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/crud-05-manual-group-dialog.png" alt="crud-05-manual-group-dialog.png" class="screenshot" loading="lazy"><figcaption>Manual group creation dialog with employee selection</figcaption></figure><ol start="6"><li>Click Add Group</li><li>Enter group name</li><li>Select employees from the list</li><li>Save group</li><li>Create at least one more group (minimum two required)</li><li>Review all groups</li><li>Click Next</li><li>Review structure summary</li><li>Click Create</li></ol><div class="info-box"><p><strong>Expected outcome:</strong> Structure created with manually assigned employees. Changes to employee data do not affect group membership. Structure available for role restrictions and policy assignments.</p></div></div><div class="subsection"><h3>Task: View and Manage Structures</h3><p>Review existing structures, check group membership, and verify employee assignments.</p><h4>Subtask: View Structure Details</h4><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/employee-structures-list.png" alt="employee-structures-list.png" class="screenshot" loading="lazy"><figcaption>Employee Structures list showing all configured structures with group counts</figcaption></figure><ol><li>Go to Settings > Company > Employee Structures</li><li>Locate structure in the list</li><li>Click View Groups to see all groups in the structure</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/exploration-02-view-groups-dialog.png" alt="exploration-02-view-groups-dialog.png" class="screenshot" loading="lazy"><figcaption>View Groups dialog displaying all groups within a structure</figcaption></figure><ol start="4"><li>Review group names and criteria</li><li>Click on a group to see assigned employees</li></ol><div class="info-box"><p><strong>Expected outcome:</strong> See complete structure configuration including all groups and their members.</p></div><h4>Subtask: Check Employee Assignments</h4><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/exploration-03-employees-roles-assignments.png" alt="exploration-03-employees-roles-assignments.png" class="screenshot" loading="lazy"><figcaption>Employee assignments view showing which structures and groups each employee belongs to</figcaption></figure><ol><li>From Employee Structures list, click View Employees & Roles</li><li>Review which employees are in which groups</li><li>Verify structure assignments are correct</li></ol><div class="info-box"><p><strong>Expected outcome:</strong> Confirm employees are grouped correctly. For automatic structures, verify criteria are working as intended. For manual structures, verify manual assignments are up to date.</p></div></div><div class="subsection"><h3>Task: Edit Employee Structure</h3><p>Modify structure name, description, or group configuration after creation.</p><h4>Subtask: Edit Structure Details</h4><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/crud-06-edit-form-step1.png" alt="crud-06-edit-form-step1.png" class="screenshot" loading="lazy"><figcaption>Edit structure form showing editable name and description fields</figcaption></figure><ol><li>Go to Settings > Company > Employee Structures</li><li>Click Edit icon on the structure row</li><li>Update structure name or description</li><li>Click Next to proceed to groups</li></ol><div class="warning-box"><p><strong>Grouping method cannot be changed:</strong> You cannot switch between Automatic and Manual after creation. Create a new structure if you need a different grouping method.</p></div><h4>Subtask: Edit Automatic Groups</h4><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/automatic-criteria-config.png" alt="automatic-criteria-config.png" class="screenshot" loading="lazy"><figcaption>Automatic group criteria configuration showing data points and selected values</figcaption></figure><ol><li>On the Groups step, click Edit on a group</li><li>Modify group name if needed</li><li>Add or remove criteria</li><li>Change selected values for existing criteria</li><li>Save group</li><li>Review changes</li><li>Click Next, then Update</li></ol><div class="info-box"><p><strong>Expected outcome:</strong> Employees automatically reassigned based on updated criteria. Changes take effect immediately.</p></div><h4>Subtask: Edit Manual Groups</h4><ol><li>On the Groups step, click Edit on a group</li><li>Modify group name if needed</li><li>Add or remove employees from the selection list</li><li>Save group</li><li>Review changes</li><li>Click Next, then Update</li></ol><div class="info-box"><p><strong>Expected outcome:</strong> Employee assignments updated per manual changes. No automatic reassignment occurs.</p></div></div><div class="subsection"><h3>Task: Delete Employee Structure</h3><p>Remove a structure that is no longer needed.</p><h4>Subtask: Delete Structure</h4><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/crud-07-delete-confirmation-dialog.png" alt="crud-07-delete-confirmation-dialog.png" class="screenshot" loading="lazy"><figcaption>Delete confirmation dialog warning about role and policy impacts</figcaption></figure><ol><li>Go to Settings > Company > Employee Structures</li><li>Click Delete icon on the structure row</li><li>Review the warning about role restrictions and policy assignments</li><li>Click Delete to confirm</li></ol><div class="warning-box"><p><strong>Cannot delete if in use:</strong> You cannot delete a structure that is currently used in <a href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role Management</a> for access restrictions or assigned to policies. Remove all references first, then delete.</p></div><div class="info-box"><p><strong>Expected outcome:</strong> Structure removed from the list. Employees no longer grouped under this structure. Structure no longer available for selection in role or policy screens.</p></div></div><div class="subsection"><h3>Task: Assign Structure to Leave Policy</h3><p>Use structure groups to automatically assign leave policies to employees.</p><h4>Subtask: Enable Automatic Assignment</h4><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/task-04-leave-policies-overview.png" alt="task-04-leave-policies-overview.png" class="screenshot" loading="lazy"><figcaption>Leave Policies page showing policies with structure-based assignment</figcaption></figure><ol><li>Go to Settings > Leaves > Leave Policies</li><li>Click Edit on a leave policy</li><li>Scroll to Employee Assignment section</li><li>Toggle Enable Automatic Assignment ON</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/task-04-structure-dropdown-options.png" alt="task-04-structure-dropdown-options.png" class="screenshot" loading="lazy"><figcaption>Structure dropdown showing available Employee Structures</figcaption></figure><ol start="5"><li>Select an Employee Structure from the dropdown</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/task-04-group-policy-mapping-table.png" alt="task-04-group-policy-mapping-table.png" class="screenshot" loading="lazy"><figcaption>Group-to-policy mapping table showing which groups receive the policy</figcaption></figure><ol start="6"><li>Review the groups in the mapping table</li><li>Select which groups should receive this policy</li><li>Save the policy</li></ol><div class="info-box"><p><strong>Expected outcome:</strong> Employees in selected groups automatically assigned the leave policy. New employees joining those groups receive the policy automatically. Manual assignments no longer needed for these groups.</p></div><p>For detailed leave policy configuration, see the <a href="https://mashapajfhp.github.io/user-guides/leave-policies/v1/leave-policies-user-guide.html">Leave Policies guide</a>.</p></div><div class="subsection"><h3>Task: Restrict Role Access by Structure</h3><p>Limit which employees a custom role can view or manage using structure groups.</p><h4>Subtask: Configure Role Restrictions</h4><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/task-03-role-management-assignment.png" alt="task-03-role-management-assignment.png" class="screenshot" loading="lazy"><figcaption>Role Management page showing custom roles with structure restrictions</figcaption></figure><ol><li>Go to Settings > Role Management</li><li>Click Edit on a custom role</li><li>Scroll to Access Restrictions section</li></ol><figure class="screenshot-container"><img src="https://raw.githubusercontent.com/mashapajfhp/user-guides/main/employee-structures/v4/validation/screenshots/role-restriction-groups-dropdown.png" alt="role-restriction-groups-dropdown.png" class="screenshot" loading="lazy"><figcaption>Group selection dropdown for role access restrictions</figcaption></figure><ol start="4"><li>Select an Employee Structure</li><li>Choose which groups this role can access</li><li>Save the role</li></ol><div class="info-box"><p><strong>Expected outcome:</strong> Users with this role can only view and manage employees in the selected groups. Payroll data, attendance records, and other sensitive information restricted to assigned groups only. Admins cannot see employees outside their assigned groups.</p></div><p>For detailed role configuration, see the <a href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role Management guide</a>.</p></div>
+      </div>
+    </section>
+  
+
+    <section class="section section-workflow-integration" id="workflow-integration">
+      <header class="section-header">
+        <h2 class="section-title">Workflow Integration</h2>
+      </header>
+      <div class="section-body">
+        <div class="info-box">
+  <p><strong>Not Available:</strong> Employee Structures does not currently support workflow automation.</p>
+</div>
+      </div>
+    </section>
+  
+
+    <section class="section section-approval-flow" id="approval-flow">
+      <header class="section-header">
+        <h2 class="section-title">Approval Flow</h2>
+      </header>
+      <div class="section-body">
+        <div class="info-box">
+  <p><strong>Note:</strong> This feature does not require approval.</p>
+</div>
+      </div>
+    </section>
+  
+
+    <section class="section section-business-rules-limitations" id="business-rules-limitations">
+      <header class="section-header">
+        <h2 class="section-title">Business Rules &amp; Limitations</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+  <h3>Known Limitations</h3>
+  <p>Employee Structures currently has no documented limitations or edge cases from validation testing. The feature operates as designed with standard configuration rules.</p>
+  
+  <div class="info-box">
+    <p><strong>Configuration Rules:</strong></p>
+    <ul>
+      <li>Structures must contain at least two groups to be valid</li>
+      <li>Automatic grouping requires predefined data points (Department, Location, Job Title, etc.)</li>
+      <li>Manual groups require explicit employee selection</li>
+      <li>Each employee can belong to only one group within a structure</li>
+    </ul>
+  </div>
+  
+  <h4>Policy Assignment Constraints</h4>
+  <table class="limitations-table">
+    <thead>
+      <tr>
+        <th>Constraint</th>
+        <th>Description</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Structure Selection</td>
+        <td>Only one structure can be selected per policy at a time</td>
+        <td>Policies using structures cannot mix manual and structure-based assignment</td>
+      </tr>
+      <tr>
+        <td>Group Mapping</td>
+        <td>Each group within a structure must be explicitly mapped to policy configuration</td>
+        <td>Unmapped groups will not receive policy assignment</td>
+      </tr>
+      <tr>
+        <td>Role Restrictions</td>
+        <td>Custom roles can restrict data access to specific groups within a structure</td>
+        <td>Admins with restricted roles see only employees in their assigned groups</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <h4>Related Feature Limitations</h4>
+  <p>The following limitations from related features may affect Employee Structures usage:</p>
+  
+  <div class="info-box">
+    <p><strong>Leave Policy Sorting (Medium):</strong> Leave policies are automatically sorted by update time in the employee view. Manual prioritization or pinning of policies is not available. See <a href="https://mashapajfhp.github.io/user-guides/leave-policies/v1/leave-policies-user-guide.html">Leave Policies guide</a> for policy management details.</p>
+  </div>
+  
+  <div class="info-box">
+    <p><strong>Deleted Policy Recovery (Medium):</strong> Deleted leave policies cannot be restored through self-service. Recovery requires manual backend intervention by support teams. See <a href="https://mashapajfhp.github.io/user-guides/leave-policies/v1/leave-policies-user-guide.html">Leave Policies guide</a> for policy lifecycle management.</p>
+  </div>
+  
+  <div class="info-box">
+    <p><strong>Carry-Over Modifications (Medium):</strong> Modifying carry-over allowances for individual leave cycles requires complete policy reconfiguration. Direct edits to carry-over limits are not supported through the UI. See <a href="https://mashapajfhp.github.io/user-guides/leave-policies/v1/leave-policies-user-guide.html">Leave Policies guide</a> for configuration details.</p>
+  </div>
+  
+  <div class="warning-box">
+    <p><strong>Policy Change Rollback (High):</strong> The platform lacks a native rollback mechanism for policy changes. Modifications can unintentionally unassign employees and erase historical data without recovery options. Always verify assignments before saving policy changes.</p>
+  </div>
+  
+  <h4>Data Consistency Rules</h4>
+  <ul>
+    <li>Automatic groups update dynamically when employee data changes (e.g., department transfer)</li>
+    <li>Manual groups require explicit updates when employee assignments change</li>
+    <li>Structure deletion requires removing all policy mappings first</li>
+    <li>Group deletion is blocked if the group is mapped to active policies</li>
+  </ul>
+</div>
+      </div>
+    </section>
+  
+
+    <section class="section section-troubleshooting-edge-cases" id="troubleshooting-edge-cases">
+      <header class="section-header">
+        <h2 class="section-title">Troubleshooting &amp; Edge Cases</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+  <h3>Common Issues</h3>
+  <table class="limitations-table">
+    <thead>
+      <tr>
+        <th>Issue</th>
+        <th>Cause</th>
+        <th>Resolution</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Structure creation fails with "minimum two groups" error</td>
+        <td>Attempting to create a structure with only one group</td>
+        <td>Add at least one additional group (automatic or manual) before saving the structure</td>
+      </tr>
+      <tr>
+        <td>Automatic group shows no employees</td>
+        <td>Selected data point criteria do not match any current employees</td>
+        <td>Review employee profiles to ensure the data point field is populated, or adjust criteria to match existing data</td>
+      </tr>
+      <tr>
+        <td>Policy assignment does not apply to expected employees</td>
+        <td>Group not mapped in the policy configuration, or employee not in the selected structure's groups</td>
+        <td>Verify group mapping in policy settings and confirm employee group membership in the structure</td>
+      </tr>
+      <tr>
+        <td>Cannot delete a structure</td>
+        <td>Structure is currently referenced by active policies</td>
+        <td>Remove structure selection from all policies, then delete the structure</td>
+      </tr>
+      <tr>
+        <td>Custom role admin cannot see all employees</td>
+        <td>Role is restricted to specific groups within a structure</td>
+        <td>Verify group assignments in <a href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role Management</a> and adjust restrictions as needed</td>
+      </tr>
+      <tr>
+        <td>Employee appears in multiple groups within one structure</td>
+        <td>Manual group overlap or automatic criteria conflict</td>
+        <td>Review group definitions; each employee can belong to only one group per structure. Remove duplicate assignments.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="subsection">
+  <h3>Edge Cases</h3>
+  <ul>
+    <li><strong>New Employee Onboarding:</strong> Employees added to the system after structure creation will not automatically appear in manual groups. Update manual groups explicitly or use automatic grouping based on employee data.</li>
+    <li><strong>Employee Data Changes:</strong> When an employee's department, location, or job title changes, automatic groups update immediately. Manual groups require manual reassignment.</li>
+    <li><strong>Policy Overlap:</strong> If an employee is assigned to multiple policies (one manual, one structure-based), both policies apply. Ensure policy logic does not conflict.</li>
+    <li><strong>Structure Editing:</strong> Modifying a structure's groups (adding, removing, or changing criteria) does not automatically update existing policy mappings. Review and update policy group mappings after structure changes.</li>
+    <li><strong>Bulk Employee Import:</strong> When importing employees in bulk, automatic groups update dynamically. Manual groups require post-import assignment.</li>
+    <li><strong>Role Restrictions:</strong> Admins with role restrictions see only employees in their assigned groups. This affects reporting, policy assignment visibility, and employee management tasks.</li>
+  </ul>
+</div>
+
+<div class="subsection">
+  <h3>Data Validation Rules</h3>
+  <div class="info-box">
+    <p><strong>Structure Name:</strong> Must be unique across the organization. Duplicate names are not allowed.</p>
+  </div>
+  <div class="info-box">
+    <p><strong>Group Name:</strong> Must be unique within a structure. Duplicate group names within the same structure are not allowed.</p>
+  </div>
+  <div class="info-box">
+    <p><strong>Automatic Criteria:</strong> At least one data point must be selected. Empty criteria are not valid.</p>
+  </div>
+  <div class="info-box">
+    <p><strong>Manual Employee Selection:</strong> At least one employee must be selected to create a manual group.</p>
+  </div>
+</div>
+
+<div class="subsection">
+  <h3>Performance Considerations</h3>
+  <ul>
+    <li>Automatic groups with broad criteria (e.g., "All Departments") may include large employee populations. Consider splitting into smaller, more targeted groups for easier management.</li>
+    <li>Structures with many groups (10+) may slow policy configuration screens. Consolidate groups where possible.</li>
+    <li>Manual groups require periodic review to ensure employee assignments remain accurate after organizational changes.</li>
+  </ul>
+</div>
+      </div>
+    </section>
+  
+
+    <section class="section section-support-resources" id="support-resources">
+      <header class="section-header">
+        <h2 class="section-title">FAQs &amp; Support</h2>
+      </header>
+      <div class="section-body">
+        <div class="subsection">
+  <h3>Frequently Asked Questions</h3>
+
+  <div class="faq-accordion"><details class="faq-item">
+    <summary>Can I assign an employee to multiple employee structures?</summary>
+    <p>No. Each employee can only belong to one employee structure at a time. This ensures clear data access boundaries for admins with restricted permissions.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>What happens if I delete an employee structure that's assigned to policies?</summary>
+    <p>Deleting a structure removes the group-to-policy mappings. Employees previously in that structure will lose automatic policy assignments unless you reassign them manually or create a new structure.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>How do automatic employee groups differ from manual groups?</summary>
+    <p>Automatic groups use system criteria (department, location, job title) to dynamically assign employees. Manual groups require you to select each employee individually. Automatic groups update as employee data changes.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Can I change a structure from automatic to manual grouping after creation?</summary>
+    <p>No. The grouping method is set during structure creation and cannot be changed. You must create a new structure with the desired grouping method.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Why must I create at least two groups per structure?</summary>
+    <p>Structures require a minimum of two groups to enable meaningful segmentation. Single-group structures do not provide the access control or policy differentiation that the feature is designed for.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>How do employee structures interact with role-based permissions?</summary>
+    <p>Employee structures control which employee data a custom role can view. Configure this in <a href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role Management</a> by assigning specific groups to each role.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Can I map the same group to multiple policies?</summary>
+    <p>Yes. A single employee group can be mapped to multiple policies (leave, loan, etc.). This allows you to apply a consistent policy set to a specific employee segment.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>What happens to existing policy assignments when I enable automatic assignment?</summary>
+    <p>Enabling automatic assignment in a policy (e.g., <a href="https://mashapajfhp.github.io/user-guides/leave-policies/v1/leave-policies-user-guide.html">Leave Policies</a>) replaces manual employee assignments with structure-based mappings. Employees are assigned based on their group membership.</p>
+  </details>
+
+</div></div>
+
+<div class="subsection">
+  <h3>Getting Help</h3>
+  <ul>
+    <li>Contact your Bayzat Customer Success Manager for assistance with employee structure configuration</li>
+    <li>Submit a support ticket through the Bayzat platform for technical issues</li>
+    <li>Refer to the <a href="https://mashapajfhp.github.io/user-guides/role-management/v1/role-management-user-guide.html">Role Management guide</a> for permission-related questions</li>
+  </ul>
+</div>
+      </div>
+    </section>
+  
+
+    <section class="section section-glossary" id="glossary">
+      <header class="section-header">
+        <h2 class="section-title">Glossary</h2>
+      </header>
+      <div class="section-body">
+        <table class="glossary-table">
+  <thead>
+    <tr>
+      <th>Term</th>
+      <th>Definition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Automatic Grouping</strong></td>
+      <td>A method that dynamically assigns employees to groups based on system criteria like department, location, or job title.</td>
+    </tr>
+    <tr>
+      <td><strong>Custom Role</strong></td>
+      <td>A user-defined role with specific permissions and data access restrictions configured in Role Management.</td>
+    </tr>
+    <tr>
+      <td><strong>Employee Group</strong></td>
+      <td>A collection of employees within an employee structure, used to apply policies and control data access.</td>
+    </tr>
+    <tr>
+      <td><strong>Employee Structure</strong></td>
+      <td>A framework that organizes employees into groups for policy assignment and access control purposes.</td>
+    </tr>
+    <tr>
+      <td><strong>Group-to-Policy Mapping</strong></td>
+      <td>The configuration that links an employee group to specific policies like leave or loan policies.</td>
+    </tr>
+    <tr>
+      <td><strong>Manual Grouping</strong></td>
+      <td>A method where administrators manually select which employees belong to each group.</td>
+    </tr>
+    <tr>
+      <td><strong>Policy Assignment</strong></td>
+      <td>The process of linking policies to employees, either manually or automatically through employee structures.</td>
+    </tr>
+    <tr>
+      <td><strong>Structure-Based Assignment</strong></td>
+      <td>Automatic policy assignment driven by an employee's membership in a specific employee group.</td>
+    </tr>
+  </tbody>
+</table>
+      </div>
+    </section>
+  
+    </main>
+
+    <footer>
+      <div>Generated by Bayzat Documentation System</div>
+      <div>Last updated: 2026-02-26</div>
+    </footer>
+  </div>
+</body>
+</html>
