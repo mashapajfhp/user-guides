@@ -246,91 +246,59 @@
 
   <script>
     // === Supabase read-only access ===
-    const SUPABASE_URL = "https://wliqznyleighuggvtidj.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsaXF6bnlsZWlnaHVnZ3Z0aWRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzODg4NDksImV4cCI6MjA3ODk2NDg0OX0.VsoY-dYVxfntIEZcXYHtkm4uZ493d5aNDTC9yLiMBEE";
+    var SUPABASE_URL = "https://wliqznyleighuggvtidj.supabase.co";
+    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsaXF6bnlsZWlnaHVnZ3Z0aWRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzODg4NDksImV4cCI6MjA3ODk2NDg0OX0.VsoY-dYVxfntIEZcXYHtkm4uZ493d5aNDTC9yLiMBEE";
 
-    // === Visual metadata per slug (icon, category, short description) ===
-    // New guides not in this map still appear with defaults derived from content_summary
-    const META = {
-      "360-feedback":              { icon: "🔄", cat: "performance", desc: "Run multi-rater feedback cycles with peer, manager, and self reviews." },
-      "air-ticket":                { icon: "✈️", cat: "payroll",     desc: "Manage annual flight ticket allowances, encashments, and policies." },
-      "approval-flow":             { icon: "✅", cat: "automation",  desc: "Configure multi-level approval chains for leave, expenses, payroll, and more." },
-      "attendance":                { icon: "⏰", cat: "time",        desc: "Track employee check-ins, manage attendance policies, and generate reports." },
-      "bayzat-ai":                 { icon: "🤖", cat: "settings",    desc: "Use AI-powered insights, reports, and the knowledge base chatbot." },
-      "biometric-attendance":      { icon: "👆", cat: "time",        desc: "Set up facial recognition and fingerprint devices for attendance tracking." },
-      "daily-wage-calculator":     { icon: "🧮", cat: "payroll",     desc: "Configure daily rate calculations for salary proration, leave deductions, and EOS." },
-      "employee-tickets":          { icon: "🎫", cat: "requests",    desc: "Manage HR requests including letters, loans, and support tickets." },
-      "employee-violation":        { icon: "⚠️", cat: "people",      desc: "Track disciplinary actions, issue warnings, and manage violation records." },
-      "end-of-service":            { icon: "📋", cat: "payroll",     desc: "Calculate gratuity, process final settlements, and manage employee exits." },
-      "knowledge-hub":             { icon: "📚", cat: "people",      desc: "Create and manage a company knowledge base with documents and FAQs." },
-      "leave-encashment":          { icon: "💰", cat: "payroll",     desc: "Process leave balance payouts and configure encashment policies." },
-      "leave-management":          { icon: "🏖️", cat: "time",        desc: "Handle leave requests, approvals, balances, and time-off reporting." },
-      "leave-policies":            { icon: "📜", cat: "time",        desc: "Configure leave types, accrual rules, carry-forward limits, and policy assignments." },
-      "leave-salary":              { icon: "💵", cat: "payroll",     desc: "Process annual leave salary requests with flight ticket integration." },
-      "letters":                   { icon: "📄", cat: "requests",    desc: "Generate salary certificates, NOCs, offer letters, and other HR documents." },
-      "loans":                     { icon: "🏦", cat: "payroll",     desc: "Manage employee loan requests, repayment schedules, and salary deductions." },
-      "multifactor-authentication":{ icon: "🔐", cat: "security",    desc: "Enable MFA with authenticator apps for enhanced login security." },
-      "overtime":                  { icon: "⏱️", cat: "time",        desc: "Track extra hours, configure overtime policies, and process OT payments." },
-      "payroll-management":        { icon: "💳", cat: "payroll",     desc: "Run payroll cycles, generate payslips, and manage salary processing." },
-      "performance":               { icon: "📊", cat: "performance", desc: "Manage review cycles, goals, OKRs, calibration, and 1-on-1 meetings." },
-      "records-management":        { icon: "🗂️", cat: "people",      desc: "Manage employee profiles, bulk updates, custom groups, and data exports." },
-      "role-management":           { icon: "👥", cat: "settings",    desc: "Configure user roles, access permissions, and feature-level controls." },
-      "shift-scheduling":          { icon: "📅", cat: "time",        desc: "Create, publish, and manage employee shift schedules and rosters." },
-      "split-shifts":              { icon: "✂️", cat: "time",        desc: "Configure divided work periods with breaks for flexible scheduling." },
-      "surveys":                   { icon: "📝", cat: "performance", desc: "Create engagement surveys, pulse checks, and analyze employee sentiment." },
-      "timesheets":                { icon: "📋", cat: "time",        desc: "Review daily attendance logs, hours tracking, and timesheet management." },
-      "variable-pay":              { icon: "💎", cat: "payroll",     desc: "Manage commissions, bonuses, and other variable compensation items." },
-      "work-expenses":             { icon: "🧾", cat: "requests",    desc: "Submit, approve, and reimburse employee expense claims." },
-      "work-timings":              { icon: "🕐", cat: "time",        desc: "Define work schedules, flexible timing, late arrival rules, and break policies." },
-      "workflows":                 { icon: "⚡", cat: "automation",  desc: "Build automated workflows with triggers, conditions, and task assignments." }
-    };
-
-    const CAT_LABELS = {
+    // Category display labels and background classes
+    var CAT_LABELS = {
       payroll: "Payroll", time: "Time & Attendance", people: "People",
       performance: "Performance", requests: "Requests", settings: "Settings",
       security: "Security", automation: "Automation", other: "Other"
     };
-    const CAT_BG = {
+    var CAT_BG = {
       payroll: "bg-payroll", time: "bg-time", people: "bg-people",
       performance: "bg-performance", requests: "bg-people", settings: "bg-settings",
       security: "bg-security", automation: "bg-automation", other: "bg-default"
     };
 
+    // Parse content_summary for audience and tags
     function parseSummary(summary) {
       if (!summary) return { audience: "Admin", tags: [] };
-      const lines = summary.split("\n");
-      let audience = "Admin";
-      let tags = [];
-      for (const line of lines) {
-        if (line.startsWith("Audience:")) {
-          const val = line.replace("Audience:", "").trim().toLowerCase();
+      var lines = summary.split("\n");
+      var audience = "Admin";
+      var tags = [];
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (line.indexOf("Audience:") === 0) {
+          var val = line.replace("Audience:", "").trim().toLowerCase();
           audience = val === "both" ? "Admin & Employee" : val === "admin" ? "Admin" : "Admin & Employee";
         }
-        if (line.startsWith("Also known as:")) {
+        if (line.indexOf("Also known as:") === 0) {
           tags = line.replace("Also known as:", "").trim()
-            .split(",").map(t => t.trim()).filter(t => t.length > 0 && t.length < 30).slice(0, 4);
+            .split(",").map(function(t){ return t.trim(); })
+            .filter(function(t){ return t.length > 0 && t.length < 30; }).slice(0, 4);
         }
       }
-      return { audience, tags };
+      return { audience: audience, tags: tags };
     }
 
-    const grid = document.getElementById("grid");
-    const searchInput = document.getElementById("search");
-    const categoriesDiv = document.getElementById("categories");
-    let guides = [];
-    let activeCategory = "all";
+    var grid = document.getElementById("grid");
+    var searchInput = document.getElementById("search");
+    var categoriesDiv = document.getElementById("categories");
+    var guides = [];
+    var activeCategory = "all";
 
     function render(filter, cat) {
       filter = filter || "";
       cat = cat || "all";
-      const q = filter.toLowerCase();
-      const filtered = guides.filter(g => {
-        const matchCat = cat === "all" || g.cat === cat;
-        const matchSearch = !q ||
-          g.name.toLowerCase().includes(q) ||
-          g.desc.toLowerCase().includes(q) ||
-          g.tags.some(t => t.toLowerCase().includes(q)) ||
-          (g.allAliases && g.allAliases.toLowerCase().includes(q));
+      var q = filter.toLowerCase();
+      var filtered = guides.filter(function(g) {
+        var matchCat = cat === "all" || g.cat === cat;
+        var matchSearch = !q ||
+          g.name.toLowerCase().indexOf(q) !== -1 ||
+          g.sdesc.toLowerCase().indexOf(q) !== -1 ||
+          g.tags.some(function(t){ return t.toLowerCase().indexOf(q) !== -1; }) ||
+          (g.allAliases && g.allAliases.toLowerCase().indexOf(q) !== -1);
         return matchCat && matchSearch;
       });
 
@@ -339,57 +307,57 @@
         return;
       }
 
-      grid.innerHTML = filtered.map(g => `
-        <a class="card" href="${g.url}" data-cat="${g.cat}">
-          <div class="card-header">
-            <div class="card-icon ${g.bg}">${g.icon}</div>
-            <div class="card-title">${g.name}</div>
-            <span class="card-version">v${g.version}</span>
-          </div>
-          <div class="card-desc">${g.desc}</div>
-          <div class="card-tags">${g.tags.map(t => '<span class="tag">' + t + '</span>').join("")}</div>
-          <div class="card-footer">
-            <span class="card-audience">${g.audience}</span>
-            <span class="card-arrow">&rarr;</span>
-          </div>
-        </a>
-      `).join("");
+      grid.innerHTML = filtered.map(function(g) {
+        return '<a class="card" href="' + g.url + '" data-cat="' + g.cat + '">' +
+          '<div class="card-header">' +
+            '<div class="card-icon ' + g.bg + '">' + g.icon + '</div>' +
+            '<div class="card-title">' + g.name + '</div>' +
+            '<span class="card-version">v' + g.version + '</span>' +
+          '</div>' +
+          '<div class="card-desc">' + g.sdesc + '</div>' +
+          '<div class="card-tags">' + g.tags.map(function(t){ return '<span class="tag">' + t + '</span>'; }).join("") + '</div>' +
+          '<div class="card-footer">' +
+            '<span class="card-audience">' + g.audience + '</span>' +
+            '<span class="card-arrow">&rarr;</span>' +
+          '</div>' +
+        '</a>';
+      }).join("");
     }
 
     function buildCategoryButtons() {
-      const cats = new Set(guides.map(g => g.cat));
-      let html = '<button class="cat-btn active" data-cat="all">All</button>';
-      for (const [key, label] of Object.entries(CAT_LABELS)) {
-        if (cats.has(key)) html += '<button class="cat-btn" data-cat="' + key + '">' + label + '</button>';
+      var cats = {};
+      guides.forEach(function(g){ cats[g.cat] = true; });
+      var html = '<button class="cat-btn active" data-cat="all">All</button>';
+      for (var key in CAT_LABELS) {
+        if (cats[key]) html += '<button class="cat-btn" data-cat="' + key + '">' + CAT_LABELS[key] + '</button>';
       }
       categoriesDiv.innerHTML = html;
     }
 
     async function loadGuides() {
       try {
-        const res = await fetch(
-          SUPABASE_URL + "/rest/v1/user_guides?select=feature_slug,feature_name,version,access_url,content_summary&status=eq.completed&order=feature_name.asc",
+        var res = await fetch(
+          SUPABASE_URL + "/rest/v1/user_guides?select=feature_slug,feature_name,version,access_url,content_summary,category,icon,short_description&status=eq.completed&order=feature_name.asc",
           { headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY } }
         );
         if (!res.ok) throw new Error("HTTP " + res.status);
-        const rows = await res.json();
+        var rows = await res.json();
 
         guides = rows.map(function(row) {
-          var slug = row.feature_slug;
-          var meta = META[slug] || {};
           var parsed = parseSummary(row.content_summary);
+          var cat = row.category || "other";
           var allAliases = row.content_summary
-            ? (row.content_summary.match(/Also known as:\s*(.+)/)||[])[1] || ""
+            ? (row.content_summary.match(/Also known as:\s*(.+)/) || [])[1] || ""
             : "";
           return {
-            slug: slug,
+            slug: row.feature_slug,
             name: row.feature_name,
             version: row.version,
             url: row.access_url,
-            cat: meta.cat || "other",
-            icon: meta.icon || "📖",
-            bg: CAT_BG[meta.cat] || "bg-default",
-            desc: meta.desc || row.feature_name + " user guide.",
+            cat: cat,
+            icon: row.icon || "📖",
+            bg: CAT_BG[cat] || "bg-default",
+            sdesc: row.short_description || row.feature_name + " user guide.",
             audience: parsed.audience,
             tags: parsed.tags,
             allAliases: allAliases
@@ -397,7 +365,9 @@
         });
 
         document.getElementById("guide-count").textContent = guides.length;
-        document.getElementById("cat-count").textContent = new Set(guides.map(function(g){ return g.cat; })).size;
+        var catSet = {};
+        guides.forEach(function(g){ catSet[g.cat] = true; });
+        document.getElementById("cat-count").textContent = Object.keys(catSet).length;
         document.getElementById("footer").innerHTML = "Powered by Supabase &middot; " + guides.length + " guides &middot; auto-updates when new guides are published";
 
         buildCategoryButtons();
