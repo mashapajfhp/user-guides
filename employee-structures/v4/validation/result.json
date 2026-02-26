@@ -1,0 +1,394 @@
+{
+  "feature_name": "Employee Structures",
+  "feature_slug": "employee-structures",
+  "version": "v4",
+  "validation_date": "2026-02-26",
+  "overall_status": "PASS",
+  "summary": "Employee Structures feature fully validated across all CRUD operations, cross-referenced integrations (Role Management, Leave Policies, Employee Loan Policies, Leave Salary Policy), and workflow checks. All 4 WTD tasks validated successfully. 1 WOF limitation confirmed. Key discoveries: (1) Employee Structure groups serve as restriction groups in Role Management for 8 built-in restrictable roles and 6 custom restrictable roles. (2) Three policy types support automatic employee assignment via structures: Leave Policies, Employee Loan Policies, and Leave Salary Policy. (3) Payroll item types (Allowances, Variable Pays, Additions, Deductions) do NOT support employee grouping.",
+  "primary_entity": {
+    "name": "Employee Structure",
+    "singular": "structure",
+    "plural": "structures",
+    "identified_from": "List view at Settings > Company > Employee Structures showing table with Name, Type, Groups, Employees, Created columns"
+  },
+  "navigation_validated": {
+    "primary_path": {
+      "steps": ["Settings (sidebar)", "Company", "Employee Structures (accordion)"],
+      "url": "/enterprise/dashboard/settings/company",
+      "status": "PASS",
+      "screenshot": "exploration-01-primary-view.png"
+    },
+    "cross_references": [
+      {
+        "label": "Role Management",
+        "path": "Settings > Organization > Role management",
+        "url": "/enterprise/dashboard/roles",
+        "status": "PASS",
+        "screenshot": "role-management-page.png"
+      },
+      {
+        "label": "Leave Policies",
+        "path": "Settings > Leaves > Leave Policies",
+        "url": "/enterprise/dashboard/settings/time-off",
+        "status": "PASS",
+        "screenshot": "leave-policies-page.png"
+      }
+    ]
+  },
+  "crud_results": {
+    "entity": "Employee Structure",
+    "create": {
+      "status": "PASS",
+      "trigger": "Add New button (top-right of structures list)",
+      "flow": "3-step wizard: Step 1 (Name + Description + Type) > Step 2 (Employee Grouping - add groups) > Step 3 (Review + Create)",
+      "grouping_types": {
+        "manual": {
+          "status": "PASS",
+          "description": "Select individual employees from employee list with search and filter",
+          "screenshot": "crud-05-manual-group-dialog.png"
+        },
+        "automatic": {
+          "status": "PASS",
+          "description": "Define criteria-based rules using 50+ data points (department, office, nationality, etc.) with AND/OR logic and multiple criteria blocks",
+          "screenshots": ["crud-03-auto-group-dialog.png", "crud-04-auto-criteria-datapoints.png", "automatic-criteria-config.png"]
+        }
+      },
+      "constraints": [
+        "Minimum 2 groups required per structure",
+        "Group name and description required for each group",
+        "Structure name and description required in Step 1"
+      ],
+      "screenshots": ["crud-01-create-form-step1.png", "crud-02-create-step2-grouping.png", "create-automatic-step3-review.png", "structure-created-success.png"]
+    },
+    "read": {
+      "status": "PASS",
+      "trigger": "Three-dot menu > View Groups / View Employees & Roles",
+      "details": "View Groups shows group list with employee counts. View Employees & Roles shows full employee table with Name, Department, Groups, Roles columns and search/filter/export.",
+      "screenshots": ["view-groups-dialog.png", "view-employees-roles-dialog.png"]
+    },
+    "update": {
+      "status": "PASS",
+      "trigger": "Three-dot menu > Edit",
+      "details": "Opens same 3-step wizard pre-populated with existing data. Can modify structure name, description, type, and group configuration.",
+      "screenshot": "crud-06-edit-form-step1.png"
+    },
+    "delete": {
+      "status": "PASS",
+      "trigger": "Three-dot menu > Delete",
+      "details": "Confirmation dialog: 'Are you sure you want to delete [name]? This action cannot be undone.' with Cancel/Delete buttons.",
+      "screenshot": "crud-07-delete-confirmation-dialog.png"
+    }
+  },
+  "workflow_results": {
+    "has_workflows": false,
+    "details": "Navigated to Automations > Workflows. No workflow triggers or actions found related to Employee Structures. The feature does not appear in the workflow trigger/action catalog.",
+    "screenshot": "workflow-01-workflows-list.png"
+  },
+  "approval_flow_results": {
+    "has_approval_flows": false,
+    "details": "No approval flow detected. Employee structure creation/deletion is immediate with no approval routing."
+  },
+  "what_to_do_results": [
+    {
+      "task_id": "WTD-001",
+      "task": "Create an Employee Group with Automatic Grouping",
+      "status": "PASS",
+      "actual_steps_used": [
+        "Navigate to Settings > Company > Employee Structures",
+        "Click 'Add New' button",
+        "Step 1: Enter structure Name and Description, select Automatic type",
+        "Step 2: Click 'Add Group', enter group name/description",
+        "Configure automatic criteria using data points (50+ available: Department, Office, Nationality, etc.)",
+        "Criteria supports AND/OR logic with multiple conditions per block and multiple blocks",
+        "Step 3: Review structure summary showing groups and criteria",
+        "Click 'Create' to save"
+      ],
+      "expected_outcome_met": true,
+      "evidence": "Successfully created automatic structure with criteria-based rules. Structure appeared in list with correct type and group count.",
+      "screenshots": ["create-automatic-step1.png", "automatic-criteria-datapoints.png", "automatic-criteria-config.png", "create-automatic-step2-groups.png", "create-automatic-step3-review.png", "structure-created-success.png"],
+      "notes": "Automatic grouping supports complex multi-criteria rules. Data points include employee profile fields, employment details, compensation data, and custom fields."
+    },
+    {
+      "task_id": "WTD-002",
+      "task": "Create an Employee Group with Manual Selection",
+      "status": "PASS",
+      "actual_steps_used": [
+        "Navigate to Settings > Company > Employee Structures",
+        "Click 'Add New' button",
+        "Step 1: Enter structure Name and Description, select Manual type",
+        "Step 2: Click 'Add Group', enter group name/description",
+        "Employee selection panel shows all employees with search and filter",
+        "Select employees individually via checkboxes",
+        "Step 3: Review structure summary",
+        "Click 'Create' to save"
+      ],
+      "expected_outcome_met": true,
+      "evidence": "Successfully created manual structure with hand-picked employees.",
+      "screenshots": ["crud-01-create-form-step1.png", "crud-05-manual-group-dialog.png", "crud-02-create-step2-grouping.png"]
+    },
+    {
+      "task_id": "WTD-003",
+      "task": "Assign Employee Group Viewership Permissions to Admin Roles",
+      "status": "PASS",
+      "actual_steps_used": [
+        "Navigate to Settings > Organization > Role management",
+        "Role assignment tab shows all employees with their assigned roles",
+        "Click Edit on an employee to open role assignment dialog",
+        "2-step dialog: Step 1 (Select roles & restrictions) > Step 2 (Review & save)",
+        "Roles with 'Restrictable' badge have a 'Restriction groups' dropdown",
+        "Checked People Manager role - Restriction groups dropdown became enabled",
+        "Dropdown shows ALL Employee Structure groups in format 'Structure Name | Group Name'",
+        "Selecting restriction groups limits that role's access to employees in those groups only"
+      ],
+      "expected_outcome_met": true,
+      "evidence": "Restriction groups dropdown for restrictable roles (People Manager, Attendance Manager, Expense Manager, etc.) shows Employee Structure groups. This is the mechanism for role-based access control using structures.",
+      "screenshots": ["role-management-page.png", "role-edit-dialog-roles-list.png", "super-admin-role-edit-dialog.png", "role-restriction-groups-dropdown.png"],
+      "notes": "No dedicated 'Employee Structure' role exists. Access control is implemented through restriction groups on restrictable roles. Super Admin description: 'Covers all other roles except Transaction Processor role'.",
+      "restrictable_roles_discovered": [
+        "Adjustment manager",
+        "Attendance Manager",
+        "Expense Manager",
+        "Leaves Manager",
+        "Payroll table admin",
+        "People Manager",
+        "Performance Manager",
+        "Transaction processing admin"
+      ],
+      "custom_restrictable_roles": [
+        "AKQA",
+        "CET Custom Role",
+        "Payroll Testing (SAF)",
+        "People Manager 2",
+        "Tickets Custom Role",
+        "Work Expense Manager"
+      ]
+    },
+    {
+      "task_id": "WTD-004",
+      "task": "Use Employee Structures for Automatic Leave Policy Assignment",
+      "status": "PASS",
+      "actual_steps_used": [
+        "Navigate to Settings > Leaves",
+        "Leave Policies section shows all policies with Manage Employee Assignment buttons",
+        "Click 'Manage Employee Assignment' on a leave policy",
+        "Employee assignment page shows Manual toggle (default) and 'Enable automatic assignment using grouping structures' toggle",
+        "Toggle ON the automatic assignment",
+        "Structure dropdown appears showing all available Employee Structures",
+        "Select a structure - mapping table appears with Leave Policy | Assign Group | Employees columns",
+        "Each policy row has an 'Assign group' dropdown showing groups from selected structure",
+        "Multi-select groups per policy - selected groups shown as tags",
+        "'View X employees' link shows preview dialog with employee count per group",
+        "Preview dialog has expandable accordions showing individual employee names with profile links"
+      ],
+      "expected_outcome_met": true,
+      "evidence": "Full leave policy automatic assignment flow validated end-to-end. Structure-based assignment enables mapping specific groups to specific leave policies.",
+      "screenshots": [
+        "leave-policies-page.png",
+        "leave-policy-employee-assignment.png",
+        "leave-policy-auto-assignment-enabled.png",
+        "leave-policy-structure-dropdown.png",
+        "leave-policy-group-mapping.png",
+        "leave-policy-group-dropdown.png",
+        "leave-policy-groups-selected.png",
+        "leave-policy-employee-preview-dialog.png",
+        "leave-policy-employee-list-expanded.png"
+      ],
+      "notes": "Days in Lieu (Attendance Policy) cannot be automatically assigned - it is excluded from the mapping table. The automatic assignment toggle is only available when at least one Employee Structure exists."
+    }
+  ],
+  "what_to_watch_out_for_results": [
+    {
+      "issue_id": "WOF-001",
+      "theme": "Lack of Granular Employee Directory Access Controls",
+      "status": "CONFIRMED",
+      "impact": "high",
+      "by_design": false,
+      "jira_refs": ["TSSD-4272"],
+      "jira_status": "Won't Do",
+      "validation_notes": "Confirmed that while Employee Structures provide restriction groups for restrictable roles (People Manager, Payroll table admin, etc.), the core HR employee directory itself does not have granular visibility controls. The restriction groups limit what data a restricted role can manage, but the employee directory listing remains visible to roles with base access.",
+      "screenshot": "limitation-01-wof001-employee-directory.png"
+    }
+  ],
+  "exploration": {
+    "navigation_map_coverage": [
+      {
+        "label": "Employee Structures",
+        "guide_role": "primary",
+        "audience": "admin",
+        "validated": true,
+        "actual_steps_used": ["Settings (sidebar)", "Company", "Employee Structures accordion"],
+        "screenshot": "exploration-01-primary-view.png"
+      },
+      {
+        "label": "Add New Employee Structure",
+        "guide_role": "admin_view",
+        "audience": "admin",
+        "validated": true,
+        "actual_steps_used": ["Settings", "Company", "Employee Structures", "Add New button"],
+        "screenshot": "crud-01-create-form-step1.png"
+      },
+      {
+        "label": "Role management",
+        "guide_role": "settings",
+        "audience": "admin",
+        "validated": true,
+        "actual_steps_used": ["Settings (sidebar)", "Organization section", "Role management"],
+        "screenshot": "role-management-page.png"
+      },
+      {
+        "label": "Role management (related)",
+        "guide_role": "related",
+        "audience": "admin",
+        "validated": true,
+        "actual_steps_used": ["Settings", "Role management", "Role assignment tab", "Edit button", "Restriction groups dropdown"],
+        "screenshot": "role-restriction-groups-dropdown.png"
+      },
+      {
+        "label": "Leave Policies",
+        "guide_role": "related",
+        "audience": "admin",
+        "validated": true,
+        "actual_steps_used": ["Settings (sidebar)", "Leaves", "Leave Policies section", "Manage Employee Assignment"],
+        "screenshot": "leave-policy-auto-assignment-enabled.png"
+      },
+      {
+        "label": "Leave Policies (settings)",
+        "guide_role": "settings",
+        "audience": "admin",
+        "validated": true,
+        "actual_steps_used": ["Settings", "Leaves", "Leave Policies", "Manage Employee Assignment", "Enable automatic assignment toggle"],
+        "screenshot": "leave-policy-structure-dropdown.png"
+      }
+    ],
+    "ui_elements_discovered": {
+      "structures_list_table": {
+        "columns": ["Name", "Type", "Groups", "Employees", "Created"],
+        "row_actions": ["Edit", "View Groups", "View Employees & Roles", "Delete"],
+        "action_trigger": "Three-dot menu on each row"
+      },
+      "creation_wizard": {
+        "steps": 3,
+        "step1": "Structure Details (Name, Description, Type: Manual/Automatic)",
+        "step2": "Employee Grouping (Add Group button, min 2 groups required)",
+        "step3": "Review (summary of all groups with employee counts)"
+      },
+      "automatic_criteria": {
+        "data_points_count": "50+",
+        "categories": ["Department", "Office", "Nationality", "Employment Type", "Job Title", "Compensation", "Custom Fields"],
+        "logic": "AND/OR conditions with multiple criteria blocks"
+      }
+    },
+    "settings_discovered": {
+      "leave_policy_auto_assignment": {
+        "location": "Settings > Leaves > Manage Employee Assignment",
+        "toggle": "Enable automatic assignment using grouping structures",
+        "requires": "At least one Employee Structure to exist",
+        "excluded_policies": ["Days in Lieu (Attendance Policy)"]
+      },
+      "role_restriction_groups": {
+        "location": "Settings > Organization > Role management > Edit role",
+        "mechanism": "Restriction groups dropdown on Restrictable roles",
+        "format": "Structure Name | Group Name",
+        "effect": "Limits role access scope to employees in selected groups"
+      },
+      "employee_loan_policy_auto_assignment": {
+        "location": "Settings > Payroll > Employee Loan Policies > Manage Employee Assignment",
+        "toggle": "Enable automatic assignment using grouping structures",
+        "description": "Automatically assign employees to loan policies based on the organizational structure",
+        "requires": "At least one Employee Structure to exist",
+        "screenshot": "loan-policy-structure-dropdown.png"
+      },
+      "leave_salary_policy_auto_assignment": {
+        "location": "Settings > Payroll > Leave salary policy > Manage Employee Assignment",
+        "toggle": "Enable automatic assignment using grouping structures",
+        "description": "Automatically assign employees to leave salary policies based on the organizational structure",
+        "requires": "At least one Employee Structure to exist"
+      },
+      "policies_without_grouping": [
+        "Allowances",
+        "Variable Pays",
+        "Additions",
+        "Deductions",
+        "Leave Encashment Policy",
+        "Daily Wage Calculation",
+        "Payroll Templates",
+        "Bank Accounts",
+        "End of Service Eligibility",
+        "Social Security Contributions"
+      ]
+    }
+  },
+  "screenshots": [
+    "exploration-01-primary-view.png",
+    "exploration-02-view-groups-dialog.png",
+    "exploration-03-employees-roles-assignments.png",
+    "employee-structures-list.png",
+    "crud-01-create-form-step1.png",
+    "crud-02-create-step2-grouping.png",
+    "crud-03-auto-group-dialog.png",
+    "crud-04-auto-criteria-datapoints.png",
+    "crud-05-manual-group-dialog.png",
+    "crud-06-edit-form-step1.png",
+    "crud-07-delete-confirmation-dialog.png",
+    "structure-created-success.png",
+    "structures-list-with-new.png",
+    "create-automatic-step1.png",
+    "automatic-criteria-datapoints.png",
+    "automatic-criteria-config.png",
+    "create-automatic-step2-groups.png",
+    "create-automatic-step3-review.png",
+    "create-structure-step1.png",
+    "create-structure-step2-empty.png",
+    "create-structure-step2-group-added.png",
+    "create-structure-step3-review.png",
+    "create-group-dialog.png",
+    "minimum-two-groups-error.png",
+    "view-groups-dialog.png",
+    "view-employees-roles-dialog.png",
+    "delete-confirmation-dialog.png",
+    "workflow-01-workflows-list.png",
+    "workflows-page.png",
+    "role-management-page.png",
+    "custom-roles-tab.png",
+    "custom-role-edit-dialog.png",
+    "role-edit-dialog-roles-list.png",
+    "super-admin-role-edit-dialog.png",
+    "role-restriction-groups-dropdown.png",
+    "task-03-custom-role-no-structure-policies.png",
+    "task-03-role-management-assignment.png",
+    "leave-policies-page.png",
+    "leave-policy-employee-assignment.png",
+    "leave-policy-auto-assignment-enabled.png",
+    "leave-policy-structure-dropdown.png",
+    "leave-policy-group-mapping.png",
+    "leave-policy-group-dropdown.png",
+    "leave-policy-groups-selected.png",
+    "leave-policy-employee-preview-dialog.png",
+    "leave-policy-employee-list-expanded.png",
+    "task-04-assign-group-dropdown.png",
+    "task-04-automatic-assignment-enabled.png",
+    "task-04-group-policy-mapping-table.png",
+    "task-04-leave-policies-overview.png",
+    "task-04-manage-assignment-manual.png",
+    "task-04-structure-dropdown-options.png",
+    "limitation-01-wof001-employee-directory.png",
+    "company-settings-page.png",
+    "loan-policy-structure-dropdown.png"
+  ],
+  "metadata": {
+    "validation_payload_version": "v3",
+    "validator": "manual-playwright-session",
+    "login_account": "job+demoacct@bayzat.com",
+    "browser": "chromium",
+    "total_screenshots": 54,
+    "total_wtd_tasks": 4,
+    "wtd_pass": 4,
+    "wtd_fail": 0,
+    "total_wof_issues": 1,
+    "wof_confirmed": 1,
+    "wof_not_reproduced": 0,
+    "crud_all_pass": true,
+    "has_workflows": false,
+    "has_approval_flows": false
+  }
+}
