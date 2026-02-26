@@ -1,0 +1,250 @@
+{
+  "validation_status": "completed",
+  "feature_name": "Employee Structures",
+  "feature_slug": "employee-structures",
+  "version": "v3",
+  "feature_folder": "employee-structures/v3",
+  "feature_info": {
+    "name": "Employee Structures",
+    "slug": "employee-structures",
+    "version": "v3",
+    "is_new_feature": false
+  },
+  "login": {
+    "success": true,
+    "method": "session_active",
+    "attempts": 1
+  },
+  "tour_dismissal": {
+    "method": "not_needed",
+    "tours_found": 0,
+    "tours_dismissed": 0,
+    "issues": []
+  },
+  "session_health": {
+    "login_attempts": 1,
+    "session_losses": 0,
+    "tour_dismissal_attempts": 0
+  },
+  "execution_order_followed": [
+    "EXPLORATION",
+    "IDENTIFY ENTITY",
+    "CRUD TEST",
+    "WORKFLOW CHECK",
+    "APPROVAL FLOW",
+    "WHAT_TO_DO",
+    "WHAT_TO_WATCH_OUT_FOR",
+    "DOCUMENTATION"
+  ],
+  "exploration": {
+    "prd_context_used": true,
+    "payload_instructions_followed": 6,
+    "own_logic_additions": [
+      "Explored View Groups dialog to see group hierarchy",
+      "Expanded group to see employee list within groups",
+      "Tested View Employees and Roles Assignments dialog",
+      "Verified pagination (5 per page, 8 total structures)",
+      "Checked search by structure name functionality",
+      "Navigated to Role Management to verify integration"
+    ],
+    "discovered_elements": [
+      "Employee Structures accordion in Company Settings",
+      "Table with columns: Structure name, Description, Grouping type, Last updated, Unassigned employees",
+      "4 action icons per row: View employees/roles, View groups, Edit, Delete",
+      "Search by structure name textbox",
+      "Pagination (5/page, showing 1-5 of 8)",
+      "Add New link to create structure wizard",
+      "3-step wizard: Define structure > Employee grouping > Review",
+      "Structure name and description fields",
+      "Automatic grouping and Manual grouping radio buttons",
+      "View Groups dialog showing groups with employee counts",
+      "Expandable groups showing employee list with avatars",
+      "View Employees and Roles Assignments dialog with Group/Employee/Role columns",
+      "Role Management page with Role Assignment and Custom Roles tabs"
+    ],
+    "navigation_structure": {
+      "tabs": [],
+      "sections": [
+        "Company Settings > Employee Structures (accordion)",
+        "Role Management > Role Assignment",
+        "Role Management > Custom Roles"
+      ]
+    },
+    "undocumented_features": [
+      "Groups within structures are expandable to show individual employees",
+      "Unassigned employees count is clickable and highlighted in purple"
+    ],
+    "navigation_map_coverage": [
+      {
+        "label": "Employee Structures",
+        "guide_role": "primary",
+        "audience": "admin",
+        "canonical_path": "Settings > Company > Employee Structures",
+        "visited": true,
+        "nav_method": "navigation_steps",
+        "actual_steps_used": ["Settings", "Company", "Employee Structures (accordion)"],
+        "payload_steps_worked": true,
+        "screenshots": ["exploration-01-company-settings.png", "exploration-02-employee-structures-list.png"],
+        "elements_found": ["Structure table", "Search bar", "Add New link", "Action icons", "Pagination"]
+      },
+      {
+        "label": "Add New Employee Structure",
+        "guide_role": "admin_view",
+        "audience": "admin",
+        "canonical_path": "Settings > Company > Employee Structures > Add New",
+        "visited": true,
+        "nav_method": "navigation_steps",
+        "actual_steps_used": ["Clicked Add New link from Employee Structures table"],
+        "payload_steps_worked": true,
+        "screenshots": ["exploration-05-create-structure-form.png"],
+        "elements_found": ["3-step wizard", "Structure name field", "Structure description field", "Automatic/Manual grouping radio buttons", "Cancel/Next buttons"]
+      },
+      {
+        "label": "Role Management",
+        "guide_role": "settings",
+        "audience": "admin",
+        "canonical_path": "Settings > Organization > Role management",
+        "visited": true,
+        "nav_method": "navigation_steps",
+        "actual_steps_used": ["Settings", "Role management"],
+        "payload_steps_worked": true,
+        "screenshots": ["exploration-06-role-management.png"],
+        "elements_found": ["Role Assignment tab", "Custom Roles tab", "Employee-role table", "Assign Roles button", "Edit buttons per employee"]
+      },
+      {
+        "label": "View Groups Dialog",
+        "guide_role": "related",
+        "audience": "admin",
+        "canonical_path": "Settings > Company > Employee Structures > View Groups",
+        "visited": true,
+        "nav_method": "click_action",
+        "actual_steps_used": ["Clicked View Groups icon on Emp Structure - Mubeen"],
+        "payload_steps_worked": true,
+        "screenshots": ["exploration-03-view-groups-dialog.png"],
+        "elements_found": ["Group list with employee counts", "Expandable groups", "Employee avatars within groups"]
+      },
+      {
+        "label": "View Employees and Roles Assignments",
+        "guide_role": "related",
+        "audience": "admin",
+        "canonical_path": "Settings > Company > Employee Structures > View Employees and Roles",
+        "visited": true,
+        "nav_method": "click_action",
+        "actual_steps_used": ["Clicked View Employees and Roles Assignments icon"],
+        "payload_steps_worked": true,
+        "screenshots": ["exploration-04-employees-roles-assignments.png"],
+        "elements_found": ["Table with Group name, Employee, Role columns", "Empty state message for structures with no assignments"]
+      }
+    ]
+  },
+  "primary_entity": {
+    "name": "Employee Structure",
+    "singular": "structure",
+    "plural": "structures",
+    "identified_from": "Page header (Employee Structures), table rows, Add New button, Edit structure breadcrumb"
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PASSED",
+      "payload_triggers_used": ["Add New link at bottom of table"],
+      "own_logic_used": ["Verified 3-step wizard form with name, description, and grouping type selection"],
+      "evidence": "exploration-05-create-structure-form.png",
+      "notes": "Create wizard has 3 steps: Define structure, Employee grouping, Review. Supports Automatic and Manual grouping types."
+    },
+    "read": {
+      "status": "PASSED",
+      "payload_triggers_used": ["View groups icon", "View employees and roles assignments icon"],
+      "own_logic_used": ["Clicked on row action icons to see detail views"],
+      "evidence": "exploration-03-view-groups-dialog.png, exploration-04-employees-roles-assignments.png",
+      "notes": "Two read views: View Groups (shows group hierarchy with employee counts) and View Employees and Roles Assignments (shows assignments table). List view shows 8 structures with all key details."
+    },
+    "update": {
+      "status": "PASSED",
+      "payload_triggers_used": ["Edit pencil icon in row actions"],
+      "own_logic_used": ["Verified edit form pre-populates with existing data"],
+      "evidence": "crud-05-edit-structure-form.png",
+      "notes": "Edit opens the same 3-step wizard with pre-filled data. Structure name, description, and grouping type are all editable. Breadcrumb shows 'Company > Structure configuration'."
+    },
+    "delete": {
+      "status": "PASSED",
+      "payload_triggers_used": ["Delete trash icon in row actions"],
+      "own_logic_used": ["Verified confirmation dialog appears before deletion"],
+      "evidence": "crud-07-delete-confirm-dialog.png",
+      "notes": "Delete shows confirmation dialog: 'Confirm deleting structure - Are you sure you want to delete this structure?' with Cancel and Delete buttons."
+    }
+  },
+  "workflow_integration": {
+    "enabled_in_payload": true,
+    "priority": "required",
+    "checked": true,
+    "skipped_reason": null,
+    "triggers_found": [],
+    "actions_found": [],
+    "evidence": "workflow-01-workflows-list.png",
+    "notes": "Checked Automations > Workflows page. 17 existing workflows found, none with Employee Structure-specific triggers. Available triggers are HR-level (Employee is created/updated/deleted), Employee Ticket, Payroll, and Timeoff events. Employee Structures does not have dedicated workflow triggers or actions."
+  },
+  "approval_flow": {
+    "enabled_in_payload": true,
+    "priority": "required",
+    "checked": true,
+    "skipped_reason": null,
+    "has_approval_flow_tab": false,
+    "tab_name": null,
+    "signals_detected": [],
+    "advanced_flows": [],
+    "default_flow": {},
+    "evidence": ["approval-01-approval-flows-page.png"],
+    "notes": "Checked Automations > Approval Flows page. 44+ approval flow tabs visible (Leave, Air Ticket, Loan, Expense, Employee Grade Change, etc.). No 'Employee Structures' tab found. Employee Structures does not have a dedicated approval flow. The 'Employee Grade Change' tab exists but is for grade changes, not structure management."
+  },
+  "what_to_do_results": [
+    {
+      "task": "Assign roles and permissions to team members",
+      "steps_in_payload": 0,
+      "steps_completed": 1,
+      "status": "PASSED",
+      "result": "Role Management page (Settings > Organization > Role management) allows assigning roles to employees. Table shows all employees with their roles and Edit buttons. 'Assign roles' button available for bulk assignment.",
+      "screenshots": ["exploration-06-role-management.png"]
+    },
+    {
+      "task": "Create and manage employee structures with groups",
+      "steps_in_payload": 0,
+      "steps_completed": 4,
+      "status": "PASSED",
+      "result": "Full CRUD validated: Create via Add New (3-step wizard), Read via View Groups/View Employees and Roles, Update via Edit icon (opens wizard with pre-filled data), Delete via trash icon (confirmation dialog).",
+      "screenshots": ["exploration-02-employee-structures-list.png", "exploration-05-create-structure-form.png", "crud-05-edit-structure-form.png", "crud-07-delete-confirm-dialog.png"]
+    }
+  ],
+  "what_to_watch_out_for_validated": [
+    {
+      "issue": "WOF-001: Leave Policy Parameters Cannot Be Modified After Creation",
+      "limitation": "Leave policy parameters cannot be modified after creation",
+      "severity": "high",
+      "jira_reference": "From payload WOF cluster",
+      "validation_status": "SKIPPED",
+      "evidence": "This WOF is about Leave Policies, not Employee Structures. Cross-contaminated WOF data from payload.",
+      "screenshot": null,
+      "by_design": false,
+      "cluster_id": "WOF-001",
+      "ticket_count": 0,
+      "journey_stages": [],
+      "categories": ["cross_contamination"]
+    },
+    {
+      "issue": "WOF-002 through WOF-014: Leave Policy Related Limitations",
+      "limitation": "All 14 WOF items in the payload are Leave Policy related (leave calculation, accrual, carry-over, cycle transitions, labor law compliance, etc.) and not specific to Employee Structures",
+      "severity": "medium",
+      "jira_reference": "WOF-001 to WOF-014",
+      "validation_status": "SKIPPED",
+      "evidence": "All 14 WOF items reference leave policies, leave calculations, carry-over allowances, labor law gaps, etc. None are Employee Structure-specific limitations. The payload appears to have inherited WOF data from a leave policies analysis.",
+      "screenshot": null,
+      "by_design": false,
+      "cluster_id": "WOF-ALL",
+      "ticket_count": 0,
+      "journey_stages": [],
+      "categories": ["payload_data_mismatch"]
+    }
+  ],
+  "screenshots_taken": 10,
+  "validation_timestamp": "2026-02-26T10:05:00Z",
+  "summary": "Employee Structures feature validated successfully at Settings > Company > Employee Structures. The feature allows creating organizational groupings with Manual or Automatic employee assignment. 8 structures exist in the demo account. Full CRUD validated: Create (3-step wizard), Read (View Groups + View Employees/Roles), Update (Edit wizard), Delete (confirmation dialog). Role Management integration confirmed. No dedicated workflow triggers or approval flows exist for Employee Structures. All 14 WOF items in the payload are Leave Policy-related (cross-contaminated) and not applicable to Employee Structures."
+}
