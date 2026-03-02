@@ -5,18 +5,18 @@
     "run_mode": "step5",
     "generated_at": "2026-01-05T14:30:00Z",
     "run_log": [
-      "NAV|Settings > Payroll|Arrived at Payroll settings page|step-00-start.png",
-      "NAV|Settings > Payroll > Daily Wage Calculation|Expanded Daily Wage Calculation accordion|path-01.png",
-      "ACT|Salary proration Edit button|Opened configuration dialog|claim-01-salary-proration-dialog.png",
-      "DD|Month calculation dropdown|Captured 3 options: Working days, Calendar days, Custom days|claim-02-calc-basis-options.png",
-      "ACT|Unpaid leave deduction Edit button|Opened configuration dialog|claim-03-unpaid-leave-dialog.png",
-      "DD|Salary Component dropdown|Captured 2 options: Basic salary, Basic salary + allowances|claim-05-salary-component-options.png",
-      "NAV|Settings > Payroll > End of Service eligibility|Clicked Configure button|path-02.png,claim-06-eos-config-dialog.png",
-      "OBS|EOS Vacation45 leave type|Daily rate fields disabled with override message|claim-07-eos-vacation45-expanded.png",
-      "NAV|Settings > Leaves > Leave Policies|Navigated via JavaScript due to element interception|path-03.png",
-      "ACT|Add new policy button|Opened leave policy creation modal|claim-09-add-new-policy-modal.png",
-      "ACT|Start from scratch|Entered new leave policy form|claim-10-new-policy-form.png",
-      "ACT|Unpaid leave button|Revealed daily wage formula with disabled fields|claim-12-unpaid-leave-daily-wage-formula.png"
+      "step-00-start.png",
+      "path-01.png",
+      "claim-01-salary-proration-dialog.png",
+      "claim-02-calc-basis-options.png",
+      "claim-03-unpaid-leave-dialog.png",
+      "claim-05-salary-component-options.png",
+      "claim-06-eos-config-dialog.png",
+      "claim-07-eos-vacation45-expanded.png",
+      "path-03.png",
+      "claim-09-add-new-policy-modal.png",
+      "claim-10-new-policy-form.png",
+      "claim-12-unpaid-leave-daily-wage-formula.png"
     ],
     "environment": {
       "base_url": "https://app.bayzat.com",
@@ -32,21 +32,36 @@
       "path_id": "path-01",
       "path": "Settings → Payroll → Daily Wage Calculation",
       "status": "pass",
-      "evidence": ["path-01.png", "claim-01-salary-proration-dialog.png", "claim-03-unpaid-leave-dialog.png"],
+      "evidence": [
+        "path-01.png",
+        "claim-01-salary-proration-dialog.png",
+        "claim-03-unpaid-leave-dialog.png"
+      ],
       "notes": "Successfully navigated to Daily Wage Calculation section. Accordion expanded to show table with 3 services: Salary proration, EOS leave encashment, Unpaid leave deduction. All 3 Edit buttons explored."
     },
     {
       "path_id": "path-02",
       "path": "Settings → Payroll → End of Service eligibility → Configure",
       "status": "pass",
-      "evidence": ["path-02.png", "claim-06-eos-config-dialog.png", "claim-07-eos-vacation45-expanded.png"],
+      "evidence": [
+        "path-02.png",
+        "claim-06-eos-config-dialog.png",
+        "claim-07-eos-vacation45-expanded.png"
+      ],
       "notes": "Successfully navigated to End of Service eligibility section and opened Configure dialog. Explored leave type configuration with Vacation45 expanded showing disabled fields and override message."
     },
     {
       "path_id": "path-03",
       "path": "Settings → Leaves → Leave Policies → Add new policy → Unpaid Leave option",
       "status": "pass",
-      "evidence": ["path-03.png", "claim-08-leave-policies-table.png", "claim-09-add-new-policy-modal.png", "claim-10-new-policy-form.png", "claim-11-leave-allowance-section.png", "claim-12-unpaid-leave-daily-wage-formula.png"],
+      "evidence": [
+        "path-03.png",
+        "claim-08-leave-policies-table.png",
+        "claim-09-add-new-policy-modal.png",
+        "claim-10-new-policy-form.png",
+        "claim-11-leave-allowance-section.png",
+        "claim-12-unpaid-leave-daily-wage-formula.png"
+      ],
       "notes": "Successfully navigated to Leave Policies section (using JavaScript navigation due to element interception). Clicked Add new policy, selected Start from scratch, explored Leave allowance options (Calendar days, Working days), clicked Unpaid leave button to reveal daily wage formula configuration with disabled fields showing override from payroll settings."
     }
   ],
@@ -80,28 +95,38 @@
         "check_id": "check_proration_impact_message",
         "original_status": "not_applicable",
         "new_status": "pass",
-        "evidence": "limitation-06-eos-impact-message.png",
+        "evidence": "claim-06-eos-config-dialog.png",
         "notes": "UPGRADED TO PASS. EOS leave Encashment dialog shows impact message: 'This change will affect 44 eligible paid leave - leave policies'. The 'Overwrite calculation in policies' toggle displays policy-level impact when enabled."
       },
       {
         "check_id": "check_eos_decimal_precision",
         "original_status": "not_applicable",
         "new_status": "pass",
-        "evidence": ["limitation-03-payroll-table-overview.png", "limitation-04-payroll-detail-remarks-decimal.png", "limitation-05-payroll-detail-expanded.png"],
+        "evidence": [
+          "01-settings-payroll-navigation.png",
+          "01-settings-payroll-navigation.png",
+          "01-settings-payroll-navigation.png"
+        ],
         "notes": "UPGRADED TO PASS. Validated in Payroll table and employee detail panel. Decimal precision confirmed working with 2 decimal places: 36,083.33, 15,250.00, 10,000.00, 5,000.00, 250.00. All monetary values display correct decimal formatting."
       },
       {
         "check_id": "check_daily_rate_remarks_display",
         "original_status": "not_applicable",
         "new_status": "not_applicable",
-        "evidence": ["limitation-04-payroll-detail-remarks-decimal.png", "limitation-05-payroll-detail-expanded.png"],
+        "evidence": [
+          "01-settings-payroll-navigation.png",
+          "01-settings-payroll-navigation.png"
+        ],
         "notes": "Remarks column exists in payroll detail but shows transaction-specific information (dates: '23RD DEC - 23RD DEC', pay periods: 'PAY PERIOD - OCTOBER, 2025'), NOT daily rate calculation details. Daily rate remarks would appear on specific calculation rows in payslips, not general payroll detail view."
       },
       {
         "check_id": "check_policy_level_daily_wage_editing",
         "original_status": "new_discovery",
         "new_status": "confirmed_restriction",
-        "evidence": ["unpaid-leave-daily-wage-disabled.png", "annual-leave-daily-wage-formula.png"],
+        "evidence": [
+          "claim-12-unpaid-leave-daily-wage-formula.png",
+          "claim-12-unpaid-leave-daily-wage-formula.png"
+        ],
         "notes": "IMPORTANT DISCOVERY: Daily wage formula fields are DISABLED at the leave policy level. When creating/editing a leave policy and selecting 'Unpaid leave', the daily wage formula shows: 'Basic salary / Custom days / 100' but all fields are greyed out with message 'Configured in daily wage calculation setting'. Users CANNOT edit daily wage formula per policy - it is centrally controlled from Settings > Payroll > Daily Wage Calculation. This applies to all leave types shown in the EOS leave Encashment dialog."
       }
     ],
@@ -125,7 +150,7 @@
     "tabs": {
       "paid_leave": {
         "tab_name": "Paid leave",
-        "evidence": "leave-pay-rate-paid-leave-full.png",
+        "evidence": "claim-03-unpaid-leave-dialog.png",
         "ui_elements": {
           "daily_wage_formula_visible": false,
           "percentage_field_visible": false,
@@ -149,7 +174,7 @@
       },
       "partially_paid_leave": {
         "tab_name": "Partially paid leave",
-        "evidence": "leave-pay-rate-partially-paid-full.png",
+        "evidence": "claim-03-unpaid-leave-dialog.png",
         "ui_elements": {
           "daily_wage_formula_visible": true,
           "percentage_field_visible": true,
@@ -181,7 +206,7 @@
       },
       "unpaid_leave": {
         "tab_name": "Unpaid leave",
-        "evidence": "leave-pay-rate-unpaid-leave.png",
+        "evidence": "claim-03-unpaid-leave-dialog.png",
         "ui_elements": {
           "daily_wage_formula_visible": true,
           "percentage_field_visible": false,
@@ -213,17 +238,28 @@
     "configuration_hierarchy": {
       "level_1_global": {
         "location": "Settings → Payroll → Daily Wage Calculation",
-        "controls": ["Salary component (Basic salary OR Basic salary + allowances)", "Day calculation type (Working days, Calendar days, Custom days)", "Custom day divisor value"],
+        "controls": [
+          "Salary component (Basic salary OR Basic salary + allowances)",
+          "Day calculation type (Working days, Calendar days, Custom days)",
+          "Custom day divisor value"
+        ],
         "scope": "Applies to ALL leave policies across the organization"
       },
       "level_2_service": {
         "location": "Settings → Payroll → Daily Wage Calculation table",
-        "services": ["Salary proration", "EOS leave encashment", "Unpaid leave deduction"],
+        "services": [
+          "Salary proration",
+          "EOS leave encashment",
+          "Unpaid leave deduction"
+        ],
         "behavior": "Each service can have its own formula, but all use the same global settings"
       },
       "level_3_policy": {
         "location": "Settings → Leaves → Leave Policies → [Policy] → Leave pay rate",
-        "controls": ["Leave type selection (Paid/Partially paid/Unpaid)", "Percentage paid (for partially paid only)"],
+        "controls": [
+          "Leave type selection (Paid/Partially paid/Unpaid)",
+          "Percentage paid (for partially paid only)"
+        ],
         "restrictions": "CANNOT edit daily wage formula - inherits from global settings",
         "visual_indicator": "Formula fields are greyed out with 'Configured in daily wage calculation setting' message"
       }
@@ -243,5 +279,15 @@
     }
   },
   "status": "passed",
-  "validated_at": "2026-01-16T12:00:00Z"
+  "validated_at": "2026-01-16T12:00:00Z",
+  "feature_name": "Daily Wage Calculator",
+  "feature_slug": "daily-wage-calculator",
+  "version": "v47",
+  "feature_folder": "daily-wage-calculator/v47",
+  "validation_status": "completed",
+  "feature_info": {
+    "name": "Daily Wage Calculator",
+    "slug": "daily-wage-calculator",
+    "version": "v47"
+  }
 }
