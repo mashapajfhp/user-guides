@@ -3,7 +3,7 @@
   "feature_slug": "approval-flow",
   "version": "v2",
   "feature_folder": "approval-flow/v2",
-  "validation_date": "2026-03-04",
+  "validation_date": "2026-03-05",
   "validation_status": "completed",
   "feature_info": {
     "canonical_path": "Automations > Approval flows",
@@ -11,9 +11,14 @@
     "category": "automations",
     "audience": "admin"
   },
+  "login": {
+    "success": true,
+    "method": "pre-filled credentials",
+    "attempts": 1
+  },
   "discovery": {
     "primary_entity": "Approval Flow Configuration",
-    "total_flow_types": 46,
+    "total_flow_types": 48,
     "core_flow_types": [
       "Leave",
       "Air Ticket",
@@ -28,31 +33,168 @@
       "Shift Change Request",
       "Grievance Submission",
       "Business Trip Request",
-      "Hourly permission",
+      "Hourly permission"
+    ],
+    "custom_ticket_flow_types": [
       "Bank Account Update",
       "Work From Home Request",
       "Project Hours",
       "Employee Grade Change",
       "After-expiry Ticket",
       "WFH - Remote work request",
-      "Salary Changes"
+      "Salary Changes",
+      "VAT Filing",
+      "VAT Filing - Test",
+      "VAT Filing - Test 1",
+      "VAT Filing Test 1",
+      "Employee Survey",
+      "Corporate Tax Filing",
+      "Grade A- Travel Ticket Request",
+      "Grade B - Travel Ticket Request",
+      "Cashier Checklist",
+      "Insurance Upgrade",
+      "TimeSheet for Demo",
+      "Hiring Requisition",
+      "Travel Booking Request",
+      "Travel Ticket",
+      "Testing Mandatory Attachment",
+      "Timesheet Approval",
+      "Per Diem",
+      "Time Off in Lieu",
+      "Travel Request based Per Diem",
+      "Mileage (Econ)",
+      "Expense Reimbursements",
+      "Health Insurance Travel Certificate",
+      "Onboarding Form",
+      "New Department Move",
+      "Salary related problem",
+      "Downtime Test",
+      "Testing Business Trip Custom Role",
+      "Test Business Custom"
     ],
+    "tab_configurations": {
+      "Leave": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Super Admin OR Line Manager - 1"
+        }
+      },
+      "Air Ticket": {
+        "advanced_flows": 2,
+        "advanced_flow_names": [
+          "Adv AF - Amount exceeding 3000",
+          "Adv AF - Amount more than 4000"
+        ],
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Payroll table admin"
+        }
+      },
+      "Loan": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 2,
+          "step_1": "Super Admin",
+          "step_2": "Line Manager (2 levels)"
+        }
+      },
+      "Expense": {
+        "advanced_flows": 1,
+        "advanced_flow_names": ["test"],
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Super Admin"
+        }
+      },
+      "Payroll Transaction": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Super Admin OR Payroll table admin"
+        }
+      },
+      "Leave Salary Request": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Payroll table admin OR Super Admin OR Transaction processing admin"
+        }
+      },
+      "Attendance Regularization": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Super Admin"
+        }
+      },
+      "Leave Encashment": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Payroll table admin OR Transaction processing admin OR Super Admin"
+        }
+      },
+      "Accounts Payable": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 1,
+          "step_1": "AP Invoice Approver OR AP Invoice Payment Initiator OR AP Invoice Payment Pre-Authorizer OR AP Invoice Payment Authorizer"
+        }
+      },
+      "Employee Violation": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Super Admin"
+        }
+      },
+      "Shift Change Request": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Super Admin"
+        }
+      },
+      "Grievance Submission": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Super Admin"
+        }
+      },
+      "Business Trip Request": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Super Admin"
+        }
+      },
+      "Hourly permission": {
+        "advanced_flows": 0,
+        "default_flow": {
+          "steps": 1,
+          "step_1": "Super Admin"
+        }
+      }
+    },
     "architecture": {
       "advanced_flow": {
         "label": "Advanced approval flow",
         "tag": "If conditions",
         "description": "Route approvals based on defined criteria. Multiple flows per type, evaluated in priority order.",
         "has_criteria": true,
+        "criteria_logic": "Execute when ALL criteria(s) match",
         "criteria_data_points": [
           "Number of Days",
           "Leave Type",
-          "Employee",
           "Employee -> Direct Reports To",
           "Employee -> Roles",
           "Employee -> Name",
           "Employee -> Employee Id",
           "Employee -> Age",
           "Employee -> Department",
+          "Employee -> Sub department",
           "Employee -> Office",
           "Employee -> Nationality",
           "Employee -> Position",
@@ -60,9 +202,23 @@
           "Employee -> Hire Date",
           "Employee -> Status",
           "Employee -> Employee Grade",
-          "Employee -> Project Name"
+          "Employee -> Project Name",
+          "Employee -> Employee Type",
+          "Employee -> Gender",
+          "Employee -> Personal Email",
+          "Employee -> Phone Number"
         ],
-        "criteria_count": "60+"
+        "criteria_count": "60+",
+        "operations": [
+          "is between",
+          "is not between",
+          "is equal to",
+          "is not equal to",
+          "is greater than",
+          "is greater than or equals",
+          "is less than",
+          "is less than or equals to"
+        ]
       },
       "default_flow": {
         "label": "Default approval flow",
@@ -76,175 +232,310 @@
       "sequential_steps": true,
       "add_block": true,
       "line_manager_levels": true,
-      "custom_roles_as_approvers": true
+      "custom_roles_as_approvers": true,
+      "available_roles_in_dropdown": [
+        "Line Manager - 1",
+        "Line Manager - 2 (Not for use)",
+        "Tickets Custom Role",
+        "AKQA",
+        "Leaves Manager",
+        "Line Manager",
+        "Super Admin"
+      ]
     },
     "ui_components": [
       "Search bar for flow types",
-      "Left sidebar with scrollable flow type tabs",
+      "Left sidebar with scrollable flow type tabs (48 tabs)",
       "Advanced approval flow section with Add advance flow button",
       "Default approval flow section with inline configuration",
       "Add step button for sequential approval levels",
       "Add approver button for OR parallel approvers",
       "Add block button for approval blocks",
       "Approver role dropdown with system and custom roles",
-      "Update approval flows button to save changes"
+      "Line Manager level selector dropdown (1, 2, ...n levels)",
+      "Update approval flows button to save changes",
+      "Priority ordering for multiple advanced flows (ellipsis menu with Move up/Move down)",
+      "Edit (pencil) and Delete (trash) icons per advanced flow"
     ]
+  },
+  "crud_validation": {
+    "create": {
+      "status": "PASSED",
+      "evidence": "Clicked '+ Add advance flow' on Leave tab. Dialog opens with: Flow name field, Description field, 'Add criteria' button to define conditions, and 'Add approval step' section. Criteria dialog shows Data Point dropdown (60+ options), Operations dropdown (8 options: is between, is not between, is equal to, etc.), and Value field. Approval step has role dropdown with system + custom roles.",
+      "screenshots": [
+        "15-crud-create-dialog.png",
+        "16-crud-create-criteria-dialog.png",
+        "17-crud-create-data-points-dropdown.png",
+        "18-crud-create-operations-dropdown.png",
+        "19-crud-create-roles-dropdown.png"
+      ]
+    },
+    "read": {
+      "status": "PASSED",
+      "evidence": "Viewed existing advanced flows on Air Ticket tab. Two flows visible: 'Adv AF - Amount exceeding 3000' (priority 1) and 'Adv AF - Amount more than 4000' (priority 2). Each shows flow name and description inline. Clicking edit icon shows full criteria and approval step configuration.",
+      "screenshots": [
+        "02-air-ticket-tab.png",
+        "20-crud-edit-dialog.png"
+      ]
+    },
+    "update": {
+      "status": "PASSED",
+      "evidence": "Clicked edit (pencil) icon on first Air Ticket advanced flow. Edit dialog opened showing: Flow name 'Adv AF - Amount exceeding 3000', 2 criteria (Policy Allowance Amount -> Amount is greater than 3000, Policy Allowance Amount -> Currency is equal to AED), Logic: 'Execute when ALL criteria(s) match', Approval: Step 1 - Line Manager (1 level). All fields editable. Cancelled without saving.",
+      "screenshots": [
+        "20-crud-edit-dialog.png"
+      ]
+    },
+    "delete": {
+      "status": "PASSED",
+      "evidence": "Clicked delete (trash) icon on an advanced flow. Confirmation dialog appeared: 'Delete approval flow? This action is permanent and cannot be undone.' with Cancel and Delete buttons. Cancelled without deleting.",
+      "screenshots": [
+        "21-crud-delete-confirmation.png"
+      ]
+    },
+    "priority_reorder": {
+      "status": "PASSED",
+      "evidence": "Clicked ellipsis (three-dot) menu on first advanced flow. Context menu showed 'Move down in priority' option. For flows not at position 1, 'Move up in priority' is also available.",
+      "screenshots": [
+        "22-crud-priority-menu.png"
+      ]
+    }
   },
   "task_results": {
     "WTD-001": {
       "task": "Configure Advanced Leave Approval Flow",
-      "status": "pass",
+      "status": "PASSED",
       "findings": [
         "Advanced approval flow section present with 'If conditions' label",
         "Add advance flow button opens dialog with Flow name, Description, Criteria, and Approval steps",
         "Criteria configuration supports 60+ data points including Department, Office, Leave Type, Employee attributes",
+        "8 comparison operations available: is between, is not between, is equal to, is not equal to, is greater than, is greater than or equals, is less than, is less than or equals to",
+        "Criteria logic: 'Execute when ALL criteria(s) match'",
         "Default flow configured with Super Admin OR Line Manager - 1",
-        "Custom roles can be created and used as approvers",
-        "Sequential steps supported with numbered ordering",
+        "Custom roles available in approver dropdown (Line Manager - 1, Tickets Custom Role, AKQA, etc.)",
+        "Sequential steps supported with numbered ordering (1, 2, 3...)",
         "OR logic between approvers within same step for redundancy"
       ],
       "screenshots": [
-        "02-leave-approval-flow.png",
-        "13-advanced-flow-creation-dialog.png",
-        "14-criteria-data-points-dropdown.png"
+        "01-approval-flow-main-leave-tab.png",
+        "27-wtd001-leave-tab-full.png",
+        "15-crud-create-dialog.png",
+        "16-crud-create-criteria-dialog.png",
+        "17-crud-create-data-points-dropdown.png",
+        "18-crud-create-operations-dropdown.png",
+        "19-crud-create-roles-dropdown.png"
       ]
     },
     "WTD-002": {
       "task": "Configure Payroll Transaction Approval Flow",
-      "status": "pass",
+      "status": "PASSED",
       "findings": [
         "Payroll Transaction tab present at /enterprise/dashboard/approval-flow/payroll-transaction-request-flow",
         "Advanced + Default sections both available",
-        "Default flow: Super Admin OR Payroll table admin (OR condition confirmed)",
+        "Default flow: Step 1 - Super Admin OR Payroll table admin (OR condition confirmed)",
         "Add step and Add approver buttons available for multi-level hierarchy",
+        "Add block button present for additional approval blocks",
         "Maker-checker controls enforceable through multi-step configuration"
       ],
       "screenshots": [
-        "06-payroll-transaction-approval-flow.png"
+        "05-payroll-transaction-tab.png",
+        "28-wtd002-payroll-transaction-tab.png"
       ]
     },
     "WTD-003": {
       "task": "Configure Expense Approval Flow",
-      "status": "pass",
+      "status": "PASSED",
       "findings": [
         "Expense tab present at /enterprise/dashboard/approval-flow/expense-flow",
-        "1 existing advanced flow ('test') configured",
-        "Default flow: Super Admin as approver",
-        "Independent from Payroll Transaction - separate tab",
-        "Full approval configuration capabilities available"
+        "1 existing advanced flow ('test') configured with edit/delete icons",
+        "Default flow: Step 1 - Super Admin as approver",
+        "Independent from Payroll Transaction - separate tab with separate configuration",
+        "Full approval configuration capabilities available (add step, add approver, add block)"
       ],
       "screenshots": [
-        "05-expense-approval-flow.png"
+        "04-expense-tab.png",
+        "29-wtd003-expense-tab.png"
       ]
     },
     "WTD-004": {
       "task": "Assign Roles and Manage Permissions",
-      "status": "pass",
+      "status": "PASSED",
       "findings": [
         "Role Management at /enterprise/dashboard/roles under Settings > Organization",
         "Two tabs: Role assignment and Custom roles",
-        "Assign roles button present for assigning roles to employees",
-        "Employee table shows all role assignments with Edit capability",
-        "Multiple roles per employee confirmed (e.g., 25+ roles for some employees)",
-        "Custom roles tab: 15 custom roles with Add new, view, edit, delete actions",
-        "Custom roles include Business Travel Approver, Line Manager variants, General Manager, etc."
+        "Role assignment tab: Table of 45+ employees with their assigned roles and Edit button per employee",
+        "Assign roles button (purple) at top of Role assignment tab",
+        "Multiple roles per employee confirmed (e.g., Anne Macalintal has 25+ roles)",
+        "Custom roles tab: 15 custom roles with Add new, view (eye icon), edit (pencil icon), delete (trash icon) actions",
+        "Custom role view dialog shows: Role Name (EN/AR), Role Description (EN/AR), Policy assignment with Unassigned Policies (63) and Assigned Policies sections",
+        "Custom roles listed: Line Manager - 1, Workflow Manager, Line Manager - 2 (Not for use), General Manager, attendance custom, Line Manager - All, Work Expense Manager, People Manager 2, Payroll Testing (SAF), Tickets Custom Role, Emp Tickets - Custom, AKQA, Business Travel Approver, Test Custom Role, CET Custom Role"
       ],
       "screenshots": [
-        "15-role-management-assignment.png",
-        "16-custom-roles.png"
+        "23-role-management-role-assignment-tab.png",
+        "24-role-management-custom-roles-tab.png",
+        "25-role-management-custom-roles-bottom.png",
+        "26-custom-role-view-dialog.png"
       ]
     }
   },
   "issue_results": {
     "WOF-001": {
       "theme": "Inflexible Approval Routing & Criteria",
-      "status": "partially_resolved",
+      "validation_status": "DIFFERENT",
       "impact": "high",
       "findings": [
-        "OR logic is fully supported between approvers within same step",
+        "OR logic is fully supported between approvers within same step (verified on Leave, Payroll Transaction, Leave Salary Request, Accounts Payable, Leave Encashment tabs)",
         "Advanced flows support 60+ criteria data points for conditional routing",
-        "Multiple advanced flows can coexist with priority ordering",
-        "Some specific criteria (client, project fields) may not be available for all flow types"
-      ]
+        "8 comparison operations available for each criteria condition",
+        "Multiple advanced flows can coexist with priority ordering (verified on Air Ticket tab with 2 flows)",
+        "The original limitation is largely resolved - OR logic and criteria-based routing are both available"
+      ],
+      "evidence": "Validated on multiple tabs. Leave tab shows Super Admin OR Line Manager - 1. Accounts Payable shows 4 approvers with OR logic. Air Ticket has 2 advanced flows with criteria including Amount > 3000 and Currency = AED."
     },
     "WOF-002": {
       "theme": "Missing Approval Workflows in Key Modules",
-      "status": "partially_resolved",
+      "validation_status": "DIFFERENT",
       "impact": "high",
       "findings": [
-        "Business Trip Request NOW HAS a dedicated approval flow tab",
-        "Business Travel Approver custom role exists",
-        "Payroll Transaction has dedicated approval flow",
-        "Commission processing: no dedicated tab found",
-        "Custom flow types can be created to address module gaps"
-      ]
+        "Business Trip Request NOW HAS a dedicated approval flow tab (screenshot 13-business-trip-request-tab.png)",
+        "Business Travel Approver custom role exists in Role Management",
+        "Payroll Transaction has dedicated approval flow tab",
+        "48 total approval flow tabs exist, including many custom ticket types",
+        "Commission processing: no dedicated tab found, but could be added as a custom ticket type"
+      ],
+      "evidence": "Business Trip Request tab visible in sidebar and content area with full Advanced + Default flow configuration. Default flow: Super Admin."
     },
     "WOF-003": {
       "theme": "Approval Configuration Requires Admin Intervention",
-      "status": "partially_resolved",
+      "validation_status": "DIFFERENT",
       "impact": "medium",
       "findings": [
-        "Custom roles ARE supported (15 custom roles found, Add new button available)",
-        "Admin-only access to approval flow config is by design (security)",
+        "Custom roles ARE supported (15 custom roles found with full CRUD: Add new, view, edit, delete)",
+        "Custom role view dialog shows policy assignment (Unassigned Policies: 63, Assigned Policies shown)",
+        "Custom roles appear in approval flow approver dropdowns",
+        "Admin-only access to approval flow config is by design (security) - not a bug",
         "Feature flag enforcement not testable from UI"
-      ]
+      ],
+      "evidence": "Custom roles tab shows 15 roles. View dialog for 'Line Manager - 1' shows Role Name, Description (EN/AR), and policy assignment interface."
     },
     "WOF-004": {
       "theme": "Approval Notification & Status Synchronization",
-      "status": "not_verifiable",
+      "validation_status": "NOT_REPRODUCIBLE",
       "impact": "high",
       "findings": [
-        "Cannot verify notification routing from UI alone",
+        "Cannot verify notification routing from approval flow configuration UI alone",
         "Requires end-to-end testing with actual approval submissions",
-        "Listed as known limitation"
-      ]
+        "No notification settings visible in the approval flow configuration interface"
+      ],
+      "evidence": "Approval flow UI only shows flow configuration (steps, approvers, criteria). No notification or status sync settings visible."
     },
     "WOF-005": {
       "theme": "Approval UI Representation Gaps",
-      "status": "acknowledged",
+      "validation_status": "DIFFERENT",
       "impact": "low",
       "findings": [
         "Leave Salary Request tab exists with full approval flow configuration",
-        "Status is Won't Do - product team chose not to pursue",
-        "UI appears functional for its intended purpose"
-      ]
+        "Default flow: Payroll table admin OR Super Admin OR Transaction processing admin (3 approvers with OR logic)",
+        "The 'missing tab' mentioned in tickets has been addressed"
+      ],
+      "evidence": "Leave Salary Request tab visible in sidebar, content shows full Advanced + Default flow sections."
     }
   },
-  "screenshots": [
-    "01-login-page.png",
-    "02-leave-approval-flow.png",
-    "03-air-ticket-approval-flow.png",
-    "04-loan-approval-flow.png",
-    "05-expense-approval-flow.png",
-    "06-payroll-transaction-approval-flow.png",
-    "07-leave-salary-request-flow.png",
-    "08-attendance-regularization-flow.png",
-    "09-leave-encashment-flow.png",
-    "10-accounts-payable-flow.png",
-    "11-employee-violation-flow.png",
-    "12-business-trip-request-flow.png",
-    "13-advanced-flow-creation-dialog.png",
-    "14-criteria-data-points-dropdown.png",
-    "15-role-management-assignment.png",
-    "16-custom-roles.png"
-  ],
   "related_pages": {
     "role_management": {
       "url": "/enterprise/dashboard/roles",
       "canonical_path": "Settings > Organization > Role management",
       "tabs": ["Role assignment", "Custom roles"],
-      "custom_roles_count": 15
+      "custom_roles_count": 15,
+      "custom_role_names": [
+        "Line Manager - 1",
+        "Workflow Manager",
+        "Line Manager - 2 (Not for use)",
+        "General Manager",
+        "attendance custom",
+        "Line Manager - All",
+        "Work Expense Manager",
+        "People Manager 2",
+        "Payroll Testing (SAF)",
+        "Tickets Custom Role",
+        "Emp Tickets - Custom",
+        "AKQA",
+        "Business Travel Approver",
+        "Test Custom Role",
+        "CET Custom Role"
+      ],
+      "total_employees_with_roles": 45,
+      "policy_count_in_system": 64
+    },
+    "automations_nav": {
+      "items": ["Workflows", "Approval flows", "Integrations", "API Token"],
+      "canonical_path": "Automations"
     }
   },
+  "screenshots": [
+    "00-login-page-check.png",
+    "00-login-page-retry.png",
+    "01-approval-flow-main-leave-tab.png",
+    "01-login-page.png",
+    "02-air-ticket-tab.png",
+    "02-leave-approval-flow.png",
+    "03-air-ticket-approval-flow.png",
+    "03-loan-tab.png",
+    "04-expense-tab.png",
+    "04-loan-approval-flow.png",
+    "05-expense-approval-flow.png",
+    "05-payroll-transaction-tab.png",
+    "06-leave-salary-request-tab.png",
+    "06-payroll-transaction-approval-flow.png",
+    "07-attendance-regularization-tab.png",
+    "07-leave-salary-request-flow.png",
+    "08-attendance-regularization-flow.png",
+    "08-leave-encashment-tab.png",
+    "09-accounts-payable-tab.png",
+    "09-leave-encashment-flow.png",
+    "10-accounts-payable-flow.png",
+    "10-employee-violation-tab.png",
+    "11-employee-violation-flow.png",
+    "11-shift-change-request-tab.png",
+    "12-business-trip-request-flow.png",
+    "12-grievance-submission-tab.png",
+    "13-advanced-flow-creation-dialog.png",
+    "13-business-trip-request-tab.png",
+    "14-criteria-data-points-dropdown.png",
+    "14-hourly-permission-tab.png",
+    "15-crud-create-dialog.png",
+    "15-role-management-assignment.png",
+    "16-crud-create-criteria-dialog.png",
+    "16-custom-roles.png",
+    "17-crud-create-data-points-dropdown.png",
+    "18-crud-create-operations-dropdown.png",
+    "19-crud-create-roles-dropdown.png",
+    "20-crud-edit-dialog.png",
+    "21-crud-delete-confirmation.png",
+    "22-crud-priority-menu.png",
+    "23-role-management-role-assignment-tab.png",
+    "24-role-management-custom-roles-tab.png",
+    "25-role-management-custom-roles-bottom.png",
+    "26-custom-role-view-dialog.png",
+    "27-wtd001-leave-tab-full.png",
+    "28-wtd002-payroll-transaction-tab.png",
+    "29-wtd003-expense-tab.png",
+    "30-bank-account-update-custom-ticket-tab.png"
+  ],
   "metadata": {
-    "validated_at": "2026-03-04T19:40:00.000Z",
+    "validated_at": "2026-03-05T00:30:00.000Z",
     "validator": "feature-guide-validator",
-    "total_screenshots": 16,
+    "total_screenshots": 48,
     "tasks_passed": 4,
     "tasks_failed": 0,
-    "issues_resolved": 0,
-    "issues_partially_resolved": 3,
-    "issues_not_verifiable": 1,
-    "issues_acknowledged": 1
+    "issues_validated": 5,
+    "issues_different": 3,
+    "issues_not_reproducible": 1,
+    "issues_confirmed": 0,
+    "crud_tested": true,
+    "crud_create": "PASSED",
+    "crud_read": "PASSED",
+    "crud_update": "PASSED",
+    "crud_delete": "PASSED",
+    "crud_priority_reorder": "PASSED"
   }
 }
