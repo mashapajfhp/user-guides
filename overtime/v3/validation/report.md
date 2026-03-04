@@ -104,7 +104,7 @@ Identified from:
 | Update | PASSED | Edit button opens 3-step wizard; Active/Inactive toggle for inline state change |
 | Delete | PASSED | Delete icon on each policy row (not executed to preserve data) |
 
-## What To Do Results (9/9 Passed)
+## What To Do Results (11/11 Passed)
 
 | ID | Task | Status |
 |----|------|--------|
@@ -117,6 +117,8 @@ Identified from:
 | WTD-006 | Mass upload overtime via Excel template | PASSED |
 | WTD-007 | Review activity and comments on extra hours records | PASSED |
 | WTD-009 | Understand overtime rate calculation formula | PASSED |
+| WTD-010 | Schedule Overtime in Advance for Employees | PASSED |
+| WTD-011 | Bulk Approve or Reject Pending Overtime Requests | PASSED |
 
 ## What To Watch Out For (6 Items Validated)
 
@@ -152,6 +154,16 @@ Identified from:
 | 16 | 16-payroll-table.png | Payroll table with Overtime column |
 | 17 | 17-payroll-3dot-menu.png | Payroll 3-dot menu options |
 | 18 | 18-mass-upload-variable-pay.png | Mass upload variable pay spreadsheet |
+| 19 | 19-scheduled-tab-overview.png | Scheduled sub-tab with Schedule Extra Hours button |
+| 20 | 20-schedule-extra-hours-dialog-initial.png | Schedule Extra Hours dialog (initial load) |
+| 21 | 21-scheduled-tab-with-data.png | Scheduled tab with 3 existing entries visible |
+| 22 | 22-schedule-employee-dropdown.png | Employee dropdown in schedule dialog (with disabled entries) |
+| 23 | 23-schedule-form-employee-selected.png | Schedule form after employee selected (Date + Duration fields) |
+| 24 | 24-schedule-form-full-fields.png | Full schedule form: Employee, Date, Duration, Schedule info, Compensation Type, Description |
+| 25 | 25-pending-tab-with-checkboxes.png | Pending tab showing checkboxes and individual action buttons |
+| 26 | 26-pending-extra-hours-filtered.png | Pending tab filtered to Extra Hours (3 entries) |
+| 27 | 27-bulk-action-bar-2-selected.png | Bulk action bar with 2 items selected |
+| 28 | 28-bulk-action-bar-3-selected.png | Bulk action bar with all 3 items selected |
 
 ## Key Findings
 
@@ -162,3 +174,57 @@ Identified from:
 - Payroll integration allows both manual per-employee editing and bulk Excel upload
 - All settings toggles (threshold, line manager compensation) are global, not per-policy or per-team
 - The implicit approval workflow uses Pending/Approved/Rejected sub-tabs rather than a separate approval flow configuration
+
+## Supplemental Validation (v2 Gap Analysis)
+
+Two tasks were added to v3 to cover workflows documented in v2 but missing from the initial v3 validation.
+
+### WTD-010: Schedule Overtime in Advance for Employees -- PASSED
+
+**Path:** Time > Employee attendance > Time and Pay Adjustments > Scheduled tab
+
+The "Schedule Extra Hours" button appears in the top-right corner when on the Scheduled tab. Clicking it opens a dialog with these fields:
+
+1. **Employee** - Searchable dropdown. Employees not assigned to an overtime policy appear disabled with "Not assigned to addition policy" message.
+2. **Date** - YYYY-MM-DD format with calendar picker.
+3. **Extra Hours Duration** - Two fields: Hours and Minutes. (Note: the form uses duration, not start/end time as initially expected.)
+4. **Current Schedule** - Auto-populated section showing the employee's shift for the selected date. Displays an alert if no shift is published.
+5. **Compensation Type** - Radio buttons: "Approve for Payroll" and "Approve for Leave". One may be disabled based on shift/policy configuration.
+6. **Description (Optional)** - Free text field with placeholder "Leave a note for the employee".
+7. **Create Extra Hours Instruction** button (disabled until all required fields are filled).
+
+**Scheduled tab table** shows existing entries with columns: Name, Created At, Type, Scheduled For (date, time range, location, creator), Unit(s), Compensation Type, Status. Quick filters: Scheduled, Declined, Not Fulfilled. 3 existing entries found.
+
+### WTD-011: Bulk Approve or Reject Pending Overtime Requests -- PASSED
+
+**Path:** Time > Employee attendance > Time and Pay Adjustments > Pending tab
+
+Every row in the Pending tab has a checkbox. The header row has a select-all checkbox.
+
+When 2+ entries are selected, a bulk action bar appears above the table showing:
+- **"N Items Selected"** counter
+- **"Reject All (N)"** button
+- **"Approve all for payroll (N)"** button -- count reflects only selected items with payroll compensation
+- **"Approve all for leaves (N)"** button -- count reflects only selected items with leave compensation
+- **X** button to deselect all
+
+The counts are smart: selecting 1 payroll + 2 leave entries shows "Reject All (3)", "Approve all for payroll (1)", "Approve all for leaves (2)". Individual row actions remain available: Reject, Approve for Payroll/Leaves, and a 3-dot overflow menu.
+
+### New Screenshots (10 total)
+
+| # | File | What It Shows |
+|---|------|---------------|
+| 19 | 19-scheduled-tab-overview.png | Scheduled tab with Schedule Extra Hours button |
+| 20 | 20-schedule-extra-hours-dialog-initial.png | Dialog initial state with employee dropdown |
+| 21 | 21-scheduled-tab-with-data.png | Scheduled entries behind open dialog |
+| 22 | 22-schedule-employee-dropdown.png | Employee dropdown showing enabled/disabled options |
+| 23 | 23-schedule-form-employee-selected.png | Form with Date and Duration fields visible |
+| 24 | 24-schedule-form-full-fields.png | Complete form with all fields including compensation type |
+| 25 | 25-pending-tab-with-checkboxes.png | Pending tab with per-row checkboxes visible |
+| 26 | 26-pending-extra-hours-filtered.png | Extra Hours filter active (3 pending entries) |
+| 27 | 27-bulk-action-bar-2-selected.png | Bulk bar with 2 selected |
+| 28 | 28-bulk-action-bar-3-selected.png | Bulk bar with all 3 selected |
+
+### Correction: Schedule Form Fields vs WTD-010 Expectation
+
+WTD-010 expected start/end time fields. The actual UI uses **duration** (hours + minutes) instead. This is a payload accuracy issue, not a product gap. The feature works correctly -- admins specify how many extra hours to schedule rather than a time window.

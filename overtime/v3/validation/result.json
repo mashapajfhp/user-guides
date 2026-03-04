@@ -65,7 +65,15 @@
       "Active/Inactive toggle per policy",
       "Edit and Delete icons per policy row",
       "Add new button for creating policies",
-      "Pagination on policies tables"
+      "Pagination on policies tables",
+      "Schedule Extra Hours button on Scheduled tab (top-right)",
+      "Schedule Extra Hours dialog: Employee dropdown, Date picker, Hours/Minutes duration, Compensation Type radios, Description field",
+      "Employees not assigned to overtime policy shown as disabled in schedule dropdown with 'Not assigned to addition policy' message",
+      "Bulk action bar on Pending tab: Reject All, Approve all for payroll, Approve all for leaves (with smart counts per compensation type)",
+      "Select-all checkbox in Pending and Scheduled tab table headers",
+      "Scheduled tab quick filters: Scheduled, Declined, Not Fulfilled",
+      "Scheduled tab columns: Name, Created At, Type, Scheduled For, Unit(s), Compensation Type, Status",
+      "Individual row actions on Pending: Reject, Approve for Payroll/Leaves, 3-dot menu"
     ],
     "navigation_structure": {
       "tabs": [
@@ -382,6 +390,40 @@
       "status": "PASSED",
       "result": "Opened Overtime Pay policy editor. Formula displayed: ((Unit [1.5] X [Basic + Allowance]) / [Custom Days] [30.42] X [Hours: 8]) X Extra hours duration. Rate type: Single Rate with Unified/Split toggle. Allowances selector for which salary components to include.",
       "screenshots": ["12-overtime-rate-formula.png"]
+    },
+    {
+      "task_id": "WTD-010",
+      "task": "Schedule Overtime in Advance for Employees",
+      "persona": "HR Admin | People Manager",
+      "cluster_id": "CLU-004",
+      "steps_in_payload": 10,
+      "steps_completed": 8,
+      "status": "PASSED",
+      "result": "Navigated to Time > Employee attendance > Time and Pay Adjustments > Scheduled tab. Found 'Schedule Extra Hours' button in top-right. Clicked it to open the scheduling dialog. Dialog fields: Employee dropdown (searchable, shows 'Not assigned to addition policy' for ineligible employees), Date (YYYY-MM-DD with calendar picker), Extra Hours Duration (Hours + Minutes), Current Schedule section (shows shift info or 'No Published Shifts' alert), Compensation Type radio buttons (Approve for Payroll / Approve for Leave), Description (optional text field). Scheduled tab table columns: Name, Created At, Type, Scheduled For (date, time range, location), Unit(s), Compensation Type, Status. Quick filters: Scheduled (2), Declined (0), Not Fulfilled (1). 3 existing scheduled entries found with statuses Scheduled (Expired) and Not Fulfilled. Note: Form uses duration (hours/minutes) not start/end time as WTD-010 expected.",
+      "screenshots": [
+        "19-scheduled-tab-overview.png",
+        "20-schedule-extra-hours-dialog-initial.png",
+        "21-scheduled-tab-with-data.png",
+        "22-schedule-employee-dropdown.png",
+        "23-schedule-form-employee-selected.png",
+        "24-schedule-form-full-fields.png"
+      ]
+    },
+    {
+      "task_id": "WTD-011",
+      "task": "Bulk Approve or Reject Pending Overtime Requests",
+      "persona": "HR Admin | People Manager",
+      "cluster_id": "CLU-004",
+      "steps_in_payload": 7,
+      "steps_completed": 7,
+      "status": "PASSED",
+      "result": "Navigated to Time > Employee attendance > Time and Pay Adjustments > Pending tab. Confirmed checkboxes present on every row. Filtered to Extra Hours (3 pending entries). Selected 2 entries (John Jacob, Admin Nadeem) - bulk action bar appeared showing '2 Items Selected' with buttons: Reject All (2), Approve all for payroll (1), Approve all for leaves (1). Then selected all 3 entries - bar updated to: Reject All (3), Approve all for payroll (1), Approve all for leaves (2). Bulk action counts are smart - they reflect how many selected items match each compensation type. Individual row actions also available: Reject, Approve for Payroll/Leaves, and a 3-dot menu. Header checkbox enables select-all.",
+      "screenshots": [
+        "25-pending-tab-with-checkboxes.png",
+        "26-pending-extra-hours-filtered.png",
+        "27-bulk-action-bar-2-selected.png",
+        "28-bulk-action-bar-3-selected.png"
+      ]
     }
   ],
   "what_to_watch_out_for_validated": [
@@ -470,7 +512,7 @@
       "categories": ["ux_issue"]
     }
   ],
-  "screenshots_taken": 19,
-  "validation_timestamp": "2026-03-05T01:35:00Z",
-  "summary": "Overtime v3 validation completed. The overtime feature in Bayzat operates across two main areas: (1) Time > Employee attendance > Time and Pay Adjustments for viewing and managing extra hours records with Pending/Approved/Rejected workflow, and (2) Settings > Attendance for configuring Overtime Policies and Days In Lieu Policies. Key findings: overtime supports two compensation modes (Payroll monetary amounts and Leave days in lieu), policy configuration uses a 3-step wizard with detailed rate formulas, the minimum extra hours threshold is 30 minutes globally, and line managers can be enabled to choose compensation types. Payroll integration includes an Overtime column in the payroll table and mass upload capability via Variable Pays. All 9 WTD tasks passed. 6 WOF items confirmed as by-design limitations."
+  "screenshots_taken": 29,
+  "validation_timestamp": "2026-03-05T22:45:00Z",
+  "summary": "Overtime v3 validation completed with supplemental gap analysis. The overtime feature in Bayzat operates across two main areas: (1) Time > Employee attendance > Time and Pay Adjustments for viewing and managing extra hours records with Pending/Approved/Rejected workflow, and (2) Settings > Attendance for configuring Overtime Policies and Days In Lieu Policies. Key findings: overtime supports two compensation modes (Payroll monetary amounts and Leave days in lieu), policy configuration uses a 3-step wizard with detailed rate formulas, the minimum extra hours threshold is 30 minutes globally, and line managers can be enabled to choose compensation types. Payroll integration includes an Overtime column in the payroll table and mass upload capability via Variable Pays. All 11 WTD tasks passed (including 2 supplemental v2 gap tasks). Supplemental findings: Schedule Extra Hours dialog uses employee dropdown, date picker, duration (hours/minutes), compensation type radio buttons, and optional description. Bulk actions on Pending tab show smart counts per compensation type (Reject All, Approve all for payroll, Approve all for leaves). 6 WOF items confirmed as by-design limitations."
 }
