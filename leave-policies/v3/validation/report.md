@@ -2,7 +2,7 @@
 
 **Date:** 2026-03-05
 **Status:** Completed
-**Screenshots:** 248
+**Screenshots:** 31
 
 ---
 
@@ -168,15 +168,13 @@ This is by design. The Leave pay rate (Paid/Partially paid/Unpaid) is set during
 
 ## Screenshot Summary
 
-248 screenshots captured across all phases:
+31 screenshots captured across all phases:
 
-- Exploration: ~30 screenshots (settings, policy table, policy summary, templates, calendar settings)
-- CRUD: ~10 screenshots (create wizard, edit form, delete dialog, validation errors)
+- Exploration: 9 screenshots (settings overview, policies table, policy summary, allowance, calendar settings)
+- CRUD: 7 screenshots (create wizard UAE/KSA, edit form, delete dialog, validation errors)
 - Workflows: 2 screenshots
 - Approval Flows: 3 screenshots
-- WTD Tasks: ~10 screenshots (leave requests list, filters, calendar, my leaves, employee profile)
-- Documentation: Various supplementary screenshots
-- Previous session exploration: ~190 screenshots (initial exploration of all settings sections, policy detail views, form interactions)
+- WTD Tasks: 10 screenshots (leave requests, filters, calendar, my leaves, employee profile, allowance edit)
 
 All screenshots saved to:
 `/Users/mashapa/actions-runner/_work/user-guides/user-guides/leave-policies/v3/validation/screenshots/`
@@ -196,7 +194,7 @@ All screenshots saved to:
 
 ```
 leave-policies/v3/validation/
-  screenshots/     (248 files)
+  screenshots/     (31 files)
   result.json
   report.md
 ```
