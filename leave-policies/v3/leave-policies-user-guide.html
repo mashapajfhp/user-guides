@@ -1337,6 +1337,110 @@ footer {
       </header>
       <div class="section-body">
         <div class="subsection">
+    <h3>First-Time Setup Checklist</h3>
+    <p>Complete these foundational steps before creating your first leave policy. Skipping prerequisites leads to incorrect calculations and broken approval routing.</p>
+
+    <h4>1. Configure Company Work Week</h4>
+    <p>Define your organization's working days to enable accurate working-day calculations for leave policies.</p>
+    <ul>
+      <li>Go to Settings &rarr; Company &rarr; Work Week</li>
+      <li>Select which days are working days (e.g., Sunday to Thursday)</li>
+      <li>Save configuration</li>
+    </ul>
+    <div class="info-box">
+      <p><strong>Why this matters:</strong> Leave policies can calculate days as calendar days or working days. Without a defined work week, working-day policies cannot function correctly.</p>
+    </div>
+
+    <h4>2. Set Up Public Holiday Calendar</h4>
+    <p>Create a holiday calendar to exclude public holidays from leave calculations when needed.</p>
+    <ul>
+      <li>Navigate to Settings &rarr; Company &rarr; Holiday Calendars</li>
+      <li>Add public holidays for your region</li>
+      <li>Name the calendar (e.g., "UAE Public Holidays 2026")</li>
+      <li>Assign calendar to relevant employees</li>
+    </ul>
+
+    <h4>3. Define Organizational Hierarchy</h4>
+    <p>Set up reporting lines to enable leave approval workflows.</p>
+    <ul>
+      <li>Go to each employee's profile &rarr; Work tab</li>
+      <li>Set the "Reports to" field to assign their line manager</li>
+      <li>Alternatively, use bulk upload via Excel for multiple employees</li>
+    </ul>
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; Required for approvals:</strong> Leave requests cannot be approved without defined reporting lines. Managers must have Line Manager permissions assigned in Role Management.</p>
+    </div>
+
+    <h4>4. Configure Leave Approval Flow</h4>
+    <p>Define who approves leave requests and in what order.</p>
+    <ul>
+      <li>Navigate to Settings &rarr; Approval Flows &rarr; Leaves</li>
+      <li>Add approval steps (e.g., Line Manager &rarr; Department Head &rarr; HR)</li>
+      <li>Choose whether approvers act sequentially or in parallel</li>
+      <li>Save the approval flow</li>
+    </ul>
+
+    <h4>5. Review Leave Cycle Settings</h4>
+    <p>Decide whether your organization uses calendar-year or individual (hire-date-based) leave cycles.</p>
+    <ul>
+      <li>Calendar year: All employees' leave resets on January 1st</li>
+      <li>Individual cycle: Each employee's leave resets on their hire anniversary</li>
+    </ul>
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; Cannot change easily:</strong> Switching leave cycle types after setup requires configuration team intervention and results in historical data loss. Choose carefully before creating policies.</p>
+    </div>
+
+    <table class="requirements-table">
+      <thead>
+        <tr>
+          <th>Configuration</th>
+          <th>Location</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Work week defined</td>
+          <td>Settings &rarr; Company &rarr; Work Week</td>
+          <td>Required</td>
+        </tr>
+        <tr>
+          <td>Public holiday calendar created</td>
+          <td>Settings &rarr; Company &rarr; Holiday Calendars</td>
+          <td>Recommended</td>
+        </tr>
+        <tr>
+          <td>Reporting lines assigned</td>
+          <td>Employee profiles &rarr; Work tab</td>
+          <td>Required</td>
+        </tr>
+        <tr>
+          <td>Leave approval flow configured</td>
+          <td>Settings &rarr; Approval Flows &rarr; Leaves</td>
+          <td>Required</td>
+        </tr>
+        <tr>
+          <td>Leave cycle type selected</td>
+          <td>Settings &rarr; Leaves &rarr; Leave Cycle</td>
+          <td>Required</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4>What Not to Configure Yet</h4>
+    <p>The following configurations are conditional and only needed for specific sub-features:</p>
+    <ul>
+      <li><strong>Payroll Module:</strong> Only required if you plan to use unpaid leave deductions. Not needed for basic paid leave tracking.</li>
+      <li><strong>Employee Salary Configuration:</strong> Only required for unpaid leave policies that automatically calculate payroll deductions.</li>
+      <li><strong>Leave Encashment Settings:</strong> Only required if employees can request to encash unused leave. Configure this later when setting up encashment policies.</li>
+      <li><strong>Leave Salary Settings:</strong> Only required if you pay employees in advance for leave periods.</li>
+    </ul>
+    <div class="info-box">
+      <p><strong>Start simple:</strong> You can create and use basic paid leave policies (e.g., annual leave, sick leave) with just the required configurations above. Add conditional features later as your needs grow.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
     <h3>Configuration Walkthrough</h3>
     <p>Before creating leave policies, configure company-wide leave settings to control how leave cycles work and who can see team calendars.</p>
 
@@ -2188,6 +2292,35 @@ footer {
     <div class="info-box">
       <p><strong>By Design:</strong> This restriction prevents unintended changes to employee leave balances and payroll calculations mid-cycle.</p>
     </div>
+
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; Accrual Frequency Cannot Be Modified After Creation</strong></p>
+      <p>After creating a leave policy, you cannot change its accrual frequency (e.g., from monthly to upfront allocation). To implement a different accrual schedule, create a new policy and migrate employees.</p>
+    </div>
+
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; Conditional Pay Rate Requires Employee Removal</strong></p>
+      <p>Enabling conditional pay rate features on existing policies requires removing all assigned employees first. Plan the migration carefully to avoid disrupting leave balances.</p>
+    </div>
+
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; Leave Cycle Type Change Causes Data Loss</strong></p>
+      <p>Switching between calendar-year and hire-date-based leave cycles requires configuration team intervention and results in loss of historical leave data. Export all leave balance reports before requesting a cycle type change.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Leave Balance &amp; Data Integrity Risks</h3>
+
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; Data Loss Risk When Unassigning Policies</strong></p>
+      <p>Removing employees from a policy and reassigning them can erase historical leave balances. The system lacks safeguards against this data loss. Always export leave balance reports before making policy changes.</p>
+    </div>
+
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; No Mid-Month Prorated Accrual</strong></p>
+      <p>Leave accrues only for complete months worked. Employees leaving mid-month do not receive prorated accrual for partial months, even if they work most of the month.</p>
+    </div>
   </div>
 
   <div class="subsection">
@@ -2226,6 +2359,16 @@ footer {
     
     <p>When employees take unpaid leave, the system automatically calculates salary deductions:</p>
     
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; Daily Wage Calculation Uses Fixed Divisor</strong></p>
+      <p>The system uses a fixed divisor of <strong>30.42 days</strong> for daily wage calculations instead of actual calendar days. This can result in deduction amounts that don't precisely match monthly salary expectations. Formula: Daily Pay = (Basic Salary + Allowances) &divide; 30.42</p>
+    </div>
+
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; Public Holiday Changes Don't Trigger Recalculation</strong></p>
+      <p>When public holidays are added after unpaid leave requests are approved, the system does not automatically recalculate deductions. Daily wage calculations remain based on the original working day count at approval time.</p>
+    </div>
+
     <div class="info-box">
       <p><strong>Calculation Formula:</strong> Daily Pay = Salary Amount / Total Days (calendar or working days based on policy)</p>
       <p><strong>Salary Components:</strong> Basic + Allowances (as configured in policy)</p>
@@ -2561,9 +2704,57 @@ footer {
       </tbody>
     </table>
   </div>
+
+  <div class="subsection">
+    <h3>Regional Compliance Gaps</h3>
+
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; KSA Sick Leave Regulations Not Fully Supported</strong></p>
+      <p>The platform lacks native support for KSA-specific sick leave regulations requiring individual, anniversary-based leave accrual cycles. The system defaults to calendar year or hire date-based accrual. Manual workarounds may be required for KSA compliance.</p>
+    </div>
+
+    <div class="info-box">
+      <p><strong>Note:</strong> For KSA compliance, contact support for configuration guidance specific to your regulatory requirements.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Feature Gaps</h3>
+
+    <table class="limitations-table">
+      <thead>
+        <tr>
+          <th>Missing Feature</th>
+          <th>Current Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Hourly Leave Requests</strong></td>
+          <td>System only supports full-day or half-day leave applications</td>
+        </tr>
+        <tr>
+          <td><strong>Automated Leave Expiry Notifications</strong></td>
+          <td>Cannot customize advance notice period or enable automatic notifications for line managers</td>
+        </tr>
+        <tr>
+          <td><strong>Bulk Carry-Over Updates</strong></td>
+          <td>No user-friendly interface for bulk updating carry-over allowances across multiple policies</td>
+        </tr>
+        <tr>
+          <td><strong>Policy Recovery</strong></td>
+          <td>No self-service undelete mechanism for accidentally deleted policies</td>
+        </tr>
+        <tr>
+          <td><strong>Shift Days-Off Exclusion</strong></td>
+          <td>Working days policies cannot automatically account for scheduled shift days-off</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
       </div>
     </section>
-  
+
 
     <section class="section section-troubleshooting-edge-cases" id="troubleshooting-edge-cases">
       <header class="section-header">
@@ -2698,6 +2889,45 @@ footer {
     <div class="info-box">
       <p><strong>Workaround:</strong> Adjust balances individually via employee profile, or contact support for assistance with bulk corrections.</p>
     </div>
+
+    <h4>Leap Year Hire Dates</h4>
+    <p>Employees hired on February 29 have their leave cycle start date set to February 28 in non-leap years, causing a 1-day discrepancy in conditional leave allowance calculations.</p>
+    <div class="info-box">
+      <p><strong>Workaround:</strong> Manually adjust leave balances at cycle start to account for the missing day, or configure policy with 1 additional day allowance for affected employees.</p>
+    </div>
+
+    <h4>Shift-Based Working Days</h4>
+    <p>Working days leave policies cannot automatically exclude scheduled shift days-off. Employees with rotating shifts may see incorrect leave day counts.</p>
+    <div class="info-box">
+      <p><strong>Workaround:</strong> Use calendar days policy instead, or manually adjust leave balances to account for shift patterns. Document shift schedules for reference during leave approval.</p>
+    </div>
+
+    <h4>Accrual Pausing During Extended Unpaid Leave</h4>
+    <p>When configured, the system automatically pauses monthly leave accrual when employees take extended unpaid leave exceeding the configured threshold (e.g., 21 days for KSA compliance).</p>
+    <div class="info-box">
+      <p><strong>How it works:</strong> System tracks total days of specified leave types taken in a month. If total exceeds minimum threshold, monthly accrual is paused. Leave allowance is prorated: (Days worked &divide; Total days) &times; Monthly accrual.</p>
+    </div>
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; Important:</strong> Accrual pausing configuration cannot be edited once set. It only applies to new leave requests, not retroactively to existing ones.</p>
+    </div>
+
+    <h4>Retroactive Salary Changes</h4>
+    <p>Unpaid leave deductions use salary at approval time. Salary increases after approval do not trigger deduction recalculation.</p>
+    <div class="info-box">
+      <p><strong>Workaround:</strong> Process salary adjustments before approving unpaid leave requests. For retroactive salary changes, manually adjust deductions in payroll.</p>
+    </div>
+
+    <h4>Probation Period Transitions</h4>
+    <p>Employees transitioning out of probation mid-cycle may have leave restrictions that don't automatically lift.</p>
+    <div class="info-box">
+      <p><strong>Workaround:</strong> Review and update leave policy assignments when probation ends. Communicate new leave allowances to employees. Process any pending leave requests that were blocked by probation restrictions.</p>
+    </div>
+
+    <h4>Deleted Policy Recovery</h4>
+    <p>No self-service mechanism exists to recover accidentally deleted leave policies.</p>
+    <div class="warning-box">
+      <p><strong>&#9888;&#65039; No Recovery:</strong> Contact support immediately for backend recovery. Maintain documentation of all policy configurations as backup.</p>
+    </div>
   </div>
 
   <div class="subsection">
@@ -2747,9 +2977,35 @@ footer {
       </tbody>
     </table>
   </div>
+
+  <div class="subsection">
+    <h3>Data Integrity Checks</h3>
+    <p>Perform these checks regularly to prevent data issues:</p>
+    <ul>
+      <li><strong>Monthly Balance Audit:</strong> Export leave balance reports at month-end and compare with previous month to identify unexpected changes</li>
+      <li><strong>Deduction Reconciliation:</strong> Verify unpaid leave deductions in Finance &rarr; Adjustments match approved leave requests</li>
+      <li><strong>Policy Assignment Review:</strong> Check that all active employees have appropriate leave policies assigned</li>
+      <li><strong>Approval Flow Validation:</strong> Test approval flows after organizational changes to ensure requests route correctly</li>
+      <li><strong>Accrual Verification:</strong> Spot-check accrual calculations for employees with conditional allowances or complex tenure rules</li>
+      <li><strong>Encashment Eligibility:</strong> Review encashment policy assignments before cycle end to ensure eligible employees can submit requests</li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <h3>Prevention Best Practices</h3>
+    <ul>
+      <li><strong>Export Before Changes:</strong> Always download leave balance and policy configuration reports before making modifications</li>
+      <li><strong>Communicate Early:</strong> Notify employees of policy changes well before implementation</li>
+      <li><strong>Document Configurations:</strong> Maintain external documentation of all policy rules, especially complex conditional settings</li>
+      <li><strong>Schedule Updates Strategically:</strong> Make policy changes at cycle boundaries to minimize recalculation impacts</li>
+      <li><strong>Verify Integrations:</strong> Check that payroll module and salary configurations are current before enabling unpaid leave deductions</li>
+      <li><strong>Monitor Audit Logs:</strong> Regularly review system audit logs for unexpected automatic adjustments</li>
+      <li><strong>Backup Critical Data:</strong> Download and archive leave request reports, especially before major system changes</li>
+    </ul>
+  </div>
       </div>
     </section>
-  
+
 
     <section class="section section-support-resources" id="support-resources">
       <header class="section-header">
@@ -2818,6 +3074,36 @@ footer {
   <p>Yes. When creating or editing a policy, enable monthly accrual pausing and select which leave types trigger the pause. Set the minimum days requirement (e.g., 21 days for KSA compliance). This only applies to new leave requests after configuration.</p>
 </details>
 
+<details class="faq-item">
+  <summary>Why doesn't my leave policy account for scheduled shift days-off?</summary>
+  <p>The platform cannot automatically account for scheduled shift days-off in working-day leave calculations. Employees with rotating shift schedules may see incorrect leave day counts. Use calendar days policy as an alternative, or manually adjust balances to account for shift patterns.</p>
+</details>
+
+<details class="faq-item">
+  <summary>Does the platform support hourly leave requests?</summary>
+  <p>No. The platform currently only supports full-day or half-day leave applications. Hourly leave requests are not available.</p>
+</details>
+
+<details class="faq-item">
+  <summary>How does leave encashment work for employees leaving mid-month?</summary>
+  <p>The platform cannot automatically calculate pro-rated leave encashment for employees leaving before month-end. Manual intervention is required to ensure employees receive accurate compensation for accrued leave days.</p>
+</details>
+
+<details class="faq-item">
+  <summary>What happens to leave balances if I unassign and reassign employees to a policy?</summary>
+  <p>Unassigning and reassigning employees can reset leave balances and erase historical data. The system lacks safeguards against this data loss. Always export leave balance reports before making policy changes.</p>
+</details>
+
+<details class="faq-item">
+  <summary>Can employees request leave for periods before their policy was assigned?</summary>
+  <p>No. The platform does not allow creating leave requests for periods before a leave policy is assigned to an employee. To handle historical leave, assign the policy with a retroactive start date first, then create the leave request.</p>
+</details>
+
+<details class="faq-item">
+  <summary>How does the daily wage divisor affect unpaid leave deductions?</summary>
+  <p>The system uses a fixed divisor of 30.42 days for daily wage calculations, not actual calendar days. This means deduction amounts may not precisely match monthly salary expectations. Formula: Daily Pay = (Basic Salary + Allowances) &divide; 30.42. Multiply by leave days for total deduction.</p>
+</details>
+
 <h3>Getting Help</h3>
 <ul>
   <li><strong>In-App Support:</strong> Click the help icon in the top navigation bar to access live chat support</li>
@@ -2853,6 +3139,22 @@ footer {
     <tr>
       <td><strong>Calendar Days</strong></td>
       <td>Leave calculation method that counts all days including weekends and public holidays.</td>
+    </tr>
+    <tr>
+      <td><strong>Carry-Over Allowance</strong></td>
+      <td>The number of unused leave days that can be transferred from one leave cycle to the next, subject to policy-defined maximum limits.</td>
+    </tr>
+    <tr>
+      <td><strong>Conditional Pay Rate</strong></td>
+      <td>A policy feature that automatically adjusts pay rates (fully paid, partially paid, or unpaid) based on the cumulative number of leave days taken within a cycle.</td>
+    </tr>
+    <tr>
+      <td><strong>Daily Wage Divisor</strong></td>
+      <td>The number used to calculate daily pay for unpaid leave deductions. Bayzat uses a fixed divisor of 30.42 days rather than actual calendar days.</td>
+    </tr>
+    <tr>
+      <td><strong>EOS (End of Service)</strong></td>
+      <td>The final settlement calculation when an employee leaves the organization, including leave encashment based on unused leave balances and policy rules.</td>
     </tr>
     <tr>
       <td><strong>Carryover</strong></td>
