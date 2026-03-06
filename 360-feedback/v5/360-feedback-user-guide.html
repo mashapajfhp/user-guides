@@ -574,7 +574,7 @@
           </tr>
           <tr>
             <td>Feedback Categories</td>
-            <td>Define competency categories in Settings > Performance > 360° feedback</td>
+            <td>Define competency categories in Settings > Performance > 360° feedback configurations</td>
             <td>Required</td>
           </tr>
         </tbody>
@@ -780,9 +780,9 @@
     <h3>Settings and Configuration</h3>
     <p>To access 360° feedback system settings:</p>
 
-    <div class="nav-path"><strong>Settings</strong> &rarr; <strong>Performance</strong> &rarr; <strong>360° feedback</strong></div>
+    <div class="nav-path"><strong>Settings</strong> &rarr; <strong>Performance</strong> &rarr; <strong>360° feedback configurations</strong> (expandable accordion)</div>
 
-    <p>The settings area includes two configuration tabs:</p>
+    <p>The 360° feedback configurations section is an expandable accordion panel within the Performance Management settings page. It includes two configuration tabs:</p>
     <ul>
       <li><strong>Feedback categories:</strong> Manage categories like Technical Expertise, Leadership & Influence, Values & Culture Fit, Flexibility and Adaptability, Reliability and Dependability, Communication Skills, Teamwork and Collaboration</li>
       <li><strong>Question bank:</strong> Configure feedback questions used in surveys</li>
@@ -796,9 +796,9 @@
     <h3>URL Patterns</h3>
     <p>While direct URL access depends on your Bayzat instance configuration, the typical pattern follows:</p>
     <ul>
-      <li><strong>Main Dashboard:</strong> <code>/performance/360-reviews</code></li>
-      <li><strong>Review Detail:</strong> <code>/performance/360-reviews/[review-id]</code></li>
-      <li><strong>Settings:</strong> <code>/settings/performance/360-feedback</code></li>
+      <li><strong>Main Dashboard:</strong> <code>/enterprise/dashboard/performance/holistic-feedback/company/overview</code></li>
+      <li><strong>Review Detail:</strong> <code>/enterprise/dashboard/performance/holistic-feedback/company/cycle/[review-id]/overview</code></li>
+      <li><strong>Settings:</strong> <code>/enterprise/dashboard/settings/performance-management</code></li>
     </ul>
 
     <div class="info-box">
@@ -824,7 +824,7 @@
     <h3>Step 1: Configure Feedback Categories</h3>
     <p>Feedback categories organize the competencies you'll assess in 360° reviews.</p>
     <ol>
-      <li>Navigate to <strong>Settings</strong> &rarr; <strong>Performance</strong> &rarr; <strong>360° feedback</strong></li>
+      <li>Navigate to <strong>Settings</strong> &rarr; <strong>Performance</strong> and expand the <strong>360° feedback configurations</strong> accordion</li>
       <li>Select the <strong>Feedback categories</strong> tab</li>
       <li>Review the default categories provided:
         <ul>
@@ -959,7 +959,7 @@
           <li><strong>Step 1: Basic Info</strong> - Enter review name and configure timeline periods</li>
           <li><strong>Step 2: Select Participants</strong> - Choose employees to include in the review cycle</li>
           <li><strong>Step 3: Setup Nominations</strong> - Configure peer nomination settings</li>
-          <li><strong>Step 4: Review and Send</strong> - Review summary and send invitations</li>
+          <li><strong>Step 4: Send</strong> - Review summary and send invitations</li>
         </ul>
       </li>
     </ol>
@@ -975,8 +975,13 @@
       <li><strong>Review Name</strong>: Enter a descriptive name for the review cycle (e.g., "Q1 2024 360° Review")</li>
       <li><strong>Peer Nomination Period</strong>: Set start and end dates for when employees can nominate peers</li>
       <li><strong>Feedback Submission Period</strong>: Define when feedback can be submitted</li>
-      <li><strong>Review Finalization Period</strong>: Set the deadline for completing all reviews</li>
+      <li><strong>Review and Report Finalisation</strong>: Allocate time for HR and managers to review responses, generate reports, and share feedback with employees</li>
+      <li><strong>Overall Cycle Duration</strong>: Automatically inferred from the earliest start and latest end date (read-only)</li>
     </ul>
+
+    <div class="info-box">
+      <p><strong>Save Draft:</strong> At any point during the creation wizard, you can click <strong>Save draft</strong> to save your progress. The review will appear in the list with "Draft" status and a "Continue" action link to resume setup later.</p>
+    </div>
 
     <figure class="screenshot-container">
       <img src="validation/screenshots/crud-01b-create-form-filled.png" alt="Completed basic information form" class="screenshot" />
@@ -1004,7 +1009,7 @@
       <figcaption>Peer nomination configuration</figcaption>
     </figure>
 
-    <h4>Step 4: Review and Send</h4>
+    <h4>Step 4: Send</h4>
     <p>Review all settings and participant information before sending invitations. This step displays a summary of:</p>
     <ul>
       <li>Review name and timeline</li>
@@ -1042,11 +1047,11 @@
 
     <p>The detail view provides multiple tabs for comprehensive review management:</p>
     <ul>
-      <li><strong>Overview</strong>: Summary of review timeline, participants, and current status</li>
-      <li><strong>Peer nominations</strong>: Track peer nomination progress</li>
-      <li><strong>Surveys</strong>: Manage feedback surveys</li>
-      <li><strong>Responses</strong>: View submitted feedback responses</li>
-      <li><strong>Reports</strong>: Access generated 360° feedback reports</li>
+      <li><strong>Overview</strong>: Review summary with progress cards (Employee Self-Reviews %, Line Manager Feedback %, Peer Feedback %, Deadlines), Timeline/Milestones, Participation breakdown, and Activity history</li>
+      <li><strong>Peer nominations</strong>: Table of participants showing Employee, Line Manager, and Peers columns with quick filters (All, No Peers, Pending Peers, Completed) and actions (Manage, Send reminders)</li>
+      <li><strong>Surveys</strong>: Survey cards for each participant group (Self Review, Manager Review, Direct Reports Review, Peer Review) with Preview buttons</li>
+      <li><strong>Responses</strong>: Employee feedback tracking table with Responses Received count (e.g., "0/2"), Status, and actions (View, Send reminders)</li>
+      <li><strong>Reports</strong>: Generate and access 360° feedback reports</li>
     </ul>
 
     <figure class="screenshot-container">
@@ -1057,6 +1062,45 @@
     <div class="info-box">
       <p><strong>Quick Filters:</strong> Use the status filters (All, Draft, Ongoing, Completed, Pending) to quickly find reviews at specific stages. You can also search by review name or employee name.</p>
     </div>
+
+    <h4>Status-to-Action Mapping</h4>
+    <p>Each review status shows a specific contextual action in the Actions column:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Action Link</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Draft</strong></td>
+          <td>Continue</td>
+          <td>Resume the creation wizard from where you left off</td>
+        </tr>
+        <tr>
+          <td><strong>Pending Peer Nominations</strong></td>
+          <td>Assign peers</td>
+          <td>Navigate to the Peer nominations tab to manage nominations</td>
+        </tr>
+        <tr>
+          <td><strong>Pending Review and Report Finalisation</strong></td>
+          <td>Generate reports</td>
+          <td>Navigate to the Reports tab to generate feedback reports</td>
+        </tr>
+        <tr>
+          <td><strong>Ongoing</strong></td>
+          <td>Context-dependent</td>
+          <td>Shows the most relevant action for the current phase</td>
+        </tr>
+        <tr>
+          <td><strong>Completed</strong></td>
+          <td>View report</td>
+          <td>Access the generated 360° feedback reports</td>
+        </tr>
+      </tbody>
+    </table>
 
     <h3>Editing a 360° Review Cycle</h3>
     <p>To modify an existing 360° review cycle:</p>
@@ -1339,13 +1383,19 @@
 
     <div class="nav-path"><strong>Performance</strong> &rarr; <strong>My 360° reviews Beta</strong></div>
 
-    <p>The employee's "My 360° reviews" page includes:</p>
+    <p>The employee's "My 360° reviews" page has a landing page with 3 overview cards (Active reviews, Pending peer nominations, Upcoming deadlines) — note that unlike the admin view, it does not include the "Employees involved" card or the "Start 360° review" button.</p>
+
+    <p>When clicking into a review, the employee sees 4 tabs:</p>
     <ul>
-      <li><strong>Overview Tab:</strong> Shows feedback shared about the employee once available</li>
+      <li><strong>Overview Tab:</strong> Shows review progress summary, timeline milestones, and participation breakdown</li>
       <li><strong>Peer nominations Tab:</strong> Where employees nominate their peers for feedback</li>
       <li><strong>Surveys Tab:</strong> Lists all surveys the employee needs to complete (feedback about colleagues)</li>
       <li><strong>Reports Tab:</strong> Access to finalized 360° feedback reports</li>
     </ul>
+
+    <div class="info-box">
+      <p><strong>Note:</strong> The employee view shows 4 tabs (Overview, Peer nominations, Surveys, Reports) — the <strong>Responses</strong> tab is only visible in the admin view.</p>
+    </div>
 
     <figure class="screenshot-container">
       <img src="validation/screenshots/360-my-reviews-employee-view.png" alt="Employee view of My 360° reviews" class="screenshot" />
@@ -1439,12 +1489,12 @@
     <h3>Business Rules</h3>
     <p>The 360° Feedback feature operates under the following business rules:</p>
     <ul>
-      <li><strong>Review Lifecycle:</strong> Reviews progress through defined stages: Draft &rarr; Ongoing &rarr; Completed. Each stage has specific actions available.</li>
+      <li><strong>Review Lifecycle:</strong> Reviews progress through defined stages: Draft &rarr; Pending (Peer Nominations) &rarr; Ongoing &rarr; Pending (Review and Report Finalisation) &rarr; Completed. The "Pending" filter in the list groups reviews with "Pending Peer Nominations" and "Pending Review and Report Finalisation" statuses. Each stage has specific contextual actions.</li>
       <li><strong>Participant Selection:</strong> Only active employees can be selected as participants in a 360° review cycle.</li>
       <li><strong>Time Periods:</strong> Three distinct time periods must be configured: Peer nomination period, Feedback submission period, and Review finalization period. These periods cannot overlap and must be sequential.</li>
       <li><strong>Peer Nominations:</strong> Employees must nominate peers during the designated nomination period. The number of required nominations can be configured per review cycle.</li>
       <li><strong>Survey Configuration:</strong> Feedback surveys use questions from the Question Bank and are organized by Feedback Categories (Technical Expertise, Leadership & Influence, Values & Culture Fit, Flexibility and Adaptability, Reliability and Dependability, Communication Skills, Teamwork and Collaboration).</li>
-      <li><strong>Rating Scale:</strong> Reviews use the organization's configured rating scale (3-10 points) as defined in Settings > Performance > Rating Scale.</li>
+      <li><strong>Rating scales:</strong> Reviews use the organization's configured rating scale (3-10 points) as defined in Settings > Performance > Rating scales.</li>
       <li><strong>Deletion Policy:</strong> Deleted 360° reviews are permanently removed and cannot be recovered. All associated data including nominations, surveys, responses, and reports are deleted.</li>
       <li><strong>Beta Status:</strong> This feature is currently in beta testing phase, indicated by the "Beta" badge in the navigation. Functionality may be subject to change based on user feedback.</li>
     </ul>
@@ -1625,14 +1675,14 @@
     <details class="faq-item">
       <summary class="faq-question">How do I configure the feedback questions?</summary>
       <div class="faq-answer">
-        <p>Feedback questions are managed in Settings > 360° feedback configurations. You can create and organize questions in the Question Bank, group them into Feedback Categories, and customize categories to match your organization's competency framework.</p>
+        <p>Feedback questions are managed in Settings > Performance > 360° feedback configurations (expandable accordion). You can create and organize questions in the Question Bank, group them into Feedback Categories, and customize categories to match your organization's competency framework.</p>
       </div>
     </details>
 
     <details class="faq-item">
       <summary class="faq-question">What rating scale is used for feedback?</summary>
       <div class="faq-answer">
-        <p>360° reviews use your organization's configured rating scale, set up in Settings > Performance > Rating Scale. The scale can be 3-10 points with optional "Not Applicable" (N/A) option.</p>
+        <p>360° reviews use your organization's configured rating scale, set up in Settings > Performance > Rating scales. The scale can be 3-10 points with optional "Not Applicable" (N/A) option.</p>
       </div>
     </details>
 
@@ -1703,7 +1753,7 @@
       </tr>
       <tr>
         <td><strong>Feedback Categories</strong></td>
-        <td>Organizational groupings for feedback questions, such as Technical Expertise, Leadership & Influence, Values & Culture Fit, Flexibility and Adaptability, Reliability and Dependability, Communication Skills, and Teamwork and Collaboration. Configured in Settings > 360° feedback configurations.</td>
+        <td>Organizational groupings for feedback questions, such as Technical Expertise, Leadership & Influence, Values & Culture Fit, Flexibility and Adaptability, Reliability and Dependability, Communication Skills, and Teamwork and Collaboration. Configured in Settings > Performance > 360° feedback configurations (expandable accordion section). Categories can be Default (cannot be deleted) or Custom (can be deleted).</td>
       </tr>
       <tr>
         <td><strong>Feedback Submission Period</strong></td>
@@ -1727,11 +1777,11 @@
       </tr>
       <tr>
         <td><strong>Question Bank</strong></td>
-        <td>A repository of feedback questions configured in Settings > 360° feedback configurations. Questions are organized by Feedback Categories and used to create surveys for review cycles.</td>
+        <td>A repository of feedback questions configured in Settings > Performance > 360° feedback configurations. Questions are organized by Feedback Categories with counts broken down by 4 reviewer types (Employee, Manager, Direct reports, Peer). Actions include "View / Edit" and "Add question" per category.</td>
       </tr>
       <tr>
-        <td><strong>Rating Scale</strong></td>
-        <td>A numerical scale (3-10 points) used to grade feedback responses. Configured globally in Settings > Performance > Rating Scale, with customizable labels and descriptions for each point. May include an optional "Not Applicable" (N/A) option.</td>
+        <td><strong>Rating Scales</strong></td>
+        <td>A numerical scale (3-10 points) used to grade feedback responses. Configured globally in Settings > Performance > Rating scales ("Setup performance review rating scales"). With customizable labels and descriptions for each point. May include an optional "Not Applicable" (N/A) option.</td>
       </tr>
       <tr>
         <td><strong>Review Finalization Period</strong></td>
@@ -1739,7 +1789,7 @@
       </tr>
       <tr>
         <td><strong>Review Status</strong></td>
-        <td>The current state of a review cycle in its lifecycle. Possible statuses include: Draft (not yet sent), Ongoing (in progress), Completed (finished), and Pending (awaiting action). Used for filtering and tracking in the reviews list.</td>
+        <td>The current state of a review cycle in its lifecycle. Quick filter statuses: Draft, Ongoing, Completed, Pending. The "Pending" filter groups two substatus labels: "Pending Peer Nominations" (awaiting peer nominations) and "Pending Review and Report Finalisation" (awaiting report generation). Each status shows a specific contextual action in the reviews list (Continue, Assign peers, Generate reports, View report).</td>
       </tr>
     </tbody>
   </table>
@@ -1748,7 +1798,7 @@
 
 <footer>
   <p>Generated by Bayzat Documentation System</p>
-  <p>Last updated: 2026-01-30</p>
+  <p>Last updated: 2026-03-06</p>
 </footer>
 
 </body>
