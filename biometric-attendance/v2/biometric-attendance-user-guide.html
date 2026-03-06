@@ -930,10 +930,10 @@
 
 <div class="nav-path">
   <strong>Facial Recognition Settings:</strong><br>
-  Settings → Attendance Settings → Facial Recognition Configuration
+  Settings → Attendance → General (expand accordion)
 </div>
 
-<p>Configure facial recognition parameters including retry limits, fallback behavior, eligible employees, and reference photo management. This is where you enable facial recognition company-wide.</p>
+<p>Enable facial recognition by expanding the <strong>General</strong> accordion section. The settings include the <strong>Enable Image Capture</strong> toggle and the <strong>Enable facial recognition</strong> toggle with an <strong>Update</strong> button.</p>
 
 <figure>
   <img src="validation/screenshots/11-general-settings-facial-recognition.png" alt="Facial recognition settings showing enable toggle and configuration options" />
@@ -961,7 +961,7 @@
 <ul>
   <li><strong>Dashboard Widget:</strong> If configured, an attendance summary widget may appear on the main dashboard showing recent check-ins</li>
   <li><strong>Mobile App Shortcuts:</strong> The Bayzat mobile app provides quick access to the Check In/Out function from the home screen</li>
-  <li><strong>Direct URL Patterns:</strong> Attendance reports can be accessed directly at <code>/time/attendance</code></li>
+  <li><strong>Direct URL Patterns:</strong> Attendance reports can be accessed directly at <code>/enterprise/dashboard/attendance/attendance-report/daily-report</code></li>
 </ul>
 
 <h3>Menu Locations by User Role</h3>
@@ -1020,14 +1020,20 @@
 
 <p>Setting up biometric attendance requires careful configuration to ensure accurate tracking and seamless employee experience. Follow these steps in order to configure the system properly.</p>
 
-<h4>Step 1: Enable Biometric Attendance</h4>
+<h4>Step 1: Review Attendance Settings</h4>
 
 <ol>
-  <li>Navigate to <strong>Settings → Attendance Settings</strong></li>
-  <li>Locate the <strong>Biometric Attendance</strong> section</li>
-  <li>Toggle the <strong>Enable Biometric Attendance</strong> switch to ON</li>
-  <li>Review and accept any terms or compliance notices related to biometric data collection</li>
-  <li>Click <strong>Save</strong> to activate the feature</li>
+  <li>Navigate to <strong>Settings → Attendance</strong></li>
+  <li>The <strong>Attendance settings</strong> page displays multiple expandable accordion sections: General, Multiple Visits, Work Timings, Overtime Policies, Days In Lieu Policies, Deductions Policies for Payroll, Work Centers for Shift Scheduling, Biometric Data, Attendance API Settings, and Biometric Devices</li>
+  <li>Expand the <strong>General</strong> section to review check-in/out settings including image capture and facial recognition toggles</li>
+  <li>Review the additional toggles:
+    <ul>
+      <li><strong>Allow check-in/out from multiple offices:</strong> Applicable to non-shift employees only</li>
+      <li><strong>Line managers can decide compensation types for extra hours worked:</strong> Overtime payments or days in lieu</li>
+      <li><strong>Auto-mark employees as absent on missed check-in:</strong> System auto-marks absent for missed scheduled hours</li>
+      <li><strong>Minimum extra hours threshold:</strong> Configurable in minutes (default: 30)</li>
+    </ul>
+  </li>
 </ol>
 
 <div class="info-box">
@@ -1156,17 +1162,12 @@
 <p><strong>Method B: Bulk Upload via Excel</strong></p>
 
 <ol>
-  <li>Navigate to <strong>Employees → Bulk Actions → Upload Biometric IDs</strong></li>
-  <li>Download the Excel template</li>
-  <li>Fill in the template with:
-    <ul>
-      <li><strong>Employee Name:</strong> Select from dropdown (direct Employee ID input not supported)</li>
-      <li><strong>Biometric ID:</strong> The ID from the biometric device</li>
-    </ul>
-  </li>
-  <li>Upload the completed Excel file</li>
-  <li>Review the validation summary</li>
-  <li>Click <strong>Confirm Upload</strong></li>
+  <li>Navigate to <strong>Settings → Attendance</strong></li>
+  <li>Locate the <strong>Biometric Data</strong> section (displays "Upload biometric data for your employees")</li>
+  <li>Click the <strong>Start</strong> button — this opens <strong>Bayzat Sheets</strong>, an in-browser spreadsheet interface at <code>/sheets/attendance/mass-upload/biometric-data</code></li>
+  <li>Fill in the spreadsheet columns with employee names and biometric device IDs</li>
+  <li>Review the data for accuracy</li>
+  <li>Submit the bulk upload</li>
 </ol>
 
 <figure>
@@ -1235,8 +1236,8 @@
   </thead>
   <tbody>
     <tr>
-      <td><strong>Biometric Attendance Enabled</strong></td>
-      <td>Master switch to activate biometric attendance functionality</td>
+      <td><strong>General Settings Review</strong></td>
+      <td>Review and configure check-in/out settings in the General accordion (image capture, facial recognition, multi-office, auto-absent)</td>
       <td>Required</td>
     </tr>
     <tr>
@@ -1255,13 +1256,8 @@
       <td>Optional</td>
     </tr>
     <tr>
-      <td><strong>Facial Recognition Retry Limit</strong></td>
-      <td>Number of attempts before fallback behavior triggers</td>
-      <td>Required (if facial recognition enabled)</td>
-    </tr>
-    <tr>
-      <td><strong>Facial Recognition Fallback</strong></td>
-      <td>Action to take when max retries exceeded</td>
+      <td><strong>Enable Image Capture</strong></td>
+      <td>Employees take a picture when checking in/out (prerequisite for facial recognition, may be enabled by default)</td>
       <td>Required (if facial recognition enabled)</td>
     </tr>
   </tbody>
@@ -1270,9 +1266,9 @@
 <h3>Recommended Default Values</h3>
 
 <ul>
-  <li><strong>Facial Recognition Retry Limit:</strong> 3 attempts (balances security with user experience)</li>
-  <li><strong>Facial Recognition Fallback:</strong> Allow manual check-in with supervisor notification (prevents employee lockout while maintaining oversight)</li>
+  <li><strong>Minimum Extra Hours Threshold:</strong> 30 minutes (default value; configurable in General settings)</li>
   <li><strong>Biometric Data Sync Frequency:</strong> Every 15 minutes (ensures near real-time attendance visibility)</li>
+  <li><strong>Check-in Threshold:</strong> 60 minutes (default; configurable in Attendance API Settings, range 1-300 minutes)</li>
 </ul>
 
 <h3>Verification Steps</h3>
@@ -1342,7 +1338,13 @@
     <p><strong>Note:</strong> Standard create, read, update, and delete operations are not available for biometric attendance records through the web interface. Attendance data is managed through device integrations, bulk uploads, and specialized reporting tools.</p>
   </div>
 
-  <h3>Update Biometric IDs</h3><p>HR administrators must configure biometric IDs to link employee records with physical biometric devices. This ensures attendance punches are correctly attributed to the right employees.</p><h4>Individual Biometric ID Update</h4><ol><li>Log into your Bayzat account with administrator privileges</li><li>Navigate to <strong>Employees</strong> section</li><li>Search for and select the employee whose biometric ID needs updating</li><li>Locate the <strong>Biometric ID</strong> field in the employee profile</li><li>Enter the exact ID that matches the biometric device registration</li><li>Click <strong>Save Changes</strong></li><li>Verify the ID matches the device by testing a check-in</li></ol><h4>Bulk Biometric ID Upload</h4><ol><li>Navigate to <strong>Employees</strong> → <strong>Bulk Actions</strong></li><li>Download the Excel template for biometric ID updates</li><li>Fill in the template with:<ul><li>Employee names (selected from dropdown)</li><li>Corresponding biometric device IDs</li></ul></li><li>Upload the completed Excel file</li><li>Review the validation summary for errors</li><li>Confirm and save the bulk update</li><li>Assign shifts to employees after ID configuration</li></ol><div class="warning-box"><p><strong>⚠️ Biometrics mass upload restricts direct Employee ID input</strong></p><p><strong>Impact:</strong> Users must select employee names from dropdowns, limiting data entry flexibility.</p><p><strong>Workaround:</strong> No workaround provided.</p><p><em>Reference: TSSD-2658</em></p></div><div class="info-box"><p><strong>Precision Required:</strong> Biometric IDs must match exactly with the IDs registered on physical devices. Even small discrepancies (extra spaces, different capitalization) will prevent attendance data from syncing correctly.</p></div><h3>View and Edit Attendance Reports</h3><p>The Attendance page provides comprehensive visibility into employee attendance patterns with multiple report types and raw data views.</p><ol><li>Navigate to <strong>Time</strong> → <strong>Employee attendance</strong></li><li>The page displays three main tabs:<ul><li><strong>Attendance Report:</strong> Daily Report, Custom Report, and Location Report views</li><li><strong>Time and Pay Adjustments:</strong> Manage attendance corrections</li><li><strong>Attendance Raw Data:</strong> View API Data, Device Data, and Legacy Raw Data</li></ul></li><li>In the <strong>Attendance Report</strong> tab, select the date using the date picker</li><li>Use the search bar to find employees by name or employee ID</li><li>Click <strong>Filters</strong> to apply advanced filters:<ul><li><strong>Status:</strong> Absent, Present, Weekend, Day Off, Public Holiday, On Leave</li><li><strong>Schedule:</strong> Working Day, Day Off, Weekend, Public Holiday, On Leave</li><li><strong>Source:</strong> Platform, API, Biometric Device, Excel Upload</li><li><strong>Departments:</strong> Select specific departments</li><li><strong>Offices:</strong> Select specific office locations</li><li><strong>Work Timings:</strong> Filter by work timing schedules</li><li><strong>Reports To:</strong> Filter by manager</li></ul></li><li>Review the attendance data in the table showing:<ul><li>Employee ID and Name</li><li>Reports to (manager)</li><li>Schedule and Date</li><li>Status</li><li>Check In and Check Out times</li><li>Hours Worked and Extra Hours</li><li>Locations Visited</li></ul></li><li>Click the <strong>Columns</strong> button to customize which columns are displayed</li><li>Use the <strong>Download</strong> button to export the report</li><li>Use the action buttons at the end of each row to edit attendance records</li></ol>
+  <h3>Update Biometric IDs</h3><p>HR administrators must configure biometric IDs to link employee records with physical biometric devices. This ensures attendance punches are correctly attributed to the right employees.</p><h4>Individual Biometric ID Update</h4><ol><li>Log into your Bayzat account with administrator privileges</li><li>Navigate to <strong>Employees</strong> section</li><li>Search for and select the employee whose biometric ID needs updating</li><li>Locate the <strong>Biometric ID</strong> field in the employee profile</li><li>Enter the exact ID that matches the biometric device registration</li><li>Click <strong>Save Changes</strong></li><li>Verify the ID matches the device by testing a check-in</li></ol><h4>Bulk Biometric ID Upload</h4><ol><li>Navigate to <strong>Settings → Attendance</strong></li><li>Locate the <strong>Biometric Data</strong> section</li><li>Click the <strong>Start</strong> button to open <strong>Bayzat Sheets</strong> (in-browser spreadsheet)</li><li>Fill in the spreadsheet with employee names and corresponding biometric device IDs</li><li>Review the data for accuracy</li><li>Submit the bulk upload</li><li>Assign shifts to employees after ID configuration</li></ol><div class="warning-box"><p><strong>⚠️ Biometrics mass upload restricts direct Employee ID input</strong></p><p><strong>Impact:</strong> Users must select employee names from dropdowns, limiting data entry flexibility.</p><p><strong>Workaround:</strong> No workaround provided.</p><p><em>Reference: TSSD-2658</em></p></div><div class="info-box"><p><strong>Precision Required:</strong> Biometric IDs must match exactly with the IDs registered on physical devices. Even small discrepancies (extra spaces, different capitalization) will prevent attendance data from syncing correctly.</p></div><h3>View and Edit Attendance Reports</h3><p>The Attendance page provides comprehensive visibility into employee attendance patterns with multiple report types and raw data views.</p>
+
+<div class="info-box"><p><strong>AI Reports Integration:</strong> The Attendance Report page displays a promotional banner: "Curious how attendance trends? Get an instant report using Bayzat AI" with a <strong>Try AI Reports</strong> button for quick access to AI-powered attendance analytics.</p></div>
+
+<div class="info-box"><p><strong>Attendance Regularization:</strong> The page also shows a count of pending employee tickets for attendance regularization (e.g., "11 pending employee tickets for attendance regularization") with a <strong>View tickets</strong> button.</p></div>
+
+<ol><li>Navigate to <strong>Time</strong> → <strong>Employee attendance</strong></li><li>The page displays three main tabs:<ul><li><strong>Attendance Report:</strong> Daily Report, Custom Report, and Location Report views</li><li><strong>Time and Pay Adjustments:</strong> Manage attendance corrections</li><li><strong>Attendance Raw Data:</strong> View API Data, Device Data, and Legacy Raw Data</li></ul></li><li>In the <strong>Attendance Report</strong> tab, select the date using the date picker</li><li>Use the search bar to find employees by name or employee ID</li><li>Click <strong>Filters</strong> to apply advanced filters:<ul><li><strong>Status:</strong> Absent, Present, Weekend, Day Off, Public Holiday, On Leave</li><li><strong>Schedule:</strong> Working Day, Day Off, Weekend, Public Holiday, On Leave</li><li><strong>Source:</strong> Platform, API, Biometric Device, Excel Upload</li><li><strong>Departments:</strong> Select specific departments</li><li><strong>Offices:</strong> Select specific office locations</li><li><strong>Work Timings:</strong> Filter by work timing schedules</li><li><strong>Reports To:</strong> Filter by manager</li></ul></li><li>Review the attendance data in the table showing:<ul><li>ID and Name (separate columns)</li><li>Reports to (manager)</li><li>Schedule and Date</li><li>Status</li><li>Check In and Check Out times</li><li>Hours Worked and Extra Hours</li><li>Locations Visited</li></ul></li><li>Click the <strong>Columns</strong> button to customize which columns are displayed</li><li>Use the <strong>Download</strong> button to export the report</li><li>Use the action buttons at the end of each row to edit attendance records</li></ol>
 
 <figure>
   <img src="validation/screenshots/24-task3-attendance-edit-form-expanded.png" alt="Attendance edit form showing time and break adjustments" />
@@ -1421,7 +1423,9 @@
   <p><strong>Image Comparison:</strong> When an employee attempts to check in, the system captures a live image and compares it against the stored reference photo using facial feature matching algorithms. The comparison analyzes facial geometry, key landmark positions, and unique facial characteristics to verify identity.</p>
   <p><strong>Liveliness Validation:</strong> To prevent spoofing attacks (such as holding up a photo or video of someone else), the system performs anti-spoofing checks that verify a real, live person is present. This includes detecting natural facial movements, depth perception, and other indicators that distinguish a live face from a static image or recording.</p>
 </div>
-<ol><li>Navigate to <strong>Settings</strong> → <strong>Attendance</strong> → <strong>Facial Recognition</strong></li><li>Toggle <strong>Enable Facial Recognition</strong> to ON</li><li>Configure validation settings:<ul><li>Set image comparison sensitivity threshold</li><li>Enable liveliness detection for anti-spoofing protection</li><li>Configure confidence score requirements</li></ul></li><li>Configure retry limits:<ul><li>Set maximum number of facial scan attempts</li><li>Define retry cooldown period</li></ul></li><li>Set fallback behavior:<ul><li>Allow manual check-in after failed attempts</li><li>Require supervisor approval</li><li>Block check-in entirely</li></ul></li><li>Select eligible employees:<ul><li>Choose specific departments</li><li>Select individual employees</li><li>Apply to all employees</li></ul></li><li>Manage reference photos:<ul><li>Upload employee photos manually</li><li>Allow employees to capture their own reference images</li><li>Set photo quality requirements</li></ul></li><li>Review configuration summary</li><li>Click <strong>Save Configuration</strong></li></ol>
+<ol><li>Navigate to <strong>Settings</strong> → <strong>Attendance</strong></li><li>Expand the <strong>General</strong> accordion section</li><li>Ensure the <strong>Enable Image Capture</strong> toggle is ON (this may be enabled by default and cannot be changed)</li><li>Toggle <strong>Enable facial recognition</strong> to ON — "Employees scan their face during check-in/out, system verifies identity against reference photo"</li><li>Click <strong>Update</strong> to save the changes</li></ol>
+
+<div class="info-box"><p><strong>Note:</strong> Facial recognition must be enabled company-wide — it cannot be limited to specific departments or employee groups. All employees will need to capture reference photos via the mobile app.</p></div>
 
 <figure>
   <img src="validation/screenshots/27-task4-facial-recognition-toggle.png" alt="Facial recognition settings with enable toggle and configuration options" />
@@ -1936,7 +1940,7 @@
 </table></div></section>
 <footer>
   <p>Generated by Bayzat Documentation System</p>
-  <p>Last updated: 2026-01-22</p>
+  <p>Last updated: 2026-03-06</p>
 </footer>
 </body>
 </html>
