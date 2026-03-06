@@ -1014,7 +1014,7 @@ If an employee missed a check-in or check-out, they can request a correction thr
 
 #### Create New Ticket
 
-Tap/Click **Create Ticket** and select **Attendance Regularization** from the Category \> Ticket type dropdown under the Attendance category.
+Tap/Click **Create Ticket** and select **Attendance Regularization** from the Category > Ticket type dropdown under the Attendance category.
 
 </div>
 
@@ -1148,11 +1148,11 @@ Managers and administrators can view and manage employee attendance records thro
 
 ### Who Can View Reports?
 
-| Role                   | Access Level                               |
-|------------------------|--------------------------------------------|
-| **Super Admin**        | All employees across the organization      |
-| **Attendance Manager** | All employees across the organization      |
-| **Line Manager**       | Only employees who report directly to them |
+| Role | Access Level |
+|----|----|
+| **Super Admin** | All employees across the organization |
+| **Attendance Manager** | All employees across the organization |
+| **Line Manager** | Only employees who report directly to them |
 
 <div class="nav-path">
 
@@ -1709,11 +1709,11 @@ The Employee Tickets page organizes requests into three tabs based on their stat
 
 #### Tab Overview
 
-| Tab          | Description                          | Actions Available |
-|--------------|--------------------------------------|-------------------|
-| **Pending**  | Tickets awaiting review and approval | Approve, Reject   |
-| **Approved** | Tickets that have been approved      | View details      |
-| **Rejected** | Tickets that were declined           | View details      |
+| Tab | Description | Actions Available |
+|----|----|----|
+| **Pending** | Tickets awaiting review and approval | Approve, Reject |
+| **Approved** | Tickets that have been approved | View details |
+| **Rejected** | Tickets that were declined | View details |
 
 ### Reviewing a Regularization Request
 
@@ -1899,7 +1899,7 @@ The default approval flow is used when no advanced flow conditions match. You ca
 
 Route IT department regularization requests to the IT Manager, while Finance department requests go to the Finance Director.
 
-**Criteria:** Employee → Department equals "IT"  
+**Criteria:** Employee → Department equals "IT"
 **Approver:** IT Manager
 
 </div>
@@ -1910,7 +1910,7 @@ Route IT department regularization requests to the IT Manager, while Finance dep
 
 Senior employees (Grade A) require Director approval, while junior employees need only Manager approval.
 
-**Criteria:** Employee → Employee Grade equals "Grade A"  
+**Criteria:** Employee → Employee Grade equals "Grade A"
 **Approver:** Director
 
 </div>
@@ -1921,7 +1921,7 @@ Senior employees (Grade A) require Director approval, while junior employees nee
 
 All requests first go to the Line Manager, then to HR for final verification.
 
-**Step 1:** Direct Reports To (Line Manager)  
+**Step 1:** Direct Reports To (Line Manager)
 **Step 2:** HR Admin
 
 </div>
@@ -2390,64 +2390,71 @@ A workflow that calculates the exact expiry date for each comp-off based on when
 
 <div class="faq-accordion">
 
-Why is my check-in being rejected?
-
+<details class="faq-item">
+<summary class="faq-question">Why is my check-in being rejected?</summary>
 <div class="faq-answer">
 
 Check-ins are rejected if the shift is not published, the employee is outside the geo-fence radius, or checking in outside the allowed time threshold. Contact the manager or HR for assistance.
 
 </div>
+</details>
 
-How do I correct a missed check-in or check-out?
-
+<details class="faq-item">
+<summary class="faq-question">How do I correct a missed check-in or check-out?</summary>
 <div class="faq-answer">
 
 Submit an Attendance Regularization request through Requests → My Tickets → Create Ticket → Select "Attendance Regularization". The manager will review and approve the correction.
 
 </div>
+</details>
 
-Can I check in from home or a remote location?
-
+<details class="faq-item">
+<summary class="faq-question">Can I check in from home or a remote location?</summary>
 <div class="faq-answer">
 
 This depends on the company's geo-fencing policy. If remote work is allowed, the HR administrator may configure specific locations or disable geo-fencing for the employee's profile.
 
 </div>
+</details>
 
-Why don't I see my overtime hours?
-
+<details class="faq-item">
+<summary class="faq-question">Why don't I see my overtime hours?</summary>
 <div class="faq-answer">
 
 Overtime tracking requires the employee to be assigned to an overtime policy. Contact the HR administrator to verify policy assignment.
 
 </div>
+</details>
 
-How do notifications work?
-
+<details class="faq-item">
+<summary class="faq-question">How do notifications work?</summary>
 <div class="faq-answer">
 
 The system sends push notifications 10 minutes before scheduled check-in and check-out times. Ensure notifications are enabled for the Bayzat app on the device.
 
 </div>
+</details>
 
-How do I track visits to multiple locations during the day?
-
+<details class="faq-item">
+<summary class="faq-question">How do I track visits to multiple locations during the day?</summary>
 <div class="faq-answer">
 
 Use the Multiple Visits feature in the Bayzat mobile app. After checking in for the day, go to the Attendance widget and select "Start Visit". Choose the location from the map, and when done, select "End Visit". Repeat for each location visited. The complete visit timeline can be viewed in Attendance → My Attendance.
 
 </div>
+</details>
 
-What if my visit location doesn't appear in the list?
-
+<details class="faq-item">
+<summary class="faq-question">What if my visit location doesn't appear in the list?</summary>
 <div class="faq-answer">
 
 If the company allows it, employees can add their current location by selecting "Add current location" when starting a visit. The employee should be at the actual meeting spot first, as only locations within the configured radius will appear. Enter the location name and details, then save it for future use.
 
 </div>
+</details>
 
-Can I check in when my device is offline or has no internet connection?
-
+<details class="faq-item">
+<summary class="faq-question">Can I check in when my device is offline or has no internet connection?</summary>
 <div class="faq-answer">
 
 It depends on how you check in:
@@ -2456,6 +2463,7 @@ It depends on how you check in:
 - **Biometric device (fingerprint/face scanner):** Yes. Biometric devices are not affected by Bayzat downtime or internet issues. They store attendance punches locally using an asynchronous queue mechanism and automatically sync the data to Bayzat once the system is back online. No attendance records are lost.
 
 </div>
+</details>
 
 </div>
 

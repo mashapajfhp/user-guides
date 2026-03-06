@@ -20,7 +20,7 @@ Gather comprehensive feedback from peers, managers, and direct reports for holis
 
 <figure>
 <img src="validation/screenshots/04-360-reviews-main-page.png" alt="360° Reviews management interface in Bayzat HR" />
-<figcaption aria-hidden="true">360° Reviews management interface in Bayzat HR</figcaption>
+<figcaption>360° Reviews management interface in Bayzat HR</figcaption>
 </figure>
 
 <div id="feature-overview" class="section section">
@@ -108,7 +108,7 @@ Answer these questions before creating a review cycle:
 |----|----|----|
 | Performance Module | 360° Reviews is part of the Performance management suite | Required |
 | Employee Data | Employee profiles must exist with accurate reporting structures | Required |
-| Feedback Categories | Define competency categories in Settings \> Performance \> 360° feedback | Required |
+| Feedback Categories | Define competency categories in Settings > Performance > 360° feedback configurations | Required |
 
 </div>
 
@@ -352,7 +352,7 @@ To access 360° Reviews:
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/03-performance-menu-expanded.png" class="screenshot" alt="Accessing 360° Reviews from the Performance menu" />
-<figcaption aria-hidden="true">Accessing 360° Reviews from the Performance menu</figcaption>
+<figcaption>Accessing 360° Reviews from the Performance menu</figcaption>
 </figure>
 
 ### Landing Page Overview
@@ -366,7 +366,7 @@ Upon accessing the feature, you arrive at the 360° Reviews dashboard, which dis
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/04-360-reviews-main-page.png" class="screenshot" alt="360° Reviews dashboard with overview cards and reviews list" />
-<figcaption aria-hidden="true">360° Reviews dashboard with overview cards and reviews list</figcaption>
+<figcaption>360° Reviews dashboard with overview cards and reviews list</figcaption>
 </figure>
 
 ### Quick Access Methods
@@ -396,7 +396,7 @@ Click any review name in the list to open the detail page with five tabs:
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-03-detail-view.png" class="screenshot" alt="Review detail page with navigation tabs" />
-<figcaption aria-hidden="true">Review detail page with navigation tabs</figcaption>
+<figcaption>Review detail page with navigation tabs</figcaption>
 </figure>
 
 ### Settings and Configuration
@@ -405,27 +405,27 @@ To access 360° feedback system settings:
 
 <div class="nav-path">
 
-**Settings** → **Performance** → **360° feedback**
+**Settings** → **Performance** → **360° feedback configurations** (expandable accordion)
 
 </div>
 
-The settings area includes two configuration tabs:
+The 360° feedback configurations section is an expandable accordion panel within the Performance Management settings page. It includes two configuration tabs:
 
 - **Feedback categories:** Manage categories like Technical Expertise, Leadership & Influence, Values & Culture Fit, Flexibility and Adaptability, Reliability and Dependability, Communication Skills, Teamwork and Collaboration
 - **Question bank:** Configure feedback questions used in surveys
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/settings-02-feedback-categories.png" class="screenshot" alt="360° feedback settings with feedback categories and question bank" />
-<figcaption aria-hidden="true">360° feedback settings with feedback categories and question bank</figcaption>
+<figcaption>360° feedback settings with feedback categories and question bank</figcaption>
 </figure>
 
 ### URL Patterns
 
 While direct URL access depends on your Bayzat instance configuration, the typical pattern follows:
 
-- **Main Dashboard:** `/performance/360-reviews`
-- **Review Detail:** `/performance/360-reviews/[review-id]`
-- **Settings:** `/settings/performance/360-feedback`
+- **Main Dashboard:** `/enterprise/dashboard/performance/holistic-feedback/company/overview`
+- **Review Detail:** `/enterprise/dashboard/performance/holistic-feedback/company/cycle/[review-id]/overview`
+- **Settings:** `/enterprise/dashboard/settings/performance-management`
 
 <div class="info-box">
 
@@ -454,7 +454,7 @@ Verify these items are in place before setup:
 
 Feedback categories organize the competencies you'll assess in 360° reviews.
 
-1.  Navigate to **Settings** → **Performance** → **360° feedback**
+1.  Navigate to **Settings** → **Performance** and expand the **360° feedback configurations** accordion
 2.  Select the **Feedback categories** tab
 3.  Review the default categories provided:
     - Technical Expertise
@@ -510,42 +510,13 @@ Ensure employee information is current and complete:
 
 Before creating your first review, document your plan:
 
-<table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>Planning Element</th>
-<th>Considerations</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Review Name</strong></td>
-<td>Use a clear naming convention (e.g., "Q1 2024 Leadership 360")</td>
-</tr>
-<tr>
-<td><strong>Timeline</strong></td>
-<td>Nomination period: 1-2 weeks<br />
-Feedback period: 2-3 weeks<br />
-Finalization period: 1 week</td>
-</tr>
-<tr>
-<td><strong>Participants</strong></td>
-<td>Start with a pilot group (10-20 employees) for your first cycle</td>
-</tr>
-<tr>
-<td><strong>Nomination Criteria</strong></td>
-<td>How many peers should each participant nominate? (typically 3-7)</td>
-</tr>
-<tr>
-<td><strong>Communication</strong></td>
-<td>Prepare announcement and instructions for participants</td>
-</tr>
-</tbody>
-</table>
+| Planning Element | Considerations |
+|----|----|
+| **Review Name** | Use a clear naming convention (e.g., "Q1 2024 Leadership 360") |
+| **Timeline** | Nomination period: 1-2 weeks<br>Feedback period: 2-3 weeks<br>Finalization period: 1 week |
+| **Participants** | Start with a pilot group (10-20 employees) for your first cycle |
+| **Nomination Criteria** | How many peers should each participant nominate? (typically 3-7) |
+| **Communication** | Prepare announcement and instructions for participants |
 
 ### Recommended Default Values
 
@@ -597,7 +568,7 @@ To create a new 360° review cycle:
     - **Step 1: Basic Info** - Enter review name and configure timeline periods
     - **Step 2: Select Participants** - Choose employees to include in the review cycle
     - **Step 3: Setup Nominations** - Configure peer nomination settings
-    - **Step 4: Review and Send** - Review summary and send invitations
+    - **Step 4: Send** - Review summary and send invitations
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/04-360-reviews-main-page.png" class="screenshot" alt="360° Reviews dashboard with Start 360° review button" />
@@ -611,11 +582,18 @@ In the first step, provide the following details:
 - **Review Name**: Enter a descriptive name for the review cycle (e.g., "Q1 2024 360° Review")
 - **Peer Nomination Period**: Set start and end dates for when employees can nominate peers
 - **Feedback Submission Period**: Define when feedback can be submitted
-- **Review Finalization Period**: Set the deadline for completing all reviews
+- **Review and Report Finalisation**: Allocate time for HR and managers to review responses, generate reports, and share feedback with employees
+- **Overall Cycle Duration**: Automatically inferred from the earliest start and latest end date (read-only)
+
+<div class="info-box">
+
+**Save Draft:** At any point during the creation wizard, you can click **Save draft** to save your progress. The review will appear in the list with "Draft" status and a "Continue" action link to resume setup later.
+
+</div>
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-01b-create-form-filled.png" class="screenshot" alt="Completed basic information form" />
-<figcaption aria-hidden="true">Completed basic information form</figcaption>
+<figcaption>Completed basic information form</figcaption>
 </figure>
 
 #### Step 2: Select Participants
@@ -624,12 +602,12 @@ Choose which employees will participate in this 360° review cycle. You can sear
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-01c-step2-select-participants.png" class="screenshot" alt="Participant selection interface" />
-<figcaption aria-hidden="true">Participant selection interface</figcaption>
+<figcaption>Participant selection interface</figcaption>
 </figure>
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-01d-step2-participants-selected.png" class="screenshot" alt="Employees selected for the review cycle" />
-<figcaption aria-hidden="true">Employees selected for the review cycle</figcaption>
+<figcaption>Employees selected for the review cycle</figcaption>
 </figure>
 
 #### Step 3: Setup Peer Nominations
@@ -638,10 +616,10 @@ Configure how peer nominations will work for this review cycle, including the nu
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-01e-step3-setup-nominations.png" class="screenshot" alt="Peer nomination configuration" />
-<figcaption aria-hidden="true">Peer nomination configuration</figcaption>
+<figcaption>Peer nomination configuration</figcaption>
 </figure>
 
-#### Step 4: Review and Send
+#### Step 4: Send
 
 Review all settings and participant information before sending invitations. This step displays a summary of:
 
@@ -652,21 +630,21 @@ Review all settings and participant information before sending invitations. This
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-01f-step4-review-summary.png" class="screenshot" alt="Final review summary before sending" />
-<figcaption aria-hidden="true">Final review summary before sending</figcaption>
+<figcaption>Final review summary before sending</figcaption>
 </figure>
 
 Click **Send** to create the review cycle and send invitations to participants. A success message will confirm: "360° review created and participants invited".
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-02-item-created.png" class="screenshot" alt="Success confirmation after creating the review" />
-<figcaption aria-hidden="true">Success confirmation after creating the review</figcaption>
+<figcaption>Success confirmation after creating the review</figcaption>
 </figure>
 
 The newly created review will appear in the main list with status "Pending Peer Nominations".
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-02b-review-in-list.png" class="screenshot" alt="New review displayed in the reviews list" />
-<figcaption aria-hidden="true">New review displayed in the reviews list</figcaption>
+<figcaption>New review displayed in the reviews list</figcaption>
 </figure>
 
 ### Viewing 360° Review Details
@@ -679,15 +657,15 @@ To view details of an existing 360° review cycle:
 
 The detail view provides multiple tabs for comprehensive review management:
 
-- **Overview**: Summary of review timeline, participants, and current status
-- **Peer nominations**: Track peer nomination progress
-- **Surveys**: Manage feedback surveys
-- **Responses**: View submitted feedback responses
-- **Reports**: Access generated 360° feedback reports
+- **Overview**: Review summary with progress cards (Employee Self-Reviews %, Line Manager Feedback %, Peer Feedback %, Deadlines), Timeline/Milestones, Participation breakdown, and Activity history
+- **Peer nominations**: Table of participants showing Employee, Line Manager, and Peers columns with quick filters (All, No Peers, Pending Peers, Completed) and actions (Manage, Send reminders)
+- **Surveys**: Survey cards for each participant group (Self Review, Manager Review, Direct Reports Review, Peer Review) with Preview buttons
+- **Responses**: Employee feedback tracking table with Responses Received count (e.g., "0/2"), Status, and actions (View, Send reminders)
+- **Reports**: Generate and access 360° feedback reports
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-03-detail-view.png" class="screenshot" alt="360° review detail page with multiple management tabs" />
-<figcaption aria-hidden="true">360° review detail page with multiple management tabs</figcaption>
+<figcaption>360° review detail page with multiple management tabs</figcaption>
 </figure>
 
 <div class="info-box">
@@ -695,6 +673,18 @@ The detail view provides multiple tabs for comprehensive review management:
 **Quick Filters:** Use the status filters (All, Draft, Ongoing, Completed, Pending) to quickly find reviews at specific stages. You can also search by review name or employee name.
 
 </div>
+
+#### Status-to-Action Mapping
+
+Each review status shows a specific contextual action in the Actions column:
+
+| Status | Action Link | Description |
+|----|----|----|
+| **Draft** | Continue | Resume the creation wizard from where you left off |
+| **Pending Peer Nominations** | Assign peers | Navigate to the Peer nominations tab to manage nominations |
+| **Pending Review and Report Finalisation** | Generate reports | Navigate to the Reports tab to generate feedback reports |
+| **Ongoing** | Context-dependent | Shows the most relevant action for the current phase |
+| **Completed** | View report | Access the generated 360° feedback reports |
 
 ### Editing a 360° Review Cycle
 
@@ -709,14 +699,14 @@ To modify an existing 360° review cycle:
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-04-edit-form.png" class="screenshot" alt="Editing an existing 360° review using the wizard" />
-<figcaption aria-hidden="true">Editing an existing 360° review using the wizard</figcaption>
+<figcaption>Editing an existing 360° review using the wizard</figcaption>
 </figure>
 
 After saving, a success message confirms the changes have been applied. The updated information will be reflected in the main list view.
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-05-changes-saved.png" class="screenshot" alt="Confirmation that changes were saved successfully" />
-<figcaption aria-hidden="true">Confirmation that changes were saved successfully</figcaption>
+<figcaption>Confirmation that changes were saved successfully</figcaption>
 </figure>
 
 <div class="info-box">
@@ -735,7 +725,7 @@ To permanently remove a 360° review cycle:
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-06-delete-menu.png" class="screenshot" alt="Accessing the delete option from the action menu" />
-<figcaption aria-hidden="true">Accessing the delete option from the action menu</figcaption>
+<figcaption>Accessing the delete option from the action menu</figcaption>
 </figure>
 
 A confirmation dialog will appear with the warning:
@@ -744,14 +734,14 @@ A confirmation dialog will appear with the warning:
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-07-delete-confirm.png" class="screenshot" alt="Delete confirmation dialog" />
-<figcaption aria-hidden="true">Delete confirmation dialog</figcaption>
+<figcaption>Delete confirmation dialog</figcaption>
 </figure>
 
 Click **Confirm** to proceed with deletion. A success message will display: "360° review deleted successfully."
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/crud-08-item-deleted.png" class="screenshot" alt="Confirmation that the review was deleted" />
-<figcaption aria-hidden="true">Confirmation that the review was deleted</figcaption>
+<figcaption>Confirmation that the review was deleted</figcaption>
 </figure>
 
 <div class="warning-box">
@@ -994,12 +984,20 @@ Employees access their 360° review surveys through a dedicated personal interfa
 
 </div>
 
-The employee's "My 360° reviews" page includes:
+The employee's "My 360° reviews" page has a landing page with 3 overview cards (Active reviews, Pending peer nominations, Upcoming deadlines) — note that unlike the admin view, it does not include the "Employees involved" card or the "Start 360° review" button.
 
-- **Overview Tab:** Shows feedback shared about the employee once available
+When clicking into a review, the employee sees 4 tabs:
+
+- **Overview Tab:** Shows review progress summary, timeline milestones, and participation breakdown
 - **Peer nominations Tab:** Where employees nominate their peers for feedback
 - **Surveys Tab:** Lists all surveys the employee needs to complete (feedback about colleagues)
 - **Reports Tab:** Access to finalized 360° feedback reports
+
+<div class="info-box">
+
+**Note:** The employee view shows 4 tabs (Overview, Peer nominations, Surveys, Reports) — the **Responses** tab is only visible in the admin view.
+
+</div>
 
 <figure class="screenshot-container">
 <img src="validation/screenshots/360-my-reviews-employee-view.png" class="screenshot" alt="Employee view of My 360° reviews" />
@@ -1110,12 +1108,12 @@ While workflow integration is not currently available, the following scenarios i
 
 The 360° Feedback feature operates under the following business rules:
 
-- **Review Lifecycle:** Reviews progress through defined stages: Draft → Ongoing → Completed. Each stage has specific actions available.
+- **Review Lifecycle:** Reviews progress through defined stages: Draft → Pending (Peer Nominations) → Ongoing → Pending (Review and Report Finalisation) → Completed. The "Pending" filter in the list groups reviews with "Pending Peer Nominations" and "Pending Review and Report Finalisation" statuses. Each stage has specific contextual actions.
 - **Participant Selection:** Only active employees can be selected as participants in a 360° review cycle.
 - **Time Periods:** Three distinct time periods must be configured: Peer nomination period, Feedback submission period, and Review finalization period. These periods cannot overlap and must be sequential.
 - **Peer Nominations:** Employees must nominate peers during the designated nomination period. The number of required nominations can be configured per review cycle.
 - **Survey Configuration:** Feedback surveys use questions from the Question Bank and are organized by Feedback Categories (Technical Expertise, Leadership & Influence, Values & Culture Fit, Flexibility and Adaptability, Reliability and Dependability, Communication Skills, Teamwork and Collaboration).
-- **Rating Scale:** Reviews use the organization's configured rating scale (3-10 points) as defined in Settings \> Performance \> Rating Scale.
+- **Rating scales:** Reviews use the organization's configured rating scale (3-10 points) as defined in Settings > Performance > Rating scales.
 - **Deletion Policy:** Deleted 360° reviews are permanently removed and cannot be recovered. All associated data including nominations, surveys, responses, and reports are deleted.
 - **Beta Status:** This feature is currently in beta testing phase, indicated by the "Beta" badge in the navigation. Functionality may be subject to change based on user feedback.
 
@@ -1254,7 +1252,7 @@ How do I configure the feedback questions?
 
 <div class="faq-answer">
 
-Feedback questions are managed in Settings \> 360° feedback configurations. You can create and organize questions in the Question Bank, group them into Feedback Categories, and customize categories to match your organization's competency framework.
+Feedback questions are managed in Settings > Performance > 360° feedback configurations (expandable accordion). You can create and organize questions in the Question Bank, group them into Feedback Categories, and customize categories to match your organization's competency framework.
 
 </div>
 
@@ -1262,7 +1260,7 @@ What rating scale is used for feedback?
 
 <div class="faq-answer">
 
-360° reviews use your organization's configured rating scale, set up in Settings \> Performance \> Rating Scale. The scale can be 3-10 points with optional "Not Applicable" (N/A) option.
+360° reviews use your organization's configured rating scale, set up in Settings > Performance > Rating scales. The scale can be 3-10 points with optional "Not Applicable" (N/A) option.
 
 </div>
 
@@ -1313,19 +1311,19 @@ The Beta badge indicates this feature is in active testing and development. Whil
 | **Beta Feature** | A feature that is in active testing and development phase. While fully functional, beta features may receive updates or changes based on user feedback. Indicated by a "Beta" badge in the navigation. |
 | **Completed Review** | A review cycle that has finished all phases including peer nominations, feedback submission, and finalization. Reports become available for completed reviews. |
 | **Draft Review** | A review cycle that has been created but not yet sent to participants. Draft reviews can be edited or deleted without impacting employees. |
-| **Feedback Categories** | Organizational groupings for feedback questions, such as Technical Expertise, Leadership & Influence, Values & Culture Fit, Flexibility and Adaptability, Reliability and Dependability, Communication Skills, and Teamwork and Collaboration. Configured in Settings \> 360° feedback configurations. |
+| **Feedback Categories** | Organizational groupings for feedback questions, such as Technical Expertise, Leadership & Influence, Values & Culture Fit, Flexibility and Adaptability, Reliability and Dependability, Communication Skills, and Teamwork and Collaboration. Configured in Settings > Performance > 360° feedback configurations (expandable accordion section). Categories can be Default (cannot be deleted) or Custom (can be deleted). |
 | **Feedback Submission Period** | The time window during which participants provide feedback responses about their peers. This is the second phase of a 360° review cycle, following the peer nomination period. |
 | **Ongoing Review** | A review cycle that is actively in progress, with participants currently nominating peers or submitting feedback. One of the status options in the review lifecycle. |
 | **Participant** | An employee who is being evaluated in a 360° review cycle. Participants are selected in Step 2 of the review creation wizard and must be active employees. |
 | **Peer Nomination** | The process where employees select colleagues who will provide feedback about them. Nominations occur during the designated peer nomination period and are tracked in the "Pending peer nominations" count. |
 | **Peer Nomination Period** | The first phase of a 360° review cycle, during which participants nominate peers who will provide feedback about them. This period must be completed before the feedback submission period begins. |
-| **Question Bank** | A repository of feedback questions configured in Settings \> 360° feedback configurations. Questions are organized by Feedback Categories and used to create surveys for review cycles. |
-| **Rating Scale** | A numerical scale (3-10 points) used to grade feedback responses. Configured globally in Settings \> Performance \> Rating Scale, with customizable labels and descriptions for each point. May include an optional "Not Applicable" (N/A) option. |
+| **Question Bank** | A repository of feedback questions configured in Settings > Performance > 360° feedback configurations. Questions are organized by Feedback Categories with counts broken down by 4 reviewer types (Employee, Manager, Direct reports, Peer). Actions include "View / Edit" and "Add question" per category. |
+| **Rating Scales** | A numerical scale (3-10 points) used to grade feedback responses. Configured globally in Settings > Performance > Rating scales ("Setup performance review rating scales"). With customizable labels and descriptions for each point. May include an optional "Not Applicable" (N/A) option. |
 | **Review Finalization Period** | The third and final phase of a 360° review cycle, during which feedback is compiled, reports are generated, and results are finalized. This period begins after the feedback submission period ends. |
-| **Review Status** | The current state of a review cycle in its lifecycle. Possible statuses include: Draft (not yet sent), Ongoing (in progress), Completed (finished), and Pending (awaiting action). Used for filtering and tracking in the reviews list. |
+| **Review Status** | The current state of a review cycle in its lifecycle. Quick filter statuses: Draft, Ongoing, Completed, Pending. The "Pending" filter groups two substatus labels: "Pending Peer Nominations" (awaiting peer nominations) and "Pending Review and Report Finalisation" (awaiting report generation). Each status shows a specific contextual action in the reviews list (Continue, Assign peers, Generate reports, View report). |
 
 </div>
 
 Generated by Bayzat Documentation System
 
-Last updated: 2026-01-30
+Last updated: 2026-03-06

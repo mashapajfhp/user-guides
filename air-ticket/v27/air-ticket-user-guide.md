@@ -578,10 +578,10 @@ Open any request from your My Air Tickets list to view its full details and acti
 ### Processing Requests (Manager Flow)
 
 1.  Navigate to Requests → Air tickets
-2.  Click 'Pending' tab to view requests awaiting approval
-3.  Click on a request row to open the detail panel
-4.  Review all submitted information including coverage details
-5.  Click 'Approve' or 'Reject' (add reason if rejecting)
+1.  Click 'Pending' tab to view requests awaiting approval
+1.  Click on a request row to open the detail panel
+1.  Review all submitted information including coverage details
+1.  Click 'Approve' or 'Reject' (add reason if rejecting)
 
 <figure>
 <img src="validation/screenshots/13-air-ticket-requests-pending.png" alt="Air ticket requests list with pending requests" />
